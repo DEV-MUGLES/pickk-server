@@ -1,5 +1,9 @@
 {
     "conventionalCommits.scopes": [
-        "yarn"
+        "yarn",
+        "config",
+        "api",
+        "model",
+        "admin"
     ]
 }
