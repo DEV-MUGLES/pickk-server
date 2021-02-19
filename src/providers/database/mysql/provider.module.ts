@@ -18,7 +18,6 @@ import { User } from 'src/models/users/entities/user.entity';
         password: mysqlConfigService.password,
         database: mysqlConfigService.database,
         entities: [User],
-        synchronize: true,
       }),
       inject: [MysqlConfigService],
     } as TypeOrmModuleAsyncOptions),
