@@ -4,6 +4,7 @@
         "api",
         "model",
         "admin",
-        "npm"
+        "npm",
+        "provider"
     ]
 }
