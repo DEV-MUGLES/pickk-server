@@ -17,7 +17,15 @@ import { User } from 'src/models/users/entities/user.entity';
         username: mysqlConfigService.username,
         password: mysqlConfigService.password,
         database: mysqlConfigService.database,
-        entities: [User],
+        entities: [
+          __dirname + '../../../../**/*.entity.ts',
+          __dirname + '../../../../**/*.entity.js',
+        ],
+        migrationsRun: false,
+        migrations: [
+          __dirname + '../../../../database/migrations/*.ts',
+          __dirname + '../../../../database/migrations/*.js',
+        ],
       }),
       inject: [MysqlConfigService],
     } as TypeOrmModuleAsyncOptions),
