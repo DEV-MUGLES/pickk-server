@@ -4,5 +4,9 @@
  * @interface
  */
 export interface IUser {
-  name: string;
+  email: string;
+  name: string | null;
+  password: string;
+  weight: number;
+  height: number;
 }

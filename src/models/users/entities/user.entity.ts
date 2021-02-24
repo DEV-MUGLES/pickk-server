@@ -1,4 +1,10 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IUser } from '../interfaces/user.interface';
 
 /**
@@ -12,27 +18,38 @@ import { IUser } from '../interfaces/user.interface';
 export class User implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
-  @Column()
-  name: string;
-  @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
-  })
-  createdAt: string;
 
   @Column({
-    type: 'timestamp',
-    default: () => 'CURRENT_TIMESTAMP',
+    unique: true,
   })
-  updatedAt: string;
+  email: string;
+
+  @Column({ nullable: true, default: null })
+  name: string;
+
+  @Column()
+  password: string;
+
+  @CreateDateColumn({
+    name: 'created_at',
+  })
+  createdAt: Date;
+
+  @UpdateDateColumn({
+    name: 'updated_at',
+    type: 'timestamp',
+  })
+  updatedAt: Date;
 
   @Column({
     type: 'smallint',
+    nullable: true,
   })
   weight: number;
 
   @Column({
     type: 'smallint',
+    nullable: true,
   })
   height: number;
 }

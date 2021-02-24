@@ -7,8 +7,10 @@ import { AppService } from './app.service';
 import { AppConfigModule } from './config/app/config.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 
+import { UsersModule } from './models/users/users.module';
+
 @Module({
-  imports: [AppConfigModule, MysqlDatabaseProviderModule],
+  imports: [AppConfigModule, MysqlDatabaseProviderModule, UsersModule],
   controllers: [AppController],
   providers: [AppService],
 })

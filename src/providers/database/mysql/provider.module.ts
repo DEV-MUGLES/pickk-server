@@ -12,6 +12,7 @@ import { User } from 'src/models/users/entities/user.entity';
       imports: [MysqlConfigModule],
       useFactory: async (mysqlConfigService: MysqlConfigService) => ({
         type: 'mysql' as DatabaseType,
+        charset: 'utf8',
         host: mysqlConfigService.host,
         port: mysqlConfigService.port,
         username: mysqlConfigService.username,
