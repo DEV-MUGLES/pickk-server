@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from './users.repository';
+import { UserRepository } from './user.repository';
 import { UserEntity } from './serializers/user.serializer';
 import { CreateUserDto, EditUserDto } from './dto';
 
 @Injectable()
-export class UsersService {
+export class UserService {
   constructor(
-    @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository
+    @InjectRepository(UserRepository)
+    private readonly usersRepository: UserRepository
   ) {}
 
   async list(relations: string[] = []): Promise<UserEntity[]> {

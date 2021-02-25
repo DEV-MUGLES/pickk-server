@@ -14,14 +14,14 @@ import {
   UserEntity,
   extendedUserGroupsForSerializing,
 } from './serializers/user.serializer';
-import { UsersService } from './users.service';
+import { UserService } from './user.service';
 
 @Controller('users')
 @SerializeOptions({
   groups: extendedUserGroupsForSerializing,
 })
-export class UsersController {
-  constructor(private readonly usersService: UsersService) {}
+export class UserController {
+  constructor(private readonly usersService: UserService) {}
 
   @Get('/')
   @UseInterceptors(ClassSerializerInterceptor)

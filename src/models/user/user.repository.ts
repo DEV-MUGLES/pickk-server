@@ -8,7 +8,7 @@ import {
 import { classToPlain, plainToClass } from 'class-transformer';
 
 @EntityRepository(User)
-export class UsersRepository extends ModelRepository<User, UserEntity> {
+export class UserRepository extends ModelRepository<User, UserEntity> {
   transform(model: User): UserEntity {
     const tranformOptions = {
       groups: allUserGroupsForSerializing,

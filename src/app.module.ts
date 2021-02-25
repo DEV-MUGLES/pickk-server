@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 import { AppConfigModule } from './config/app/config.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 
-import { UsersModule } from './models/users/users.module';
+import { UsersModule } from './models/user/user.module';
 
 @Module({
   imports: [AppConfigModule, MysqlDatabaseProviderModule, UsersModule],
