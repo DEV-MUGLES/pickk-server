@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { CreateUserDto } from './dto';
@@ -52,6 +53,25 @@ describe('UsersService', () => {
       const result = await usersService.get(userId);
 
       expect(userRepositoryGetSpy).toHaveBeenCalledWith(userId, []);
+      expect(result).toEqual(user);
+    });
+  });
+
+  describe('find a user', () => {
+    const findOneDto: Partial<User> = {
+      name: faker.lorem.text(),
+    };
+
+    it('should return matched user', async () => {
+      const user = Object.assign(new User(), findOneDto);
+
+      const userRepositoryFindSpy = jest
+        .spyOn(usersRepository, 'findOneEntity')
+        .mockResolvedValue(user);
+
+      const result = await usersService.findOne(findOneDto);
+
+      expect(userRepositoryFindSpy).toHaveBeenCalledWith(findOneDto, []);
       expect(result).toEqual(user);
     });
   });
