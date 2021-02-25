@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial, UpdateResult } from 'typeorm';
+import { Repository, DeepPartial } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 import { ModelEntity } from '../common/serializers/model.serializer';
@@ -10,7 +10,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     return obj !== undefined && (obj as K).id !== undefined;
   }
 
-  async get(id: string, relations: string[] = []): Promise<K | null> {
+  async get(id: number, relations: string[] = []): Promise<K | null> {
     return await this.findOne({
       where: { id },
       relations,

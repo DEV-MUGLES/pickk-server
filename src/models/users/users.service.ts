@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UserRepository } from './user.repository';
+import { UsersRepository } from './users.repository';
 import { UserEntity } from './serializers/user.serializer';
-import { CreateUserDto, EditUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 
 @Injectable()
-export class UserService {
+export class UsersService {
   constructor(
-    @InjectRepository(UserRepository)
-    private readonly usersRepository: UserRepository
+    @InjectRepository(UsersRepository)
+    private readonly usersRepository: UsersRepository
   ) {}
 
   async list(relations: string[] = []): Promise<UserEntity[]> {
@@ -16,7 +16,7 @@ export class UserService {
     return this.usersRepository.transformMany(users);
   }
 
-  async get(id: string, relations: string[] = []): Promise<UserEntity> {
+  async get(id: number, relations: string[] = []): Promise<UserEntity> {
     return await this.usersRepository.get(id, relations);
   }
 
@@ -24,7 +24,7 @@ export class UserService {
     return await this.usersRepository.createEntity(inputs);
   }
 
-  async update(id: string, inputs: EditUserDto): Promise<UserEntity> {
+  async update(id: number, inputs: UpdateUserDto): Promise<UserEntity> {
     const user = await this.usersRepository.get(id);
     return await this.usersRepository.updateEntity(user, inputs);
   }

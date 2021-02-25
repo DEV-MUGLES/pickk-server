@@ -9,19 +9,19 @@ import {
   ClassSerializerInterceptor,
   Param,
 } from '@nestjs/common';
-import { CreateUserDto, EditUserDto } from './dto';
+import { CreateUserDto, UpdateUserDto } from './dto';
 import {
   UserEntity,
   extendedUserGroupsForSerializing,
 } from './serializers/user.serializer';
-import { UserService } from './user.service';
+import { UsersService } from './users.service';
 
 @Controller('users')
 @SerializeOptions({
   groups: extendedUserGroupsForSerializing,
 })
-export class UserController {
-  constructor(private readonly usersService: UserService) {}
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
 
   @Get('/')
   @UseInterceptors(ClassSerializerInterceptor)
@@ -32,7 +32,7 @@ export class UserController {
   @Get('/:id')
   @UseInterceptors(ClassSerializerInterceptor)
   async get(@Param('id') id: number): Promise<UserEntity> {
-    const user = this.usersService.get(id.toString());
+    const user = this.usersService.get(id);
     return user;
   }
 
@@ -46,8 +46,8 @@ export class UserController {
   @UseInterceptors(ClassSerializerInterceptor)
   async update(
     @Param('id') id: number,
-    @Body() inputs: EditUserDto
+    @Body() inputs: UpdateUserDto
   ): Promise<UserEntity> {
-    return await this.usersService.update(id.toString(), inputs);
+    return await this.usersService.update(id, inputs);
   }
 }

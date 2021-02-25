@@ -14,7 +14,7 @@ export const allUserGroupsForSerializing: string[] = [
 ];
 
 export class UserEntity extends ModelEntity implements IUser {
-  id: string;
+  id: number;
   email: string;
   name: string;
   weight: number;
