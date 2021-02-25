@@ -1,9 +1,10 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial } from 'typeorm';
+import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
+import { MultipleEntityReturnedException } from 'src/common/exceptions/multiple-entity-returned.exception';
 
 export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
   private isEntity(obj: unknown): obj is K {
@@ -20,7 +21,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
           throw new NotFoundException('Model not found.');
         }
 
-        return Promise.resolve(entity ? this.transform(entity) : null);
+        return Promise.resolve(this.transform(entity));
       })
       .catch((error) => Promise.reject(error));
   }
@@ -42,6 +43,25 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     return this.update(entity.id, inputs)
       .then(async () => await this.get(entity.id, relations))
       .catch((error) => Promise.reject(error));
+  }
+
+  async findOneEntity(
+    param: FindOneOptions<T>['where'],
+    relations: string[] = []
+  ): Promise<K | null> {
+    return await this.find({
+      where: param,
+      relations,
+    }).then((entities) => {
+      if (entities.length > 1) {
+        throw new MultipleEntityReturnedException();
+      }
+      if (entities.length === 0 || !this.isEntity(entities[0])) {
+        throw new NotFoundException('Model not found.');
+      }
+
+      return Promise.resolve(this.transform(entities[0]));
+    });
   }
 
   transform(model: T, transformOptions = {}): K {
