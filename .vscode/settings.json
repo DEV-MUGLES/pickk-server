@@ -5,7 +5,8 @@
         "model",
         "admin",
         "npm",
-        "provider"
+        "provider",
+        "service"
     ],
     "jestrunner.jestCommand": "npm run test --",
 }

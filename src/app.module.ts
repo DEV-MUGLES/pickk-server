@@ -6,11 +6,16 @@ import { AppService } from './app.service';
 
 import { AppConfigModule } from './config/app/config.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
-
+import { AuthModule } from './authentication/auth.module';
 import { UsersModule } from './models/users/users.module';
 
 @Module({
-  imports: [AppConfigModule, MysqlDatabaseProviderModule, UsersModule],
+  imports: [
+    AppConfigModule,
+    MysqlDatabaseProviderModule,
+    AuthModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
