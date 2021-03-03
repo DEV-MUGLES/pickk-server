@@ -1,3 +1,4 @@
+import { ModelEntity } from 'src/common/serializers/model.serializer';
 import {
   Column,
   CreateDateColumn,
@@ -15,7 +16,7 @@ import { IUser } from '../interfaces/user.interface';
 @Entity({
   name: 'user',
 })
-export class User implements IUser {
+export class User extends ModelEntity implements IUser {
   @PrimaryGeneratedColumn()
   id: number;
 

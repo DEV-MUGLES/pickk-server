@@ -1,17 +1,22 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
+import path from 'path';
+
+import { AppConfigModule } from './config/app/config.module';
+import { GraphQLModule } from '@nestjs/graphql';
+import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
+import { AuthModule } from './authentication/auth.module';
+import { UsersModule } from './modules/users/users.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
-import { AppConfigModule } from './config/app/config.module';
-import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
-import { AuthModule } from './authentication/auth.module';
-import { UsersModule } from './models/users/users.module';
-
 @Module({
   imports: [
     AppConfigModule,
+    GraphQLModule.forRoot({
+      autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
+    }),
     MysqlDatabaseProviderModule,
     AuthModule,
     UsersModule,

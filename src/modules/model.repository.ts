@@ -6,12 +6,12 @@ import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MultipleEntityReturnedException } from 'src/common/exceptions/multiple-entity-returned.exception';
 
-export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
-  private isEntity(obj: unknown): obj is K {
-    return obj !== undefined && (obj as K).id !== undefined;
+export class ModelRepository<T extends ModelEntity> extends Repository<T> {
+  private isEntity(obj: unknown): obj is T {
+    return obj !== undefined && (obj as T).id !== undefined;
   }
 
-  async get(id: number, relations: string[] = []): Promise<K | null> {
+  async get(id: number, relations: string[] = []): Promise<T | null> {
     return await this.findOne({
       where: { id },
       relations,
@@ -29,17 +29,17 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
   async createEntity(
     inputs: DeepPartial<T>,
     relations: string[] = []
-  ): Promise<K | null> {
+  ): Promise<T | null> {
     return this.save(inputs)
       .then(async (entity) => await this.get((entity as any).id, relations))
       .catch((error) => Promise.reject(error));
   }
 
   async updateEntity(
-    entity: K,
+    entity: T,
     inputs: QueryDeepPartialEntity<T>,
     relations: string[] = []
-  ): Promise<K | null> {
+  ): Promise<T | null> {
     return this.update(entity.id, inputs)
       .then(async () => await this.get(entity.id, relations))
       .catch((error) => Promise.reject(error));
@@ -48,7 +48,7 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
   async findOneEntity(
     param: FindOneOptions<T>['where'],
     relations: string[] = []
-  ): Promise<K | null> {
+  ): Promise<T | null> {
     return await this.find({
       where: param,
       relations,
@@ -64,11 +64,11 @@ export class ModelRepository<T, K extends ModelEntity> extends Repository<T> {
     });
   }
 
-  transform(model: T, transformOptions = {}): K {
-    return plainToClass(ModelEntity, model, transformOptions) as K;
+  transform(model: T, transformOptions = {}): T {
+    return plainToClass(ModelEntity, model, transformOptions) as T;
   }
 
-  transformMany(models: T[], transformOptions = {}): K[] {
+  transformMany(models: T[], transformOptions = {}): T[] {
     return models.map((model) => this.transform(model, transformOptions));
   }
 }
