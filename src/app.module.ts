@@ -5,7 +5,7 @@ import { AppConfigModule } from './config/app/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { AuthModule } from './authentication/auth.module';
-import { UsersModule } from './modules/users/users.module';
+import { UsersModule } from './modules/user/users/users.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
