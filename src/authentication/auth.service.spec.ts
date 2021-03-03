@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { User } from 'src/modules/users/models/user.model';
-import { UsersRepository } from 'src/modules/users/users.repository';
-import { UsersService } from 'src/modules/users/users.service';
+import { User } from '@src/modules/users/models/user.model';
+import { UsersRepository } from '@src/modules/users/users.repository';
+import { UsersService } from '@src/modules/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 

@@ -4,7 +4,7 @@ import { NotFoundException } from '@nestjs/common';
 
 import { ModelEntity } from '../common/serializers/model.serializer';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { MultipleEntityReturnedException } from 'src/common/exceptions/multiple-entity-returned.exception';
+import { MultipleEntityReturnedException } from '@src/common/exceptions/multiple-entity-returned.exception';
 
 export class ModelRepository<T extends ModelEntity> extends Repository<T> {
   private isEntity(obj: unknown): obj is T {

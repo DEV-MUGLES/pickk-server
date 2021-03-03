@@ -7,7 +7,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-import { ModelEntity } from 'src/common/serializers/model.serializer';
+import { ModelEntity } from '@src/common/serializers/model.serializer';
 import { IUser } from '../interfaces/user.interface';
 
 @ObjectType()
