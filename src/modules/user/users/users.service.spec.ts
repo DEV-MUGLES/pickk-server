@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { CreateUserDto } from './dto';
+import { CreateUserInput } from './dto';
 import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
@@ -21,7 +21,7 @@ describe('UsersService', () => {
 
   describe('creating a user', () => {
     it('create success', async () => {
-      const createUserDto: CreateUserDto = {
+      const createUserDto: CreateUserInput = {
         name: faker.lorem.sentence(),
         password: faker.lorem.sentence(),
         email: faker.internet.email(),

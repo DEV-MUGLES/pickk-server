@@ -7,6 +7,6 @@ export interface IUser {
   email: string;
   name: string | null;
   password: string;
-  weight: number;
-  height: number;
+  weight?: number;
+  height?: number;
 }
