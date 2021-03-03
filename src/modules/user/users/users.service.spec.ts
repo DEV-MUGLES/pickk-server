@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { CreateUserInput } from './dto';
+import { CreateUserInput } from './dto/user.input';
 import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
