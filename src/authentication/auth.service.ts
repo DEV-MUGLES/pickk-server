@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from 'src/modules/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from 'src/modules/users/serializers/user.serializer';
+import { User } from 'src/modules/users/models/user.model';
 
-type ValidatedUser = Omit<UserEntity, 'password'>;
+type ValidatedUser = Omit<User, 'password'>;
 
 @Injectable()
 export class AuthService {

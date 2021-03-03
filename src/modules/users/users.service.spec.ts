@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { CreateUserDto } from './dto';
-import { User } from './entities/user.entity';
+import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';

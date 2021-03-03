@@ -1,5 +1,5 @@
 import { EntityRepository } from 'typeorm';
-import { User } from './entities/user.entity';
+import { User } from './models/user.model';
 import { ModelRepository } from '../model.repository';
 
 @EntityRepository(User)
