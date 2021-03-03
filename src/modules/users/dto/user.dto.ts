@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { InputType, Field, PartialType } from '@nestjs/graphql';
 import {
   IsEmail,
   IsInt,
@@ -11,30 +11,34 @@ import {
 
 import { IUser } from '../interfaces/user.interface';
 
+@InputType()
 export class CreateUserDto implements Partial<IUser> {
-  @ApiProperty()
+  @Field()
   @IsEmail()
   email: string;
 
-  @ApiProperty()
+  @Field()
   @IsString()
   name: string;
 
-  @ApiProperty()
+  @Field()
   @IsNotEmpty()
   password: string;
 
-  @ApiProperty()
+  @Field({ nullable: true })
   @IsInt()
   @Min(10)
   @Max(300)
   @IsOptional()
   weight?: number;
 
-  @ApiProperty()
+  @Field({ nullable: true })
   @IsInt()
   @Min(10)
   @Max(300)
   @IsOptional()
   height?: number;
 }
+
+@InputType()
+export class UpdateUserDto extends PartialType(CreateUserDto) {}

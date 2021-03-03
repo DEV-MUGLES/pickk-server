@@ -1,5 +1,6 @@
 import { Inject } from '@nestjs/common';
-import { Args, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { CreateUserDto } from './dto';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 
@@ -15,5 +16,12 @@ export class UsersResolver {
   @Query((returns) => [User])
   async users(): Promise<User[]> {
     return await this.usersService.list();
+  }
+
+  @Mutation((returns) => User)
+  async createUser(
+    @Args('createUserDto') createUserDto: CreateUserDto
+  ): Promise<User> {
+    return await this.usersService.create(createUserDto);
   }
 }

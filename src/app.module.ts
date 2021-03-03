@@ -15,6 +15,7 @@ import { AppService } from './app.service';
     AppConfigModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
+      sortSchema: true,
     }),
     MysqlDatabaseProviderModule,
     AuthModule,

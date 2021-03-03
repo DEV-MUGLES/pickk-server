@@ -2,15 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  id: Float!
+input CreateUserDto {
   email: String!
+  height: Float
   name: String!
   password: String!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  weight: Float!
-  height: Float!
+  weight: Float
 }
 
 """
@@ -18,7 +15,22 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Mutation {
+  createUser(createUserDto: CreateUserDto!): User!
+}
+
 type Query {
   user(id: Float!): User!
   users: [User!]!
+}
+
+type User {
+  createdAt: DateTime!
+  email: String!
+  height: Float
+  id: Float!
+  name: String!
+  password: String!
+  updatedAt: DateTime!
+  weight: Float
 }

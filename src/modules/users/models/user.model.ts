@@ -46,14 +46,14 @@ export class User extends ModelEntity implements IUser {
   })
   updatedAt: Date;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     type: 'smallint',
     nullable: true,
   })
   weight: number;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     type: 'smallint',
     nullable: true,
