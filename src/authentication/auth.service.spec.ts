@@ -4,18 +4,32 @@ import { User } from 'src/models/users/entities/user.entity';
 import { UsersRepository } from 'src/models/users/users.repository';
 import { UsersService } from 'src/models/users/users.service';
 import { AuthService } from './auth.service';
+import { JwtService } from '@nestjs/jwt';
 
+const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
   let authService: AuthService;
   let usersService: UsersService;
+  let jwtService: JwtService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [AuthService, UsersService, UsersRepository],
+      providers: [
+        AuthService,
+        UsersService,
+        UsersRepository,
+        {
+          provide: JwtService,
+          useValue: {
+            sign: jest.fn((_params) => JWT_TOKEN),
+          },
+        },
+      ],
     }).compile();
 
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   describe('validateEmail', () => {
@@ -106,6 +120,25 @@ describe('AuthService', () => {
       expect(result).toEqual(null);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         name: nameLoginDto.name,
+      });
+    });
+  });
+
+  describe('login', () => {
+    const { password, ...validatedUser } = new User();
+    it('유저의 name과 id를 통해 JWT를 생성한다.', async () => {
+      const jwtServiceSignSpy = jest
+        .spyOn(jwtService, 'sign')
+        .mockReturnValue(JWT_TOKEN);
+
+      const result = await authService.login(validatedUser);
+
+      expect(result).toEqual({
+        accessToken: JWT_TOKEN,
+      });
+      expect(jwtServiceSignSpy).toHaveBeenCalledWith({
+        username: validatedUser.name,
+        sub: validatedUser.id,
       });
     });
   });
