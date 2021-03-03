@@ -7,6 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "dev": "docker-compose -f docker-compose.yml up",
+    "dev:down": "docker-compose -f docker-compose.yml down -v",
     "dev:build": "docker-compose -f docker-compose.yml up --build -V",
     "test:init": "docker-compose -f docker-compose.test.yml down && ./scripts/init-test.sh",
     "preinstall": "npm list ts-node -g || npm install ts-node -g",
@@ -23,7 +24,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "typeorm": "node --require ts-node/register ./node_modules/typeorm/cli.js"
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
+    "makemigrations": "npm run typeorm migration:generate --",
+    "migrate": "npm run typeorm migration:run",
+    "migrate:revert": "npm run typeorm migration:revert",
+    "migrations": "npm run typeorm migration:show"
   },
   "dependencies": {
     "@hapi/joi": "^17.1.1",
