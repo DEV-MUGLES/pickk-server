@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
-import path from 'path';
 
 import { AppConfigModule } from './config/app/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -15,7 +14,7 @@ import { AppService } from './app.service';
   imports: [
     AppConfigModule,
     GraphQLModule.forRoot({
-      autoSchemaFile: path.join(process.cwd(), 'src/schema.gql'),
+      autoSchemaFile: 'src/schema.gql',
     }),
     MysqlDatabaseProviderModule,
     AuthModule,
