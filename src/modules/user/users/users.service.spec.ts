@@ -21,21 +21,21 @@ describe('UsersService', () => {
 
   describe('creating a user', () => {
     it('create success', async () => {
-      const createUserDto: CreateUserInput = {
+      const createUserInput: CreateUserInput = {
         name: faker.lorem.sentence(),
         password: faker.lorem.sentence(),
         email: faker.internet.email(),
       };
 
-      const newUser = Object.assign(new User(), createUserDto);
+      const newUser = Object.assign(new User(), createUserInput);
 
       const userRepositoryCreateSpy = jest
         .spyOn(usersRepository, 'createEntity')
         .mockResolvedValue(newUser);
 
-      const result = await usersService.create(createUserDto);
+      const result = await usersService.create(createUserInput);
 
-      expect(userRepositoryCreateSpy).toHaveBeenCalledWith(createUserDto);
+      expect(userRepositoryCreateSpy).toHaveBeenCalledWith(createUserInput);
       expect(result).toEqual(newUser);
     });
   });

@@ -1,10 +1,13 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { User } from '@user/users/models/user.model';
-import { UsersRepository } from '@user/users/users.repository';
+
 import { UsersService } from '@user/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
+import { UsersRepository } from '@user/users/users.repository';
+
+import { User } from '@user/users/models/user.model';
+import { IJwtToken } from './interfaces/token.interface';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -78,33 +81,33 @@ describe('AuthService', () => {
     });
   });
 
-  describe('validateName', () => {
-    const nameLoginDto = {
-      name: faker.internet.email(),
+  describe('validateCode', () => {
+    const codeLoginDto = {
+      code: faker.internet.email(),
       password: faker.lorem.text(),
     };
     it('인증된 유저를 반환한다.', async () => {
-      const existingUser = Object.assign(new User(), nameLoginDto);
+      const existingUser = Object.assign(new User(), codeLoginDto);
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
 
-      const result = await authService.validateName(
-        nameLoginDto.name,
-        nameLoginDto.password
+      const result = await authService.validateCode(
+        codeLoginDto.code,
+        codeLoginDto.password
       );
 
       expect(result).toEqual(expectedResult);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
-        name: nameLoginDto.name,
+        code: codeLoginDto.code,
       });
     });
 
     it('비밀번호가 틀리면 실패한다.', async () => {
       const existingUser = Object.assign(new User(), {
-        ...nameLoginDto,
+        ...codeLoginDto,
         password: faker.lorem.text(),
       });
 
@@ -112,32 +115,35 @@ describe('AuthService', () => {
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
 
-      const result = await authService.validateName(
-        nameLoginDto.name,
-        nameLoginDto.password
+      const result = await authService.validateCode(
+        codeLoginDto.code,
+        codeLoginDto.password
       );
 
       expect(result).toEqual(null);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
-        name: nameLoginDto.name,
+        code: codeLoginDto.code,
       });
     });
   });
 
-  describe('login', () => {
+  describe('getToken', () => {
     const { password, ...validatedUser } = new User();
     it('유저의 name과 id를 통해 JWT를 생성한다.', async () => {
       const jwtServiceSignSpy = jest
         .spyOn(jwtService, 'sign')
         .mockReturnValue(JWT_TOKEN);
 
-      const result = await authService.login(validatedUser);
+      const expectedResult: IJwtToken = {
+        access: JWT_TOKEN,
+        refresh: JWT_TOKEN,
+      };
+      const result = await authService.getToken(validatedUser);
 
-      expect(result).toEqual({
-        accessToken: JWT_TOKEN,
-      });
+      expect(result).toEqual(expectedResult);
       expect(jwtServiceSignSpy).toHaveBeenCalledWith({
         username: validatedUser.name,
+        code: validatedUser.code,
         sub: validatedUser.id,
       });
     });

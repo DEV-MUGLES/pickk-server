@@ -2,11 +2,12 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input CreateUserDto {
+input CreateUserInput {
+  code: String
   email: String!
   height: Float
   name: String!
-  password: String!
+  password: String
   weight: Float
 }
 
@@ -15,22 +16,49 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type JwtPayload {
+  code: String
+  sub: Float!
+  username: String!
+}
+
+type JwtToken {
+  access: String!
+  refresh: String!
+}
+
+input LoginByCodeInput {
+  code: String
+  password: String
+}
+
+input LoginByEmailInput {
+  email: String!
+  password: String
+}
+
 type Mutation {
-  createUser(createUserDto: CreateUserDto!): User!
+  createUser(createUserInput: CreateUserInput!): User!
+  loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
+  loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
+  refreshToken: JwtToken!
 }
 
 type Query {
+  getJwtPayload: JwtPayload!
   user(id: Float!): User!
   users: [User!]!
+  whoAmI: User!
 }
 
 type User {
+  code: String
   createdAt: DateTime!
   email: String!
   height: Float
   id: Float!
   name: String!
-  password: String!
+  password: String
   updatedAt: DateTime!
   weight: Float
 }

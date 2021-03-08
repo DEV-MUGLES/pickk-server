@@ -35,13 +35,27 @@ export class User extends ModelEntity implements IUser {
   @IsEmail()
   email: string;
 
-  @Field()
-  @Column({ nullable: true, default: null })
+  @Field({ nullable: true })
+  @Column({
+    nullable: true,
+    default: null,
+    unique: true,
+  })
   @IsString()
-  name: string;
+  code?: string;
 
   @Field()
   @Column()
+  @IsString()
+  name: string;
+
+  @Field({
+    nullable: true,
+  })
+  @Column({
+    nullable: true,
+    default: null,
+  })
   @IsString()
   @IsNotEmpty()
   password: string;
