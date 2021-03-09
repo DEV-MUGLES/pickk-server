@@ -1,11 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  Entity,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import {
   IsEmail,
   IsInt,
@@ -16,18 +10,14 @@ import {
   Min,
 } from 'class-validator';
 
-import { ModelEntity } from '@src/common/serializers/model.serializer';
+import { BaseEntity } from '@src/common/entities/base.entity';
 import { IUser } from '../interfaces/user.interface';
 
 @ObjectType()
 @Entity({
   name: 'user',
 })
-export class User extends ModelEntity implements IUser {
-  @Field()
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends BaseEntity implements IUser {
   @Field()
   @Column({
     unique: true,
@@ -59,19 +49,6 @@ export class User extends ModelEntity implements IUser {
   @IsString()
   @IsNotEmpty()
   password: string;
-
-  @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-  })
-  createdAt: Date;
-
-  @Field()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp',
-  })
-  updatedAt: Date;
 
   @Field({ nullable: true })
   @Column({

@@ -17,8 +17,8 @@ import { MysqlConfigService } from '../../../config/database/mysql/config.servic
         password: mysqlConfigService.password,
         database: mysqlConfigService.database,
         entities: [
-          __dirname + '../../../../**/*.model.ts',
-          __dirname + '../../../../**/*.model.js',
+          __dirname + '../../../../**/*.entity.ts',
+          __dirname + '../../../../**/*.entity.js',
         ],
         migrationsRun: false,
         migrations: [

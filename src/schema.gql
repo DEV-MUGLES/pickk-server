@@ -11,11 +11,6 @@ input CreateUserInput {
   weight: Float
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type JwtPayload {
   code: String
   sub: Float!
@@ -53,12 +48,9 @@ type Query {
 
 type User {
   code: String
-  createdAt: DateTime!
   email: String!
   height: Float
-  id: Float!
   name: String!
   password: String
-  updatedAt: DateTime!
   weight: Float
 }
