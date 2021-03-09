@@ -1,10 +1,10 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 
-import { UsersService } from '@user/users/users.service';
+import { UsersService } from '@src/models/user/users/users.service';
 import { AuthService } from './auth.service';
 
-import { User } from '@src/modules/user/users/entities/user.entity';
+import { User } from '@src/models/user/users/entities/user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';

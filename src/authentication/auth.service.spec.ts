@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UsersService } from '@user/users/users.service';
+import { UsersService } from '@src/models/user/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from '@user/users/users.repository';
+import { UsersRepository } from '@src/models/user/users/users.repository';
 
-import { User } from '@src/modules/user/users/entities/user.entity';
+import { User } from '@src/models/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 
 const JWT_TOKEN = 'JWT_TOKEN';

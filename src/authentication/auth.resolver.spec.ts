@@ -2,9 +2,9 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { User } from '@src/modules/user/users/entities/user.entity';
-import { UsersRepository } from '@user/users/users.repository';
-import { UsersService } from '@user/users/users.service';
+import { User } from '@src/models/user/users/entities/user.entity';
+import { UsersRepository } from '@src/models/user/users/users.repository';
+import { UsersService } from '@src/models/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
