@@ -38,7 +38,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): UserModel!
+  createUser(createUserInput: CreateUserInput!): User!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   refreshToken: JwtToken!
@@ -46,12 +46,12 @@ type Mutation {
 
 type Query {
   getJwtPayload: JwtPayload!
-  user(id: Float!): UserModel!
-  users: [UserModel!]!
-  whoAmI: UserModel!
+  user(id: Float!): User!
+  users: [User!]!
+  whoAmI: User!
 }
 
-type UserModel {
+type User {
   code: String
   createdAt: DateTime!
   email: String!
