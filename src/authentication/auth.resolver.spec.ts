@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { User } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { UsersRepository } from '@src/models/user/users/users.repository';
 import { UsersService } from '@src/models/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
@@ -43,7 +43,7 @@ describe('AuthResolver', () => {
 
   describe('whoAmI', () => {
     it('should return current user', () => {
-      const user = new User();
+      const user = new UserEntity();
       const result = authResolver.whoAmI(user);
       expect(result).toEqual(user);
     });
@@ -75,7 +75,7 @@ describe('AuthResolver', () => {
         sub: faker.random.number(),
         code: faker.lorem.text(),
       };
-      const user = Object.assign(new User(), {
+      const user = Object.assign(new UserEntity(), {
         id: payload.sub,
         name: payload.username,
         code: payload.code,
@@ -105,7 +105,7 @@ describe('AuthResolver', () => {
         email: faker.internet.email(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new User(), loginByEmailInput);
+      const existingUser = Object.assign(new UserEntity(), loginByEmailInput);
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,
@@ -135,7 +135,7 @@ describe('AuthResolver', () => {
         email: faker.internet.email(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new User(), loginByEmailInput);
+      const existingUser = Object.assign(new UserEntity(), loginByEmailInput);
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,

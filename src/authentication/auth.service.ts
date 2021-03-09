@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { UsersService } from '@src/models/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
 
-type ValidatedUser = Omit<User, 'password'>;
+type ValidatedUser = Omit<UserEntity, 'password'>;
 
 @Injectable()
 export class AuthService {

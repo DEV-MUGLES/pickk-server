@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '@src/models/user/users/users.repository';
 
-import { User } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 
 const JWT_TOKEN = 'JWT_TOKEN';
@@ -41,7 +41,7 @@ describe('AuthService', () => {
       password: faker.lorem.text(),
     };
     it('인증된 유저를 반환한다.', async () => {
-      const existingUser = Object.assign(new User(), emailLoginDto);
+      const existingUser = Object.assign(new UserEntity(), emailLoginDto);
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
@@ -60,7 +60,7 @@ describe('AuthService', () => {
     });
 
     it('비밀번호가 틀리면 실패한다.', async () => {
-      const existingUser = Object.assign(new User(), {
+      const existingUser = Object.assign(new UserEntity(), {
         ...emailLoginDto,
         password: faker.lorem.text(),
       });
@@ -87,7 +87,7 @@ describe('AuthService', () => {
       password: faker.lorem.text(),
     };
     it('인증된 유저를 반환한다.', async () => {
-      const existingUser = Object.assign(new User(), codeLoginDto);
+      const existingUser = Object.assign(new UserEntity(), codeLoginDto);
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
@@ -106,7 +106,7 @@ describe('AuthService', () => {
     });
 
     it('비밀번호가 틀리면 실패한다.', async () => {
-      const existingUser = Object.assign(new User(), {
+      const existingUser = Object.assign(new UserEntity(), {
         ...codeLoginDto,
         password: faker.lorem.text(),
       });
@@ -128,7 +128,7 @@ describe('AuthService', () => {
   });
 
   describe('getToken', () => {
-    const { password, ...validatedUser } = new User();
+    const { password, ...validatedUser } = new UserEntity();
     it('유저의 name과 id를 통해 JWT를 생성한다.', async () => {
       const jwtServiceSignSpy = jest
         .spyOn(jwtService, 'sign')

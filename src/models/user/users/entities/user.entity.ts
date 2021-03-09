@@ -17,7 +17,7 @@ import { IUser } from '../interfaces/user.interface';
 @Entity({
   name: 'user',
 })
-export class User extends BaseEntity implements IUser {
+export class UserEntity extends BaseEntity implements IUser {
   @Field()
   @Column({
     unique: true,
