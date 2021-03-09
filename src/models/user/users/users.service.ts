@@ -13,7 +13,7 @@ export class UsersService {
 
   async list(relations: string[] = []): Promise<UserEntity[]> {
     const users = await this.usersRepository.find({ relations });
-    return this.usersRepository.transformMany(users);
+    return this.usersRepository.entityToModelMany(users);
   }
 
   async get(id: number, relations: string[] = []): Promise<UserEntity> {

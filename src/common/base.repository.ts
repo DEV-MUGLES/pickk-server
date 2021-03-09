@@ -6,12 +6,15 @@ import { BaseEntity } from './entities/base.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MultipleEntityReturnedException } from '@src/common/exceptions/multiple-entity-returned.exception';
 
-export class BaseRepository<T extends BaseEntity> extends Repository<T> {
-  private isEntity(obj: unknown): obj is T {
-    return obj !== undefined && (obj as T).id !== undefined;
+export class BaseRepository<
+  Entity extends BaseEntity,
+  Model extends BaseEntity
+> extends Repository<Entity> {
+  private isEntity(obj: unknown): obj is Entity {
+    return obj !== undefined && (obj as Entity).id !== undefined;
   }
 
-  async get(id: number, relations: string[] = []): Promise<T | null> {
+  async get(id: number, relations: string[] = []): Promise<Model | null> {
     return await this.findOne({
       where: { id },
       relations,
@@ -21,34 +24,34 @@ export class BaseRepository<T extends BaseEntity> extends Repository<T> {
           throw new NotFoundException('Model not found.');
         }
 
-        return Promise.resolve(this.transform(entity));
+        return Promise.resolve(this.entityToModel(entity));
       })
       .catch((error) => Promise.reject(error));
   }
 
   async createEntity(
-    inputs: DeepPartial<T>,
+    inputs: DeepPartial<Entity>,
     relations: string[] = []
-  ): Promise<T | null> {
+  ): Promise<Model | null> {
     return this.save(inputs)
       .then(async (entity) => await this.get((entity as any).id, relations))
       .catch((error) => Promise.reject(error));
   }
 
   async updateEntity(
-    entity: T,
-    inputs: QueryDeepPartialEntity<T>,
+    entity: Model,
+    inputs: QueryDeepPartialEntity<Entity>,
     relations: string[] = []
-  ): Promise<T | null> {
+  ): Promise<Model | null> {
     return this.update(entity.id, inputs)
       .then(async () => await this.get(entity.id, relations))
       .catch((error) => Promise.reject(error));
   }
 
   async findOneEntity(
-    param: FindOneOptions<T>['where'],
+    param: FindOneOptions<Model>['where'],
     relations: string[] = []
-  ): Promise<T | null> {
+  ): Promise<Model | null> {
     return await this.find({
       where: param,
       relations,
@@ -60,15 +63,15 @@ export class BaseRepository<T extends BaseEntity> extends Repository<T> {
         throw new NotFoundException('Model not found.');
       }
 
-      return Promise.resolve(this.transform(entities[0]));
+      return Promise.resolve(this.entityToModel(entities[0]));
     });
   }
 
-  transform(model: T, transformOptions = {}): T {
-    return plainToClass(BaseEntity, model, transformOptions) as T;
+  entityToModel(entity: Entity, transformOptions = {}): Model {
+    return plainToClass(BaseEntity, entity, transformOptions) as Model;
   }
 
-  transformMany(models: T[], transformOptions = {}): T[] {
-    return models.map((model) => this.transform(model, transformOptions));
+  entityToModelMany(entities: Entity[], transformOptions = {}): Model[] {
+    return entities.map((model) => this.entityToModel(model, transformOptions));
   }
 }

@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { IJwtPayload } from '../interfaces/jwt-payload.interface';
 import { IJwtToken } from '../interfaces/token.interface';
 
@@ -19,6 +19,6 @@ export class JwtPayload implements IJwtPayload {
   @Field({ nullable: true })
   code?: string;
 
-  @Field()
+  @Field(() => Int)
   sub: number;
 }

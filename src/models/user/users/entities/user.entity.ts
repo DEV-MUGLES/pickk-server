@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 import {
   IsEmail,
@@ -50,7 +50,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsNotEmpty()
   password: string;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column({
     type: 'smallint',
     nullable: true,
@@ -61,7 +61,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsOptional()
   weight?: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column({
     type: 'smallint',
     nullable: true,

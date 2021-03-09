@@ -5,15 +5,20 @@
 input CreateUserInput {
   code: String
   email: String!
-  height: Float
+  height: Int
   name: String!
   password: String
-  weight: Float
+  weight: Int
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type JwtPayload {
   code: String
-  sub: Float!
+  sub: Int!
   username: String!
 }
 
@@ -33,7 +38,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
+  createUser(createUserInput: CreateUserInput!): UserModel!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   refreshToken: JwtToken!
@@ -41,16 +46,19 @@ type Mutation {
 
 type Query {
   getJwtPayload: JwtPayload!
-  user(id: Float!): User!
-  users: [User!]!
-  whoAmI: User!
+  user(id: Float!): UserModel!
+  users: [UserModel!]!
+  whoAmI: UserModel!
 }
 
-type User {
+type UserModel {
   code: String
+  createdAt: DateTime!
   email: String!
-  height: Float
+  height: Int
+  id: Int!
   name: String!
   password: String
-  weight: Float
+  updatedAt: DateTime!
+  weight: Int
 }

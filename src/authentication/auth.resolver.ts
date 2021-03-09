@@ -9,6 +9,7 @@ import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard, JwtRefreshGuard } from './guards';
+import { UserModel } from '@src/models/user/users/models/user.model';
 
 @Resolver()
 export class AuthResolver {
@@ -17,7 +18,7 @@ export class AuthResolver {
     @Inject(AuthService) private authService: AuthService
   ) {}
 
-  @Query(() => UserEntity)
+  @Query(() => UserModel)
   @UseGuards(JwtAuthGuard)
   whoAmI(@CurrentUser() user: UserEntity) {
     return user;

@@ -1,15 +1,14 @@
 import { InputType, PartialType, PickType, OmitType } from '@nestjs/graphql';
-
-import { UserEntity } from '../entities/user.entity';
+import { UserModel } from '../models/user.model';
 
 @InputType()
 export class CreateUserInput extends PickType(
-  UserEntity,
+  UserModel,
   ['code', 'email', 'name', 'password', 'weight', 'height'],
   InputType
 ) {}
 
 @InputType()
 export class UpdateUserInput extends PartialType(
-  OmitType(UserEntity, ['createdAt', 'updatedAt'], InputType)
+  OmitType(UserModel, ['createdAt', 'updatedAt'], InputType)
 ) {}

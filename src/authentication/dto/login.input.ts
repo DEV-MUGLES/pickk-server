@@ -1,16 +1,16 @@
 import { InputType, PickType } from '@nestjs/graphql';
-import { UserEntity } from '@src/models/user/users/entities/user.entity';
+import { UserModel } from '@src/models/user/users/models/user.model';
 
 @InputType()
 export class LoginByEmailInput extends PickType(
-  UserEntity,
+  UserModel,
   ['email', 'password'],
   InputType
 ) {}
 
 @InputType()
 export class LoginByCodeInput extends PickType(
-  UserEntity,
+  UserModel,
   ['code', 'password'],
   InputType
 ) {}
