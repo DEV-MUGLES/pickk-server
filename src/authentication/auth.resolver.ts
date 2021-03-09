@@ -4,7 +4,7 @@ import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 import { UsersService } from '@user/users/users.service';
 import { AuthService } from './auth.service';
 
-import { User } from '@src/modules/user/users/models/user.model';
+import { User } from '@src/modules/user/users/entities/user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';

@@ -1,5 +1,5 @@
 import { InputType, PickType } from '@nestjs/graphql';
-import { User } from '@src/modules/user/users/models/user.model';
+import { User } from '@src/modules/user/users/entities/user.entity';
 
 @InputType()
 export class LoginByEmailInput extends PickType(

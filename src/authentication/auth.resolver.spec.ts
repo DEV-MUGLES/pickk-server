@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { User } from '@user/users/models/user.model';
+import { User } from '@src/modules/user/users/entities/user.entity';
 import { UsersRepository } from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 import { AuthResolver } from './auth.resolver';

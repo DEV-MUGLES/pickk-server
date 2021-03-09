@@ -6,7 +6,7 @@ import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
 import { UsersRepository } from '@user/users/users.repository';
 
-import { User } from '@user/users/models/user.model';
+import { User } from '@src/modules/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 
 const JWT_TOKEN = 'JWT_TOKEN';
