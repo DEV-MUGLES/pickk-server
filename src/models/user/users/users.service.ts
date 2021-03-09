@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
+import { User } from './models/user.model';
 
 @Injectable()
 export class UsersService {
@@ -32,7 +33,7 @@ export class UsersService {
   async findOne(
     param: Partial<UserEntity>,
     relations: string[] = []
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     return await this.usersRepository.findOneEntity(param, relations);
   }
 }

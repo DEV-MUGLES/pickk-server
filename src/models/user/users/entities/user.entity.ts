@@ -3,7 +3,6 @@ import { Column, Entity } from 'typeorm';
 import {
   IsEmail,
   IsInt,
-  IsNotEmpty,
   IsOptional,
   IsString,
   Max,
@@ -12,6 +11,8 @@ import {
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { IUser } from '../interfaces/user.interface';
+import { UserPasswordEntity } from './user-password.entity';
+import { UserPassword } from '../models/user-password.model';
 
 @ObjectType()
 @Entity({
@@ -39,17 +40,6 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsString()
   name: string;
 
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    nullable: true,
-    default: null,
-  })
-  @IsString()
-  @IsNotEmpty()
-  password: string;
-
   @Field(() => Int, { nullable: true })
   @Column({
     type: 'smallint',
@@ -71,4 +61,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @Max(300)
   @IsOptional()
   height?: number;
+
+  @Column(() => UserPasswordEntity)
+  password: UserPassword;
 }

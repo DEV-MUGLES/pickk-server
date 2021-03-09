@@ -20,11 +20,8 @@ export class AuthService {
     password: string
   ): Promise<ValidatedUser | null> {
     const user = await this.usersService.findOne({ email });
-    if (user.password === password) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+    const { password: _password, ...result } = user;
+    return result;
   }
 
   async validateCode(
@@ -32,11 +29,8 @@ export class AuthService {
     password: string
   ): Promise<ValidatedUser | null> {
     const user = await this.usersService.findOne({ code });
-    if (user.password === password) {
-      const { password, ...result } = user;
-      return result;
-    }
-    return null;
+    const { password: _password, ...result } = user;
+    return result;
   }
 
   getToken(user: ValidatedUser): IJwtToken {

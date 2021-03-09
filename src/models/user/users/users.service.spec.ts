@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
+import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
@@ -27,7 +28,7 @@ describe('UsersService', () => {
         email: faker.internet.email(),
       };
 
-      const newUser = Object.assign(new UserEntity(), createUserInput);
+      const newUser = Object.assign(new User(), createUserInput);
 
       const userRepositoryCreateSpy = jest
         .spyOn(usersRepository, 'createEntity')
@@ -43,7 +44,7 @@ describe('UsersService', () => {
   describe('get a user', () => {
     it('get success', async () => {
       const userId = faker.random.number();
-      const user = Object.assign(new UserEntity(), { id: userId });
+      const user = Object.assign(new User(), { id: userId });
 
       const userRepositoryGetSpy = jest
         .spyOn(usersRepository, 'get')
@@ -62,7 +63,7 @@ describe('UsersService', () => {
     };
 
     it('should return matched user', async () => {
-      const user = Object.assign(new UserEntity(), findOneDto);
+      const user = Object.assign(new User(), findOneDto);
 
       const userRepositoryFindSpy = jest
         .spyOn(usersRepository, 'findOneEntity')

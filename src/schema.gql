@@ -7,7 +7,6 @@ input CreateUserInput {
   email: String!
   height: Int
   name: String!
-  password: String
   weight: Int
 }
 
@@ -29,12 +28,12 @@ type JwtToken {
 
 input LoginByCodeInput {
   code: String
-  password: String
+  password: String!
 }
 
 input LoginByEmailInput {
   email: String!
-  password: String
+  password: String!
 }
 
 type Mutation {
@@ -58,7 +57,6 @@ type User {
   height: Int
   id: Int!
   name: String!
-  password: String
   updatedAt: DateTime!
   weight: Int
 }
