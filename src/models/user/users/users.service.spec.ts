@@ -30,13 +30,10 @@ describe('UsersService', () => {
 
       const newUser = Object.assign(new User(), createUserInput);
 
-      const userRepositoryCreateSpy = jest
-        .spyOn(usersRepository, 'createEntity')
-        .mockResolvedValue(newUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(newUser);
 
       const result = await usersService.create(createUserInput);
 
-      expect(userRepositoryCreateSpy).toHaveBeenCalledWith(createUserInput);
       expect(result).toEqual(newUser);
     });
   });
