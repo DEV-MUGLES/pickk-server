@@ -9,6 +9,8 @@ import { UsersRepository } from '@src/models/user/users/users.repository';
 import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 import { User } from '@src/models/user/users/models/user.model';
+import { UserPassword } from '@src/models/user/users/models/user-password.model';
+import { UnauthorizedException } from '@nestjs/common';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -44,6 +46,7 @@ describe('AuthService', () => {
     it('인증된 유저를 반환한다.', async () => {
       const existingUser = Object.assign(new User(), {
         email: emailLoginDto.email,
+        password: new UserPassword(emailLoginDto.password),
       });
       const { password, ...expectedResult } = existingUser;
 
@@ -51,7 +54,7 @@ describe('AuthService', () => {
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
 
-      const result = await authService.validateEmail(
+      const result = await authService.getUserByEmailAuth(
         emailLoginDto.email,
         emailLoginDto.password
       );
@@ -62,22 +65,25 @@ describe('AuthService', () => {
       });
     });
 
-    it.skip('비밀번호가 틀리면 실패한다. (password 구현 때문에 skip)', async () => {
+    it('비밀번호가 틀리면 실패한다.', async () => {
       const existingUser = Object.assign(new User(), {
         ...emailLoginDto,
-        password: faker.lorem.text(),
+        password: new UserPassword(faker.lorem.text()),
       });
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
 
-      const result = await authService.validateEmail(
-        emailLoginDto.email,
-        emailLoginDto.password
-      );
+      try {
+        await authService.getUserByEmailAuth(
+          emailLoginDto.email,
+          emailLoginDto.password
+        );
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+      }
 
-      expect(result).toEqual(null);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         email: emailLoginDto.email,
       });
@@ -86,47 +92,64 @@ describe('AuthService', () => {
 
   describe('validateCode', () => {
     const codeLoginDto = {
-      code: faker.internet.email(),
+      code: faker.lorem.text(),
       password: faker.lorem.text(),
     };
     it('인증된 유저를 반환한다.', async () => {
-      const existingUser = Object.assign(new User(), codeLoginDto);
+      const existingUser = Object.assign(new User(), {
+        code: codeLoginDto.code,
+        password: new UserPassword(codeLoginDto.password),
+      });
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
+      const userComparePasswordSpy = jest
+        .spyOn(existingUser, 'comparePassword')
+        .mockReturnValue(true);
 
-      const result = await authService.validateCode(
+      const result = await authService.getUserByCodeAuth(
         codeLoginDto.code,
         codeLoginDto.password
       );
 
-      expect(result).toEqual(expectedResult);
+      expect(result.code).toEqual(expectedResult.code);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         code: codeLoginDto.code,
       });
+      expect(userComparePasswordSpy).toHaveBeenCalledWith(
+        codeLoginDto.password
+      );
     });
 
-    it.skip('비밀번호가 틀리면 실패한다. (password 구현 때문에 skip)', async () => {
+    it('비밀번호가 틀리면 실패한다.', async () => {
       const existingUser = Object.assign(new User(), {
         ...codeLoginDto,
-        password: faker.lorem.text(),
+        password: new UserPassword(faker.lorem.text()),
       });
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
+      const userComparePasswordSpy = jest
+        .spyOn(existingUser, 'comparePassword')
+        .mockReturnValue(false);
 
-      const result = await authService.validateCode(
-        codeLoginDto.code,
-        codeLoginDto.password
-      );
-
-      expect(result).toEqual(null);
+      try {
+        await authService.getUserByCodeAuth(
+          codeLoginDto.code,
+          codeLoginDto.password
+        );
+      } catch (error) {
+        expect(error).toBeInstanceOf(UnauthorizedException);
+      }
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         code: codeLoginDto.code,
       });
+      expect(userComparePasswordSpy).toHaveBeenCalledWith(
+        codeLoginDto.password
+      );
     });
   });
 

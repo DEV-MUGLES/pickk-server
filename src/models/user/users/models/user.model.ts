@@ -17,8 +17,6 @@ export class User extends UserEntity {
     this.code = attributes.code;
     this.weight = attributes.weight;
     this.height = attributes.height;
-    this.password = attributes.password;
-    this.password = attributes.password;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
   }
@@ -32,7 +30,7 @@ export class User extends UserEntity {
     this.password = new UserPassword(input);
   };
 
-  private comparePassword = (password: string): boolean => {
+  public comparePassword = (password: string): boolean => {
     return this.password.compare(password);
   };
 }
