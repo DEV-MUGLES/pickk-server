@@ -11,7 +11,6 @@ import {
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { IUser } from '../interfaces/user.interface';
-import { UserPasswordEntity } from './user-password.entity';
 import { UserPassword } from '../models/user-password.model';
 
 @ObjectType()

@@ -60,7 +60,7 @@ export class BaseRepository<
         throw new MultipleEntityReturnedException();
       }
       if (entities.length === 0 || !this.isEntity(entities[0])) {
-        throw new NotFoundException('Model not found.');
+        return null;
       }
 
       return Promise.resolve(this.entityToModel(entities[0]));

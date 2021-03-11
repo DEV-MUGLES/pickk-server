@@ -1,13 +1,12 @@
 {
     "conventionalCommits.scopes": [
-        "config",
-        "api",
-        "model",
-        "admin",
         "npm",
+        "infra",
+        "domain",
+        "application",
         "provider",
-        "service",
-        "repository"
+        "config",
+        "admin",
     ],
     "jestrunner.jestCommand": "npm run test --",
 }

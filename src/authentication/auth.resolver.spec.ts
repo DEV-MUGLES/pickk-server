@@ -27,7 +27,7 @@ describe('AuthResolver', () => {
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn((_params) => JWT_TOKEN),
+            sign: jest.fn(() => JWT_TOKEN),
           },
         },
       ],

@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '@src/models/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '@src/models/user/users/entities/user.entity';
@@ -6,6 +6,11 @@ import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
 import { User } from '@src/models/user/users/models/user.model';
+import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
+import {
+  UserCodeNotFoundExeption,
+  UserEmailNotFoundExeption,
+} from './exceptions/user-not-found.exception';
 
 type ValidatedUser = Omit<UserEntity, 'password'>;
 
@@ -21,11 +26,15 @@ export class AuthService {
     password: string
   ): Promise<User | null> {
     const user = await this.usersService.findOne({ email });
+    if (!user) {
+      throw new UserEmailNotFoundExeption();
+    }
+
     if (user.comparePassword(password)) {
       delete user.password;
       return user;
     } else {
-      throw new UnauthorizedException();
+      throw new PasswordIncorrectException();
     }
   }
 
@@ -34,11 +43,15 @@ export class AuthService {
     password: string
   ): Promise<User | null> {
     const user = await this.usersService.findOne({ code });
+    if (!user) {
+      throw new UserCodeNotFoundExeption();
+    }
+
     if (user.comparePassword(password)) {
       delete user.password;
       return user;
     } else {
-      throw new UnauthorizedException();
+      throw new PasswordIncorrectException();
     }
   }
 

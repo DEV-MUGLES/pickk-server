@@ -36,7 +36,7 @@ export class UsersService {
   async findOne(
     param: Partial<UserEntity>,
     relations: string[] = []
-  ): Promise<User> {
+  ): Promise<User | null> {
     return await this.usersRepository.findOneEntity(param, relations);
   }
 }

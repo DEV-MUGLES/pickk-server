@@ -10,7 +10,11 @@ import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 import { User } from '@src/models/user/users/models/user.model';
 import { UserPassword } from '@src/models/user/users/models/user-password.model';
-import { UnauthorizedException } from '@nestjs/common';
+import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
+import {
+  UserCodeNotFoundExeption,
+  UserEmailNotFoundExeption,
+} from './exceptions/user-not-found.exception';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -71,7 +75,26 @@ describe('AuthService', () => {
       );
     });
 
-    it('비밀번호가 틀리면 실패한다.', async () => {
+    it('Email 일치하는 유저가 없으면 User', async () => {
+      const usersServiceFindOneSpy = jest
+        .spyOn(usersService, 'findOne')
+        .mockResolvedValue(null);
+
+      try {
+        await authService.getUserByEmailAuth(
+          emailLoginDto.email,
+          emailLoginDto.password
+        );
+      } catch (error) {
+        expect(error).toBeInstanceOf(UserEmailNotFoundExeption);
+      }
+
+      expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
+        email: emailLoginDto.email,
+      });
+    });
+
+    it('비밀번호가 틀리면 PasswordIncorrectException', async () => {
       const existingUser = Object.assign(new User(), {
         ...emailLoginDto,
         password: new UserPassword(),
@@ -90,7 +113,7 @@ describe('AuthService', () => {
           emailLoginDto.password
         );
       } catch (error) {
-        expect(error).toBeInstanceOf(UnauthorizedException);
+        expect(error).toBeInstanceOf(PasswordIncorrectException);
       }
 
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
@@ -107,7 +130,8 @@ describe('AuthService', () => {
       code: faker.lorem.text(),
       password: faker.lorem.text(),
     };
-    it('인증된 유저를 반환한다.', async () => {
+
+    it('성공시 인증된 유저를 반환한다.', async () => {
       const existingUser = Object.assign(new User(), {
         code: codeLoginDto.code,
         password: new UserPassword(),
@@ -135,7 +159,26 @@ describe('AuthService', () => {
       );
     });
 
-    it('비밀번호가 틀리면 실패한다.', async () => {
+    it('Code 일치하는 유저가 없으면 User', async () => {
+      const usersServiceFindOneSpy = jest
+        .spyOn(usersService, 'findOne')
+        .mockResolvedValue(null);
+
+      try {
+        await authService.getUserByCodeAuth(
+          codeLoginDto.code,
+          codeLoginDto.password
+        );
+      } catch (error) {
+        expect(error).toBeInstanceOf(UserCodeNotFoundExeption);
+      }
+
+      expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
+        code: codeLoginDto.code,
+      });
+    });
+
+    it('비밀번호가 틀리면 PasswordIncorrectException', async () => {
       const existingUser = Object.assign(new User(), {
         ...codeLoginDto,
         password: new UserPassword(),
@@ -154,7 +197,7 @@ describe('AuthService', () => {
           codeLoginDto.password
         );
       } catch (error) {
-        expect(error).toBeInstanceOf(UnauthorizedException);
+        expect(error).toBeInstanceOf(PasswordIncorrectException);
       }
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         code: codeLoginDto.code,
