@@ -42,7 +42,7 @@ export class AuthResolver {
     @Args('loginByEmailInput') loginByEmailInput: LoginByEmailInput
   ) {
     const { email, password } = loginByEmailInput;
-    const user = await this.authService.validateEmail(email, password);
+    const user = await this.authService.getUserByEmailAuth(email, password);
     return this.authService.getToken(user);
   }
 
@@ -51,7 +51,7 @@ export class AuthResolver {
     @Args('loginByCodeInput') loginByCodeInput: LoginByCodeInput
   ) {
     const { code, password } = loginByCodeInput;
-    const user = await this.authService.validateCode(code, password);
+    const user = await this.authService.getUserByCodeAuth(code, password);
     return this.authService.getToken(user);
   }
 }

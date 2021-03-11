@@ -3,6 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
+import { User } from './models/user.model';
+import { UserPassword } from './models/user-password.model';
 
 @Injectable()
 export class UsersService {
@@ -20,8 +22,10 @@ export class UsersService {
     return await this.usersRepository.get(id, relations);
   }
 
-  async create(input: CreateUserInput): Promise<UserEntity> {
-    return await this.usersRepository.createEntity(input);
+  async create({ password, ...input }: CreateUserInput): Promise<UserEntity> {
+    const user = new User(input);
+    user.password = new UserPassword(password);
+    return await this.usersRepository.save(user);
   }
 
   async update(id: number, input: UpdateUserInput): Promise<UserEntity> {
@@ -32,7 +36,7 @@ export class UsersService {
   async findOne(
     param: Partial<UserEntity>,
     relations: string[] = []
-  ): Promise<UserEntity> {
+  ): Promise<User> {
     return await this.usersRepository.findOneEntity(param, relations);
   }
 }

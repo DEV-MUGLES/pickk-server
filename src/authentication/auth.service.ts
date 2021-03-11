@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '@src/models/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '@src/models/user/users/entities/user.entity';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
+import { User } from '@src/models/user/users/models/user.model';
 
 type ValidatedUser = Omit<UserEntity, 'password'>;
 
@@ -15,28 +16,30 @@ export class AuthService {
     private jwtService: JwtService
   ) {}
 
-  async validateEmail(
+  async getUserByEmailAuth(
     email: string,
     password: string
-  ): Promise<ValidatedUser | null> {
+  ): Promise<User | null> {
     const user = await this.usersService.findOne({ email });
-    if (user.password === password) {
-      const { password, ...result } = user;
-      return result;
+    if (user.comparePassword(password)) {
+      delete user.password;
+      return user;
+    } else {
+      throw new UnauthorizedException();
     }
-    return null;
   }
 
-  async validateCode(
+  async getUserByCodeAuth(
     code: string,
     password: string
-  ): Promise<ValidatedUser | null> {
+  ): Promise<User | null> {
     const user = await this.usersService.findOne({ code });
-    if (user.password === password) {
-      const { password, ...result } = user;
-      return result;
+    if (user.comparePassword(password)) {
+      delete user.password;
+      return user;
+    } else {
+      throw new UnauthorizedException();
     }
-    return null;
   }
 
   getToken(user: ValidatedUser): IJwtToken {

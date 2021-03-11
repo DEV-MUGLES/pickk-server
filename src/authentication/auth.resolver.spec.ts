@@ -8,7 +8,8 @@ import { UsersService } from '@src/models/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
-import { LoginByEmailInput } from './dto/login.input';
+import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
+import { User } from '@src/models/user/users/models/user.model';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -105,14 +106,14 @@ describe('AuthResolver', () => {
         email: faker.internet.email(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new UserEntity(), loginByEmailInput);
+      const existingUser = Object.assign(new User(), loginByEmailInput);
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,
       };
 
       const authServiceValidateEmailSpy = jest
-        .spyOn(authService, 'validateEmail')
+        .spyOn(authService, 'getUserByEmailAuth')
         .mockResolvedValue(existingUser);
       const authServiceGetTokenSpy = jest
         .spyOn(authService, 'getToken')
@@ -131,29 +132,31 @@ describe('AuthResolver', () => {
 
   describe('loginByCode', () => {
     it('should return matching user', async () => {
-      const loginByEmailInput: LoginByEmailInput = {
-        email: faker.internet.email(),
+      const loginByCodeInput: LoginByCodeInput = {
+        code: faker.lorem.text(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new UserEntity(), loginByEmailInput);
+      const existingUser = Object.assign(new User(), {
+        code: loginByCodeInput.code,
+      });
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,
       };
 
-      const authServiceValidateEmailSpy = jest
-        .spyOn(authService, 'validateEmail')
+      const authServiceGetUserByCodeAuthSpy = jest
+        .spyOn(authService, 'getUserByCodeAuth')
         .mockResolvedValue(existingUser);
       const authServiceGetTokenSpy = jest
         .spyOn(authService, 'getToken')
         .mockReturnValue(jwtToken);
 
-      const result = await authResolver.loginByEmail(loginByEmailInput);
+      const result = await authResolver.loginByCode(loginByCodeInput);
 
       expect(result).toEqual(jwtToken);
-      expect(authServiceValidateEmailSpy).toHaveBeenCalledWith(
-        loginByEmailInput.email,
-        loginByEmailInput.password
+      expect(authServiceGetUserByCodeAuthSpy).toHaveBeenCalledWith(
+        loginByCodeInput.code,
+        loginByCodeInput.password
       );
       expect(authServiceGetTokenSpy).toHaveBeenCalledWith(existingUser);
     });
