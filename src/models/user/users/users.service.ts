@@ -24,7 +24,7 @@ export class UsersService {
 
   async create({ password, ...input }: CreateUserInput): Promise<UserEntity> {
     const user = new User(input);
-    user.password = new UserPassword(password);
+    user.password = new UserPassword().init(password);
     return await this.usersRepository.save(user);
   }
 

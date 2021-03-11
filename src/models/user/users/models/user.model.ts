@@ -6,7 +6,7 @@ import { UserPassword } from './user-password.model';
 
 @ObjectType()
 export class User extends UserEntity {
-  constructor(attributes?: Partial<UserEntity>) {
+  constructor(attributes?: Partial<User>) {
     super();
     if (!attributes) {
       return;
@@ -17,6 +17,7 @@ export class User extends UserEntity {
     this.code = attributes.code;
     this.weight = attributes.weight;
     this.height = attributes.height;
+    this.password = attributes.password;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
   }
@@ -27,7 +28,7 @@ export class User extends UserEntity {
     }
 
     this.updatedAt = new Date();
-    this.password = new UserPassword(input);
+    this.password = UserPassword.create(input);
   };
 
   public comparePassword = (password: string): boolean => {

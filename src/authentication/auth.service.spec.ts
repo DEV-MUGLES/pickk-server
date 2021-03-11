@@ -27,7 +27,7 @@ describe('AuthService', () => {
         {
           provide: JwtService,
           useValue: {
-            sign: jest.fn((_params) => JWT_TOKEN),
+            sign: jest.fn(() => JWT_TOKEN),
           },
         },
       ],
@@ -46,34 +46,43 @@ describe('AuthService', () => {
     it('인증된 유저를 반환한다.', async () => {
       const existingUser = Object.assign(new User(), {
         email: emailLoginDto.email,
-        password: new UserPassword(emailLoginDto.password),
+        password: new UserPassword(),
       });
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
+      const userComparePasswordSpy = jest
+        .spyOn(existingUser, 'comparePassword')
+        .mockReturnValue(true);
 
       const result = await authService.getUserByEmailAuth(
         emailLoginDto.email,
         emailLoginDto.password
       );
 
-      expect(result).toEqual(expectedResult);
+      expect(result.email).toEqual(expectedResult.email);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         email: emailLoginDto.email,
       });
+      expect(userComparePasswordSpy).toHaveBeenCalledWith(
+        emailLoginDto.password
+      );
     });
 
     it('비밀번호가 틀리면 실패한다.', async () => {
       const existingUser = Object.assign(new User(), {
         ...emailLoginDto,
-        password: new UserPassword(faker.lorem.text()),
+        password: new UserPassword(),
       });
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
         .mockResolvedValue(existingUser);
+      const userComparePasswordSpy = jest
+        .spyOn(existingUser, 'comparePassword')
+        .mockReturnValue(false);
 
       try {
         await authService.getUserByEmailAuth(
@@ -87,6 +96,9 @@ describe('AuthService', () => {
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         email: emailLoginDto.email,
       });
+      expect(userComparePasswordSpy).toHaveBeenCalledWith(
+        emailLoginDto.password
+      );
     });
   });
 
@@ -98,7 +110,7 @@ describe('AuthService', () => {
     it('인증된 유저를 반환한다.', async () => {
       const existingUser = Object.assign(new User(), {
         code: codeLoginDto.code,
-        password: new UserPassword(codeLoginDto.password),
+        password: new UserPassword(),
       });
       const { password, ...expectedResult } = existingUser;
 
@@ -126,7 +138,7 @@ describe('AuthService', () => {
     it('비밀번호가 틀리면 실패한다.', async () => {
       const existingUser = Object.assign(new User(), {
         ...codeLoginDto,
-        password: new UserPassword(faker.lorem.text()),
+        password: new UserPassword(),
       });
 
       const usersServiceFindOneSpy = jest

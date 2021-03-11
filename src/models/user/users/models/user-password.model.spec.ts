@@ -5,7 +5,7 @@ const newPassword = 'NEW_PASSWORD';
 describe('UserPasswordModel', () => {
   describe('constructor', () => {
     it('should be created well', () => {
-      const userPassword = new UserPassword(newPassword);
+      const userPassword = UserPassword.create(newPassword);
       expect(userPassword).toBeTruthy();
       expect(userPassword.salt).toBeTruthy();
       expect(userPassword.encrypted).toBeTruthy();
@@ -15,7 +15,7 @@ describe('UserPasswordModel', () => {
 
   describe('compare', () => {
     it('should return true when matched', () => {
-      const userPassword = new UserPassword(newPassword);
+      const userPassword = UserPassword.create(newPassword);
       expect(userPassword.compare(newPassword)).toEqual(true);
     });
   });

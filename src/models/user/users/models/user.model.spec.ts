@@ -10,7 +10,7 @@ describe('UserModel', () => {
 
     it('should return void when matched', () => {
       const user = new User();
-      user.password = new UserPassword(OLD_PASSWORD);
+      user.password = UserPassword.create(OLD_PASSWORD);
 
       const userPasswordCompareSpy = jest
         .spyOn(user.password, 'compare')
@@ -24,7 +24,7 @@ describe('UserModel', () => {
 
     it('should raise Unauthorized error when unmatched', () => {
       const user = new User();
-      user.password = new UserPassword('OLD_PASSWORD');
+      user.password = UserPassword.create(OLD_PASSWORD);
 
       const userPasswordCompareSpy = jest
         .spyOn(user.password, 'compare')
