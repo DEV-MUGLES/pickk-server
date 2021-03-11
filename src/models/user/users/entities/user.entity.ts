@@ -62,6 +62,6 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsOptional()
   height?: number;
 
-  @Column(() => UserPasswordEntity)
+  @Column(() => UserPassword)
   password: UserPassword;
 }
