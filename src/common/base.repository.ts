@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
+import { Repository, DeepPartial, FindOneOptions, Entity } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 import { BaseEntity } from './entities/base.entity';
@@ -68,6 +68,9 @@ export class BaseRepository<
   }
 
   entityToModel(entity: Entity, transformOptions = {}): Model {
+    if (Array.isArray(entity)) {
+      throw new MultipleEntityReturnedException();
+    }
     return plainToClass(BaseEntity, entity, transformOptions) as Model;
   }
 
