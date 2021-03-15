@@ -1,15 +1,15 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
 
-import { UsersService } from '@src/models/user/users/users.service';
+import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
 
-import { UserEntity } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard, JwtRefreshGuard } from './guards';
-import { User } from '@src/models/user/users/models/user.model';
+import { User } from '@src/modules/user/users/models/user.model';
 
 @Resolver()
 export class AuthResolver {

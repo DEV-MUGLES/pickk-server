@@ -2,14 +2,14 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UserEntity } from '@src/models/user/users/entities/user.entity';
-import { UsersRepository } from '@src/models/user/users/users.repository';
-import { UsersService } from '@src/models/user/users/users.service';
+import { UserEntity } from '@src/modules/user/users/entities/user.entity';
+import { UsersRepository } from '@src/modules/user/users/users.repository';
+import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
-import { User } from '@src/models/user/users/models/user.model';
+import { User } from '@src/modules/user/users/models/user.model';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {

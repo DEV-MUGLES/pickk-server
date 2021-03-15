@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UsersService } from '@src/models/user/users/users.service';
+import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from '@src/models/user/users/users.repository';
+import { UsersRepository } from '@src/modules/user/users/users.repository';
 
-import { UserEntity } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
-import { User } from '@src/models/user/users/models/user.model';
-import { UserPassword } from '@src/models/user/users/models/user-password.model';
+import { User } from '@src/modules/user/users/models/user.model';
+import { UserPassword } from '@src/modules/user/users/models/user-password.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
 import {
   UserCodeNotFoundExeption,
