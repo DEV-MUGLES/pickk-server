@@ -2,10 +2,13 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { IsPhoneNumber, IsPostalCode } from 'class-validator';
 import { Column } from 'typeorm';
 
+import { BaseEntity } from './base.entity';
 import { IAddress } from '../interfaces/address.interface';
 
 @ObjectType()
-export abstract class AbstractAddressEntity implements IAddress {
+export abstract class AbstractAddressEntity
+  extends BaseEntity
+  implements IAddress {
   @Field()
   @Column()
   name: string;

@@ -1,3 +1,5 @@
+import { ShippingAddress } from '../models/shipping-address.model';
+
 /**
  * User variable type declaration.
  *
@@ -9,4 +11,5 @@ export interface IUser {
   name: string | null;
   weight?: number;
   height?: number;
+  shippingAddresses: ShippingAddress[];
 }

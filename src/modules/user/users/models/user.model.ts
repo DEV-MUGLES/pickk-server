@@ -20,6 +20,7 @@ export class User extends UserEntity {
     this.password = attributes.password;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
+    this.shippingAddresses = attributes.shippingAddresses;
   }
 
   public updatePassword = (password: string, input: string): void => {

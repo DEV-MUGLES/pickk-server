@@ -51,6 +51,20 @@ type Query {
   whoAmI: User!
 }
 
+type ShippingAddress {
+  baseAddress: String!
+  createdAt: DateTime!
+  detailAddress: String!
+  id: Int!
+  isPrimary: Boolean!
+  name: String!
+  phoneNumber1: String!
+  phoneNumber2: String!
+  receiverName: String!
+  updatedAt: DateTime!
+  zipCode: String!
+}
+
 type User {
   code: String
   createdAt: DateTime!
@@ -58,6 +72,7 @@ type User {
   height: Int
   id: Int!
   name: String!
+  shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
   weight: Int
 }
