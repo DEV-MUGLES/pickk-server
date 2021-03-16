@@ -1,5 +1,6 @@
 import { UnauthorizedException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { CreateShippingAddressInput } from '../dto/shipping-address.input';
 
 import { UserEntity } from '../entities/user.entity';
 import { ShippingAddress } from './shipping-address.model';
@@ -45,8 +46,9 @@ export class User extends UserEntity {
   };
 
   public addShippingAddress = (
-    shippingAddress: ShippingAddress
+    createShippingAddressInput: CreateShippingAddressInput
   ): ShippingAddress => {
+    const shippingAddress = new ShippingAddress(createShippingAddressInput);
     this.shippingAddresses = (this.shippingAddresses ?? []).concat(
       shippingAddress
     );

@@ -1,8 +1,10 @@
 import { UnauthorizedException } from '@nestjs/common';
+import * as faker from 'faker';
 
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
 import { ShippingAddress } from './shipping-address.model';
+import { CreateShippingAddressInput } from '../dto/shipping-address.input';
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
@@ -69,10 +71,18 @@ describe('UserModel', () => {
   describe('addShippingAddress', () => {
     it('should return added shippingAddress', () => {
       const user = new User();
-      const shippingAddress = new ShippingAddress();
+      const createShippingAddressInput: CreateShippingAddressInput = {
+        name: faker.lorem.text(),
+        receiverName: faker.lorem.text(),
+        baseAddress: faker.lorem.text(),
+        detailAddress: faker.lorem.text(),
+        postalCode: faker.address.zipCode('#####'),
+        phoneNumber1: faker.phone.phoneNumber('###-####-####'),
+        isPrimary: faker.random.boolean(),
+      };
 
-      const result = user.addShippingAddress(shippingAddress);
-      expect(result).toEqual(shippingAddress);
+      const result = user.addShippingAddress(createShippingAddressInput);
+      expect(result.name).toEqual(createShippingAddressInput.name);
     });
   });
 });

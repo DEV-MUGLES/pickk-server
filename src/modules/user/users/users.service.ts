@@ -55,9 +55,7 @@ export class UsersService {
     user: User,
     createShippingAddressInput: CreateShippingAddressInput
   ): Promise<ShippingAddress[]> {
-    const shippingAddress = new ShippingAddress(createShippingAddressInput);
-
-    user.addShippingAddress(shippingAddress);
+    user.addShippingAddress(createShippingAddressInput);
     return (await this.usersRepository.save(user)).shippingAddresses;
   }
 }
