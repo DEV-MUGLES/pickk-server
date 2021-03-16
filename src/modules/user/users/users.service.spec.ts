@@ -1,6 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { CreateShippingAddressInput } from './dto/shipping-address.input';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from './dto/shipping-address.input';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { ShippingAddress } from './models/shipping-address.model';
@@ -147,6 +150,47 @@ describe('UsersService', () => {
       expect(result).toEqual([shippingAddress]);
       expect(userModelAddShippingAddressSpy).toHaveBeenCalledWith(
         createShippingAddressInput
+      );
+    });
+  });
+
+  describe('updateShippingAddress', () => {
+    const updateShippingAddressInput: UpdateShippingAddressInput = {
+      name: faker.lorem.text(),
+    };
+
+    it('should return updated address when success', async () => {
+      const shippingAddress = new ShippingAddress({
+        id: faker.random.number(),
+      });
+      const user = new User({
+        shippingAddresses: [shippingAddress],
+      });
+
+      const updatedShippingAddress = new ShippingAddress({
+        ...shippingAddress,
+        ...updateShippingAddressInput,
+      });
+      const updatedUser = new User({
+        ...user,
+        shippingAddresses: [updatedShippingAddress],
+      });
+
+      const userModelUpdateShippingAddressSpy = jest.spyOn(
+        user,
+        'updateShippingAddress'
+      );
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+
+      const result = await usersService.updateShippingAddress(
+        user,
+        shippingAddress.id,
+        updateShippingAddressInput
+      );
+      expect(result).toEqual(updatedShippingAddress);
+      expect(userModelUpdateShippingAddressSpy).toHaveBeenCalledWith(
+        shippingAddress.id,
+        updateShippingAddressInput
       );
     });
   });

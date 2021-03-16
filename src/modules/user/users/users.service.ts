@@ -6,7 +6,10 @@ import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UserPassword } from './models/user-password.model';
 import { ShippingAddress } from './models/shipping-address.model';
-import { CreateShippingAddressInput } from './dto/shipping-address.input';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from './dto/shipping-address.input';
 
 @Injectable()
 export class UsersService {
@@ -57,5 +60,16 @@ export class UsersService {
   ): Promise<ShippingAddress[]> {
     user.addShippingAddress(createShippingAddressInput);
     return (await this.usersRepository.save(user)).shippingAddresses;
+  }
+
+  async updateShippingAddress(
+    user: User,
+    addressId: number,
+    updateShippingAddressInput: UpdateShippingAddressInput
+  ): Promise<ShippingAddress> {
+    user.updateShippingAddress(addressId, updateShippingAddressInput);
+    return (await this.usersRepository.save(user)).shippingAddresses.find(
+      (address) => address.id === addressId
+    );
   }
 }

@@ -1,6 +1,9 @@
 import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CreateShippingAddressInput } from '@src/modules/user/users/dto/shipping-address.input';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from '@src/modules/user/users/dto/shipping-address.input';
 import { User } from '@src/modules/user/users/models/user.model';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { ShippingAddress } from '../user/users/models/shipping-address.model';
@@ -78,6 +81,22 @@ export class MyResolver extends BaseResolver {
     return await this.usersService.addShippingAddress(
       user,
       createShippingAddressInput
+    );
+  }
+
+  @Mutation(() => ShippingAddress)
+  @UseGuards(JwtVerifyGuard)
+  async updateMyShippingAddress(
+    @CurrentUser() payload: JwtPayload,
+    @Args('addressId') addressId: number,
+    @Args('updateShippingAddressInput')
+    updateShippingAddressInput: UpdateShippingAddressInput
+  ): Promise<ShippingAddress> {
+    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    return await this.usersService.updateShippingAddress(
+      user,
+      addressId,
+      updateShippingAddressInput
     );
   }
 }

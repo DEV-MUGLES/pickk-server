@@ -4,7 +4,10 @@ import * as faker from 'faker';
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
 import { ShippingAddress } from './shipping-address.model';
-import { CreateShippingAddressInput } from '../dto/shipping-address.input';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from '../dto/shipping-address.input';
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
@@ -83,6 +86,32 @@ describe('UserModel', () => {
 
       const result = user.addShippingAddress(createShippingAddressInput);
       expect(result.name).toEqual(createShippingAddressInput.name);
+    });
+  });
+
+  describe('updateShippingAddress', () => {
+    it('shoud return updated shippingAddress', () => {
+      const addressId = faker.random.number();
+      const shippingAddresses = [
+        new ShippingAddress(),
+        new ShippingAddress({ id: addressId }),
+        new ShippingAddress(),
+      ];
+      const user = new User({ shippingAddresses });
+
+      const updateShippingAddressInput: UpdateShippingAddressInput = {
+        receiverName: faker.lorem.text(),
+        baseAddress: faker.lorem.text(),
+      };
+
+      const result = user.updateShippingAddress(
+        addressId,
+        updateShippingAddressInput
+      );
+
+      expect(result.receiverName).toEqual(
+        updateShippingAddressInput.receiverName
+      );
     });
   });
 });

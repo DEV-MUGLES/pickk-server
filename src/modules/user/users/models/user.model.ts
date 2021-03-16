@@ -1,6 +1,9 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { CreateShippingAddressInput } from '../dto/shipping-address.input';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from '../dto/shipping-address.input';
 
 import { UserEntity } from '../entities/user.entity';
 import { ShippingAddress } from './shipping-address.model';
@@ -53,5 +56,30 @@ export class User extends UserEntity {
       shippingAddress
     );
     return shippingAddress;
+  };
+
+  public updateShippingAddress = (
+    addressId: number,
+    updateShippingAddressInput: UpdateShippingAddressInput
+  ): ShippingAddress => {
+    const index = this.shippingAddresses?.findIndex(
+      (address) => address.id === addressId
+    );
+    if (index < 0) {
+      throw new NotFoundException('수정할 배송정보가 존재하지 않습니다.');
+    }
+
+    const updatedShippingAddress = {
+      ...this.shippingAddresses[index],
+      ...updateShippingAddressInput,
+    };
+
+    this.shippingAddresses = [
+      ...this.shippingAddresses.slice(0, index),
+      updatedShippingAddress,
+      ...this.shippingAddresses.slice(index + 1),
+    ];
+
+    return updatedShippingAddress;
   };
 }

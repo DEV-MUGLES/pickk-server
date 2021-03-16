@@ -8,7 +8,7 @@ input CreateShippingAddressInput {
   isPrimary: Boolean!
   name: String!
   phoneNumber1: String!
-  phoneNumber2: String!
+  phoneNumber2: String
   postalCode: String!
   receiverName: String!
 }
@@ -54,6 +54,7 @@ type Mutation {
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   refreshToken: JwtToken!
+  updateMyShippingAddress(addressId: Float!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
 
 type Query {
@@ -73,10 +74,21 @@ type ShippingAddress {
   isPrimary: Boolean!
   name: String!
   phoneNumber1: String!
-  phoneNumber2: String!
+  phoneNumber2: String
   postalCode: String!
   receiverName: String!
   updatedAt: DateTime!
+}
+
+input UpdateShippingAddressInput {
+  baseAddress: String
+  detailAddress: String
+  isPrimary: Boolean
+  name: String
+  phoneNumber1: String
+  phoneNumber2: String
+  postalCode: String
+  receiverName: String
 }
 
 type User {
