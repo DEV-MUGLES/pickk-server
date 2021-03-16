@@ -1,5 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
 import { AbstractAddressEntity } from '@src/common/entities/address.entity';
 import { UserEntity } from './user.entity';
@@ -8,11 +8,18 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: 'shipping_address',
 })
+@Index(['userId', 'name'], { unique: true })
 export class ShippingAddressEntity extends AbstractAddressEntity {
   @Field()
   @Column()
   isPrimary: boolean;
 
-  @ManyToOne('UserEntity', 'shippingAddresses')
+  @ManyToOne('UserEntity', 'shippingAddresses', {
+    onDelete: 'CASCADE',
+  })
   user: UserEntity;
+
+  @Field(() => Int)
+  @Column({ nullable: true })
+  userId: number;
 }

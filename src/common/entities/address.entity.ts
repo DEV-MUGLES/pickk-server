@@ -37,7 +37,7 @@ export abstract class AbstractAddressEntity
   phoneNumber1: string;
 
   @Field({ nullable: true })
-  @Column()
+  @Column({ nullable: true })
   @IsPhoneNumber('KR')
   @IsOptional()
   phoneNumber2?: string;
