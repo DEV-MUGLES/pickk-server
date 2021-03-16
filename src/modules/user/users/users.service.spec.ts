@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
+import { ShippingAddress } from './models/shipping-address.model';
 import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
@@ -70,6 +71,46 @@ describe('UsersService', () => {
 
       expect(userRepositoryFindSpy).toHaveBeenCalledWith(findOneDto, []);
       expect(result).toEqual(user);
+    });
+  });
+
+  describe('getShippingAddresses', () => {
+    it('should return existing shippingAddresses', async () => {
+      const shippingAddresses = [
+        new ShippingAddress(),
+        new ShippingAddress(),
+        new ShippingAddress(),
+      ];
+      const user = new User({ shippingAddresses });
+
+      const result = await usersService.getShippingAddresses(user);
+      expect(result).toEqual(shippingAddresses);
+    });
+
+    it('should get shippingAddresses relation when not initialized', async () => {
+      const user = new User({
+        id: faker.random.number(),
+      });
+      const shippingAddresses = [
+        new ShippingAddress(),
+        new ShippingAddress(),
+        new ShippingAddress(),
+      ];
+
+      const userRepositoryGetSpy = jest
+        .spyOn(usersRepository, 'get')
+        .mockResolvedValue(
+          new User({
+            ...user,
+            shippingAddresses,
+          })
+        );
+
+      const result = await usersService.getShippingAddresses(user);
+      expect(result).toEqual(shippingAddresses);
+      expect(userRepositoryGetSpy).toHaveBeenCalledWith(user.id, [
+        'shippingAddresses',
+      ]);
     });
   });
 });

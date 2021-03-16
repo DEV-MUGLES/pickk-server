@@ -5,6 +5,7 @@ import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UserPassword } from './models/user-password.model';
+import { ShippingAddress } from './models/shipping-address.model';
 
 @Injectable()
 export class UsersService {
@@ -38,5 +39,15 @@ export class UsersService {
     relations: string[] = []
   ): Promise<User | null> {
     return await this.usersRepository.findOneEntity(param, relations);
+  }
+
+  async getShippingAddresses(user: User): Promise<ShippingAddress[]> {
+    const shippingAddresses =
+      user.getShippingAddresses() ??
+      (await (
+        await this.usersRepository.get(user.id, ['shippingAddresses'])
+      ).getShippingAddresses());
+
+    return shippingAddresses;
   }
 }

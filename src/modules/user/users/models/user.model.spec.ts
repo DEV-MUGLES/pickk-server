@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
+import { ShippingAddress } from './shipping-address.model';
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
@@ -35,5 +36,33 @@ describe('UserModel', () => {
       }).toThrow(UnauthorizedException);
       expect(userPasswordCompareSpy).toHaveBeenCalledWith(NEW_PASSWORD);
     });
+  });
+
+  describe('getShippingAddresses', () => {
+    it('shoud return all shippingAddresses', async () => {
+      const shippingAddresses = [
+        new ShippingAddress(),
+        new ShippingAddress(),
+        new ShippingAddress(),
+      ];
+      const user = new User({ shippingAddresses });
+
+      const result = await user.getShippingAddresses();
+      expect(result).toEqual(shippingAddresses);
+    });
+  });
+
+  it('shoud return empty array when null', () => {
+    const user = new User({ shippingAddresses: null });
+
+    const result = user.getShippingAddresses();
+    expect(result).toEqual([]);
+  });
+
+  it('shoud return undefined when undefined', () => {
+    const user = new User();
+
+    const result = user.getShippingAddresses();
+    expect(result).toEqual(undefined);
   });
 });

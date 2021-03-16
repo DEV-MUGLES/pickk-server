@@ -2,6 +2,7 @@ import { UnauthorizedException } from '@nestjs/common';
 import { ObjectType } from '@nestjs/graphql';
 
 import { UserEntity } from '../entities/user.entity';
+import { ShippingAddress } from './shipping-address.model';
 import { UserPassword } from './user-password.model';
 
 @ObjectType()
@@ -34,5 +35,9 @@ export class User extends UserEntity {
 
   public comparePassword = (password: string): boolean => {
     return this.password.compare(password);
+  };
+
+  public getShippingAddresses = (): ShippingAddress[] | undefined => {
+    return this.shippingAddresses === null ? [] : this.shippingAddresses;
   };
 }

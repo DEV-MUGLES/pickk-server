@@ -1,22 +1,31 @@
 import { Inject } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { BaseResolver } from '@src/common/base.resolver';
+import { GraphQLResolveInfo } from 'graphql';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 
 @Resolver(() => User)
-export class UsersResolver {
-  constructor(@Inject(UsersService) private usersService: UsersService) {}
+export class UsersResolver extends BaseResolver {
+  relations = ['shippingAddresses'];
+
+  constructor(@Inject(UsersService) private usersService: UsersService) {
+    super();
+  }
 
   @Query(() => User)
-  async user(@Args('id') id: number): Promise<UserEntity> {
-    return await this.usersService.get(id);
+  async user(
+    @Args('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<UserEntity> {
+    return await this.usersService.get(id, this.getRelationsFromInfo(info));
   }
 
   @Query(() => [User])
-  async users(): Promise<UserEntity[]> {
-    return await this.usersService.list();
+  async users(@Info() info?: GraphQLResolveInfo): Promise<UserEntity[]> {
+    return await this.usersService.list(this.getRelationsFromInfo(info));
   }
 
   @Mutation(() => User)
