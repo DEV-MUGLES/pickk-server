@@ -13,6 +13,9 @@ import { User } from './models/user.model';
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
 
+const USER_PASSWORD_1 = 'abcd1234!';
+const USER_PASSWORD_2 = 'efgh7890@';
+
 describe('UsersService', () => {
   let usersService: UsersService;
   let usersRepository: UsersRepository;
@@ -30,7 +33,7 @@ describe('UsersService', () => {
     it('create success', async () => {
       const createUserInput: CreateUserInput = {
         name: faker.lorem.sentence(),
-        password: faker.lorem.sentence(),
+        password: USER_PASSWORD_1,
         email: faker.internet.email(),
       };
 
@@ -84,8 +87,8 @@ describe('UsersService', () => {
 
   describe('updatePassword', () => {
     it('should return user when success', async () => {
-      const oldPassword = faker.lorem.text();
-      const newPassword = faker.lorem.text();
+      const oldPassword = USER_PASSWORD_1;
+      const newPassword = USER_PASSWORD_2;
       const user = new User({
         password: UserPassword.create(oldPassword),
       });

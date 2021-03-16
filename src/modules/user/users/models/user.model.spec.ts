@@ -13,8 +13,8 @@ import { PasswordIncorrectException } from '@src/authentication/exceptions/passw
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
-    const OLD_PASSWORD = 'OLD_PASSWORD';
-    const NEW_PASSWORD = 'NEW_PASSWORD';
+    const OLD_PASSWORD = 'OLD_PASSWORD1!';
+    const NEW_PASSWORD = 'NEW_PASSWORD1!';
 
     it('should return user when matched', () => {
       const user = new User({});
