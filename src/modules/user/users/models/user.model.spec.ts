@@ -50,19 +50,29 @@ describe('UserModel', () => {
       const result = await user.getShippingAddresses();
       expect(result).toEqual(shippingAddresses);
     });
+
+    it('shoud return empty array when null', () => {
+      const user = new User({ shippingAddresses: null });
+
+      const result = user.getShippingAddresses();
+      expect(result).toEqual([]);
+    });
+
+    it('shoud return undefined when undefined', () => {
+      const user = new User();
+
+      const result = user.getShippingAddresses();
+      expect(result).toEqual(undefined);
+    });
   });
 
-  it('shoud return empty array when null', () => {
-    const user = new User({ shippingAddresses: null });
+  describe('addShippingAddress', () => {
+    it('should return added shippingAddress', () => {
+      const user = new User();
+      const shippingAddress = new ShippingAddress();
 
-    const result = user.getShippingAddresses();
-    expect(result).toEqual([]);
-  });
-
-  it('shoud return undefined when undefined', () => {
-    const user = new User();
-
-    const result = user.getShippingAddresses();
-    expect(result).toEqual(undefined);
+      const result = user.addShippingAddress(shippingAddress);
+      expect(result).toEqual(shippingAddress);
+    });
   });
 });

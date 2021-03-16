@@ -22,6 +22,8 @@ export class BaseResolver {
     }
 
     const simplifiedInfo = this.getSimplifiedInfo(info);
-    return this.relations.filter((relation) => relation in simplifiedInfo);
+    return this.relations.filter(
+      (relation) => relation in simplifiedInfo.fields
+    );
   };
 }

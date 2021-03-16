@@ -6,6 +6,7 @@ import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UserPassword } from './models/user-password.model';
 import { ShippingAddress } from './models/shipping-address.model';
+import { CreateShippingAddressInput } from './dto/shipping-address.input';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +20,7 @@ export class UsersService {
     return this.usersRepository.entityToModelMany(users);
   }
 
-  async get(id: number, relations: string[] = []): Promise<UserEntity> {
+  async get(id: number, relations: string[] = []): Promise<User> {
     return await this.usersRepository.get(id, relations);
   }
 
@@ -49,5 +50,15 @@ export class UsersService {
       ).getShippingAddresses());
 
     return shippingAddresses;
+  }
+
+  async addShippingAddress(
+    user: User,
+    createShippingAddressInput: CreateShippingAddressInput
+  ): Promise<User> {
+    const shippingAddress = new ShippingAddress(createShippingAddressInput);
+
+    user.addShippingAddress(shippingAddress);
+    return await this.usersRepository.save(user);
   }
 }

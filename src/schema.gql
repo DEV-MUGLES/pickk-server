@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateShippingAddressInput {
+  baseAddress: String!
+  detailAddress: String!
+  isPrimary: Boolean!
+  name: String!
+  phoneNumber1: String!
+  phoneNumber2: String!
+  postalCode: String!
+  receiverName: String!
+}
+
 input CreateUserInput {
   code: String
   email: String!
@@ -38,6 +49,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
+  addShippingAddress(createShippingAddressInput: CreateShippingAddressInput!, userId: Float!): User!
   createUser(createUserInput: CreateUserInput!): User!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
@@ -60,9 +72,9 @@ type ShippingAddress {
   name: String!
   phoneNumber1: String!
   phoneNumber2: String!
+  postalCode: String!
   receiverName: String!
   updatedAt: DateTime!
-  zipCode: String!
 }
 
 type User {

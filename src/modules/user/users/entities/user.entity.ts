@@ -66,7 +66,6 @@ export class UserEntity extends BaseEntity implements IUser {
   @Column(() => UserPasswordEntity)
   password: UserPassword;
 
-  @Field(() => [ShippingAddress], { nullable: true })
   @OneToMany('ShippingAddressEntity', 'user', {
     cascade: true,
   })

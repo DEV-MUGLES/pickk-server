@@ -1,5 +1,5 @@
 import { UnauthorizedException } from '@nestjs/common';
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { UserEntity } from '../entities/user.entity';
 import { ShippingAddress } from './shipping-address.model';
@@ -7,6 +7,9 @@ import { UserPassword } from './user-password.model';
 
 @ObjectType()
 export class User extends UserEntity {
+  @Field(() => [ShippingAddress], { nullable: true })
+  shippingAddresses: ShippingAddress[];
+
   constructor(attributes?: Partial<User>) {
     super();
     if (!attributes) {
@@ -39,5 +42,14 @@ export class User extends UserEntity {
 
   public getShippingAddresses = (): ShippingAddress[] | undefined => {
     return this.shippingAddresses === null ? [] : this.shippingAddresses;
+  };
+
+  public addShippingAddress = (
+    shippingAddress: ShippingAddress
+  ): ShippingAddress => {
+    this.shippingAddresses = (this.shippingAddresses ?? []).concat(
+      shippingAddress
+    );
+    return shippingAddress;
   };
 }

@@ -9,8 +9,8 @@ export interface IAddress {
 
   baseAddress: string;
   detailAddress: string;
-  zipCode: string;
+  postalCode: string;
 
   phoneNumber1: string;
-  phoneNumber2: string;
+  phoneNumber2?: string;
 }
