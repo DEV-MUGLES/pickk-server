@@ -55,17 +55,20 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
-  refreshToken: JwtToken!
-  removeMyShippingAddress(addressId: Float!): [ShippingAddress!]!
-  updateMyShippingAddress(addressId: Float!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
+  removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
 
 type Query {
+  """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
   myProfile: User!
-  myShippingAddress(id: Float!): ShippingAddress!
+  myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
-  user(id: Float!): User!
+
+  """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
+  refreshJwtToken: JwtToken!
+  user(id: Int!): User!
   users: [User!]!
 }
 

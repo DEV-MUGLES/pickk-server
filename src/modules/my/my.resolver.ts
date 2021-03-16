@@ -1,5 +1,13 @@
 import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
+
+import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
+import { JwtPayload } from '@src/authentication/dto/jwt.dto';
+import { JwtVerifyGuard } from '@src/authentication/guards';
+import { IntArgs } from '@src/common/decorators/args.decorator';
+import { BaseResolver } from '@src/common/base.resolver';
+
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
@@ -7,15 +15,11 @@ import {
 import { User } from '@src/modules/user/users/models/user.model';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { ShippingAddress } from '../user/users/models/shipping-address.model';
-import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
-import { JwtVerifyGuard } from '@src/authentication/guards';
+
 import {
   SHIPPING_ADDRESSES,
   USER_RELATIONS,
 } from '../user/users/constants/user.relation';
-import { BaseResolver } from '@src/common/base.resolver';
-import { JwtPayload } from '@src/authentication/dto/jwt.dto';
-import { GraphQLResolveInfo } from 'graphql';
 
 @Resolver()
 export class MyResolver extends BaseResolver {
@@ -49,7 +53,7 @@ export class MyResolver extends BaseResolver {
   @UseGuards(JwtVerifyGuard)
   async myShippingAddress(
     @CurrentUser() payload: JwtPayload,
-    @Args('id') id: number
+    @IntArgs('id') id: number
   ): Promise<ShippingAddress> {
     const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
     const shippingAddress = (
@@ -90,7 +94,7 @@ export class MyResolver extends BaseResolver {
   @UseGuards(JwtVerifyGuard)
   async updateMyShippingAddress(
     @CurrentUser() payload: JwtPayload,
-    @Args('addressId') addressId: number,
+    @IntArgs('addressId') addressId: number,
     @Args('updateShippingAddressInput')
     updateShippingAddressInput: UpdateShippingAddressInput
   ): Promise<ShippingAddress> {
@@ -106,7 +110,7 @@ export class MyResolver extends BaseResolver {
   @UseGuards(JwtVerifyGuard)
   async removeMyShippingAddress(
     @CurrentUser() payload: JwtPayload,
-    @Args('addressId') addressId: number
+    @IntArgs('addressId') addressId: number
   ): Promise<ShippingAddress[]> {
     const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
     return await this.usersService.removeShippingAddress(user, addressId);

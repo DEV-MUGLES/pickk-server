@@ -1,7 +1,9 @@
 import { Inject } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { BaseResolver } from '@src/common/base.resolver';
 import { GraphQLResolveInfo } from 'graphql';
+
+import { IntArgs } from '@src/common/decorators/args.decorator';
+import { BaseResolver } from '@src/common/base.resolver';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
@@ -19,7 +21,7 @@ export class UsersResolver extends BaseResolver {
 
   @Query(() => User)
   async user(
-    @Args('id') id: number,
+    @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<UserEntity> {
     return await this.usersService.get(id, this.getRelationsFromInfo(info));
