@@ -1,4 +1,4 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import {
   CreateShippingAddressInput,
@@ -6,6 +6,10 @@ import {
 } from '../dto/shipping-address.input';
 
 import { UserEntity } from '../entities/user.entity';
+import {
+  UserPasswordDuplicatedException,
+  UserPasswordInvalidException,
+} from '../exceptions/user.exception';
 import { ShippingAddress } from './shipping-address.model';
 import { UserPassword } from './user-password.model';
 
@@ -33,7 +37,10 @@ export class User extends UserEntity {
 
   public updatePassword = (password: string, input: string): void => {
     if (!this.comparePassword(password)) {
-      throw new UnauthorizedException();
+      throw new UserPasswordInvalidException();
+    }
+    if (password === input) {
+      throw new UserPasswordDuplicatedException();
     }
 
     this.updatedAt = new Date();

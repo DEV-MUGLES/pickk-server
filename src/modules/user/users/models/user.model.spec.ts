@@ -1,4 +1,4 @@
-import { NotFoundException, UnauthorizedException } from '@nestjs/common';
+import { NotFoundException } from '@nestjs/common';
 import * as faker from 'faker';
 
 import { User } from './user.model';
@@ -8,6 +8,10 @@ import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dto/shipping-address.input';
+import {
+  UserPasswordDuplicatedException,
+  UserPasswordInvalidException,
+} from '../exceptions/user.exception';
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
@@ -28,18 +32,30 @@ describe('UserModel', () => {
       expect(userPasswordCompareSpy).toHaveBeenCalledWith(OLD_PASSWORD);
     });
 
-    it('should raise Unauthorized error when unmatched', () => {
-      const user = new User();
-      user.password = UserPassword.create(OLD_PASSWORD);
+    it('should throw UnauthorizedException when unmatched', () => {
+      const user = new User({
+        password: UserPassword.create(OLD_PASSWORD),
+      });
+      const strangePassword = faker.lorem.text();
 
       const userPasswordCompareSpy = jest
         .spyOn(user.password, 'compare')
         .mockReturnValue(false);
 
       expect(() => {
-        user.updatePassword(NEW_PASSWORD, NEW_PASSWORD);
-      }).toThrow(UnauthorizedException);
-      expect(userPasswordCompareSpy).toHaveBeenCalledWith(NEW_PASSWORD);
+        user.updatePassword(strangePassword, NEW_PASSWORD);
+      }).toThrow(UserPasswordInvalidException);
+      expect(userPasswordCompareSpy).toHaveBeenCalledWith(strangePassword);
+    });
+
+    it('should throw ConflictException when before/after password is duplicated', () => {
+      const user = new User({
+        password: UserPassword.create(OLD_PASSWORD),
+      });
+
+      expect(() => {
+        user.updatePassword(OLD_PASSWORD, OLD_PASSWORD);
+      }).toThrow(UserPasswordDuplicatedException);
     });
   });
 
