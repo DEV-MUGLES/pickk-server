@@ -25,6 +25,7 @@ import { MysqlConfigService } from '../../../config/database/mysql/config.servic
           __dirname + '../../../../database/migrations/*.ts',
           __dirname + '../../../../database/migrations/*.js',
         ],
+        logging: mysqlConfigService.logging,
       }),
       inject: [MysqlConfigService],
     } as TypeOrmModuleAsyncOptions),
