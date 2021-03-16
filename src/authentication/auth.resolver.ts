@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Resolver, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Args, Query, Mutation } from '@nestjs/graphql';
 
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
@@ -16,9 +16,11 @@ export class AuthResolver {
     @Inject(AuthService) private authService: AuthService
   ) {}
 
-  @Mutation(() => JwtToken)
+  @Query(() => JwtToken, {
+    description: 'refresh token을 받아서 새로운 JwtToken을 생성합니다.',
+  })
   @UseGuards(JwtRefreshGuard)
-  async refreshToken(@CurrentUser() payload: JwtPayload) {
+  async refreshJwtToken(@CurrentUser() payload: JwtPayload) {
     const user = await this.usersService.get(payload.sub);
     return this.authService.getToken(user);
   }

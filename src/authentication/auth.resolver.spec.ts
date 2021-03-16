@@ -41,8 +41,8 @@ describe('AuthResolver', () => {
     expect(authResolver).toBeDefined();
   });
 
-  describe('refreshToken', () => {
-    it('shoud return refreshed token', async () => {
+  describe('refreshJwtToken', () => {
+    it('shoud return refreshed JwtToken', async () => {
       const payload: JwtPayload = {
         username: faker.lorem.text(),
         sub: faker.random.number(),
@@ -67,7 +67,7 @@ describe('AuthResolver', () => {
         .spyOn(authService, 'getToken')
         .mockReturnValue(token);
 
-      const result = await authResolver.refreshToken(payload);
+      const result = await authResolver.refreshJwtToken(payload);
       expect(result).toEqual(token);
       expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub);
       expect(authServiceGetTokenSpy).toHaveBeenCalledWith(user);

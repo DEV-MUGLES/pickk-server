@@ -37,7 +37,9 @@ export class MyResolver extends BaseResolver {
     );
   }
 
-  @Query(() => JwtPayload)
+  @Query(() => JwtPayload, {
+    description: 'Bearer token을 받아 JwtPayload를 반환합니다.',
+  })
   @UseGuards(JwtVerifyGuard)
   myJwtPayload(@CurrentUser() payload: JwtPayload) {
     return payload;
