@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
-import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
 import { User } from '@src/modules/user/users/models/user.model';
@@ -11,6 +10,7 @@ import {
   UserCodeNotFoundExeption,
   UserEmailNotFoundExeption,
 } from './exceptions/user-not-found.exception';
+import { CreateJwtPayloadInput } from './dto/jwt.dto';
 
 type ValidatedUser = Omit<UserEntity, 'password'>;
 
@@ -56,7 +56,7 @@ export class AuthService {
   }
 
   getToken(user: ValidatedUser): IJwtToken {
-    const payload: IJwtPayload = {
+    const payload: CreateJwtPayloadInput = {
       username: user.name,
       code: user.code,
       sub: user.id,

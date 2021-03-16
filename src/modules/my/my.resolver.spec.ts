@@ -39,6 +39,8 @@ describe('MyResolver', () => {
     username: faker.lorem.text(),
     sub: faker.random.number(),
     code: faker.lorem.text(),
+    iat: new Date().getTime(),
+    exp: new Date().getTime(),
   };
   const user = new User({
     id: payload.sub,
@@ -61,6 +63,7 @@ describe('MyResolver', () => {
 
   describe('myJwtPayload', () => {
     it('should work without code', () => {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { code, ...payloadWithoutCode } = payload;
 
       const result = myResolver.myJwtPayload(payloadWithoutCode);

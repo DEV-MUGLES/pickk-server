@@ -1,5 +1,5 @@
 import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial, FindOneOptions, Entity } from 'typeorm';
+import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
 import { BaseEntity } from './entities/base.entity';

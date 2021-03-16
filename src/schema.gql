@@ -29,6 +29,8 @@ scalar DateTime
 
 type JwtPayload {
   code: String
+  exp: Timestamp!
+  iat: Timestamp!
   sub: Int!
   username: String!
 }
@@ -79,7 +81,13 @@ type ShippingAddress {
   postalCode: String!
   receiverName: String!
   updatedAt: DateTime!
+  userId: Int!
 }
+
+"""
+Date type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
+"""
+scalar Timestamp
 
 input UpdateShippingAddressInput {
   baseAddress: String
@@ -90,6 +98,7 @@ input UpdateShippingAddressInput {
   phoneNumber2: String
   postalCode: String
   receiverName: String
+  userId: Int
 }
 
 type User {

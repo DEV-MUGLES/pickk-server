@@ -47,6 +47,8 @@ describe('AuthResolver', () => {
         username: faker.lorem.text(),
         sub: faker.random.number(),
         code: faker.lorem.text(),
+        iat: new Date().getTime(),
+        exp: new Date().getTime(),
       };
       const user = new User({
         id: payload.sub,
