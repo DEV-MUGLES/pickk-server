@@ -49,7 +49,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
-  addShippingAddress(createShippingAddressInput: CreateShippingAddressInput!, userId: Float!): User!
+  addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createUser(createUserInput: CreateUserInput!): User!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
@@ -57,10 +57,12 @@ type Mutation {
 }
 
 type Query {
-  getJwtPayload: JwtPayload!
+  myJwtPayload: JwtPayload!
+  myProfile: User!
+  myShippingAddress(id: Float!): ShippingAddress!
+  myShippingAddresses: [ShippingAddress!]!
   user(id: Float!): User!
   users: [User!]!
-  whoAmI: User!
 }
 
 type ShippingAddress {

@@ -13,7 +13,6 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 import { IUser } from '../interfaces/user.interface';
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
-import { UserPasswordEntity } from './user-password.entity';
 
 @ObjectType()
 @Entity({
@@ -63,7 +62,7 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsOptional()
   height?: number;
 
-  @Column(() => UserPasswordEntity)
+  @Column(() => UserPassword)
   password: UserPassword;
 
   @OneToMany('ShippingAddressEntity', 'user', {

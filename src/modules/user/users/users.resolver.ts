@@ -7,11 +7,11 @@ import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';
 
-const SHIPPING_ADDRESSES = 'shippingAddresses';
+import { USER_RELATIONS } from './constants/user.relation';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver {
-  relations = [SHIPPING_ADDRESSES];
+  relations = USER_RELATIONS;
 
   constructor(@Inject(UsersService) private usersService: UsersService) {
     super();

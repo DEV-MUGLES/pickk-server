@@ -48,7 +48,6 @@ export class UsersService {
       (
         await this.usersRepository.get(user.id, ['shippingAddresses'])
       ).getShippingAddresses();
-
     return shippingAddresses;
   }
 

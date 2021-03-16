@@ -12,6 +12,7 @@
     "baseUrl": "./",
     "paths": {
       "@src/*": ["src/*"],
+      "@my/*": ["src/modules/my/*"],
       "@user/*": ["src/modules/user/*"],
     },
     "incremental": true,

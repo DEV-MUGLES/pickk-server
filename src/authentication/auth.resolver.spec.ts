@@ -2,7 +2,6 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { UsersRepository } from '@src/modules/user/users/users.repository';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
@@ -42,33 +41,6 @@ describe('AuthResolver', () => {
     expect(authResolver).toBeDefined();
   });
 
-  describe('whoAmI', () => {
-    it('should return current user', () => {
-      const user = new UserEntity();
-      const result = authResolver.whoAmI(user);
-      expect(result).toEqual(user);
-    });
-  });
-
-  describe('getJwtPayload', () => {
-    const payload: JwtPayload = {
-      username: faker.lorem.text(),
-      sub: faker.random.number(),
-    };
-
-    it('should work without code', () => {
-      const result = authResolver.getJwtPayload(payload);
-      expect(result).toEqual(payload);
-    });
-
-    it('should return payload', () => {
-      payload.code = faker.lorem.text();
-
-      const result = authResolver.getJwtPayload(payload);
-      expect(result).toEqual(payload);
-    });
-  });
-
   describe('refreshToken', () => {
     it('shoud return refreshed token', async () => {
       const payload: JwtPayload = {
@@ -76,7 +48,7 @@ describe('AuthResolver', () => {
         sub: faker.random.number(),
         code: faker.lorem.text(),
       };
-      const user = Object.assign(new UserEntity(), {
+      const user = new User({
         id: payload.sub,
         name: payload.username,
         code: payload.code,
@@ -106,7 +78,7 @@ describe('AuthResolver', () => {
         email: faker.internet.email(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new User(), loginByEmailInput);
+      const existingUser = new User({ email: loginByEmailInput.email });
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,
@@ -136,7 +108,7 @@ describe('AuthResolver', () => {
         code: faker.lorem.text(),
         password: faker.lorem.text(),
       };
-      const existingUser = Object.assign(new User(), {
+      const existingUser = new User({
         code: loginByCodeInput.code,
       });
       const jwtToken: JwtToken = {

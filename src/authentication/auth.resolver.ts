@@ -1,15 +1,13 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Args, Mutation } from '@nestjs/graphql';
+import { Resolver, Args, Mutation } from '@nestjs/graphql';
 
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
 
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
-import { JwtAuthGuard, JwtVerifyGuard, JwtRefreshGuard } from './guards';
-import { User } from '@src/modules/user/users/models/user.model';
+import { JwtRefreshGuard } from './guards';
 
 @Resolver()
 export class AuthResolver {
@@ -17,18 +15,6 @@ export class AuthResolver {
     @Inject(UsersService) private usersService: UsersService,
     @Inject(AuthService) private authService: AuthService
   ) {}
-
-  @Query(() => User)
-  @UseGuards(JwtAuthGuard)
-  whoAmI(@CurrentUser() user: UserEntity) {
-    return user;
-  }
-
-  @Query(() => JwtPayload)
-  @UseGuards(JwtVerifyGuard)
-  getJwtPayload(@CurrentUser() payload: JwtPayload) {
-    return payload;
-  }
 
   @Mutation(() => JwtToken)
   @UseGuards(JwtRefreshGuard)
