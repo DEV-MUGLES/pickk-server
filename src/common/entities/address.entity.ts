@@ -27,6 +27,7 @@ export abstract class AbstractAddressEntity
 
   @Field()
   @Column()
+  // @TODO: https://github.com/validatorjs/validator.js/pull/1628 가 머지 및 release 완료되면 국가코드 'KR'로 변경하기!
   @IsPostalCode('DE')
   postalCode: string;
 
