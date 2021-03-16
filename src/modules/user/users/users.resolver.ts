@@ -2,7 +2,6 @@ import { Inject } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { BaseResolver } from '@src/common/base.resolver';
 import { GraphQLResolveInfo } from 'graphql';
-import { CreateShippingAddressInput } from './dto/shipping-address.input';
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
@@ -36,18 +35,5 @@ export class UsersResolver extends BaseResolver {
     @Args('createUserInput') createUserInput: CreateUserInput
   ): Promise<UserEntity> {
     return await this.usersService.create(createUserInput);
-  }
-
-  @Mutation(() => User)
-  async addShippingAddress(
-    @Args('userId') userId: number,
-    @Args('createShippingAddressInput')
-    createShippingAddressInput: CreateShippingAddressInput
-  ): Promise<UserEntity> {
-    const user = await this.usersService.get(userId, [SHIPPING_ADDRESSES]);
-    return await this.usersService.addShippingAddress(
-      user,
-      createShippingAddressInput
-    );
   }
 }

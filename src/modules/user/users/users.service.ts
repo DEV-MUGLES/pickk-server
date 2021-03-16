@@ -45,9 +45,9 @@ export class UsersService {
   async getShippingAddresses(user: User): Promise<ShippingAddress[]> {
     const shippingAddresses =
       user.getShippingAddresses() ??
-      (await (
+      (
         await this.usersRepository.get(user.id, ['shippingAddresses'])
-      ).getShippingAddresses());
+      ).getShippingAddresses();
 
     return shippingAddresses;
   }
@@ -55,10 +55,10 @@ export class UsersService {
   async addShippingAddress(
     user: User,
     createShippingAddressInput: CreateShippingAddressInput
-  ): Promise<User> {
+  ): Promise<ShippingAddress[]> {
     const shippingAddress = new ShippingAddress(createShippingAddressInput);
 
     user.addShippingAddress(shippingAddress);
-    return await this.usersRepository.save(user);
+    return (await this.usersRepository.save(user)).shippingAddresses;
   }
 }

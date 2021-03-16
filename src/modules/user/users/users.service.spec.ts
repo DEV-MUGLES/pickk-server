@@ -126,9 +126,8 @@ describe('UsersService', () => {
       isPrimary: faker.random.boolean(),
     };
 
-    it('should return user when success', async () => {
+    it('should return list when success', async () => {
       const user = new User();
-
       const shippingAddress = new ShippingAddress(createShippingAddressInput);
       const addedUser = new User({
         ...user,
@@ -139,15 +138,13 @@ describe('UsersService', () => {
         user,
         'addShippingAddress'
       );
-      const usersRepositorySaveSpy = jest
-        .spyOn(usersRepository, 'save')
-        .mockResolvedValue(addedUser);
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(addedUser);
 
       const result = await usersService.addShippingAddress(
         user,
         createShippingAddressInput
       );
-      expect(result).toEqual(addedUser);
+      expect(result).toEqual([shippingAddress]);
       expect(userModelAddShippingAddressSpy).toHaveBeenCalledWith(
         createShippingAddressInput
       );
