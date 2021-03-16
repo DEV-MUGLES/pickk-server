@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToMany } from 'typeorm';
 import {
   IsEmail,
   IsInt,
@@ -12,6 +12,7 @@ import {
 import { BaseEntity } from '@src/common/entities/base.entity';
 import { IUser } from '../interfaces/user.interface';
 import { UserPassword } from '../models/user-password.model';
+import { ShippingAddress } from '../models/shipping-address.model';
 
 @ObjectType()
 @Entity({
@@ -63,4 +64,9 @@ export class UserEntity extends BaseEntity implements IUser {
 
   @Column(() => UserPassword)
   password: UserPassword;
+
+  @OneToMany('ShippingAddressEntity', 'user', {
+    cascade: true,
+  })
+  shippingAddresses: ShippingAddress[];
 }

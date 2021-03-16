@@ -1,5 +1,5 @@
 /**
- * User variable type declaration.
+ * Embedded Entity 기법을 사용한 ValueObject입니다.
  *
  * @interface
  */

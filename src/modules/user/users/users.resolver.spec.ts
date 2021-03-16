@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
-import { UserEntity } from './entities/user.entity';
+import { User } from './models/user.model';
 import { UsersRepository } from './users.repository';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
@@ -25,7 +25,7 @@ describe('UsersResolver', () => {
   describe('user', () => {
     it('should return matched user', async () => {
       const userId = faker.random.number();
-      const user = Object.assign(new UserEntity(), { id: userId });
+      const user = new User({ id: userId });
 
       const usersServiceSpy = jest
         .spyOn(usersService, 'get')
@@ -33,7 +33,7 @@ describe('UsersResolver', () => {
 
       const result = await usersResolver.user(userId);
       expect(result).toEqual(user);
-      expect(usersServiceSpy).toHaveBeenCalledWith(userId);
+      expect(usersServiceSpy).toHaveBeenCalledWith(userId, []);
     });
   });
 });

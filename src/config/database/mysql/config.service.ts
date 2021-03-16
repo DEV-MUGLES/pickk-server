@@ -25,4 +25,7 @@ export class MysqlConfigService {
   get database(): string {
     return this.configService.get<string>('mysql.database');
   }
+  get logging(): boolean {
+    return this.configService.get<boolean>('mysql.logging');
+  }
 }

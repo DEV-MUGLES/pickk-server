@@ -2,6 +2,17 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateShippingAddressInput {
+  baseAddress: String!
+  detailAddress: String!
+  isPrimary: Boolean!
+  name: String!
+  phoneNumber1: String!
+  phoneNumber2: String
+  postalCode: String!
+  receiverName: String!
+}
+
 input CreateUserInput {
   code: String
   email: String!
@@ -38,17 +49,47 @@ input LoginByEmailInput {
 }
 
 type Mutation {
+  addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createUser(createUserInput: CreateUserInput!): User!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   refreshToken: JwtToken!
+  removeMyShippingAddress(addressId: Float!): [ShippingAddress!]!
+  updateMyShippingAddress(addressId: Float!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
 
 type Query {
-  getJwtPayload: JwtPayload!
+  myJwtPayload: JwtPayload!
+  myProfile: User!
+  myShippingAddress(id: Float!): ShippingAddress!
+  myShippingAddresses: [ShippingAddress!]!
   user(id: Float!): User!
   users: [User!]!
-  whoAmI: User!
+}
+
+type ShippingAddress {
+  baseAddress: String!
+  createdAt: DateTime!
+  detailAddress: String!
+  id: Int!
+  isPrimary: Boolean!
+  name: String!
+  phoneNumber1: String!
+  phoneNumber2: String
+  postalCode: String!
+  receiverName: String!
+  updatedAt: DateTime!
+}
+
+input UpdateShippingAddressInput {
+  baseAddress: String
+  detailAddress: String
+  isPrimary: Boolean
+  name: String
+  phoneNumber1: String
+  phoneNumber2: String
+  postalCode: String
+  receiverName: String
 }
 
 type User {
@@ -58,6 +99,7 @@ type User {
   height: Int
   id: Int!
   name: String!
+  shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
   weight: Int
 }

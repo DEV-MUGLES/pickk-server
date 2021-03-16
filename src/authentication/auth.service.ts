@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '@src/models/user/users/users.service';
+import { UsersService } from '@src/modules/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserEntity } from '@src/models/user/users/entities/user.entity';
+import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { IJwtPayload } from './interfaces/jwt-payload.interface';
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
-import { User } from '@src/models/user/users/models/user.model';
+import { User } from '@src/modules/user/users/models/user.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
 import {
   UserCodeNotFoundExeption,
