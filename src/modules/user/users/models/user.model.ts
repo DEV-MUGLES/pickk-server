@@ -1,15 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dto/shipping-address.input';
 
 import { UserEntity } from '../entities/user.entity';
-import {
-  UserPasswordDuplicatedException,
-  UserPasswordInvalidException,
-} from '../exceptions/user.exception';
+import { UserPasswordDuplicatedException } from '../exceptions/user.exception';
 import { ShippingAddress } from './shipping-address.model';
 import { UserPassword } from './user-password.model';
 
@@ -35,9 +33,9 @@ export class User extends UserEntity {
     this.shippingAddresses = attributes.shippingAddresses;
   }
 
-  public updatePassword = (password: string, input: string): void => {
+  public updatePassword = (password: string, input: string): User => {
     if (!this.comparePassword(password)) {
-      throw new UserPasswordInvalidException();
+      throw new PasswordIncorrectException();
     }
     if (password === input) {
       throw new UserPasswordDuplicatedException();
@@ -45,6 +43,7 @@ export class User extends UserEntity {
 
     this.updatedAt = new Date();
     this.password = UserPassword.create(input);
+    return this;
   };
 
   public comparePassword = (password: string): boolean => {

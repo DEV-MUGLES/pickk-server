@@ -45,6 +45,16 @@ export class UsersService {
     return await this.usersRepository.findOneEntity(param, relations);
   }
 
+  async updatePassword(
+    user: User,
+    password: string,
+    input: string
+  ): Promise<User> {
+    return await this.usersRepository.save(
+      user.updatePassword(password, input)
+    );
+  }
+
   async getShippingAddresses(user: User): Promise<ShippingAddress[]> {
     const shippingAddresses =
       user.getShippingAddresses() ??

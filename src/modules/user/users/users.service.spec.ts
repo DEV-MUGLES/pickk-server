@@ -7,6 +7,7 @@ import {
 import { CreateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { ShippingAddress } from './models/shipping-address.model';
+import { UserPassword } from './models/user-password.model';
 import { User } from './models/user.model';
 
 import { UsersRepository } from './users.repository';
@@ -33,7 +34,10 @@ describe('UsersService', () => {
         email: faker.internet.email(),
       };
 
-      const newUser = Object.assign(new User(), createUserInput);
+      const newUser = new User({
+        name: createUserInput.name,
+        email: createUserInput.email,
+      });
 
       jest.spyOn(usersRepository, 'save').mockResolvedValue(newUser);
 
@@ -75,6 +79,39 @@ describe('UsersService', () => {
 
       expect(userRepositoryFindSpy).toHaveBeenCalledWith(findOneDto, []);
       expect(result).toEqual(user);
+    });
+  });
+
+  describe('updatePassword', () => {
+    it('should return user when success', async () => {
+      const oldPassword = faker.lorem.text();
+      const newPassword = faker.lorem.text();
+      const user = new User({
+        password: UserPassword.create(oldPassword),
+      });
+      const updatedUser = new User({
+        ...user,
+        password: UserPassword.create(newPassword),
+      });
+
+      const userModelUpdatePasswordSpy = jest
+        .spyOn(user, 'updatePassword')
+        .mockReturnValue(updatedUser);
+      const usersRepositorySaveSpy = jest
+        .spyOn(usersRepository, 'save')
+        .mockResolvedValue(updatedUser);
+
+      const result = await usersService.updatePassword(
+        user,
+        oldPassword,
+        newPassword
+      );
+      expect(result).toEqual(updatedUser);
+      expect(userModelUpdatePasswordSpy).toHaveBeenCalledWith(
+        oldPassword,
+        newPassword
+      );
+      expect(usersRepositorySaveSpy).toHaveBeenCalledWith(updatedUser);
     });
   });
 

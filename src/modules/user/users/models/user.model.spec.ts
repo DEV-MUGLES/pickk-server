@@ -8,31 +8,38 @@ import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dto/shipping-address.input';
-import {
-  UserPasswordDuplicatedException,
-  UserPasswordInvalidException,
-} from '../exceptions/user.exception';
+import { UserPasswordDuplicatedException } from '../exceptions/user.exception';
+import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
 
 describe('UserModel', () => {
   describe('updatePassword', () => {
     const OLD_PASSWORD = 'OLD_PASSWORD';
     const NEW_PASSWORD = 'NEW_PASSWORD';
 
-    it('should return void when matched', () => {
-      const user = new User();
+    it('should return user when matched', () => {
+      const user = new User({});
       user.password = UserPassword.create(OLD_PASSWORD);
+
+      const newUserPassword = UserPassword.create(NEW_PASSWORD);
+      const updatedUser = new User({
+        password: newUserPassword,
+      });
 
       const userPasswordCompareSpy = jest
         .spyOn(user.password, 'compare')
         .mockReturnValue(true);
+      const userPasswordCreateSpy = jest
+        .spyOn(UserPassword, 'create')
+        .mockReturnValue(newUserPassword);
 
       const result = user.updatePassword(OLD_PASSWORD, NEW_PASSWORD);
 
-      expect(result).toEqual(undefined);
+      expect(result.password).toEqual(updatedUser.password);
       expect(userPasswordCompareSpy).toHaveBeenCalledWith(OLD_PASSWORD);
+      expect(userPasswordCreateSpy).toHaveBeenCalledWith(NEW_PASSWORD);
     });
 
-    it('should throw UnauthorizedException when unmatched', () => {
+    it('should throw PasswordIncorrectException when oldPassword incorrect', () => {
       const user = new User({
         password: UserPassword.create(OLD_PASSWORD),
       });
@@ -44,18 +51,23 @@ describe('UserModel', () => {
 
       expect(() => {
         user.updatePassword(strangePassword, NEW_PASSWORD);
-      }).toThrow(UserPasswordInvalidException);
+      }).toThrow(PasswordIncorrectException);
       expect(userPasswordCompareSpy).toHaveBeenCalledWith(strangePassword);
     });
 
-    it('should throw ConflictException when before/after password is duplicated', () => {
+    it('should throw UserPasswordDuplicatedException when old/new passwords are same', () => {
       const user = new User({
         password: UserPassword.create(OLD_PASSWORD),
       });
 
+      const userPasswordCompareSpy = jest
+        .spyOn(user.password, 'compare')
+        .mockReturnValue(true);
+
       expect(() => {
         user.updatePassword(OLD_PASSWORD, OLD_PASSWORD);
       }).toThrow(UserPasswordDuplicatedException);
+      expect(userPasswordCompareSpy).toHaveBeenCalledWith(OLD_PASSWORD);
     });
   });
 

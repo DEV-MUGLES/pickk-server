@@ -4,7 +4,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
-import { JwtVerifyGuard } from '@src/authentication/guards';
+import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
 import { IntArgs } from '@src/common/decorators/args.decorator';
 import { BaseResolver } from '@src/common/base.resolver';
 
@@ -47,6 +47,20 @@ export class MyResolver extends BaseResolver {
   @UseGuards(JwtVerifyGuard)
   myJwtPayload(@CurrentUser() payload: JwtPayload) {
     return payload;
+  }
+
+  @Mutation(() => User)
+  @UseGuards(JwtAuthGuard)
+  async updateMyPassword(
+    @CurrentUser() user: User,
+    @Args('oldPassword') oldPassword: string,
+    @Args('newPassword') newPassword: string
+  ) {
+    return await this.usersService.updatePassword(
+      user,
+      oldPassword,
+      newPassword
+    );
   }
 
   @Query(() => ShippingAddress)

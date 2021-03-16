@@ -75,4 +75,29 @@ describe('MyResolver', () => {
       expect(result).toEqual(payload);
     });
   });
+
+  describe('updateMyPassword', () => {
+    it('should return undefined when success', async () => {
+      const user = new User();
+      const oldPassword = faker.lorem.text(),
+        newPassword = faker.lorem.text();
+
+      const usersServiceUpdatePasswordSpy = jest
+        .spyOn(usersService, 'updatePassword')
+        .mockResolvedValue(undefined);
+
+      const result = await myResolver.updateMyPassword(
+        user,
+        oldPassword,
+        newPassword
+      );
+
+      expect(result).toEqual(undefined);
+      expect(usersServiceUpdatePasswordSpy).toHaveBeenCalledWith(
+        user,
+        oldPassword,
+        newPassword
+      );
+    });
+  });
 });
