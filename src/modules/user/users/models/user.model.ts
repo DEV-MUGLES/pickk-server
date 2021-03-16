@@ -82,4 +82,20 @@ export class User extends UserEntity {
 
     return updatedShippingAddress;
   };
+
+  public removeShippingAddress = (addressId: number): ShippingAddress[] => {
+    const index = this.shippingAddresses?.findIndex(
+      (address) => address.id === addressId
+    );
+    if (index < 0) {
+      throw new NotFoundException('삭제할 배송정보가 존재하지 않습니다.');
+    }
+
+    this.shippingAddresses = [
+      ...this.shippingAddresses.slice(0, index),
+      ...this.shippingAddresses.slice(index + 1),
+    ];
+
+    return this.shippingAddresses;
+  };
 }

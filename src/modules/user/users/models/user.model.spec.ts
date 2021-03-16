@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as faker from 'faker';
 
 import { User } from './user.model';
@@ -112,6 +112,56 @@ describe('UserModel', () => {
       expect(result.receiverName).toEqual(
         updateShippingAddressInput.receiverName
       );
+    });
+
+    it('shoud throw NotFoundException', () => {
+      const addressId = faker.random.number();
+      const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
+      const user = new User({ shippingAddresses });
+
+      const updateShippingAddressInput: UpdateShippingAddressInput = {
+        receiverName: faker.lorem.text(),
+        baseAddress: faker.lorem.text(),
+      };
+
+      try {
+        user.updateShippingAddress(addressId, updateShippingAddressInput);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('removeShippingAddress', () => {
+    it('shoud return remain shippingAddresses', () => {
+      const addressId = faker.random.number();
+      const shippingAddresses = [
+        new ShippingAddress(),
+        new ShippingAddress({ id: addressId }),
+        new ShippingAddress(),
+      ];
+      const user = new User({ shippingAddresses });
+
+      const remainShippingAddresses = [
+        shippingAddresses[0],
+        shippingAddresses[2],
+      ];
+
+      const result = user.removeShippingAddress(addressId);
+
+      expect(result).toEqual(remainShippingAddresses);
+    });
+
+    it('shoud throw NotFoundException', () => {
+      const addressId = faker.random.number();
+      const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
+      const user = new User({ shippingAddresses });
+
+      try {
+        user.removeShippingAddress(addressId);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });

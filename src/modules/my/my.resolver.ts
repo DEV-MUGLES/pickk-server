@@ -99,4 +99,14 @@ export class MyResolver extends BaseResolver {
       updateShippingAddressInput
     );
   }
+
+  @Mutation(() => [ShippingAddress])
+  @UseGuards(JwtVerifyGuard)
+  async removeMyShippingAddress(
+    @CurrentUser() payload: JwtPayload,
+    @Args('addressId') addressId: number
+  ): Promise<ShippingAddress[]> {
+    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    return await this.usersService.removeShippingAddress(user, addressId);
+  }
 }

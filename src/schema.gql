@@ -54,6 +54,7 @@ type Mutation {
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   refreshToken: JwtToken!
+  removeMyShippingAddress(addressId: Float!): [ShippingAddress!]!
   updateMyShippingAddress(addressId: Float!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
 

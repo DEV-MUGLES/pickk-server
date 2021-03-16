@@ -72,4 +72,12 @@ export class UsersService {
       (address) => address.id === addressId
     );
   }
+
+  async removeShippingAddress(
+    user: User,
+    addressId: number
+  ): Promise<ShippingAddress[]> {
+    user.removeShippingAddress(addressId);
+    return (await this.usersRepository.save(user)).shippingAddresses;
+  }
 }

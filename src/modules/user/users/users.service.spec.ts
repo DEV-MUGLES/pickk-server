@@ -194,4 +194,31 @@ describe('UsersService', () => {
       );
     });
   });
+
+  describe('removeShippingAddress', () => {
+    it('should return updated address when success', async () => {
+      const addressId = faker.random.number();
+      const shippingAddress = new ShippingAddress({
+        id: addressId,
+      });
+      const user = new User({
+        shippingAddresses: [shippingAddress],
+      });
+      const remainShippingAddresses = [];
+      const updatedUser = new User({
+        ...user,
+        shippingAddresses: remainShippingAddresses,
+      });
+
+      const userModelRemoveShippingAddressSpy = jest.spyOn(
+        user,
+        'removeShippingAddress'
+      );
+      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+
+      const result = await usersService.removeShippingAddress(user, addressId);
+      expect(result).toEqual(remainShippingAddresses);
+      expect(userModelRemoveShippingAddressSpy).toHaveBeenCalledWith(addressId);
+    });
+  });
 });
