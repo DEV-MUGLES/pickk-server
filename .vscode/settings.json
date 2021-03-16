@@ -9,6 +9,6 @@
         "admin",
         "common"
     ],
-    "jestrunner.jestCommand": "npm run test --",
+    "jestrunner.jestCommand": "npm run jest --",
     "editor.formatOnSave": true,
 }
