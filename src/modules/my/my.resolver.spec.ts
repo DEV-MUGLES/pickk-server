@@ -3,7 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import * as faker from 'faker';
 import { User } from '../user/users/models/user.model';
-import { UsersRepository } from '../user/users/users.repository';
+import { ShippingAddressRepository } from '../user/users/repositories/shipping-address.repository';
+import { UserRepository } from '../user/users/repositories/user.repository';
 import { UsersService } from '../user/users/users.service';
 import { MyResolver } from './my.resolver';
 
@@ -17,7 +18,8 @@ describe('MyResolver', () => {
       providers: [
         MyResolver,
         UsersService,
-        UsersRepository,
+        UserRepository,
+        ShippingAddressRepository,
         {
           provide: JwtService,
           useValue: {

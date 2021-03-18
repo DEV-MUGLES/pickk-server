@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from './users.repository';
+import { UserRepository } from './repositories/user.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
@@ -10,39 +10,43 @@ import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from './dto/shipping-address.input';
+import { ShippingAddressRepository } from './repositories/shipping-address.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository,
+
+    @InjectRepository(ShippingAddressRepository)
+    private readonly shippingAddressRepository: ShippingAddressRepository
   ) {}
 
   async list(relations: string[] = []): Promise<UserEntity[]> {
-    const users = await this.usersRepository.find({ relations });
-    return this.usersRepository.entityToModelMany(users);
+    const users = await this.userRepository.find({ relations });
+    return this.userRepository.entityToModelMany(users);
   }
 
   async get(id: number, relations: string[] = []): Promise<User> {
-    return await this.usersRepository.get(id, relations);
+    return await this.userRepository.get(id, relations);
   }
 
   async create({ password, ...input }: CreateUserInput): Promise<UserEntity> {
     const user = new User(input);
     user.password = UserPassword.create(password);
-    return await this.usersRepository.save(user);
+    return await this.userRepository.save(user);
   }
 
   async update(id: number, input: UpdateUserInput): Promise<UserEntity> {
-    const user = await this.usersRepository.get(id);
-    return await this.usersRepository.updateEntity(user, input);
+    const user = await this.userRepository.get(id);
+    return await this.userRepository.updateEntity(user, input);
   }
 
   async findOne(
     param: Partial<UserEntity>,
     relations: string[] = []
   ): Promise<User | null> {
-    return await this.usersRepository.findOneEntity(param, relations);
+    return await this.userRepository.findOneEntity(param, relations);
   }
 
   async updatePassword(
@@ -50,16 +54,14 @@ export class UsersService {
     password: string,
     input: string
   ): Promise<User> {
-    return await this.usersRepository.save(
-      user.updatePassword(password, input)
-    );
+    return await this.userRepository.save(user.updatePassword(password, input));
   }
 
   async getShippingAddresses(user: User): Promise<ShippingAddress[]> {
     const shippingAddresses =
       user.getShippingAddresses() ??
       (
-        await this.usersRepository.get(user.id, ['shippingAddresses'])
+        await this.userRepository.get(user.id, ['shippingAddresses'])
       ).getShippingAddresses();
     return shippingAddresses;
   }
@@ -69,7 +71,7 @@ export class UsersService {
     createShippingAddressInput: CreateShippingAddressInput
   ): Promise<ShippingAddress[]> {
     user.addShippingAddress(createShippingAddressInput);
-    return (await this.usersRepository.save(user)).shippingAddresses;
+    return (await this.userRepository.save(user)).shippingAddresses;
   }
 
   async updateShippingAddress(
@@ -78,7 +80,7 @@ export class UsersService {
     updateShippingAddressInput: UpdateShippingAddressInput
   ): Promise<ShippingAddress> {
     user.updateShippingAddress(addressId, updateShippingAddressInput);
-    return (await this.usersRepository.save(user)).shippingAddresses.find(
+    return (await this.userRepository.save(user)).shippingAddresses.find(
       (address) => address.id === addressId
     );
   }
@@ -88,6 +90,7 @@ export class UsersService {
     addressId: number
   ): Promise<ShippingAddress[]> {
     user.removeShippingAddress(addressId);
-    return (await this.usersRepository.save(user)).shippingAddresses;
+    this.shippingAddressRepository.delete(addressId);
+    return (await this.userRepository.save(user)).shippingAddresses;
   }
 }

@@ -9,8 +9,9 @@ import { UserEntity } from './entities/user.entity';
 import { ShippingAddress } from './models/shipping-address.model';
 import { UserPassword } from './models/user-password.model';
 import { User } from './models/user.model';
+import { ShippingAddressRepository } from './repositories/shipping-address.repository';
 
-import { UsersRepository } from './users.repository';
+import { UserRepository } from './repositories/user.repository';
 import { UsersService } from './users.service';
 
 const USER_PASSWORD_1 = 'abcd1234!';
@@ -18,15 +19,19 @@ const USER_PASSWORD_2 = 'efgh7890@';
 
 describe('UsersService', () => {
   let usersService: UsersService;
-  let usersRepository: UsersRepository;
+  let userRepository: UserRepository;
+  let shippingAddressRepository: ShippingAddressRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService, UsersRepository],
+      providers: [UsersService, UserRepository, ShippingAddressRepository],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);
-    usersRepository = module.get<UsersRepository>(UsersRepository);
+    userRepository = module.get<UserRepository>(UserRepository);
+    shippingAddressRepository = module.get<ShippingAddressRepository>(
+      ShippingAddressRepository
+    );
   });
 
   describe('creating a user', () => {
@@ -42,7 +47,7 @@ describe('UsersService', () => {
         email: createUserInput.email,
       });
 
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(newUser);
+      jest.spyOn(userRepository, 'save').mockResolvedValue(newUser);
 
       const result = await usersService.create(createUserInput);
 
@@ -56,7 +61,7 @@ describe('UsersService', () => {
       const user = Object.assign(new User(), { id: userId });
 
       const userRepositoryGetSpy = jest
-        .spyOn(usersRepository, 'get')
+        .spyOn(userRepository, 'get')
         .mockResolvedValue(user);
 
       const result = await usersService.get(userId);
@@ -75,7 +80,7 @@ describe('UsersService', () => {
       const user = Object.assign(new User(), findOneDto);
 
       const userRepositoryFindSpy = jest
-        .spyOn(usersRepository, 'findOneEntity')
+        .spyOn(userRepository, 'findOneEntity')
         .mockResolvedValue(user);
 
       const result = await usersService.findOne(findOneDto);
@@ -100,8 +105,8 @@ describe('UsersService', () => {
       const userModelUpdatePasswordSpy = jest
         .spyOn(user, 'updatePassword')
         .mockReturnValue(updatedUser);
-      const usersRepositorySaveSpy = jest
-        .spyOn(usersRepository, 'save')
+      const userRepositorySaveSpy = jest
+        .spyOn(userRepository, 'save')
         .mockResolvedValue(updatedUser);
 
       const result = await usersService.updatePassword(
@@ -114,7 +119,7 @@ describe('UsersService', () => {
         oldPassword,
         newPassword
       );
-      expect(usersRepositorySaveSpy).toHaveBeenCalledWith(updatedUser);
+      expect(userRepositorySaveSpy).toHaveBeenCalledWith(updatedUser);
     });
   });
 
@@ -142,7 +147,7 @@ describe('UsersService', () => {
       ];
 
       const userRepositoryGetSpy = jest
-        .spyOn(usersRepository, 'get')
+        .spyOn(userRepository, 'get')
         .mockResolvedValue(
           new User({
             ...user,
@@ -181,7 +186,7 @@ describe('UsersService', () => {
         user,
         'addShippingAddress'
       );
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(addedUser);
+      jest.spyOn(userRepository, 'save').mockResolvedValue(addedUser);
 
       const result = await usersService.addShippingAddress(
         user,
@@ -220,7 +225,7 @@ describe('UsersService', () => {
         user,
         'updateShippingAddress'
       );
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+      jest.spyOn(userRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.updateShippingAddress(
         user,
@@ -254,11 +259,17 @@ describe('UsersService', () => {
         user,
         'removeShippingAddress'
       );
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
+      const shippingAddressRepositoryDeleteSpy = jest
+        .spyOn(shippingAddressRepository, 'delete')
+        .mockImplementationOnce(() => null);
+      jest.spyOn(userRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.removeShippingAddress(user, addressId);
       expect(result).toEqual(remainShippingAddresses);
       expect(userModelRemoveShippingAddressSpy).toHaveBeenCalledWith(addressId);
+      expect(shippingAddressRepositoryDeleteSpy).toHaveBeenCalledWith(
+        addressId
+      );
     });
   });
 });

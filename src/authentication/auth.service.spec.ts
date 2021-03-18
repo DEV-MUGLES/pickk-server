@@ -4,7 +4,7 @@ import * as faker from 'faker';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from '@src/modules/user/users/users.repository';
+import { UserRepository } from '@src/modules/user/users/repositories/user.repository';
 
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
@@ -15,6 +15,7 @@ import {
   UserCodeNotFoundExeption,
   UserEmailNotFoundExeption,
 } from './exceptions/user-not-found.exception';
+import { ShippingAddressRepository } from '@src/modules/user/users/repositories/shipping-address.repository';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -27,7 +28,8 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         UsersService,
-        UsersRepository,
+        UserRepository,
+        ShippingAddressRepository,
         {
           provide: JwtService,
           useValue: {

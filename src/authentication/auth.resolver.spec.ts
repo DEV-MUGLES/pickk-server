@@ -2,13 +2,14 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UsersRepository } from '@src/modules/user/users/users.repository';
+import { UserRepository } from '@src/modules/user/users/repositories/user.repository';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { User } from '@src/modules/user/users/models/user.model';
+import { ShippingAddressRepository } from '@src/modules/user/users/repositories/shipping-address.repository';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -22,7 +23,8 @@ describe('AuthResolver', () => {
         AuthResolver,
         AuthService,
         UsersService,
-        UsersRepository,
+        UserRepository,
+        ShippingAddressRepository,
         {
           provide: JwtService,
           useValue: {
