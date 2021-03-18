@@ -1,5 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { IsOptional, IsPhoneNumber, IsPostalCode } from 'class-validator';
+import {
+  IsNumberString,
+  IsOptional,
+  IsPhoneNumber,
+  IsPostalCode,
+} from 'class-validator';
 import { Column } from 'typeorm';
 
 import { BaseEntity } from './base.entity';
@@ -32,13 +37,15 @@ export abstract class AbstractAddressEntity
   postalCode: string;
 
   @Field()
-  @Column()
+  @Column({ type: 'char', length: 11 })
   @IsPhoneNumber('KR')
+  @IsNumberString()
   phoneNumber1: string;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ type: 'char', length: 11, nullable: true })
   @IsPhoneNumber('KR')
+  @IsNumberString()
   @IsOptional()
   phoneNumber2?: string;
 }

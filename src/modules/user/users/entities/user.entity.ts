@@ -6,6 +6,7 @@ import {
   IsOptional,
   IsString,
   Max,
+  MaxLength,
   Min,
 } from 'class-validator';
 
@@ -28,15 +29,21 @@ export class UserEntity extends BaseEntity implements IUser {
 
   @Field({ nullable: true })
   @Column({
+    type: 'varchar',
+    length: 15,
     nullable: true,
     default: null,
     unique: true,
   })
   @IsString()
+  @MaxLength(15)
   code?: string;
 
   @Field()
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 15,
+  })
   @IsString()
   name: string;
 
