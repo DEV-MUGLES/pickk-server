@@ -9,7 +9,7 @@ import { PasswordIncorrectException } from './exceptions/password-incorrect.exce
 import {
   UserCodeNotFoundExeption,
   UserEmailNotFoundExeption,
-} from './exceptions/user-not-found.exception';
+} from './exceptions/user.exception';
 import { CreateJwtPayloadInput } from './dto/jwt.dto';
 
 @Injectable()

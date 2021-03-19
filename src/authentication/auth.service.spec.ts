@@ -13,7 +13,7 @@ import { PasswordIncorrectException } from './exceptions/password-incorrect.exce
 import {
   UserCodeNotFoundExeption,
   UserEmailNotFoundExeption,
-} from './exceptions/user-not-found.exception';
+} from './exceptions/user.exception';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
