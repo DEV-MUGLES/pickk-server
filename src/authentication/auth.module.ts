@@ -3,7 +3,11 @@ import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
 import { jwtConstants } from './constants/jwt.constant';
-import { JwtStrategy, JwtVerifyStrategy } from './strategies/jwt.strategy';
+import {
+  JwtRefreshStrategy,
+  JwtStrategy,
+  JwtVerifyStrategy,
+} from './strategies/jwt.strategy';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 
@@ -18,7 +22,13 @@ import { UsersModule } from '@src/modules/user/users/users.module';
       signOptions: { expiresIn: jwtConstants.expiresIn },
     }),
   ],
-  providers: [AuthResolver, AuthService, JwtStrategy, JwtVerifyStrategy],
+  providers: [
+    AuthResolver,
+    AuthService,
+    JwtStrategy,
+    JwtVerifyStrategy,
+    JwtRefreshStrategy,
+  ],
   exports: [JwtModule],
 })
 export class AuthModule {}
