@@ -8,7 +8,10 @@ import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dto/shipping-address.input';
-import { UserPasswordDuplicatedException } from '../exceptions/user.exception';
+import {
+  UserPasswordDuplicatedException,
+  UserPasswordNotFoundException,
+} from '../exceptions/user.exception';
 import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
 
 describe('UserModel', () => {
@@ -68,6 +71,50 @@ describe('UserModel', () => {
         user.updatePassword(OLD_PASSWORD, OLD_PASSWORD);
       }).toThrow(UserPasswordDuplicatedException);
       expect(userPasswordCompareSpy).toHaveBeenCalledWith(OLD_PASSWORD);
+    });
+  });
+
+  describe('comparePassword', () => {
+    const OLD_PASSWORD = 'OLD_PASSWORD1!';
+
+    it('should return true when matched', () => {
+      const user = new User({});
+      user.password = UserPassword.create(OLD_PASSWORD);
+
+      const userPasswordCompareSpy = jest
+        .spyOn(user.password, 'compare')
+        .mockReturnValueOnce(true);
+
+      const result = user.comparePassword(OLD_PASSWORD);
+
+      expect(result).toEqual(true);
+      expect(userPasswordCompareSpy).toHaveBeenCalledWith(OLD_PASSWORD);
+    });
+
+    it('should return false when unmatched', () => {
+      const user = new User({});
+      user.password = UserPassword.create(OLD_PASSWORD);
+
+      const strangePassword = faker.lorem.text();
+
+      const userPasswordCompareSpy = jest
+        .spyOn(user.password, 'compare')
+        .mockReturnValueOnce(false);
+
+      const result = user.comparePassword(strangePassword);
+
+      expect(result).toEqual(false);
+      expect(userPasswordCompareSpy).toHaveBeenCalledWith(strangePassword);
+    });
+
+    it('should throw UserPasswordNotFoundException when password not found', () => {
+      const user = new User({});
+
+      const strangePassword = faker.lorem.text();
+
+      expect(() => user.comparePassword(strangePassword)).toThrow(
+        UserPasswordNotFoundException
+      );
     });
   });
 

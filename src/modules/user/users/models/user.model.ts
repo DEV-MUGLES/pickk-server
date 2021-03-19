@@ -7,7 +7,10 @@ import {
 } from '../dto/shipping-address.input';
 
 import { UserEntity } from '../entities/user.entity';
-import { UserPasswordDuplicatedException } from '../exceptions/user.exception';
+import {
+  UserPasswordDuplicatedException,
+  UserPasswordNotFoundException,
+} from '../exceptions/user.exception';
 import { ShippingAddress } from './shipping-address.model';
 import { UserPassword } from './user-password.model';
 
@@ -48,6 +51,9 @@ export class User extends UserEntity {
   };
 
   public comparePassword = (password: string): boolean => {
+    if (!this.password) {
+      throw new UserPasswordNotFoundException();
+    }
     return this.password.compare(password);
   };
 
