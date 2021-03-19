@@ -4,7 +4,9 @@ import { Connection } from 'typeorm';
 import { AppConfigModule } from './config/app/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
+
 import { AuthModule } from './authentication/auth.module';
+import { ItemModule } from './modules/item/item.module';
 import { MyModule } from './modules/my/my.module';
 import { UserModule } from './modules/user/user.module';
 
@@ -20,6 +22,7 @@ import { AppService } from './app.service';
     }),
     MysqlDatabaseProviderModule,
     AuthModule,
+    ItemModule,
     MyModule,
     UserModule,
   ],
