@@ -14,8 +14,8 @@ type Courier {
 }
 
 type CourierIssue {
-  endAt: DateTime
-  message: String
+  endAt: DateTime!
+  message: String!
 }
 
 input CreateCourierInput {
@@ -77,8 +77,10 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createUser(createUserInput: CreateUserInput!): User!
+  removeCourierIssue(courierId: Int!): Courier!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
+  updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
@@ -127,6 +129,11 @@ input UpdateCourierInput {
   name: String
   phoneNumber: String
   returnReserveUrl: String
+}
+
+input UpdateCourierIssueInput {
+  endAt: DateTime!
+  message: String!
 }
 
 input UpdateShippingAddressInput {

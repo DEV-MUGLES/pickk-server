@@ -10,6 +10,8 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CouriersService } from './couriers.service';
 import { Courier } from './models/courier.model';
 import { CreateCourierInput, UpdateCourierInput } from './dto/courier.input';
+import { CourierIssue } from './models/courier-issue.model';
+import { UpdateCourierIssueInput } from './dto/courier-issue.input';
 
 @Resolver(() => Courier)
 export class CouriersResolver extends BaseResolver {
@@ -49,5 +51,30 @@ export class CouriersResolver extends BaseResolver {
     @Args('updateCourierInput') updateCourierInput: UpdateCourierInput
   ): Promise<Courier> {
     return await this.couriersService.update(id, { ...updateCourierInput });
+  }
+
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => CourierIssue)
+  async updateCourierIssue(
+    @IntArgs('courierId') courierId: number,
+    @Args('updateCourierIssueInput')
+    updateCourierIssueInput: UpdateCourierIssueInput
+  ): Promise<CourierIssue> {
+    const courier = await this.couriersService.get(courierId);
+    return await this.couriersService.updateIssue(
+      courier,
+      updateCourierIssueInput
+    );
+  }
+
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Courier)
+  async removeCourierIssue(
+    @IntArgs('courierId') courierId: number
+  ): Promise<Courier> {
+    const courier = await this.couriersService.get(courierId);
+    return await this.couriersService.removeIssue(courier);
   }
 }

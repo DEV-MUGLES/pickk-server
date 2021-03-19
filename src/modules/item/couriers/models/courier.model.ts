@@ -43,6 +43,9 @@ export class Courier extends CourierEntity {
     if (!this.issue) {
       throw new CourierIssueNotFoundException();
     }
-    this.issue = null;
+    this.issue = {
+      message: null,
+      endAt: null,
+    };
   }
 }

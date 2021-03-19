@@ -5,12 +5,12 @@ import { ICourierIssue } from '../interfaces/courier-issue.interface';
 
 @ObjectType()
 export class CourierIssueEntity implements ICourierIssue {
-  @Field({ nullable: true })
+  @Field()
   @Column({ nullable: true, default: null })
   @IsString()
   message: string;
 
-  @Field({ nullable: true })
+  @Field()
   @Column({
     type: 'timestamp',
     nullable: true,
