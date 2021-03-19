@@ -12,6 +12,13 @@ type Courier {
   updatedAt: DateTime!
 }
 
+input CreateCourierInput {
+  code: String!
+  name: String!
+  phoneNumber: String!
+  returnReserveUrl: String!
+}
+
 input CreateShippingAddressInput {
   baseAddress: String!
   detailAddress: String!
@@ -62,8 +69,10 @@ input LoginByEmailInput {
 
 type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  createCourier(createCourierInput: CreateCourierInput!): Courier!
   createUser(createUserInput: CreateUserInput!): User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
@@ -106,6 +115,13 @@ type ShippingAddress {
 Date type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
 """
 scalar Timestamp
+
+input UpdateCourierInput {
+  code: String
+  name: String
+  phoneNumber: String
+  returnReserveUrl: String
+}
 
 input UpdateShippingAddressInput {
   baseAddress: String
