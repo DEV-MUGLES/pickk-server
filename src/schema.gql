@@ -2,6 +2,16 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Courier {
+  code: String!
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  phoneNumber: String!
+  returnReserveUrl: String!
+  updatedAt: DateTime!
+}
+
 input CreateShippingAddressInput {
   baseAddress: String!
   detailAddress: String!
@@ -60,6 +70,8 @@ type Mutation {
 }
 
 type Query {
+  courier(id: Int!): Courier!
+  couriers: [Courier!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
