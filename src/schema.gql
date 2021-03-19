@@ -2,6 +2,15 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Brand {
+  createdAt: DateTime!
+  description: String
+  id: Int!
+  nameEng: String
+  nameKor: String!
+  updatedAt: DateTime!
+}
+
 type Courier {
   code: String!
   createdAt: DateTime!
@@ -87,6 +96,8 @@ type Mutation {
 }
 
 type Query {
+  brand(id: Int!): Brand!
+  brands: [Brand!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
