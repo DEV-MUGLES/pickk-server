@@ -31,7 +31,7 @@ export class MyResolver extends BaseResolver {
 
   @Query(() => User)
   @UseGuards(JwtVerifyGuard)
-  async myProfile(
+  async me(
     @CurrentUser() payload: JwtPayload,
     @Info() info?: GraphQLResolveInfo
   ) {

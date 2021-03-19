@@ -50,13 +50,13 @@ describe('MyResolver', () => {
     name: payload.username,
   });
 
-  describe('myProfile', () => {
+  describe('me', () => {
     it('should return current user', async () => {
       const usersServiceGetSpy = jest
         .spyOn(usersService, 'get')
         .mockResolvedValue(user);
 
-      const result = await myResolver.myProfile(payload);
+      const result = await myResolver.me(payload);
 
       expect(result).toEqual(user);
       expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);

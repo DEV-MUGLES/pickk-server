@@ -61,9 +61,10 @@ type Mutation {
 }
 
 type Query {
+  me: User!
+
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
-  myProfile: User!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
 
