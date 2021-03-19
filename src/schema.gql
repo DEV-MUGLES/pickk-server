@@ -53,14 +53,14 @@ input LoginByEmailInput {
 type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createUser(createUserInput: CreateUserInput!): User!
-  loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
-  loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
 
 type Query {
+  loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
+  loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""

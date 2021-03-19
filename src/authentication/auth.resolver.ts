@@ -1,5 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Resolver, Args, Query, Mutation } from '@nestjs/graphql';
+import { Resolver, Args, Query } from '@nestjs/graphql';
 
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
@@ -25,7 +25,7 @@ export class AuthResolver {
     return this.authService.getToken(user);
   }
 
-  @Mutation(() => JwtToken)
+  @Query(() => JwtToken)
   async loginByEmail(
     @Args('loginByEmailInput') loginByEmailInput: LoginByEmailInput
   ) {
@@ -34,7 +34,7 @@ export class AuthResolver {
     return this.authService.getToken(user);
   }
 
-  @Mutation(() => JwtToken)
+  @Query(() => JwtToken)
   async loginByCode(
     @Args('loginByCodeInput') loginByCodeInput: LoginByCodeInput
   ) {
