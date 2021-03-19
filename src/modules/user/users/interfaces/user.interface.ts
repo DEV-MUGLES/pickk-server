@@ -1,3 +1,4 @@
+import { UserRole } from '../constants/user.enum';
 import { ShippingAddress } from '../models/shipping-address.model';
 
 /**
@@ -6,6 +7,7 @@ import { ShippingAddress } from '../models/shipping-address.model';
  * @interface
  */
 export interface IUser {
+  role?: UserRole;
   code?: string;
   email: string;
   name: string | null;

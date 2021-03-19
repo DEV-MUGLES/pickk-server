@@ -134,7 +134,16 @@ type User {
   height: Int
   id: Int!
   name: String!
+  role: UserRole
   shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
   weight: Int
+}
+
+"""유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""
+enum UserRole {
+  Admin
+  Editor
+  Seller
+  User
 }
