@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CouriersRepository } from './couriers.repository';
+import { UpdateCourierIssueInput } from './dto/courier-issue.input';
 import { CreateCourierInput, UpdateCourierInput } from './dto/courier.input';
+import { CourierIssue } from './models/courier-issue.model';
 import { Courier } from './models/courier.model';
 
 @Injectable()
@@ -28,5 +30,18 @@ export class CouriersService {
   async update(id: number, input: UpdateCourierInput): Promise<Courier> {
     await this.couriersRepository.update(id, input);
     return await this.get(id);
+  }
+
+  async updateIssue(
+    courier: Courier,
+    updateCourierIssueInput: UpdateCourierIssueInput
+  ): Promise<CourierIssue> {
+    courier.updateIssue(updateCourierIssueInput);
+    return (await this.couriersRepository.save(courier)).issue;
+  }
+
+  async removeIssue(courier: Courier): Promise<Courier> {
+    courier.removeIssue();
+    return await this.couriersRepository.save(courier);
   }
 }
