@@ -22,14 +22,15 @@ export class User extends UserEntity {
       return;
     }
     this.id = attributes.id;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
+
     this.email = attributes.email;
     this.name = attributes.name;
     this.code = attributes.code;
     this.weight = attributes.weight;
     this.height = attributes.height;
     this.password = attributes.password;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
     this.shippingAddresses = attributes.shippingAddresses;
   }
 
