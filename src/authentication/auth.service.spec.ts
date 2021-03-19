@@ -51,6 +51,7 @@ describe('AuthService', () => {
         email: emailLoginDto.email,
         password: new UserPassword(),
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
@@ -135,6 +136,7 @@ describe('AuthService', () => {
         code: codeLoginDto.code,
         password: new UserPassword(),
       });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...expectedResult } = existingUser;
 
       const usersServiceFindOneSpy = jest
@@ -208,6 +210,7 @@ describe('AuthService', () => {
   });
 
   describe('getToken', () => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password, ...validatedUser } = new User();
     it('유저의 name과 id를 통해 JWT를 생성한다.', async () => {
       const jwtServiceSignSpy = jest
