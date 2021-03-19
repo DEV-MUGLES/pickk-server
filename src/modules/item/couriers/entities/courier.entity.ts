@@ -9,6 +9,7 @@ import {
 } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ICourier } from '../interfaces/courier.interface';
+import { CourierIssue } from '../models/courier-issue.model';
 
 @ObjectType()
 @Entity({
@@ -47,4 +48,7 @@ export class CourierEntity extends BaseEntity implements ICourier {
   })
   @IsUrl()
   returnReserveUrl: string;
+
+  @Column(() => CourierIssue)
+  issue?: CourierIssue;
 }

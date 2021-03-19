@@ -6,10 +6,16 @@ type Courier {
   code: String!
   createdAt: DateTime!
   id: Int!
+  issue: CourierIssue
   name: String!
   phoneNumber: String!
   returnReserveUrl: String!
   updatedAt: DateTime!
+}
+
+type CourierIssue {
+  endAt: DateTime
+  message: String
 }
 
 input CreateCourierInput {

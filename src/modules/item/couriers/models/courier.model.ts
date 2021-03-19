@@ -1,8 +1,12 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { CourierEntity } from '../entities/courier.entity';
+import { CourierIssue } from './courier-issue.model';
 
 @ObjectType()
 export class Courier extends CourierEntity {
+  @Field(() => CourierIssue, { nullable: true })
+  issue?: CourierIssue;
+
   constructor(attributes?: Partial<Courier>) {
     super();
     if (!attributes) {
@@ -16,5 +20,7 @@ export class Courier extends CourierEntity {
     this.code = attributes.code;
     this.phoneNumber = attributes.phoneNumber;
     this.returnReserveUrl = attributes.returnReserveUrl;
+
+    this.issue = attributes.issue;
   }
 }
