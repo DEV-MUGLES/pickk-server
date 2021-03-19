@@ -2,6 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import * as faker from 'faker';
+import { UpdateUserInput } from '../user/users/dto/user.input';
 import { User } from '../user/users/models/user.model';
 import { ShippingAddressRepository } from '../user/users/repositories/shipping-address.repository';
 import { UserRepository } from '../user/users/repositories/user.repository';
@@ -50,19 +51,6 @@ describe('MyResolver', () => {
     name: payload.username,
   });
 
-  describe('me', () => {
-    it('should return current user', async () => {
-      const usersServiceGetSpy = jest
-        .spyOn(usersService, 'get')
-        .mockResolvedValue(user);
-
-      const result = await myResolver.me(payload);
-
-      expect(result).toEqual(user);
-      expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);
-    });
-  });
-
   describe('myJwtPayload', () => {
     it('should work without code', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -78,6 +66,38 @@ describe('MyResolver', () => {
     });
   });
 
+  describe('me', () => {
+    it('should return current user', async () => {
+      const usersServiceGetSpy = jest
+        .spyOn(usersService, 'get')
+        .mockResolvedValueOnce(user);
+
+      const result = await myResolver.me(payload);
+
+      expect(result).toEqual(user);
+      expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);
+    });
+  });
+
+  describe('updateMe', () => {
+    it('should return updated user', async () => {
+      const updateUserInput: UpdateUserInput = {
+        name: faker.lorem.text(),
+      };
+      const usersServiceUpdateSpy = jest
+        .spyOn(usersService, 'update')
+        .mockResolvedValueOnce({ ...user, ...updateUserInput });
+
+      const result = await myResolver.updateMe(payload, updateUserInput);
+
+      expect(result.name).toEqual(updateUserInput.name);
+      expect(usersServiceUpdateSpy).toHaveBeenCalledWith(
+        payload.sub,
+        updateUserInput
+      );
+    });
+  });
+
   describe('updateMyPassword', () => {
     it('should return undefined when success', async () => {
       const user = new User();
@@ -86,7 +106,7 @@ describe('MyResolver', () => {
 
       const usersServiceUpdatePasswordSpy = jest
         .spyOn(usersService, 'updatePassword')
-        .mockResolvedValue(undefined);
+        .mockResolvedValueOnce(undefined);
 
       const result = await myResolver.updateMyPassword(
         user,

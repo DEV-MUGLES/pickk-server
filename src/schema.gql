@@ -54,6 +54,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createUser(createUserInput: CreateUserInput!): User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  updateMe(updateUserInput: UpdateUserInput!): User!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
 }
@@ -104,6 +105,14 @@ input UpdateShippingAddressInput {
   postalCode: String
   receiverName: String
   userId: Int
+}
+
+input UpdateUserInput {
+  code: String
+  email: String
+  height: Int
+  name: String
+  weight: Int
 }
 
 type User {

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserRepository } from './repositories/user.repository';
 import { CreateUserInput, UpdateUserInput } from './dto/user.input';
-import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UserPassword } from './models/user-password.model';
 import { ShippingAddress } from './models/shipping-address.model';
@@ -22,7 +21,7 @@ export class UsersService {
     private readonly shippingAddressRepository: ShippingAddressRepository
   ) {}
 
-  async list(relations: string[] = []): Promise<UserEntity[]> {
+  async list(relations: string[] = []): Promise<User[]> {
     const users = await this.userRepository.find({ relations });
     return this.userRepository.entityToModelMany(users);
   }
@@ -31,19 +30,19 @@ export class UsersService {
     return await this.userRepository.get(id, relations);
   }
 
-  async create({ password, ...input }: CreateUserInput): Promise<UserEntity> {
+  async create({ password, ...input }: CreateUserInput): Promise<User> {
     const user = new User(input);
     user.password = UserPassword.create(password);
     return await this.userRepository.save(user);
   }
 
-  async update(id: number, input: UpdateUserInput): Promise<UserEntity> {
-    const user = await this.userRepository.get(id);
-    return await this.userRepository.updateEntity(user, input);
+  async update(id: number, input: UpdateUserInput): Promise<User> {
+    await this.userRepository.update(id, input);
+    return await this.get(id);
   }
 
   async findOne(
-    param: Partial<UserEntity>,
+    param: Partial<User>,
     relations: string[] = []
   ): Promise<User | null> {
     return await this.userRepository.findOneEntity(param, relations);

@@ -20,6 +20,7 @@ import {
   SHIPPING_ADDRESSES,
   USER_RELATIONS,
 } from '../user/users/constants/user.relation';
+import { UpdateUserInput } from '../user/users/dto/user.input';
 
 @Resolver()
 export class MyResolver extends BaseResolver {
@@ -27,6 +28,14 @@ export class MyResolver extends BaseResolver {
 
   constructor(@Inject(UsersService) private usersService: UsersService) {
     super();
+  }
+
+  @Query(() => JwtPayload, {
+    description: 'Bearer token을 받아 JwtPayload를 반환합니다.',
+  })
+  @UseGuards(JwtVerifyGuard)
+  myJwtPayload(@CurrentUser() payload: JwtPayload) {
+    return payload;
   }
 
   @Query(() => User)
@@ -41,12 +50,13 @@ export class MyResolver extends BaseResolver {
     );
   }
 
-  @Query(() => JwtPayload, {
-    description: 'Bearer token을 받아 JwtPayload를 반환합니다.',
-  })
+  @Mutation(() => User)
   @UseGuards(JwtVerifyGuard)
-  myJwtPayload(@CurrentUser() payload: JwtPayload) {
-    return payload;
+  async updateMe(
+    @CurrentUser() payload: JwtPayload,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput
+  ) {
+    return await this.usersService.update(payload.sub, { ...updateUserInput });
   }
 
   @Mutation(() => User)
