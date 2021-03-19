@@ -75,21 +75,15 @@ export class User extends UserEntity {
       throw new NotFoundException('수정할 배송정보가 존재하지 않습니다.');
     }
 
-    const updatedShippingAddress = {
+    this.shippingAddresses[index] = new ShippingAddress({
       ...this.shippingAddresses[index],
       ...updateShippingAddressInput,
-    };
+    });
 
-    this.shippingAddresses = [
-      ...this.shippingAddresses.slice(0, index),
-      updatedShippingAddress,
-      ...this.shippingAddresses.slice(index + 1),
-    ];
-
-    return updatedShippingAddress;
+    return this.shippingAddresses[index];
   };
 
-  public removeShippingAddress = (addressId: number): ShippingAddress[] => {
+  public removeShippingAddress = (addressId: number): ShippingAddress => {
     const index = this.shippingAddresses?.findIndex(
       (address) => address.id === addressId
     );
@@ -97,11 +91,13 @@ export class User extends UserEntity {
       throw new NotFoundException('삭제할 배송정보가 존재하지 않습니다.');
     }
 
+    const deletedShippingAddress = this.shippingAddresses[index];
+
     this.shippingAddresses = [
       ...this.shippingAddresses.slice(0, index),
       ...this.shippingAddresses.slice(index + 1),
     ];
 
-    return this.shippingAddresses;
+    return deletedShippingAddress;
   };
 }

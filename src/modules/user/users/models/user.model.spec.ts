@@ -161,23 +161,19 @@ describe('UserModel', () => {
   });
 
   describe('removeShippingAddress', () => {
-    it('shoud return remain shippingAddresses', () => {
+    it('shoud return removed shippingAddresses', () => {
       const addressId = faker.random.number();
+      const shippingAddress = new ShippingAddress({ id: addressId });
       const shippingAddresses = [
         new ShippingAddress(),
-        new ShippingAddress({ id: addressId }),
+        shippingAddress,
         new ShippingAddress(),
       ];
       const user = new User({ shippingAddresses });
 
-      const remainShippingAddresses = [
-        shippingAddresses[0],
-        shippingAddresses[2],
-      ];
-
       const result = user.removeShippingAddress(addressId);
 
-      expect(result).toEqual(remainShippingAddresses);
+      expect(result).toEqual(shippingAddress);
     });
 
     it('shoud throw NotFoundException', () => {

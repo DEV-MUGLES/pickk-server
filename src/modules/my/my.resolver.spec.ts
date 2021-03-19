@@ -4,8 +4,7 @@ import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import * as faker from 'faker';
 import { UpdateUserInput } from '../user/users/dto/user.input';
 import { User } from '../user/users/models/user.model';
-import { ShippingAddressRepository } from '../user/users/repositories/shipping-address.repository';
-import { UserRepository } from '../user/users/repositories/user.repository';
+import { UsersRepository } from '../user/users/users.repository';
 import { UsersService } from '../user/users/users.service';
 import { MyResolver } from './my.resolver';
 
@@ -19,8 +18,7 @@ describe('MyResolver', () => {
       providers: [
         MyResolver,
         UsersService,
-        UserRepository,
-        ShippingAddressRepository,
+        UsersRepository,
         {
           provide: JwtService,
           useValue: {
@@ -86,7 +84,7 @@ describe('MyResolver', () => {
       };
       const usersServiceUpdateSpy = jest
         .spyOn(usersService, 'update')
-        .mockResolvedValueOnce({ ...user, ...updateUserInput });
+        .mockResolvedValueOnce(new User({ ...user, ...updateUserInput }));
 
       const result = await myResolver.updateMe(payload, updateUserInput);
 

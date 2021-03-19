@@ -12,8 +12,6 @@ import {
 } from './exceptions/user-not-found.exception';
 import { CreateJwtPayloadInput } from './dto/jwt.dto';
 
-type ValidatedUser = Omit<UserEntity, 'password'>;
-
 @Injectable()
 export class AuthService {
   constructor(
@@ -55,7 +53,7 @@ export class AuthService {
     }
   }
 
-  getToken(user: ValidatedUser): IJwtToken {
+  getToken(user: Pick<UserEntity, 'id' | 'name' | 'code'>): IJwtToken {
     const payload: CreateJwtPayloadInput = {
       username: user.name,
       code: user.code,

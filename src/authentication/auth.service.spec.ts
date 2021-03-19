@@ -4,9 +4,8 @@ import * as faker from 'faker';
 import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthService } from './auth.service';
 import { JwtService } from '@nestjs/jwt';
-import { UserRepository } from '@src/modules/user/users/repositories/user.repository';
+import { UsersRepository } from '@src/modules/user/users/users.repository';
 
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { IJwtToken } from './interfaces/token.interface';
 import { User } from '@src/modules/user/users/models/user.model';
 import { UserPassword } from '@src/modules/user/users/models/user-password.model';
@@ -15,7 +14,6 @@ import {
   UserCodeNotFoundExeption,
   UserEmailNotFoundExeption,
 } from './exceptions/user-not-found.exception';
-import { ShippingAddressRepository } from '@src/modules/user/users/repositories/shipping-address.repository';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -28,8 +26,7 @@ describe('AuthService', () => {
       providers: [
         AuthService,
         UsersService,
-        UserRepository,
-        ShippingAddressRepository,
+        UsersRepository,
         {
           provide: JwtService,
           useValue: {
@@ -211,7 +208,7 @@ describe('AuthService', () => {
   });
 
   describe('getToken', () => {
-    const { password, ...validatedUser } = new UserEntity();
+    const { password, ...validatedUser } = new User();
     it('유저의 name과 id를 통해 JWT를 생성한다.', async () => {
       const jwtServiceSignSpy = jest
         .spyOn(jwtService, 'sign')
@@ -221,7 +218,7 @@ describe('AuthService', () => {
         access: JWT_TOKEN,
         refresh: JWT_TOKEN,
       };
-      const result = await authService.getToken(validatedUser);
+      const result = authService.getToken(validatedUser);
 
       expect(result).toEqual(expectedResult);
       expect(jwtServiceSignSpy).toHaveBeenCalledWith({
