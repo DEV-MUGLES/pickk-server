@@ -1,10 +1,13 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RefactorShippingAddressIndex1616397134153
+export class RefactorShippingAddressIndex1616404140051
   implements MigrationInterface {
-  name = 'RefactorShippingAddressIndex1616397134153';
+  name = 'RefactorShippingAddressIndex1616404140051';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      'CREATE INDEX `idx_userId-isPrimary` ON `shipping_address` (`userId`, `isPrimary`)'
+    );
     await queryRunner.query(
       'DROP INDEX `IDX_0802d2d7fb0bdbd7dedbb5c8ce` ON `shipping_address`'
     );
@@ -23,13 +26,9 @@ export class RefactorShippingAddressIndex1616397134153
     await queryRunner.query(
       'ALTER TABLE `user` CHANGE `code` `code` varchar(15) NULL DEFAULT NULL'
     );
-    await queryRunner.query(
-      'CREATE INDEX `idx_userId` ON `shipping_address` (`userId`)'
-    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query('DROP INDEX `idx_userId` ON `shipping_address`');
     await queryRunner.query(
       'ALTER TABLE `user` CHANGE `code` `code` varchar(15) NULL'
     );
@@ -44,6 +43,9 @@ export class RefactorShippingAddressIndex1616397134153
     );
     await queryRunner.query(
       'ALTER TABLE `brand` CHANGE `nameEng` `nameEng` varchar(30) NULL'
+    );
+    await queryRunner.query(
+      'DROP INDEX `idx_userId-isPrimary` ON `shipping_address`'
     );
     await queryRunner.query(
       'CREATE UNIQUE INDEX `IDX_0802d2d7fb0bdbd7dedbb5c8ce` ON `shipping_address` (`userId`, `name`)'

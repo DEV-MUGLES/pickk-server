@@ -8,7 +8,7 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: 'shipping_address',
 })
-@Index('idx_userId', ['userId'])
+@Index('idx_userId-isPrimary', ['userId', 'isPrimary'])
 export class ShippingAddressEntity extends AbstractAddressEntity {
   @Field()
   @Column()
