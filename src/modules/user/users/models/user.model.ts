@@ -61,6 +61,12 @@ export class User extends UserEntity {
     return this.shippingAddresses === null ? [] : this.shippingAddresses;
   };
 
+  private setPrimaryShippingAddress = (index: number): void => {
+    this.shippingAddresses.forEach((shippingAddress, _index) => {
+      shippingAddress.isPrimary = _index === index;
+    });
+  };
+
   public addShippingAddress = (
     createShippingAddressInput: CreateShippingAddressInput
   ): ShippingAddress => {
@@ -68,6 +74,12 @@ export class User extends UserEntity {
     this.shippingAddresses = (this.shippingAddresses ?? []).concat(
       shippingAddress
     );
+    if (
+      createShippingAddressInput.isPrimary ||
+      this.shippingAddresses.length === 1
+    ) {
+      this.setPrimaryShippingAddress(this.shippingAddresses.length - 1);
+    }
     return shippingAddress;
   };
 
@@ -86,6 +98,9 @@ export class User extends UserEntity {
       ...this.shippingAddresses[index],
       ...updateShippingAddressInput,
     });
+    if (updateShippingAddressInput.isPrimary) {
+      this.setPrimaryShippingAddress(index);
+    }
 
     return this.shippingAddresses[index];
   };

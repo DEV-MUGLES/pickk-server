@@ -147,20 +147,50 @@ describe('UserModel', () => {
   });
 
   describe('addShippingAddress', () => {
+    const createShippingAddressInput: CreateShippingAddressInput = {
+      name: faker.lorem.text(),
+      receiverName: faker.lorem.text(),
+      baseAddress: faker.lorem.text(),
+      detailAddress: faker.lorem.text(),
+      postalCode: faker.address.zipCode('#####'),
+      phoneNumber1: faker.phone.phoneNumber('###-####-####'),
+      isPrimary: faker.random.boolean(),
+    };
+
     it('should return added shippingAddress', () => {
       const user = new User();
-      const createShippingAddressInput: CreateShippingAddressInput = {
-        name: faker.lorem.text(),
-        receiverName: faker.lorem.text(),
-        baseAddress: faker.lorem.text(),
-        detailAddress: faker.lorem.text(),
-        postalCode: faker.address.zipCode('#####'),
-        phoneNumber1: faker.phone.phoneNumber('###-####-####'),
-        isPrimary: faker.random.boolean(),
-      };
 
-      const result = user.addShippingAddress(createShippingAddressInput);
+      const result = user.addShippingAddress({
+        ...createShippingAddressInput,
+        isPrimary: true,
+      });
       expect(result.name).toEqual(createShippingAddressInput.name);
+    });
+
+    it('first shippingAddress should be primary', () => {
+      const user = new User();
+
+      const result = user.addShippingAddress({
+        ...createShippingAddressInput,
+        isPrimary: false,
+      });
+      expect(result.name).toEqual(createShippingAddressInput.name);
+      expect(result.isPrimary).toEqual(true);
+    });
+
+    it('new primary shippingAddress should override existing primary', () => {
+      const user = new User();
+
+      const existingPrimaryAddress = user.addShippingAddress({
+        ...createShippingAddressInput,
+        isPrimary: true,
+      });
+      const result = user.addShippingAddress({
+        ...createShippingAddressInput,
+        isPrimary: true,
+      });
+      expect(existingPrimaryAddress.isPrimary).toEqual(false);
+      expect(result.isPrimary).toEqual(true);
     });
   });
 
@@ -189,7 +219,7 @@ describe('UserModel', () => {
       );
     });
 
-    it('shoud throw NotFoundException', () => {
+    it('shoud throw NotFoundException when not found', () => {
       const addressId = faker.random.number();
       const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
       const user = new User({ shippingAddresses });
@@ -204,6 +234,26 @@ describe('UserModel', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
+    });
+
+    it('new primary should override existing one', () => {
+      const addressId = faker.random.number();
+      const shippingAddresses = [
+        new ShippingAddress({ isPrimary: true }),
+        new ShippingAddress({ id: addressId }),
+      ];
+      const user = new User({ shippingAddresses });
+
+      const updateShippingAddressInput: UpdateShippingAddressInput = {
+        isPrimary: true,
+      };
+
+      const result = user.updateShippingAddress(
+        addressId,
+        updateShippingAddressInput
+      );
+      expect(result.isPrimary).toEqual(true);
+      expect(user.shippingAddresses[0].isPrimary).toEqual(false);
     });
   });
 
