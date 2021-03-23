@@ -93,6 +93,7 @@ type Mutation {
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
+  uploadMultipleImages(uploadImageInput: UploadImageInput!): Boolean!
 }
 
 type Query {
@@ -165,6 +166,13 @@ input UpdateUserInput {
   height: Int
   name: String
   weight: Int
+}
+
+"""The `Upload` scalar type represents a file upload."""
+scalar Upload
+
+input UploadImageInput {
+  files: [Upload!]!
 }
 
 type User {
