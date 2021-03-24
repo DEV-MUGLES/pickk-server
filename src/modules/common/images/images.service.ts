@@ -25,7 +25,7 @@ export class ImagesService {
   async uploadFileUploads(
     fileUploads: Promise<FileUpload>[]
   ): Promise<Array<S3UploadResultDto | null>> {
-    const results = await Promise.all<S3UploadResultDto | null>(
+    return await Promise.all<S3UploadResultDto | null>(
       fileUploads.map((fileUpload) =>
         new Promise<{ url: string; key: string }>(async (resolve) => {
           const { filename, mimetype, createReadStream } = await fileUpload;
@@ -39,7 +39,5 @@ export class ImagesService {
         }).catch(() => null)
       )
     );
-
-    return results;
   }
 }
