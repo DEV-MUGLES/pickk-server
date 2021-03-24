@@ -3,9 +3,13 @@ import { FileUpload } from 'graphql-upload';
 
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
+import { BaseImageRepository } from './base-image.repository';
+
 @Injectable()
 export class ImagesService {
   constructor(
+    @Inject(BaseImageRepository)
+    private baseImageRepository: BaseImageRepository,
     @Inject(AwsS3ProviderService) private awsS3Service: AwsS3ProviderService
   ) {}
 
@@ -16,9 +20,9 @@ export class ImagesService {
   async uploadFileUploads(
     fileUploads: Promise<FileUpload>[]
   ): Promise<Array<string | null>> {
-    return await Promise.all(
+    const results = await Promise.all(
       fileUploads.map((fileUpload) =>
-        new Promise<string>(async (resolve) => {
+        new Promise<{ url: string; key: string }>(async (resolve) => {
           const { filename, mimetype, createReadStream } = await fileUpload;
           resolve(
             await this.awsS3Service.uploadStream(
@@ -30,5 +34,8 @@ export class ImagesService {
         }).catch(() => null)
       )
     );
+    this.baseImageRepository.bulkInsert(results.map((result) => result.key));
+
+    return results.map((result) => result.url);
   }
 }

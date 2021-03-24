@@ -8,14 +8,12 @@ export class AddCourierIssue1616138945645 implements MigrationInterface {
       'ALTER TABLE `courier` ADD `issueEndat` timestamp NULL DEFAULT NULL'
     );
     await queryRunner.query(
-      'ALTER TABLE `courier` CHANGE `issueMessage` `issueMessage` varchar(255) NULL DEFAULT NULL'
+      'ALTER TABLE `courier` ADD `issueMessage` varchar(255) NULL DEFAULT NULL'
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      'ALTER TABLE `courier` CHANGE `issueMessage` `issueMessage` varchar(255) NOT NULL'
-    );
+    await queryRunner.query('ALTER TABLE `courier` DROP COLUMN `issueMessage`');
     await queryRunner.query('ALTER TABLE `courier` DROP COLUMN `issueEndat`');
   }
 }

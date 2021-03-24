@@ -55,7 +55,7 @@ export class AwsS3ProviderService {
     filename: string,
     mimetype: string,
     prefix?: string
-  ): Promise<string> {
+  ): Promise<{ url: string; key: string }> {
     const s3 = new AWS.S3();
 
     const params = {
@@ -66,6 +66,11 @@ export class AwsS3ProviderService {
       ContentType: mimetype,
     };
 
-    return this.getUrl((await s3.upload(params).promise()).Key);
+    const key = await (await s3.upload(params).promise()).Key;
+
+    return {
+      key,
+      url: this.getUrl(key),
+    };
   }
 }
