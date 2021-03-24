@@ -5,6 +5,8 @@ import moment from 'moment';
 
 import { AwsS3ConfigService } from '@src/config/providers/aws/s3/config.service';
 
+import { S3UploadResultDto } from './dto/s3.dto';
+
 @Injectable()
 export class AwsS3ProviderService {
   private ACL = 'public-read';
@@ -55,7 +57,7 @@ export class AwsS3ProviderService {
     filename: string,
     mimetype: string,
     prefix?: string
-  ): Promise<{ url: string; key: string }> {
+  ): Promise<S3UploadResultDto> {
     const s3 = new AWS.S3();
 
     const params = {
@@ -66,7 +68,7 @@ export class AwsS3ProviderService {
       ContentType: mimetype,
     };
 
-    const key = await (await s3.upload(params).promise()).Key;
+    const key = (await s3.upload(params).promise()).Key;
 
     return {
       key,

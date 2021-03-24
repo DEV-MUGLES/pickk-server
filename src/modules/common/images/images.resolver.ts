@@ -19,6 +19,11 @@ export class ImagesResolver {
     })
     { files }: UploadImageInput
   ): Promise<Array<string | null>> {
-    return await this.imagesService.uploadFileUploads(files);
+    const results = await this.imagesService.uploadFileUploads(files);
+    await this.imagesService.insertBaseImages(
+      results.map((result) => result.key)
+    );
+
+    return results.map((result) => result.url);
   }
 }
