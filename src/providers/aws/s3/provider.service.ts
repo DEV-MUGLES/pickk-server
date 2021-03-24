@@ -4,13 +4,14 @@ import { ReadStream } from 'fs-capacitor';
 import moment from 'moment';
 
 import { AwsS3ConfigService } from '@src/config/providers/aws/s3/config.service';
-import { ManagedUpload } from 'aws-sdk/clients/s3';
 
 @Injectable()
 export class AwsS3ProviderService {
   private ACL = 'public-read';
+  private cloudfrontUrl: string;
 
   constructor(private readonly awsS3ConfigService: AwsS3ConfigService) {
+    this.cloudfrontUrl = this.awsS3ConfigService.cloudfrontUrl;
     AWS.config.update({
       accessKeyId: this.awsS3ConfigService.accessKeyId,
       secretAccessKey: this.awsS3ConfigService.secretAccessKey,
@@ -20,7 +21,8 @@ export class AwsS3ProviderService {
 
   private getRandomString = (length = 4): string => {
     let result = '';
-    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     for (let i = 0; i < length; i++) {
       result += characters.charAt(
         Math.floor(Math.random() * characters.length)
@@ -39,12 +41,16 @@ export class AwsS3ProviderService {
     return filename.replace(/[\\/:"*?<>| ]+/gi, '').trim();
   }
 
+  private getUrl(key: string) {
+    return this.cloudfrontUrl + key;
+  }
+
   async uploadStream(
     stream: ReadStream,
     filename: string,
     mimetype: string,
     prefix?: string
-  ): Promise<ManagedUpload.SendData> {
+  ): Promise<string> {
     const s3 = new AWS.S3();
 
     const params = {
@@ -55,6 +61,6 @@ export class AwsS3ProviderService {
       ContentType: mimetype,
     };
 
-    return await s3.upload(params).promise();
+    return this.getUrl((await s3.upload(params).promise()).Key);
   }
 }

@@ -22,4 +22,7 @@ export class AwsS3ConfigService {
   get publicBucketName(): string {
     return this.configService.get<string>('aws-s3.publicBucketName');
   }
+  get cloudfrontUrl(): string {
+    return this.configService.get<string>('aws-s3.cloudfrontUrl');
+  }
 }

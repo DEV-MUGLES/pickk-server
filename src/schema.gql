@@ -93,7 +93,7 @@ type Mutation {
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
-  uploadMultipleImages(uploadImageInput: UploadImageInput!): Boolean!
+  uploadMultipleImages(uploadImageInput: UploadImageInput!): [String!]!
 }
 
 type Query {

@@ -20,7 +20,12 @@ import { AwsS3ConfigService } from './config.service';
         AWS_S3_SECRET_ACCESS_KEY: Joi.string().default(
           '3JWmXBN7UbvlkkhJ9jXjVlMN6LwSqyslMWS5ZfmD'
         ),
-        AWS_S3_PUBLIC_BUCKET_NAME: Joi.string().default('pickkdev123'),
+        AWS_S3_PUBLIC_BUCKET_NAME: Joi.string().default(
+          'pickk-server-images-bucket'
+        ),
+        AWS_CLOUDFRONT_URL: Joi.string().default(
+          'https://d30jbgl6dfbres.cloudfront.net/'
+        ),
       }),
     }),
   ],
