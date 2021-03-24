@@ -19,7 +19,7 @@ export class AwsS3ProviderService {
     });
   }
 
-  private getRandomString = (length = 4): string => {
+  private getRandomString = (length = 6): string => {
     let result = '';
     const characters =
       'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -38,7 +38,12 @@ export class AwsS3ProviderService {
   }
 
   private cleanFilename(filename: string): string {
-    return filename.replace(/[\\/:"*?<>| ]+/gi, '').trim();
+    const MAX_LENGTH = 50;
+
+    return filename
+      .replace(/[\\/:"*?<>| ]+/gi, '')
+      .trim()
+      .slice(Math.max(0, filename.length - MAX_LENGTH));
   }
 
   private getUrl(key: string) {
