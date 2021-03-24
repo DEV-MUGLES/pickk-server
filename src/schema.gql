@@ -176,6 +176,7 @@ input UploadImageInput {
 }
 
 type User {
+  avatarImage: UserAvatarImage
   code: String
   createdAt: DateTime!
   email: String!
@@ -186,6 +187,13 @@ type User {
   shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
   weight: Int
+}
+
+type UserAvatarImage {
+  angle: Float!
+  createdAt: DateTime!
+  key: String!
+  url: String!
 }
 
 """유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""

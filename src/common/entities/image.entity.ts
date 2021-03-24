@@ -29,4 +29,9 @@ export abstract class AbstractImageEntity
     name: 'created_at',
   })
   createdAt: Date;
+
+  @Field()
+  get url(): string {
+    return process.env.AWS_CLOUDFRONT_URL + this.key;
+  }
 }
