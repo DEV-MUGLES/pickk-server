@@ -273,7 +273,7 @@ describe('UserModel', () => {
       expect(result).toEqual(shippingAddress);
     });
 
-    it('shoud throw NotFoundException', () => {
+    it('shoud throw NotFoundException when not found', () => {
       const addressId = faker.random.number();
       const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
       const user = new User({ shippingAddresses });
@@ -283,6 +283,24 @@ describe('UserModel', () => {
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
       }
+    });
+
+    it('shoud make first address primary when deleted address is primary', () => {
+      const addressId = faker.random.number();
+      const shippingAddress = new ShippingAddress({
+        id: addressId,
+        isPrimary: true,
+      });
+      const shippingAddresses = [
+        new ShippingAddress({ isPrimary: false }),
+        shippingAddress,
+      ];
+      const user = new User({ shippingAddresses });
+
+      const result = user.removeShippingAddress(addressId);
+
+      expect(result).toEqual(shippingAddress);
+      expect(user.shippingAddresses[0].isPrimary).toEqual(true);
     });
   });
 });

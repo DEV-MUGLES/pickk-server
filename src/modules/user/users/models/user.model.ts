@@ -120,6 +120,10 @@ export class User extends UserEntity {
       ...this.shippingAddresses.slice(index + 1),
     ];
 
+    if (deletedShippingAddress.isPrimary && this.shippingAddresses.length > 0) {
+      this.setPrimaryShippingAddress(0);
+    }
+
     return deletedShippingAddress;
   };
 }
