@@ -4,6 +4,7 @@ import { Connection } from 'typeorm';
 import { AppConfigModule } from './config/app/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
+import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 
 import { AuthModule } from './authentication/auth.module';
 import { ItemModule } from './modules/item/item.module';
@@ -12,6 +13,7 @@ import { UserModule } from './modules/user/user.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { CommonModule } from './modules/common/common.module';
 
 @Module({
   imports: [
@@ -21,7 +23,9 @@ import { AppService } from './app.service';
       sortSchema: true,
     }),
     MysqlDatabaseProviderModule,
+    AwsS3ProviderModule,
     AuthModule,
+    CommonModule,
     ItemModule,
     MyModule,
     UserModule,
