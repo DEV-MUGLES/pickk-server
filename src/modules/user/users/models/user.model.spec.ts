@@ -1,20 +1,51 @@
 import { NotFoundException } from '@nestjs/common';
 import * as faker from 'faker';
 
-import { User } from './user.model';
-import { UserPassword } from './user-password.model';
-import { ShippingAddress } from './shipping-address.model';
+import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dto/shipping-address.input';
 import {
+  UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
 } from '../exceptions/user.exception';
-import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+import { User } from './user.model';
+import { UserPassword } from './user-password.model';
+import { ShippingAddress } from './shipping-address.model';
+import { UserAvatarImage } from './user-avatar-image.model';
 
 describe('UserModel', () => {
+  describe('setAvatarImage', () => {
+    it('should return avatarImage when success', () => {
+      const imageKey = faker.lorem.text();
+      const user = new User();
+
+      const result = user.setAvatarImage(imageKey);
+      expect(result.key).toEqual(imageKey);
+    });
+  });
+
+  describe('removeAvatarImage', () => {
+    it('should return removed avatarImage when success', () => {
+      const avatarImage = new UserAvatarImage();
+      const user = new User({ avatarImage });
+
+      const result = user.removeAvatarImage();
+      expect(result).toEqual(avatarImage);
+    });
+
+    it('should throw UserAvatarImageNotFoundException when not exist', () => {
+      const user = new User();
+
+      expect(() => user.removeAvatarImage()).toThrow(
+        UserAvatarImageNotFoundException
+      );
+    });
+  });
+
   describe('updatePassword', () => {
     const OLD_PASSWORD = 'OLD_PASSWORD1!';
     const NEW_PASSWORD = 'NEW_PASSWORD1!';
