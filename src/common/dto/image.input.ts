@@ -5,8 +5,15 @@ import { FileUpload } from 'graphql-upload';
 import { Exclude } from 'class-transformer';
 
 @InputType()
-export class UploadImageInput {
+export class UploadMultipleImageInput {
   @Field(() => [GraphQLUpload])
   @Exclude()
   files: Promise<FileUpload>[];
+}
+
+@InputType()
+export class UploadSingleImageInput {
+  @Field(() => GraphQLUpload)
+  @Exclude()
+  file: Promise<FileUpload>;
 }

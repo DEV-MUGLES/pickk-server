@@ -1,7 +1,8 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { UploadImageInput } from './dto/image.input';
+import { UploadMultipleImageInput } from '@src/common/dto/image.input';
+
 import { ImagesService } from './images.service';
 
 @Resolver()
@@ -13,7 +14,7 @@ export class ImagesResolver {
     @Args({
       name: 'uploadImageInput',
     })
-    { files }: UploadImageInput
+    { files }: UploadMultipleImageInput
   ): Promise<Array<string | null>> {
     const results = await this.imagesService.uploadFileUploads(files);
     await this.imagesService.insertBaseImages(
