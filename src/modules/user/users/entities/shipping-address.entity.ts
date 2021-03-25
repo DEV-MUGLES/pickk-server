@@ -1,14 +1,40 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
+import { IsNumberString, IsOptional, IsPhoneNumber } from 'class-validator';
 
 import { AbstractAddressEntity } from '@src/common/entities/address.entity';
+
 import { UserEntity } from './user.entity';
+import { IShippingAddress } from '../interfaces/shipping-address.interface';
 
 @ObjectType()
 @Entity({
   name: 'shipping_address',
 })
-export class ShippingAddressEntity extends AbstractAddressEntity {
+export class ShippingAddressEntity
+  extends AbstractAddressEntity
+  implements IShippingAddress {
+  @Field()
+  @Column()
+  name: string;
+
+  @Field()
+  @Column()
+  receiverName: string;
+
+  @Field()
+  @Column({ type: 'char', length: 11 })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  phoneNumber1: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'char', length: 11, nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @IsOptional()
+  phoneNumber2?: string;
+
   @Field()
   @Column()
   isPrimary: boolean;
