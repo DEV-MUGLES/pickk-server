@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { AbstractAddressEntity } from '@src/common/entities/address.entity';
 import { UserEntity } from './user.entity';
@@ -8,7 +8,6 @@ import { UserEntity } from './user.entity';
 @Entity({
   name: 'shipping_address',
 })
-@Index('idx_userId-isPrimary', ['userId', 'isPrimary'])
 export class ShippingAddressEntity extends AbstractAddressEntity {
   @Field()
   @Column()

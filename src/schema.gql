@@ -47,7 +47,7 @@ input CreateShippingAddressInput {
 
 input CreateUserInput {
   code: String
-  email: String!
+  email: String
   height: Int
   name: String!
   password: String!
@@ -78,7 +78,7 @@ input LoginByCodeInput {
 }
 
 input LoginByEmailInput {
-  email: String!
+  email: String
   password: String!
 }
 
@@ -187,7 +187,7 @@ type User {
   avatarImage: UserAvatarImage
   code: String
   createdAt: DateTime!
-  email: String!
+  email: String
   height: Int
   id: Int!
   name: String!
@@ -198,7 +198,7 @@ type User {
 }
 
 type UserAvatarImage {
-  angle: Float!
+  angle: Int!
   createdAt: DateTime!
   key: String!
   url: String!

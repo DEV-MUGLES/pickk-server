@@ -1,5 +1,12 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import {
   IsEmail,
   IsEnum,
@@ -24,6 +31,8 @@ import { UserAvatarImageEntity } from './user-avatar-image.entity';
 @Entity({
   name: 'user',
 })
+@Index('idx_email', ['email'], { unique: true })
+@Index('idx_code', ['code'], { unique: true })
 export class UserEntity extends BaseEntity implements IUser {
   @Field(() => UserRole, { nullable: true })
   @Column({
@@ -35,11 +44,15 @@ export class UserEntity extends BaseEntity implements IUser {
   @IsOptional()
   role?: UserRole;
 
-  @Field()
+  @Field({
+    nullable: true,
+  })
   @Column({
     unique: true,
+    nullable: true,
   })
   @IsEmail()
+  @IsOptional()
   email: string;
 
   @Field({ nullable: true })
@@ -47,7 +60,6 @@ export class UserEntity extends BaseEntity implements IUser {
     type: 'varchar',
     length: 15,
     nullable: true,
-    default: null,
     unique: true,
   })
   @IsString()

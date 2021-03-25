@@ -20,7 +20,6 @@ export class BrandEntity extends BaseEntity implements IBrand {
     type: 'varchar',
     length: 30,
     nullable: true,
-    default: null,
   })
   @MaxLength(30)
   @IsOptional()
@@ -30,7 +29,6 @@ export class BrandEntity extends BaseEntity implements IBrand {
   @Column({
     type: 'varchar',
     nullable: true,
-    default: null,
   })
   @IsOptional()
   description?: string;

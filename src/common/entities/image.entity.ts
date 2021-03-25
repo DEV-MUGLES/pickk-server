@@ -21,7 +21,6 @@ export abstract class AbstractImageEntity
   key: string;
 
   @Field(() => Int)
-  @Field()
   @Column({ default: 0 })
   angle: number;
 

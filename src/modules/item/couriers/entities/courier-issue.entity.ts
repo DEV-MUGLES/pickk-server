@@ -6,7 +6,7 @@ import { ICourierIssue } from '../interfaces/courier-issue.interface';
 @ObjectType()
 export class CourierIssueEntity implements ICourierIssue {
   @Field()
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true })
   @IsString()
   message: string;
 
@@ -14,7 +14,6 @@ export class CourierIssueEntity implements ICourierIssue {
   @Column({
     type: 'timestamp',
     nullable: true,
-    default: null,
   })
   endAt: Date;
 }
