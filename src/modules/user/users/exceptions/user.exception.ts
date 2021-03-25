@@ -23,3 +23,9 @@ export class UserPasswordNotFoundException extends NotFoundException {
     super('아직 비밀번호가 설정되지 않은 계정입니다.');
   }
 }
+
+export class UserAvatarImageNotFoundException extends NotFoundException {
+  constructor() {
+    super('프로핊 이미지가 존재하지 않습니다.');
+  }
+}

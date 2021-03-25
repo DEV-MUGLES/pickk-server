@@ -8,10 +8,12 @@ import {
 
 import { UserEntity } from '../entities/user.entity';
 import {
+  UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
 } from '../exceptions/user.exception';
 import { ShippingAddress } from './shipping-address.model';
+import { UserAvatarImage } from './user-avatar-image.model';
 import { UserPassword } from './user-password.model';
 
 @ObjectType()
@@ -35,7 +37,22 @@ export class User extends UserEntity {
     this.height = attributes.height;
     this.password = attributes.password;
     this.shippingAddresses = attributes.shippingAddresses;
+    this.avatarImage = attributes.avatarImage;
   }
+
+  public setAvatarImage = (key: string): UserAvatarImage => {
+    this.avatarImage = new UserAvatarImage({ key });
+    return this.avatarImage;
+  };
+
+  public removeAvatarImage = (): UserAvatarImage => {
+    const { avatarImage } = this;
+    if (!avatarImage) {
+      throw new UserAvatarImageNotFoundException();
+    }
+    this.avatarImage = null;
+    return avatarImage;
+  };
 
   public updatePassword = (password: string, input: string): User => {
     if (!this.comparePassword(password)) {
@@ -119,6 +136,10 @@ export class User extends UserEntity {
       ...this.shippingAddresses.slice(0, index),
       ...this.shippingAddresses.slice(index + 1),
     ];
+
+    if (deletedShippingAddress.isPrimary && this.shippingAddresses.length > 0) {
+      this.setPrimaryShippingAddress(0);
+    }
 
     return deletedShippingAddress;
   };

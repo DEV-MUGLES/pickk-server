@@ -10,6 +10,7 @@ import {
   UpdateShippingAddressInput,
 } from './dto/shipping-address.input';
 import { UserEntity } from './entities/user.entity';
+import { UserAvatarImage } from './models/user-avatar-image.model';
 
 @Injectable()
 export class UsersService {
@@ -43,6 +44,23 @@ export class UsersService {
     relations: string[] = []
   ): Promise<User | null> {
     return await this.usersRepository.findOneEntity(param, relations);
+  }
+
+  async updateAvatarImage(user: User, key: string): Promise<UserAvatarImage> {
+    if (user.avatarImage) {
+      user.avatarImage.remove();
+    }
+    user.setAvatarImage(key);
+    return (await this.usersRepository.save(user)).avatarImage;
+  }
+
+  async removeAvatarImage(user: User): Promise<UserAvatarImage> {
+    user.avatarImage?.remove();
+
+    const avatarImage = user.removeAvatarImage();
+    await this.usersRepository.save(user);
+
+    return avatarImage;
   }
 
   async updatePassword(

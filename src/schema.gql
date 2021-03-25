@@ -87,13 +87,17 @@ type Mutation {
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
+  removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
+  updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
+
+  """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
-  uploadMultipleImages(uploadImageInput: UploadImageInput!): [String!]!
+  uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
 type Query {
@@ -171,11 +175,16 @@ input UpdateUserInput {
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
 
-input UploadImageInput {
+input UploadMultipleImageInput {
   files: [Upload!]!
 }
 
+input UploadSingleImageInput {
+  file: Upload!
+}
+
 type User {
+  avatarImage: UserAvatarImage
   code: String
   createdAt: DateTime!
   email: String!
@@ -186,6 +195,13 @@ type User {
   shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
   weight: Int
+}
+
+type UserAvatarImage {
+  angle: Float!
+  createdAt: DateTime!
+  key: String!
+  url: String!
 }
 
 """유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""

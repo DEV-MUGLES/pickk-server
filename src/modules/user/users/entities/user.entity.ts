@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToMany, OneToOne } from 'typeorm';
 import {
   IsEmail,
   IsEnum,
@@ -12,10 +12,13 @@ import {
 } from 'class-validator';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
-import { IUser } from '../interfaces/user.interface';
+
+import { UserRole } from '../constants/user.enum';
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
-import { UserRole } from '../constants/user.enum';
+import { UserAvatarImage } from '../models/user-avatar-image.model';
+import { IUser } from '../interfaces/user.interface';
+import { UserAvatarImageEntity } from './user-avatar-image.entity';
 
 @ObjectType()
 @Entity({
@@ -48,6 +51,7 @@ export class UserEntity extends BaseEntity implements IUser {
     unique: true,
   })
   @IsString()
+  @IsOptional()
   @MaxLength(15)
   code?: string;
 
@@ -88,4 +92,13 @@ export class UserEntity extends BaseEntity implements IUser {
     cascade: true,
   })
   shippingAddresses: ShippingAddress[];
+
+  @Field(() => UserAvatarImage, { nullable: true })
+  @OneToOne(() => UserAvatarImageEntity, {
+    eager: true,
+    nullable: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  avatarImage: UserAvatarImageEntity;
 }

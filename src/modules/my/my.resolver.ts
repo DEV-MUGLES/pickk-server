@@ -1,12 +1,14 @@
 import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
+import { FileUpload } from 'graphql-upload';
 
 import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
 import { IntArgs } from '@src/common/decorators/args.decorator';
 import { BaseResolver } from '@src/common/base.resolver';
+import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
 import {
   CreateShippingAddressInput,
@@ -21,12 +23,18 @@ import {
   USER_RELATIONS,
 } from '../user/users/constants/user.relation';
 import { UpdateUserInput } from '../user/users/dto/user.input';
+import { UserAvatarImage } from '../user/users/models/user-avatar-image.model';
+import { GraphQLUpload } from 'apollo-server-express';
+import { UploadSingleImageInput } from '@src/common/dto/image.input';
 
 @Resolver()
 export class MyResolver extends BaseResolver {
   relations = USER_RELATIONS;
 
-  constructor(@Inject(UsersService) private usersService: UsersService) {
+  constructor(
+    @Inject(UsersService) private usersService: UsersService,
+    @Inject(AwsS3ProviderService) private awsS3Service: AwsS3ProviderService
+  ) {
     super();
   }
 
@@ -55,17 +63,42 @@ export class MyResolver extends BaseResolver {
   async updateMe(
     @CurrentUser() payload: JwtPayload,
     @Args('updateUserInput') updateUserInput: UpdateUserInput
-  ) {
+  ): Promise<User> {
     return await this.usersService.update(payload.sub, { ...updateUserInput });
   }
 
-  @Mutation(() => User)
+  @Mutation(() => UserAvatarImage)
+  @UseGuards(JwtAuthGuard)
+  async updateMyAvatarImage(
+    @CurrentUser() user: User,
+    @Args('uploadSingleImageInput') { file }: UploadSingleImageInput
+  ): Promise<UserAvatarImage> {
+    const { filename, mimetype, createReadStream } = await file;
+    const { key } = await this.awsS3Service.uploadStream(
+      createReadStream(),
+      filename,
+      mimetype
+    );
+    return await this.usersService.updateAvatarImage(user, key);
+  }
+
+  @Mutation(() => UserAvatarImage)
+  @UseGuards(JwtAuthGuard)
+  async removeMyAvatarImage(
+    @CurrentUser() user: User
+  ): Promise<UserAvatarImage> {
+    return await this.usersService.removeAvatarImage(user);
+  }
+
+  @Mutation(() => User, {
+    description: '(!) 예전 비밀번호와 현재 비밀번호를 입력해 ',
+  })
   @UseGuards(JwtAuthGuard)
   async updateMyPassword(
     @CurrentUser() user: User,
     @Args('oldPassword') oldPassword: string,
     @Args('newPassword') newPassword: string
-  ) {
+  ): Promise<User> {
     return await this.usersService.updatePassword(
       user,
       oldPassword,
