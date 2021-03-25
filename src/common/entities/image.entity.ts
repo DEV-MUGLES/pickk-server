@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   PrimaryColumn,
 } from 'typeorm';
+import { S3 } from 'aws-sdk';
 
 import { IImage } from '../interfaces/image.interface';
 
@@ -33,5 +34,17 @@ export abstract class AbstractImageEntity
   @Field()
   get url(): string {
     return process.env.AWS_CLOUDFRONT_URL + this.key;
+  }
+
+  async remove() {
+    const s3 = new S3();
+    const params: S3.DeleteObjectRequest = {
+      Bucket: process.env.AWS_S3_PUBLIC_BUCKET_NAME,
+      Key: this.key,
+    };
+    s3.deleteObject(params)
+      .promise()
+      .catch(() => null);
+    return await super.remove();
   }
 }

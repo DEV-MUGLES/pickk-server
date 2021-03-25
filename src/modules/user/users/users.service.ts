@@ -55,11 +55,9 @@ export class UsersService {
   }
 
   async removeAvatarImage(user: User): Promise<UserAvatarImage> {
-    user.avatarImage?.remove();
-
     const avatarImage = user.removeAvatarImage();
     await this.usersRepository.save(user);
-
+    avatarImage.remove();
     return avatarImage;
   }
 
