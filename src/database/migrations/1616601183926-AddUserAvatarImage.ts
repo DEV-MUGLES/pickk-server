@@ -11,9 +11,6 @@ export class AddUserAvatarImage1616601183926 implements MigrationInterface {
       'ALTER TABLE `user` ADD `avatarImageKey` varchar(75) NULL'
     );
     await queryRunner.query(
-      'ALTER TABLE `user` ADD UNIQUE INDEX `IDX_8e9136cf2193264fb5faad5d98` (`avatarImageKey`)'
-    );
-    await queryRunner.query(
       'CREATE UNIQUE INDEX `REL_8e9136cf2193264fb5faad5d98` ON `user` (`avatarImageKey`)'
     );
     await queryRunner.query(
@@ -27,9 +24,6 @@ export class AddUserAvatarImage1616601183926 implements MigrationInterface {
     );
     await queryRunner.query(
       'DROP INDEX `REL_8e9136cf2193264fb5faad5d98` ON `user`'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `user` DROP INDEX `IDX_8e9136cf2193264fb5faad5d98`'
     );
     await queryRunner.query('ALTER TABLE `user` DROP COLUMN `avatarImageKey`');
     await queryRunner.query('DROP TABLE `user_avatar_image`');
