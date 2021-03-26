@@ -108,6 +108,7 @@ type Query {
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
+  meSeller: Seller!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
@@ -116,8 +117,27 @@ type Query {
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
+  seller(id: Int!): Seller!
   user(id: Int!): User!
   users: [User!]!
+}
+
+type Seller {
+  brand: Brand!
+  brandId: Float
+  businessCode: String!
+  businessName: String!
+  createdAt: DateTime!
+  email: String!
+  id: Int!
+  kakaoTalkCode: String!
+  mailOrderBusinessCode: String!
+  operationTimeMessage: String!
+  phoneNumber: String!
+  representativeName: String!
+  updatedAt: DateTime!
+  user: User!
+  userId: Float
 }
 
 type ShippingAddress {
