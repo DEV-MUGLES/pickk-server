@@ -10,7 +10,7 @@ import { User } from '@src/modules/user/users/models/user.model';
 
 import { Brand } from '../../brands/models/brand.model';
 import { BrandEntity } from '../../brands/entities/brand.entity';
-import { ISeller } from '../interface/seller.interface';
+import { ISeller } from '../interfaces/seller.interface';
 
 @ObjectType()
 @Entity('seller')
