@@ -1,18 +1,31 @@
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { PassportStrategy } from '@nestjs/passport';
 import { Injectable } from '@nestjs/common';
+import { PassportStrategy } from '@nestjs/passport';
+import { ExtractJwt, Strategy } from 'passport-jwt';
+
+import { UsersService } from '@src/modules/user/users/users.service';
+import { SellersService } from '@src/modules/item/sellers/sellers.service';
+
 import { jwtConstants, jwtRefreshConstants } from '../constants/jwt.constant';
 import { JwtPayload } from '../dto/jwt.dto';
-import { UsersService } from '@src/modules/user/users/users.service';
+
+export const CustomJwtStrategy = (
+  name?: string,
+  secretOrKey: string = jwtConstants.secret
+) =>
+  class ResultStrategy extends PassportStrategy(Strategy, name) {
+    constructor() {
+      super({
+        jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+        ignoreExpiration: false,
+        secretOrKey,
+      });
+    }
+  };
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtStrategy extends CustomJwtStrategy() {
   constructor(private usersService: UsersService) {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
-    });
+    super();
   }
 
   async validate(payload: JwtPayload) {
@@ -21,16 +34,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 }
 
 @Injectable()
-export class JwtVerifyStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-verify'
+export class JwtVerifyStrategy extends CustomJwtStrategy('jwt-verify') {
+  async validate(payload: JwtPayload) {
+    return payload;
+  }
+}
+
+@Injectable()
+export class JwtRefreshStrategy extends CustomJwtStrategy(
+  'jwt-refresh',
+  jwtRefreshConstants.secret
 ) {
   constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: jwtConstants.secret,
-    });
+    super();
   }
 
   async validate(payload: JwtPayload) {
@@ -39,19 +55,15 @@ export class JwtVerifyStrategy extends PassportStrategy(
 }
 
 @Injectable()
-export class JwtRefreshStrategy extends PassportStrategy(
-  Strategy,
-  'jwt-refresh'
-) {
-  constructor() {
-    super({
-      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      ignoreExpiration: false,
-      secretOrKey: jwtRefreshConstants.secret,
-    });
+export class JwtSellerStrategy extends CustomJwtStrategy('jwt-seller') {
+  constructor(private sellersService: SellersService) {
+    super();
   }
 
   async validate(payload: JwtPayload) {
-    return payload;
+    return this.sellersService.findOne({ userId: payload.sub }, [
+      'user',
+      'brand',
+    ]);
   }
 }
