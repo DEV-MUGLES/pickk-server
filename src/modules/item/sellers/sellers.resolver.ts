@@ -10,7 +10,7 @@ import { SellersService } from './sellers.service';
 
 @Resolver(() => Seller)
 export class SellersResolver extends BaseResolver {
-  relations = ['user', 'brand'];
+  relations = ['user', 'brand', 'saleStrategy'];
 
   constructor(@Inject(SellersService) private sellersService: SellersService) {
     super();

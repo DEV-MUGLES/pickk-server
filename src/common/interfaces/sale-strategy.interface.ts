@@ -1,4 +1,4 @@
-export interface ISellerSaleStrategy {
+export interface ISaleStrategy {
   canUseCoupon: boolean;
   canUseMileage: boolean;
 }

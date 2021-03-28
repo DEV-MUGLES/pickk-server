@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
@@ -11,6 +11,8 @@ import { User } from '@src/modules/user/users/models/user.model';
 import { Brand } from '../../brands/models/brand.model';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { ISeller } from '../interfaces/seller.interface';
+import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
+import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 
 @ObjectType()
 @Entity('seller')
@@ -75,4 +77,9 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @Column()
   @Exclude()
   brandId: number;
+
+  @Field(() => SaleStrategy)
+  @ManyToOne(() => SaleStrategyEntity)
+  @JoinColumn()
+  saleStrategy: SaleStrategy;
 }

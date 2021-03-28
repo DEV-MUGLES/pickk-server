@@ -122,6 +122,14 @@ type Query {
   users: [User!]!
 }
 
+type SaleStrategy {
+  canUseCoupon: Boolean!
+  canUseMileage: Boolean!
+  createdAt: DateTime!
+  id: Int!
+  updatedAt: DateTime!
+}
+
 type Seller {
   brand: Brand!
   brandId: Float
@@ -135,6 +143,7 @@ type Seller {
   operationTimeMessage: String!
   phoneNumber: String!
   representativeName: String!
+  saleStrategy: SaleStrategy!
   updatedAt: DateTime!
   user: User!
   userId: Float
