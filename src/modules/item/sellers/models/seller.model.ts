@@ -23,7 +23,9 @@ export class Seller extends SellerEntity {
     this.operationTimeMessage = attributes.operationTimeMessage;
 
     this.user = attributes.user;
+    this.userId = attributes.userId;
     this.brand = attributes.brand;
+    this.brandId = attributes.brandId;
 
     this.saleStrategy = attributes.saleStrategy;
   }

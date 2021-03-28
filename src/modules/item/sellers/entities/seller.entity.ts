@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
 import { Exclude } from 'class-transformer';
@@ -47,7 +47,7 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @IsEmail()
   email: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
@@ -63,7 +63,7 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @JoinColumn()
   user: User;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column()
   @Exclude()
   userId: number;
@@ -73,7 +73,7 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @JoinColumn()
   brand: Brand;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @Column()
   @Exclude()
   brandId: number;
