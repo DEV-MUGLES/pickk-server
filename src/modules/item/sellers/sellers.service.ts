@@ -5,6 +5,7 @@ import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.r
 
 import { CreateSellerInput } from './dto/seller.input';
 import { SellerEntity } from './entities/seller.entity';
+import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
 import { Seller } from './models/seller.model';
 import { SellersRepository } from './sellers.repository';
 
@@ -29,7 +30,11 @@ export class SellersService {
   }
 
   async create(createSellerInput: CreateSellerInput): Promise<Seller> {
-    const { saleStrategyInput, ...sellerAttributes } = createSellerInput;
+    const {
+      saleStrategyInput,
+      shippingPolicyInput,
+      ...sellerAttributes
+    } = createSellerInput;
 
     const saleStrategy = await this.saleStrategyRepository.findOrCreate(
       saleStrategyInput
@@ -37,6 +42,7 @@ export class SellersService {
 
     const seller = new Seller({
       ...sellerAttributes,
+      shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
       saleStrategy,
     });
     return await this.sellersRepository.save(seller);

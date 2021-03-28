@@ -45,7 +45,13 @@ input CreateSellerInput {
   phoneNumber: String!
   representativeName: String!
   saleStrategyInput: FindSaleStrategyInput!
+  shippingPolicyInput: CreateSellerShippingPolicyInput!
   userId: Int!
+}
+
+input CreateSellerShippingPolicyInput {
+  fee: Int!
+  minimumAmountForFree: Int!
 }
 
 input CreateShippingAddressInput {
@@ -164,9 +170,18 @@ type Seller {
   phoneNumber: String!
   representativeName: String!
   saleStrategy: SaleStrategy!
+  shippingPolicy: SellerShippingPolicy!
   updatedAt: DateTime!
   user: User!
   userId: Int
+}
+
+type SellerShippingPolicy {
+  createdAt: DateTime!
+  fee: Int!
+  id: Int!
+  minimumAmountForFree: Int!
+  updatedAt: DateTime!
 }
 
 type ShippingAddress {
