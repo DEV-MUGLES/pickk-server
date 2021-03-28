@@ -13,6 +13,8 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { ISeller } from '../interfaces/seller.interface';
 import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
+import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.entity';
+import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
 
 @ObjectType()
 @Entity('seller')
@@ -82,4 +84,9 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @ManyToOne(() => SaleStrategyEntity)
   @JoinColumn()
   saleStrategy: SaleStrategy;
+
+  @Field(() => SellerShippingPolicy)
+  @OneToOne(() => SellerShippingPolicyEntity, { cascade: true })
+  @JoinColumn()
+  shippingPolicy: SellerShippingPolicy;
 }
