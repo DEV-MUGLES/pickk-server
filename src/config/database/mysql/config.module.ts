@@ -21,6 +21,7 @@ import { MysqlConfigService } from './config.service';
         MYSQL_PASSWORD: Joi.string().default('pickkdev123'),
         MYSQL_DATABASE: Joi.string().default('pickk_dev'),
         MYSQL_LOGGING: Joi.boolean().default(true),
+        MYSQL_MIGRATIONS_RUN: Joi.boolean().default(false),
       }),
     }),
   ],
