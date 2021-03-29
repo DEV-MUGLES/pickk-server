@@ -5,6 +5,7 @@ import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.r
 
 import { CreateSellerInput } from './dto/seller.input';
 import { SellerEntity } from './entities/seller.entity';
+import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
 import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
 import { Seller } from './models/seller.model';
 import { SellersRepository } from './sellers.repository';
@@ -32,6 +33,7 @@ export class SellersService {
   async create(createSellerInput: CreateSellerInput): Promise<Seller> {
     const {
       saleStrategyInput,
+      claimPolicyInput,
       shippingPolicyInput,
       ...sellerAttributes
     } = createSellerInput;
@@ -42,6 +44,7 @@ export class SellersService {
 
     const seller = new Seller({
       ...sellerAttributes,
+      claimPolicy: new SellerClaimPolicy(claimPolicyInput),
       shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
       saleStrategy,
     });

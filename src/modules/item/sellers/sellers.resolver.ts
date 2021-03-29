@@ -14,7 +14,13 @@ import { CreateSellerInput } from './dto/seller.input';
 
 @Resolver(() => Seller)
 export class SellersResolver extends BaseResolver {
-  relations = ['user', 'brand', 'saleStrategy', 'shippingPolicy'];
+  relations = [
+    'user',
+    'brand',
+    'saleStrategy',
+    'claimPolicy',
+    'shippingPolicy',
+  ];
 
   constructor(@Inject(SellersService) private sellersService: SellersService) {
     super();

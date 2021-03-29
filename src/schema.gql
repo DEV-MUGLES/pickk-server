@@ -34,10 +34,17 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
+input CreateSellerClaimPolicyInput {
+  fee: Int!
+  phoneNumber: String!
+  picName: String!
+}
+
 input CreateSellerInput {
   brandId: Int!
   businessCode: String!
   businessName: String!
+  claimPolicyInput: CreateSellerClaimPolicyInput!
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
@@ -161,6 +168,7 @@ type Seller {
   brandId: Int
   businessCode: String!
   businessName: String!
+  claimPolicy: SellerClaimPolicy!
   createdAt: DateTime!
   email: String!
   id: Int!
@@ -174,6 +182,15 @@ type Seller {
   updatedAt: DateTime!
   user: User!
   userId: Int
+}
+
+type SellerClaimPolicy {
+  createdAt: DateTime!
+  fee: Int!
+  id: Int!
+  phoneNumber: String!
+  picName: String!
+  updatedAt: DateTime!
 }
 
 type SellerShippingPolicy {
