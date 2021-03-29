@@ -6,6 +6,7 @@ import { UserPasswordInvalidException } from '../exceptions/user.exception';
 
 @ObjectType()
 export class UserPassword extends UserPasswordEntity {
+  public static minLength = 8;
   private static validRegex = /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_=(),./:;{}[\]|\\<>-]).{8,}$/;
 
   public static create(password: string): UserPassword {
@@ -26,7 +27,7 @@ export class UserPassword extends UserPasswordEntity {
    * @param password 검증할 비밀번호 문자열
    * @returns 통과 여부 boolean
    */
-  private static validate(password: string): boolean {
+  public static validate(password: string): boolean {
     if (typeof password !== 'string') {
       return false;
     }
