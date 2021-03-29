@@ -1,6 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import { IsEmail, IsOptional, IsString, MaxLength } from 'class-validator';
+import {
+  IsEmail,
+  IsNumberString,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+  MaxLength,
+} from 'class-validator';
 import { Exclude } from 'class-transformer';
 
 import { IsBusinessCode } from '@src/common/decorators/validations/is-business-code';
@@ -15,6 +22,8 @@ import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.entity';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
+import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
+import { SellerClaimPolicyEntity } from './policies/seller-claim-policy.entity';
 
 @ObjectType()
 @Entity('seller')
@@ -42,6 +51,8 @@ export class SellerEntity extends BaseEntity implements ISeller {
 
   @Field()
   @Column()
+  @IsPhoneNumber('KR')
+  @IsNumberString()
   phoneNumber: string;
 
   @Field()
@@ -84,6 +95,11 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @ManyToOne(() => SaleStrategyEntity)
   @JoinColumn()
   saleStrategy: SaleStrategy;
+
+  @Field(() => SellerClaimPolicy)
+  @OneToOne(() => SellerClaimPolicyEntity, { cascade: true })
+  @JoinColumn()
+  claimPolicy: SellerClaimPolicy;
 
   @Field(() => SellerShippingPolicy)
   @OneToOne(() => SellerShippingPolicyEntity, { cascade: true })
