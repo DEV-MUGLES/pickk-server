@@ -6,5 +6,6 @@ export default registerAs('mysql', () => ({
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
-  logging: Boolean(process.env.MYSQL_LOGGING),
+  logging: process.env.MYSQL_LOGGING === 'true',
+  migrationsRun: process.env.MYSQL_MIGRATIONS_RUN === 'true',
 }));

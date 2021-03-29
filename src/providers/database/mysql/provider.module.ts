@@ -20,7 +20,7 @@ import { MysqlConfigService } from '../../../config/database/mysql/config.servic
           __dirname + '../../../../**/*.entity.ts',
           __dirname + '../../../../**/*.entity.js',
         ],
-        migrationsRun: false,
+        migrationsRun: mysqlConfigService.migrationsRun,
         migrations: [
           __dirname + '../../../../database/migrations/*.ts',
           __dirname + '../../../../database/migrations/*.js',

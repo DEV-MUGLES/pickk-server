@@ -28,4 +28,7 @@ export class MysqlConfigService {
   get logging(): boolean {
     return this.configService.get<boolean>('mysql.logging');
   }
+  get migrationsRun(): boolean {
+    return this.configService.get<boolean>('mysql.migrationsRun');
+  }
 }

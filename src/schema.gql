@@ -34,6 +34,46 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
+input CreateSellerClaimPolicyInput {
+  fee: Int!
+  phoneNumber: String!
+  picName: String!
+}
+
+input CreateSellerCrawlPolicyInput {
+  isInspectingNew: Boolean!
+  isUpdatingSaleItemInfo: Boolean!
+}
+
+input CreateSellerInput {
+  brandId: Int!
+  businessCode: String!
+  businessName: String!
+  claimPolicyInput: CreateSellerClaimPolicyInput!
+  crawlPolicyInput: CreateSellerCrawlPolicyInput!
+  email: String!
+  kakaoTalkCode: String
+  mailOrderBusinessCode: String!
+  operationTimeMessage: String!
+  phoneNumber: String!
+  representativeName: String!
+  returnAddressInput: CreateSellerReturnAddressInput!
+  saleStrategyInput: FindSaleStrategyInput!
+  shippingPolicyInput: CreateSellerShippingPolicyInput!
+  userId: Int!
+}
+
+input CreateSellerReturnAddressInput {
+  baseAddress: String!
+  detailAddress: String!
+  postalCode: String!
+}
+
+input CreateSellerShippingPolicyInput {
+  fee: Int!
+  minimumAmountForFree: Int!
+}
+
 input CreateShippingAddressInput {
   baseAddress: String!
   detailAddress: String!
@@ -58,6 +98,11 @@ input CreateUserInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+input FindSaleStrategyInput {
+  canUseCoupon: Boolean!
+  canUseMileage: Boolean!
+}
 
 type JwtPayload {
   code: String
@@ -85,6 +130,7 @@ input LoginByEmailInput {
 type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
+  createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
   removeMyAvatarImage: UserAvatarImage!
@@ -92,10 +138,16 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
+  updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
+  updateMySaleStrategy(updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
+  updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
+  updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
+  updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
+  updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
@@ -108,6 +160,7 @@ type Query {
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
+  meSeller: Seller!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
@@ -116,8 +169,74 @@ type Query {
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
+  seller(id: Int!): Seller!
   user(id: Int!): User!
   users: [User!]!
+}
+
+type SaleStrategy {
+  canUseCoupon: Boolean!
+  canUseMileage: Boolean!
+  createdAt: DateTime!
+  id: Int!
+  updatedAt: DateTime!
+}
+
+type Seller {
+  brand: Brand!
+  brandId: Int
+  businessCode: String!
+  businessName: String!
+  claimPolicy: SellerClaimPolicy!
+  crawlPolicy: SellerCrawlPolicy!
+  createdAt: DateTime!
+  email: String!
+  id: Int!
+  kakaoTalkCode: String
+  mailOrderBusinessCode: String!
+  operationTimeMessage: String!
+  phoneNumber: String!
+  representativeName: String!
+  returnAddress: SellerReturnAddress!
+  saleStrategy: SaleStrategy!
+  shippingPolicy: SellerShippingPolicy!
+  updatedAt: DateTime!
+  user: User!
+  userId: Int
+}
+
+type SellerClaimPolicy {
+  createdAt: DateTime!
+  fee: Int!
+  id: Int!
+  phoneNumber: String!
+  picName: String!
+  updatedAt: DateTime!
+}
+
+type SellerCrawlPolicy {
+  createdAt: DateTime!
+  id: Int!
+  isInspectingNew: Boolean!
+  isUpdatingSaleItemInfo: Boolean!
+  updatedAt: DateTime!
+}
+
+type SellerReturnAddress {
+  baseAddress: String!
+  createdAt: DateTime!
+  detailAddress: String!
+  id: Int!
+  postalCode: String!
+  updatedAt: DateTime!
+}
+
+type SellerShippingPolicy {
+  createdAt: DateTime!
+  fee: Int!
+  id: Int!
+  minimumAmountForFree: Int!
+  updatedAt: DateTime!
 }
 
 type ShippingAddress {
@@ -150,6 +269,39 @@ input UpdateCourierInput {
 input UpdateCourierIssueInput {
   endAt: DateTime!
   message: String!
+}
+
+input UpdateSellerClaimPolicyInput {
+  fee: Int
+  phoneNumber: String
+  picName: String
+}
+
+input UpdateSellerCrawlPolicyInput {
+  isInspectingNew: Boolean
+  isUpdatingSaleItemInfo: Boolean
+}
+
+input UpdateSellerInput {
+  businessCode: String
+  businessName: String
+  email: String
+  kakaoTalkCode: String
+  mailOrderBusinessCode: String
+  operationTimeMessage: String
+  phoneNumber: String
+  representativeName: String
+}
+
+input UpdateSellerReturnAddressInput {
+  baseAddress: String
+  detailAddress: String
+  postalCode: String
+}
+
+input UpdateSellerShippingPolicyInput {
+  fee: Int
+  minimumAmountForFree: Int
 }
 
 input UpdateShippingAddressInput {

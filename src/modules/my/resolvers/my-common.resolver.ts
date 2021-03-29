@@ -1,34 +1,31 @@
 import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
-import { FileUpload } from 'graphql-upload';
 
 import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
 import { IntArgs } from '@src/common/decorators/args.decorator';
+import { UploadSingleImageInput } from '@src/common/dto/image.input';
 import { BaseResolver } from '@src/common/base.resolver';
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
 import {
-  CreateShippingAddressInput,
-  UpdateShippingAddressInput,
-} from '@src/modules/user/users/dto/shipping-address.input';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UsersService } from '@src/modules/user/users/users.service';
-import { ShippingAddress } from '../user/users/models/shipping-address.model';
-
-import {
   SHIPPING_ADDRESSES,
   USER_RELATIONS,
-} from '../user/users/constants/user.relation';
-import { UpdateUserInput } from '../user/users/dto/user.input';
-import { UserAvatarImage } from '../user/users/models/user-avatar-image.model';
-import { GraphQLUpload } from 'apollo-server-express';
-import { UploadSingleImageInput } from '@src/common/dto/image.input';
+} from '@user/users/constants/user.relation';
+import {
+  CreateShippingAddressInput,
+  UpdateShippingAddressInput,
+} from '@user/users/dto/shipping-address.input';
+import { UpdateUserInput } from '@user/users/dto/user.input';
+import { User } from '@user/users/models/user.model';
+import { UsersService } from '@user/users/users.service';
+import { ShippingAddress } from '@user/users/models/shipping-address.model';
+import { UserAvatarImage } from '@user/users/models/user-avatar-image.model';
 
 @Resolver()
-export class MyResolver extends BaseResolver {
+export class MyCommonResolver extends BaseResolver {
   relations = USER_RELATIONS;
 
   constructor(

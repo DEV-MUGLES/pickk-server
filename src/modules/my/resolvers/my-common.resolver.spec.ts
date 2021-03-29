@@ -7,17 +7,18 @@ import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { AwsS3ProviderModule } from '@src/providers/aws/s3/provider.module';
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
-import { UpdateUserInput } from '../user/users/dto/user.input';
-import { User } from '../user/users/models/user.model';
-import { UsersRepository } from '../user/users/users.repository';
-import { UsersService } from '../user/users/users.service';
+import { UpdateUserInput } from '../../user/users/dto/user.input';
+import { User } from '../../user/users/models/user.model';
+import { UsersRepository } from '../../user/users/users.repository';
+import { UsersService } from '../../user/users/users.service';
 
-import { MyResolver } from './my.resolver';
-import { UserAvatarImage } from '../user/users/models/user-avatar-image.model';
+import { MyCommonResolver } from './my-common.resolver';
+import { UserAvatarImage } from '../../user/users/models/user-avatar-image.model';
 
 const JWT_TOKEN = 'JWT_TOKEN';
-describe('MyResolver', () => {
-  let myResolver: MyResolver;
+
+describe('MyCommonResolver', () => {
+  let myCommonResolver: MyCommonResolver;
   let usersService: UsersService;
   let awsS3ProviderService: AwsS3ProviderService;
 
@@ -25,7 +26,7 @@ describe('MyResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AwsS3ProviderModule],
       providers: [
-        MyResolver,
+        MyCommonResolver,
         UsersService,
         UsersRepository,
         {
@@ -37,7 +38,7 @@ describe('MyResolver', () => {
       ],
     }).compile();
 
-    myResolver = module.get<MyResolver>(MyResolver);
+    myCommonResolver = module.get<MyCommonResolver>(MyCommonResolver);
     usersService = module.get<UsersService>(UsersService);
     awsS3ProviderService = module.get<AwsS3ProviderService>(
       AwsS3ProviderService
@@ -45,7 +46,7 @@ describe('MyResolver', () => {
   });
 
   it('should be defined', () => {
-    expect(myResolver).toBeDefined();
+    expect(myCommonResolver).toBeDefined();
   });
 
   const payload: JwtPayload = {
@@ -66,12 +67,12 @@ describe('MyResolver', () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { code, ...payloadWithoutCode } = payload;
 
-      const result = myResolver.myJwtPayload(payloadWithoutCode);
+      const result = myCommonResolver.myJwtPayload(payloadWithoutCode);
       expect(result).toEqual(payloadWithoutCode);
     });
 
     it('should return payload', () => {
-      const result = myResolver.myJwtPayload(payload);
+      const result = myCommonResolver.myJwtPayload(payload);
       expect(result).toEqual(payload);
     });
   });
@@ -82,7 +83,7 @@ describe('MyResolver', () => {
         .spyOn(usersService, 'get')
         .mockResolvedValueOnce(user);
 
-      const result = await myResolver.me(payload);
+      const result = await myCommonResolver.me(payload);
 
       expect(result).toEqual(user);
       expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);
@@ -98,7 +99,7 @@ describe('MyResolver', () => {
         .spyOn(usersService, 'update')
         .mockResolvedValueOnce(new User({ ...user, ...updateUserInput }));
 
-      const result = await myResolver.updateMe(payload, updateUserInput);
+      const result = await myCommonResolver.updateMe(payload, updateUserInput);
 
       expect(result.name).toEqual(updateUserInput.name);
       expect(usersServiceUpdateSpy).toHaveBeenCalledWith(
@@ -134,7 +135,7 @@ describe('MyResolver', () => {
           new UserAvatarImage({ key: s3UploadResult.key })
         );
 
-      const result = await myResolver.updateMyAvatarImage(user, { file });
+      const result = await myCommonResolver.updateMyAvatarImage(user, { file });
       expect(result.key).toEqual(s3UploadResult.key);
       expect(awsS3ServiceUploadStreamSpy).toHaveBeenCalledWith(
         fileUpload.createReadStream(),
@@ -158,7 +159,7 @@ describe('MyResolver', () => {
         .spyOn(usersService, 'updatePassword')
         .mockResolvedValueOnce(undefined);
 
-      const result = await myResolver.updateMyPassword(
+      const result = await myCommonResolver.updateMyPassword(
         user,
         oldPassword,
         newPassword

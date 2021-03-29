@@ -7,15 +7,18 @@ import {
   JwtRefreshStrategy,
   JwtStrategy,
   JwtVerifyStrategy,
+  JwtSellerStrategy,
 } from './strategies/jwt.strategy';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 
 import { UsersModule } from '@src/modules/user/users/users.module';
+import { SellersModule } from '@src/modules/item/sellers/sellers.module';
 
 @Module({
   imports: [
     UsersModule,
+    SellersModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
@@ -28,6 +31,7 @@ import { UsersModule } from '@src/modules/user/users/users.module';
     JwtStrategy,
     JwtVerifyStrategy,
     JwtRefreshStrategy,
+    JwtSellerStrategy,
   ],
   exports: [JwtModule],
 })
