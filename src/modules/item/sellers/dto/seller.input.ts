@@ -1,11 +1,4 @@
-import {
-  Field,
-  InputType,
-  Int,
-  OmitType,
-  PartialType,
-  PickType,
-} from '@nestjs/graphql';
+import { Field, InputType, Int, PartialType, PickType } from '@nestjs/graphql';
 
 import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
 
@@ -18,19 +11,17 @@ import {
 import { Seller } from '../models/seller.model';
 
 @InputType()
-export class CreateSellerInput extends OmitType(
+export class CreateSellerInput extends PickType(
   Seller,
   [
-    'id',
-    'createdAt',
-    'updatedAt',
-    'user',
-    'brand',
-    'saleStrategy',
-    'claimPolicy',
-    'crawlPolicy',
-    'shippingPolicy',
-    'returnAddress',
+    'businessName',
+    'businessCode',
+    'mailOrderBusinessCode',
+    'representativeName',
+    'phoneNumber',
+    'email',
+    'kakaoTalkCode',
+    'operationTimeMessage',
   ],
   InputType
 ) {
