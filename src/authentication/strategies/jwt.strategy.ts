@@ -64,6 +64,10 @@ export class JwtSellerStrategy extends CustomJwtStrategy('jwt-seller') {
     return this.sellersService.findOne({ userId: payload.sub }, [
       'user',
       'brand',
+      'saleStrategy',
+      'claimPolicy',
+      'crawlPolicy',
+      'shippingPolicy',
     ]);
   }
 }
