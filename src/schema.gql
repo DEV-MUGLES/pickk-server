@@ -40,11 +40,17 @@ input CreateSellerClaimPolicyInput {
   picName: String!
 }
 
+input CreateSellerCrawlPolicyInput {
+  isInspectingNew: Boolean!
+  isUpdatingSaleItemInfo: Boolean!
+}
+
 input CreateSellerInput {
   brandId: Int!
   businessCode: String!
   businessName: String!
   claimPolicyInput: CreateSellerClaimPolicyInput!
+  crawlPolicyInput: CreateSellerCrawlPolicyInput!
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
@@ -169,6 +175,7 @@ type Seller {
   businessCode: String!
   businessName: String!
   claimPolicy: SellerClaimPolicy!
+  crawlPolicy: SellerCrawlPolicy!
   createdAt: DateTime!
   email: String!
   id: Int!
@@ -190,6 +197,14 @@ type SellerClaimPolicy {
   id: Int!
   phoneNumber: String!
   picName: String!
+  updatedAt: DateTime!
+}
+
+type SellerCrawlPolicy {
+  createdAt: DateTime!
+  id: Int!
+  isInspectingNew: Boolean!
+  isUpdatingSaleItemInfo: Boolean!
   updatedAt: DateTime!
 }
 

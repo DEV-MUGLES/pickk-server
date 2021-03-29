@@ -3,8 +3,16 @@ import { Field, InputType, Int, OmitType, PickType } from '@nestjs/graphql';
 import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
 
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
+import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
 import { Seller } from '../models/seller.model';
+
+@InputType()
+class CreateSellerCrawlPolicyInput extends PickType(
+  SellerCrawlPolicy,
+  ['isInspectingNew', 'isUpdatingSaleItemInfo'],
+  InputType
+) {}
 
 @InputType()
 class CreateSellerClaimPolicyInput extends PickType(
@@ -31,6 +39,7 @@ export class CreateSellerInput extends OmitType(
     'brand',
     'saleStrategy',
     'claimPolicy',
+    'crawlPolicy',
     'shippingPolicy',
   ],
   InputType
@@ -46,6 +55,9 @@ export class CreateSellerInput extends OmitType(
 
   @Field()
   claimPolicyInput: CreateSellerClaimPolicyInput;
+
+  @Field()
+  crawlPolicyInput: CreateSellerCrawlPolicyInput;
 
   @Field()
   shippingPolicyInput: CreateSellerShippingPolicyInput;

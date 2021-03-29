@@ -19,6 +19,7 @@ export class SellersResolver extends BaseResolver {
     'brand',
     'saleStrategy',
     'claimPolicy',
+    'crawlPolicy',
     'shippingPolicy',
   ];
 
