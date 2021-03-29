@@ -2,7 +2,6 @@ import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { JwtSellerGuard } from '@src/authentication/guards/jwt-seller.guard';
 import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
@@ -10,9 +9,6 @@ import { IntArgs } from '@src/common/decorators/args.decorator';
 import { UploadSingleImageInput } from '@src/common/dto/image.input';
 import { BaseResolver } from '@src/common/base.resolver';
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
-
-import { Seller } from '@item/sellers/models/seller.model';
-import { CurrentSeller } from '@item/sellers/decorators/current-seller.decorator';
 
 import {
   SHIPPING_ADDRESSES,
@@ -29,7 +25,7 @@ import { ShippingAddress } from '@user/users/models/shipping-address.model';
 import { UserAvatarImage } from '@user/users/models/user-avatar-image.model';
 
 @Resolver()
-export class MyResolver extends BaseResolver {
+export class MyCommonResolver extends BaseResolver {
   relations = USER_RELATIONS;
 
   constructor(
@@ -57,12 +53,6 @@ export class MyResolver extends BaseResolver {
       payload.sub,
       this.getRelationsFromInfo(info)
     );
-  }
-
-  @Query(() => Seller)
-  @UseGuards(JwtSellerGuard)
-  meSeller(@CurrentSeller() seller: Seller) {
-    return seller;
   }
 
   @Mutation(() => User)

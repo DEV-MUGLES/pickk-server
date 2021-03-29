@@ -57,9 +57,16 @@ input CreateSellerInput {
   operationTimeMessage: String!
   phoneNumber: String!
   representativeName: String!
+  returnAddressInput: CreateSellerReturnAddressInput!
   saleStrategyInput: FindSaleStrategyInput!
   shippingPolicyInput: CreateSellerShippingPolicyInput!
   userId: Int!
+}
+
+input CreateSellerReturnAddressInput {
+  baseAddress: String!
+  detailAddress: String!
+  postalCode: String!
 }
 
 input CreateSellerShippingPolicyInput {
@@ -131,6 +138,7 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
+  updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
@@ -184,6 +192,7 @@ type Seller {
   operationTimeMessage: String!
   phoneNumber: String!
   representativeName: String!
+  returnAddress: SellerReturnAddress!
   saleStrategy: SaleStrategy!
   shippingPolicy: SellerShippingPolicy!
   updatedAt: DateTime!
@@ -205,6 +214,15 @@ type SellerCrawlPolicy {
   id: Int!
   isInspectingNew: Boolean!
   isUpdatingSaleItemInfo: Boolean!
+  updatedAt: DateTime!
+}
+
+type SellerReturnAddress {
+  baseAddress: String!
+  createdAt: DateTime!
+  detailAddress: String!
+  id: Int!
+  postalCode: String!
   updatedAt: DateTime!
 }
 
@@ -246,6 +264,17 @@ input UpdateCourierInput {
 input UpdateCourierIssueInput {
   endAt: DateTime!
   message: String!
+}
+
+input UpdateSellerInput {
+  businessCode: String
+  businessName: String
+  email: String
+  kakaoTalkCode: String
+  mailOrderBusinessCode: String
+  operationTimeMessage: String
+  phoneNumber: String
+  representativeName: String
 }
 
 input UpdateShippingAddressInput {

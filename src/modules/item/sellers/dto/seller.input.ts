@@ -1,4 +1,11 @@
-import { Field, InputType, Int, OmitType, PickType } from '@nestjs/graphql';
+import {
+  Field,
+  InputType,
+  Int,
+  OmitType,
+  PartialType,
+  PickType,
+} from '@nestjs/graphql';
 
 import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
 
@@ -76,17 +83,19 @@ export class CreateSellerInput extends OmitType(
 }
 
 @InputType()
-export class UpdateSellerInput extends PickType(
-  Seller,
-  [
-    'businessName',
-    'businessCode',
-    'mailOrderBusinessCode',
-    'representativeName',
-    'phoneNumber',
-    'email',
-    'kakaoTalkCode',
-    'operationTimeMessage',
-  ],
-  InputType
+export class UpdateSellerInput extends PartialType(
+  PickType(
+    Seller,
+    [
+      'businessName',
+      'businessCode',
+      'mailOrderBusinessCode',
+      'representativeName',
+      'phoneNumber',
+      'email',
+      'kakaoTalkCode',
+      'operationTimeMessage',
+    ],
+    InputType
+  )
 ) {}
