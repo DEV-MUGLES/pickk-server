@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
+import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
+import {
+  UpdateSellerClaimPolicyInput,
+  UpdateSellerCrawlPolicyInput,
+  UpdateSellerReturnAddressInput,
+  UpdateSellerShippingPolicyInput,
+} from './dto/seller-policies.input';
 import { CreateSellerInput, UpdateSellerInput } from './dto/seller.input';
 import { SellerEntity } from './entities/seller.entity';
 import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
@@ -60,5 +68,58 @@ export class SellersService {
       saleStrategy,
     });
     return await this.sellersRepository.save(seller);
+  }
+
+  async updateClaimPolicy(
+    seller: Seller,
+    input: UpdateSellerClaimPolicyInput
+  ): Promise<SellerClaimPolicy> {
+    seller.claimPolicy = new SellerClaimPolicy({
+      ...seller.claimPolicy,
+      ...input,
+    });
+    return (await this.sellersRepository.save(seller)).claimPolicy;
+  }
+
+  async updateCrawlPolicy(
+    seller: Seller,
+    input: UpdateSellerCrawlPolicyInput
+  ): Promise<SellerCrawlPolicy> {
+    seller.crawlPolicy = new SellerCrawlPolicy({
+      ...seller.crawlPolicy,
+      ...input,
+    });
+    return (await this.sellersRepository.save(seller)).crawlPolicy;
+  }
+
+  async updateShippingPolicy(
+    seller: Seller,
+    input: UpdateSellerShippingPolicyInput
+  ): Promise<SellerShippingPolicy> {
+    seller.shippingPolicy = new SellerShippingPolicy({
+      ...seller.shippingPolicy,
+      ...input,
+    });
+    return (await this.sellersRepository.save(seller)).shippingPolicy;
+  }
+
+  async updateSaleStrategy(
+    seller: Seller,
+    input: FindSaleStrategyInput
+  ): Promise<SaleStrategy> {
+    const saleStrategy = await this.saleStrategyRepository.findOrCreate(input);
+    seller.saleStrategy = saleStrategy;
+    return (await this.sellersRepository.save(seller)).saleStrategy;
+  }
+
+  async updateReturnAddress(
+    seller: Seller,
+    input: UpdateSellerReturnAddressInput
+  ): Promise<SellerReturnAddress> {
+    seller.returnAddress = new SellerReturnAddress({
+      ...seller.returnAddress,
+      ...input,
+    });
+    return (await this.sellersRepository.save(seller)).returnAddress;
   }
 }

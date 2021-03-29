@@ -143,6 +143,11 @@ type Mutation {
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
+  updateMySaleStrategy(updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
+  updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
+  updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
+  updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
+  updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
@@ -266,6 +271,17 @@ input UpdateCourierIssueInput {
   message: String!
 }
 
+input UpdateSellerClaimPolicyInput {
+  fee: Int
+  phoneNumber: String
+  picName: String
+}
+
+input UpdateSellerCrawlPolicyInput {
+  isInspectingNew: Boolean
+  isUpdatingSaleItemInfo: Boolean
+}
+
 input UpdateSellerInput {
   businessCode: String
   businessName: String
@@ -275,6 +291,17 @@ input UpdateSellerInput {
   operationTimeMessage: String
   phoneNumber: String
   representativeName: String
+}
+
+input UpdateSellerReturnAddressInput {
+  baseAddress: String
+  detailAddress: String
+  postalCode: String
+}
+
+input UpdateSellerShippingPolicyInput {
+  fee: Int
+  minimumAmountForFree: Int
 }
 
 input UpdateShippingAddressInput {
