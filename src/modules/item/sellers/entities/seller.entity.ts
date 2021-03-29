@@ -24,6 +24,8 @@ import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.en
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
 import { SellerClaimPolicyEntity } from './policies/seller-claim-policy.entity';
+import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
+import { SellerCrawlPolicyEntity } from './policies/seller-crawl-policy.entity';
 
 @ObjectType()
 @Entity('seller')
@@ -100,6 +102,11 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @OneToOne(() => SellerClaimPolicyEntity, { cascade: true })
   @JoinColumn()
   claimPolicy: SellerClaimPolicy;
+
+  @Field(() => SellerCrawlPolicy)
+  @OneToOne(() => SellerCrawlPolicyEntity, { cascade: true })
+  @JoinColumn()
+  crawlPolicy: SellerCrawlPolicy;
 
   @Field(() => SellerShippingPolicy)
   @OneToOne(() => SellerShippingPolicyEntity, { cascade: true })

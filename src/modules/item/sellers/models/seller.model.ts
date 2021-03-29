@@ -29,6 +29,7 @@ export class Seller extends SellerEntity {
 
     this.saleStrategy = attributes.saleStrategy;
     this.claimPolicy = attributes.claimPolicy;
+    this.crawlPolicy = attributes.crawlPolicy;
     this.shippingPolicy = attributes.shippingPolicy;
   }
 }

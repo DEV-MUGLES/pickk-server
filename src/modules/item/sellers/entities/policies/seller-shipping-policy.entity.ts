@@ -11,7 +11,7 @@ import { ISellerShippingPolicy } from '../../interfaces/policies';
 export class SellerShippingPolicyEntity
   extends BaseEntity
   implements ISellerShippingPolicy {
-  constructor(attributes?: Partial<BaseEntity>) {
+  constructor(attributes?: Partial<SellerShippingPolicyEntity>) {
     super();
     if (!attributes) {
       return;
@@ -20,6 +20,9 @@ export class SellerShippingPolicyEntity
     this.id = attributes.id;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
+
+    this.minimumAmountForFree = attributes.minimumAmountForFree;
+    this.fee = attributes.fee;
   }
 
   @Field(() => Int)

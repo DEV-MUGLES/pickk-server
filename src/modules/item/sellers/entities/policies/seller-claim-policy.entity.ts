@@ -18,7 +18,7 @@ import { ISellerClaimPolicy } from '../../interfaces/policies';
 export class SellerClaimPolicyEntity
   extends BaseEntity
   implements ISellerClaimPolicy {
-  constructor(attributes?: Partial<BaseEntity>) {
+  constructor(attributes?: Partial<SellerClaimPolicyEntity>) {
     super();
     if (!attributes) {
       return;
@@ -27,6 +27,10 @@ export class SellerClaimPolicyEntity
     this.id = attributes.id;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
+
+    this.fee = attributes.fee;
+    this.phoneNumber = attributes.phoneNumber;
+    this.picName = attributes.picName;
   }
 
   @Field(() => Int)
