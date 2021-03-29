@@ -31,5 +31,7 @@ export class Seller extends SellerEntity {
     this.claimPolicy = attributes.claimPolicy;
     this.crawlPolicy = attributes.crawlPolicy;
     this.shippingPolicy = attributes.shippingPolicy;
+
+    this.returnAddress = attributes.returnAddress;
   }
 }

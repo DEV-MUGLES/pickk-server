@@ -2,8 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { UsersService } from '@src/modules/user/users/users.service';
-import { SellersService } from '@src/modules/item/sellers/sellers.service';
+import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
+import { SellersService } from '@item/sellers/sellers.service';
+import { UsersService } from '@user/users/users.service';
 
 import { jwtConstants, jwtRefreshConstants } from '../constants/jwt.constant';
 import { JwtPayload } from '../dto/jwt.dto';
@@ -61,13 +62,9 @@ export class JwtSellerStrategy extends CustomJwtStrategy('jwt-seller') {
   }
 
   async validate(payload: JwtPayload) {
-    return this.sellersService.findOne({ userId: payload.sub }, [
-      'user',
-      'brand',
-      'saleStrategy',
-      'claimPolicy',
-      'crawlPolicy',
-      'shippingPolicy',
-    ]);
+    return this.sellersService.findOne(
+      { userId: payload.sub },
+      SELLER_RELATIONS
+    );
   }
 }

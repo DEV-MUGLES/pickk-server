@@ -8,20 +8,14 @@ import { BaseResolver } from '@src/common/base.resolver';
 import { IntArgs } from '@src/common/decorators/args.decorator';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 
+import { SELLER_RELATIONS } from './constants/seller.relation';
+import { CreateSellerInput } from './dto/seller.input';
 import { Seller } from './models/seller.model';
 import { SellersService } from './sellers.service';
-import { CreateSellerInput } from './dto/seller.input';
 
 @Resolver(() => Seller)
 export class SellersResolver extends BaseResolver {
-  relations = [
-    'user',
-    'brand',
-    'saleStrategy',
-    'claimPolicy',
-    'crawlPolicy',
-    'shippingPolicy',
-  ];
+  relations = SELLER_RELATIONS;
 
   constructor(@Inject(SellersService) private sellersService: SellersService) {
     super();

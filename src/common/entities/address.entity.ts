@@ -9,6 +9,21 @@ import { IAddress } from '../interfaces/address.interface';
 export abstract class AbstractAddressEntity
   extends BaseEntity
   implements IAddress {
+  constructor(attributes?: Partial<AbstractAddressEntity>) {
+    super();
+    if (!attributes) {
+      return;
+    }
+
+    this.id = attributes.id;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
+
+    this.baseAddress = attributes.baseAddress;
+    this.detailAddress = attributes.detailAddress;
+    this.postalCode = attributes.postalCode;
+  }
+
   @Field()
   @Column()
   baseAddress: string;

@@ -5,6 +5,7 @@ import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
+import { SellerReturnAddress } from '../models/seller-return-address.model';
 import { Seller } from '../models/seller.model';
 
 @InputType()
@@ -29,6 +30,13 @@ class CreateSellerShippingPolicyInput extends PickType(
 ) {}
 
 @InputType()
+class CreateSellerReturnAddressInput extends PickType(
+  SellerReturnAddress,
+  ['baseAddress', 'detailAddress', 'postalCode'],
+  InputType
+) {}
+
+@InputType()
 export class CreateSellerInput extends OmitType(
   Seller,
   [
@@ -41,6 +49,7 @@ export class CreateSellerInput extends OmitType(
     'claimPolicy',
     'crawlPolicy',
     'shippingPolicy',
+    'returnAddress',
   ],
   InputType
 ) {
@@ -61,4 +70,23 @@ export class CreateSellerInput extends OmitType(
 
   @Field()
   shippingPolicyInput: CreateSellerShippingPolicyInput;
+
+  @Field()
+  returnAddressInput: CreateSellerReturnAddressInput;
 }
+
+@InputType()
+export class UpdateSellerInput extends PickType(
+  Seller,
+  [
+    'businessName',
+    'businessCode',
+    'mailOrderBusinessCode',
+    'representativeName',
+    'phoneNumber',
+    'email',
+    'kakaoTalkCode',
+    'operationTimeMessage',
+  ],
+  InputType
+) {}

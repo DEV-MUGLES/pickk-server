@@ -3,11 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
-import { CreateSellerInput } from './dto/seller.input';
+import { CreateSellerInput, UpdateSellerInput } from './dto/seller.input';
 import { SellerEntity } from './entities/seller.entity';
 import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
+import { SellerReturnAddress } from './models/seller-return-address.model';
 import { Seller } from './models/seller.model';
 import { SellersRepository } from './sellers.repository';
 
@@ -31,12 +32,18 @@ export class SellersService {
     return await this.sellersRepository.findOneEntity(param, relations);
   }
 
+  async update(id: number, input: UpdateSellerInput): Promise<Seller> {
+    await this.sellersRepository.update(id, input);
+    return await this.get(id);
+  }
+
   async create(createSellerInput: CreateSellerInput): Promise<Seller> {
     const {
       saleStrategyInput,
       claimPolicyInput,
       crawlPolicyInput,
       shippingPolicyInput,
+      returnAddressInput,
       ...sellerAttributes
     } = createSellerInput;
 
@@ -49,6 +56,7 @@ export class SellersService {
       claimPolicy: new SellerClaimPolicy(claimPolicyInput),
       crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
       shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
+      returnAddress: new SellerReturnAddress(returnAddressInput),
       saleStrategy,
     });
     return await this.sellersRepository.save(seller);
