@@ -9,39 +9,13 @@ import {
 
 import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
 
-import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
-import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
-import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
-import { SellerReturnAddress } from '../models/seller-return-address.model';
+import {
+  CreateSellerClaimPolicyInput,
+  CreateSellerCrawlPolicyInput,
+  CreateSellerShippingPolicyInput,
+  CreateSellerReturnAddressInput,
+} from './seller-policies.input';
 import { Seller } from '../models/seller.model';
-
-@InputType()
-class CreateSellerCrawlPolicyInput extends PickType(
-  SellerCrawlPolicy,
-  ['isInspectingNew', 'isUpdatingSaleItemInfo'],
-  InputType
-) {}
-
-@InputType()
-class CreateSellerClaimPolicyInput extends PickType(
-  SellerClaimPolicy,
-  ['fee', 'phoneNumber', 'picName'],
-  InputType
-) {}
-
-@InputType()
-class CreateSellerShippingPolicyInput extends PickType(
-  SellerShippingPolicy,
-  ['minimumAmountForFree', 'fee'],
-  InputType
-) {}
-
-@InputType()
-class CreateSellerReturnAddressInput extends PickType(
-  SellerReturnAddress,
-  ['baseAddress', 'detailAddress', 'postalCode'],
-  InputType
-) {}
 
 @InputType()
 export class CreateSellerInput extends OmitType(
