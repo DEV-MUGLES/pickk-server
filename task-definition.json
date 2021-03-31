@@ -1,0 +1,49 @@
+{
+  "requiresCompatibilities": ["FARGATE"],
+  "inferenceAccelerators": [],
+  "containerDefinitions": [
+    {
+      "name": "pickk-server",
+      "image": "896943254900.dkr.ecr.ap-northeast-2.amazonaws.com/pickk-server",
+      "resourceRequirements": null,
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": "3000",
+          "protocol": "tcp"
+        }
+      ],
+      "environment": null,
+      "environmentFiles": [],
+      "secrets": null,
+      "mountPoints": null,
+      "volumesFrom": null,
+      "hostname": null,
+      "user": null,
+      "workingDirectory": null,
+      "extraHosts": null,
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/pickk-server-definition",
+          "awslogs-region": "ap-northeast-2",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "ulimits": null,
+      "dockerLabels": null,
+      "dependsOn": null,
+      "repositoryCredentials": {
+        "credentialsParameter": ""
+      }
+    }
+  ],
+  "volumes": [],
+  "networkMode": "awsvpc",
+  "memory": "2048",
+  "cpu": "1024",
+  "executionRoleArn": "<create_new>",
+  "family": "pickk-server-definition",
+  "taskRoleArn": "arn:aws:iam::896943254900:role/EcsTaskCall",
+  "tags": []
+}
