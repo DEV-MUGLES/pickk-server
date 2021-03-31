@@ -42,7 +42,7 @@
   "networkMode": "awsvpc",
   "memory": "2048",
   "cpu": "1024",
-  "executionRoleArn": "<create_new>",
+  "executionRoleArn": "arn:aws:iam::896943254900:role/EcsTaskCall",
   "family": "pickk-server-definition",
   "taskRoleArn": "arn:aws:iam::896943254900:role/EcsTaskCall",
   "tags": []
