@@ -115,6 +115,17 @@ type ItemProfile {
   salePrice: Int!
   thumbnailImage: ItemThumbnailImage!
   updatedAt: DateTime!
+  urls: [ItemProfileUrl!]!
+}
+
+type ItemProfileUrl {
+  createdAt: DateTime!
+  id: Int!
+  isAvailable: Boolean!
+  isPrimary: Boolean!
+  itemProfileId: Int!
+  updatedAt: DateTime!
+  url: String!
 }
 
 type ItemThumbnailImage {

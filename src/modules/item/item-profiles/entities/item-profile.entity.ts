@@ -1,5 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, ManyToOne, OneToOne } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinColumn,
+  ManyToOne,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { IsBoolean, IsNumber, IsString, Min } from 'class-validator';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
@@ -9,6 +17,7 @@ import { Brand } from '../../brands/models/brand.model';
 import { IItemProfile } from '../interfaces/item-profile.interface';
 import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
 import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
+import { ItemProfileUrl } from '../models/item-profile-url.model';
 
 @ObjectType()
 @Entity({
@@ -49,7 +58,9 @@ export class ItemProfileEntity extends BaseEntity implements IItemProfile {
   salePrice: number;
 
   @Field()
-  @Column()
+  @Column({
+    default: true,
+  })
   @IsBoolean()
   isAvailable: boolean;
 
@@ -58,15 +69,23 @@ export class ItemProfileEntity extends BaseEntity implements IItemProfile {
     eager: true,
     cascade: true,
   })
+  @JoinColumn()
   thumbnailImage: ItemThumbnailImage;
 
   @Field(() => Brand)
   @ManyToOne(() => BrandEntity, {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   brand: BrandEntity;
 
   @Field(() => Int)
   @Column()
   brandId: number;
+
+  @Field(() => [ItemProfileUrl])
+  @OneToMany('ItemProfileUrlEntity', 'itemProfile', {
+    cascade: true,
+  })
+  urls: ItemProfileUrl[];
 }
