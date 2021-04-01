@@ -104,6 +104,19 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+type ItemProfile {
+  brand: Brand!
+  brandId: Int!
+  createdAt: DateTime!
+  id: Int!
+  isAvailable: Boolean!
+  name: String!
+  originalPrice: Int!
+  salePrice: Int!
+  thumbnailImage: ItemThumbnailImage!
+  updatedAt: DateTime!
+}
+
 type ItemThumbnailImage {
   angle: Int!
   createdAt: DateTime!
@@ -164,6 +177,8 @@ type Query {
   brands: [Brand!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  itemProfile(id: Int!): ItemProfile!
+  itemProfiles: [ItemProfile!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
