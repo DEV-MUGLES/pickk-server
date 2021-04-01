@@ -13,6 +13,17 @@ import { IImage } from '../interfaces/image.interface';
 export abstract class AbstractImageEntity
   extends _TypeORMBaseEntity
   implements IImage {
+  constructor(attributes?: Partial<AbstractImageEntity>) {
+    super();
+    if (!attributes) {
+      return;
+    }
+    this.createdAt = attributes.createdAt;
+
+    this.key = attributes.key;
+    this.angle = attributes.angle;
+  }
+
   @Field()
   @PrimaryColumn({
     type: 'varchar',

@@ -8,6 +8,17 @@ import {
 
 @ObjectType()
 export class BaseEntity extends _TypeORMBaseEntity {
+  constructor(attributes?: Partial<BaseEntity>) {
+    super();
+    if (!attributes) {
+      return;
+    }
+
+    this.id = attributes.id;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
+  }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;

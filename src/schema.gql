@@ -104,6 +104,13 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+type ItemThumbnailImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
+}
+
 type JwtPayload {
   code: String
   exp: Timestamp!
