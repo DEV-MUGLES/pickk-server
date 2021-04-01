@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddItemProfileUrlInput {
+  isPrimary: Boolean!
+  url: String!
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -104,6 +109,37 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+type ItemProfile {
+  brand: Brand!
+  brandId: Int!
+  createdAt: DateTime!
+  id: Int!
+  isAvailable: Boolean!
+  name: String!
+  originalPrice: Int!
+  salePrice: Int!
+  thumbnailImage: ItemThumbnailImage!
+  updatedAt: DateTime!
+  urls: [ItemProfileUrl!]!
+}
+
+type ItemProfileUrl {
+  createdAt: DateTime!
+  id: Int!
+  isAvailable: Boolean!
+  isPrimary: Boolean!
+  itemProfileId: Int!
+  updatedAt: DateTime!
+  url: String!
+}
+
+type ItemThumbnailImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
+}
+
 type JwtPayload {
   code: String
   exp: Timestamp!
@@ -128,6 +164,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
+  addItemProfileUrl(addItemProfileUrlInput: AddItemProfileUrlInput!, itemProfileId: Int!): ItemProfileUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
@@ -157,6 +194,8 @@ type Query {
   brands: [Brand!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  itemProfile(id: Int!): ItemProfile!
+  itemProfiles: [ItemProfile!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!
   me: User!
