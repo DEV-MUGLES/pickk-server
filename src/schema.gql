@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddItemProfileUrlInput {
+  isPrimary: Boolean!
+  url: String!
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -159,6 +164,7 @@ input LoginByEmailInput {
 }
 
 type Mutation {
+  addItemProfileUrl(addItemProfileUrlInput: AddItemProfileUrlInput!, itemProfileId: Int!): ItemProfileUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!

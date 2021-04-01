@@ -35,9 +35,11 @@ export class ItemProfileEntity extends BaseEntity implements IItemProfile {
     this.originalPrice = attributes.originalPrice;
     this.salePrice = attributes.salePrice;
     this.isAvailable = attributes.isAvailable;
+
     this.thumbnailImage = attributes.thumbnailImage;
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
+    this.urls = attributes.urls;
   }
 
   @Field()
