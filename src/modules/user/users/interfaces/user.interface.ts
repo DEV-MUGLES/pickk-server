@@ -1,5 +1,5 @@
 import { UserRole } from '../constants/user.enum';
-import { ShippingAddress } from '../models/shipping-address.model';
+import { IShippingAddress } from './shipping-address.interface';
 
 /**
  * User variable type declaration.
@@ -13,5 +13,5 @@ export interface IUser {
   name: string | null;
   weight?: number;
   height?: number;
-  shippingAddresses: ShippingAddress[];
+  shippingAddresses: IShippingAddress[];
 }

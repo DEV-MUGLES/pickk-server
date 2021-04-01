@@ -1,9 +1,9 @@
-import { CourierIssue } from '../models/courier-issue.model';
+import { ICourierIssue } from './courier-issue.interface';
 
 export interface ICourier {
   code: string;
   name: string;
   phoneNumber: string;
   returnReserveUrl: string;
-  issue?: CourierIssue;
+  issue?: ICourierIssue;
 }
