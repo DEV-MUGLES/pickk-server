@@ -21,6 +21,7 @@ import { CommonModule } from './modules/common/common.module';
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
+      playground: true,
     }),
     MysqlDatabaseProviderModule,
     AwsS3ProviderModule,
