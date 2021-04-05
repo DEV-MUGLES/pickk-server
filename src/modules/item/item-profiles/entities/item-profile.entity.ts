@@ -79,13 +79,12 @@ export class ItemProfileEntity extends BaseEntity implements IItemProfile {
     onDelete: 'CASCADE',
   })
   @JoinColumn()
-  brand: BrandEntity;
+  brand: Brand;
 
   @Field(() => Int)
   @Column()
   brandId: number;
 
-  @Field(() => [ItemProfileUrl])
   @OneToMany('ItemProfileUrlEntity', 'itemProfile', {
     cascade: true,
   })

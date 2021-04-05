@@ -1,11 +1,14 @@
-import { ObjectType } from '@nestjs/graphql';
-import { AddItemProfileUrlInput } from '../dtos/item-profile-url.input';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+import { AddItemProfileUrlInput } from '../dtos/item-profile-url.input';
 import { ItemProfileEntity } from '../entities/item-profile.entity';
 import { ItemProfileUrl } from './item-profile-url.model';
 
 @ObjectType()
 export class ItemProfile extends ItemProfileEntity {
+  @Field(() => [ItemProfileUrl])
+  urls: ItemProfileUrl[];
+
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((shippingAddress, _index) => {
       shippingAddress.isPrimary = _index === index;
