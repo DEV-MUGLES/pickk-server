@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 
-import { AppConfigModule } from './config/app/config.module';
 import { GraphQLModule } from '@nestjs/graphql';
+import { AppConfigModule } from './config/app/config.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 
@@ -14,10 +14,10 @@ import { UserModule } from './modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule } from './modules/common/common.module';
+import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
-    AppConfigModule,
     GraphQLModule.forRoot({
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
@@ -25,6 +25,8 @@ import { CommonModule } from './modules/common/common.module';
       introspection: true,
       cors: false,
     }),
+    AppConfigModule,
+    AdminModule,
     MysqlDatabaseProviderModule,
     AwsS3ProviderModule,
     AuthModule,

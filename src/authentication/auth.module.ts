@@ -33,6 +33,6 @@ import { SellersModule } from '@src/modules/item/sellers/sellers.module';
     JwtRefreshStrategy,
     JwtSellerStrategy,
   ],
-  exports: [JwtModule],
+  exports: [AuthService, JwtModule],
 })
 export class AuthModule {}
