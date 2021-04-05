@@ -1,5 +1,7 @@
 import { IAddress } from '@src/common/interfaces/address.interface';
 import { ISaleStrategy } from '@src/common/interfaces/sale-strategy.interface';
+import { IBrand } from '../../brands/interfaces/brand.interface';
+import { ICourier } from '../../couriers/interfaces/courier.interface';
 
 import {
   ISellerClaimPolicy,
@@ -17,6 +19,8 @@ export interface ISeller {
   kakaoTalkCode?: string;
   operationTimeMessage: string;
 
+  brand: IBrand;
+  courier: ICourier;
   saleStrategy: ISaleStrategy;
   claimPolicy: ISellerClaimPolicy;
   crawlPolicy: ISellerCrawlPolicy;

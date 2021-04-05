@@ -28,6 +28,8 @@ import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model'
 import { SellerCrawlPolicyEntity } from './policies/seller-crawl-policy.entity';
 import { SellerReturnAddress } from '../models/seller-return-address.model';
 import { SellerReturnAddressEntity } from './seller-return-address.entity';
+import { Courier } from '../../couriers/models/courier.model';
+import { CourierEntity } from '../../couriers/entities/courier.entity';
 
 @ObjectType()
 @Entity('seller')
@@ -94,6 +96,16 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @Column()
   @Exclude()
   brandId: number;
+
+  @Field(() => Courier)
+  @ManyToOne(() => CourierEntity)
+  @JoinColumn()
+  courier: Courier;
+
+  @Field(() => Int, { nullable: true })
+  @Column()
+  @Exclude()
+  courierId: number;
 
   @Field(() => SaleStrategy)
   @ManyToOne(() => SaleStrategyEntity)

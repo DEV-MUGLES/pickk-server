@@ -55,6 +55,7 @@ input CreateSellerInput {
   businessCode: String!
   businessName: String!
   claimPolicyInput: CreateSellerClaimPolicyInput!
+  courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
   email: String!
   kakaoTalkCode: String
@@ -227,6 +228,8 @@ type Seller {
   businessCode: String!
   businessName: String!
   claimPolicy: SellerClaimPolicy!
+  courier: Courier!
+  courierId: Int
   crawlPolicy: SellerCrawlPolicy!
   createdAt: DateTime!
   email: String!

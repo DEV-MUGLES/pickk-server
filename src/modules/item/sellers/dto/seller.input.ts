@@ -31,6 +31,9 @@ export class CreateSellerInput extends PickType(
   @Field(() => Int)
   brandId: number;
 
+  @Field(() => Int)
+  courierId: number;
+
   @Field(() => FindSaleStrategyInput)
   saleStrategyInput: FindSaleStrategyInput;
 

@@ -6,6 +6,7 @@ export const SELLER_RELATIONS: Array<keyof Seller> = [
   'saleStrategy',
   'claimPolicy',
   'crawlPolicy',
+  'courier',
   'shippingPolicy',
   'returnAddress',
 ];

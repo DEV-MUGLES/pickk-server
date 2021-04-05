@@ -26,6 +26,8 @@ export class Seller extends SellerEntity {
     this.userId = attributes.userId;
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
+    this.courier = attributes.courier;
+    this.courierId = attributes.courierId;
 
     this.saleStrategy = attributes.saleStrategy;
     this.claimPolicy = attributes.claimPolicy;
