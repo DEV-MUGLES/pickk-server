@@ -38,6 +38,7 @@ describe('SellersService', () => {
       operationTimeMessage: faker.lorem.text(),
       userId: faker.random.number(),
       brandId: faker.random.number(),
+      courierId: faker.random.number(),
       saleStrategyInput: {
         canUseCoupon: faker.random.boolean(),
         canUseMileage: faker.random.boolean(),

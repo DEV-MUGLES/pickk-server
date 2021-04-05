@@ -23,7 +23,6 @@ import { AdminModule } from './admin/admin.module';
       sortSchema: true,
       playground: true,
       introspection: true,
-      cors: false,
     }),
     AppConfigModule,
     AdminModule,
