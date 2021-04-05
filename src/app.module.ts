@@ -22,6 +22,7 @@ import { CommonModule } from './modules/common/common.module';
       autoSchemaFile: 'src/schema.gql',
       sortSchema: true,
       playground: true,
+      introspection: true,
       cors: false,
     }),
     MysqlDatabaseProviderModule,
