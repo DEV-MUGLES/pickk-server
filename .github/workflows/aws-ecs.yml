@@ -87,3 +87,4 @@ jobs:
           service: pickk-server-service
           cluster: pickk-server-cluster
           wait-for-service-stability: true
+          force-new-deployment: true
