@@ -6,13 +6,6 @@
       "name": "pickk-server",
       "image": "896943254900.dkr.ecr.ap-northeast-2.amazonaws.com/pickk-server",
       "resourceRequirements": null,
-      "healthCheck": {
-        "command": ["CMD-SHELL", "curl -f http://localhost/ || exit 1"],
-        "interval": 300,
-        "timeout": 30,
-        "retries": 3,
-        "startPeriod": 0
-      },
       "essential": true,
       "portMappings": [
         {
