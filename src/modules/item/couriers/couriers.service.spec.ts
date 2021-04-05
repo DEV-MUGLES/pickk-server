@@ -3,7 +3,7 @@ import * as faker from 'faker';
 
 import { CouriersRepository } from './couriers.repository';
 import { CouriersService } from './couriers.service';
-import { UpdateCourierIssueInput } from './dto/courier-issue.input';
+import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 import { CourierIssue } from './models/courier-issue.model';
 import { Courier } from './models/courier.model';
 

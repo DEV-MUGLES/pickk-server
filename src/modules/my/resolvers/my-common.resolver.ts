@@ -6,7 +6,7 @@ import { CurrentUser } from '@src/authentication/decorators/current-user.decorat
 import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
 import { IntArgs } from '@src/common/decorators/args.decorator';
-import { UploadSingleImageInput } from '@src/common/dto/image.input';
+import { UploadSingleImageInput } from '@src/common/dtos/image.input';
 import { BaseResolver } from '@src/common/base.resolver';
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
@@ -17,8 +17,8 @@ import {
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '@user/users/dto/shipping-address.input';
-import { UpdateUserInput } from '@user/users/dto/user.input';
+} from '@src/modules/user/users/dtos/shipping-address.input';
+import { UpdateUserInput } from '@src/modules/user/users/dtos/user.input';
 import { User } from '@user/users/models/user.model';
 import { UsersService } from '@user/users/users.service';
 import { ShippingAddress } from '@user/users/models/shipping-address.model';

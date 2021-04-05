@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CouriersRepository } from './couriers.repository';
-import { UpdateCourierIssueInput } from './dto/courier-issue.input';
-import { CreateCourierInput, UpdateCourierInput } from './dto/courier.input';
+import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
+import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
 import { CourierIssue } from './models/courier-issue.model';
 import { Courier } from './models/courier.model';
 

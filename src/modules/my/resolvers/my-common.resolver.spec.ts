@@ -7,7 +7,7 @@ import { JwtPayload } from '@src/authentication/dto/jwt.dto';
 import { AwsS3ProviderModule } from '@src/providers/aws/s3/provider.module';
 import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 
-import { UpdateUserInput } from '../../user/users/dto/user.input';
+import { UpdateUserInput } from '../../user/users/dtos/user.input';
 import { User } from '../../user/users/models/user.model';
 import { UsersRepository } from '../../user/users/users.repository';
 import { UsersService } from '../../user/users/users.service';

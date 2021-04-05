@@ -6,7 +6,7 @@ import { PasswordIncorrectException } from '@src/authentication/exceptions/passw
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '../dto/shipping-address.input';
+} from '../dtos/shipping-address.input';
 import {
   UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,

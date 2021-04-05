@@ -1,6 +1,6 @@
 import * as faker from 'faker';
 
-import { UpdateCourierIssueInput } from '../dto/courier-issue.input';
+import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
 import {
   CourierIssueInvalidEndAtException,
   CourierIssueNotFoundException,

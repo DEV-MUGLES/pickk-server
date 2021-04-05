@@ -9,7 +9,7 @@ import { IntArgs } from '@src/common/decorators/args.decorator';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 
 import { SELLER_RELATIONS } from './constants/seller.relation';
-import { CreateSellerInput } from './dto/seller.input';
+import { CreateSellerInput } from './dtos/seller.input';
 import { Seller } from './models/seller.model';
 import { SellersService } from './sellers.service';
 

@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersRepository } from './users.repository';
-import { CreateUserInput, UpdateUserInput } from './dto/user.input';
+import { CreateUserInput, UpdateUserInput } from './dtos/user.input';
 import { User } from './models/user.model';
 import { UserPassword } from './models/user-password.model';
 import { ShippingAddress } from './models/shipping-address.model';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from './dto/shipping-address.input';
+} from './dtos/shipping-address.input';
 import { UserEntity } from './entities/user.entity';
 import { UserAvatarImage } from './models/user-avatar-image.model';
 

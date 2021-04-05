@@ -3,8 +3,8 @@ import * as faker from 'faker';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from './dto/shipping-address.input';
-import { CreateUserInput } from './dto/user.input';
+} from './dtos/shipping-address.input';
+import { CreateUserInput } from './dtos/user.input';
 import { ShippingAddress } from './models/shipping-address.model';
 import { UserAvatarImage } from './models/user-avatar-image.model';
 import { UserPassword } from './models/user-password.model';

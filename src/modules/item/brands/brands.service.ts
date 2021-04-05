@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BrandsRepository } from './brands.repository';
-import { CreateBrandInput, UpdateBrandInput } from './dto/brand.input';
+import { CreateBrandInput, UpdateBrandInput } from './dtos/brand.input';
 import { Brand } from './models/brand.model';
 
 @Injectable()

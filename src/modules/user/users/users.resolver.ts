@@ -4,7 +4,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { IntArgs } from '@src/common/decorators/args.decorator';
 import { BaseResolver } from '@src/common/base.resolver';
-import { CreateUserInput } from './dto/user.input';
+import { CreateUserInput } from './dtos/user.input';
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 import { UsersService } from './users.service';

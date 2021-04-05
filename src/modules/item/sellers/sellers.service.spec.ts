@@ -3,7 +3,7 @@ import * as faker from 'faker';
 
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
-import { CreateSellerInput } from './dto/seller.input';
+import { CreateSellerInput } from './dtos/seller.input';
 import { SellersRepository } from './sellers.repository';
 import { SellersService } from './sellers.service';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
+import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
@@ -10,8 +10,8 @@ import {
   UpdateSellerCrawlPolicyInput,
   UpdateSellerReturnAddressInput,
   UpdateSellerShippingPolicyInput,
-} from './dto/seller-policies.input';
-import { CreateSellerInput, UpdateSellerInput } from './dto/seller.input';
+} from './dtos/seller-policies.input';
+import { CreateSellerInput, UpdateSellerInput } from './dtos/seller.input';
 import { SellerEntity } from './entities/seller.entity';
 import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';

@@ -5,7 +5,7 @@ import { JwtSellerGuard } from '@src/authentication/guards/jwt-seller.guard';
 import { BaseResolver } from '@src/common/base.resolver';
 import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
 import { CurrentSeller } from '@item/sellers/decorators/current-seller.decorator';
-import { UpdateSellerInput } from '@item/sellers/dto/seller.input';
+import { UpdateSellerInput } from '@src/modules/item/sellers/dtos/seller.input';
 import { Seller } from '@item/sellers/models/seller.model';
 import { SellersService } from '@item/sellers/sellers.service';
 import { SellerCrawlPolicy } from '@item/sellers/models/policies/seller-crawl-policy.model';
@@ -14,10 +14,10 @@ import {
   UpdateSellerCrawlPolicyInput,
   UpdateSellerReturnAddressInput,
   UpdateSellerShippingPolicyInput,
-} from '@item/sellers/dto/seller-policies.input';
+} from '@src/modules/item/sellers/dtos/seller-policies.input';
 import { SellerClaimPolicy } from '@src/modules/item/sellers/models/policies/seller-claim-policy.model';
 import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/seller-shipping-policy.model';
-import { FindSaleStrategyInput } from '@src/common/dto/sale-strategy.input';
+import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
 

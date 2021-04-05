@@ -9,9 +9,9 @@ import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { GraphQLResolveInfo } from 'graphql';
 import { CouriersService } from './couriers.service';
 import { Courier } from './models/courier.model';
-import { CreateCourierInput, UpdateCourierInput } from './dto/courier.input';
+import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
 import { CourierIssue } from './models/courier-issue.model';
-import { UpdateCourierIssueInput } from './dto/courier-issue.input';
+import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 
 @Resolver(() => Courier)
 export class CouriersResolver extends BaseResolver {

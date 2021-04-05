@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import moment from 'moment';
 
-import { UpdateCourierIssueInput } from '../dto/courier-issue.input';
+import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
 import { CourierEntity } from '../entities/courier.entity';
 import {
   CourierIssueInvalidEndAtException,
