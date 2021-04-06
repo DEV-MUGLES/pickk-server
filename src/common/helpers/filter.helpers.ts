@@ -1,48 +1,77 @@
-import { isArray, isObject } from 'class-validator';
+import { isArray as _isArray, isObject } from 'class-validator';
 import { Between, In, LessThanOrEqual, Like, MoreThanOrEqual } from 'typeorm';
 
-export const parseFilter = (filter: { [key: string]: any }, idFilter: any) => {
-  if (!filter && !idFilter) {
+type TFilterValue = unknown | unknown[] | Record<string, unknown | unknown[]>;
+
+type TFilter = Record<string, unknown | unknown[] | TFilterValue>;
+
+export const isFilter = (value: unknown): value is TFilter => {
+  return isObject(value);
+};
+
+type TSearchableFilter = {
+  search: string;
+  searchFields: string[];
+};
+
+export const isSearchableFilter = (
+  value: TFilter
+): value is TSearchableFilter => {
+  return (
+    value != null &&
+    value.search !== undefined &&
+    value.searchFields !== undefined &&
+    isObject(value)
+  );
+};
+
+export const isArray = (value): value is Array<unknown> => {
+  return _isArray(value);
+};
+
+export const parseFilter = (filter: TFilter, idFilter: any = {}) => {
+  if (!filter || !isFilter(filter)) {
     return {};
   }
 
   const newFilter = Object.keys(filter ?? {}).reduce((acc, key) => {
-    if (isObject(filter[key])) {
-      return parseFilter(filter[key], {});
+    const value = filter[key];
+    if (isFilter(value)) {
+      return { ...acc, [key]: parseFilter(value, {}) };
     }
     if (['search', 'searchFields'].includes(key)) {
       return acc;
     }
-    if (/In$/.test(key) && isArray(filter[key])) {
+    if (/In$/.test(key) && isArray(value)) {
       return {
         ...acc,
-        [key.replace(/In$/, '')]: In(filter[key]),
+        [key.replace(/In$/, '')]: In(value),
       };
     }
-    if (/Between$/.test(key) && isArray(filter[key])) {
-      const [start, end] = filter[key];
+    if (/Between$/.test(key) && isArray(value)) {
+      const [start, end] = value;
       return {
         ...acc,
-        [key.replace(/In$/, '')]: Between(start, end),
+        [key.replace(/Between$/, '')]: Between(start, end),
       };
     }
     if (/Mte$/.test(key)) {
       return {
         ...acc,
-        [key.replace(/Mte$/, '')]: MoreThanOrEqual(key),
+        [key.replace(/Mte$/, '')]: MoreThanOrEqual(value),
       };
     }
     if (/Lte$/.test(key)) {
       return {
         ...acc,
-        [key.replace(/Lte$/, '')]: LessThanOrEqual(key),
+        [key.replace(/Lte$/, '')]: LessThanOrEqual(value),
       };
     }
 
-    return { ...acc, [key]: filter[key] };
+    return { ...acc, [key]: value };
   }, idFilter ?? {});
 
-  if (!filter.search || !filter.searchFields) {
+  if (!isSearchableFilter(filter)) {
     return newFilter;
   }
 
