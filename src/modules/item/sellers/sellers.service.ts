@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
+import { plainToClass } from 'class-transformer';
 
+import { PageInput } from '@src/common/dtos/pagination.dto';
+import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
+import { parseFilter } from '@src/common/helpers/filter.helpers';
+import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
 import {
@@ -11,6 +14,7 @@ import {
   UpdateSellerReturnAddressInput,
   UpdateSellerShippingPolicyInput,
 } from './dtos/seller-policies.input';
+import { SellerFilter } from './dtos/seller.filter';
 import { CreateSellerInput, UpdateSellerInput } from './dtos/seller.input';
 import { SellerEntity } from './entities/seller.entity';
 import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
@@ -28,6 +32,21 @@ export class SellersService {
     @InjectRepository(SaleStrategyRepository)
     private readonly saleStrategyRepository: SaleStrategyRepository
   ) {}
+
+  async list(
+    sellerFilter?: SellerFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<Seller[]> {
+    const _sellerFilter = plainToClass(SellerFilter, sellerFilter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return await this.sellersRepository.find({
+      relations,
+      where: parseFilter(_sellerFilter, pageInput?.idFilter),
+      ...(_pageInput?.pageFilter ?? {}),
+    });
+  }
 
   async get(id: number, relations: string[] = []): Promise<Seller> {
     return await this.sellersRepository.get(id, relations);
