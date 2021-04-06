@@ -190,6 +190,12 @@ type Mutation {
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
+input PageInput {
+  limit: Int = 20
+  offset: Int
+  startId: Int
+}
+
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
@@ -210,6 +216,7 @@ type Query {
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   seller(id: Int!): Seller!
+  sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   user(id: Int!): User!
   users: [User!]!
 }
@@ -262,6 +269,12 @@ type SellerCrawlPolicy {
   isInspectingNew: Boolean!
   isUpdatingSaleItemInfo: Boolean!
   updatedAt: DateTime!
+}
+
+input SellerFilter {
+  businessCode: String
+  kakaoTalkCodeIn: [String!]
+  search: String
 }
 
 type SellerReturnAddress {
