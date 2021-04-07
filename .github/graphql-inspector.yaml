@@ -1,0 +1,7 @@
+branch: 'master'
+schema: './src/schema.graphql'
+env:
+  production:
+    branch: 'master'
+    notifications:
+      slack: ${{ secrets.SLACK_WEBHOOK_URL }}
