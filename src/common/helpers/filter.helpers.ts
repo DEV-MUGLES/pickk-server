@@ -29,7 +29,7 @@ export const isArray = (value): value is Array<unknown> => {
   return _isArray(value);
 };
 
-export const parseFilter = (filter: TFilter, idFilter: any = {}) => {
+export const parseFilter = (filter: unknown, idFilter: any = {}) => {
   if (!filter || !isFilter(filter)) {
     return {};
   }
