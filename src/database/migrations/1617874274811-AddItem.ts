@@ -28,9 +28,19 @@ export class AddItem1617874274811 implements MigrationInterface {
     await queryRunner.query(
       'ALTER TABLE `item_url` ADD CONSTRAINT `FK_d6e09541765216738641861da02` FOREIGN KEY (`itemId`) REFERENCES `item`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
     );
+    await queryRunner.query(
+      "CREATE TABLE `item_detail_image` (`key` varchar(75) NOT NULL, `angle` int NOT NULL DEFAULT '0', `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `itemId` int NULL, PRIMARY KEY (`key`)) ENGINE=InnoDB"
+    );
+    await queryRunner.query(
+      'ALTER TABLE `item_detail_image` ADD CONSTRAINT `FK_56aa44843bb95f27172978212ee` FOREIGN KEY (`itemId`) REFERENCES `item`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      'ALTER TABLE `item_detail_image` DROP FOREIGN KEY `FK_56aa44843bb95f27172978212ee`'
+    );
+    await queryRunner.query('DROP TABLE `item_detail_image`');
     await queryRunner.query(
       'ALTER TABLE `item_url` DROP FOREIGN KEY `FK_d6e09541765216738641861da02`'
     );

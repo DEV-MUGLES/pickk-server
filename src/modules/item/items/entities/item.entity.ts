@@ -18,6 +18,7 @@ import { IItem } from '../interfaces/item.interface';
 import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
 import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
 import { ItemUrl } from '../models/item-url.model';
+import { ItemDetailImage } from '../models/item-detail-image.model';
 
 @ObjectType()
 @Entity({
@@ -89,4 +90,9 @@ export class ItemEntity extends BaseEntity implements IItem {
     cascade: true,
   })
   urls: ItemUrl[];
+
+  @OneToMany('ItemDetailImageEntity', 'item', {
+    cascade: true,
+  })
+  detailImages: ItemDetailImage[];
 }
