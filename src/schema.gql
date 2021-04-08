@@ -114,6 +114,7 @@ type Item {
   brand: Brand!
   brandId: Int!
   createdAt: DateTime!
+  detailImages: [ItemDetailImage!]
   id: Int!
   isAvailable: Boolean!
   name: String!
@@ -122,6 +123,13 @@ type Item {
   thumbnailImage: ItemThumbnailImage!
   updatedAt: DateTime!
   urls: [ItemUrl!]!
+}
+
+type ItemDetailImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
 }
 
 type ItemThumbnailImage {
