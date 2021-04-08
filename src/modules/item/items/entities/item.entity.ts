@@ -14,18 +14,18 @@ import { BaseEntity } from '@src/common/entities/base.entity';
 
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { Brand } from '../../brands/models/brand.model';
-import { IItemProfile } from '../interfaces/item-profile.interface';
+import { IItem } from '../interfaces/item.interface';
 import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
 import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
-import { ItemProfileUrl } from '../models/item-profile-url.model';
+import { ItemUrl } from '../models/item-url.model';
 
 @ObjectType()
 @Entity({
-  name: 'item_profile',
+  name: 'item',
 })
 @Index(['salePrice'])
-export class ItemProfileEntity extends BaseEntity implements IItemProfile {
-  constructor(attributes?: Partial<ItemProfileEntity>) {
+export class ItemEntity extends BaseEntity implements IItem {
+  constructor(attributes?: Partial<ItemEntity>) {
     super();
     if (!attributes) {
       return;
@@ -85,8 +85,8 @@ export class ItemProfileEntity extends BaseEntity implements IItemProfile {
   @Column()
   brandId: number;
 
-  @OneToMany('ItemProfileUrlEntity', 'itemProfile', {
+  @OneToMany('ItemUrlEntity', 'item', {
     cascade: true,
   })
-  urls: ItemProfileUrl[];
+  urls: ItemUrl[];
 }

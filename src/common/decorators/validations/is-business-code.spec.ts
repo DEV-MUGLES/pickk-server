@@ -10,7 +10,7 @@ describe('isBusinessCode', () => {
   });
 
   it('should return false when invalid', () => {
-    const invalidInputs = [3332255555, '3332255555', null];
+    const invalidInputs = [3332255555, '3332255555', null, undefined, true];
 
     invalidInputs.forEach((input) => {
       expect(isBusinessCode(input)).toEqual(false);

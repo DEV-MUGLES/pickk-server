@@ -1,22 +1,42 @@
-import { MigrationInterface, QueryRunner } from 'typeorm';
+import {
+  MigrationInterface,
+  QueryRunner,
+  TableColumn,
+  TableForeignKey,
+} from 'typeorm';
+
+const COURIER_ID = 'courierId';
 
 export class AddSellerCourierRelation1617599043815
   implements MigrationInterface {
   name = 'AddSellerCourierRelation1617599043815';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      'ALTER TABLE `seller` ADD `courierId` int NOT NULL'
+    await queryRunner.addColumn(
+      'seller',
+      new TableColumn({
+        name: COURIER_ID,
+        type: 'int',
+        isNullable: true,
+      })
     );
-    await queryRunner.query(
-      'ALTER TABLE `seller` ADD CONSTRAINT `FK_0008b48ab8799d2a86e76ae53f3` FOREIGN KEY (`courierId`) REFERENCES `courier`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION'
+
+    await queryRunner.createForeignKey(
+      'seller',
+      new TableForeignKey({
+        columnNames: [COURIER_ID],
+        referencedColumnNames: ['id'],
+        referencedTableName: 'courier',
+      })
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
-    await queryRunner.query(
-      'ALTER TABLE `seller` DROP FOREIGN KEY `FK_0008b48ab8799d2a86e76ae53f3`'
+    const table = await queryRunner.getTable('seller');
+    const foreignKey = table.foreignKeys.find(
+      (fk) => fk.columnNames.indexOf(COURIER_ID) !== -1
     );
-    await queryRunner.query('ALTER TABLE `seller` DROP COLUMN `courierId`');
+    await queryRunner.dropForeignKey('seller', foreignKey);
+    await queryRunner.dropColumn('seller', COURIER_ID);
   }
 }
