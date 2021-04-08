@@ -4,15 +4,13 @@ import { IsBoolean, IsUrl } from 'class-validator';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 
-import { IItemProfileUrl } from '../interfaces/item-profile-url.interface';
-import { ItemProfileEntity } from './item-profile.entity';
+import { IItemUrl } from '../interfaces/item-url.interface';
+import { ItemEntity } from './item.entity';
 
 @ObjectType()
-@Entity('item_profile_url')
-export class ItemProfileUrlEntity
-  extends BaseEntity
-  implements IItemProfileUrl {
-  constructor(attributes?: Partial<ItemProfileUrlEntity>) {
+@Entity('item_url')
+export class ItemUrlEntity extends BaseEntity implements IItemUrl {
+  constructor(attributes?: Partial<ItemUrlEntity>) {
     super();
     if (!attributes) {
       return;
@@ -21,8 +19,8 @@ export class ItemProfileUrlEntity
     this.url = attributes.url;
     this.isPrimary = attributes.isPrimary;
     this.isAvailable = attributes.isAvailable;
-    this.itemProfile = attributes.itemProfile;
-    this.itemProfileId = attributes.itemProfileId;
+    this.item = attributes.item;
+    this.itemId = attributes.itemId;
   }
 
   @Field()
@@ -44,12 +42,12 @@ export class ItemProfileUrlEntity
   @IsBoolean()
   isAvailable: boolean;
 
-  @ManyToOne('ItemProfileEntity', 'urls', {
+  @ManyToOne('ItemEntity', 'urls', {
     onDelete: 'CASCADE',
   })
-  itemProfile: ItemProfileEntity;
+  item: ItemEntity;
 
   @Field(() => Int)
   @Column()
-  itemProfileId: number;
+  itemId: number;
 }

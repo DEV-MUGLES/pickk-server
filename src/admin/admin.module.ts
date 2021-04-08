@@ -6,13 +6,13 @@ import { Database, Resource } from '@admin-bro/typeorm';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { BrandEntity } from '@src/modules/item/brands/entities/brand.entity';
 import { CourierEntity } from '@src/modules/item/couriers/entities/courier.entity';
-import { ItemProfileEntity } from '@src/modules/item/item-profiles/entities/item-profile.entity';
+import { ItemEntity } from '@src/modules/item/items/entities/item.entity';
 import { AuthModule } from '@src/authentication/auth.module';
 import { AuthService } from '@src/authentication/auth.service';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { UserAvatarImageEntity } from '@src/modules/user/users/entities/user-avatar-image.entity';
 import { ShippingAddressEntity } from '@src/modules/user/users/entities/shipping-address.entity';
-import { ItemThumbnailImageEntity } from '@src/modules/item/item-profiles/entities/item-thumbnail-image.entity';
+import { ItemThumbnailImageEntity } from '@src/modules/item/items/entities/item-thumbnail-image.entity';
 
 AdminBro.registerAdapter({ Database, Resource });
 
@@ -31,7 +31,7 @@ AdminBro.registerAdapter({ Database, Resource });
             ShippingAddressEntity,
             BrandEntity,
             CourierEntity,
-            ItemProfileEntity,
+            ItemEntity,
             ItemThumbnailImageEntity,
           ],
         },
