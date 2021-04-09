@@ -256,7 +256,17 @@ type Product {
   createdAt: DateTime!
   id: Int!
   itemOptionValues: [ItemOptionValue!]!
+  shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
+  updatedAt: DateTime!
+}
+
+type ProductShippingReservePolicy {
+  createdAt: DateTime!
+  endAt: DateTime!
+  estimatedShippingBegginDate: DateTime!
+  id: Int!
+  startAt: DateTime!
   updatedAt: DateTime!
 }
 
