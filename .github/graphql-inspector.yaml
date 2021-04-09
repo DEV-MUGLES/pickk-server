@@ -1,5 +1,5 @@
 branch: 'master'
-schema: './src/schema.graphql'
+schema: 'src/schema.gql'
 env:
   production:
     branch: 'master'
