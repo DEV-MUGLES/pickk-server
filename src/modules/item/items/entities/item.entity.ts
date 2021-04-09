@@ -30,10 +30,8 @@ import { ItemOption } from '../models/item-option.model';
 import { ItemPriceUnit } from '../constants/item.enum';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 
-import {
-  DEFAULT_ITEM_SALE_POLICY,
-  ItemSalePolicyEntity,
-} from './item-sale-policy.entity';
+import { ItemSalePolicyEntity } from './item-sale-policy.entity';
+import { Product } from '../../products/models/product.model';
 
 @ObjectType()
 @Entity({
@@ -57,6 +55,9 @@ export class ItemEntity extends BaseEntity implements IItem {
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
     this.urls = attributes.urls;
+    this.detailImages = attributes.detailImages;
+    this.options = attributes.options;
+    this.products = attributes.products;
   }
 
   @Field()
@@ -87,7 +88,7 @@ export class ItemEntity extends BaseEntity implements IItem {
   salePrice: number;
 
   @Field()
-  @Column()
+  @Column({ nullable: true })
   @IsNumber()
   @IsOptional()
   @Min(1)
@@ -158,8 +159,15 @@ export class ItemEntity extends BaseEntity implements IItem {
   })
   options: ItemOption[];
 
-  @Field(() => ItemSalePolicy, { defaultValue: DEFAULT_ITEM_SALE_POLICY })
+  @Field(() => ItemSalePolicy, {
+    nullable: true,
+  })
   @OneToOne(() => ItemSalePolicyEntity, { cascade: true, nullable: true })
   @JoinColumn()
   salePolicy: ItemSalePolicy;
+
+  @OneToMany('ProductEntity', 'item', {
+    cascade: true,
+  })
+  products: Product[];
 }

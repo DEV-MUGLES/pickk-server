@@ -5,19 +5,25 @@ import { ItemEntity } from '../entities/item.entity';
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
+import { Product } from '../../products/models/product.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
   @Field(() => [ItemUrl])
   urls: ItemUrl[];
 
-  @Field(() => [ItemDetailImage], { nullable: true, defaultValue: [] })
+  @Field(() => [ItemDetailImage], { nullable: true })
   detailImages: ItemDetailImage[];
 
   @Field(() => [ItemOption], {
     nullable: true,
   })
   options: ItemOption[];
+
+  @Field(() => [Product], {
+    nullable: true,
+  })
+  products: Product[];
 
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((shippingAddress, _index) => {

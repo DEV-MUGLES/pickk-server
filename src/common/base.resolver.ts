@@ -6,7 +6,7 @@ import {
 import { GraphQLResolveInfo } from 'graphql';
 
 export class BaseResolver {
-  protected relations = [];
+  protected relations: string[] = [];
 
   private getSimplifiedInfo = (info: GraphQLResolveInfo) => {
     const parsedInfo = parseResolveInfo(info) as ResolveTree;
@@ -22,8 +22,8 @@ export class BaseResolver {
     }
 
     const simplifiedInfo = this.getSimplifiedInfo(info);
-    return this.relations.filter(
-      (relation) => relation in simplifiedInfo.fields
+    return this.relations.filter((relation) =>
+      relation.split('.').some((chunk) => chunk in simplifiedInfo.fields)
     );
   };
 }

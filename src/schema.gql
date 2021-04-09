@@ -125,7 +125,8 @@ type Item {
   options: [ItemOption!]
   originalPrice: Int!
   priceUnit: ItemPriceUnit!
-  salePolicy: ItemSalePolicy!
+  products: [Product!]
+  salePolicy: ItemSalePolicy
   salePrice: Int!
   thumbnailImage: ItemThumbnailImage!
   updatedAt: DateTime!
@@ -249,6 +250,14 @@ input PageInput {
   limit: Int = 20
   offset: Int
   startId: Int
+}
+
+type Product {
+  createdAt: DateTime!
+  id: Int!
+  itemOptionValues: [ItemOptionValue!]!
+  stock: Int!
+  updatedAt: DateTime!
 }
 
 type Query {

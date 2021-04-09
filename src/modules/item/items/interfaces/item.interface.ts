@@ -1,6 +1,7 @@
 import { IImage } from '@src/common/interfaces/image.interface';
 
 import { IBrand } from '../../brands/interfaces/brand.interface';
+import { IProduct } from '../../products/interfaces/product.interface';
 import { IItemOption } from './item-option.interface';
 import { IItemUrl } from './item-url.interface';
 
@@ -15,7 +16,9 @@ export interface IItem {
 
   thumbnailImage: IImage;
   brand: IBrand;
-  urls: IItemUrl[];
 
+  urls: IItemUrl[];
+  detailImages: IImage[];
   options: IItemOption[];
+  products: IProduct[];
 }
