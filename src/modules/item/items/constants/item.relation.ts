@@ -1,7 +1,10 @@
 import { Item } from '../models/item.model';
 
 export const ITEM_RELATIONS: Array<
-  keyof Item | 'options.values' | 'products.itemOptionValues'
+  | keyof Item
+  | 'options.values'
+  | 'products.itemOptionValues'
+  | 'products.shippingReservePolicy'
 > = [
   'brand',
   'urls',
@@ -11,4 +14,5 @@ export const ITEM_RELATIONS: Array<
   'salePolicy',
   'products',
   'products.itemOptionValues',
+  'products.shippingReservePolicy',
 ];

@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { ItemDetailImageEntity } from '../entities/item-detail-image.entity';
+import { AbstractImageEntity } from '@src/common/entities/image.entity';
 
 @ObjectType()
-export class ItemDetailImage extends ItemDetailImageEntity {}
+export class ItemDetailImage extends AbstractImageEntity {}
