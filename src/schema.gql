@@ -125,6 +125,7 @@ type Item {
   options: [ItemOption!]
   originalPrice: Int!
   priceUnit: ItemPriceUnit!
+  salePolicy: ItemSalePolicy!
   salePrice: Int!
   thumbnailImage: ItemThumbnailImage!
   updatedAt: DateTime!
@@ -167,6 +168,15 @@ enum ItemPriceUnit {
   JPY
   KRW
   USD
+}
+
+type ItemSalePolicy {
+  createdAt: DateTime!
+  id: Int!
+  isUsingQuantityLimit: Boolean!
+  isUsingStock: Boolean!
+  quantityLimit: Int!
+  updatedAt: DateTime!
 }
 
 type ItemThumbnailImage {

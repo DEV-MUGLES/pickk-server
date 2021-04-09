@@ -28,6 +28,12 @@ import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemOption } from '../models/item-option.model';
 import { ItemPriceUnit } from '../constants/item.enum';
+import { ItemSalePolicy } from '../models/item-sale-policy.model';
+
+import {
+  DEFAULT_ITEM_SALE_POLICY,
+  ItemSalePolicyEntity,
+} from './item-sale-policy.entity';
 
 @ObjectType()
 @Entity({
@@ -151,4 +157,9 @@ export class ItemEntity extends BaseEntity implements IItem {
     cascade: true,
   })
   options: ItemOption[];
+
+  @Field(() => ItemSalePolicy, { defaultValue: DEFAULT_ITEM_SALE_POLICY })
+  @OneToOne(() => ItemSalePolicyEntity, { cascade: true, nullable: true })
+  @JoinColumn()
+  salePolicy: ItemSalePolicy;
 }
