@@ -33,5 +33,5 @@ export class ItemOptionValueEntity
   @ManyToOne('ItemOptionEntity', 'values', {
     onDelete: 'CASCADE',
   })
-  item: ItemOptionEntity;
+  itemOption: ItemOptionEntity;
 }
