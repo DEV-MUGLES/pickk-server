@@ -3,6 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { AddItemUrlInput } from '../dtos/item-url.input';
 import { ItemEntity } from '../entities/item.entity';
 import { ItemDetailImage } from './item-detail-image.model';
+import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 
 @ObjectType()
@@ -12,6 +13,11 @@ export class Item extends ItemEntity {
 
   @Field(() => [ItemDetailImage], { nullable: true, defaultValue: [] })
   detailImages: ItemDetailImage[];
+
+  @Field(() => [ItemOption], {
+    nullable: true,
+  })
+  options: ItemOption[];
 
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((shippingAddress, _index) => {

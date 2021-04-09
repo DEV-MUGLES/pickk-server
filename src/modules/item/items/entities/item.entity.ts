@@ -8,7 +8,14 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { IsBoolean, IsNumber, IsString, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  IsString,
+  Min,
+} from 'class-validator';
 
 import { BaseEntity } from '@src/common/entities/base.entity';
 
@@ -19,6 +26,8 @@ import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
 import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
+import { ItemOption } from '../models/item-option.model';
+import { ItemPriceUnit } from '../constants/item.enum';
 
 @ObjectType()
 @Entity({
@@ -36,6 +45,7 @@ export class ItemEntity extends BaseEntity implements IItem {
     this.originalPrice = attributes.originalPrice;
     this.salePrice = attributes.salePrice;
     this.isAvailable = attributes.isAvailable;
+    this.isSellable = attributes.isSellable;
 
     this.thumbnailImage = attributes.thumbnailImage;
     this.brand = attributes.brand;
@@ -47,6 +57,16 @@ export class ItemEntity extends BaseEntity implements IItem {
   @Column()
   @IsString()
   name: string;
+
+  @Field({ nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  description?: string;
 
   @Field(() => Int)
   @Column()
@@ -61,11 +81,42 @@ export class ItemEntity extends BaseEntity implements IItem {
   salePrice: number;
 
   @Field()
+  @Column()
+  @IsNumber()
+  @IsOptional()
+  @Min(1)
+  displayPrice?: number;
+
+  @Field(() => ItemPriceUnit, { defaultValue: ItemPriceUnit.KRW })
+  @Column({
+    type: 'enum',
+    enum: ItemPriceUnit,
+    default: ItemPriceUnit.KRW,
+  })
+  @IsEnum(ItemPriceUnit)
+  @IsOptional()
+  priceUnit?: ItemPriceUnit;
+
+  @Field({ defaultValue: true })
   @Column({
     default: true,
   })
   @IsBoolean()
   isAvailable: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({
+    default: false,
+  })
+  @IsBoolean()
+  isSellable: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({
+    default: false,
+  })
+  @IsBoolean()
+  isPurchasable: boolean;
 
   @Field(() => ItemThumbnailImage)
   @OneToOne(() => ItemThumbnailImageEntity, {
@@ -95,4 +146,9 @@ export class ItemEntity extends BaseEntity implements IItem {
     cascade: true,
   })
   detailImages: ItemDetailImage[];
+
+  @OneToMany('ItemOptionEntity', 'item', {
+    cascade: true,
+  })
+  options: ItemOption[];
 }

@@ -114,11 +114,17 @@ type Item {
   brand: Brand!
   brandId: Int!
   createdAt: DateTime!
+  description: String
   detailImages: [ItemDetailImage!]
+  displayPrice: Float!
   id: Int!
   isAvailable: Boolean!
+  isPurchasable: Boolean!
+  isSellable: Boolean!
   name: String!
+  options: [ItemOption!]
   originalPrice: Int!
+  priceUnit: ItemPriceUnit!
   salePrice: Int!
   thumbnailImage: ItemThumbnailImage!
   updatedAt: DateTime!
@@ -130,6 +136,37 @@ type ItemDetailImage {
   createdAt: DateTime!
   key: String!
   url: String!
+}
+
+type ItemOption {
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  order: Float!
+  updatedAt: DateTime!
+  values: [ItemOptionValue!]!
+}
+
+type ItemOptionValue {
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  order: Float!
+  updatedAt: DateTime!
+}
+
+"""
+아이템의 가격 단위입니다. null인 경우 원화로 취급되며, 값을 가질 경우 적절한 displayPrice에 적절한 환율을 곱한 값으로 salePrice를 설정합니다.
+"""
+enum ItemPriceUnit {
+  AUD
+  CAD
+  CNY
+  EUR
+  GBP
+  JPY
+  KRW
+  USD
 }
 
 type ItemThumbnailImage {
