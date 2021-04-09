@@ -312,6 +312,7 @@ type Seller {
   courier: Courier!
   courierId: Int
   crawlPolicy: SellerCrawlPolicy!
+  crawlStrategy: SellerCrawlStrategy!
   createdAt: DateTime!
   email: String!
   id: Int!
@@ -342,6 +343,15 @@ type SellerCrawlPolicy {
   id: Int!
   isInspectingNew: Boolean!
   isUpdatingSaleItemInfo: Boolean!
+  updatedAt: DateTime!
+}
+
+type SellerCrawlStrategy {
+  baseUrl: String!
+  createdAt: DateTime!
+  id: Int!
+  itemLinksSelector: String!
+  startPathNamesJoin: String!
   updatedAt: DateTime!
 }
 

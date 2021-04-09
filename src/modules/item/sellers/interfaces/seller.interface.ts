@@ -8,6 +8,7 @@ import {
   ISellerCrawlPolicy,
   ISellerShippingPolicy,
 } from './policies';
+import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {
   businessName: string;
@@ -21,7 +22,10 @@ export interface ISeller {
 
   brand: IBrand;
   courier: ICourier;
+
   saleStrategy: ISaleStrategy;
+  crawlStrategy: ISellerCrawlStrategy;
+
   claimPolicy: ISellerClaimPolicy;
   crawlPolicy: ISellerCrawlPolicy;
   shippingPolicy: ISellerShippingPolicy;

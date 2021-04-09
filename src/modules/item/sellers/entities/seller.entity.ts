@@ -30,6 +30,8 @@ import { SellerReturnAddress } from '../models/seller-return-address.model';
 import { SellerReturnAddressEntity } from './seller-return-address.entity';
 import { Courier } from '../../couriers/models/courier.model';
 import { CourierEntity } from '../../couriers/entities/courier.entity';
+import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
+import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
 
 @ObjectType()
 @Entity('seller')
@@ -111,6 +113,11 @@ export class SellerEntity extends BaseEntity implements ISeller {
   @ManyToOne(() => SaleStrategyEntity)
   @JoinColumn()
   saleStrategy: SaleStrategy;
+
+  @Field(() => SellerCrawlStrategy)
+  @ManyToOne(() => SellerCrawlStrategyEntity)
+  @JoinColumn()
+  crawlStrategy: SellerCrawlStrategy;
 
   @Field(() => SellerClaimPolicy)
   @OneToOne(() => SellerClaimPolicyEntity, { cascade: true })
