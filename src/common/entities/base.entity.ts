@@ -7,8 +7,8 @@ import {
 } from 'typeorm';
 
 @ObjectType()
-export class BaseEntity extends _TypeORMBaseEntity {
-  constructor(attributes?: Partial<BaseEntity>) {
+export class BaseIdEntity extends _TypeORMBaseEntity {
+  constructor(attributes?: Partial<BaseIdEntity>) {
     super();
     if (!attributes) {
       return;

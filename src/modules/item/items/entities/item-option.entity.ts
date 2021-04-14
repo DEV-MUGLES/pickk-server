@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { IsOptional, Max, Min } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { IItemOption } from '../interfaces/item-option.interface';
 import { ItemOptionValue } from '../models/item-option-value.model';
@@ -10,7 +10,7 @@ import { ItemEntity } from './item.entity';
 
 @ObjectType()
 @Entity({ name: 'item_option' })
-export class ItemOptionEntity extends BaseEntity implements IItemOption {
+export class ItemOptionEntity extends BaseIdEntity implements IItemOption {
   @Field()
   @Column({
     type: 'varchar',

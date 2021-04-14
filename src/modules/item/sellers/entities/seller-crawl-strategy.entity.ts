@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { IsUrl } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interface';
@@ -7,7 +7,7 @@ import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interf
 @ObjectType()
 @Entity('seller_crawl_strategy')
 export class SellerCrawlStrategyEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements ISellerCrawlStrategy {
   @Field()
   @Column({

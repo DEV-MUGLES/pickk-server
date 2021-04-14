@@ -9,14 +9,14 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { ISellerClaimPolicy } from '../../interfaces/policies';
 
 @ObjectType()
 @Entity('seller_claim_policy')
 export class SellerClaimPolicyEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements ISellerClaimPolicy {
   constructor(attributes?: Partial<SellerClaimPolicyEntity>) {
     super();

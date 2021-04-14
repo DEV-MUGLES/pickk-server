@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { IItemSalePolicy } from '../interfaces/item-sale-policy.interface';
 import { IsNumber, Max, Min } from 'class-validator';
 
@@ -10,7 +10,7 @@ import { IsNumber, Max, Min } from 'class-validator';
   name: 'item_sale_policy',
 })
 export class ItemSalePolicyEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements IItemSalePolicy {
   @Field()
   @Column()

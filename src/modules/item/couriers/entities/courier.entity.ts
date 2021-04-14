@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import {
   IsPhoneNumber,
   IsNumberString,
@@ -15,7 +15,7 @@ import { CourierIssue } from '../models/courier-issue.model';
 @Entity({
   name: 'courier',
 })
-export class CourierEntity extends BaseEntity implements ICourier {
+export class CourierEntity extends BaseIdEntity implements ICourier {
   @Field()
   @Column({
     type: 'varchar',

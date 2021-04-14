@@ -2,13 +2,13 @@ import { plainToClass } from 'class-transformer';
 import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 
-import { BaseEntity } from './entities/base.entity';
+import { BaseIdEntity } from './entities/base.entity';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import { MultipleEntityReturnedException } from '@src/common/exceptions/multiple-entity-returned.exception';
 
 export class BaseRepository<
-  Entity extends BaseEntity,
-  Model extends BaseEntity
+  Entity extends BaseIdEntity,
+  Model extends BaseIdEntity
 > extends Repository<Entity> {
   private isEntity(obj: unknown): obj is Entity {
     return obj !== undefined && (obj as Entity).id !== undefined;
@@ -71,7 +71,7 @@ export class BaseRepository<
     if (Array.isArray(entity)) {
       throw new MultipleEntityReturnedException();
     }
-    return plainToClass(BaseEntity, entity, transformOptions) as Model;
+    return plainToClass(BaseIdEntity, entity, transformOptions) as Model;
   }
 
   entityToModelMany(entities: Entity[], transformOptions = {}): Model[] {

@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { Column, Entity } from 'typeorm';
 import { IProductShippingReservePolicy } from '../interfaces/product-shipping-reserve-policy.interface';
 
@@ -8,7 +8,7 @@ import { IProductShippingReservePolicy } from '../interfaces/product-shipping-re
   name: 'product_shipping_reserve_policy',
 })
 export class ProductShippingReservePolicyEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements IProductShippingReservePolicy {
   @Field()
   @Column('datetime')

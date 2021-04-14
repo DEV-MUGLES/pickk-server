@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import {
   Column,
   Entity,
@@ -21,7 +21,7 @@ import { ProductShippingReservePolicy } from '../models/product-shipping-reserve
 @Entity({
   name: 'product',
 })
-export class ProductEntity extends BaseEntity implements IProduct {
+export class ProductEntity extends BaseIdEntity implements IProduct {
   constructor(attributes?: Partial<ProductEntity>) {
     super();
     if (!attributes) {

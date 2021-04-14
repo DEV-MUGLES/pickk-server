@@ -17,7 +17,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { Brand } from '../../brands/models/brand.model';
@@ -38,7 +38,7 @@ import { Product } from '../../products/models/product.model';
   name: 'item',
 })
 @Index(['salePrice'])
-export class ItemEntity extends BaseEntity implements IItem {
+export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
     super();
     if (!attributes) {

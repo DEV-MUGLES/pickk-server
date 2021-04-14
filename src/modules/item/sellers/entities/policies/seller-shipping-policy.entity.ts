@@ -2,14 +2,14 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 import { IsNumber, Min } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { ISellerShippingPolicy } from '../../interfaces/policies';
 
 @ObjectType()
 @Entity('seller_shipping_policy')
 export class SellerShippingPolicyEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements ISellerShippingPolicy {
   constructor(attributes?: Partial<SellerShippingPolicyEntity>) {
     super();

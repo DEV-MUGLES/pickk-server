@@ -2,14 +2,14 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsBoolean, IsUrl } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { IItemUrl } from '../interfaces/item-url.interface';
 import { ItemEntity } from './item.entity';
 
 @ObjectType()
 @Entity('item_url')
-export class ItemUrlEntity extends BaseEntity implements IItemUrl {
+export class ItemUrlEntity extends BaseIdEntity implements IItemUrl {
   constructor(attributes?: Partial<ItemUrlEntity>) {
     super();
     if (!attributes) {

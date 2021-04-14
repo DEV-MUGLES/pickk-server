@@ -11,7 +11,7 @@ import {
 import { Exclude } from 'class-transformer';
 
 import { IsBusinessCode } from '@src/common/decorators/validations/is-business-code';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { User } from '@src/modules/user/users/models/user.model';
 
@@ -35,7 +35,7 @@ import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
 
 @ObjectType()
 @Entity('seller')
-export class SellerEntity extends BaseEntity implements ISeller {
+export class SellerEntity extends BaseIdEntity implements ISeller {
   @Field()
   @Column()
   @IsString()

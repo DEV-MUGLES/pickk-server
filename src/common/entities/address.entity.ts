@@ -2,12 +2,12 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column } from 'typeorm';
 import { IsPostalCode } from 'class-validator';
 
-import { BaseEntity } from './base.entity';
+import { BaseIdEntity } from './base.entity';
 import { IAddress } from '../interfaces/address.interface';
 
 @ObjectType()
 export abstract class AbstractAddressEntity
-  extends BaseEntity
+  extends BaseIdEntity
   implements IAddress {
   constructor(attributes?: Partial<AbstractAddressEntity>) {
     super();

@@ -1,12 +1,12 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { IsOptional, MaxLength } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { IBrand } from '../interfaces/brand.interface';
 
 @ObjectType()
 @Entity({ name: 'brand' })
-export class BrandEntity extends BaseEntity implements IBrand {
+export class BrandEntity extends BaseIdEntity implements IBrand {
   @Field()
   @Column({
     type: 'varchar',

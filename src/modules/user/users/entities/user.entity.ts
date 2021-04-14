@@ -18,7 +18,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { UserRole } from '../constants/user.enum';
 import { UserPassword } from '../models/user-password.model';
@@ -33,7 +33,7 @@ import { UserAvatarImageEntity } from './user-avatar-image.entity';
 })
 @Index('idx_email', ['email'], { unique: true })
 @Index('idx_code', ['code'], { unique: true })
-export class UserEntity extends BaseEntity implements IUser {
+export class UserEntity extends BaseIdEntity implements IUser {
   @Field(() => UserRole, { nullable: true })
   @Column({
     type: 'enum',
