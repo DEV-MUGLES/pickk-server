@@ -7,6 +7,17 @@ input AddItemUrlInput {
   url: String!
 }
 
+type BaseSellerOutput {
+  businessCode: String!
+  businessName: String!
+  email: String!
+  kakaoTalkCode: String
+  mailOrderBusinessCode: String!
+  operationTimeMessage: String!
+  phoneNumber: String!
+  representativeName: String!
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -128,7 +139,7 @@ type Item {
   products: [Product!]
   salePolicy: ItemSalePolicy
   salePrice: Int!
-  thumbnailImage: ItemThumbnailImage!
+  thumbnailImage: ItemThumbnailImage
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -224,7 +235,7 @@ type Mutation {
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
-  createSeller(createSellerInput: CreateSellerInput!): Seller!
+  createSeller(createSellerInput: CreateSellerInput!): BaseSellerOutput!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
   removeMyAvatarImage: UserAvatarImage!
@@ -232,7 +243,7 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
-  updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
+  updateMeSeller(updateSellerInput: UpdateSellerInput!): BaseSellerOutput!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """

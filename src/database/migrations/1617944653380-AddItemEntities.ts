@@ -5,10 +5,6 @@ export class AddItemEntities1617944653380 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      'ALTER TABLE `seller` CHANGE `courierId` `courierId` int NOT NULL'
-    );
-
-    await queryRunner.query(
       "CREATE TABLE `item_thumbnail_image` (`key` varchar(75) NOT NULL, `angle` int NOT NULL DEFAULT '0', `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), PRIMARY KEY (`key`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
@@ -77,9 +73,5 @@ export class AddItemEntities1617944653380 implements MigrationInterface {
     );
     await queryRunner.query('DROP TABLE `item`');
     await queryRunner.query('DROP TABLE `item_thumbnail_image`');
-
-    await queryRunner.query(
-      'ALTER TABLE `seller` CHANGE `courierId` `courierId` int NULL'
-    );
   }
 }
