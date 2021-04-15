@@ -12,6 +12,7 @@ import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { SELLER_RELATIONS } from './constants/seller.relation';
 import { SellerFilter } from './dtos/seller.filter';
 import { CreateSellerInput } from './dtos/seller.input';
+import { BaseSellerOutput } from './dtos/seller.output';
 import { Seller } from './models/seller.model';
 import { SellersService } from './sellers.service';
 
@@ -43,9 +44,10 @@ export class SellersResolver extends BaseResolver {
       this.getRelationsFromInfo(info)
     );
   }
+
   @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => Seller)
+  @Mutation(() => BaseSellerOutput)
   async createSeller(
     @Args('createSellerInput') createSellerInput: CreateSellerInput
   ): Promise<Seller> {

@@ -20,6 +20,7 @@ import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/
 import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
+import { BaseSellerOutput } from '@src/modules/item/sellers/dtos/seller.output';
 
 @Resolver()
 export class MySellerResolver extends BaseResolver {
@@ -35,7 +36,7 @@ export class MySellerResolver extends BaseResolver {
     return seller;
   }
 
-  @Mutation(() => Seller)
+  @Mutation(() => BaseSellerOutput)
   @UseGuards(JwtSellerGuard)
   async updateMeSeller(
     @CurrentSeller() seller: Seller,
