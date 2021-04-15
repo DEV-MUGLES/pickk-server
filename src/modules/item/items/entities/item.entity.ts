@@ -125,10 +125,11 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @IsBoolean()
   isPurchasable: boolean;
 
-  @Field(() => ItemThumbnailImage)
+  @Field(() => ItemThumbnailImage, { nullable: true })
   @OneToOne(() => ItemThumbnailImageEntity, {
     eager: true,
     cascade: true,
+    nullable: true,
   })
   @JoinColumn()
   thumbnailImage: ItemThumbnailImage;
