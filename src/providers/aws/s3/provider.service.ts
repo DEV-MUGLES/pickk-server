@@ -40,7 +40,7 @@ export class AwsS3ProviderService {
   }
 
   private cleanFilename(filename: string): string {
-    const MAX_LENGTH = 50;
+    const MAX_LENGTH = 15;
 
     return filename
       .replace(/[\\/:"*?<>| ]+/gi, '')
