@@ -10,12 +10,15 @@ input AddItemUrlInput {
 type BaseSellerOutput {
   businessCode: String!
   businessName: String!
+  createdAt: DateTime!
   email: String!
+  id: Int!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
   operationTimeMessage: String!
   phoneNumber: String!
   representativeName: String!
+  updatedAt: DateTime!
 }
 
 type Brand {
