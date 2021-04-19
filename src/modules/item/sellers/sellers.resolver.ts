@@ -15,6 +15,8 @@ import { CreateSellerInput } from './dtos/seller.input';
 import { BaseSellerOutput } from './dtos/seller.output';
 import { Seller } from './models/seller.model';
 import { SellersService } from './sellers.service';
+import { SaleStrategy } from '@src/common/models/sale-strategy.model';
+import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
 
 @Resolver(() => Seller)
 export class SellersResolver extends BaseResolver {
@@ -52,5 +54,23 @@ export class SellersResolver extends BaseResolver {
     @Args('createSellerInput') createSellerInput: CreateSellerInput
   ): Promise<Seller> {
     return await this.sellersService.create(createSellerInput);
+  }
+
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => SaleStrategy, {
+    description:
+      '입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다.',
+  })
+  async updateSellerSaleStrategy(
+    @IntArgs('sellerId') sellerId: number,
+    @Args('updateSaleStrategyInput')
+    updateSaleStrategyInput: FindSaleStrategyInput
+  ): Promise<SaleStrategy> {
+    const seller = await this.sellersService.get(sellerId);
+    return await this.sellersService.updateSaleStrategy(
+      seller,
+      updateSaleStrategyInput
+    );
   }
 }

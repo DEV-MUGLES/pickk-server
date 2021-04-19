@@ -17,8 +17,6 @@ import {
 } from '@src/modules/item/sellers/dtos/seller-policies.input';
 import { SellerClaimPolicy } from '@src/modules/item/sellers/models/policies/seller-claim-policy.model';
 import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/seller-shipping-policy.model';
-import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
 import { BaseSellerOutput } from '@src/modules/item/sellers/dtos/seller.output';
 
@@ -83,19 +81,6 @@ export class MySellerResolver extends BaseResolver {
     return await this.sellersService.updateShippingPolicy(
       seller,
       updateSellerShippingPolicyInput
-    );
-  }
-
-  @Mutation(() => SaleStrategy)
-  @UseGuards(JwtSellerGuard)
-  async updateMySaleStrategy(
-    @CurrentSeller() seller: Seller,
-    @Args('updateSaleStrategyInput')
-    updateSaleStrategyInput: FindSaleStrategyInput
-  ): Promise<SaleStrategy> {
-    return await this.sellersService.updateSaleStrategy(
-      seller,
-      updateSaleStrategyInput
     );
   }
 
