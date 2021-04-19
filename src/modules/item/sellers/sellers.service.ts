@@ -59,12 +59,19 @@ export class SellersService {
     return await this.sellersRepository.findOneEntity(param, relations);
   }
 
-  async update(id: number, input: UpdateSellerInput): Promise<Seller> {
+  async update(
+    id: number,
+    input: UpdateSellerInput,
+    relations: string[] = []
+  ): Promise<Seller> {
     await this.sellersRepository.update(id, input);
-    return await this.get(id);
+    return await this.get(id, relations);
   }
 
-  async create(createSellerInput: CreateSellerInput): Promise<Seller> {
+  async create(
+    createSellerInput: CreateSellerInput,
+    relations: string[] = []
+  ): Promise<Seller> {
     const {
       saleStrategyInput,
       claimPolicyInput,
@@ -86,7 +93,8 @@ export class SellersService {
       returnAddress: new SellerReturnAddress(returnAddressInput),
       saleStrategy,
     });
-    return await this.sellersRepository.save(seller);
+    const newEntity = await this.sellersRepository.save(seller);
+    return await this.get(newEntity.id, relations);
   }
 
   async updateClaimPolicy(

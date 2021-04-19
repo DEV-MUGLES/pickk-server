@@ -1,5 +1,6 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
 import { JwtSellerGuard } from '@src/authentication/guards/jwt-seller.guard';
 import { BaseResolver } from '@src/common/base.resolver';
@@ -18,7 +19,6 @@ import {
 import { SellerClaimPolicy } from '@src/modules/item/sellers/models/policies/seller-claim-policy.model';
 import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/seller-shipping-policy.model';
 import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
-import { BaseSellerOutput } from '@src/modules/item/sellers/dtos/seller.output';
 
 @Resolver()
 export class MySellerResolver extends BaseResolver {
@@ -34,15 +34,20 @@ export class MySellerResolver extends BaseResolver {
     return seller;
   }
 
-  @Mutation(() => BaseSellerOutput)
+  @Mutation(() => Seller)
   @UseGuards(JwtSellerGuard)
   async updateMeSeller(
     @CurrentSeller() seller: Seller,
-    @Args('updateSellerInput') updateSellerInput: UpdateSellerInput
+    @Args('updateSellerInput') updateSellerInput: UpdateSellerInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Seller> {
-    return await this.sellersService.update(seller.id, {
-      ...updateSellerInput,
-    });
+    return await this.sellersService.update(
+      seller.id,
+      {
+        ...updateSellerInput,
+      },
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => SellerClaimPolicy)

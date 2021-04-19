@@ -12,7 +12,6 @@ import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { SELLER_RELATIONS } from './constants/seller.relation';
 import { SellerFilter } from './dtos/seller.filter';
 import { CreateSellerInput } from './dtos/seller.input';
-import { BaseSellerOutput } from './dtos/seller.output';
 import { Seller } from './models/seller.model';
 import { SellersService } from './sellers.service';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
@@ -49,11 +48,15 @@ export class SellersResolver extends BaseResolver {
 
   @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => BaseSellerOutput)
+  @Mutation(() => Seller)
   async createSeller(
-    @Args('createSellerInput') createSellerInput: CreateSellerInput
+    @Args('createSellerInput') createSellerInput: CreateSellerInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Seller> {
-    return await this.sellersService.create(createSellerInput);
+    return await this.sellersService.create(
+      createSellerInput,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Roles(UserRole.Admin)

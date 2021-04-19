@@ -7,20 +7,6 @@ input AddItemUrlInput {
   url: String!
 }
 
-type BaseSellerOutput {
-  businessCode: String!
-  businessName: String!
-  createdAt: DateTime!
-  email: String!
-  id: Int!
-  kakaoTalkCode: String
-  mailOrderBusinessCode: String!
-  operationTimeMessage: String!
-  phoneNumber: String!
-  representativeName: String!
-  updatedAt: DateTime!
-}
-
 type Brand {
   createdAt: DateTime!
   description: String
@@ -238,7 +224,7 @@ type Mutation {
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
-  createSeller(createSellerInput: CreateSellerInput!): BaseSellerOutput!
+  createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
   removeMyAvatarImage: UserAvatarImage!
@@ -246,7 +232,7 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateMe(updateUserInput: UpdateUserInput!): User!
-  updateMeSeller(updateSellerInput: UpdateSellerInput!): BaseSellerOutput!
+  updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """

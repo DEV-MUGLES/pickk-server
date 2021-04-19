@@ -8,6 +8,10 @@ import { SellersRepository } from './sellers.repository';
 import { SellersService } from './sellers.service';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { Seller } from './models/seller.model';
+import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
+import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
+import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
+import { SellerReturnAddress } from './models/seller-return-address.model';
 
 describe('SellersService', () => {
   let sellersService: SellersService;
@@ -63,14 +67,33 @@ describe('SellersService', () => {
       },
     };
     it('create success', async () => {
+      const {
+        saleStrategyInput,
+        claimPolicyInput,
+        crawlPolicyInput,
+        shippingPolicyInput,
+        returnAddressInput,
+        ...sellerAttributes
+      } = createSellerInput;
+      const saleStrategy = new SaleStrategy(saleStrategyInput);
+      const seller = new Seller({
+        ...sellerAttributes,
+        claimPolicy: new SellerClaimPolicy(claimPolicyInput),
+        crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
+        shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
+        returnAddress: new SellerReturnAddress(returnAddressInput),
+        saleStrategy,
+      });
+
       const salesStrategyResposytoryFindOrCreateSpy = jest
         .spyOn(saleStrategyRepository, 'findOrCreate')
-        .mockResolvedValueOnce(
-          new SaleStrategy(createSellerInput.saleStrategyInput)
-        );
+        .mockResolvedValueOnce(saleStrategy);
       const sellersRepositorySaveSpy = jest
         .spyOn(sellersRepository, 'save')
-        .mockImplementationOnce(async (v) => v as Seller);
+        .mockResolvedValueOnce(seller);
+      const sellersServiceGetSpy = jest
+        .spyOn(sellersService, 'get')
+        .mockResolvedValueOnce(seller);
 
       const result = await sellersService.create(createSellerInput);
       expect(result.businessCode).toEqual(createSellerInput.businessCode);
@@ -83,6 +106,7 @@ describe('SellersService', () => {
         createSellerInput.saleStrategyInput
       );
       expect(sellersRepositorySaveSpy).toHaveBeenCalledTimes(1);
+      expect(sellersServiceGetSpy).toHaveBeenCalledTimes(1);
     });
   });
 });
