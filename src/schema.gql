@@ -133,6 +133,16 @@ type Item {
   urls: [ItemUrl!]!
 }
 
+type ItemCategory {
+  children: [ItemCategory!]!
+  code: String!
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+  parent: ItemCategory!
+  updatedAt: DateTime!
+}
+
 type ItemDetailImage {
   angle: Int!
   createdAt: DateTime!
@@ -278,6 +288,7 @@ type Query {
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   item(id: Int!): Item!
+  itemCategories: [ItemCategory!]!
   items: [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByEmail(loginByEmailInput: LoginByEmailInput!): JwtToken!

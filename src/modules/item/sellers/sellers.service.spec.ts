@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
+import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
 import { CreateSellerInput } from './dtos/seller.input';
 import { SellersRepository } from './sellers.repository';
 import { SellersService } from './sellers.service';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { Seller } from './models/seller.model';
 import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
