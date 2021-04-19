@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-@Module({})
+import { ItemCategoriesRepository } from './item-categories.repository';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([ItemCategoriesRepository])],
+})
 export class ItemCategoriesModule {}
