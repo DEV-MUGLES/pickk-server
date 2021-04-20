@@ -212,11 +212,17 @@ type JwtToken {
 
 input LoginByCodeInput {
   code: String
+
+  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
+  minRole: UserRole = User
   password: String!
 }
 
 input LoginByEmailInput {
   email: String
+
+  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
+  minRole: UserRole = User
   password: String!
 }
 

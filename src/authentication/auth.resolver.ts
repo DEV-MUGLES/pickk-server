@@ -2,11 +2,13 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
 import { UsersService } from '@src/modules/user/users/users.service';
+import { checkIsPermitted } from '@src/modules/user/users/helpers/user-role.helper';
 import { AuthService } from './auth.service';
 
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
+import { ForbiddenResourceException } from './exceptions/user.exception';
 import { JwtRefreshGuard } from './guards';
 
 @Resolver()
@@ -29,8 +31,11 @@ export class AuthResolver {
   async loginByEmail(
     @Args('loginByEmailInput') loginByEmailInput: LoginByEmailInput
   ) {
-    const { email, password } = loginByEmailInput;
+    const { email, password, minRole } = loginByEmailInput;
     const user = await this.authService.getUserByEmailAuth(email, password);
+    if (!checkIsPermitted(user.role, minRole)) {
+      throw new ForbiddenResourceException(minRole);
+    }
     return this.authService.getToken(user);
   }
 
@@ -38,8 +43,11 @@ export class AuthResolver {
   async loginByCode(
     @Args('loginByCodeInput') loginByCodeInput: LoginByCodeInput
   ) {
-    const { code, password } = loginByCodeInput;
+    const { code, password, minRole } = loginByCodeInput;
     const user = await this.authService.getUserByCodeAuth(code, password);
+    if (!checkIsPermitted(user.role, minRole)) {
+      throw new ForbiddenResourceException(minRole);
+    }
     return this.authService.getToken(user);
   }
 }
