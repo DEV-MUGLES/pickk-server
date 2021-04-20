@@ -120,14 +120,15 @@ type Item {
   detailImages: [ItemDetailImage!]
   displayPrice: Float!
   id: Int!
-  isAvailable: Boolean!
-  isPurchasable: Boolean!
+  isManaging: Boolean!
+  isMdRecommended: Boolean!
   isSellable: Boolean!
   name: String!
   options: [ItemOption!]
   originalPrice: Int!
   priceUnit: ItemPriceUnit!
   products: [Product!]
+  providedCode: String
   salePolicy: ItemSalePolicy
   salePrice: Int!
   thumbnailImage: ItemThumbnailImage

@@ -9,10 +9,11 @@ export interface IItem {
   name: string;
   originalPrice: number;
   salePrice: number;
+  providedCode?: string;
 
-  isAvailable: boolean;
+  isManaging: boolean;
+  isMdRecommended: boolean;
   isSellable: boolean;
-  isPurchasable: boolean;
 
   thumbnailImage: IImage;
   brand: IBrand;

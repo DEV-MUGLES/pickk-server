@@ -38,6 +38,7 @@ import { Product } from '../../products/models/product.model';
   name: 'item',
 })
 @Index(['salePrice'])
+@Index(['providedCode'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
     super();
@@ -48,7 +49,10 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.name = attributes.name;
     this.originalPrice = attributes.originalPrice;
     this.salePrice = attributes.salePrice;
-    this.isAvailable = attributes.isAvailable;
+    this.providedCode = attributes.providedCode;
+
+    this.isManaging = attributes.isManaging;
+    this.isMdRecommended = attributes.isManaging;
     this.isSellable = attributes.isSellable;
 
     this.thumbnailImage = attributes.thumbnailImage;
@@ -87,6 +91,16 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Min(1)
   salePrice: number;
 
+  @Field({ nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 100,
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  providedCode?: string;
+
   @Field()
   @Column({ nullable: true })
   @IsNumber()
@@ -109,7 +123,14 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: true,
   })
   @IsBoolean()
-  isAvailable: boolean;
+  isManaging: boolean;
+
+  @Field({ defaultValue: true })
+  @Column({
+    default: true,
+  })
+  @IsBoolean()
+  isMdRecommended: boolean;
 
   @Field({ defaultValue: false })
   @Column({
@@ -117,13 +138,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   @IsBoolean()
   isSellable: boolean;
-
-  @Field({ defaultValue: false })
-  @Column({
-    default: false,
-  })
-  @IsBoolean()
-  isPurchasable: boolean;
 
   @Field(() => ItemThumbnailImage, { nullable: true })
   @OneToOne(() => ItemThumbnailImageEntity, {
