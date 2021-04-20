@@ -1,4 +1,4 @@
-import { UserRole } from '../constants/user.enum';
+import { UserOauthProvider, UserRole } from '../constants/user.enum';
 import { IShippingAddress } from './shipping-address.interface';
 
 /**
@@ -8,10 +8,14 @@ import { IShippingAddress } from './shipping-address.interface';
  */
 export interface IUser {
   role?: UserRole;
+  oauthProvider?: UserOauthProvider;
+  oauthCode?: string;
+
   code?: string;
   email: string;
   name: string | null;
   weight?: number;
   height?: number;
+
   shippingAddresses: IShippingAddress[];
 }

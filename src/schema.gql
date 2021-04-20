@@ -96,7 +96,9 @@ input CreateUserInput {
   email: String
   height: Int
   name: String!
-  password: String!
+  oauthCode: String
+  oauthProvider: UserProviderType
+  password: String
   weight: Int
 }
 
@@ -501,6 +503,8 @@ type User {
   height: Int
   id: Int!
   name: String!
+  oauthCode: String
+  oauthProvider: UserProviderType
   role: UserRole
   shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!
@@ -512,6 +516,13 @@ type UserAvatarImage {
   createdAt: DateTime!
   key: String!
   url: String!
+}
+
+"""Oauth 제공 서비스입니다."""
+enum UserProviderType {
+  Apple
+  Facebook
+  Kakao
 }
 
 """유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""

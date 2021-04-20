@@ -38,6 +38,10 @@ export class User extends UserEntity {
     this.password = attributes.password;
     this.shippingAddresses = attributes.shippingAddresses;
     this.avatarImage = attributes.avatarImage;
+
+    this.role = attributes.role;
+    this.oauthProvider = attributes.oauthProvider;
+    this.oauthCode = attributes.oauthCode;
   }
 
   public setAvatarImage = (key: string): UserAvatarImage => {
