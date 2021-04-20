@@ -5,10 +5,10 @@ import { User } from '../models/user.model';
 @InputType()
 export class CreateUserInput extends PickType(
   User,
-  ['code', 'email', 'name', 'weight', 'height'],
+  ['code', 'email', 'name', 'weight', 'height', 'oauthProvider', 'oauthCode'],
   InputType
 ) {
-  @Field()
+  @Field({ nullable: true })
   password: string;
 }
 

@@ -20,7 +20,7 @@ import {
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 
-import { UserRole } from '../constants/user.enum';
+import { UserOauthProvider, UserRole } from '../constants/user.enum';
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
 import { UserAvatarImage } from '../models/user-avatar-image.model';
@@ -31,8 +31,8 @@ import { UserAvatarImageEntity } from './user-avatar-image.entity';
 @Entity({
   name: 'user',
 })
-@Index('idx_email', ['email'], { unique: true })
 @Index('idx_code', ['code'], { unique: true })
+@Index('idx_oauth_code', ['oauthCode'])
 export class UserEntity extends BaseIdEntity implements IUser {
   @Field(() => UserRole, { nullable: true })
   @Column({
@@ -43,6 +43,24 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;
+
+  @Field(() => UserOauthProvider, { nullable: true })
+  @Column({
+    type: 'enum',
+    enum: UserOauthProvider,
+    nullable: true,
+  })
+  @IsEnum(UserOauthProvider)
+  @IsOptional()
+  oauthProvider?: UserOauthProvider;
+
+  @Field({ nullable: true })
+  @Column({
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  oauthCode?: string;
 
   @Field({
     nullable: true,
