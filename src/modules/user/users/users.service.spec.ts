@@ -52,7 +52,7 @@ describe('UsersService', () => {
 
   describe('get a user', () => {
     it('get success', async () => {
-      const userId = faker.random.number();
+      const userId = faker.datatype.number();
       const user = Object.assign(new User(), { id: userId });
 
       const usersRepositoryGetSpy = jest
@@ -211,7 +211,7 @@ describe('UsersService', () => {
 
     it('should get shippingAddresses relation when not initialized', async () => {
       const user = new User({
-        id: faker.random.number(),
+        id: faker.datatype.number(),
       });
       const shippingAddresses = [
         new ShippingAddress(),
@@ -244,7 +244,7 @@ describe('UsersService', () => {
       detailAddress: faker.lorem.text(),
       postalCode: faker.address.zipCode('#####'),
       phoneNumber1: faker.phone.phoneNumber('###-####-####'),
-      isPrimary: faker.random.boolean(),
+      isPrimary: faker.datatype.boolean(),
     };
 
     it('should return list when success', async () => {
@@ -279,7 +279,7 @@ describe('UsersService', () => {
 
     it('should return updated address when success', async () => {
       const shippingAddress = new ShippingAddress({
-        id: faker.random.number(),
+        id: faker.datatype.number(),
       });
       const user = new User({
         shippingAddresses: [shippingAddress],
@@ -315,7 +315,7 @@ describe('UsersService', () => {
 
   describe('removeShippingAddress', () => {
     it('should return removed address when success', async () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddress = new ShippingAddress({
         id: addressId,
       });

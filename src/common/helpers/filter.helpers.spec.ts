@@ -81,9 +81,9 @@ describe('FilterHelpers', () => {
     it('should parse In', () => {
       const strs = [faker.lorem.text(), faker.lorem.text(), faker.lorem.text()];
       const nums = [
-        faker.random.number(),
-        faker.random.number(),
-        faker.random.number(),
+        faker.datatype.number(),
+        faker.datatype.number(),
+        faker.datatype.number(),
       ];
 
       expect(parseFilter({ nameIn: strs })).toEqual({
@@ -96,8 +96,8 @@ describe('FilterHelpers', () => {
 
     it('should parse Between', () => {
       const [start, end] = [
-        faker.random.number(),
-        faker.random.number(),
+        faker.datatype.number(),
+        faker.datatype.number(),
       ].sort();
 
       expect(parseFilter({ ageBetween: [start, end] })).toEqual({
@@ -106,7 +106,7 @@ describe('FilterHelpers', () => {
     });
 
     it('should parse Mte', () => {
-      const num = faker.random.number();
+      const num = faker.datatype.number();
 
       expect(parseFilter({ ageMte: num })).toEqual({
         age: MoreThanOrEqual(num),
@@ -114,7 +114,7 @@ describe('FilterHelpers', () => {
     });
 
     it('should parse Lte', () => {
-      const num = faker.random.number();
+      const num = faker.datatype.number();
 
       expect(parseFilter({ ageLte: num })).toEqual({
         age: LessThanOrEqual(num),
@@ -122,7 +122,7 @@ describe('FilterHelpers', () => {
     });
 
     it('should work for nested filters', () => {
-      const userAgeMte = faker.random.number();
+      const userAgeMte = faker.datatype.number();
       const itemNameIn = [
         faker.lorem.text(),
         faker.lorem.text(),

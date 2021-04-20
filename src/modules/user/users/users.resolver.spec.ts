@@ -24,7 +24,7 @@ describe('UsersResolver', () => {
 
   describe('user', () => {
     it('should return matched user', async () => {
-      const userId = faker.random.number();
+      const userId = faker.datatype.number();
       const user = new User({ id: userId });
 
       const usersServiceSpy = jest

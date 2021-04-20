@@ -51,7 +51,7 @@ describe('MyCommonResolver', () => {
 
   const payload: JwtPayload = {
     username: faker.lorem.text(),
-    sub: faker.random.number(),
+    sub: faker.datatype.number(),
     code: faker.lorem.text(),
     iat: new Date().getTime(),
     exp: new Date().getTime(),

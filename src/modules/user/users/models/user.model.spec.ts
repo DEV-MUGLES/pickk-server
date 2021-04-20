@@ -185,7 +185,7 @@ describe('UserModel', () => {
       detailAddress: faker.lorem.text(),
       postalCode: faker.address.zipCode('#####'),
       phoneNumber1: faker.phone.phoneNumber('###-####-####'),
-      isPrimary: faker.random.boolean(),
+      isPrimary: faker.datatype.boolean(),
     };
 
     it('should return added shippingAddress', () => {
@@ -227,7 +227,7 @@ describe('UserModel', () => {
 
   describe('updateShippingAddress', () => {
     it('shoud return updated shippingAddress', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddresses = [
         new ShippingAddress(),
         new ShippingAddress({ id: addressId }),
@@ -251,7 +251,7 @@ describe('UserModel', () => {
     });
 
     it('shoud throw NotFoundException when not found', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
       const user = new User({ shippingAddresses });
 
@@ -268,7 +268,7 @@ describe('UserModel', () => {
     });
 
     it('new primary should override existing one', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddresses = [
         new ShippingAddress({ isPrimary: true }),
         new ShippingAddress({ id: addressId }),
@@ -290,7 +290,7 @@ describe('UserModel', () => {
 
   describe('removeShippingAddress', () => {
     it('shoud return removed shippingAddresses', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddress = new ShippingAddress({ id: addressId });
       const shippingAddresses = [
         new ShippingAddress(),
@@ -305,7 +305,7 @@ describe('UserModel', () => {
     });
 
     it('shoud throw NotFoundException when not found', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
       const user = new User({ shippingAddresses });
 
@@ -317,7 +317,7 @@ describe('UserModel', () => {
     });
 
     it('shoud make first address primary when deleted address is primary', () => {
-      const addressId = faker.random.number();
+      const addressId = faker.datatype.number();
       const shippingAddress = new ShippingAddress({
         id: addressId,
         isPrimary: true,
