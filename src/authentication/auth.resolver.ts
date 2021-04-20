@@ -6,7 +6,7 @@ import { checkIsPermitted } from '@src/modules/user/users/helpers/user-role.help
 import { AuthService } from './auth.service';
 
 import { CurrentUser } from './decorators/current-user.decorator';
-import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
+import { LoginByCodeInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { ForbiddenResourceException } from './exceptions/user.exception';
 import { JwtRefreshGuard } from './guards';
@@ -24,18 +24,6 @@ export class AuthResolver {
   @UseGuards(JwtRefreshGuard)
   async refreshJwtToken(@CurrentUser() payload: JwtPayload) {
     const user = await this.usersService.get(payload.sub);
-    return this.authService.getToken(user);
-  }
-
-  @Query(() => JwtToken)
-  async loginByEmail(
-    @Args('loginByEmailInput') loginByEmailInput: LoginByEmailInput
-  ) {
-    const { email, password, minRole } = loginByEmailInput;
-    const user = await this.authService.getUserByEmailAuth(email, password);
-    if (!checkIsPermitted(user.role, minRole)) {
-      throw new ForbiddenResourceException(minRole);
-    }
     return this.authService.getToken(user);
   }
 
