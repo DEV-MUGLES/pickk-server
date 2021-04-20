@@ -6,10 +6,7 @@ import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
 import { User } from '@src/modules/user/users/models/user.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
-import {
-  UserCodeNotFoundExeption,
-  UserEmailNotFoundExeption,
-} from './exceptions/user.exception';
+import { UserCodeNotFoundExeption } from './exceptions/user.exception';
 import { CreateJwtPayloadInput } from './dto/jwt.dto';
 
 @Injectable()
@@ -18,23 +15,6 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService
   ) {}
-
-  async getUserByEmailAuth(
-    email: string,
-    password: string
-  ): Promise<User | null> {
-    const user = await this.usersService.findOne({ email });
-    if (!user) {
-      throw new UserEmailNotFoundExeption();
-    }
-
-    if (user.comparePassword(password)) {
-      delete user.password;
-      return user;
-    } else {
-      throw new PasswordIncorrectException();
-    }
-  }
 
   async getUserByCodeAuth(
     code: string,

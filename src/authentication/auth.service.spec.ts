@@ -10,10 +10,7 @@ import { IJwtToken } from './interfaces/token.interface';
 import { User } from '@src/modules/user/users/models/user.model';
 import { UserPassword } from '@src/modules/user/users/models/user-password.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
-import {
-  UserCodeNotFoundExeption,
-  UserEmailNotFoundExeption,
-} from './exceptions/user.exception';
+import { UserCodeNotFoundExeption } from './exceptions/user.exception';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -39,90 +36,6 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
-  });
-
-  describe('validateEmail', () => {
-    const emailLoginDto = {
-      email: faker.internet.email(),
-      password: faker.lorem.text(),
-    };
-    it('인증된 유저를 반환한다.', async () => {
-      const existingUser = Object.assign(new User(), {
-        email: emailLoginDto.email,
-        password: new UserPassword(),
-      });
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { password, ...expectedResult } = existingUser;
-
-      const usersServiceFindOneSpy = jest
-        .spyOn(usersService, 'findOne')
-        .mockResolvedValue(existingUser);
-      const userComparePasswordSpy = jest
-        .spyOn(existingUser, 'comparePassword')
-        .mockReturnValue(true);
-
-      const result = await authService.getUserByEmailAuth(
-        emailLoginDto.email,
-        emailLoginDto.password
-      );
-
-      expect(result.email).toEqual(expectedResult.email);
-      expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
-        email: emailLoginDto.email,
-      });
-      expect(userComparePasswordSpy).toHaveBeenCalledWith(
-        emailLoginDto.password
-      );
-    });
-
-    it('Email 일치하는 유저가 없으면 User', async () => {
-      const usersServiceFindOneSpy = jest
-        .spyOn(usersService, 'findOne')
-        .mockResolvedValue(null);
-
-      try {
-        await authService.getUserByEmailAuth(
-          emailLoginDto.email,
-          emailLoginDto.password
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(UserEmailNotFoundExeption);
-      }
-
-      expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
-        email: emailLoginDto.email,
-      });
-    });
-
-    it('비밀번호가 틀리면 PasswordIncorrectException', async () => {
-      const existingUser = Object.assign(new User(), {
-        ...emailLoginDto,
-        password: new UserPassword(),
-      });
-
-      const usersServiceFindOneSpy = jest
-        .spyOn(usersService, 'findOne')
-        .mockResolvedValue(existingUser);
-      const userComparePasswordSpy = jest
-        .spyOn(existingUser, 'comparePassword')
-        .mockReturnValue(false);
-
-      try {
-        await authService.getUserByEmailAuth(
-          emailLoginDto.email,
-          emailLoginDto.password
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(PasswordIncorrectException);
-      }
-
-      expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
-        email: emailLoginDto.email,
-      });
-      expect(userComparePasswordSpy).toHaveBeenCalledWith(
-        emailLoginDto.password
-      );
-    });
   });
 
   describe('validateCode', () => {

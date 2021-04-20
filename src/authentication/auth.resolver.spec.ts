@@ -7,8 +7,9 @@ import { UsersService } from '@src/modules/user/users/users.service';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
-import { LoginByCodeInput, LoginByEmailInput } from './dto/login.input';
+import { LoginByCodeInput } from './dto/login.input';
 import { User } from '@src/modules/user/users/models/user.model';
+import { UserRole } from '@src/modules/user/users/constants/user.enum';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -45,7 +46,7 @@ describe('AuthResolver', () => {
     it('shoud return refreshed JwtToken', async () => {
       const payload: JwtPayload = {
         username: faker.lorem.text(),
-        sub: faker.random.number(),
+        sub: faker.datatype.number(),
         code: faker.lorem.text(),
         iat: new Date().getTime(),
         exp: new Date().getTime(),
@@ -74,44 +75,16 @@ describe('AuthResolver', () => {
     });
   });
 
-  describe('loginByEmail', () => {
-    it('should return matching user', async () => {
-      const loginByEmailInput: LoginByEmailInput = {
-        email: faker.internet.email(),
-        password: faker.lorem.text(),
-      };
-      const existingUser = new User({ email: loginByEmailInput.email });
-      const jwtToken: JwtToken = {
-        access: JWT_TOKEN,
-        refresh: JWT_TOKEN,
-      };
-
-      const authServiceValidateEmailSpy = jest
-        .spyOn(authService, 'getUserByEmailAuth')
-        .mockResolvedValue(existingUser);
-      const authServiceGetTokenSpy = jest
-        .spyOn(authService, 'getToken')
-        .mockReturnValue(jwtToken);
-
-      const result = await authResolver.loginByEmail(loginByEmailInput);
-
-      expect(result).toEqual(jwtToken);
-      expect(authServiceValidateEmailSpy).toHaveBeenCalledWith(
-        loginByEmailInput.email,
-        loginByEmailInput.password
-      );
-      expect(authServiceGetTokenSpy).toHaveBeenCalledWith(existingUser);
-    });
-  });
-
   describe('loginByCode', () => {
     it('should return matching user', async () => {
       const loginByCodeInput: LoginByCodeInput = {
         code: faker.lorem.text(),
         password: faker.lorem.text(),
+        minRole: UserRole.Admin,
       };
       const existingUser = new User({
         code: loginByCodeInput.code,
+        role: UserRole.Admin,
       });
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,
