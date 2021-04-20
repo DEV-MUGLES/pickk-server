@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService } from '@src/modules/user/users/users.service';
 import { JwtService } from '@nestjs/jwt';
+
+import { UserOauthProvider } from '@src/modules/user/users/constants/user.enum';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
+import { User } from '@src/modules/user/users/models/user.model';
+import { UsersService } from '@src/modules/user/users/users.service';
+
 import { IJwtToken } from './interfaces/token.interface';
 import { jwtRefreshConstants } from './constants/jwt.constant';
-import { User } from '@src/modules/user/users/models/user.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
-import { UserCodeNotFoundExeption } from './exceptions/user.exception';
+import {
+  UserCodeNotFoundExeption,
+  UserOauthNotFoundExeption,
+} from './exceptions/user.exception';
 import { CreateJwtPayloadInput } from './dto/jwt.dto';
 
 @Injectable()
@@ -31,6 +37,19 @@ export class AuthService {
     } else {
       throw new PasswordIncorrectException();
     }
+  }
+
+  async getUserByOauth(
+    oauthProvider: UserOauthProvider,
+    oauthCode: string
+  ): Promise<User | null> {
+    const user = await this.usersService.findOne({ oauthProvider, oauthCode });
+    if (!user) {
+      throw new UserOauthNotFoundExeption();
+    }
+
+    delete user.password;
+    return user;
   }
 
   getToken(user: Pick<UserEntity, 'id' | 'name' | 'code'>): IJwtToken {

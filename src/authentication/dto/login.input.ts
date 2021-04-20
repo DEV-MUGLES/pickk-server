@@ -18,3 +18,19 @@ export class LoginByCodeInput extends PickType(User, ['code'], InputType) {
   @IsOptional()
   minRole?: UserRole;
 }
+
+@InputType()
+export class LoginByOauthInput extends PickType(
+  User,
+  ['oauthProvider', 'oauthCode'],
+  InputType
+) {
+  @Field(() => UserRole, {
+    defaultValue: UserRole.User,
+    description:
+      '로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)',
+  })
+  @IsEnum(UserRole)
+  @IsOptional()
+  minRole?: UserRole;
+}
