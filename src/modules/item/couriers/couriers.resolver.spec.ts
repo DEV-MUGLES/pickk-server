@@ -26,7 +26,7 @@ describe('CouriersResolver', () => {
 
   describe('updateCourierIssue', () => {
     it('should return new issue', async () => {
-      const courierId = faker.random.number();
+      const courierId = faker.datatype.number();
       const courier = new Courier({ id: courierId });
 
       const updateCourierIssueInput: UpdateCourierIssueInput = {
@@ -58,7 +58,7 @@ describe('CouriersResolver', () => {
   describe('removeCourierIssue', () => {
     it('should remove courier', async () => {
       const courierIssue = new CourierIssue();
-      const courierId = faker.random.number();
+      const courierId = faker.datatype.number();
       const courier = new Courier({ id: courierId, issue: courierIssue });
       const removedCourier = new Courier({
         ...courier,

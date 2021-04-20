@@ -53,7 +53,7 @@ describe('CouriersService', () => {
     it('should return courier when success', async () => {
       const courierIssue = new CourierIssue();
       const courier = new Courier({
-        id: faker.random.number(),
+        id: faker.datatype.number(),
         issue: courierIssue,
       });
 
