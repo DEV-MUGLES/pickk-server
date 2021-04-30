@@ -53,4 +53,13 @@ export class AuthResolver {
     }
     return this.authService.getToken(user);
   }
+
+  @Query(() => Boolean)
+  async checkNicknameDuplicate(@Args('nickname') nickname: string) {
+    const user = await this.usersService.findOne({ nickname });
+    if (user) {
+      return true;
+    }
+    return false;
+  }
 }
