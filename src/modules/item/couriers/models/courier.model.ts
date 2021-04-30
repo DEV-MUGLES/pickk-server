@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
 import { CourierEntity } from '../entities/courier.entity';
@@ -32,7 +32,7 @@ export class Courier extends CourierEntity {
   }
 
   updateIssue(updateCourierIssueInput: UpdateCourierIssueInput): CourierIssue {
-    if (moment().isAfter(updateCourierIssueInput.endAt)) {
+    if (dayjs().isAfter(updateCourierIssueInput.endAt)) {
       throw new CourierIssueInvalidEndAtException();
     }
     this.issue = new CourierIssue(updateCourierIssueInput);

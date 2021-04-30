@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import * as AWS from 'aws-sdk';
 import { ReadStream } from 'fs-capacitor';
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 import { AwsS3ConfigService } from '@src/config/providers/aws/s3/config.service';
 
@@ -34,9 +34,9 @@ export class AwsS3ProviderService {
   };
 
   private getKey(filename: string, prefix?: string) {
-    return `${moment().format('YYYYMMDD')}${
+    return `${dayjs().format('YYYYMMDD')}${
       prefix ? `/${prefix}` : ''
-    }/${moment().format('hhmmss')}${this.getRandomString()}_${filename}`;
+    }/${dayjs().format('hhmmss')}${this.getRandomString()}_${filename}`;
   }
 
   private cleanFilename(filename: string): string {
