@@ -31,8 +31,10 @@ export class User extends UserEntity {
     this.updatedAt = attributes.updatedAt;
 
     this.email = attributes.email;
-    this.name = attributes.name;
     this.code = attributes.code;
+    this.nickname = attributes.nickname;
+
+    this.name = attributes.name;
     this.weight = attributes.weight;
     this.height = attributes.height;
     this.password = attributes.password;

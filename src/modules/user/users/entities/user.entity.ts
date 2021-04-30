@@ -88,10 +88,21 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Field()
   @Column({
     type: 'varchar',
-    length: 15,
+    unique: true,
+    length: 11,
   })
   @IsString()
-  name: string;
+  nickname: string;
+
+  @Field({ nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 15,
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  name?: string;
 
   @Field(() => Int, { nullable: true })
   @Column({

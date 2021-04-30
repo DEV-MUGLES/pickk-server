@@ -32,7 +32,7 @@ describe('UsersService', () => {
   describe('creating a user', () => {
     it('create success', async () => {
       const createUserInput: CreateUserInput = {
-        name: faker.lorem.sentence(),
+        nickname: faker.lorem.sentence(),
         password: USER_PASSWORD_1,
         email: faker.internet.email(),
       };

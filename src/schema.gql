@@ -95,7 +95,8 @@ input CreateUserInput {
   code: String
   email: String
   height: Int
-  name: String!
+  name: String
+  nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
   password: String
@@ -293,6 +294,7 @@ type ProductShippingReservePolicy {
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
+  checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   item(id: Int!): Item!
@@ -481,6 +483,7 @@ input UpdateUserInput {
   email: String
   height: Int
   name: String
+  nickname: String
   weight: Int
 }
 
@@ -502,7 +505,8 @@ type User {
   email: String
   height: Int
   id: Int!
-  name: String!
+  name: String
+  nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
   role: UserRole

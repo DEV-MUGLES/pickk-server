@@ -5,7 +5,16 @@ import { User } from '../models/user.model';
 @InputType()
 export class CreateUserInput extends PickType(
   User,
-  ['code', 'email', 'name', 'weight', 'height', 'oauthProvider', 'oauthCode'],
+  [
+    'code',
+    'email',
+    'nickname',
+    'name',
+    'weight',
+    'height',
+    'oauthProvider',
+    'oauthCode',
+  ],
   InputType
 ) {
   @Field({ nullable: true })
@@ -14,5 +23,9 @@ export class CreateUserInput extends PickType(
 
 @InputType()
 export class UpdateUserInput extends PartialType(
-  PickType(User, ['code', 'email', 'name', 'weight', 'height'], InputType)
+  PickType(
+    User,
+    ['code', 'email', 'name', 'weight', 'height', 'nickname'],
+    InputType
+  )
 ) {}

@@ -13,7 +13,9 @@ export interface IUser {
 
   code?: string;
   email: string;
-  name: string | null;
+  nickname: string;
+
+  name?: string | null;
   weight?: number;
   height?: number;
 
