@@ -6,6 +6,7 @@ import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
+import { SellPriceReservation } from '../../sell-price-reservations/models/sell-price-reservation.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -24,6 +25,11 @@ export class Item extends ItemEntity {
     nullable: true,
   })
   products: Product[];
+
+  @Field(() => SellPriceReservation, {
+    nullable: true,
+  })
+  sellPriceReservation?: SellPriceReservation;
 
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((shippingAddress, _index) => {

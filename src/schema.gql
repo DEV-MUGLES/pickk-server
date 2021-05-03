@@ -132,6 +132,7 @@ type Item {
   providedCode: String
   salePolicy: ItemSalePolicy
   sellPrice: Int!
+  sellPriceReservation: SellPriceReservation
   thumbnailImage: ItemThumbnailImage
   updatedAt: DateTime!
   urls: [ItemUrl!]!
@@ -323,6 +324,18 @@ type SaleStrategy {
   canUseMileage: Boolean!
   createdAt: DateTime!
   id: Int!
+  updatedAt: DateTime!
+}
+
+type SellPriceReservation {
+  createdAt: DateTime!
+  destSellPrice: Int!
+  endAt: DateTime!
+  id: Int!
+  isActive: Boolean!
+  isRollbackByCrawl: Boolean!
+  rollbackSellPrice: Int!
+  startAt: DateTime!
   updatedAt: DateTime!
 }
 

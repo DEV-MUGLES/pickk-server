@@ -32,6 +32,7 @@ import { ItemSalePolicy } from '../models/item-sale-policy.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { Product } from '../../products/models/product.model';
+import { SellPriceReservationEntity } from '../../sell-price-reservations/entities/sell-price-reservation.entity';
 
 @ObjectType()
 @Entity({
@@ -80,13 +81,19 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   description?: string;
 
   @Field(() => Int)
-  @Column()
+  @Column({
+    type: 'mediumint',
+    unsigned: true,
+  })
   @IsNumber()
   @Min(1)
   originalPrice: number;
 
   @Field(() => Int)
-  @Column()
+  @Column({
+    type: 'mediumint',
+    unsigned: true,
+  })
   @IsNumber()
   @Min(1)
   sellPrice: number;
@@ -185,4 +192,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     cascade: true,
   })
   products: Product[];
+
+  @OneToOne('SellPriceReservationEntity', 'item')
+  @JoinColumn()
+  sellPriceReservation?: SellPriceReservationEntity;
 }
