@@ -37,7 +37,7 @@ import { Product } from '../../products/models/product.model';
 @Entity({
   name: 'item',
 })
-@Index(['salePrice'])
+@Index(['sellPrice'])
 @Index(['providedCode'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
@@ -48,7 +48,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
 
     this.name = attributes.name;
     this.originalPrice = attributes.originalPrice;
-    this.salePrice = attributes.salePrice;
+    this.sellPrice = attributes.sellPrice;
     this.providedCode = attributes.providedCode;
 
     this.isManaging = attributes.isManaging;
@@ -89,7 +89,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Column()
   @IsNumber()
   @Min(1)
-  salePrice: number;
+  sellPrice: number;
 
   @Field({ nullable: true })
   @Column({

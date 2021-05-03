@@ -8,7 +8,7 @@ import { IItemUrl } from './item-url.interface';
 export interface IItem {
   name: string;
   originalPrice: number;
-  salePrice: number;
+  sellPrice: number;
   providedCode?: string;
 
   isManaging: boolean;

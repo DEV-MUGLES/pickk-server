@@ -131,7 +131,7 @@ type Item {
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
-  salePrice: Int!
+  sellPrice: Int!
   thumbnailImage: ItemThumbnailImage
   updatedAt: DateTime!
   urls: [ItemUrl!]!
