@@ -6,6 +6,7 @@ import { IntArgs } from '@src/common/decorators/args.decorator';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
+import { UpdateItemInput } from './dtos/item-update.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemUrl } from './models/item-url.model';
@@ -43,5 +44,14 @@ export class ItemsResolver extends BaseResolver {
   ): Promise<ItemUrl> {
     const item = await this.itemsService.get(itemId, ['urls']);
     return await this.itemsService.addUrl(item, addItemUrlInput);
+  }
+
+  @Mutation(() => Item)
+  async updateItem(
+    @IntArgs('itemId') itemId: number,
+    @Args('updateItemInput') updateItemInput: UpdateItemInput
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId);
+    return await this.itemsService.updateById(item, updateItemInput);
   }
 }

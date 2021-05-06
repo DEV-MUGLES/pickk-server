@@ -43,7 +43,7 @@ export class BaseRepository<
     inputs: QueryDeepPartialEntity<Entity>,
     relations: string[] = []
   ): Promise<Model | null> {
-    return this.update(entity.id, inputs)
+    return this.update(entity.id, { ...inputs })
       .then(async () => await this.get(entity.id, relations))
       .catch((error) => Promise.reject(error));
   }

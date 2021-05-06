@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { UpdateItemInput } from './dtos/item-update.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsRepository } from './items.repository';
 import { ItemUrl } from './models/item-url.model';
@@ -27,5 +28,12 @@ export class ItemsService {
     const url = item.addUrl(addItemUrlInput);
     await this.itemsRepository.save(item);
     return url;
+  }
+
+  async updateById(
+    item: Item,
+    updateItemInput: UpdateItemInput
+  ): Promise<Item> {
+    return await this.itemsRepository.updateEntity(item, updateItemInput);
   }
 }
