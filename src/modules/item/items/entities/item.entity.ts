@@ -22,6 +22,8 @@ import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { Brand } from '../../brands/models/brand.model';
 import { IItem } from '../interfaces/item.interface';
+import { ItemCategory } from '../../item-categories/models/item-category.model';
+import { ItemCategoryEntity } from '../../item-categories/entities/item-category.entity';
 import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
 import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
 import { ItemUrl } from '../models/item-url.model';
@@ -62,6 +64,10 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.detailImages = attributes.detailImages;
     this.options = attributes.options;
     this.products = attributes.products;
+    this.majorCategory = attributes.majorCategory;
+    this.minorCategory = attributes.minorCategory;
+    this.majorCategoryCode = attributes.majorCategoryCode;
+    this.minorCategoryCode = attributes.minorCategoryCode;
   }
 
   @Field()
@@ -185,4 +191,34 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     cascade: true,
   })
   products: Product[];
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @Column()
+  majorCategoryCode: string;
+
+  @Field(() => String, {
+    nullable: true,
+  })
+  @Column()
+  minorCategoryCode: string;
+
+  @Field(() => ItemCategory, {
+    nullable: true,
+  })
+  @ManyToOne(() => ItemCategoryEntity, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'majorCategoryCode', referencedColumnName: 'code' })
+  majorCategory: ItemCategory;
+
+  @Field(() => ItemCategory, {
+    nullable: true,
+  })
+  @ManyToOne(() => ItemCategoryEntity, {
+    nullable: true,
+  })
+  @JoinColumn({ name: 'minorCategoryCode', referencedColumnName: 'code' })
+  minorCategory: ItemCategory;
 }
