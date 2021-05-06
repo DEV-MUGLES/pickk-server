@@ -192,16 +192,24 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   products: Product[];
 
-  @Field(() => String, {
+  @Field({
     nullable: true,
   })
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+  })
   majorCategoryCode: string;
 
-  @Field(() => String, {
+  @Field({
     nullable: true,
   })
-  @Column()
+  @Column({
+    type: 'varchar',
+    length: 20,
+    nullable: true,
+  })
   minorCategoryCode: string;
 
   @Field(() => ItemCategory, {

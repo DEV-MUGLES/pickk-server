@@ -39,15 +39,10 @@ export class ItemCategoryEntity implements IItemCategory {
   parent: ItemCategoryEntity;
 
   @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Field()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp',
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 }
