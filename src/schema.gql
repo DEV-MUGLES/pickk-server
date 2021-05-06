@@ -124,6 +124,10 @@ type Item {
   isManaging: Boolean!
   isMdRecommended: Boolean!
   isSellable: Boolean!
+  majorCategory: ItemCategory
+  majorCategoryCode: String
+  minorCategory: ItemCategory
+  minorCategoryCode: String
   name: String!
   options: [ItemOption!]
   originalPrice: Int!
@@ -141,7 +145,6 @@ type ItemCategory {
   children: [ItemCategory!]!
   code: String!
   createdAt: DateTime!
-  id: Int!
   name: String!
   parent: ItemCategory!
   updatedAt: DateTime!
@@ -250,6 +253,7 @@ type Mutation {
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
+  updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -431,6 +435,18 @@ input UpdateCourierInput {
 input UpdateCourierIssueInput {
   endAt: DateTime!
   message: String!
+}
+
+input UpdateItemInput {
+  description: String
+  displayPrice: Float
+  isMdRecommended: Boolean = true
+  isSellable: Boolean = false
+  majorCategoryCode: String
+  minorCategoryCode: String
+  name: String
+  originalPrice: Int
+  sellPrice: Int
 }
 
 input UpdateSellerClaimPolicyInput {
