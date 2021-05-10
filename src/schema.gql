@@ -145,6 +145,7 @@ type ItemCategory {
   children: [ItemCategory!]!
   code: String!
   createdAt: DateTime!
+  id: Int!
   name: String!
   parent: ItemCategory!
   updatedAt: DateTime!

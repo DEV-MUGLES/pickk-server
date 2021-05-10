@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Entity,
   Tree,
@@ -7,7 +7,7 @@ import {
   TreeParent,
   CreateDateColumn,
   UpdateDateColumn,
-  PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 
 import { IItemCategory } from '../interfaces/item-category.interface';
@@ -16,7 +16,11 @@ import { IItemCategory } from '../interfaces/item-category.interface';
 @Entity({ name: 'item_category' })
 @Tree('nested-set')
 export class ItemCategoryEntity implements IItemCategory {
-  @PrimaryColumn({
+  @Field(() => Int)
+  @PrimaryGeneratedColumn()
+  id: number;
+
+  @Column({
     type: 'varchar',
     length: 10,
     unique: true,
