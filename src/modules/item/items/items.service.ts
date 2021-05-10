@@ -1,9 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { AddItemPriceInput } from './dtos/item-price.input';
 
 import { UpdateItemInput } from './dtos/item-update.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsRepository } from './items.repository';
+import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 
@@ -28,6 +30,21 @@ export class ItemsService {
     const url = item.addUrl(addItemUrlInput);
     await this.itemsRepository.save(item);
     return url;
+  }
+
+  async addPrice(
+    item: Item,
+    addItemPriceInput: AddItemPriceInput
+  ): Promise<ItemPrice> {
+    const price = item.addPrice(addItemPriceInput);
+    await this.itemsRepository.save(item);
+    return price;
+  }
+
+  async removePrice(item: Item, priceId: number): Promise<Item> {
+    const price = item.removePrice(priceId);
+    await price.remove();
+    return await this.itemsRepository.save(item);
   }
 
   async updateById(

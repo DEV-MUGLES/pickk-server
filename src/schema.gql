@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddItemPriceInput {
+  finalPrice: Int!
+  originalPrice: Int!
+  pickkDiscountAmount: Int!
+  pickkDiscountRate: Int!
+  sellPrice: Int!
+}
+
 input AddItemUrlInput {
   isPrimary: Boolean!
   url: String!
@@ -242,6 +250,7 @@ input LoginByOauthInput {
 }
 
 type Mutation {
+  addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   createCourier(createCourierInput: CreateCourierInput!): Courier!

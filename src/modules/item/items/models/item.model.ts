@@ -7,6 +7,8 @@ import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
 import { ItemPrice } from './item-price.model';
+import { AddItemPriceInput } from '../dtos/item-price.input';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -45,8 +47,14 @@ export class Item extends ItemEntity {
   }
 
   private setPrimaryUrl = (index: number): void => {
-    this.urls.forEach((shippingAddress, _index) => {
-      shippingAddress.isPrimary = _index === index;
+    this.urls.forEach((url, _index) => {
+      url.isPrimary = _index === index;
+    });
+  };
+
+  private setActivePrice = (index: number): void => {
+    this.prices.forEach((price, _index) => {
+      price.isActive = _index === index;
     });
   };
 
@@ -57,5 +65,33 @@ export class Item extends ItemEntity {
       this.setPrimaryUrl(this.urls.length - 1);
     }
     return itemUrl;
+  };
+
+  public addPrice = (addItemPriceInput: AddItemPriceInput): ItemPrice => {
+    const itemPrice = new ItemPrice(addItemPriceInput);
+    this.prices = (this.prices ?? []).concat(itemPrice);
+    if (addItemPriceInput.isActive || this.prices.length === 1) {
+      this.setActivePrice(this.prices.length - 1);
+    }
+    return itemPrice;
+  };
+
+  public removePrice = (priceId: number): ItemPrice => {
+    const index = this.prices.findIndex(({ id }) => id === priceId);
+    if (index < 0) {
+      throw new NotFoundException('ItemPrice Not Found!');
+    }
+    const itemPrice = this.prices[index];
+
+    if (itemPrice.isBase) {
+      throw new BadRequestException('Cannot remove base ItemPrice');
+    }
+
+    this.prices = [
+      ...this.prices.slice(0, index),
+      ...this.prices.slice(index + 1),
+    ];
+
+    return itemPrice;
   };
 }

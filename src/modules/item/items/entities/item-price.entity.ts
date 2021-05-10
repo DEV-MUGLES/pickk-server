@@ -13,7 +13,7 @@ import { ItemPriceUnit } from '../constants/item-price.enum';
 @Index('idx_sellPrice', ['sellPrice'])
 export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   constructor(attributes?: Partial<ItemPriceEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }
