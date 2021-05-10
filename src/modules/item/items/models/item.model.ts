@@ -29,6 +29,21 @@ export class Item extends ItemEntity {
   })
   products: Product[];
 
+  @Field()
+  get originalPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  }
+
+  @Field()
+  get salePrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  }
+
+  @Field()
+  get finalPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  }
+
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((shippingAddress, _index) => {
       shippingAddress.isPrimary = _index === index;

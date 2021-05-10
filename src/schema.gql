@@ -119,6 +119,7 @@ type Item {
   createdAt: DateTime!
   description: String
   detailImages: [ItemDetailImage!]
+  finalPrice: Float!
   id: Int!
   isManaging: Boolean!
   isMdRecommended: Boolean!
@@ -129,10 +130,12 @@ type Item {
   minorCategoryCode: String
   name: String!
   options: [ItemOption!]
+  originalPrice: Float!
   prices: [ItemPrice!]!
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
+  salePrice: Float!
   thumbnailImage: ItemThumbnailImage
   updatedAt: DateTime!
   urls: [ItemUrl!]!
