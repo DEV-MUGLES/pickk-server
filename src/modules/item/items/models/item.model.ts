@@ -6,9 +6,13 @@ import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
+import { ItemPrice } from './item-price.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
+  @Field(() => [ItemPrice])
+  prices: ItemPrice[];
+
   @Field(() => [ItemUrl])
   urls: ItemUrl[];
 

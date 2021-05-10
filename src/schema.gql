@@ -129,6 +129,7 @@ type Item {
   minorCategoryCode: String
   name: String!
   options: [ItemOption!]
+  prices: [ItemPrice!]!
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
@@ -168,6 +169,18 @@ type ItemOptionValue {
   id: Int!
   name: String!
   order: Float!
+  updatedAt: DateTime!
+}
+
+type ItemPrice {
+  createdAt: DateTime!
+  finalPrice: Int!
+  id: Int!
+  itemId: Int!
+  originalPrice: Int!
+  pickkDiscountAmount: Int!
+  pickkDiscountRate: Int!
+  sellPrice: Int!
   updatedAt: DateTime!
 }
 
