@@ -8,14 +8,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  IsBoolean,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  IsString,
-  Min,
-} from 'class-validator';
+import { IsBoolean, IsOptional, IsString } from 'class-validator';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 
@@ -29,7 +22,6 @@ import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemOption } from '../models/item-option.model';
-import { ItemPriceUnit } from '../constants/item.enum';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
@@ -39,7 +31,6 @@ import { Product } from '../../products/models/product.model';
 @Entity({
   name: 'item',
 })
-@Index(['sellPrice'])
 @Index(['providedCode'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
@@ -49,8 +40,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     }
 
     this.name = attributes.name;
-    this.originalPrice = attributes.originalPrice;
-    this.sellPrice = attributes.sellPrice;
     this.providedCode = attributes.providedCode;
 
     this.isManaging = attributes.isManaging;
@@ -85,18 +74,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @IsOptional()
   description?: string;
 
-  @Field(() => Int)
-  @Column()
-  @IsNumber()
-  @Min(1)
-  originalPrice: number;
-
-  @Field(() => Int)
-  @Column()
-  @IsNumber()
-  @Min(1)
-  sellPrice: number;
-
   @Field({ nullable: true })
   @Column({
     type: 'varchar',
@@ -106,23 +83,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @IsString()
   @IsOptional()
   providedCode?: string;
-
-  @Field()
-  @Column({ nullable: true })
-  @IsNumber()
-  @IsOptional()
-  @Min(1)
-  displayPrice?: number;
-
-  @Field(() => ItemPriceUnit, { defaultValue: ItemPriceUnit.KRW })
-  @Column({
-    type: 'enum',
-    enum: ItemPriceUnit,
-    default: ItemPriceUnit.KRW,
-  })
-  @IsEnum(ItemPriceUnit)
-  @IsOptional()
-  priceUnit?: ItemPriceUnit;
 
   @Field({ defaultValue: true })
   @Column({

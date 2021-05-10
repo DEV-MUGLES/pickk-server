@@ -11,11 +11,8 @@ export class UpdateItemInput extends PartialType(
       'description',
       'majorCategoryCode',
       'minorCategoryCode',
-      'originalPrice',
-      'displayPrice',
       'isMdRecommended',
       'isSellable',
-      'sellPrice',
     ],
     InputType
   )
