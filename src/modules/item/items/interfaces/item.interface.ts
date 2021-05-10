@@ -8,8 +8,7 @@ import { IItemUrl } from './item-url.interface';
 
 export interface IItem {
   name: string;
-  originalPrice: number;
-  sellPrice: number;
+  /** (제휴아이템만) 공식홈페이지에서 사용된 식별자입니다. */
   providedCode?: string;
 
   isManaging: boolean;
