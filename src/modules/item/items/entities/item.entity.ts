@@ -26,6 +26,7 @@ import { ItemSalePolicy } from '../models/item-sale-policy.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { Product } from '../../products/models/product.model';
+import { ItemPrice } from '../models/item-price.model';
 
 @ObjectType()
 @Entity({
@@ -49,6 +50,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.thumbnailImage = attributes.thumbnailImage;
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
+
+    this.prices = attributes.prices;
     this.urls = attributes.urls;
     this.detailImages = attributes.detailImages;
     this.options = attributes.options;
@@ -124,6 +127,12 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Field(() => Int)
   @Column()
   brandId: number;
+
+  @OneToMany('ItemPriceEntity', 'item', {
+    cascade: true,
+    eager: true,
+  })
+  prices: ItemPrice[];
 
   @OneToMany('ItemUrlEntity', 'item', {
     cascade: true,
