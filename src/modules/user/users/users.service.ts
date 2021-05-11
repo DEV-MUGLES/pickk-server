@@ -19,6 +19,18 @@ export class UsersService {
     private readonly usersRepository: UsersRepository
   ) {}
 
+  async insert(): Promise<void> {
+    const dummy = [];
+    let i = 0;
+    while (i < 20000) {
+      dummy.push(i);
+      i++;
+    }
+    console.log(dummy);
+    await this.usersRepository.bulkInsert(dummy);
+    return;
+  }
+
   async list(relations: string[] = []): Promise<User[]> {
     const users = await this.usersRepository.find({ relations });
     return this.usersRepository.entityToModelMany(users);

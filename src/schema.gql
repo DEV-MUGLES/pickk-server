@@ -256,6 +256,7 @@ type Mutation {
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
+  insert(number: Float!): Float!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
@@ -310,6 +311,7 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  genRandomNickname: RandomNickname!
   item(id: Int!): Item!
   itemCategories: [ItemCategory!]!
   items: [Item!]!
@@ -329,6 +331,10 @@ type Query {
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   user(id: Int!): User!
   users: [User!]!
+}
+
+type RandomNickname {
+  nickname: String!
 }
 
 type SaleStrategy {
