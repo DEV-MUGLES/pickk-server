@@ -8,7 +8,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { IsBoolean, IsOptional, IsString } from 'class-validator';
+import { IsBoolean, IsOptional, IsString, IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 
@@ -17,8 +17,6 @@ import { Brand } from '../../brands/models/brand.model';
 import { IItem } from '../interfaces/item.interface';
 import { ItemCategory } from '../../item-categories/models/item-category.model';
 import { ItemCategoryEntity } from '../../item-categories/entities/item-category.entity';
-import { ItemThumbnailImage } from '../models/item-thumbnail-image.model';
-import { ItemThumbnailImageEntity } from './item-thumbnail-image.entity';
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemOption } from '../models/item-option.model';
@@ -42,12 +40,12 @@ export class ItemEntity extends BaseIdEntity implements IItem {
 
     this.name = attributes.name;
     this.providedCode = attributes.providedCode;
+    this.imageUrl = attributes.imageUrl;
 
     this.isManaging = attributes.isManaging;
     this.isMdRecommended = attributes.isManaging;
     this.isSellable = attributes.isSellable;
 
-    this.thumbnailImage = attributes.thumbnailImage;
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
 
@@ -75,7 +73,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   @IsString()
   @IsOptional()
-  description?: string;
+  providedCode?: string;
 
   @Field({ nullable: true })
   @Column({
@@ -85,7 +83,12 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   @IsString()
   @IsOptional()
-  providedCode?: string;
+  description?: string;
+
+  @Field()
+  @Column()
+  @IsUrl()
+  imageUrl: string;
 
   @Field({ defaultValue: true })
   @Column({
@@ -107,15 +110,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   @IsBoolean()
   isSellable: boolean;
-
-  @Field(() => ItemThumbnailImage, { nullable: true })
-  @OneToOne(() => ItemThumbnailImageEntity, {
-    eager: true,
-    cascade: true,
-    nullable: true,
-  })
-  @JoinColumn()
-  thumbnailImage: ItemThumbnailImage;
 
   @Field(() => Brand)
   @ManyToOne(() => BrandEntity, {

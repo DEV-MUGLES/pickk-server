@@ -12,12 +12,15 @@ export interface IItem {
   name: string;
   /** (제휴아이템만) 공식홈페이지에서 사용된 식별자입니다. */
   providedCode?: string;
+  description?: string;
+
+  /** Item 정보는 크롤링 과정에서 Bulk로 다룰 일이 많아 이미지를 필드로 처리합니다. */
+  imageUrl: string;
 
   isManaging: boolean;
   isMdRecommended: boolean;
   isSellable: boolean;
 
-  thumbnailImage: IImage;
   brand: IBrand;
 
   prices: IItemPrice[];

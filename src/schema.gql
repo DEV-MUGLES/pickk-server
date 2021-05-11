@@ -129,6 +129,7 @@ type Item {
   detailImages: [ItemDetailImage!]
   finalPrice: Float!
   id: Int!
+  imageUrl: String!
   isManaging: Boolean!
   isMdRecommended: Boolean!
   isSellable: Boolean!
@@ -144,7 +145,6 @@ type Item {
   providedCode: String
   salePolicy: ItemSalePolicy
   salePrice: Float!
-  thumbnailImage: ItemThumbnailImage
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -202,13 +202,6 @@ type ItemSalePolicy {
   isUsingStock: Boolean!
   quantityLimit: Int!
   updatedAt: DateTime!
-}
-
-type ItemThumbnailImage {
-  angle: Int!
-  createdAt: DateTime!
-  key: String!
-  url: String!
 }
 
 type ItemUrl {

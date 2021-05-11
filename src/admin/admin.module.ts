@@ -12,7 +12,6 @@ import { AuthService } from '@src/authentication/auth.service';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { UserAvatarImageEntity } from '@src/modules/user/users/entities/user-avatar-image.entity';
 import { ShippingAddressEntity } from '@src/modules/user/users/entities/shipping-address.entity';
-import { ItemThumbnailImageEntity } from '@src/modules/item/items/entities/item-thumbnail-image.entity';
 
 AdminBro.registerAdapter({ Database, Resource });
 
@@ -32,7 +31,6 @@ AdminBro.registerAdapter({ Database, Resource });
             BrandEntity,
             CourierEntity,
             ItemEntity,
-            ItemThumbnailImageEntity,
           ],
         },
         auth: {
