@@ -133,9 +133,9 @@ type Item {
   isMdRecommended: Boolean!
   isSellable: Boolean!
   majorCategory: ItemCategory
-  majorCategoryCode: String
+  majorCategoryId: String
   minorCategory: ItemCategory
-  minorCategoryCode: String
+  minorCategoryId: String
   name: String!
   options: [ItemOption!]
   originalPrice: Float!
@@ -455,8 +455,8 @@ input UpdateItemInput {
   description: String
   isMdRecommended: Boolean = true
   isSellable: Boolean = false
-  majorCategoryCode: String
-  minorCategoryCode: String
+  majorCategoryId: String
+  minorCategoryId: String
   name: String
 }
 
