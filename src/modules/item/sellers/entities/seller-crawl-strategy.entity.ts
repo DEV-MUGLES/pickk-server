@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { IsUrl } from 'class-validator';
+import { IsBoolean, IsUrl, MaxLength } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interface';
 
@@ -14,17 +14,41 @@ export class SellerCrawlStrategyEntity
     type: 'varchar',
     length: 50,
   })
-  itemLinksSelector: string;
+  @MaxLength(50)
+  itemsSelector: string;
 
   @Field()
   @Column({
     type: 'varchar',
-    length: 50,
+    length: 30,
   })
-  @IsUrl()
-  baseUrl: string;
+  @MaxLength(30)
+  codeRegex: string;
 
   @Field()
   @Column()
+  @IsBoolean()
+  pagination: boolean;
+
+  @Field()
+  @Column({
+    type: 'varchar',
+    length: 20,
+  })
+  @MaxLength(20)
+  pageParam: string;
+
+  @Field()
+  @Column({
+    type: 'varchar',
+    length: 75,
+  })
+  @IsUrl()
+  @MaxLength(75)
+  baseUrl: string;
+
+  @Field({ description: "'<>'으로 join된 상태다." })
+  @Column()
+  @MaxLength(255)
   startPathNamesJoin: string;
 }

@@ -55,7 +55,7 @@ input CreateSellerClaimPolicyInput {
 
 input CreateSellerCrawlPolicyInput {
   isInspectingNew: Boolean!
-  isUpdatingSaleItemInfo: Boolean!
+  isUpdatingItems: Boolean!
 }
 
 input CreateSellerInput {
@@ -257,6 +257,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
+  removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
@@ -377,15 +378,20 @@ type SellerCrawlPolicy {
   createdAt: DateTime!
   id: Int!
   isInspectingNew: Boolean!
-  isUpdatingSaleItemInfo: Boolean!
+  isUpdatingItems: Boolean!
   updatedAt: DateTime!
 }
 
 type SellerCrawlStrategy {
   baseUrl: String!
+  codeRegex: String!
   createdAt: DateTime!
   id: Int!
-  itemLinksSelector: String!
+  itemsSelector: String!
+  pageParam: String!
+  pagination: Boolean!
+
+  """'<>'으로 join된 상태다."""
   startPathNamesJoin: String!
   updatedAt: DateTime!
 }
@@ -462,7 +468,7 @@ input UpdateSellerClaimPolicyInput {
 
 input UpdateSellerCrawlPolicyInput {
   isInspectingNew: Boolean
-  isUpdatingSaleItemInfo: Boolean
+  isUpdatingItems: Boolean
 }
 
 input UpdateSellerInput {

@@ -54,7 +54,7 @@ describe('SellersService', () => {
       },
       crawlPolicyInput: {
         isInspectingNew: faker.datatype.boolean(),
-        isUpdatingSaleItemInfo: faker.datatype.boolean(),
+        isUpdatingItems: faker.datatype.boolean(),
       },
       shippingPolicyInput: {
         minimumAmountForFree: faker.datatype.number(),

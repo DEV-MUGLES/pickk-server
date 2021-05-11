@@ -15,7 +15,7 @@ export class CreateSellerClaimPolicyInput extends PickType(
 @InputType()
 export class CreateSellerCrawlPolicyInput extends PickType(
   SellerCrawlPolicy,
-  ['isInspectingNew', 'isUpdatingSaleItemInfo'],
+  ['isInspectingNew', 'isUpdatingItems'],
   InputType
 ) {}
 
