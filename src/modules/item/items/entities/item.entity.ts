@@ -58,8 +58,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.products = attributes.products;
     this.majorCategory = attributes.majorCategory;
     this.minorCategory = attributes.minorCategory;
-    this.majorCategoryCode = attributes.majorCategoryCode;
-    this.minorCategoryCode = attributes.minorCategoryCode;
+    this.majorCategoryId = attributes.majorCategoryId;
+    this.minorCategoryId = attributes.minorCategoryId;
   }
 
   @Field()
@@ -165,21 +165,19 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     nullable: true,
   })
   @Column({
-    type: 'varchar',
-    length: 20,
+    type: 'int',
     nullable: true,
   })
-  majorCategoryCode: string;
+  majorCategoryId: string;
 
   @Field({
     nullable: true,
   })
   @Column({
-    type: 'varchar',
-    length: 20,
+    type: 'int',
     nullable: true,
   })
-  minorCategoryCode: string;
+  minorCategoryId: string;
 
   @Field(() => ItemCategory, {
     nullable: true,
@@ -187,7 +185,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @ManyToOne(() => ItemCategoryEntity, {
     nullable: true,
   })
-  @JoinColumn({ name: 'majorCategoryCode', referencedColumnName: 'code' })
+  @JoinColumn()
   majorCategory: ItemCategory;
 
   @Field(() => ItemCategory, {
@@ -196,6 +194,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @ManyToOne(() => ItemCategoryEntity, {
     nullable: true,
   })
-  @JoinColumn({ name: 'minorCategoryCode', referencedColumnName: 'code' })
+  @JoinColumn()
   minorCategory: ItemCategory;
 }
