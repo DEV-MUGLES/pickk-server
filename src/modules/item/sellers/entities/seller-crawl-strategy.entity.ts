@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { IsBoolean, IsUrl, MaxLength } from 'class-validator';
+import { IsBoolean, IsOptional, IsUrl, MaxLength } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interface';
 
@@ -30,12 +30,14 @@ export class SellerCrawlStrategyEntity
   @IsBoolean()
   pagination: boolean;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({
     type: 'varchar',
     length: 20,
+    nullable: true,
   })
   @MaxLength(20)
+  @IsOptional()
   pageParam: string;
 
   @Field()

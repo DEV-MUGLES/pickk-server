@@ -5,7 +5,7 @@ export interface ISellerCrawlStrategy {
 
   pagination: boolean;
 
-  pageParam: string;
+  pageParam?: string;
 
   baseUrl: string;
 

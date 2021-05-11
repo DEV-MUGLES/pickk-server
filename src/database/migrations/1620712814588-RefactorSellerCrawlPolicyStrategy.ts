@@ -21,7 +21,7 @@ export class RefactorSellerCrawlPolicyStrategy1620712814588
       'ALTER TABLE `seller_crawl_strategy` ADD `pagination` tinyint NOT NULL'
     );
     await queryRunner.query(
-      'ALTER TABLE `seller_crawl_strategy` ADD `pageParam` varchar(20) NOT NULL'
+      'ALTER TABLE `seller_crawl_strategy` ADD `pageParam` varchar(20) NULL'
     );
     await queryRunner.query(
       'ALTER TABLE `seller_crawl_strategy` DROP COLUMN `baseUrl`'

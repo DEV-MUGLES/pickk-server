@@ -388,7 +388,7 @@ type SellerCrawlStrategy {
   createdAt: DateTime!
   id: Int!
   itemsSelector: String!
-  pageParam: String!
+  pageParam: String
   pagination: Boolean!
 
   """'<>'으로 join된 상태다."""
