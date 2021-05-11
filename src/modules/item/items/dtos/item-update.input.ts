@@ -9,8 +9,8 @@ export class UpdateItemInput extends PartialType(
     [
       'name',
       'description',
-      'majorCategoryCode',
-      'minorCategoryCode',
+      'majorCategoryId',
+      'minorCategoryId',
       'isMdRecommended',
       'isSellable',
     ],
