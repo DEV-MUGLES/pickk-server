@@ -1,6 +1,14 @@
 export interface ISellerCrawlStrategy {
-  itemLinksSelector: string;
+  itemsSelector: string;
+
+  codeRegex: string;
+
+  pagination: boolean;
+
+  pageParam?: string;
 
   baseUrl: string;
+
+  /** spliter: "<>" */
   startPathNamesJoin: string;
 }

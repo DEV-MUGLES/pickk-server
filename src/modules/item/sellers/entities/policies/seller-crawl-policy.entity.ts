@@ -22,7 +22,7 @@ export class SellerCrawlPolicyEntity
     this.updatedAt = attributes.updatedAt;
 
     this.isInspectingNew = attributes.isInspectingNew;
-    this.isUpdatingSaleItemInfo = attributes.isUpdatingSaleItemInfo;
+    this.isUpdatingItems = attributes.isUpdatingItems;
   }
 
   @Field()
@@ -33,5 +33,5 @@ export class SellerCrawlPolicyEntity
   @Field()
   @Column()
   @IsBoolean()
-  isUpdatingSaleItemInfo: boolean;
+  isUpdatingItems: boolean;
 }

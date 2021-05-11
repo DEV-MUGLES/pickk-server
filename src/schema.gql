@@ -55,7 +55,7 @@ input CreateSellerClaimPolicyInput {
 
 input CreateSellerCrawlPolicyInput {
   isInspectingNew: Boolean!
-  isUpdatingSaleItemInfo: Boolean!
+  isUpdatingItems: Boolean!
 }
 
 input CreateSellerInput {
@@ -378,15 +378,20 @@ type SellerCrawlPolicy {
   createdAt: DateTime!
   id: Int!
   isInspectingNew: Boolean!
-  isUpdatingSaleItemInfo: Boolean!
+  isUpdatingItems: Boolean!
   updatedAt: DateTime!
 }
 
 type SellerCrawlStrategy {
   baseUrl: String!
+  codeRegex: String!
   createdAt: DateTime!
   id: Int!
-  itemLinksSelector: String!
+  itemsSelector: String!
+  pageParam: String
+  pagination: Boolean!
+
+  """'<>'으로 join된 상태다."""
   startPathNamesJoin: String!
   updatedAt: DateTime!
 }
@@ -463,7 +468,7 @@ input UpdateSellerClaimPolicyInput {
 
 input UpdateSellerCrawlPolicyInput {
   isInspectingNew: Boolean
-  isUpdatingSaleItemInfo: Boolean
+  isUpdatingItems: Boolean
 }
 
 input UpdateSellerInput {
