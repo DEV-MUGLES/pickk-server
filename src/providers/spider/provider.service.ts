@@ -2,8 +2,12 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { SpiderConfigService } from '@src/config/providers/spider/config.service';
-import { SellersService } from '@src/modules/item/sellers/sellers.service';
-import { SpiderSellerRequestDto } from './interfaces/spider.interface';
+import { SellersService } from '@item/sellers/sellers.service';
+
+import {
+  SpiderSellerRequestDto,
+  SpiderSellerResultDto,
+} from './dto/spider.dto';
 
 @Injectable()
 export class SpiderService {
@@ -39,5 +43,9 @@ export class SpiderService {
     await Promise.all(
       requestDtos.map((requestDto) => axios.post(requestUrl, requestDto))
     );
+  }
+
+  async processSellerResult(sellerResult: SpiderSellerResultDto) {
+    const { items } = sellerResult;
   }
 }
