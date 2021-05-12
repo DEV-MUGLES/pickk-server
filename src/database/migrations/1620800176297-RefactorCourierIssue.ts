@@ -16,9 +16,6 @@ export class RefactorCourierIssue1620800176297 implements MigrationInterface {
       'ALTER TABLE `courier` ADD UNIQUE INDEX `IDX_9f7b0be627db80955da0fc8597` (`issueId`)'
     );
     await queryRunner.query(
-      'ALTER TABLE `seller` CHANGE `courierId` `courierId` int NOT NULL'
-    );
-    await queryRunner.query(
       'CREATE UNIQUE INDEX `REL_9f7b0be627db80955da0fc8597` ON `courier` (`issueId`)'
     );
     await queryRunner.query(
@@ -32,9 +29,6 @@ export class RefactorCourierIssue1620800176297 implements MigrationInterface {
     );
     await queryRunner.query(
       'DROP INDEX `REL_9f7b0be627db80955da0fc8597` ON `courier`'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `seller` CHANGE `courierId` `courierId` int NULL'
     );
     await queryRunner.query(
       'ALTER TABLE `courier` DROP INDEX `IDX_9f7b0be627db80955da0fc8597`'
