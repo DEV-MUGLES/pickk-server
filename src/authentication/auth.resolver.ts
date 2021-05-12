@@ -62,4 +62,9 @@ export class AuthResolver {
     }
     return false;
   }
+
+  @Query(() => String)
+  async genRandomNickname(): Promise<string> {
+    return await this.authService.genRandomNickname();
+  }
 }

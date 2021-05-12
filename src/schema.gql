@@ -303,6 +303,7 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  genRandomNickname: String!
   item(id: Int!): Item!
   itemCategories: [ItemCategory!]!
   items: [Item!]!
