@@ -14,7 +14,6 @@ import {
   UserOauthNotFoundExeption,
 } from './exceptions/user.exception';
 import { CreateJwtPayloadInput } from './dto/jwt.dto';
-import { RandomNickname } from './dto/nickname.dto';
 import { genRandomNickname } from './helpers/auth.helper';
 
 @Injectable()
@@ -66,11 +65,12 @@ export class AuthService {
     };
   }
 
-  async genRandomNickname(): Promise<RandomNickname> {
-    let nickname = genRandomNickname();
-    while (await this.usersService.findOne({ nickname })) {
+  async genRandomNickname(): Promise<string> {
+    let nickname: string;
+    do {
       nickname = genRandomNickname();
-    }
-    return { nickname };
+    } while (await this.usersService.findOne({ nickname }));
+
+    return nickname;
   }
 }

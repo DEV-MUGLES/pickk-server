@@ -10,7 +10,6 @@ import { LoginByCodeInput, LoginByOauthInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { ForbiddenResourceException } from './exceptions/user.exception';
 import { JwtRefreshGuard } from './guards';
-import { RandomNickname } from './dto/nickname.dto';
 
 @Resolver()
 export class AuthResolver {
@@ -64,8 +63,8 @@ export class AuthResolver {
     return false;
   }
 
-  @Query(() => RandomNickname)
-  async genRandomNickname() {
+  @Query(() => String)
+  async genRandomNickname(): Promise<string> {
     return await this.authService.genRandomNickname();
   }
 }
