@@ -74,7 +74,7 @@ describe('CouriersResolver', () => {
 
       const result = await couriersResolver.removeCourierIssue(courierId);
       expect(result).toEqual(removedCourier);
-      expect(couriersServiceGetSpy).toHaveBeenCalledWith(courierId);
+      expect(couriersServiceGetSpy).toHaveBeenCalledWith(courierId, ['issue']);
       expect(couriersServiceRemoveIssueSpy).toHaveBeenCalledWith(courier);
     });
   });
