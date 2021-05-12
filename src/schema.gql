@@ -256,7 +256,6 @@ type Mutation {
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
-  insert(number: Float!): Float!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!

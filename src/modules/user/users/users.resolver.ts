@@ -38,10 +38,4 @@ export class UsersResolver extends BaseResolver {
   ): Promise<UserEntity> {
     return await this.usersService.create(createUserInput);
   }
-
-  @Mutation(() => Number)
-  async insert(@Args('number') number: number) {
-    await this.usersService.insert();
-    return number;
-  }
 }
