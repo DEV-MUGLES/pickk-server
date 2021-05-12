@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CouriersRepository } from './couriers.repository';
 import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
+import { CourierIssueNotFoundException } from './exceptions/courier.exception';
 import { CourierIssue } from './models/courier-issue.model';
 import { Courier } from './models/courier.model';
 
@@ -41,7 +42,15 @@ export class CouriersService {
   }
 
   async removeIssue(courier: Courier): Promise<Courier> {
-    courier.removeIssue();
-    return await this.couriersRepository.save(courier);
+    const { issue } = courier;
+
+    if (!issue) {
+      throw new CourierIssueNotFoundException();
+    }
+    courier.issue = null;
+    const _courier = await this.couriersRepository.save(courier);
+
+    await issue.remove();
+    return _courier;
   }
 }

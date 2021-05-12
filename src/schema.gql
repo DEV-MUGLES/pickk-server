@@ -36,8 +36,11 @@ type Courier {
 }
 
 type CourierIssue {
+  createdAt: DateTime!
   endAt: DateTime!
+  id: Int!
   message: String!
+  updatedAt: DateTime!
 }
 
 input CreateCourierInput {

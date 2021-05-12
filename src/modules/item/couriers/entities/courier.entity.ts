@@ -7,9 +7,10 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { ICourier } from '../interfaces/courier.interface';
 import { CourierIssue } from '../models/courier-issue.model';
+import { CourierIssueEntity } from './courier-issue.entity';
 
 @ObjectType()
 @Entity({
@@ -49,6 +50,8 @@ export class CourierEntity extends BaseIdEntity implements ICourier {
   @IsUrl()
   returnReserveUrl: string;
 
-  @Column(() => CourierIssue)
+  @Field(() => CourierIssue, { nullable: true })
+  @OneToOne(() => CourierIssueEntity, { cascade: true, nullable: true })
+  @JoinColumn()
   issue?: CourierIssue;
 }

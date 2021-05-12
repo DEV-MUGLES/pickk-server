@@ -4,6 +4,7 @@ import * as faker from 'faker';
 import { CouriersRepository } from './couriers.repository';
 import { CouriersService } from './couriers.service';
 import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
+import { CourierIssueNotFoundException } from './exceptions/courier.exception';
 import { CourierIssue } from './models/courier-issue.model';
 import { Courier } from './models/courier.model';
 
@@ -50,32 +51,14 @@ describe('CouriersService', () => {
   });
 
   describe('removeIssue', () => {
-    it('should return courier when success', async () => {
-      const courierIssue = new CourierIssue();
-      const courier = new Courier({
-        id: faker.datatype.number(),
-        issue: courierIssue,
-      });
+    it('should throw CourierIssueNotFoundException when not found', async () => {
+      const courier = new Courier();
 
-      const courierRemoveIssueSpy = jest
-        .spyOn(courier, 'removeIssue')
-        .mockImplementationOnce(() => {
-          courier.issue = null;
-        });
-      const couriersRepositorySaveSpy = jest
-        .spyOn(couriersRepository, 'save')
-        .mockResolvedValueOnce(
-          new Courier({
-            ...courier,
-            issue: null,
-          })
-        );
-
-      const result = await couriersService.removeIssue(courier);
-      expect(result.id).toEqual(courier.id);
-      expect(result.issue).toEqual(null);
-      expect(courierRemoveIssueSpy).toBeCalledTimes(1);
-      expect(couriersRepositorySaveSpy).toHaveBeenCalledWith(courier);
+      try {
+        await couriersService.removeIssue(courier);
+      } catch (err) {
+        expect(err).toBeInstanceOf(CourierIssueNotFoundException);
+      }
     });
   });
 });

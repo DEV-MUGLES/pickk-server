@@ -1,11 +1,7 @@
 import * as faker from 'faker';
 
 import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
-import {
-  CourierIssueInvalidEndAtException,
-  CourierIssueNotFoundException,
-} from '../exceptions/courier.exception';
-import { CourierIssue } from './courier-issue.model';
+import { CourierIssueInvalidEndAtException } from '../exceptions/courier.exception';
 import { Courier } from './courier.model';
 
 describe('Courier', () => {
@@ -30,26 +26,6 @@ describe('Courier', () => {
 
       expect(() => courier.updateIssue(updateCourierIssueInput)).toThrow(
         CourierIssueInvalidEndAtException
-      );
-    });
-  });
-
-  describe('removeIssue', () => {
-    it('should return undefined when success', () => {
-      const courierIssue = new CourierIssue();
-      const courier = new Courier({
-        issue: courierIssue,
-      });
-
-      const result = courier.removeIssue();
-      expect(result).toEqual(undefined);
-    });
-
-    it('should throw CourierIssueNotFoundException when not found', () => {
-      const courier = new Courier();
-
-      expect(() => courier.removeIssue()).toThrow(
-        CourierIssueNotFoundException
       );
     });
   });

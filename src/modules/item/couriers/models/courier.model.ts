@@ -3,10 +3,7 @@ import dayjs from 'dayjs';
 
 import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
 import { CourierEntity } from '../entities/courier.entity';
-import {
-  CourierIssueInvalidEndAtException,
-  CourierIssueNotFoundException,
-} from '../exceptions/courier.exception';
+import { CourierIssueInvalidEndAtException } from '../exceptions/courier.exception';
 import { CourierIssue } from './courier-issue.model';
 
 @ObjectType()
@@ -37,15 +34,5 @@ export class Courier extends CourierEntity {
     }
     this.issue = new CourierIssue(updateCourierIssueInput);
     return this.issue;
-  }
-
-  removeIssue() {
-    if (!this.issue) {
-      throw new CourierIssueNotFoundException();
-    }
-    this.issue = {
-      message: null,
-      endAt: null,
-    };
   }
 }

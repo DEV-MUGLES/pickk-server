@@ -1,19 +1,30 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { IsString } from 'class-validator';
-import { Column } from 'typeorm';
+import { Column, Entity } from 'typeorm';
 import { ICourierIssue } from '../interfaces/courier-issue.interface';
 
 @ObjectType()
-export class CourierIssueEntity implements ICourierIssue {
+@Entity({
+  name: 'courier_issue',
+})
+export class CourierIssueEntity extends BaseIdEntity implements ICourierIssue {
+  constructor(attributes?: Partial<CourierIssueEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.message = attributes.message;
+    this.endAt = attributes.endAt;
+  }
+
   @Field()
-  @Column({ nullable: true })
+  @Column()
   @IsString()
   message: string;
 
   @Field()
-  @Column({
-    type: 'timestamp',
-    nullable: true,
-  })
+  @Column()
   endAt: Date;
 }

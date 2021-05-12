@@ -15,6 +15,8 @@ import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 
 @Resolver(() => Courier)
 export class CouriersResolver extends BaseResolver {
+  relations = ['issue'];
+
   constructor(
     @Inject(CouriersService) private couriersService: CouriersService
   ) {
@@ -74,7 +76,7 @@ export class CouriersResolver extends BaseResolver {
   async removeCourierIssue(
     @IntArgs('courierId') courierId: number
   ): Promise<Courier> {
-    const courier = await this.couriersService.get(courierId);
+    const courier = await this.couriersService.get(courierId, ['issue']);
     return await this.couriersService.removeIssue(courier);
   }
 }

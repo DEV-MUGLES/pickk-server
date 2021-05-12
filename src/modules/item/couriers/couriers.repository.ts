@@ -9,9 +9,6 @@ import { Courier } from './models/courier.model';
 @EntityRepository(CourierEntity)
 export class CouriersRepository extends BaseRepository<CourierEntity, Courier> {
   entityToModel(entity: CourierEntity, transformOptions = {}): Courier {
-    if (entity.issue.endAt === null) {
-      delete entity.issue;
-    }
     return plainToClass(Courier, entity, transformOptions) as Courier;
   }
 
