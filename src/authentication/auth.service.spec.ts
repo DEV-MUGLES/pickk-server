@@ -40,20 +40,37 @@ describe('AuthService', () => {
   });
 
   describe('genRandomNickname', () => {
-    it('생성된 랜덤닉네임이 중복된 경우 새로운 랜덤닉네임을 생성한다.', async () => {
-      let nickname = faker.lorem.text();
+    it('생성한 닉네임의 유저가 존재하는 경우 반복해서 다시 시도한다.', async () => {
+      const count = Math.max(faker.datatype.number(100), 1);
+      const NICKNAME = 'nickname';
 
       const authHelperGenRandomNumberSpy = jest
         .spyOn(authHelper, 'genRandomNickname')
-        .mockImplementation(() => {
-          nickname = faker.lorem.text();
-          return nickname;
-        });
+        .mockReturnValue(NICKNAME);
+
+      let i = 0;
+      const usersServiceFindOneSpy = jest
+        .spyOn(usersService, 'findOne')
+        .mockImplementation(async () => (++i < count ? new User() : null));
+
+      const result = await authService.genRandomNickname();
+
+      expect(result).toBe(NICKNAME);
+      // @WARNING: 상단에 같은 method의 spy를 사용하면 CalledTimes에 영향이 있습니다.
+      expect(usersServiceFindOneSpy).toBeCalledTimes(count);
+      expect(authHelperGenRandomNumberSpy).toBeCalledTimes(count);
+    });
+
+    it('생성한 닉네임을 그대로 반환한다.', async () => {
+      const nickname = faker.lorem.text();
+
+      const authHelperGenRandomNumberSpy = jest
+        .spyOn(authHelper, 'genRandomNickname')
+        .mockImplementationOnce(() => nickname);
 
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
-        .mockImplementationOnce(async () => new User({ nickname }))
-        .mockImplementation(() => null);
+        .mockImplementationOnce(() => null);
 
       const result = await authService.genRandomNickname();
 
