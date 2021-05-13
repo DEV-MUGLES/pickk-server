@@ -4,11 +4,11 @@ import { Brand } from '../models/brand.model';
 @InputType()
 export class CreateBrandInput extends PickType(
   Brand,
-  ['nameKor', 'nameEng', 'description'],
+  ['nameKor', 'nameEng', 'description', 'imageUrl'],
   InputType
 ) {}
 
 @InputType()
 export class UpdateBrandInput extends PartialType(
-  PickType(Brand, ['nameKor', 'nameEng', 'description'], InputType)
+  PickType(Brand, ['nameKor', 'nameEng', 'description', 'imageUrl'], InputType)
 ) {}
