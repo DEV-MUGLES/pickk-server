@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { IsOptional, MaxLength } from 'class-validator';
+import { IsOptional, IsUrl, MaxLength } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 import { IBrand } from '../interfaces/brand.interface';
 
@@ -32,4 +32,9 @@ export class BrandEntity extends BaseIdEntity implements IBrand {
   })
   @IsOptional()
   description?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsUrl()
+  imageUrl?: string;
 }

@@ -16,5 +16,6 @@ export class Brand extends BrandEntity {
     this.nameKor = attributes.nameKor;
     this.nameEng = attributes.nameEng;
     this.description = attributes.description;
+    this.imageUrl = attributes.imageUrl;
   }
 }

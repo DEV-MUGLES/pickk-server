@@ -19,6 +19,7 @@ type Brand {
   createdAt: DateTime!
   description: String
   id: Int!
+  imageUrl: String
   nameEng: String
   nameKor: String!
   updatedAt: DateTime!
