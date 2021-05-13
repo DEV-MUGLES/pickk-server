@@ -11,6 +11,7 @@ import { User } from '@src/modules/user/users/models/user.model';
 import { UserPassword } from '@src/modules/user/users/models/user-password.model';
 import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
 import { UserCodeNotFoundExeption } from './exceptions/user.exception';
+import * as authHelper from './helpers/auth.helper';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -36,6 +37,30 @@ describe('AuthService', () => {
     authService = module.get<AuthService>(AuthService);
     usersService = module.get<UsersService>(UsersService);
     jwtService = module.get<JwtService>(JwtService);
+  });
+
+  describe('genRandomNickname', () => {
+    it('생성된 랜덤닉네임이 중복된 경우 새로운 랜덤닉네임을 생성한다.', async () => {
+      let nickname = faker.lorem.text();
+
+      const authHelperGenRandomNumberSpy = jest
+        .spyOn(authHelper, 'genRandomNickname')
+        .mockImplementation(() => {
+          nickname = faker.lorem.text();
+          return nickname;
+        });
+
+      const usersServiceFindOneSpy = jest
+        .spyOn(usersService, 'findOne')
+        .mockImplementationOnce(async () => new User({ nickname }))
+        .mockImplementation(() => null);
+
+      const result = await authService.genRandomNickname();
+
+      expect(result).toBe(nickname);
+      expect(usersServiceFindOneSpy).toBeCalled();
+      expect(authHelperGenRandomNumberSpy).toBeCalled();
+    });
   });
 
   describe('validateCode', () => {
