@@ -7,7 +7,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
 import { AddItemPriceInput } from './dtos/item-price.input';
-import { UpdateItemInput } from './dtos/item-update.input';
+import { UpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';

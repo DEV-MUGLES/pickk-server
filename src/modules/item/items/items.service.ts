@@ -3,11 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@src/common/dtos/pagination.dto';
+
+import { CreateItemInput, UpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsRepository } from './items.repository';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
+import { AddItemPriceInput } from './dtos/item-price.input';
 
 @Injectable()
 export class ItemsService {
@@ -31,6 +34,20 @@ export class ItemsService {
     return await this.itemsRepository.get(id, relations);
   }
 
+  async create(
+    createItemInput: CreateItemInput,
+    relations: string[]
+  ): Promise<Item> {
+    const { priceInput, urlInput, ...itemAttributes } = createItemInput;
+
+    const item = new Item({
+      ...itemAttributes,
+      prices: [new ItemPrice(priceInput)],
+      urls: [new ItemUrl(urlInput)],
+    });
+    const newEntity = await this.itemsRepository.save(item);
+    return await this.get(newEntity.id, relations);
+  }
   async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {
     const url = item.addUrl(addItemUrlInput);
     await this.itemsRepository.save(item);
