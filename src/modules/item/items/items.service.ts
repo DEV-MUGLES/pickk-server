@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { AddItemPriceInput } from './dtos/item-price.input';
+import { plainToClass } from 'class-transformer';
 
-import { UpdateItemInput } from './dtos/item-update.input';
+import { PageInput } from '@src/common/dtos/pagination.dto';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsRepository } from './items.repository';
 import { ItemPrice } from './models/item-price.model';
@@ -16,9 +16,14 @@ export class ItemsService {
     private readonly itemsRepository: ItemsRepository
   ) {}
 
-  async list(relations: string[] = []): Promise<Item[]> {
+  async list(pageInput?: PageInput, relations: string[] = []): Promise<Item[]> {
+    const _pageInput = plainToClass(PageInput, pageInput);
+
     return this.itemsRepository.entityToModelMany(
-      await this.itemsRepository.find({ relations })
+      await this.itemsRepository.find({
+        relations,
+        ...(_pageInput?.pageFilter ?? {}),
+      })
     );
   }
 

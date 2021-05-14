@@ -13,6 +13,7 @@ import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
+import { PageInput } from '@src/common/dtos/pagination.dto';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -34,8 +35,11 @@ export class ItemsResolver extends BaseResolver {
   }
 
   @Query(() => [Item])
-  async items(@Info() info?: GraphQLResolveInfo): Promise<Item[]> {
-    return this.itemsService.list(this.getRelationsFromInfo(info));
+  async items(
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    return this.itemsService.list(pageInput, this.getRelationsFromInfo(info));
   }
 
   @Mutation(() => Item)
