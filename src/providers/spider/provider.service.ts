@@ -19,7 +19,7 @@ export class SpiderService {
     private readonly itemsService: ItemsService
   ) {}
 
-  async requestSellers() {
+  async requestSellers(): Promise<number> {
     const sellers = await this.sellersService
       .list(null, null, ['brand', 'crawlPolicy', 'crawlStrategy'])
       .then((sellers) =>
@@ -46,6 +46,7 @@ export class SpiderService {
     await Promise.all(
       requestDtos.map((requestDto) => axios.post(requestUrl, requestDto))
     );
+    return requestDtos.length;
   }
 
   async processSellerResult(sellerResult: SpiderSellerResultDto) {

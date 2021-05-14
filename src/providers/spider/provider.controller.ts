@@ -9,8 +9,9 @@ export class SpiderController {
 
   @Post('/sellers')
   @HttpCode(200)
-  async requestSellers(): Promise<void> {
-    await this.spiderService.requestSellers();
+  async requestSellers(): Promise<string> {
+    const count = await this.spiderService.requestSellers();
+    return `${count} seller requested!`;
   }
 
   @Patch('/sellers')
