@@ -162,7 +162,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     type: 'int',
     nullable: true,
   })
-  majorCategoryId: string;
+  majorCategoryId?: number;
 
   @Field({
     nullable: true,
@@ -171,7 +171,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     type: 'int',
     nullable: true,
   })
-  minorCategoryId: string;
+  minorCategoryId?: number;
 
   @Field(() => ItemCategory, {
     nullable: true,
@@ -180,7 +180,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     nullable: true,
   })
   @JoinColumn()
-  majorCategory: ItemCategory;
+  majorCategory?: ItemCategory;
 
   @Field(() => ItemCategory, {
     nullable: true,
@@ -189,5 +189,5 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     nullable: true,
   })
   @JoinColumn()
-  minorCategory: ItemCategory;
+  minorCategory?: ItemCategory;
 }

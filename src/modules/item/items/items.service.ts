@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@src/common/dtos/pagination.dto';
+import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
 
 import { CreateItemInput, UpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
@@ -36,7 +37,7 @@ export class ItemsService {
 
   async create(
     createItemInput: CreateItemInput,
-    relations: string[]
+    relations: string[] = []
   ): Promise<Item> {
     const { priceInput, urlInput, ...itemAttributes } = createItemInput;
 
@@ -79,5 +80,48 @@ export class ItemsService {
     updateItemInput: UpdateItemInput
   ): Promise<Item> {
     return await this.itemsRepository.updateEntity(item, updateItemInput);
+  }
+
+  async addByCrawlData(
+    brandId: number,
+    code: string,
+    data: ISpiderItem
+  ): Promise<Item> {
+    return await this.create({
+      brandId,
+      name: data.name,
+      providedCode: code,
+      imageUrl: data.imageUrl,
+      isMdRecommended: false,
+      isSellable: false,
+      urlInput: {
+        isPrimary: true,
+        url: data.url,
+      },
+      priceInput: {
+        originalPrice: data.originalPrice,
+        sellPrice: data.salePrice,
+        pickkDiscountRate: 5,
+        finalPrice: Math.floor((data.salePrice * 19) / 20),
+        isActive: true,
+        isBase: true,
+        isCrawlUpdating: true,
+      },
+    });
+  }
+
+  async updateByCrawlData(item: Item, data: ISpiderItem): Promise<Item> {
+    item.prices.forEach((price) => {
+      if (!price.isCrawlUpdating) {
+        return;
+      }
+      price.originalPrice = data.originalPrice;
+      price.sellPrice = data.salePrice;
+      price.finalPrice =
+        (data.salePrice * (100 - price.pickkDiscountRate)) / 100;
+    });
+    item.name = data.name;
+
+    return await this.itemsRepository.save(item);
   }
 }

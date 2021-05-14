@@ -9,7 +9,9 @@ export class CreateItemInput extends PickType(
   Item,
   [
     'name',
+    'imageUrl',
     'description',
+    'providedCode',
     'brandId',
     'majorCategoryId',
     'minorCategoryId',

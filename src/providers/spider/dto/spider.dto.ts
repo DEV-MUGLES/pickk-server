@@ -15,6 +15,7 @@ export type SpiderSellerRequestDto = Omit<
 export type SpiderSellerResultDto = {
   brandName: string;
   brandId: number;
+  codeRegex: string;
 
   items: ISpiderItem[];
 };
