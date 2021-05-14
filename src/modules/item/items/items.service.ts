@@ -48,6 +48,11 @@ export class ItemsService {
     const newEntity = await this.itemsRepository.save(item);
     return await this.get(newEntity.id, relations);
   }
+
+  async findOne(param: Partial<Item>, relations: string[] = []): Promise<Item> {
+    return await this.itemsRepository.findOneEntity(param, relations);
+  }
+
   async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {
     const url = item.addUrl(addItemUrlInput);
     await this.itemsRepository.save(item);
