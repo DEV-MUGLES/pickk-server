@@ -115,7 +115,7 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   saleStrategy: SaleStrategy;
 
   @Field(() => SellerCrawlStrategy)
-  @ManyToOne(() => SellerCrawlStrategyEntity)
+  @ManyToOne(() => SellerCrawlStrategyEntity, { cascade: true })
   @JoinColumn()
   crawlStrategy: SellerCrawlStrategy;
 

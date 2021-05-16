@@ -7,6 +7,7 @@ import {
   CreateSellerCrawlPolicyInput,
   CreateSellerShippingPolicyInput,
   CreateSellerReturnAddressInput,
+  CreateSellerCrawlStrategyInput,
 } from './seller-policies.input';
 import { Seller } from '../models/seller.model';
 
@@ -42,6 +43,9 @@ export class CreateSellerInput extends PickType(
 
   @Field()
   crawlPolicyInput: CreateSellerCrawlPolicyInput;
+
+  @Field()
+  crawlStrategyInput: CreateSellerCrawlStrategyInput;
 
   @Field()
   shippingPolicyInput: CreateSellerShippingPolicyInput;
