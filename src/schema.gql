@@ -32,6 +32,11 @@ type Brand {
   updatedAt: DateTime!
 }
 
+input BulkUpdateItemInput {
+  isMdRecommended: Boolean
+  isSellable: Boolean
+}
+
 type Courier {
   code: String!
   createdAt: DateTime!
@@ -291,6 +296,7 @@ type Mutation {
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!

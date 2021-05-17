@@ -5,7 +5,11 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@src/common/dtos/pagination.dto';
 import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
 
-import { CreateItemInput, UpdateItemInput } from './dtos/item.input';
+import {
+  CreateItemInput,
+  UpdateItemInput,
+  BulkUpdateItemInput,
+} from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsRepository } from './items.repository';
 import { ItemPrice } from './models/item-price.model';
@@ -80,6 +84,13 @@ export class ItemsService {
     updateItemInput: UpdateItemInput
   ): Promise<Item> {
     return await this.itemsRepository.updateEntity(item, updateItemInput);
+  }
+
+  async bulkUpdate(
+    ids: number[],
+    bulkUpdateItemInput: BulkUpdateItemInput
+  ): Promise<void> {
+    await this.itemsRepository.bulkUpdate(ids, bulkUpdateItemInput);
   }
 
   async addByCrawlData(

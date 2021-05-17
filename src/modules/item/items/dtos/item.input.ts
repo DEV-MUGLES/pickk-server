@@ -1,4 +1,5 @@
 import { InputType, PickType, PartialType, Field } from '@nestjs/graphql';
+import { IsBoolean, IsOptional } from 'class-validator';
 
 import { Item } from '../models/item.model';
 import { AddItemPriceInput } from './item-price.input';
@@ -42,3 +43,16 @@ export class UpdateItemInput extends PartialType(
     InputType
   )
 ) {}
+
+@InputType()
+export class BulkUpdateItemInput {
+  @Field({ nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  isMdRecommended: boolean;
+
+  @Field({ nullable: true })
+  @IsBoolean()
+  @IsOptional()
+  isSellable: boolean;
+}

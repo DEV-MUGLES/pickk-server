@@ -1,5 +1,5 @@
 import { Inject } from '@nestjs/common';
-import { Resolver, Query, Info, Mutation, Args } from '@nestjs/graphql';
+import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
 
 import { BaseResolver } from '@src/common/base.resolver';
 import { IntArgs } from '@src/common/decorators/args.decorator';
@@ -7,7 +7,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
 import { AddItemPriceInput } from './dtos/item-price.input';
-import { UpdateItemInput } from './dtos/item.input';
+import { UpdateItemInput, BulkUpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
@@ -67,6 +67,15 @@ export class ItemsResolver extends BaseResolver {
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId);
     return await this.itemsService.updateById(item, updateItemInput);
+  }
+
+  @Mutation(() => Boolean)
+  async bulkUpdateItems(
+    @Args('ids', { type: () => [Int] }) ids: number[],
+    @Args('bulkUpdateItemInput') bulkUpdateItemInput: BulkUpdateItemInput
+  ): Promise<boolean> {
+    await this.itemsService.bulkUpdate(ids, bulkUpdateItemInput);
+    return true;
   }
 
   @Mutation(() => ItemUrl)

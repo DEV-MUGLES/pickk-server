@@ -1,4 +1,4 @@
-import { EntityRepository } from 'typeorm';
+import { DeepPartial, EntityRepository, getConnection, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
@@ -15,5 +15,17 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+
+  async bulkUpdate(
+    ids: number[],
+    input: DeepPartial<ItemEntity>
+  ): Promise<void> {
+    await getConnection()
+      .createQueryBuilder()
+      .update(ItemEntity)
+      .set({ ...input })
+      .where({ id: In(ids) })
+      .execute();
   }
 }
