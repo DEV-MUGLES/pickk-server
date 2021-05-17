@@ -153,9 +153,10 @@ type Item {
   finalPrice: Float!
   id: Int!
   imageUrl: String!
-  isManaging: Boolean!
+  isInfiniteStock: Boolean!
   isMdRecommended: Boolean!
   isSellable: Boolean!
+  isSoldout: Boolean!
   majorCategory: ItemCategory
   majorCategoryId: Float
   minorCategory: ItemCategory

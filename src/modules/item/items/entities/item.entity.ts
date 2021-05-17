@@ -42,8 +42,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.providedCode = attributes.providedCode;
     this.imageUrl = attributes.imageUrl;
 
-    this.isManaging = attributes.isManaging;
-    this.isMdRecommended = attributes.isManaging;
+    this.isInfiniteStock = attributes.isInfiniteStock;
+    this.isSoldout = attributes.isSoldout;
+    this.isMdRecommended = attributes.isMdRecommended;
     this.isSellable = attributes.isSellable;
 
     this.brand = attributes.brand;
@@ -95,7 +96,14 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: true,
   })
   @IsBoolean()
-  isManaging: boolean;
+  isInfiniteStock: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({
+    default: false,
+  })
+  @IsBoolean()
+  isSoldout: boolean;
 
   @Field({ defaultValue: true })
   @Column({

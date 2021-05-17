@@ -17,9 +17,10 @@ export interface IItem {
   /** Item 정보는 크롤링 과정에서 Bulk로 다룰 일이 많아 이미지를 필드로 처리합니다. */
   imageUrl: string;
 
-  isManaging: boolean;
   isMdRecommended: boolean;
   isSellable: boolean;
+  isInfiniteStock: boolean;
+  isSoldout: boolean;
 
   brand: IBrand;
 
