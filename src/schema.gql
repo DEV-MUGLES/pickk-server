@@ -206,6 +206,15 @@ type ItemDetailImage {
   url: String!
 }
 
+input ItemFilter {
+  isMdRecommended: Boolean
+  isPurchasable: Boolean
+  isSellable: Boolean
+
+  """아이템 이름(name)으로 검색합니다."""
+  search: String
+}
+
 type ItemNotice {
   createdAt: DateTime!
   endAt: DateTime
@@ -393,7 +402,7 @@ type Query {
   itemCategoryTree: [ItemCategory!]!
   itemMajorCategories: [ItemCategory!]!
   itemMinorCategories: [ItemCategory!]!
-  items(pageInput: PageInput): [Item!]!
+  items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!

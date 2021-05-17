@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@src/common/dtos/pagination.dto';
+import { parseFilter } from '@src/common/helpers/filter.helpers';
 import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
 
 import {
@@ -21,6 +22,7 @@ import {
   UpdateItemNoticeInput,
 } from './dtos/item-notice.input';
 import { ItemNotice } from './models/item-notice.model';
+import { ItemFilter } from './dtos/item.filter';
 
 @Injectable()
 export class ItemsService {
@@ -29,12 +31,18 @@ export class ItemsService {
     private readonly itemsRepository: ItemsRepository
   ) {}
 
-  async list(pageInput?: PageInput, relations: string[] = []): Promise<Item[]> {
+  async list(
+    itemFilter?: ItemFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<Item[]> {
+    const _itemFilter = plainToClass(ItemFilter, itemFilter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
     return this.itemsRepository.entityToModelMany(
       await this.itemsRepository.find({
         relations,
+        where: parseFilter(_itemFilter, pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
       })
     );

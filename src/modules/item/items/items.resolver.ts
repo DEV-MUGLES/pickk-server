@@ -22,6 +22,7 @@ import {
 import { Roles } from '@src/authentication/decorators/roles.decorator';
 import { JwtAuthGuard } from '@src/authentication/guards';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
+import { ItemFilter } from './dtos/item.filter';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -59,10 +60,12 @@ export class ItemsResolver extends BaseResolver {
 
   @Query(() => [Item])
   async items(
+    @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item[]> {
     return await this.itemsService.list(
+      itemFilter,
       pageInput,
       this.getRelationsFromInfo(info)
     );
