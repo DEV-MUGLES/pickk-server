@@ -11,9 +11,7 @@ export class ItemCategoriesService {
     private readonly itemCategoriesRepository: ItemCategoriesRepository
   ) {}
 
-  async list(relations: string[] = []): Promise<ItemCategory[]> {
-    return await this.itemCategoriesRepository.find({
-      relations,
-    });
+  async trees(): Promise<ItemCategory[]> {
+    return await this.itemCategoriesRepository.findTrees();
   }
 }

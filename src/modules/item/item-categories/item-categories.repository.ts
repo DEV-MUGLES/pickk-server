@@ -1,15 +1,11 @@
-import { BaseRepository } from '@src/common/base.repository';
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, TreeRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { ItemCategoryEntity } from './entities/item-category.entity';
 import { ItemCategory } from './models/item-category.model';
 
 @EntityRepository(ItemCategoryEntity)
-export class ItemCategoriesRepository extends BaseRepository<
-  ItemCategoryEntity,
-  ItemCategory
-> {
+export class ItemCategoriesRepository extends TreeRepository<ItemCategoryEntity> {
   entityToModel(
     entity: ItemCategoryEntity,
     transformOptions = {}

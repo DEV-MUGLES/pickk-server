@@ -357,7 +357,9 @@ type Query {
   couriers: [Courier!]!
   genRandomNickname: String!
   item(id: Int!): Item!
-  itemCategories: [ItemCategory!]!
+  itemCategoryTree: [ItemCategory!]!
+  itemMajorCategories: [ItemCategory!]!
+  itemMinorCategories: [ItemCategory!]!
   items(pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
