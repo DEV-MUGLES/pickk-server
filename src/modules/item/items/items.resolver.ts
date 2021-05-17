@@ -40,7 +40,7 @@ export class ItemsResolver extends BaseResolver {
       relations.push('prices');
     }
 
-    return relations;
+    return [...new Set(relations)];
   }
 
   constructor(
