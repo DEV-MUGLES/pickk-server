@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddItemNoticeInput {
+  endAt: DateTime!
+  message: String!
+  startAt: DateTime!
+  type: ItemNoticeType
+}
+
 input AddItemPriceInput {
   displayPrice: Float
   endAt: DateTime
@@ -315,6 +322,7 @@ input LoginByOauthInput {
 }
 
 type Mutation {
+  addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
@@ -323,6 +331,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
+  removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
@@ -330,6 +339,7 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
+  updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -535,6 +545,13 @@ input UpdateItemInput {
   majorCategoryId: Float
   minorCategoryId: Float
   name: String
+}
+
+input UpdateItemNoticeInput {
+  endAt: DateTime
+  message: String
+  startAt: DateTime
+  type: ItemNoticeType
 }
 
 input UpdateSellerClaimPolicyInput {

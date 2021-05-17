@@ -1,10 +1,20 @@
-import { BadRequestException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as faker from 'faker';
 
+import { ItemNoticeType } from '../constants/item-notice.enum';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from '../dtos/item-notice.input';
 import { AddItemPriceInput } from '../dtos/item-price.input';
 import { AddItemUrlInput } from '../dtos/item-url.input';
-import { ItemPrice } from './item-price.model';
 
+import { ItemNotice } from './item-notice.model';
+import { ItemPrice } from './item-price.model';
 import { Item } from './item.model';
 
 describe('Item', () => {
@@ -108,6 +118,77 @@ describe('Item', () => {
         item.removePrice(priceId);
       } catch (err) {
         expect(err).toBeInstanceOf(BadRequestException);
+      }
+    });
+  });
+
+  const addItemNoticeInput: AddItemNoticeInput = {
+    type: ItemNoticeType.General,
+    message: faker.lorem.text(),
+    startAt: faker.datatype.datetime(),
+    endAt: faker.datatype.datetime(),
+  };
+
+  describe('addNotice', () => {
+    it('성공적으로 추가된다.', () => {
+      const item = new Item();
+      expect(item.addNotice(addItemNoticeInput)).toMatchObject(
+        addItemNoticeInput
+      );
+    });
+
+    it('이미 존재할 경우 ConflictException 발생', () => {
+      const item = new Item({
+        notice: new ItemNotice(),
+      });
+      try {
+        item.addNotice(addItemNoticeInput);
+      } catch (error) {
+        expect(error).toBeInstanceOf(ConflictException);
+      }
+    });
+  });
+
+  const updateItemNoticeInput: UpdateItemNoticeInput = {
+    message: faker.lorem.text(),
+    endAt: faker.datatype.datetime(),
+  };
+
+  describe('updateNotice', () => {
+    it('성공적으로 업데이트된다.', () => {
+      const item = new Item({
+        notice: new ItemNotice(addItemNoticeInput),
+      });
+      expect(item.updateNotice(updateItemNoticeInput)).toMatchObject(
+        updateItemNoticeInput
+      );
+    });
+
+    it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
+      const item = new Item();
+      try {
+        item.updateNotice(updateItemNoticeInput);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('removeNotice', () => {
+    it('삭제 후 해당 Notice를 반환한다.', () => {
+      const item = new Item({
+        notice: new ItemNotice(addItemNoticeInput),
+      });
+      expect(item.removeNotice()).toMatchObject(addItemNoticeInput);
+      expect(item.notice).toEqual(null);
+    });
+
+    it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
+      const item = new Item();
+      try {
+        item.removeNotice();
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
       }
     });
   });

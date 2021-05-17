@@ -8,7 +8,16 @@ import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
 import { ItemPrice } from './item-price.model';
 import { AddItemPriceInput } from '../dtos/item-price.input';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from '../dtos/item-notice.input';
+import { ItemNotice } from './item-notice.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -93,5 +102,41 @@ export class Item extends ItemEntity {
     ];
 
     return itemPrice;
+  };
+
+  public addNotice = (addItemNoticeInput: AddItemNoticeInput): ItemNotice => {
+    if (this.notice) {
+      throw new ConflictException('이미 안내 메세지가 존재합니다.');
+    }
+
+    const itemNotice = new ItemNotice(addItemNoticeInput);
+    this.notice = itemNotice;
+
+    return this.notice;
+  };
+
+  public updateNotice = (
+    updateItemNoticeInput: UpdateItemNoticeInput
+  ): ItemNotice => {
+    if (!this.notice) {
+      throw new NotFoundException('수정할 안내가 존재하지 않습니다.');
+    }
+
+    this.notice = new ItemNotice({
+      ...this.notice,
+      ...updateItemNoticeInput,
+    });
+
+    return this.notice;
+  };
+
+  public removeNotice = (): ItemNotice => {
+    const { notice } = this;
+    if (!notice) {
+      throw new NotFoundException('삭제할 안내가 존재하지 않습니다.');
+    }
+
+    this.notice = null;
+    return notice;
   };
 }

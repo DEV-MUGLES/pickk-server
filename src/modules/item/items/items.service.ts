@@ -16,6 +16,11 @@ import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 import { AddItemPriceInput } from './dtos/item-price.input';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from './dtos/item-notice.input';
+import { ItemNotice } from './models/item-notice.model';
 
 @Injectable()
 export class ItemsService {
@@ -76,6 +81,30 @@ export class ItemsService {
   async removePrice(item: Item, priceId: number): Promise<Item> {
     const price = item.removePrice(priceId);
     await price.remove();
+    return await this.itemsRepository.save(item);
+  }
+
+  async addNotice(
+    item: Item,
+    addItemNoticeInput: AddItemNoticeInput
+  ): Promise<ItemNotice> {
+    item.addNotice(addItemNoticeInput);
+    await this.itemsRepository.save(item);
+    return (await this.itemsRepository.get(item.id, ['notice'])).notice;
+  }
+
+  async updateNotice(
+    item: Item,
+    updateItemNoticeInput: UpdateItemNoticeInput
+  ): Promise<ItemNotice> {
+    item.updateNotice(updateItemNoticeInput);
+    await this.itemsRepository.save(item);
+    return (await this.itemsRepository.get(item.id, ['notice'])).notice;
+  }
+
+  async removeNotice(item: Item): Promise<Item> {
+    const notice = item.removeNotice();
+    await notice.remove();
     return await this.itemsRepository.save(item);
   }
 

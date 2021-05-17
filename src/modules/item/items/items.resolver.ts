@@ -1,4 +1,4 @@
-import { Inject } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
 
 import { BaseResolver } from '@src/common/base.resolver';
@@ -14,6 +14,14 @@ import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 import { PageInput } from '@src/common/dtos/pagination.dto';
+import { ItemNotice } from './models/item-notice.model';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from './dtos/item-notice.input';
+import { Roles } from '@src/authentication/decorators/roles.decorator';
+import { JwtAuthGuard } from '@src/authentication/guards';
+import { UserRole } from '@src/modules/user/users/constants/user.enum';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -69,6 +77,8 @@ export class ItemsResolver extends BaseResolver {
     return await this.itemsService.updateById(item, updateItemInput);
   }
 
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
   async bulkUpdateItems(
     @Args('ids', { type: () => [Int] }) ids: number[],
@@ -78,6 +88,8 @@ export class ItemsResolver extends BaseResolver {
     return true;
   }
 
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemUrl)
   async addItemUrl(
     @IntArgs('itemId') itemId: number,
@@ -88,6 +100,8 @@ export class ItemsResolver extends BaseResolver {
     return await this.itemsService.addUrl(item, addItemUrlInput);
   }
 
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemPrice)
   async addItemPrice(
     @IntArgs('itemId') itemId: number,
@@ -98,6 +112,8 @@ export class ItemsResolver extends BaseResolver {
     return await this.itemsService.addPrice(item, addItemPriceInput);
   }
 
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemPrice(
     @IntArgs('itemId') itemId: number,
@@ -105,5 +121,35 @@ export class ItemsResolver extends BaseResolver {
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['prices']);
     return await this.itemsService.removePrice(item, priceId);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => ItemNotice)
+  async addItemNotice(
+    @IntArgs('itemId') itemId: number,
+    @Args('addItemNoticeInput')
+    addItemNoticeInput: AddItemNoticeInput
+  ): Promise<ItemNotice> {
+    const item = await this.itemsService.get(itemId, ['notice']);
+    return await this.itemsService.addNotice(item, addItemNoticeInput);
+  }
+
+  @Mutation(() => ItemNotice)
+  async updateItemNotice(
+    @IntArgs('itemId') itemId: number,
+    @Args('updateItemNoticeInput')
+    updateItemNoticeInput: UpdateItemNoticeInput
+  ): Promise<ItemNotice> {
+    const item = await this.itemsService.get(itemId, ['notice']);
+    return await this.itemsService.updateNotice(item, updateItemNoticeInput);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async removeItemNotice(@IntArgs('itemId') itemId: number): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['notice']);
+    return await this.itemsService.removeNotice(item);
   }
 }
