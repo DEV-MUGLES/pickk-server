@@ -167,6 +167,9 @@ type Item {
   minorCategory: ItemCategory
   minorCategoryId: Float
   name: String!
+
+  """상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다."""
+  notice: ItemNotice
   options: [ItemOption!]
   originalPrice: Float!
   prices: [ItemPrice!]!
@@ -193,6 +196,25 @@ type ItemDetailImage {
   createdAt: DateTime!
   key: String!
   url: String!
+}
+
+type ItemNotice {
+  createdAt: DateTime!
+  endAt: DateTime!
+  id: Int!
+  message: String!
+  startAt: DateTime!
+  type: ItemNoticeType
+  updatedAt: DateTime!
+}
+
+"""아이템 안내 분류입니다. 기본값은 General입니다."""
+enum ItemNoticeType {
+  CustomOrder
+  DeliveryDelay
+  General
+  OverseaDelivery
+  PreorderDelivery
 }
 
 type ItemOption {

@@ -3,6 +3,7 @@ import { IImage } from '@src/common/interfaces/image.interface';
 import { IBrand } from '../../brands/interfaces/brand.interface';
 import { IItemCategory } from '../../item-categories/interfaces/item-category.interface';
 import { IProduct } from '../../products/interfaces/product.interface';
+import { IItemNotice } from './item-notice.interface';
 
 import { IItemOption } from './item-option.interface';
 import { IItemPrice } from './item-price.interface';
@@ -23,6 +24,7 @@ export interface IItem {
   isSoldout: boolean;
 
   brand: IBrand;
+  notice: IItemNotice;
 
   prices: IItemPrice[];
   urls: IItemUrl[];

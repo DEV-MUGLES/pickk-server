@@ -14,17 +14,20 @@ import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { BrandEntity } from '../../brands/entities/brand.entity';
 import { Brand } from '../../brands/models/brand.model';
-import { IItem } from '../interfaces/item.interface';
 import { ItemCategory } from '../../item-categories/models/item-category.model';
 import { ItemCategoryEntity } from '../../item-categories/entities/item-category.entity';
+import { Product } from '../../products/models/product.model';
+
+import { IItem } from '../interfaces/item.interface';
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemOption } from '../models/item-option.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
+import { ItemPrice } from '../models/item-price.model';
+import { ItemNotice } from '../models/item-notice.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
-import { Product } from '../../products/models/product.model';
-import { ItemPrice } from '../models/item-price.model';
+import { ItemNoticeEntity } from './item-notice.entity';
 
 @ObjectType()
 @Entity({
@@ -49,6 +52,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
 
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
+    this.notice = attributes.notice;
 
     this.prices = attributes.prices;
     this.urls = attributes.urls;
@@ -198,4 +202,12 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   })
   @JoinColumn()
   minorCategory?: ItemCategory;
+
+  @Field(() => ItemNotice, {
+    nullable: true,
+    description: '상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다.',
+  })
+  @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
+  @JoinColumn()
+  notice: ItemNotice;
 }
