@@ -53,7 +53,7 @@ export class SpiderService {
     const { brandId, codeRegex, items } = sellerResult;
 
     for (const itemData of items) {
-      const [code] = itemData.url.match(
+      const [, code] = itemData.url.match(
         new RegExp(...splitRegexString(codeRegex))
       );
 
