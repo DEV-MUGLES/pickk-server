@@ -8,7 +8,7 @@ import { GraphQLResolveInfo } from 'graphql';
 export class BaseResolver {
   protected relations: string[] = [];
 
-  private getSimplifiedInfo = (info: GraphQLResolveInfo) => {
+  protected getSimplifiedInfo = (info: GraphQLResolveInfo) => {
     const parsedInfo = parseResolveInfo(info) as ResolveTree;
     return simplifyParsedResolveInfoFragmentWithType(
       parsedInfo,

@@ -19,6 +19,21 @@ import { PageInput } from '@src/common/dtos/pagination.dto';
 export class ItemsResolver extends BaseResolver {
   relations = ITEM_RELATIONS;
 
+  protected getRelationsFromInfo = (info: GraphQLResolveInfo): string[] => {
+    const relations = super.getRelationsFromInfo(info);
+    const simplifiedInfo = this.getSimplifiedInfo(info);
+
+    if (
+      ['origianlPrice', 'finalPrice'].some(
+        (field) => field in simplifiedInfo.fields
+      )
+    ) {
+      relations.push('prices');
+    }
+
+    return relations;
+  };
+
   constructor(
     @Inject(ItemsService)
     private itemsService: ItemsService
