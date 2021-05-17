@@ -38,11 +38,11 @@ export class ItemNoticeEntity extends BaseIdEntity implements IItemNotice {
   @Column()
   message: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   startAt?: Date;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   endAt?: Date;
 }

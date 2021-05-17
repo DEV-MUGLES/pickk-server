@@ -5,7 +5,7 @@ export class AddItemNotice1621240687297 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      "CREATE TABLE `item_notice` (`id` int NOT NULL AUTO_INCREMENT, `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `type` enum ('0', '1', '2', '3', '4') NOT NULL DEFAULT '4', `message` varchar(255) NOT NULL, `startAt` datetime NOT NULL, `endAt` datetime NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB"
+      "CREATE TABLE `item_notice` (`id` int NOT NULL AUTO_INCREMENT, `created_at` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updated_at` timestamp(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `type` enum ('0', '1', '2', '3', '4') NOT NULL DEFAULT '4', `message` varchar(255) NOT NULL, `startAt` datetime NULL, `endAt` datetime NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query('ALTER TABLE `item` ADD `noticeId` int NULL');
     await queryRunner.query(

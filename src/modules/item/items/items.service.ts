@@ -104,8 +104,9 @@ export class ItemsService {
 
   async removeNotice(item: Item): Promise<Item> {
     const notice = item.removeNotice();
+    const result = await this.itemsRepository.save(item);
     await notice.remove();
-    return await this.itemsRepository.save(item);
+    return result;
   }
 
   async updateById(

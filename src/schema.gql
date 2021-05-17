@@ -3,9 +3,9 @@
 # ------------------------------------------------------
 
 input AddItemNoticeInput {
-  endAt: DateTime!
+  endAt: DateTime
   message: String!
-  startAt: DateTime!
+  startAt: DateTime
   type: ItemNoticeType
 }
 
@@ -207,10 +207,10 @@ type ItemDetailImage {
 
 type ItemNotice {
   createdAt: DateTime!
-  endAt: DateTime!
+  endAt: DateTime
   id: Int!
   message: String!
-  startAt: DateTime!
+  startAt: DateTime
   type: ItemNoticeType
   updatedAt: DateTime!
 }
