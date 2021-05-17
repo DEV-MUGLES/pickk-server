@@ -7,10 +7,11 @@ import { SpiderService } from './provider.service';
 export class SpiderController {
   constructor(private readonly spiderService: SpiderService) {}
 
-  @Post('/sellers')
+  @Patch('/sellers')
   @HttpCode(200)
-  async requestSellers(): Promise<void> {
-    await this.spiderService.requestSellers();
+  async requestSellers(): Promise<string> {
+    const count = await this.spiderService.requestSellers();
+    return `${count} seller requested!`;
   }
 
   @Patch('/sellers')

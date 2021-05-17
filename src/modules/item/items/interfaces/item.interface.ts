@@ -29,6 +29,8 @@ export interface IItem {
   options: IItemOption[];
   products: IProduct[];
 
-  majorCategory: IItemCategory;
-  minorCategory: IItemCategory;
+  majorCategory?: IItemCategory;
+  majorCategoryId?: number;
+  minorCategory?: IItemCategory;
+  minorCategoryId?: number;
 }

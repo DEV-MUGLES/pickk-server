@@ -6,4 +6,5 @@ export interface ISpiderItem {
   salePrice: number;
   isSoldout?: boolean;
   images?: string[];
+  url: string;
 }

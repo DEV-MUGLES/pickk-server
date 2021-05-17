@@ -3,6 +3,7 @@ import { InputType, PartialType, PickType } from '@nestjs/graphql';
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
+import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
 import { SellerReturnAddress } from '../models/seller-return-address.model';
 
 @InputType()
@@ -30,6 +31,20 @@ export class CreateSellerShippingPolicyInput extends PickType(
 export class CreateSellerReturnAddressInput extends PickType(
   SellerReturnAddress,
   ['baseAddress', 'detailAddress', 'postalCode'],
+  InputType
+) {}
+
+@InputType()
+export class CreateSellerCrawlStrategyInput extends PickType(
+  SellerCrawlStrategy,
+  [
+    'itemsSelector',
+    'codeRegex',
+    'pagination',
+    'pageParam',
+    'baseUrl',
+    'startPathNamesJoin',
+  ],
   InputType
 ) {}
 

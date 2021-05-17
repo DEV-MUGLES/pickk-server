@@ -12,6 +12,7 @@ export class AddItemPriceInput extends PickType(
     'pickkDiscountAmount',
     'pickkDiscountRate',
     'isActive',
+    'isBase',
     'isCrawlUpdating',
     'startAt',
     'endAt',

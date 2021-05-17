@@ -1,3 +1,4 @@
+import { BadRequestException } from '@nestjs/common';
 import * as faker from 'faker';
 
 import { AddItemPriceInput } from '../dtos/item-price.input';
@@ -43,6 +44,7 @@ describe('Item', () => {
       sellPrice,
       pickkDiscountAmount,
       finalPrice,
+      isBase: true,
       isActive: true,
       isCrawlUpdating: true,
     };
@@ -81,6 +83,7 @@ describe('Item', () => {
       finalPrice,
       isActive: true,
       isCrawlUpdating: true,
+      isBase: true,
     };
 
     it('성공적으로 삭제한다.', () => {
@@ -88,12 +91,24 @@ describe('Item', () => {
       const item = new Item({
         prices: [
           new ItemPrice(),
-          new ItemPrice({ ...addItemPriceInput, id: priceId }),
+          new ItemPrice({ ...addItemPriceInput, isBase: false, id: priceId }),
         ],
       });
       const result = item.removePrice(priceId);
       expect(result.id).toEqual(priceId);
       expect(item.prices.length).toEqual(1);
+    });
+
+    it('Base price는 삭제할 수 없다.', () => {
+      const priceId = faker.datatype.number();
+      const item = new Item({
+        prices: [new ItemPrice({ ...addItemPriceInput, id: priceId })],
+      });
+      try {
+        item.removePrice(priceId);
+      } catch (err) {
+        expect(err).toBeInstanceOf(BadRequestException);
+      }
     });
   });
 });

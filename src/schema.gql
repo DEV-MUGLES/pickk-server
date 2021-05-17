@@ -3,11 +3,18 @@
 # ------------------------------------------------------
 
 input AddItemPriceInput {
+  displayPrice: Float
+  endAt: DateTime
   finalPrice: Int!
+  isActive: Boolean!
+  isBase: Boolean!
+  isCrawlUpdating: Boolean!
   originalPrice: Int!
   pickkDiscountAmount: Int!
   pickkDiscountRate: Int!
   sellPrice: Int!
+  startAt: DateTime
+  unit: ItemPriceUnit
 }
 
 input AddItemUrlInput {
@@ -62,6 +69,17 @@ input CreateSellerCrawlPolicyInput {
   isUpdatingItems: Boolean!
 }
 
+input CreateSellerCrawlStrategyInput {
+  baseUrl: String!
+  codeRegex: String!
+  itemsSelector: String!
+  pageParam: String
+  pagination: Boolean!
+
+  """'<>'으로 join된 상태다."""
+  startPathNamesJoin: String!
+}
+
 input CreateSellerInput {
   brandId: Int!
   businessCode: String!
@@ -69,6 +87,7 @@ input CreateSellerInput {
   claimPolicyInput: CreateSellerClaimPolicyInput!
   courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
+  crawlStrategyInput: CreateSellerCrawlStrategyInput!
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
@@ -138,9 +157,9 @@ type Item {
   isMdRecommended: Boolean!
   isSellable: Boolean!
   majorCategory: ItemCategory
-  majorCategoryId: String
+  majorCategoryId: Float
   minorCategory: ItemCategory
-  minorCategoryId: String
+  minorCategoryId: Float
   name: String!
   options: [ItemOption!]
   originalPrice: Float!
@@ -189,14 +208,35 @@ type ItemOptionValue {
 
 type ItemPrice {
   createdAt: DateTime!
+  displayPrice: Float
+  endAt: DateTime
   finalPrice: Int!
   id: Int!
+  isActive: Boolean!
+  isBase: Boolean!
+  isCrawlUpdating: Boolean!
   itemId: Int!
   originalPrice: Int!
   pickkDiscountAmount: Int!
   pickkDiscountRate: Int!
   sellPrice: Int!
+  startAt: DateTime
+  unit: ItemPriceUnit
   updatedAt: DateTime!
+}
+
+"""
+아이템의 가격 단위입니다. null인 경우 원화로 취급되며, 값을 가질 경우 적절한 displayPrice에 적절한 환율을 곱한 값으로 salePrice를 설정합니다.
+"""
+enum ItemPriceUnit {
+  AUD
+  CAD
+  CNY
+  EUR
+  GBP
+  JPY
+  KRW
+  USD
 }
 
 type ItemSalePolicy {
@@ -311,7 +351,7 @@ type Query {
   genRandomNickname: String!
   item(id: Int!): Item!
   itemCategories: [ItemCategory!]!
-  items: [Item!]!
+  items(pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!
@@ -461,8 +501,8 @@ input UpdateItemInput {
   description: String
   isMdRecommended: Boolean = true
   isSellable: Boolean = false
-  majorCategoryId: String
-  minorCategoryId: String
+  majorCategoryId: Float
+  minorCategoryId: Float
   name: String
 }
 

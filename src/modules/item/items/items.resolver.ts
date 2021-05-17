@@ -7,16 +7,32 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
 import { AddItemPriceInput } from './dtos/item-price.input';
-import { UpdateItemInput } from './dtos/item-update.input';
+import { UpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
+import { PageInput } from '@src/common/dtos/pagination.dto';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
   relations = ITEM_RELATIONS;
+
+  protected getRelationsFromInfo(info: GraphQLResolveInfo): string[] {
+    const relations = super.getRelationsFromInfo(info);
+    const simplifiedInfo = this.getSimplifiedInfo(info);
+
+    if (
+      ['originalPrice', 'finalPrice'].some(
+        (field) => field in simplifiedInfo.fields
+      )
+    ) {
+      relations.push('prices');
+    }
+
+    return relations;
+  }
 
   constructor(
     @Inject(ItemsService)
@@ -34,8 +50,14 @@ export class ItemsResolver extends BaseResolver {
   }
 
   @Query(() => [Item])
-  async items(@Info() info?: GraphQLResolveInfo): Promise<Item[]> {
-    return this.itemsService.list(this.getRelationsFromInfo(info));
+  async items(
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    return await this.itemsService.list(
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => Item)
