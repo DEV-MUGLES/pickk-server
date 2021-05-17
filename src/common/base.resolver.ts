@@ -16,7 +16,7 @@ export class BaseResolver {
     );
   };
 
-  protected getRelationsFromInfo = (info: GraphQLResolveInfo) => {
+  protected getRelationsFromInfo(info: GraphQLResolveInfo) {
     if (!info) {
       return [];
     }
@@ -25,5 +25,5 @@ export class BaseResolver {
     return this.relations.filter((relation) =>
       relation.split('.').some((chunk) => chunk in simplifiedInfo.fields)
     );
-  };
+  }
 }

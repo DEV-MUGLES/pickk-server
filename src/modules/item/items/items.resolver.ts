@@ -19,12 +19,12 @@ import { PageInput } from '@src/common/dtos/pagination.dto';
 export class ItemsResolver extends BaseResolver {
   relations = ITEM_RELATIONS;
 
-  protected getRelationsFromInfo = (info: GraphQLResolveInfo): string[] => {
+  protected getRelationsFromInfo(info: GraphQLResolveInfo): string[] {
     const relations = super.getRelationsFromInfo(info);
     const simplifiedInfo = this.getSimplifiedInfo(info);
 
     if (
-      ['origianlPrice', 'finalPrice'].some(
+      ['originalPrice', 'finalPrice'].some(
         (field) => field in simplifiedInfo.fields
       )
     ) {
@@ -32,7 +32,7 @@ export class ItemsResolver extends BaseResolver {
     }
 
     return relations;
-  };
+  }
 
   constructor(
     @Inject(ItemsService)
@@ -54,7 +54,10 @@ export class ItemsResolver extends BaseResolver {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item[]> {
-    return this.itemsService.list(pageInput, this.getRelationsFromInfo(info));
+    return await this.itemsService.list(
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => Item)
