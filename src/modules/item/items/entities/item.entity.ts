@@ -28,6 +28,7 @@ import { ItemNotice } from '../models/item-notice.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
+import { Optional } from '@nestjs/common';
 
 @ObjectType()
 @Entity({
@@ -49,6 +50,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.isSoldout = attributes.isSoldout;
     this.isMdRecommended = attributes.isMdRecommended;
     this.isSellable = attributes.isSellable;
+    this.isPurchasable = attributes.isPurchasable;
 
     this.brand = attributes.brand;
     this.brandId = attributes.brandId;
@@ -100,6 +102,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: true,
   })
   @IsBoolean()
+  @Optional()
   isInfiniteStock: boolean;
 
   @Field({ defaultValue: false })
@@ -107,6 +110,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: false,
   })
   @IsBoolean()
+  @Optional()
   isSoldout: boolean;
 
   @Field({ defaultValue: true })
@@ -114,6 +118,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: true,
   })
   @IsBoolean()
+  @Optional()
   isMdRecommended: boolean;
 
   @Field({ defaultValue: false })
@@ -121,7 +126,16 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     default: false,
   })
   @IsBoolean()
+  @Optional()
   isSellable: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({
+    default: false,
+  })
+  @IsBoolean()
+  @Optional()
+  isPurchasable: boolean;
 
   @Field(() => Brand)
   @ManyToOne(() => BrandEntity, {

@@ -167,6 +167,7 @@ type Item {
   imageUrl: String!
   isInfiniteStock: Boolean!
   isMdRecommended: Boolean!
+  isPurchasable: Boolean!
   isSellable: Boolean!
   isSoldout: Boolean!
   majorCategory: ItemCategory

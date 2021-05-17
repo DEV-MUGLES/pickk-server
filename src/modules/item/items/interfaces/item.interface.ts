@@ -19,8 +19,13 @@ export interface IItem {
   imageUrl: string;
 
   isMdRecommended: boolean;
+  /** 판매가능 여부 */
   isSellable: boolean;
+  /** 구매가능 여부 */
+  isPurchasable: boolean;
+  /** 무한재고 여부 */
   isInfiniteStock: boolean;
+  /** 품절 여부 (모든 Product의 stock이 0인 경우) */
   isSoldout: boolean;
 
   brand: IBrand;
