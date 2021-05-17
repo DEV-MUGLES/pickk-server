@@ -65,6 +65,14 @@ describe('SellersService', () => {
         detailAddress: faker.lorem.text(),
         postalCode: '12321',
       },
+      crawlStrategyInput: {
+        itemsSelector: faker.lorem.text(),
+        codeRegex: faker.lorem.text(),
+        baseUrl: faker.internet.url(),
+        pageParam: faker.lorem.text(),
+        pagination: faker.datatype.boolean(),
+        startPathNamesJoin: faker.lorem.text(),
+      },
     };
     it('create success', async () => {
       const {
