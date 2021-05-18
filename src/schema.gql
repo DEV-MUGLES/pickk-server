@@ -210,6 +210,8 @@ input ItemFilter {
   isMdRecommended: Boolean
   isPurchasable: Boolean
   isSellable: Boolean
+  majorCategoryId: Float
+  minorCategoryId: Float
 
   """아이템 이름(name)으로 검색합니다."""
   search: String

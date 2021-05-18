@@ -15,6 +15,12 @@ export class ItemFilter implements Partial<IItem> {
   @Field({ nullable: true })
   isPurchasable: boolean;
 
+  @Field({ nullable: true })
+  majorCategoryId: number;
+
+  @Field({ nullable: true })
+  minorCategoryId: number;
+
   @Field({ nullable: true, description: '아이템 이름(name)으로 검색합니다.' })
   search: string;
 }
