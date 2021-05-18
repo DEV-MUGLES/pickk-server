@@ -126,10 +126,7 @@ export class ItemsService {
     return result;
   }
 
-  async updateById(
-    item: Item,
-    updateItemInput: UpdateItemInput
-  ): Promise<Item> {
+  async update(item: Item, updateItemInput: UpdateItemInput): Promise<Item> {
     return await this.itemsRepository.updateEntity(item, updateItemInput);
   }
 

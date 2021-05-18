@@ -375,6 +375,7 @@ type Mutation {
   updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
 
   """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
@@ -579,6 +580,10 @@ input UpdateItemNoticeInput {
   message: String
   startAt: DateTime
   type: ItemNoticeType
+}
+
+input UpdateProductInput {
+  stock: Int!
 }
 
 input UpdateSellerClaimPolicyInput {

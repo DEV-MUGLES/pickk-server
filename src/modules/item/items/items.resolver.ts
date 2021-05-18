@@ -87,7 +87,7 @@ export class ItemsResolver extends BaseResolver {
     @Args('updateItemInput') updateItemInput: UpdateItemInput
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId);
-    return await this.itemsService.updateById(item, updateItemInput);
+    return await this.itemsService.update(item, updateItemInput);
   }
 
   @Roles(UserRole.Seller)

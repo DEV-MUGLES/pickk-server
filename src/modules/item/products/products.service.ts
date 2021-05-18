@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { getOptionValueCombinations } from '../items/helpers/item.helper';
 
 import { Item } from '../items/models/item.model';
+import { UpdateProductInput } from './dtos/product.input';
 
 import { Product } from './models/product.model';
 import { ProductsRepository } from './products.repository';
@@ -13,6 +14,22 @@ export class ProductsService {
     @InjectRepository(ProductsRepository)
     private readonly productsRepository: ProductsRepository
   ) {}
+
+  async get(id: number, relations: string[] = []): Promise<Product> {
+    return await this.productsRepository.get(id, relations);
+  }
+
+  async update(
+    product: Product,
+    updateProductInput: UpdateProductInput,
+    relations: string[] = []
+  ): Promise<Product> {
+    return await this.productsRepository.updateEntity(
+      product,
+      updateProductInput,
+      relations
+    );
+  }
 
   async bulkRemove(products: Product[]) {
     await this.productsRepository.remove(products);
