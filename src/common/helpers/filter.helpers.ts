@@ -1,5 +1,13 @@
 import { isArray as _isArray, isObject } from 'class-validator';
-import { Between, In, LessThanOrEqual, Like, MoreThanOrEqual } from 'typeorm';
+import {
+  Between,
+  In,
+  IsNull,
+  LessThanOrEqual,
+  Like,
+  MoreThanOrEqual,
+  Not,
+} from 'typeorm';
 
 type TFilterValue = unknown | unknown[] | Record<string, unknown | unknown[]>;
 
@@ -65,6 +73,12 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
       return {
         ...acc,
         [key.replace(/Lte$/, '')]: LessThanOrEqual(value),
+      };
+    }
+    if (/IsNull$/.test(key)) {
+      return {
+        ...acc,
+        [key.replace(/IsNull$/, '')]: value ? IsNull() : Not(IsNull()),
       };
     }
 

@@ -1,4 +1,11 @@
-import { Between, In, LessThanOrEqual, MoreThanOrEqual } from 'typeorm';
+import {
+  Between,
+  In,
+  IsNull,
+  LessThanOrEqual,
+  MoreThanOrEqual,
+  Not,
+} from 'typeorm';
 import * as faker from 'faker';
 
 import {
@@ -118,6 +125,14 @@ describe('FilterHelpers', () => {
 
       expect(parseFilter({ ageLte: num })).toEqual({
         age: LessThanOrEqual(num),
+      });
+    });
+
+    it('should parse IsNull', () => {
+      [true, false].forEach((value) => {
+        expect(parseFilter({ titleIsNull: value })).toEqual({
+          title: value ? IsNull() : Not(IsNull()),
+        });
       });
     });
 
