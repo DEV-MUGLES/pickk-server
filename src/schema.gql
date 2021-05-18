@@ -388,10 +388,13 @@ type Product {
 
 type ProductShippingReservePolicy {
   createdAt: DateTime!
-  endAt: DateTime!
+
+  """예약발송 예정일"""
   estimatedShippingBegginDate: DateTime!
   id: Int!
-  startAt: DateTime!
+
+  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
+  stock: Int!
   updatedAt: DateTime!
 }
 
