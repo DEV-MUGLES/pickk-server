@@ -42,6 +42,8 @@ type Brand {
 input BulkUpdateItemInput {
   isMdRecommended: Boolean
   isSellable: Boolean
+  majorCategoryId: Float
+  minorCategoryId: Float
 }
 
 type Courier {
