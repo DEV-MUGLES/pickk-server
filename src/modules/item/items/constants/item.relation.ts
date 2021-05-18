@@ -15,4 +15,6 @@ export const ITEM_RELATIONS: Array<
   'products',
   'products.itemOptionValues',
   'products.shippingReservePolicy',
+  'notice',
+  'prices',
 ];

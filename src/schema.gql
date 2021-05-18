@@ -2,12 +2,26 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input AddItemNoticeInput {
+  endAt: DateTime
+  message: String!
+  startAt: DateTime
+  type: ItemNoticeType
+}
+
 input AddItemPriceInput {
+  displayPrice: Float
+  endAt: DateTime
   finalPrice: Int!
+  isActive: Boolean!
+  isBase: Boolean!
+  isCrawlUpdating: Boolean!
   originalPrice: Int!
   pickkDiscountAmount: Int!
   pickkDiscountRate: Int!
   sellPrice: Int!
+  startAt: DateTime
+  unit: ItemPriceUnit
 }
 
 input AddItemUrlInput {
@@ -23,6 +37,13 @@ type Brand {
   nameEng: String
   nameKor: String!
   updatedAt: DateTime!
+}
+
+input BulkUpdateItemInput {
+  isMdRecommended: Boolean
+  isSellable: Boolean
+  majorCategoryId: Float
+  minorCategoryId: Float
 }
 
 type Courier {
@@ -62,6 +83,17 @@ input CreateSellerCrawlPolicyInput {
   isUpdatingItems: Boolean!
 }
 
+input CreateSellerCrawlStrategyInput {
+  baseUrl: String!
+  codeRegex: String!
+  itemsSelector: String!
+  pageParam: String
+  pagination: Boolean!
+
+  """'<>'으로 join된 상태다."""
+  startPathNamesJoin: String!
+}
+
 input CreateSellerInput {
   brandId: Int!
   businessCode: String!
@@ -69,6 +101,7 @@ input CreateSellerInput {
   claimPolicyInput: CreateSellerClaimPolicyInput!
   courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
+  crawlStrategyInput: CreateSellerCrawlStrategyInput!
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
@@ -134,14 +167,19 @@ type Item {
   finalPrice: Float!
   id: Int!
   imageUrl: String!
-  isManaging: Boolean!
+  isInfiniteStock: Boolean!
   isMdRecommended: Boolean!
+  isPurchasable: Boolean!
   isSellable: Boolean!
+  isSoldout: Boolean!
   majorCategory: ItemCategory
-  majorCategoryId: String
+  majorCategoryId: Float
   minorCategory: ItemCategory
-  minorCategoryId: String
+  minorCategoryId: Float
   name: String!
+
+  """상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다."""
+  notice: ItemNotice
   options: [ItemOption!]
   originalPrice: Float!
   prices: [ItemPrice!]!
@@ -170,6 +208,36 @@ type ItemDetailImage {
   url: String!
 }
 
+input ItemFilter {
+  isMdRecommended: Boolean
+  isPurchasable: Boolean
+  isSellable: Boolean
+  majorCategoryId: Float
+  minorCategoryId: Float
+
+  """아이템 이름(name)으로 검색합니다."""
+  search: String
+}
+
+type ItemNotice {
+  createdAt: DateTime!
+  endAt: DateTime
+  id: Int!
+  message: String!
+  startAt: DateTime
+  type: ItemNoticeType
+  updatedAt: DateTime!
+}
+
+"""아이템 안내 분류입니다. 기본값은 General입니다."""
+enum ItemNoticeType {
+  CustomOrder
+  DeliveryDelay
+  General
+  OverseaDelivery
+  PreorderDelivery
+}
+
 type ItemOption {
   createdAt: DateTime!
   id: Int!
@@ -189,14 +257,35 @@ type ItemOptionValue {
 
 type ItemPrice {
   createdAt: DateTime!
+  displayPrice: Float
+  endAt: DateTime
   finalPrice: Int!
   id: Int!
+  isActive: Boolean!
+  isBase: Boolean!
+  isCrawlUpdating: Boolean!
   itemId: Int!
   originalPrice: Int!
   pickkDiscountAmount: Int!
   pickkDiscountRate: Int!
   sellPrice: Int!
+  startAt: DateTime
+  unit: ItemPriceUnit
   updatedAt: DateTime!
+}
+
+"""
+아이템의 가격 단위입니다. null인 경우 원화로 취급되며, 값을 가질 경우 적절한 displayPrice에 적절한 환율을 곱한 값으로 salePrice를 설정합니다.
+"""
+enum ItemPriceUnit {
+  AUD
+  CAD
+  CNY
+  EUR
+  GBP
+  JPY
+  KRW
+  USD
 }
 
 type ItemSalePolicy {
@@ -247,13 +336,16 @@ input LoginByOauthInput {
 }
 
 type Mutation {
+  addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
+  removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
@@ -261,6 +353,7 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
+  updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -310,8 +403,10 @@ type Query {
   couriers: [Courier!]!
   genRandomNickname: String!
   item(id: Int!): Item!
-  itemCategories: [ItemCategory!]!
-  items: [Item!]!
+  itemCategoryTree: [ItemCategory!]!
+  itemMajorCategories: [ItemCategory!]!
+  itemMinorCategories: [ItemCategory!]!
+  items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!
@@ -461,9 +556,16 @@ input UpdateItemInput {
   description: String
   isMdRecommended: Boolean = true
   isSellable: Boolean = false
-  majorCategoryId: String
-  minorCategoryId: String
+  majorCategoryId: Float
+  minorCategoryId: Float
   name: String
+}
+
+input UpdateItemNoticeInput {
+  endAt: DateTime
+  message: String
+  startAt: DateTime
+  type: ItemNoticeType
 }
 
 input UpdateSellerClaimPolicyInput {

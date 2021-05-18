@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
-import { IsNumber, Min } from 'class-validator';
+import { IsBoolean, IsNumber, IsOptional, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 
@@ -84,14 +84,40 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   @Min(1)
   pickkDiscountRate?: number;
 
+  @Field()
+  @Column()
+  @IsBoolean()
   isActive: boolean;
+
+  @Field()
+  @Column()
+  @IsBoolean()
   isCrawlUpdating: boolean;
+
+  @Field()
+  @Column()
+  @IsBoolean()
+  @IsOptional()
   isBase: boolean;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   startAt?: Date | null;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   endAt?: Date | null;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   displayPrice?: number | null;
+
+  @Field(() => ItemPriceUnit, { nullable: true })
+  @Column({
+    type: 'enum',
+    enum: ItemPriceUnit,
+    default: ItemPriceUnit.KRW,
+  })
   unit?: ItemPriceUnit;
 
   @ManyToOne('ItemEntity', 'prices', {
