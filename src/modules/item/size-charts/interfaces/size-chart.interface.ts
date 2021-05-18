@@ -1,3 +1,5 @@
+import { IItem } from '../../items/interfaces/item.interface';
+
 export interface ISizeChart {
   name: string;
   //상의,아우터,하의,악세사리등 총 길이와 관련된 정보
@@ -21,4 +23,7 @@ export interface ISizeChart {
   glassWidth?: number;
   glassBridgeLength?: number;
   glassLegLength?: number;
+
+  item?: IItem;
+  itemId: number;
 }

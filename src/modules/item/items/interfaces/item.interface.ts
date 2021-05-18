@@ -3,6 +3,7 @@ import { IImage } from '@src/common/interfaces/image.interface';
 import { IBrand } from '../../brands/interfaces/brand.interface';
 import { IItemCategory } from '../../item-categories/interfaces/item-category.interface';
 import { IProduct } from '../../products/interfaces/product.interface';
+import { ISizeChart } from '../../size-charts/interfaces/size-chart.interface';
 import { IItemNotice } from './item-notice.interface';
 
 import { IItemOption } from './item-option.interface';
@@ -41,4 +42,6 @@ export interface IItem {
   majorCategoryId?: number;
   minorCategory?: IItemCategory;
   minorCategoryId?: number;
+
+  sizeCharts?: ISizeChart[];
 }

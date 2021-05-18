@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
@@ -28,7 +29,7 @@ import { ItemNotice } from '../models/item-notice.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
-import { Optional } from '@nestjs/common';
+import { SizeChart } from '../../size-charts/model/size-chart.model';
 
 @ObjectType()
 @Entity({
@@ -65,6 +66,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.minorCategory = attributes.minorCategory;
     this.majorCategoryId = attributes.majorCategoryId;
     this.minorCategoryId = attributes.minorCategoryId;
+    this.sizeCharts = attributes.sizeCharts;
   }
 
   @Field()
@@ -224,4 +226,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
   @JoinColumn()
   notice: ItemNotice;
+
+  @OneToMany('SizeChartEntity', 'item', {
+    cascade: true,
+  })
+  sizeCharts: SizeChart[];
 }

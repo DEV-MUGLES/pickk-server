@@ -1,15 +1,43 @@
-import { Column, Entity } from 'typeorm';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { ISizeChart } from '../interfaces/size-chart.interface';
 import { FloatColumn } from '../decorators/size-chart.decorator';
+import { ItemEntity } from '../../items/entities/item.entity';
 
 @ObjectType()
 @Entity({
   name: 'size_chart',
 })
 export class SizeChartEntity extends BaseIdEntity implements ISizeChart {
+  constructor(attributes?: Partial<SizeChartEntity>) {
+    super();
+    if (!attributes) return;
+    this.name = attributes.name;
+
+    this.totalLength = attributes.totalLength;
+    this.shoulderWidth = attributes.shoulderWidth;
+    this.chestWidth = attributes.chestWidth;
+    this.sleeveLength = attributes.sleeveLength;
+
+    this.waistWidth = attributes.waistWidth;
+    this.riseHeight = attributes.riseHeight;
+    this.thighWidth = attributes.thighWidth;
+    this.hemWidth = attributes.hemWidth;
+
+    this.accWidth = attributes.accWidth;
+    this.accHeight = attributes.accHeight;
+    this.accDepth = attributes.accDepth;
+    this.crossStrapLength = attributes.crossStrapLength;
+    this.watchBandDepth = attributes.watchBandDepth;
+    this.glassWidth = attributes.glassWidth;
+    this.glassBridgeLength = attributes.glassBridgeLength;
+    this.glassLegLength = attributes.glassLegLength;
+
+    this.itemId = attributes.itemId;
+    this.item = attributes.item;
+  }
   /**
    * XS,S,M,L,XL등 사이즈 값들의 집합의 이름을 의미한다.
    */
@@ -127,4 +155,15 @@ export class SizeChartEntity extends BaseIdEntity implements ISizeChart {
   @Field()
   @FloatColumn()
   glassLegLength?: number;
+
+  @Field(() => Int)
+  @Column({
+    type: 'int',
+  })
+  itemId: number;
+
+  @ManyToOne('ItemEntity', 'sizeCharts', {
+    onDelete: 'CASCADE',
+  })
+  item: ItemEntity;
 }
