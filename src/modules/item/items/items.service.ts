@@ -10,9 +10,14 @@ import {
   CreateItemInput,
   UpdateItemInput,
   BulkUpdateItemInput,
+  CreateItemOptionInput,
 } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsRepository } from './items.repository';
+import {
+  ItemOptionsRepository,
+  ItemOptionValuesRepository,
+  ItemsRepository,
+} from './items.repository';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
@@ -28,7 +33,11 @@ import { ItemFilter } from './dtos/item.filter';
 export class ItemsService {
   constructor(
     @InjectRepository(ItemsRepository)
-    private readonly itemsRepository: ItemsRepository
+    private readonly itemsRepository: ItemsRepository,
+    @InjectRepository(ItemOptionsRepository)
+    private readonly itemOptionsRepository: ItemOptionsRepository,
+    @InjectRepository(ItemOptionValuesRepository)
+    private readonly itemOptionValuesRepository: ItemOptionValuesRepository
   ) {}
 
   async list(
@@ -172,5 +181,25 @@ export class ItemsService {
     item.name = data.name;
 
     return await this.itemsRepository.save(item);
+  }
+
+  /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */
+  async clearOptionSet(item: Item): Promise<Item> {
+    const optionValues = item.options.reduce(
+      (acc, curr) => acc.concat(curr.values),
+      []
+    );
+    await this.itemOptionValuesRepository.remove(optionValues);
+    await this.itemOptionsRepository.remove(item.options);
+    return this.get(item.id, ['options', 'options.values', 'products']);
+  }
+
+  async createOptionSet(
+    item: Item,
+    options: CreateItemOptionInput[]
+  ): Promise<Item> {
+    item.createOptionSet(options);
+    await this.itemsRepository.save(item);
+    return this.get(item.id, ['options', 'options.values', 'products']);
   }
 }

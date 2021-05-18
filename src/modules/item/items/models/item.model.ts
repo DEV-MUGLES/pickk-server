@@ -18,6 +18,8 @@ import {
   UpdateItemNoticeInput,
 } from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
+import { CreateItemOptionInput } from '../dtos/item.input';
+import { ItemOptionValue } from './item-option-value.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -138,5 +140,21 @@ export class Item extends ItemEntity {
 
     this.notice = null;
     return notice;
+  };
+
+  public createOptionSet = (inputs: CreateItemOptionInput[]): ItemOption[] => {
+    if (this.options?.length > 0) {
+      throw new ConflictException('옵션이 이미 존재합니다.');
+    }
+
+    return (this.options = inputs.map(
+      (input) =>
+        new ItemOption({
+          name: input.name,
+          values: input.values.map(
+            (value) => new ItemOptionValue({ name: value })
+          ),
+        })
+    ));
   };
 }

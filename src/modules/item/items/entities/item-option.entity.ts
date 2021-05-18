@@ -11,6 +11,18 @@ import { ItemEntity } from './item.entity';
 @ObjectType()
 @Entity({ name: 'item_option' })
 export class ItemOptionEntity extends BaseIdEntity implements IItemOption {
+  constructor(attributes?: Partial<ItemOptionEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.name = attributes.name;
+    this.order = attributes.order;
+    this.values = attributes.values;
+    this.item = attributes.item;
+  }
+
   @Field()
   @Column({
     type: 'varchar',

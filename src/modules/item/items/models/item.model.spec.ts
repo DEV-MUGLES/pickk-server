@@ -12,8 +12,10 @@ import {
 } from '../dtos/item-notice.input';
 import { AddItemPriceInput } from '../dtos/item-price.input';
 import { AddItemUrlInput } from '../dtos/item-url.input';
+import { CreateItemOptionSetInput } from '../dtos/item.input';
 
 import { ItemNotice } from './item-notice.model';
+import { ItemOption } from './item-option.model';
 import { ItemPrice } from './item-price.model';
 import { Item } from './item.model';
 
@@ -141,11 +143,10 @@ describe('Item', () => {
       const item = new Item({
         notice: new ItemNotice(),
       });
-      try {
-        item.addNotice(addItemNoticeInput);
-      } catch (error) {
-        expect(error).toBeInstanceOf(ConflictException);
-      }
+
+      expect(() => item.addNotice(addItemNoticeInput)).toThrow(
+        ConflictException
+      );
     });
   });
 
@@ -166,11 +167,10 @@ describe('Item', () => {
 
     it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
       const item = new Item();
-      try {
-        item.updateNotice(updateItemNoticeInput);
-      } catch (error) {
-        expect(error).toBeInstanceOf(NotFoundException);
-      }
+
+      expect(() => item.updateNotice(updateItemNoticeInput)).toThrow(
+        NotFoundException
+      );
     });
   });
 
@@ -185,11 +185,42 @@ describe('Item', () => {
 
     it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
       const item = new Item();
-      try {
-        item.removeNotice();
-      } catch (error) {
-        expect(error).toBeInstanceOf(NotFoundException);
-      }
+      expect(() => item.removeNotice()).toThrow(NotFoundException);
+    });
+  });
+
+  describe('createOptionSet', () => {
+    const createItemOptionSetInput: CreateItemOptionSetInput = {
+      options: [],
+    };
+    const optionsCount = Math.max(1, faker.datatype.number(20));
+    [...Array(optionsCount)].forEach(() => {
+      createItemOptionSetInput.options.push({
+        name: faker.lorem.text(),
+        values: [faker.lorem.text(), faker.lorem.text(), faker.lorem.text()],
+      });
+    });
+
+    it('성공적으로 생성한다.', () => {
+      const item = new Item();
+      const { options } = createItemOptionSetInput;
+
+      const result = item.createOptionSet(options);
+      expect(options.length).toEqual(result.length);
+      options.forEach((option, i) => {
+        expect(result[i].name).toEqual(option.name);
+        option.values.forEach((value, j) => {
+          expect(result[i].values[j].name).toEqual(value);
+        });
+      });
+    });
+
+    it('옵션이 이미 존재하면 ConflictException 발생', () => {
+      const item = new Item({ options: [new ItemOption()] });
+
+      expect(() =>
+        item.createOptionSet(createItemOptionSetInput.options)
+      ).toThrow(ConflictException);
     });
   });
 });

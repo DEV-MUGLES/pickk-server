@@ -42,8 +42,8 @@ type Brand {
 input BulkUpdateItemInput {
   isMdRecommended: Boolean
   isSellable: Boolean
-  majorCategoryId: Float
-  minorCategoryId: Float
+  majorCategoryId: Int
+  minorCategoryId: Int
 }
 
 type Courier {
@@ -70,6 +70,15 @@ input CreateCourierInput {
   name: String!
   phoneNumber: String!
   returnReserveUrl: String!
+}
+
+input CreateItemOptionInput {
+  name: String!
+  values: [String!]!
+}
+
+input CreateItemOptionSetInput {
+  options: [CreateItemOptionInput!]!
 }
 
 input CreateSellerClaimPolicyInput {
@@ -342,6 +351,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
+  createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!

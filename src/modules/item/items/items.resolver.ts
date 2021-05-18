@@ -7,7 +7,11 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
 import { AddItemPriceInput } from './dtos/item-price.input';
-import { UpdateItemInput, BulkUpdateItemInput } from './dtos/item.input';
+import {
+  UpdateItemInput,
+  BulkUpdateItemInput,
+  CreateItemOptionSetInput,
+} from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
@@ -23,12 +27,16 @@ import { Roles } from '@src/authentication/decorators/roles.decorator';
 import { JwtAuthGuard } from '@src/authentication/guards';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { ItemFilter } from './dtos/item.filter';
+import { ProductsService } from '../products/products.service';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
   relations = ITEM_RELATIONS;
 
-  protected getRelationsFromInfo(info: GraphQLResolveInfo): string[] {
+  protected getRelationsFromInfo(
+    info: GraphQLResolveInfo,
+    includes: string[] = []
+  ): string[] {
     const relations = super.getRelationsFromInfo(info);
     const simplifiedInfo = this.getSimplifiedInfo(info);
 
@@ -40,12 +48,14 @@ export class ItemsResolver extends BaseResolver {
       relations.push('prices');
     }
 
-    return [...new Set(relations)];
+    return [...new Set(relations.concat(includes))];
   }
 
   constructor(
     @Inject(ItemsService)
-    private itemsService: ItemsService
+    private readonly itemsService: ItemsService,
+    @Inject(ProductsService)
+    private readonly productsService: ProductsService
   ) {
     super();
   }
@@ -154,5 +164,29 @@ export class ItemsResolver extends BaseResolver {
   async removeItemNotice(@IntArgs('itemId') itemId: number): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['notice']);
     return await this.itemsService.removeNotice(item);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async createItemOptionSet(
+    @IntArgs('id') id: number,
+    @Args('createItemOptionSetInput')
+    { options }: CreateItemOptionSetInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const item = await this.itemsService.get(
+      id,
+      this.getRelationsFromInfo(info, ['products', 'options', 'options.values'])
+    );
+    const newItem = await this.productsService
+      .bulkRemove(item.products)
+      .then(async () => await this.itemsService.clearOptionSet(item))
+      .then(
+        async (_item) => await this.itemsService.createOptionSet(_item, options)
+      );
+    await this.productsService.createByOptionSet(newItem);
+
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }
