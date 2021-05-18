@@ -1,6 +1,12 @@
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { AddItemUrlInput } from '../dtos/item-url.input';
+import { CreateItemOptionInput } from '../dtos/item-option.input';
 import { ItemEntity } from '../entities/item.entity';
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
@@ -9,16 +15,10 @@ import { Product } from '../../products/models/product.model';
 import { ItemPrice } from './item-price.model';
 import { AddItemPriceInput } from '../dtos/item-price.input';
 import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
 } from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
-import { CreateItemOptionInput } from '../dtos/item.input';
 import { ItemOptionValue } from './item-option-value.model';
 
 @ObjectType()

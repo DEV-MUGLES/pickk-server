@@ -24,7 +24,11 @@ import {
 } from './dtos/item-notice.input';
 import { ItemFilter } from './dtos/item.filter';
 import { ProductsService } from '../products/products.service';
-import { CreateItemOptionSetInput } from './dtos/item-option.input';
+import {
+  CreateItemOptionSetInput,
+  UpdateItemOptionInput,
+} from './dtos/item-option.input';
+import { ItemOption } from './models/item-option.model';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -153,6 +157,20 @@ export class ItemsResolver extends BaseResolver {
   ): Promise<ItemNotice> {
     const item = await this.itemsService.get(itemId, ['notice']);
     return await this.itemsService.updateNotice(item, updateItemNoticeInput);
+  }
+
+  @Mutation(() => ItemOption)
+  async updateItemOption(
+    @IntArgs('id') id: number,
+    @Args('updateItemOptionInput')
+    updateItemOptionInput: UpdateItemOptionInput
+  ): Promise<ItemOption> {
+    const itemOption = await this.itemsService.getItemOption(id);
+    return await this.itemsService.updateItemOption(
+      itemOption,
+      updateItemOptionInput,
+      ['values']
+    );
   }
 
   @Roles(UserRole.Seller)

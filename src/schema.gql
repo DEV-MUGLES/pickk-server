@@ -364,6 +364,7 @@ type Mutation {
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
+  updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -580,6 +581,10 @@ input UpdateItemNoticeInput {
   message: String
   startAt: DateTime
   type: ItemNoticeType
+}
+
+input UpdateItemOptionInput {
+  name: String!
 }
 
 input UpdateProductInput {

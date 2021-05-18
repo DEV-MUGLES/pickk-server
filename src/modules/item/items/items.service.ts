@@ -16,7 +16,10 @@ import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
 } from './dtos/item-notice.input';
-import { CreateItemOptionInput } from './dtos/item-option.input';
+import {
+  CreateItemOptionInput,
+  UpdateItemOptionInput,
+} from './dtos/item-option.input';
 import { AddItemPriceInput } from './dtos/item-price.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import {
@@ -28,6 +31,7 @@ import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 import { ItemNotice } from './models/item-notice.model';
+import { ItemOption } from './models/item-option.model';
 
 @Injectable()
 export class ItemsService {
@@ -59,6 +63,13 @@ export class ItemsService {
 
   async get(id: number, relations: string[] = []): Promise<Item> {
     return await this.itemsRepository.get(id, relations);
+  }
+
+  async getItemOption(
+    id: number,
+    relations: string[] = []
+  ): Promise<ItemOption> {
+    return await this.itemOptionsRepository.get(id, relations);
   }
 
   async create(
@@ -128,6 +139,18 @@ export class ItemsService {
 
   async update(item: Item, updateItemInput: UpdateItemInput): Promise<Item> {
     return await this.itemsRepository.updateEntity(item, updateItemInput);
+  }
+
+  async updateItemOption(
+    itemOption: ItemOption,
+    updateItemOptionInput: UpdateItemOptionInput,
+    relations: string[] = []
+  ): Promise<ItemOption> {
+    return await this.itemOptionsRepository.updateEntity(
+      itemOption,
+      updateItemOptionInput,
+      relations
+    );
   }
 
   async bulkUpdate(

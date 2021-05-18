@@ -1,4 +1,5 @@
-import { InputType, Field } from '@nestjs/graphql';
+import { InputType, Field, PickType } from '@nestjs/graphql';
+import { ItemOption } from '../models/item-option.model';
 
 @InputType()
 export class CreateItemOptionInput {
@@ -14,3 +15,10 @@ export class CreateItemOptionSetInput {
   @Field(() => [CreateItemOptionInput])
   options: CreateItemOptionInput[];
 }
+
+@InputType()
+export class UpdateItemOptionInput extends PickType(
+  ItemOption,
+  ['name'],
+  InputType
+) {}
