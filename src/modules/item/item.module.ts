@@ -6,6 +6,7 @@ import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemsModule } from './items/items.module';
 import { ProductsModule } from './products/products.module';
 import { SellersModule } from './sellers/sellers.module';
+import { SizeChartsModule } from './size-charts/size-charts.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { SellersModule } from './sellers/sellers.module';
     ItemsModule,
     ProductsModule,
     SellersModule,
+    SizeChartsModule,
   ],
 })
 export class ItemModule {}
