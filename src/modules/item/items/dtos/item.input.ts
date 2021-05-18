@@ -67,18 +67,3 @@ export class BulkUpdateItemInput implements Partial<IItem> {
   @IsOptional()
   minorCategoryId: number;
 }
-
-@InputType()
-export class CreateItemOptionInput {
-  @Field(() => String)
-  name: string;
-
-  @Field(() => [String])
-  values: string[];
-}
-
-@InputType()
-export class CreateItemOptionSetInput {
-  @Field(() => [CreateItemOptionInput])
-  options: CreateItemOptionInput[];
-}

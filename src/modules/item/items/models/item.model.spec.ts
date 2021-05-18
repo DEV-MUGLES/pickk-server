@@ -10,9 +10,9 @@ import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
 } from '../dtos/item-notice.input';
+import { CreateItemOptionSetInput } from '../dtos/item-option.input';
 import { AddItemPriceInput } from '../dtos/item-price.input';
 import { AddItemUrlInput } from '../dtos/item-url.input';
-import { CreateItemOptionSetInput } from '../dtos/item.input';
 
 import { ItemNotice } from './item-notice.model';
 import { ItemOption } from './item-option.model';

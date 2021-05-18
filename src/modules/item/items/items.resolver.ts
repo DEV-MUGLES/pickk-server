@@ -1,33 +1,30 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
+import { Roles } from '@src/authentication/decorators/roles.decorator';
+import { JwtAuthGuard } from '@src/authentication/guards';
 import { BaseResolver } from '@src/common/base.resolver';
 import { IntArgs } from '@src/common/decorators/args.decorator';
-import { GraphQLResolveInfo } from 'graphql';
+import { PageInput } from '@src/common/dtos/pagination.dto';
+import { UserRole } from '@user/users/constants/user.enum';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
 import { AddItemPriceInput } from './dtos/item-price.input';
-import {
-  UpdateItemInput,
-  BulkUpdateItemInput,
-  CreateItemOptionSetInput,
-} from './dtos/item.input';
+import { UpdateItemInput, BulkUpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
-import { PageInput } from '@src/common/dtos/pagination.dto';
 import { ItemNotice } from './models/item-notice.model';
 import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
 } from './dtos/item-notice.input';
-import { Roles } from '@src/authentication/decorators/roles.decorator';
-import { JwtAuthGuard } from '@src/authentication/guards';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { ItemFilter } from './dtos/item.filter';
 import { ProductsService } from '../products/products.service';
+import { CreateItemOptionSetInput } from './dtos/item-option.input';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
