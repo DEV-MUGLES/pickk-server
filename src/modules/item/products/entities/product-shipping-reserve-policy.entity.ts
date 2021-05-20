@@ -1,6 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { IsDate, IsNumber } from 'class-validator';
 import { Column, Entity } from 'typeorm';
+
+import { BaseIdEntity } from '@src/common/entities/base.entity';
+
 import { IProductShippingReservePolicy } from '../interfaces/product-shipping-reserve-policy.interface';
 
 @ObjectType()
@@ -10,15 +13,26 @@ import { IProductShippingReservePolicy } from '../interfaces/product-shipping-re
 export class ProductShippingReservePolicyEntity
   extends BaseIdEntity
   implements IProductShippingReservePolicy {
-  @Field()
+  constructor(attributes?: Partial<ProductShippingReservePolicyEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.estimatedShippingBegginDate = attributes.estimatedShippingBegginDate;
+    this.stock = attributes.stock;
+  }
+
+  @Field({ description: '예약발송 예정일' })
   @Column('datetime')
+  @IsDate()
   estimatedShippingBegginDate: Date;
 
-  @Field()
-  @Column('datetime')
-  startAt: Date;
-
-  @Field()
-  @Column('datetime')
-  endAt: Date;
+  @Field(() => Int, {
+    description:
+      '예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다.',
+  })
+  @Column({ type: 'smallint', unsigned: true })
+  @IsNumber()
+  stock: number;
 }

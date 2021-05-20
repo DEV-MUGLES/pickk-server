@@ -1,29 +1,33 @@
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { plainToClass } from 'class-transformer';
 
 import { AddItemUrlInput } from '../dtos/item-url.input';
+import { CreateItemOptionInput } from '../dtos/item-option.input';
+import { AddItemPriceInput } from '../dtos/item-price.input';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from '../dtos/item-notice.input';
+import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from '../dtos/item-size-chart.input';
+
 import { ItemEntity } from '../entities/item.entity';
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
 import { ItemPrice } from './item-price.model';
-import { AddItemPriceInput } from '../dtos/item-price.input';
-import {
-  BadRequestException,
-  ConflictException,
-  NotFoundException,
-} from '@nestjs/common';
-import {
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
-} from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
-import {
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
-} from '../dtos/item-size-chart.input';
 import { ItemSizeChart } from './item-size-chart.model';
-import { plainToClass } from 'class-transformer';
+
+import { ItemOptionValue } from './item-option-value.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -147,6 +151,22 @@ export class Item extends ItemEntity {
 
     this.notice = null;
     return notice;
+  };
+
+  public createOptionSet = (inputs: CreateItemOptionInput[]): ItemOption[] => {
+    if (this.options?.length > 0) {
+      throw new ConflictException('옵션이 이미 존재합니다.');
+    }
+
+    return (this.options = inputs.map(
+      (input) =>
+        new ItemOption({
+          name: input.name,
+          values: input.values.map(
+            (value) => new ItemOptionValue({ name: value })
+          ),
+        })
+    ));
   };
 
   public addSizeCharts = (

@@ -2,10 +2,15 @@ import { DeepPartial, EntityRepository, getConnection, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
+
 import { ItemEntity } from './entities/item.entity';
 import { ItemSizeChartEntity } from './entities/item-size-chart.entity';
+import { ItemOptionEntity } from './entities/item-option.entity';
 import { Item } from './models/item.model';
 import { ItemSizeChart } from './models/item-size-chart.model';
+import { ItemOption } from './models/item-option.model';
+import { ItemOptionValue } from './models/item-option-value.model';
+import { ItemOptionValueEntity } from './entities/item-option-value.entity';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
@@ -29,6 +34,51 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
       .set({ ...input })
       .where({ id: In(ids) })
       .execute();
+  }
+}
+
+@EntityRepository(ItemOptionEntity)
+export class ItemOptionsRepository extends BaseRepository<
+  ItemOptionEntity,
+  ItemOption
+> {
+  entityToModel(entity: ItemOptionEntity, transformOptions = {}): ItemOption {
+    return plainToClass(ItemOption, entity, transformOptions) as ItemOption;
+  }
+
+  entityToModelMany(
+    entities: ItemOptionEntity[],
+    transformOptions = {}
+  ): ItemOption[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ItemOptionValueEntity)
+export class ItemOptionValuesRepository extends BaseRepository<
+  ItemOptionValueEntity,
+  ItemOptionValue
+> {
+  entityToModel(
+    entity: ItemOptionValueEntity,
+    transformOptions = {}
+  ): ItemOptionValue {
+    return plainToClass(
+      ItemOptionValue,
+      entity,
+      transformOptions
+    ) as ItemOptionValue;
+  }
+
+  entityToModelMany(
+    entities: ItemOptionValueEntity[],
+    transformOptions = {}
+  ): ItemOptionValue[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
   }
 }
 

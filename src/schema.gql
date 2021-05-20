@@ -42,8 +42,8 @@ type Brand {
 input BulkUpdateItemInput {
   isMdRecommended: Boolean
   isSellable: Boolean
-  majorCategoryId: Float
-  minorCategoryId: Float
+  majorCategoryId: Int
+  minorCategoryId: Int
 }
 
 type Courier {
@@ -70,6 +70,15 @@ input CreateCourierInput {
   name: String!
   phoneNumber: String!
   returnReserveUrl: String!
+}
+
+input CreateItemOptionInput {
+  name: String!
+  values: [String!]!
+}
+
+input CreateItemOptionSetInput {
+  options: [CreateItemOptionInput!]!
 }
 
 input CreateSellerClaimPolicyInput {
@@ -342,6 +351,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
+  createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
@@ -354,6 +364,7 @@ type Mutation {
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
+  updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -365,6 +376,7 @@ type Mutation {
   updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
+  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
 
   """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
@@ -388,10 +400,13 @@ type Product {
 
 type ProductShippingReservePolicy {
   createdAt: DateTime!
-  endAt: DateTime!
+
+  """예약발송 예정일"""
   estimatedShippingBegginDate: DateTime!
   id: Int!
-  startAt: DateTime!
+
+  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
+  stock: Int!
   updatedAt: DateTime!
 }
 
@@ -566,6 +581,14 @@ input UpdateItemNoticeInput {
   message: String
   startAt: DateTime
   type: ItemNoticeType
+}
+
+input UpdateItemOptionInput {
+  name: String!
+}
+
+input UpdateProductInput {
+  stock: Int!
 }
 
 input UpdateSellerClaimPolicyInput {

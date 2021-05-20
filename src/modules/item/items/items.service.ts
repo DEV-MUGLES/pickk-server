@@ -12,28 +12,44 @@ import {
   BulkUpdateItemInput,
 } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsRepository, ItemSizeChartsRepository } from './items.repository';
-import { ItemPrice } from './models/item-price.model';
-import { ItemUrl } from './models/item-url.model';
-import { Item } from './models/item.model';
-import { AddItemPriceInput } from './dtos/item-price.input';
+import { ItemFilter } from './dtos/item.filter';
 import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
 } from './dtos/item-notice.input';
-import { ItemNotice } from './models/item-notice.model';
-import { ItemFilter } from './dtos/item.filter';
+import {
+  CreateItemOptionInput,
+  UpdateItemOptionInput,
+} from './dtos/item-option.input';
+import { AddItemPriceInput } from './dtos/item-price.input';
 import {
   AddItemSizeChartInput,
   RemoveItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from './dtos/item-size-chart.input';
 
+import { ItemPrice } from './models/item-price.model';
+import { ItemUrl } from './models/item-url.model';
+import { Item } from './models/item.model';
+import { ItemNotice } from './models/item-notice.model';
+import { ItemOption } from './models/item-option.model';
+
+import {
+  ItemOptionsRepository,
+  ItemOptionValuesRepository,
+  ItemsRepository,
+  ItemSizeChartsRepository,
+} from './items.repository';
+
 @Injectable()
 export class ItemsService {
   constructor(
     @InjectRepository(ItemsRepository)
     private readonly itemsRepository: ItemsRepository,
+    @InjectRepository(ItemOptionsRepository)
+    private readonly itemOptionsRepository: ItemOptionsRepository,
+    @InjectRepository(ItemOptionValuesRepository)
+    private readonly itemOptionValuesRepository: ItemOptionValuesRepository,
     @InjectRepository(ItemSizeChartsRepository)
     private readonly itemSizeChartsRepository: ItemSizeChartsRepository
   ) {}
@@ -57,6 +73,13 @@ export class ItemsService {
 
   async get(id: number, relations: string[] = []): Promise<Item> {
     return await this.itemsRepository.get(id, relations);
+  }
+
+  async getItemOption(
+    id: number,
+    relations: string[] = []
+  ): Promise<ItemOption> {
+    return await this.itemOptionsRepository.get(id, relations);
   }
 
   async create(
@@ -124,11 +147,20 @@ export class ItemsService {
     return result;
   }
 
-  async updateById(
-    item: Item,
-    updateItemInput: UpdateItemInput
-  ): Promise<Item> {
+  async update(item: Item, updateItemInput: UpdateItemInput): Promise<Item> {
     return await this.itemsRepository.updateEntity(item, updateItemInput);
+  }
+
+  async updateItemOption(
+    itemOption: ItemOption,
+    updateItemOptionInput: UpdateItemOptionInput,
+    relations: string[] = []
+  ): Promise<ItemOption> {
+    return await this.itemOptionsRepository.updateEntity(
+      itemOption,
+      updateItemOptionInput,
+      relations
+    );
   }
 
   async bulkUpdate(
@@ -179,6 +211,26 @@ export class ItemsService {
     item.name = data.name;
 
     return await this.itemsRepository.save(item);
+  }
+
+  /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */
+  async clearOptionSet(item: Item): Promise<Item> {
+    const optionValues = item.options.reduce(
+      (acc, curr) => acc.concat(curr.values),
+      []
+    );
+    await this.itemOptionValuesRepository.remove(optionValues);
+    await this.itemOptionsRepository.remove(item.options);
+    return this.get(item.id, ['options', 'options.values', 'products']);
+  }
+
+  async createOptionSet(
+    item: Item,
+    options: CreateItemOptionInput[]
+  ): Promise<Item> {
+    item.createOptionSet(options);
+    await this.itemsRepository.save(item);
+    return this.get(item.id, ['options', 'options.values', 'products']);
   }
 
   async addSizeCharts(

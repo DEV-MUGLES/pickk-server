@@ -1,4 +1,4 @@
-import { InputType, PickType, PartialType, Field } from '@nestjs/graphql';
+import { InputType, PickType, PartialType, Field, Int } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 import { IItem } from '../interfaces/item.interface';
 
@@ -57,12 +57,12 @@ export class BulkUpdateItemInput implements Partial<IItem> {
   @IsOptional()
   isSellable: boolean;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   majorCategoryId: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   @IsNumber()
   @IsOptional()
   minorCategoryId: number;
