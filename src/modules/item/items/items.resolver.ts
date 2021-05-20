@@ -23,6 +23,11 @@ import { Roles } from '@src/authentication/decorators/roles.decorator';
 import { JwtAuthGuard } from '@src/authentication/guards';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { ItemFilter } from './dtos/item.filter';
+import {
+  AddItemSizeChartInput,
+  RemoveItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from './dtos/item-size-chart.input';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -154,5 +159,47 @@ export class ItemsResolver extends BaseResolver {
   async removeItemNotice(@IntArgs('itemId') itemId: number): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['notice']);
     return await this.itemsService.removeNotice(item);
+  }
+
+  @Mutation(() => Item)
+  async addItemSizeCharts(
+    @IntArgs('itemId') itemId: number,
+    @Args({
+      name: 'addItemSizeChartInput',
+      type: () => [AddItemSizeChartInput],
+    })
+    addItemSizeChartInput: AddItemSizeChartInput[]
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+    return await this.itemsService.addSizeCharts(item, addItemSizeChartInput);
+  }
+
+  @Mutation(() => Item)
+  async removeItemSizeCharts(@IntArgs('itemId') itemId: number): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+    return await this.itemsService.removeSizeCharts(item);
+  }
+
+  @Mutation(() => Item)
+  async modifyItemSizeCharts(
+    @IntArgs('itemId') itemId: number,
+    @Args('updateItemSizeChart', {
+      type: () => [UpdateItemSizeChartInput],
+      nullable: true,
+    })
+    updateItemSizeChartInputs: UpdateItemSizeChartInput[],
+    @Args('removeItemSizeChart', {
+      type: () => [RemoveItemSizeChartInput],
+      nullable: true,
+    })
+    removeItemSizeChartInputs: RemoveItemSizeChartInput[]
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+
+    return await this.itemsService.modifySizeCharts(
+      item,
+      updateItemSizeChartInputs,
+      removeItemSizeChartInputs
+    );
   }
 }

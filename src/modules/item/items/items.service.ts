@@ -12,7 +12,7 @@ import {
   BulkUpdateItemInput,
 } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsRepository } from './items.repository';
+import { ItemsRepository } from './repositories/items.repository';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
@@ -23,12 +23,20 @@ import {
 } from './dtos/item-notice.input';
 import { ItemNotice } from './models/item-notice.model';
 import { ItemFilter } from './dtos/item.filter';
+import {
+  AddItemSizeChartInput,
+  RemoveItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from './dtos/item-size-chart.input';
+import { ItemSizeChartsRepository } from './repositories/item-size-charts.repository';
 
 @Injectable()
 export class ItemsService {
   constructor(
     @InjectRepository(ItemsRepository)
-    private readonly itemsRepository: ItemsRepository
+    private readonly itemsRepository: ItemsRepository,
+    @InjectRepository(ItemSizeChartsRepository)
+    private readonly itemSizeChartsRepository: ItemSizeChartsRepository
   ) {}
 
   async list(
@@ -170,6 +178,46 @@ export class ItemsService {
         (data.salePrice * (100 - price.pickkDiscountRate)) / 100;
     });
     item.name = data.name;
+
+    return await this.itemsRepository.save(item);
+  }
+
+  async addSizeCharts(
+    item: Item,
+    addItemSizeChartInputs: AddItemSizeChartInput[]
+  ): Promise<Item> {
+    item.addSizeCharts(addItemSizeChartInputs);
+    return await this.itemsRepository.save(item);
+  }
+
+  async removeSizeCharts(item: Item): Promise<Item> {
+    await this.itemSizeChartsRepository.bulkDelete(
+      item.sizeCharts.map(({ id }) => id)
+    );
+    item.removeSizeChartsAll();
+    return await this.itemsRepository.save(item);
+  }
+
+  async modifySizeCharts(
+    item: Item,
+    updateItemSizeChartInputs: UpdateItemSizeChartInput[],
+    removeItemSizeChartInputs?: RemoveItemSizeChartInput[]
+  ): Promise<Item> {
+    const addSizeChart = [],
+      updateSizeChart = [];
+
+    updateItemSizeChartInputs.forEach((input) => {
+      if (!input.id) {
+        addSizeChart.push(input);
+        return;
+      }
+      updateSizeChart.push(input);
+    });
+    item.addSizeCharts(addSizeChart);
+    item.updateSizeCharts(updateSizeChart);
+    if (!removeItemSizeChartInputs) {
+      item.removeSizeChartsByIds(removeItemSizeChartInputs.map(({ id }) => id));
+    }
 
     return await this.itemsRepository.save(item);
   }
