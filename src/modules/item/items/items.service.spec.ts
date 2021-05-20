@@ -3,7 +3,7 @@ import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
 import * as faker from 'faker';
 
 import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsRepository } from './repositories/items.repository';
+import { ItemsRepository } from './items.repository';
 import { ItemsService } from './items.service';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';

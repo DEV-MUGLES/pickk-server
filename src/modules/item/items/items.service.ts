@@ -12,7 +12,7 @@ import {
   BulkUpdateItemInput,
 } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsRepository } from './repositories/items.repository';
+import { ItemsRepository, ItemSizeChartsRepository } from './items.repository';
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
@@ -28,7 +28,6 @@ import {
   RemoveItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from './dtos/item-size-chart.input';
-import { ItemSizeChartsRepository } from './repositories/item-size-charts.repository';
 
 @Injectable()
 export class ItemsService {

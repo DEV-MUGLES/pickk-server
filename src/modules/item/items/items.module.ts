@@ -3,8 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
-import { ItemsRepository } from './repositories/items.repository';
-import { ItemSizeChartsRepository } from './repositories/item-size-charts.repository';
+import { ItemsRepository, ItemSizeChartsRepository } from './items.repository';
 
 @Module({
   imports: [
