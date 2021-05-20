@@ -2,8 +2,8 @@ import { DeepPartial, EntityRepository, getConnection, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
-import { ItemEntity } from './entities/item.entity';
-import { Item } from './models/item.model';
+import { ItemEntity } from '../entities/item.entity';
+import { Item } from '../models/item.model';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {

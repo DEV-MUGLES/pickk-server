@@ -18,6 +18,12 @@ import {
   UpdateItemNoticeInput,
 } from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
+import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from '../dtos/item-size-chart.input';
+import { ItemSizeChart } from './item-size-chart.model';
+import { plainToClass } from 'class-transformer';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -39,6 +45,9 @@ export class Item extends ItemEntity {
     nullable: true,
   })
   products: Product[];
+
+  @Field(() => [ItemSizeChart], { nullable: true })
+  sizeCharts: ItemSizeChart[];
 
   @Field()
   get originalPrice(): number {
@@ -138,5 +147,51 @@ export class Item extends ItemEntity {
 
     this.notice = null;
     return notice;
+  };
+
+  public addSizeCharts = (
+    addItemSizeChartInputs: AddItemSizeChartInput[]
+  ): ItemSizeChart[] => {
+    addItemSizeChartInputs.forEach((input) => {
+      const sizeChart = new ItemSizeChart(input);
+      this.sizeCharts.push(sizeChart);
+    });
+    return this.sizeCharts;
+  };
+
+  public updateSizeCharts = (
+    updateSizeChartInputs: UpdateItemSizeChartInput[]
+  ): ItemSizeChart[] => {
+    updateSizeChartInputs.forEach((input) => {
+      const index = this.sizeCharts.findIndex((v) => v.id === input.id);
+      const newSizeChart = plainToClass(
+        ItemSizeChart,
+        this.sizeCharts[index]
+      ) as ItemSizeChart;
+      newSizeChart.update(input);
+      this.sizeCharts[index] = newSizeChart;
+    });
+    return this.sizeCharts;
+  };
+
+  public removeSizeChartsAll = (): ItemSizeChart[] => {
+    const { sizeCharts } = this;
+    if (!this.sizeCharts) {
+      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
+    }
+    this.sizeCharts = null;
+    return sizeCharts;
+  };
+
+  public removeSizeChartsByIds = (sizeChartIds: number[]): ItemSizeChart[] => {
+    const { sizeCharts } = this;
+    sizeCharts.forEach((size, index) => {
+      if (sizeChartIds.includes(size.id)) {
+        size.remove();
+        sizeCharts[index] = null;
+      }
+    });
+    this.sizeCharts = sizeCharts.filter((size) => size !== null);
+    return this.sizeCharts;
   };
 }

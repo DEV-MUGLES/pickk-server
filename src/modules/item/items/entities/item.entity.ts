@@ -26,10 +26,10 @@ import { ItemOption } from '../models/item-option.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemNotice } from '../models/item-notice.model';
+import { ItemSizeChart } from '../models/item-size-chart.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
-import { SizeChart } from '../../size-charts/model/size-chart.model';
 
 @ObjectType()
 @Entity({
@@ -227,8 +227,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @JoinColumn()
   notice: ItemNotice;
 
-  @OneToMany('SizeChartEntity', 'item', {
+  @OneToMany('ItemSizeChartEntity', 'item', {
     cascade: true,
   })
-  sizeCharts: SizeChart[];
+  sizeCharts: ItemSizeChart[];
 }
