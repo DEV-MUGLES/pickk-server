@@ -31,7 +31,6 @@ export class UpdateItemPriceInput extends PickType(
     'finalPrice',
     'pickkDiscountAmount',
     'pickkDiscountRate',
-    'isActive',
     'isCrawlUpdating',
     'startAt',
     'endAt',

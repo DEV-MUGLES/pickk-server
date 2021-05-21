@@ -137,6 +137,45 @@ describe('Item', () => {
     });
   });
 
+  describe('activatePrice', () => {
+    const priceId = faker.datatype.number();
+
+    it('성공적으로 활성화한다.', () => {
+      const item = new Item({
+        prices: [
+          new ItemPrice({ isActive: true }),
+          new ItemPrice({ isActive: false, id: priceId }),
+        ],
+      });
+
+      item.activatePrice(priceId);
+      expect(item.prices[0].isActive).toEqual(false);
+      expect(item.prices[1].isActive).toEqual(true);
+    });
+
+    it('존재하지 않는 priceId인 경우 NotFoundException 발생', () => {
+      const item = new Item({
+        prices: [
+          new ItemPrice({ isActive: true }),
+          new ItemPrice({ isActive: false }),
+        ],
+      });
+
+      expect(() => item.activatePrice(priceId)).toThrow(NotFoundException);
+    });
+
+    it('이미 활성화된 경우 ConflictException 발생', () => {
+      const item = new Item({
+        prices: [
+          new ItemPrice({ isActive: true, id: priceId }),
+          new ItemPrice({ isActive: false }),
+        ],
+      });
+
+      expect(() => item.activatePrice(priceId)).toThrow(ConflictException);
+    });
+  });
+
   const addItemNoticeInput: AddItemNoticeInput = {
     type: ItemNoticeType.General,
     message: faker.lorem.text(),

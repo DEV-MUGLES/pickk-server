@@ -6,6 +6,7 @@ import { AddItemUrlInput } from './dtos/item-url.input';
 import {
   ItemOptionsRepository,
   ItemOptionValuesRepository,
+  ItemPricesRepository,
   ItemsRepository,
 } from './items.repository';
 import { ItemsService } from './items.service';
@@ -24,6 +25,7 @@ describe('ItemsService', () => {
         ItemsRepository,
         ItemOptionsRepository,
         ItemOptionValuesRepository,
+        ItemPricesRepository,
       ],
     }).compile();
 

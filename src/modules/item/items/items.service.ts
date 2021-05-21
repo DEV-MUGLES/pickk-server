@@ -134,6 +134,11 @@ export class ItemsService {
     return await this.itemsRepository.save(item);
   }
 
+  async activateItemPrice(item: Item, priceId: number): Promise<Item> {
+    item.activatePrice(priceId);
+    return await this.itemsRepository.save(item);
+  }
+
   async addNotice(
     item: Item,
     addItemNoticeInput: AddItemNoticeInput

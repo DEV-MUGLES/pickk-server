@@ -110,6 +110,19 @@ export class Item extends ItemEntity {
     return itemPrice;
   };
 
+  public activatePrice = (priceId: number): ItemPrice[] => {
+    const index = this.prices?.findIndex(({ id }) => id === priceId);
+    if (index < 0) {
+      throw new NotFoundException('해당 ItemPrice가 존재하지 않습니다.');
+    }
+    if (this.prices[index].isActive) {
+      throw new ConflictException('이미 활성화된 Price입니다.');
+    }
+
+    this.setActivePrice(index);
+    return this.prices;
+  };
+
   public addNotice = (addItemNoticeInput: AddItemNoticeInput): ItemNotice => {
     if (this.notice) {
       throw new ConflictException('이미 안내 메세지가 존재합니다.');
