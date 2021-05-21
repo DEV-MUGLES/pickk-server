@@ -9,6 +9,8 @@ import { ItemOptionEntity } from './entities/item-option.entity';
 import { ItemOption } from './models/item-option.model';
 import { ItemOptionValueEntity } from './entities/item-option-value.entity';
 import { ItemOptionValue } from './models/item-option-value.model';
+import { ItemPriceEntity } from './entities/item-price.entity';
+import { ItemPrice } from './models/item-price.model';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
@@ -74,6 +76,25 @@ export class ItemOptionValuesRepository extends BaseRepository<
     entities: ItemOptionValueEntity[],
     transformOptions = {}
   ): ItemOptionValue[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ItemPriceEntity)
+export class ItemPricesRepository extends BaseRepository<
+  ItemPriceEntity,
+  ItemPrice
+> {
+  entityToModel(entity: ItemPriceEntity, transformOptions = {}): ItemPrice {
+    return plainToClass(ItemPrice, entity, transformOptions) as ItemPrice;
+  }
+
+  entityToModelMany(
+    entities: ItemPriceEntity[],
+    transformOptions = {}
+  ): ItemPrice[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );

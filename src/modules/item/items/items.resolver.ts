@@ -10,7 +10,10 @@ import { PageInput } from '@src/common/dtos/pagination.dto';
 import { UserRole } from '@user/users/constants/user.enum';
 
 import { ITEM_RELATIONS } from './constants/item.relation';
-import { AddItemPriceInput } from './dtos/item-price.input';
+import {
+  AddItemPriceInput,
+  UpdateItemPriceInput,
+} from './dtos/item-price.input';
 import { UpdateItemInput, BulkUpdateItemInput } from './dtos/item.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemsService } from './items.service';
@@ -124,6 +127,19 @@ export class ItemsResolver extends BaseResolver {
   ): Promise<ItemPrice> {
     const item = await this.itemsService.get(itemId, ['prices']);
     return await this.itemsService.addPrice(item, addItemPriceInput);
+  }
+
+  @Mutation(() => ItemPrice)
+  async updateItemPrice(
+    @IntArgs('id') id: number,
+    @Args('updateItemPriceInput')
+    updateItemPriceInput: UpdateItemPriceInput
+  ): Promise<ItemPrice> {
+    const itemPrice = await this.itemsService.getItemPrice(id);
+    return await this.itemsService.updateItemPrice(
+      itemPrice,
+      updateItemPriceInput
+    );
   }
 
   @Roles(UserRole.Seller)

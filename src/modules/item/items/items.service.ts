@@ -20,11 +20,15 @@ import {
   CreateItemOptionInput,
   UpdateItemOptionInput,
 } from './dtos/item-option.input';
-import { AddItemPriceInput } from './dtos/item-price.input';
+import {
+  AddItemPriceInput,
+  UpdateItemPriceInput,
+} from './dtos/item-price.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import {
   ItemOptionsRepository,
   ItemOptionValuesRepository,
+  ItemPricesRepository,
   ItemsRepository,
 } from './items.repository';
 import { ItemPrice } from './models/item-price.model';
@@ -41,7 +45,9 @@ export class ItemsService {
     @InjectRepository(ItemOptionsRepository)
     private readonly itemOptionsRepository: ItemOptionsRepository,
     @InjectRepository(ItemOptionValuesRepository)
-    private readonly itemOptionValuesRepository: ItemOptionValuesRepository
+    private readonly itemOptionValuesRepository: ItemOptionValuesRepository,
+    @InjectRepository(ItemPricesRepository)
+    private readonly itemPricesRepository: ItemPricesRepository
   ) {}
 
   async list(
@@ -70,6 +76,10 @@ export class ItemsService {
     relations: string[] = []
   ): Promise<ItemOption> {
     return await this.itemOptionsRepository.get(id, relations);
+  }
+
+  async getItemPrice(id: number, relations: string[] = []): Promise<ItemPrice> {
+    return await this.itemPricesRepository.get(id, relations);
   }
 
   async create(
@@ -104,6 +114,18 @@ export class ItemsService {
     const price = item.addPrice(addItemPriceInput);
     await this.itemsRepository.save(item);
     return price;
+  }
+
+  async updateItemPrice(
+    itemPrice: ItemPrice,
+    updateItemPriceInput: UpdateItemPriceInput,
+    relations: string[] = []
+  ): Promise<ItemPrice> {
+    return await this.itemPricesRepository.updateEntity(
+      itemPrice,
+      updateItemPriceInput,
+      relations
+    );
   }
 
   async removePrice(item: Item, priceId: number): Promise<Item> {

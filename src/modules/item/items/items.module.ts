@@ -4,9 +4,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductsModule } from '../products/products.module';
 
 import {
+  ItemsRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
-  ItemsRepository,
+  ItemPricesRepository,
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
@@ -17,6 +18,7 @@ import { ItemsService } from './items.service';
       ItemsRepository,
       ItemOptionsRepository,
       ItemOptionValuesRepository,
+      ItemPricesRepository,
     ]),
     ProductsModule,
   ],
