@@ -81,6 +81,7 @@ jobs:
           image: ${{ steps.build-image.outputs.image }}
 
       - name: Deploy Amazon ECS task definition
+        id: deploy
         uses: aws-actions/amazon-ecs-deploy-task-definition@v1
         with:
           task-definition: ${{ steps.task-def.outputs.task-definition }}
@@ -88,3 +89,47 @@ jobs:
           cluster: pickk-server-cluster
           wait-for-service-stability: true
           force-new-deployment: true
+
+      - name: Notify to slack (SUCCEED)
+        if: steps.deploy.outcome == 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            { 
+              text: ":+1: Great! Execution Succeed",
+              attachments: [{
+                color: '#58A459',
+                author_name: `${process.env.GITHUB_ACTOR}`,
+                author_link: `https://github.com/${process.env.GITHUB_ACTOR}`,
+                author_icon: `https://github.com/${process.env.GITHUB_ACTOR}.png`,
+                title: `Server deployed (@pickk/server)\n${process.env.AS_WORKFLOW}\nby ${process.env.AS_COMMIT} of ${process.env.AS_REPO}`,
+                footer: `${process.env.AS_REPO} took ${process.env.AS_TOOK}`
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: Notify to slack (FAILED)
+        if: steps.deploy.outcome != 'success'
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: workflow,job,commit,repo,ref,author,took
+          custom_payload: |
+            { 
+              text: ":cry: Uh oh, Looks like there was an error",
+              attachments: [{
+                color: "#B73537",
+                author_name: `${process.env.GITHUB_ACTOR}`,
+                author_link: `https://github.com/${process.env.GITHUB_ACTOR}`,
+                author_icon: `https://github.com/${process.env.GITHUB_ACTOR}.png`,
+                title: `Server Deploy Failed (@pickk/server)\n${process.env.AS_WORKFLOW}\nby ${process.env.AS_COMMIT} of ${process.env.AS_REPO}`,
+                footer: `${process.env.AS_REPO} took ${process.env.AS_TOOK}`
+              }]
+            }
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
