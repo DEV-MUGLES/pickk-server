@@ -97,6 +97,10 @@ export class Item extends ItemEntity {
     if (itemPrice.isBase) {
       throw new BadRequestException('Cannot remove base ItemPrice');
     }
+    if (itemPrice.isActive) {
+      const baseIndex = this.prices.findIndex(({ isBase }) => isBase);
+      this.setActivePrice(baseIndex);
+    }
 
     this.prices = [
       ...this.prices.slice(0, index),

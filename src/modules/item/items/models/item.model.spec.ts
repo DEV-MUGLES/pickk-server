@@ -111,16 +111,29 @@ describe('Item', () => {
       expect(item.prices.length).toEqual(1);
     });
 
-    it('Base price는 삭제할 수 없다.', () => {
+    it('Base price를 삭제하면 BadRequestException 발생', () => {
       const priceId = faker.datatype.number();
       const item = new Item({
         prices: [new ItemPrice({ ...addItemPriceInput, id: priceId })],
       });
-      try {
-        item.removePrice(priceId);
-      } catch (err) {
-        expect(err).toBeInstanceOf(BadRequestException);
-      }
+      expect(() => item.removePrice(priceId)).toThrow(BadRequestException);
+    });
+
+    it('활성화 상태인 Price를 삭제하면 Base price가 활성화된다.', () => {
+      const priceLength = Math.max(1, faker.datatype.number(20));
+      const priceId = faker.datatype.number();
+      const baseIndex = 0;
+
+      const item = new Item({
+        prices: [
+          new ItemPrice({ isBase: true, isActive: false }),
+          ...[...Array(priceLength - 2)].map(() => new ItemPrice()),
+          new ItemPrice({ isActive: true, id: priceId }),
+        ],
+      });
+      item.removePrice(priceId);
+      expect(item.prices.length).toEqual(priceLength - 1);
+      expect(item.prices[baseIndex].isActive).toEqual(true);
     });
   });
 
