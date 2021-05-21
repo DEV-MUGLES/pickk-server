@@ -196,6 +196,9 @@ type Item {
   providedCode: String
   salePolicy: ItemSalePolicy
   salePrice: Float!
+
+  """판매가능시점(=활성전환일)"""
+  sellableAt: DateTime
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -345,6 +348,7 @@ input LoginByOauthInput {
 }
 
 type Mutation {
+  activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
@@ -365,6 +369,7 @@ type Mutation {
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
+  updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
@@ -413,6 +418,8 @@ type ProductShippingReservePolicy {
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
+
+  """중복이면 true, 아니면 false를 반환한다."""
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
@@ -585,6 +592,19 @@ input UpdateItemNoticeInput {
 
 input UpdateItemOptionInput {
   name: String!
+}
+
+input UpdateItemPriceInput {
+  displayPrice: Float
+  endAt: DateTime
+  finalPrice: Int!
+  isCrawlUpdating: Boolean!
+  originalPrice: Int!
+  pickkDiscountAmount: Int!
+  pickkDiscountRate: Int!
+  sellPrice: Int!
+  startAt: DateTime
+  unit: ItemPriceUnit
 }
 
 input UpdateProductInput {

@@ -1,5 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   Index,
@@ -65,6 +67,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.minorCategory = attributes.minorCategory;
     this.majorCategoryId = attributes.majorCategoryId;
     this.minorCategoryId = attributes.minorCategoryId;
+
+    this.sellableAt = attributes.sellableAt;
   }
 
   @Field()
@@ -224,4 +228,16 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
   @JoinColumn()
   notice: ItemNotice;
+
+  @Field({ nullable: true, description: '판매가능시점(=활성전환일)' })
+  @Column({ nullable: true })
+  sellableAt?: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  setSellableAt() {
+    if (this.isSellable && !this.sellableAt) {
+      this.sellableAt = new Date();
+    }
+  }
 }

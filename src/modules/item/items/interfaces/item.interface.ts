@@ -41,4 +41,7 @@ export interface IItem {
   majorCategoryId?: number;
   minorCategory?: IItemCategory;
   minorCategoryId?: number;
+
+  /** 판매가능시점(=활성전환일) */
+  sellableAt?: Date;
 }
