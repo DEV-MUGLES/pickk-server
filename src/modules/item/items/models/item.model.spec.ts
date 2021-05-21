@@ -120,7 +120,7 @@ describe('Item', () => {
     });
 
     it('활성화 상태인 Price를 삭제하면 Base price가 활성화된다.', () => {
-      const priceLength = Math.max(1, faker.datatype.number(20));
+      const priceLength = Math.max(3, faker.datatype.number(20));
       const priceId = faker.datatype.number();
       const baseIndex = 0;
 
