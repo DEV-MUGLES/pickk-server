@@ -104,11 +104,9 @@ describe('BrandsResolver', () => {
         .spyOn(sellersService, 'findOne')
         .mockResolvedValueOnce(seller);
 
-      try {
-        await brandsResolver.updateBrand(user, brandId, updateBrandInput);
-      } catch (error) {
-        expect(error).toBeInstanceOf(UnauthorizedException);
-      }
+      await expect(
+        brandsResolver.updateBrand(user, brandId, updateBrandInput)
+      ).rejects.toThrow(UnauthorizedException);
       expect(sellersServiceSpy).toHaveBeenCalledWith({ userId });
     });
   });

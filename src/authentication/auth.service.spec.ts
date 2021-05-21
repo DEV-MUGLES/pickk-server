@@ -115,26 +115,21 @@ describe('AuthService', () => {
       );
     });
 
-    it('Code 일치하는 유저가 없으면 User', async () => {
+    it('Code 일치하는 유저가 없으면 UserCodeNotFoundExeption 발생', async () => {
       const usersServiceFindOneSpy = jest
         .spyOn(usersService, 'findOne')
-        .mockResolvedValue(null);
+        .mockResolvedValueOnce(null);
 
-      try {
-        await authService.getUserByCodeAuth(
-          codeLoginDto.code,
-          codeLoginDto.password
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(UserCodeNotFoundExeption);
-      }
+      await expect(
+        authService.getUserByCodeAuth(codeLoginDto.code, codeLoginDto.password)
+      ).rejects.toThrow(UserCodeNotFoundExeption);
 
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         code: codeLoginDto.code,
       });
     });
 
-    it('비밀번호가 틀리면 PasswordIncorrectException', async () => {
+    it('비밀번호가 틀리면 PasswordIncorrectException 발생', async () => {
       const existingUser = Object.assign(new User(), {
         ...codeLoginDto,
         password: new UserPassword(),
@@ -147,14 +142,9 @@ describe('AuthService', () => {
         .spyOn(existingUser, 'comparePassword')
         .mockReturnValue(false);
 
-      try {
-        await authService.getUserByCodeAuth(
-          codeLoginDto.code,
-          codeLoginDto.password
-        );
-      } catch (error) {
-        expect(error).toBeInstanceOf(PasswordIncorrectException);
-      }
+      await expect(
+        authService.getUserByCodeAuth(codeLoginDto.code, codeLoginDto.password)
+      ).rejects.toThrow(PasswordIncorrectException);
       expect(usersServiceFindOneSpy).toHaveBeenCalledWith({
         code: codeLoginDto.code,
       });

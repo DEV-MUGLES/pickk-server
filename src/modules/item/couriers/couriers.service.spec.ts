@@ -54,11 +54,9 @@ describe('CouriersService', () => {
     it('should throw CourierIssueNotFoundException when not found', async () => {
       const courier = new Courier();
 
-      try {
-        await couriersService.removeIssue(courier);
-      } catch (err) {
-        expect(err).toBeInstanceOf(CourierIssueNotFoundException);
-      }
+      await expect(couriersService.removeIssue(courier)).rejects.toThrow(
+        CourierIssueNotFoundException
+      );
     });
   });
 });

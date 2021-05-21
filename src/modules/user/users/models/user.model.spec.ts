@@ -260,11 +260,9 @@ describe('UserModel', () => {
         baseAddress: faker.lorem.text(),
       };
 
-      try {
-        user.updateShippingAddress(addressId, updateShippingAddressInput);
-      } catch (error) {
-        expect(error).toBeInstanceOf(NotFoundException);
-      }
+      expect(() =>
+        user.updateShippingAddress(addressId, updateShippingAddressInput)
+      ).toThrow(NotFoundException);
     });
 
     it('new primary should override existing one', () => {
@@ -309,11 +307,9 @@ describe('UserModel', () => {
       const shippingAddresses = [new ShippingAddress(), new ShippingAddress()];
       const user = new User({ shippingAddresses });
 
-      try {
-        user.removeShippingAddress(addressId);
-      } catch (error) {
-        expect(error).toBeInstanceOf(NotFoundException);
-      }
+      expect(() => user.removeShippingAddress(addressId)).toThrow(
+        NotFoundException
+      );
     });
 
     it('shoud make first address primary when deleted address is primary', () => {
