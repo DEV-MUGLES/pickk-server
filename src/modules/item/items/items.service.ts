@@ -58,6 +58,8 @@ export class ItemsService {
     const _itemFilter = plainToClass(ItemFilter, itemFilter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
+    console.log(_itemFilter, parseFilter(_itemFilter, pageInput?.idFilter));
+
     return this.itemsRepository.entityToModelMany(
       await this.itemsRepository.find({
         relations,

@@ -221,6 +221,8 @@ type ItemDetailImage {
 }
 
 input ItemFilter {
+  createdAtLte: DateTime
+  createdAtMte: DateTime
   isMdRecommended: Boolean
   isPurchasable: Boolean
   isSellable: Boolean
@@ -229,6 +231,8 @@ input ItemFilter {
 
   """아이템 이름(name)으로 검색합니다."""
   search: String
+  sellableAtLte: DateTime
+  sellableAtMte: DateTime
 }
 
 type ItemNotice {

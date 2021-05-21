@@ -1,4 +1,4 @@
-import { isArray as _isArray, isObject } from 'class-validator';
+import { isArray as _isArray, isDate, isObject } from 'class-validator';
 import {
   Between,
   In,
@@ -14,7 +14,7 @@ type TFilterValue = unknown | unknown[] | Record<string, unknown | unknown[]>;
 type TFilter = Record<string, unknown | unknown[] | TFilterValue>;
 
 export const isFilter = (value: unknown): value is TFilter => {
-  return isObject(value);
+  return isObject(value) && !isDate(value);
 };
 
 type TSearchableFilter = {
