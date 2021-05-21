@@ -110,6 +110,22 @@ export class Item extends ItemEntity {
     return itemPrice;
   };
 
+  public setBasePrice = (priceId: number): ItemPrice => {
+    const index = this.prices.findIndex(({ id }) => id === priceId);
+    if (index < 0) {
+      throw new NotFoundException('해당 ItemPrice가 존재하지 않습니다.');
+    }
+    if (this.prices[index].isBase) {
+      throw new ConflictException('해당 Price는 이미 Base 상태입니다.');
+    }
+
+    this.prices.forEach((price, _index) => {
+      price.isBase = _index === index;
+    });
+
+    return this.prices[index];
+  };
+
   public activatePrice = (priceId: number): ItemPrice[] => {
     const index = this.prices?.findIndex(({ id }) => id === priceId);
     if (index < 0) {

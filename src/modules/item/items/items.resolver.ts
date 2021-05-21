@@ -166,6 +166,17 @@ export class ItemsResolver extends BaseResolver {
 
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async setBaseItemPrice(
+    @IntArgs('itemId') itemId: number,
+    @IntArgs('priceId') priceId: number
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['prices']);
+    return await this.itemsService.setBasePrice(item, priceId);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemNotice)
   async addItemNotice(
     @IntArgs('itemId') itemId: number,
