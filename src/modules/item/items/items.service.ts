@@ -165,7 +165,8 @@ export class ItemsService {
   }
 
   async update(item: Item, updateItemInput: UpdateItemInput): Promise<Item> {
-    return await this.itemsRepository.updateEntity(item, updateItemInput);
+    Object.assign(item, updateItemInput);
+    return await this.itemsRepository.save(item);
   }
 
   async updateItemOption(
@@ -184,6 +185,9 @@ export class ItemsService {
     ids: number[],
     bulkUpdateItemInput: BulkUpdateItemInput
   ): Promise<void> {
+    if (bulkUpdateItemInput.isSellable) {
+      bulkUpdateItemInput.sellableAt = new Date();
+    }
     await this.itemsRepository.bulkUpdate(ids, bulkUpdateItemInput);
   }
 

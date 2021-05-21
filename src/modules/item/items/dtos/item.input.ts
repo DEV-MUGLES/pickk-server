@@ -66,4 +66,6 @@ export class BulkUpdateItemInput implements Partial<IItem> {
   @IsNumber()
   @IsOptional()
   minorCategoryId: number;
+
+  sellableAt?: Date;
 }
