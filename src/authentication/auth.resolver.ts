@@ -54,7 +54,9 @@ export class AuthResolver {
     return this.authService.getToken(user);
   }
 
-  @Query(() => Boolean)
+  @Query(() => Boolean, {
+    description: '중복이면 true, 아니면 false를 반환한다.',
+  })
   async checkNicknameDuplicate(@Args('nickname') nickname: string) {
     const user = await this.usersService.findOne({ nickname });
     if (user) {
