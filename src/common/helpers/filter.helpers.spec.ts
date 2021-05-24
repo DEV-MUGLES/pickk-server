@@ -33,13 +33,14 @@ describe('FilterHelpers', () => {
   });
 
   describe('isFilter', () => {
-    it('should return true when given array', () => {
+    it('should return true when given value is Record<string|number, any>', () => {
       expect(isFilter({})).toEqual(true);
       expect(isFilter({ name: '최수민' })).toEqual(true);
       expect(isFilter({ 3: 6 })).toEqual(true);
+      expect(isFilter({ name: { name: '최수민' } })).toEqual(true);
     });
 
-    it('should return false when given non-array', () => {
+    it('should return false when given non-filter', () => {
       expect(isFilter(null)).toEqual(false);
       expect(isFilter(undefined)).toEqual(false);
       expect(isFilter(3)).toEqual(false);
@@ -138,6 +139,7 @@ describe('FilterHelpers', () => {
 
     it('should work for nested filters', () => {
       const userAgeMte = faker.datatype.number();
+      const userHeightLte = faker.datatype.number();
       const itemNameIn = [
         faker.lorem.text(),
         faker.lorem.text(),
@@ -148,7 +150,7 @@ describe('FilterHelpers', () => {
         parseFilter({
           user: {
             ageMte: userAgeMte,
-            height: 180,
+            heightLte: userHeightLte,
           },
           item: {
             nameIn: itemNameIn,
@@ -158,7 +160,7 @@ describe('FilterHelpers', () => {
       ).toEqual({
         user: {
           age: MoreThanOrEqual(userAgeMte),
-          height: 180,
+          height: LessThanOrEqual(userHeightLte),
         },
         item: {
           name: In(itemNameIn),
