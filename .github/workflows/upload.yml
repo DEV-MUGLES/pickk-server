@@ -38,6 +38,9 @@ jobs:
           steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
 
+      - name: Set env
+        run: cp .env.prod .env
+
       - name: Build
         run: npm run build
 
