@@ -9,7 +9,6 @@
     "set": "cp .env.dev .env && docker compose -f docker-compose.yml up",
     "set:down": "docker compose -f docker-compose.yml down -v && docker system prune",
     "preinstall": "npm list ts-node -g || npm install ts-node -g",
-    "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
