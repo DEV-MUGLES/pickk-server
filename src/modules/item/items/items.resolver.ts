@@ -107,6 +107,21 @@ export class ItemsResolver extends BaseResolver {
 
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async removeItemDetailImage(
+    @IntArgs('itemId') itemId: number,
+    @IntArgs('detailImageKey') detailImageKey: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const detailImage = await this.itemsService.getItemDetailImage(
+      detailImageKey
+    );
+    await this.itemsService.removeDetailImage(detailImage);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemUrl)
   async addItemUrl(
     @IntArgs('itemId') itemId: number,
@@ -129,6 +144,8 @@ export class ItemsResolver extends BaseResolver {
     return await this.itemsService.addPrice(item, addItemPriceInput);
   }
 
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemPrice)
   async updateItemPrice(
     @IntArgs('id') id: number,

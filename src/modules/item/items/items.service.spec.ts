@@ -4,6 +4,7 @@ import * as faker from 'faker';
 
 import { AddItemUrlInput } from './dtos/item-url.input';
 import {
+  ItemDetailImagesRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
   ItemPricesRepository,
@@ -26,6 +27,7 @@ describe('ItemsService', () => {
         ItemOptionsRepository,
         ItemOptionValuesRepository,
         ItemPricesRepository,
+        ItemDetailImagesRepository,
       ],
     }).compile();
 

@@ -26,6 +26,7 @@ import {
 } from './dtos/item-price.input';
 import { AddItemUrlInput } from './dtos/item-url.input';
 import {
+  ItemDetailImagesRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
   ItemPricesRepository,
@@ -36,6 +37,7 @@ import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 import { ItemNotice } from './models/item-notice.model';
 import { ItemOption } from './models/item-option.model';
+import { ItemDetailImage } from './models/item-detail-image.model';
 
 @Injectable()
 export class ItemsService {
@@ -47,7 +49,9 @@ export class ItemsService {
     @InjectRepository(ItemOptionValuesRepository)
     private readonly itemOptionValuesRepository: ItemOptionValuesRepository,
     @InjectRepository(ItemPricesRepository)
-    private readonly itemPricesRepository: ItemPricesRepository
+    private readonly itemPricesRepository: ItemPricesRepository,
+    @InjectRepository(ItemDetailImagesRepository)
+    private readonly itemDetailImagesRepository: ItemDetailImagesRepository
   ) {}
 
   async list(
@@ -69,6 +73,13 @@ export class ItemsService {
 
   async get(id: number, relations: string[] = []): Promise<Item> {
     return await this.itemsRepository.get(id, relations);
+  }
+
+  async getItemDetailImage(
+    key: string,
+    relations: string[] = []
+  ): Promise<ItemDetailImage> {
+    return await this.itemDetailImagesRepository.get(key, relations);
   }
 
   async getItemOption(
@@ -99,6 +110,10 @@ export class ItemsService {
 
   async findOne(param: Partial<Item>, relations: string[] = []): Promise<Item> {
     return await this.itemsRepository.findOneEntity(param, relations);
+  }
+
+  async removeDetailImage(itemDetailImage: ItemDetailImage): Promise<void> {
+    await this.itemDetailImagesRepository.remove(itemDetailImage);
   }
 
   async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {

@@ -8,6 +8,7 @@ import {
   ItemOptionsRepository,
   ItemOptionValuesRepository,
   ItemPricesRepository,
+  ItemDetailImagesRepository,
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
@@ -19,6 +20,7 @@ import { ItemsService } from './items.service';
       ItemOptionsRepository,
       ItemOptionValuesRepository,
       ItemPricesRepository,
+      ItemDetailImagesRepository,
     ]),
     ProductsModule,
   ],

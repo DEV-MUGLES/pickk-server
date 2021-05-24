@@ -363,6 +363,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
+  removeItemDetailImage(detailImageKey: Int!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
@@ -581,8 +582,7 @@ input UpdateCourierIssueInput {
 
 input UpdateItemInput {
   description: String
-  isMdRecommended: Boolean = true
-  isSellable: Boolean = false
+  imageUrl: String
   majorCategoryId: Float
   minorCategoryId: Float
   name: String
