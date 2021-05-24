@@ -38,6 +38,9 @@ jobs:
           steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install --only=development
 
+      - name: Build
+        run: npm run build
+
       - name: Zip Artifacts
         run: zip pickk-server.zip -r . -x './.github/*' -x './test/*' -x './.git/*' -x './node_modules/*'
 
