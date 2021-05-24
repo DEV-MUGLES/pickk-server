@@ -51,6 +51,7 @@
     "bcryptjs": "^2.4.3",
     "bull": "^3.22.6",
     "bull-board": "^2.1.0",
+    "bullmq": "^1.26.5",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dayjs": "^1.10.4",
