@@ -15,7 +15,7 @@ import { MysqlConfigService } from './config.service';
     ConfigModule.forRoot({
       load: [configuration],
       validationSchema: Joi.object({
-        MYSQL_HOST: Joi.string().default('mysql'),
+        MYSQL_HOST: Joi.string().default('localhost'),
         MYSQL_PORT: Joi.number().default(3306),
         MYSQL_USERNAME: Joi.string().default('pickkdev'),
         MYSQL_PASSWORD: Joi.string().default('pickkdev123'),

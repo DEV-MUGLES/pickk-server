@@ -12,17 +12,30 @@ please make sure that [Docker Desktop](https://www.docker.com/products/docker-de
 $ npm install
 ```
 
+## Set Providers
+
+```bash
+# Start mysql, redis
+# please make sure that [Docker Desktop](https://www.docker.com/products/docker-desktop) is available
+$ npm run set
+
+# clear docker containers, volumnes
+$ npm run set:down
+```
+
 ## Running the app
 
 ```bash
-# development
-$ npm run dev
+$ npm run start
 
-# development with docker build
-$ npm run dev:build
+# watch mode
+$ npm run start:dev
 
-# clear docker containers, volumnes
-$ npm run dev:down
+# debug mode
+$ npm run start:debug
+
+# with build files (/dist)
+$ npm run start:prod
 ```
 
 ## Test
@@ -37,6 +50,6 @@ $ npm run jest:e2e
 # test coverage
 $ npm run jest:cov
 
-# prettier, eslint, tsc
-$ npm run format && npm run lint && npm run tsc
+# prettier, eslint, tsc, jest
+$ npm run test
 ```

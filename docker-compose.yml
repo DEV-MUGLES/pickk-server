@@ -1,24 +1,6 @@
 version: '3.7'
 
 services:
-  main:
-    container_name: main
-    build:
-      context: .
-      target: development
-    volumes:
-      - .:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - ${APP_PORT}:${APP_PORT}
-      - 9229:9229
-    command: npm run start:dev
-    env_file:
-      - .env
-    networks:
-      - webnet
-    depends_on:
-      - mysql
   mysql:
     container_name: mysql
     image: mysql:5.7
@@ -41,6 +23,11 @@ services:
       - '${MYSQL_PORT}:${MYSQL_PORT}'
     volumes:
       - mysql-data:/var/lib/mysql
+  redis:
+    container_name: redis
+    image: redis:5
+    networks:
+      - webnet
 networks:
   webnet:
 volumes:
