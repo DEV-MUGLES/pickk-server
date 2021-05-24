@@ -38,6 +38,7 @@ import { Item } from './models/item.model';
 import { ItemNotice } from './models/item-notice.model';
 import { ItemOption } from './models/item-option.model';
 import { ItemDetailImage } from './models/item-detail-image.model';
+import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 
 @Injectable()
 export class ItemsService {
@@ -110,6 +111,14 @@ export class ItemsService {
 
   async findOne(param: Partial<Item>, relations: string[] = []): Promise<Item> {
     return await this.itemsRepository.findOneEntity(param, relations);
+  }
+
+  async addDetailImages(
+    item: Item,
+    createItemDetailImageInput: CreateItemDetailImageInput
+  ): Promise<Item> {
+    item.addDetailImages(createItemDetailImageInput);
+    return await this.itemsRepository.save(item);
   }
 
   async removeDetailImage(itemDetailImage: ItemDetailImage): Promise<void> {

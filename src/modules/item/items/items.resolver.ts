@@ -32,6 +32,7 @@ import {
   UpdateItemOptionInput,
 } from './dtos/item-option.input';
 import { ItemOption } from './models/item-option.model';
+import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver {
@@ -108,16 +109,38 @@ export class ItemsResolver extends BaseResolver {
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
+  async addItemDetailImages(
+    @IntArgs('itemId') itemId: number,
+    @Args('createItemDetailImageInput')
+    createItemDetailImageInput: CreateItemDetailImageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const item = await this.itemsService.get(
+      itemId,
+      this.getRelationsFromInfo(info, ['detailImages'])
+    );
+    return await this.itemsService.addDetailImages(
+      item,
+      createItemDetailImageInput
+    );
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
   async removeItemDetailImage(
     @IntArgs('itemId') itemId: number,
-    @IntArgs('detailImageKey') detailImageKey: string,
+    @Args('detailImageKey') detailImageKey: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     const detailImage = await this.itemsService.getItemDetailImage(
       detailImageKey
     );
     await this.itemsService.removeDetailImage(detailImage);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    return await this.itemsService.get(
+      itemId,
+      this.getRelationsFromInfo(info, ['detailImages'])
+    );
   }
 
   @Roles(UserRole.Seller)

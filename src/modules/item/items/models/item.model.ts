@@ -20,6 +20,7 @@ import {
 } from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
 import { ItemOptionValue } from './item-option-value.model';
+import { CreateItemDetailImageInput } from '../dtos/item-detail-image.dto';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -76,6 +77,21 @@ export class Item extends ItemEntity {
       this.setPrimaryUrl(this.urls.length - 1);
     }
     return itemUrl;
+  };
+
+  public addDetailImages = (
+    createItemDetailImageInput: CreateItemDetailImageInput
+  ): ItemDetailImage[] => {
+    const { urls } = createItemDetailImageInput;
+
+    const detailImages = urls.map(
+      (url) =>
+        new ItemDetailImage({
+          key: new URL(url).pathname.slice(1),
+        })
+    );
+    this.detailImages = this.detailImages.concat(detailImages);
+    return this.detailImages;
   };
 
   public addPrice = (addItemPriceInput: AddItemPriceInput): ItemPrice => {

@@ -72,6 +72,10 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
+input CreateItemDetailImageInput {
+  urls: [String!]!
+}
+
 input CreateItemOptionInput {
   name: String!
   values: [String!]!
@@ -353,6 +357,7 @@ input LoginByOauthInput {
 
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
+  addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
   addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
@@ -363,7 +368,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   removeCourierIssue(courierId: Int!): Courier!
-  removeItemDetailImage(detailImageKey: Int!, itemId: Int!): Item!
+  removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
