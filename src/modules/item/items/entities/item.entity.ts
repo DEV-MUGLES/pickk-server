@@ -45,6 +45,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     }
 
     this.name = attributes.name;
+    this.description = attributes.description;
     this.providedCode = attributes.providedCode;
     this.imageUrl = attributes.imageUrl;
 

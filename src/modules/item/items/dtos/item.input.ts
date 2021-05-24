@@ -33,7 +33,14 @@ export class CreateItemInput extends PickType(
 export class UpdateItemInput extends PartialType(
   PickType(
     Item,
-    ['name', 'description', 'majorCategoryId', 'minorCategoryId'],
+    [
+      'name',
+      'description',
+      'imageUrl',
+      'description',
+      'majorCategoryId',
+      'minorCategoryId',
+    ],
     InputType
   )
 ) {}
