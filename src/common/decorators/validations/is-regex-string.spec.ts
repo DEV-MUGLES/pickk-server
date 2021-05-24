@@ -15,6 +15,7 @@ describe('isRegexString', () => {
       '/3332255555',
       '/3332255555/a',
       '/3332255555/gin',
+      '/3332255555/gg',
       null,
       undefined,
       true,
