@@ -12,11 +12,16 @@ import {
 } from '../dtos/item-notice.input';
 import { CreateItemOptionSetInput } from '../dtos/item-option.input';
 import { AddItemPriceInput } from '../dtos/item-price.input';
+import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from '../dtos/item-size-chart.input';
 import { AddItemUrlInput } from '../dtos/item-url.input';
 
 import { ItemNotice } from './item-notice.model';
 import { ItemOption } from './item-option.model';
 import { ItemPrice } from './item-price.model';
+import { ItemSizeChart } from './item-size-chart.model';
 import { Item } from './item.model';
 
 describe('Item', () => {
@@ -221,6 +226,132 @@ describe('Item', () => {
       expect(() =>
         item.createOptionSet(createItemOptionSetInput.options)
       ).toThrow(ConflictException);
+    });
+  });
+
+  const inputCount = Math.max(1, faker.datatype.number(10));
+  const addItemSizeChartInputs: AddItemSizeChartInput[] = [];
+  [...Array(inputCount)].forEach(() => {
+    addItemSizeChartInputs.push({
+      name: faker.name.firstName(),
+      accDepth: faker.datatype.float(200),
+      accHeight: faker.datatype.float(200),
+      accWidth: faker.datatype.float(200),
+      chestWidth: faker.datatype.float(200),
+      crossStrapLength: faker.datatype.float(200),
+      glassBridgeLength: faker.datatype.float(200),
+      glassLegLength: faker.datatype.float(200),
+      glassWidth: faker.datatype.float(200),
+      hemWidth: faker.datatype.float(200),
+      riseHeight: faker.datatype.float(200),
+      shoulderWidth: faker.datatype.float(200),
+      sleeveLength: faker.datatype.float(200),
+      thighWidth: faker.datatype.float(200),
+      totalLength: faker.datatype.float(200),
+      waistWidth: faker.datatype.float(200),
+      watchBandDepth: faker.datatype.float(200),
+    });
+  });
+
+  describe('addSizeCharts', () => {
+    it('아이템에 사이즈 차트가 성공적으로 추가된다.', async () => {
+      const item = new Item();
+
+      const itemSizeCharts = item.addSizeCharts(addItemSizeChartInputs);
+      expect(itemSizeCharts.length).toEqual(addItemSizeChartInputs.length);
+      itemSizeCharts.forEach((size, i) => {
+        Object.keys(addItemSizeChartInputs).forEach((k) => {
+          expect(size[k]).toEqual(addItemSizeChartInputs[i][k]);
+        });
+      });
+    });
+  });
+
+  const updateItemSizeChartInputs: Array<UpdateItemSizeChartInput> = [];
+  [...Array(inputCount)].forEach((_, index) => {
+    updateItemSizeChartInputs.push({
+      id: index + 1,
+      name: faker.name.firstName(),
+      accDepth: faker.datatype.float(200),
+      accHeight: faker.datatype.float(200),
+      accWidth: faker.datatype.float(200),
+      chestWidth: faker.datatype.float(200),
+      crossStrapLength: faker.datatype.float(200),
+      glassBridgeLength: faker.datatype.float(200),
+      glassLegLength: faker.datatype.float(200),
+      glassWidth: faker.datatype.float(200),
+      hemWidth: faker.datatype.float(200),
+      riseHeight: faker.datatype.float(200),
+      shoulderWidth: faker.datatype.float(200),
+      sleeveLength: faker.datatype.float(200),
+      thighWidth: faker.datatype.float(200),
+      totalLength: faker.datatype.float(200),
+      waistWidth: faker.datatype.float(200),
+      watchBandDepth: faker.datatype.float(200),
+    });
+  });
+
+  describe('updateSizeCharts', () => {
+    it('성공적으로 업데이트한다.', async () => {
+      const item = new Item({
+        sizeCharts: [...Array(inputCount)].map(
+          (_, index) => new ItemSizeChart(addItemSizeChartInputs[index])
+        ),
+      });
+      [...Array(inputCount)].forEach((_, index) => {
+        item.sizeCharts[index].id = index + 1;
+      });
+      const itemSizeCharts = item.updateSizeCharts(updateItemSizeChartInputs);
+      expect(itemSizeCharts.length).toEqual(updateItemSizeChartInputs.length);
+      itemSizeCharts.forEach((size, i) => {
+        Object.keys(updateItemSizeChartInputs).forEach((k) => {
+          expect(size[k]).toEqual(updateItemSizeChartInputs[i][k]);
+        });
+      });
+    });
+
+    it('sizeChart가 존재하지 않으면 NotFoundException 발생', async () => {
+      const item = new Item({
+        sizeCharts: [new ItemSizeChart(addItemSizeChartInputs[0])],
+      });
+      expect(() => item.updateSizeCharts(updateItemSizeChartInputs)).toThrow(
+        NotFoundException
+      );
+    });
+  });
+
+  describe('removeSizeChartsAll', () => {
+    it('성공적으로 사이즈 차트가 모두 삭제된다.', async () => {
+      const item = new Item({
+        sizeCharts: [...Array(inputCount)].map(
+          (_, index) => new ItemSizeChart(addItemSizeChartInputs[index])
+        ),
+      });
+
+      expect(item.removeSizeChartsAll()).toMatchObject(addItemSizeChartInputs);
+      expect(item.sizeCharts).toEqual(null);
+    });
+    it('sizeCharts가 존재하지 않으면 NotFoundException 발생', async () => {
+      const item = new Item();
+      expect(() => item.removeSizeChartsAll()).toThrow(NotFoundException);
+    });
+  });
+
+  describe('removeSizeChartsByIds', () => {
+    it('성공적으로 삭제된다', async () => {
+      const item = new Item({
+        sizeCharts: [...Array(inputCount)].map(
+          (_, index) => new ItemSizeChart(addItemSizeChartInputs[index])
+        ),
+      });
+      const sizeChartIds: number[] = [];
+      [...Array(inputCount)].forEach((_, index) => {
+        item.sizeCharts[index].id = index + 1;
+        sizeChartIds.push(index + 1);
+      });
+
+      const itemSizeCharts = item.removeSizeChartsByIds(sizeChartIds);
+      expect(itemSizeCharts).toHaveLength(0);
     });
   });
 });
