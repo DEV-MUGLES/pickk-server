@@ -15,12 +15,12 @@ import { AppConfigService } from './config.service';
     ConfigModule.forRoot({
       load: [configuration],
       validationSchema: Joi.object({
-        APP_NAME: Joi.string().default('Pickk'),
-        APP_ENV: Joi.string()
+        NAME: Joi.string().default('Pickk'),
+        NODE_ENV: Joi.string()
           .valid('development', 'production', 'test', 'provision')
           .default('development'),
-        APP_URL: Joi.string().default('http://localhost:3000'),
-        APP_PORT: Joi.number().default(3000),
+        URL: Joi.string().default('http://localhost:3000'),
+        PORT: Joi.number().default(3000),
       }),
     }),
   ],
