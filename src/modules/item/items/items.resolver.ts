@@ -280,13 +280,13 @@ export class ItemsResolver extends BaseResolver<Item> {
   async addItemSizeCharts(
     @IntArgs('itemId') itemId: number,
     @Args({
-      name: 'addItemSizeChartInput',
+      name: 'addItemSizeChartInputs',
       type: () => [AddItemSizeChartInput],
     })
-    addItemSizeChartInput: AddItemSizeChartInput[]
+    addItemSizeChartInputs: AddItemSizeChartInput[]
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['sizeCharts']);
-    return await this.itemsService.addSizeCharts(item, addItemSizeChartInput);
+    return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
   }
 
   @Roles(UserRole.Admin)
@@ -309,34 +309,26 @@ export class ItemsResolver extends BaseResolver<Item> {
       nullable: true,
     })
     updateItemSizeChartInputs: UpdateItemSizeChartInput[],
-    @Args('removeItemSizeChartInput', {
+    @Args('removedChartIds', {
       type: () => [Int],
       nullable: true,
     })
-    removeItemSizeChartInputs: number[]
+    removedChartIds: number[]
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['sizeCharts']);
-    const updateSizeChartInputs = updateItemSizeChartInputs.filter(
-      (input) => input.id
-    );
-    const addSizeChartInputs: AddItemSizeChartInput[] = [];
-    updateItemSizeChartInputs.forEach((input) => {
-      if (!input.id) addSizeChartInputs.push(input as AddItemSizeChartInput);
-    });
 
-    if (removeItemSizeChartInputs) {
-      await this.itemsService.removeSizeChartsByIds(
-        item,
-        removeItemSizeChartInputs
-      );
+    const addInputs: AddItemSizeChartInput[] = updateItemSizeChartInputs.filter(
+      (input) => !input.id
+    );
+    const updateInputs = updateItemSizeChartInputs.filter((input) => input.id);
+
+    if (removedChartIds?.length > 0) {
+      await this.itemsService.removeSizeChartsByIds(item, removedChartIds);
     }
-    if (addSizeChartInputs) {
-      await this.itemsService.addSizeCharts(item, addSizeChartInputs);
+    if (addInputs?.length > 0) {
+      await this.itemsService.addSizeCharts(item, addInputs);
     }
 
-    return await this.itemsService.updateSizeCharts(
-      item,
-      updateSizeChartInputs
-    );
+    return await this.itemsService.updateSizeCharts(item, updateInputs);
   }
 }

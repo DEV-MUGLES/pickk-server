@@ -15,7 +15,9 @@ export class ItemSizeChartEntity
   implements IItemSizeChart {
   constructor(attributes?: Partial<ItemSizeChartEntity>) {
     super(attributes);
-    if (!attributes) return;
+    if (!attributes) {
+      return;
+    }
     this.name = attributes.name;
 
     this.totalLength = attributes.totalLength;
