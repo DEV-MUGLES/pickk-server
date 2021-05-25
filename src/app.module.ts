@@ -9,13 +9,15 @@ import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider
 import { SpiderModule } from './providers/spider/provider.module';
 
 import { AuthModule } from './authentication/auth.module';
+import { jobModules } from './jobs';
+
+import { CommonModule } from './modules/common/common.module';
 import { ItemModule } from './modules/item/item.module';
 import { MyModule } from './modules/my/my.module';
 import { UserModule } from './modules/user/user.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CommonModule } from './modules/common/common.module';
 
 @Module({
   imports: [
@@ -31,6 +33,7 @@ import { CommonModule } from './modules/common/common.module';
     MysqlDatabaseProviderModule,
     SpiderModule,
     AuthModule,
+    ...jobModules,
     CommonModule,
     ItemModule,
     MyModule,

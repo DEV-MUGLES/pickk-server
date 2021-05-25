@@ -11,6 +11,7 @@ import { S3UploadResultDto } from './dto/s3.dto';
 export class AwsS3ProviderService {
   private ACL = 'public-read';
   private cloudfrontUrl: string;
+  private s3: AWS.S3;
 
   constructor(private readonly awsS3ConfigService: AwsS3ConfigService) {
     this.cloudfrontUrl = this.awsS3ConfigService.cloudfrontUrl;
@@ -19,6 +20,7 @@ export class AwsS3ProviderService {
       secretAccessKey: this.awsS3ConfigService.secretAccessKey,
       region: this.awsS3ConfigService.region,
     });
+    this.s3 = new AWS.S3();
   }
 
   private getRandomString = (length = 6): string => {
@@ -58,8 +60,6 @@ export class AwsS3ProviderService {
     mimetype: string,
     prefix?: string
   ): Promise<S3UploadResultDto> {
-    const s3 = new AWS.S3();
-
     const params = {
       Bucket: this.awsS3ConfigService.publicBucketName,
       Key: this.getKey(this.cleanFilename(filename), prefix),
@@ -68,7 +68,7 @@ export class AwsS3ProviderService {
       ContentType: mimetype,
     };
 
-    const key = (await s3.upload(params).promise()).Key;
+    const key = (await this.s3.upload(params).promise()).Key;
 
     return {
       key,
