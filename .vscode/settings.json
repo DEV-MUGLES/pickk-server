@@ -7,7 +7,8 @@
         "provider",
         "config",
         "admin",
-        "common"
+        "common",
+        "job"
     ],
     "jestrunner.jestCommand": "npm run jest --",
     "editor.formatOnSave": true,
