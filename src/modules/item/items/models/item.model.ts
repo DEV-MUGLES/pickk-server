@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { plainToClass } from 'class-transformer';
 
 import { AddItemUrlInput } from '../dtos/item-url.input';
 import { CreateItemOptionInput } from '../dtos/item-option.input';
@@ -228,11 +227,9 @@ export class Item extends ItemEntity {
   public addSizeCharts = (
     addItemSizeChartInputs: AddItemSizeChartInput[]
   ): ItemSizeChart[] => {
-    if (!this.sizeCharts) this.sizeCharts = [];
-    addItemSizeChartInputs?.forEach((input) => {
-      const sizeChart = new ItemSizeChart(input);
-      this.sizeCharts.push(sizeChart);
-    });
+    this.sizeCharts = (this.sizeCharts ?? []).concat(
+      addItemSizeChartInputs.map((input) => new ItemSizeChart(input))
+    );
     return this.sizeCharts;
   };
 
@@ -241,40 +238,35 @@ export class Item extends ItemEntity {
   ): ItemSizeChart[] => {
     updateSizeChartInputs.forEach((input) => {
       const index = this.sizeCharts.findIndex((v) => v.id === input.id);
-      if (index === -1) {
+      if (index < 0) {
         throw new NotFoundException('수정할 사이즈차트가 존재하지 않습니다.');
       }
-      const newSizeChart = plainToClass(
-        ItemSizeChart,
-        this.sizeCharts[index]
-      ) as ItemSizeChart;
-      newSizeChart.update(input);
-      this.sizeCharts[index] = newSizeChart;
+
+      this.sizeCharts[index] = new ItemSizeChart({
+        ...this.sizeCharts[index],
+        ...input,
+      });
     });
     return this.sizeCharts;
   };
 
   public removeSizeChartsAll = (): ItemSizeChart[] => {
     const { sizeCharts } = this;
-    if (!this.sizeCharts) {
+    if ((this.sizeCharts ?? [])?.length === 0) {
       throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
     }
-    this.sizeCharts = null;
+
+    this.sizeCharts = [];
     return sizeCharts;
   };
 
   public removeSizeChartsByIds = (removeIds: number[]): ItemSizeChart[] => {
     const { sizeCharts } = this;
-    if (!this.sizeCharts) {
+    if ((this.sizeCharts ?? [])?.length === 0) {
       throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
     }
-    sizeCharts.forEach((size, index) => {
-      if (removeIds.includes(size.id)) {
-        sizeCharts[index] = null;
-      }
-    });
 
-    this.sizeCharts = sizeCharts.filter((size) => size !== null);
+    this.sizeCharts = sizeCharts.filter((size) => !removeIds.includes(size.id));
     return this.sizeCharts;
   };
 }
