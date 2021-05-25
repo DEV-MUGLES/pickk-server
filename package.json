@@ -7,7 +7,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "set": "cp .env.dev .env && docker compose -f docker-compose.yml up",
-    "set:down": "docker compose -f docker-compose.yml down -v && docker system prune",
+    "set:down": "docker-compose -f docker-compose.yml down --volumes && docker system prune",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
