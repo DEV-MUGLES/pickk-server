@@ -16,7 +16,6 @@ import { UserModule } from './modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule } from './modules/common/common.module';
-import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -27,7 +26,6 @@ import { AdminModule } from './admin/admin.module';
       introspection: true,
     }),
     AppConfigModule,
-    AdminModule,
     AwsS3ProviderModule,
     BullProviderModule,
     MysqlDatabaseProviderModule,
