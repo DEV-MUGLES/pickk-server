@@ -172,7 +172,8 @@ export class Item extends ItemEntity {
   public addSizeCharts = (
     addItemSizeChartInputs: AddItemSizeChartInput[]
   ): ItemSizeChart[] => {
-    addItemSizeChartInputs.forEach((input) => {
+    if (!this.sizeCharts) this.sizeCharts = [];
+    addItemSizeChartInputs?.forEach((input) => {
       const sizeChart = new ItemSizeChart(input);
       this.sizeCharts.push(sizeChart);
     });
@@ -184,6 +185,9 @@ export class Item extends ItemEntity {
   ): ItemSizeChart[] => {
     updateSizeChartInputs.forEach((input) => {
       const index = this.sizeCharts.findIndex((v) => v.id === input.id);
+      if (index === -1) {
+        throw new NotFoundException('수정할 사이즈차트가 존재하지 않습니다.');
+      }
       const newSizeChart = plainToClass(
         ItemSizeChart,
         this.sizeCharts[index]
@@ -203,14 +207,17 @@ export class Item extends ItemEntity {
     return sizeCharts;
   };
 
-  public removeSizeChartsByIds = (sizeChartIds: number[]): ItemSizeChart[] => {
+  public removeSizeChartsByIds = (removeIds: number[]): ItemSizeChart[] => {
     const { sizeCharts } = this;
+    if (!this.sizeCharts) {
+      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
+    }
     sizeCharts.forEach((size, index) => {
-      if (sizeChartIds.includes(size.id)) {
-        size.remove();
+      if (removeIds.includes(size.id)) {
         sizeCharts[index] = null;
       }
     });
+
     this.sizeCharts = sizeCharts.filter((size) => size !== null);
     return this.sizeCharts;
   };
