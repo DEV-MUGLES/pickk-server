@@ -7,6 +7,7 @@ import { ItemImageUrlConsumer } from './item-image-url.consumer';
 import { ItemImageUrlProducer } from './item-image.producer';
 
 import { ITEM_IMAGE_URL_QUEUE_NAME } from './item-image-url.constant';
+import { ImagesModule } from '@src/modules/common/images/images.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ITEM_IMAGE_URL_QUEUE_NAME } from './item-image-url.constant';
       },
     }),
     forwardRef(() => ItemsModule),
+    ImagesModule,
   ],
   providers: [ItemImageUrlProducer, ItemImageUrlConsumer],
   exports: [ItemImageUrlProducer],
