@@ -1,11 +1,12 @@
 import { Item } from '../models/item.model';
 
-export const ITEM_RELATIONS: Array<
+export type ItemRelationType =
   | keyof Item
   | 'options.values'
   | 'products.itemOptionValues'
-  | 'products.shippingReservePolicy'
-> = [
+  | 'products.shippingReservePolicy';
+
+export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'brand',
   'urls',
   'options',

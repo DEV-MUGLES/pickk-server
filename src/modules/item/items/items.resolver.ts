@@ -4,7 +4,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@src/authentication/decorators/roles.decorator';
 import { JwtAuthGuard } from '@src/authentication/guards';
-import { BaseResolver } from '@src/common/base.resolver';
+import { BaseResolver, DerivedFieldsInfoType } from '@src/common/base.resolver';
 import { IntArgs } from '@src/common/decorators/args.decorator';
 import { PageInput } from '@src/common/dtos/pagination.dto';
 import { UserRole } from '@user/users/constants/user.enum';
@@ -35,26 +35,11 @@ import { ItemOption } from './models/item-option.model';
 import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 
 @Resolver(() => Item)
-export class ItemsResolver extends BaseResolver {
+export class ItemsResolver extends BaseResolver<Item> {
   relations = ITEM_RELATIONS;
-
-  protected getRelationsFromInfo(
-    info: GraphQLResolveInfo,
-    includes: string[] = []
-  ): string[] {
-    const relations = super.getRelationsFromInfo(info);
-    const simplifiedInfo = this.getSimplifiedInfo(info);
-
-    if (
-      ['originalPrice', 'finalPrice'].some(
-        (field) => field in simplifiedInfo.fields
-      )
-    ) {
-      relations.push('prices');
-    }
-
-    return [...new Set(relations.concat(includes))];
-  }
+  derivedFieldsInfo: DerivedFieldsInfoType<Item> = {
+    prices: ['originalPrice', 'sellPrice', 'finalPrice'],
+  };
 
   constructor(
     @Inject(ItemsService)
