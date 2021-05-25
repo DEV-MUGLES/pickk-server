@@ -29,7 +29,7 @@
     "migrate": "npm run typeorm migration:run",
     "migrate:revert": "npm run typeorm migration:revert",
     "migrations": "npm run typeorm migration:show",
-    "eb:prod": "npm install --only=production && npm run start:prod"
+    "eb:prod": "npm install && npm run start:prod"
   },
   "dependencies": {
     "@admin-bro/express": "^3.1.0",
