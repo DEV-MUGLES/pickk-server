@@ -70,6 +70,12 @@ export class Item extends ItemEntity {
     });
   };
 
+  private setBasePrice = (index: number): void => {
+    this.prices.forEach((price, _index) => {
+      price.isBase = _index === index;
+    });
+  };
+
   public addUrl = (addItemUrlInput: AddItemUrlInput): ItemUrl => {
     const itemUrl = new ItemUrl(addItemUrlInput);
     this.urls = (this.urls ?? []).concat(itemUrl);
@@ -97,8 +103,12 @@ export class Item extends ItemEntity {
   public addPrice = (addItemPriceInput: AddItemPriceInput): ItemPrice => {
     const itemPrice = new ItemPrice(addItemPriceInput);
     this.prices = (this.prices ?? []).concat(itemPrice);
-    if (addItemPriceInput.isActive || this.prices.length === 1) {
+    if (addItemPriceInput.isActive === true) {
       this.setActivePrice(this.prices.length - 1);
+    }
+    if (this.prices.length === 1) {
+      this.setActivePrice(this.prices.length - 1);
+      this.setBasePrice(this.prices.length - 1);
     }
     return itemPrice;
   };
@@ -126,7 +136,7 @@ export class Item extends ItemEntity {
     return itemPrice;
   };
 
-  public setBasePrice = (priceId: number): ItemPrice => {
+  public basifyPrice = (priceId: number): ItemPrice => {
     const index = this.prices.findIndex(({ id }) => id === priceId);
     if (index < 0) {
       throw new NotFoundException('해당 ItemPrice가 존재하지 않습니다.');
@@ -135,10 +145,7 @@ export class Item extends ItemEntity {
       throw new ConflictException('해당 Price는 이미 Base 상태입니다.');
     }
 
-    this.prices.forEach((price, _index) => {
-      price.isBase = _index === index;
-    });
-
+    this.setBasePrice(index);
     return this.prices[index];
   };
 

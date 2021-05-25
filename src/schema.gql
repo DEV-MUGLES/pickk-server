@@ -10,18 +10,14 @@ input AddItemNoticeInput {
 }
 
 input AddItemPriceInput {
-  displayPrice: Float
   endAt: DateTime
-  finalPrice: Int!
-  isActive: Boolean!
-  isBase: Boolean!
+  isActive: Boolean
   isCrawlUpdating: Boolean!
   originalPrice: Int!
-  pickkDiscountAmount: Int!
-  pickkDiscountRate: Int!
+  pickkDiscountAmount: Int
+  pickkDiscountRate: Int
   sellPrice: Int!
   startAt: DateTime
-  unit: ItemPriceUnit
 }
 
 input AddItemUrlInput {
@@ -286,8 +282,8 @@ type ItemPrice {
   isCrawlUpdating: Boolean!
   itemId: Int!
   originalPrice: Int!
-  pickkDiscountAmount: Int!
-  pickkDiscountRate: Int!
+  pickkDiscountAmount: Int
+  pickkDiscountRate: Int
   sellPrice: Int!
   startAt: DateTime
   unit: ItemPriceUnit
@@ -610,8 +606,8 @@ input UpdateItemPriceInput {
   finalPrice: Int!
   isCrawlUpdating: Boolean!
   originalPrice: Int!
-  pickkDiscountAmount: Int!
-  pickkDiscountRate: Int!
+  pickkDiscountAmount: Int
+  pickkDiscountRate: Int
   sellPrice: Int!
   startAt: DateTime
   unit: ItemPriceUnit

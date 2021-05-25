@@ -159,7 +159,7 @@ export class ItemsService {
   }
 
   async setBasePrice(item: Item, priceId: number): Promise<Item> {
-    item.setBasePrice(priceId);
+    item.basifyPrice(priceId);
     return await this.itemsRepository.save(item);
   }
 
@@ -238,10 +238,6 @@ export class ItemsService {
       priceInput: {
         originalPrice: data.originalPrice,
         sellPrice: data.salePrice,
-        pickkDiscountRate: 5,
-        finalPrice: Math.floor((data.salePrice * 19) / 20),
-        isActive: true,
-        isBase: true,
         isCrawlUpdating: true,
       },
     });
