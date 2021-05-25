@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
 
 import { ItemsModule } from '@src/modules/item/items/items.module';
@@ -17,7 +17,7 @@ import { ImagesModule } from '@src/modules/common/images/images.module';
         maxStalledCount: 500,
       },
     }),
-    forwardRef(() => ItemsModule),
+    ItemsModule,
     ImagesModule,
   ],
   providers: [ItemImageUrlProducer, ItemImageUrlConsumer],

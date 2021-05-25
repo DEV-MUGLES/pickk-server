@@ -1,7 +1,5 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
-import { ItemImageUrlJobModule } from '@src/jobs/item-image-url/item-image.job.module';
 
 import { ProductsModule } from '../products/products.module';
 
@@ -25,7 +23,6 @@ import { ItemsService } from './items.service';
       ItemDetailImagesRepository,
     ]),
     ProductsModule,
-    forwardRef(() => ItemImageUrlJobModule),
   ],
   providers: [ItemsResolver, ItemsService],
   exports: [ItemsService],

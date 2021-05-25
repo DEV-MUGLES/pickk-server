@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
 import { SpiderConfigService } from '@src/config/providers/spider/config.service';
+import { ItemImageUrlProducer } from '@src/jobs/item-image-url/item-image.producer';
 import { SellersService } from '@item/sellers/sellers.service';
 import { ItemsService } from '@item/items/items.service';
 
@@ -16,7 +17,8 @@ export class SpiderService {
   constructor(
     private readonly spiderConfigService: SpiderConfigService,
     private readonly sellersService: SellersService,
-    private readonly itemsService: ItemsService
+    private readonly itemsService: ItemsService,
+    private readonly itemImageUrlProducer: ItemImageUrlProducer
   ) {}
 
   async requestSellers(): Promise<number> {
@@ -66,7 +68,15 @@ export class SpiderService {
       );
       if (!item) {
         // @TODO: 추가된 item들에 대해서 썸네일 이미지 업로드를 진행하고, 업데이트 해야함
-        await this.itemsService.addByCrawlData(brandId, code, itemData);
+        const { id } = await this.itemsService.addByCrawlData(
+          brandId,
+          code,
+          itemData
+        );
+        await this.itemImageUrlProducer.add({
+          itemId: id,
+          imageUrl: itemData.imageUrl,
+        });
         continue;
       }
 
