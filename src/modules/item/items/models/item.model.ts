@@ -49,13 +49,13 @@ export class Item extends ItemEntity {
   }
 
   @Field()
-  get salePrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  get sellPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).sellPrice;
   }
 
   @Field()
   get finalPrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+    return this.prices.find(({ isActive }) => isActive === true).finalPrice;
   }
 
   private setPrimaryUrl = (index: number): void => {

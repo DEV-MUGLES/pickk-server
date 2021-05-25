@@ -195,7 +195,7 @@ type Item {
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
-  salePrice: Float!
+  sellPrice: Float!
 
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
