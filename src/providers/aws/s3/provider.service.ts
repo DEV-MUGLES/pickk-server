@@ -36,9 +36,9 @@ export class AwsS3ProviderService {
   };
 
   private getKey(filename: string, prefix?: string) {
-    return `${dayjs().format('YYYYMMDD')}${
-      prefix ? `/${prefix}` : ''
-    }/${dayjs().format('hhmmss')}${this.getRandomString()}_${filename}`;
+    return `${prefix ? `${prefix}/` : ''}${dayjs().format(
+      'YYYYMMDD'
+    )}/${dayjs().format('hhmmss')}${this.getRandomString()}_${filename}`;
   }
 
   private cleanFilename(filename: string): string {
@@ -52,6 +52,28 @@ export class AwsS3ProviderService {
 
   private getUrl(key: string) {
     return this.cloudfrontUrl + key;
+  }
+
+  async uploadBuffer(
+    buffer: Buffer,
+    filename: string,
+    mimetype: string,
+    prefix?: string
+  ): Promise<S3UploadResultDto> {
+    const params = {
+      Bucket: this.awsS3ConfigService.publicBucketName,
+      Key: this.getKey(this.cleanFilename(filename), prefix),
+      Body: buffer,
+      ACL: this.ACL,
+      ContentType: mimetype,
+    };
+
+    const key = (await this.s3.upload(params).promise()).Key;
+
+    return {
+      key,
+      url: this.getUrl(key),
+    };
   }
 
   async uploadStream(
