@@ -119,9 +119,7 @@ input CreateSellerCrawlStrategyInput {
   pageParam: String
   pagination: Boolean!
 
-  """
-  '<>'으로 join된 상태다.
-  """
+  """'<>'으로 join된 상태다."""
   startPathNamesJoin: String!
 }
 
@@ -209,9 +207,7 @@ type Item {
   minorCategoryId: Float
   name: String!
 
-  """
-  상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다.
-  """
+  """상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다."""
   notice: ItemNotice
   options: [ItemOption!]
   originalPrice: Float!
@@ -219,15 +215,11 @@ type Item {
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
-
-  salePrice: Float!
-  sizeCharts: [ItemSizeChart!]
   sellPrice: Float!
 
-  """
-  판매가능시점(=활성전환일)
-  """
+  """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
+  sizeCharts: [ItemSizeChart!]
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -258,9 +250,7 @@ input ItemFilter {
   majorCategoryId: Float
   minorCategoryId: Float
 
-  """
-  아이템 이름(name)으로 검색합니다.
-  """
+  """아이템 이름(name)으로 검색합니다."""
   search: String
   sellableAtLte: DateTime
   sellableAtMte: DateTime
@@ -276,9 +266,7 @@ type ItemNotice {
   updatedAt: DateTime!
 }
 
-"""
-아이템 안내 분류입니다. 기본값은 General입니다.
-"""
+"""아이템 안내 분류입니다. 기본값은 General입니다."""
 enum ItemNoticeType {
   CustomOrder
   DeliveryDelay
@@ -396,17 +384,13 @@ type JwtToken {
 input LoginByCodeInput {
   code: String
 
-  """
-  로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)
-  """
+  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
   minRole: UserRole = User
   password: String!
 }
 
 input LoginByOauthInput {
-  """
-  로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)
-  """
+  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
   minRole: UserRole = User
   oauthCode: String
   oauthProvider: UserProviderType
@@ -414,40 +398,19 @@ input LoginByOauthInput {
 
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
-  addItemDetailImages(
-    createItemDetailImageInput: CreateItemDetailImageInput!
-    itemId: Int!
-  ): Item!
-  addItemNotice(
-    addItemNoticeInput: AddItemNoticeInput!
-    itemId: Int!
-  ): ItemNotice!
+  addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
+  addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
-  addItemSizeCharts(
-    addItemSizeChartInput: [AddItemSizeChartInput!]!
-    itemId: Int!
-  ): Item!
+  addItemSizeCharts(addItemSizeChartInput: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
-  addMyShippingAddress(
-    createShippingAddressInput: CreateShippingAddressInput!
-  ): [ShippingAddress!]!
+  addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
-  bulkUpdateItems(
-    bulkUpdateItemInput: BulkUpdateItemInput!
-    ids: [Int!]!
-  ): Boolean!
+  bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
-  createItemOptionSet(
-    createItemOptionSetInput: CreateItemOptionSetInput!
-    id: Int!
-  ): Item!
+  createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
-  modifyItemSizeCharts(
-    itemId: Int!
-    removeItemSizeChartInput: [Int!]
-    updateItemSizeChartInput: [UpdateItemSizeChartInput!]
-  ): Item!
+  modifyItemSizeCharts(itemId: Int!, removeItemSizeChartInput: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
@@ -457,58 +420,26 @@ type Mutation {
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
-  updateCourierIssue(
-    courierId: Int!
-    updateCourierIssueInput: UpdateCourierIssueInput!
-  ): CourierIssue!
+  updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
-  updateItemNotice(
-    itemId: Int!
-    updateItemNoticeInput: UpdateItemNoticeInput!
-  ): ItemNotice!
-  updateItemOption(
-    id: Int!
-    updateItemOptionInput: UpdateItemOptionInput!
-  ): ItemOption!
-  updateItemPrice(
-    id: Int!
-    updateItemPriceInput: UpdateItemPriceInput!
-  ): ItemPrice!
+  updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
+  updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
+  updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
-  updateMyAvatarImage(
-    uploadSingleImageInput: UploadSingleImageInput!
-  ): UserAvatarImage!
+  updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
 
-  """
-  (!) 예전 비밀번호와 현재 비밀번호를 입력해
-  """
+  """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
-  updateMySellerClaimPolicy(
-    updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!
-  ): SellerClaimPolicy!
-  updateMySellerCrawlPolicy(
-    updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!
-  ): SellerCrawlPolicy!
-  updateMySellerReturnAddress(
-    updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!
-  ): SellerReturnAddress!
-  updateMySellerShippingPolicy(
-    updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!
-  ): SellerShippingPolicy!
-  updateMyShippingAddress(
-    addressId: Int!
-    updateShippingAddressInput: UpdateShippingAddressInput!
-  ): ShippingAddress!
+  updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
+  updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
+  updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
+  updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
+  updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
 
-  """
-  입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다.
-  """
-  updateSellerSaleStrategy(
-    sellerId: Int!
-    updateSaleStrategyInput: FindSaleStrategyInput!
-  ): SaleStrategy!
+  """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
+  updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
@@ -530,15 +461,11 @@ type Product {
 type ProductShippingReservePolicy {
   createdAt: DateTime!
 
-  """
-  예약발송 예정일
-  """
+  """예약발송 예정일"""
   estimatedShippingBegginDate: DateTime!
   id: Int!
 
-  """
-  예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다.
-  """
+  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
   stock: Int!
   updatedAt: DateTime!
 }
@@ -547,9 +474,7 @@ type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
 
-  """
-  중복이면 true, 아니면 false를 반환한다.
-  """
+  """중복이면 true, 아니면 false를 반환한다."""
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
@@ -564,16 +489,12 @@ type Query {
   me: User!
   meSeller: Seller!
 
-  """
-  Bearer token을 받아 JwtPayload를 반환합니다.
-  """
+  """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
 
-  """
-  refresh token을 받아서 새로운 JwtToken을 생성합니다.
-  """
+  """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
@@ -641,9 +562,7 @@ type SellerCrawlStrategy {
   pageParam: String
   pagination: Boolean!
 
-  """
-  '<>'으로 join된 상태다.
-  """
+  """'<>'으로 join된 상태다."""
   startPathNamesJoin: String!
   updatedAt: DateTime!
 }
@@ -729,27 +648,6 @@ input UpdateItemOptionInput {
   name: String!
 }
 
-input UpdateItemSizeChartInput {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  id: Int
-  name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  waistWidth: Float
-  watchBandDepth: Float
-}
-
 input UpdateItemPriceInput {
   displayPrice: Float
   endAt: DateTime
@@ -761,6 +659,27 @@ input UpdateItemPriceInput {
   sellPrice: Int!
   startAt: DateTime
   unit: ItemPriceUnit
+}
+
+input UpdateItemSizeChartInput {
+  accDepth: Float
+  accHeight: Float
+  accWidth: Float
+  chestWidth: Float
+  crossStrapLength: Float
+  glassBridgeLength: Float
+  glassLegLength: Float
+  glassWidth: Float
+  hemWidth: Float
+  id: Int
+  name: String
+  riseHeight: Float
+  shoulderWidth: Float
+  sleeveLength: Float
+  thighWidth: Float
+  totalLength: Float
+  waistWidth: Float
+  watchBandDepth: Float
 }
 
 input UpdateProductInput {
@@ -821,9 +740,7 @@ input UpdateUserInput {
   weight: Int
 }
 
-"""
-The `Upload` scalar type represents a file upload.
-"""
+"""The `Upload` scalar type represents a file upload."""
 scalar Upload
 
 input UploadMultipleImageInput {
@@ -858,18 +775,14 @@ type UserAvatarImage {
   url: String!
 }
 
-"""
-Oauth 제공 서비스입니다.
-"""
+"""Oauth 제공 서비스입니다."""
 enum UserProviderType {
   Apple
   Facebook
   Kakao
 }
 
-"""
-유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다.
-"""
+"""유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""
 enum UserRole {
   Admin
   Editor

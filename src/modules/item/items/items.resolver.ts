@@ -274,6 +274,8 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async addItemSizeCharts(
     @IntArgs('itemId') itemId: number,
@@ -287,6 +289,8 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.addSizeCharts(item, addItemSizeChartInput);
   }
 
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemSizeChartsAll(
     @IntArgs('itemId') itemId: number
@@ -295,6 +299,8 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.removeSizeChartsAll(item);
   }
 
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async modifyItemSizeCharts(
     @IntArgs('itemId') itemId: number,
