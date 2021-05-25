@@ -158,7 +158,7 @@ export class ItemsService {
     return await this.itemsRepository.save(item);
   }
 
-  async setBasePrice(item: Item, priceId: number): Promise<Item> {
+  async basifyPrice(item: Item, priceId: number): Promise<Item> {
     item.basifyPrice(priceId);
     return await this.itemsRepository.save(item);
   }

@@ -192,12 +192,12 @@ export class ItemsResolver extends BaseResolver<Item> {
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
-  async setBaseItemPrice(
+  async basifyPrice(
     @IntArgs('itemId') itemId: number,
     @IntArgs('priceId') priceId: number
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['prices']);
-    return await this.itemsService.setBasePrice(item, priceId);
+    return await this.itemsService.basifyPrice(item, priceId);
   }
 
   @Roles(UserRole.Seller)

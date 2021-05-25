@@ -358,6 +358,7 @@ type Mutation {
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
@@ -369,7 +370,6 @@ type Mutation {
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
-  setBaseItemPrice(itemId: Int!, priceId: Int!): Item!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
