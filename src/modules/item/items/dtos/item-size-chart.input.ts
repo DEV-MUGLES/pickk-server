@@ -29,11 +29,5 @@ export class AddItemSizeChartInput extends PickType(
 @InputType()
 export class UpdateItemSizeChartInput extends AddItemSizeChartInput {
   @Field(() => Int, { nullable: true })
-  id: number;
-}
-
-@InputType()
-export class RemoveItemSizeChartInput {
-  @Field(() => Int)
-  id: number;
+  id?: number;
 }

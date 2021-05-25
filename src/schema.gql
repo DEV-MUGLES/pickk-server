@@ -400,11 +400,11 @@ type Mutation {
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
-  modifyItemSizeCharts(itemId: Int!, removeItemSizeChart: [RemoveItemSizeChartInput!], updateItemSizeChart: [UpdateItemSizeChartInput!]): Item!
+  modifyItemSizeCharts(itemId: Int!, removeItemSizeChartInput: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
-  removeItemSizeCharts(itemId: Int!): Item!
+  removeItemSizeChartsAll(itemId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
@@ -486,10 +486,6 @@ type Query {
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   user(id: Int!): User!
   users: [User!]!
-}
-
-input RemoveItemSizeChartInput {
-  id: Int!
 }
 
 type SaleStrategy {

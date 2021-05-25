@@ -24,7 +24,6 @@ import {
 import { AddItemPriceInput } from './dtos/item-price.input';
 import {
   AddItemSizeChartInput,
-  RemoveItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from './dtos/item-size-chart.input';
 
@@ -237,11 +236,14 @@ export class ItemsService {
     item: Item,
     addItemSizeChartInputs: AddItemSizeChartInput[]
   ): Promise<Item> {
+    if (!addItemSizeChartInputs) {
+      return item;
+    }
     item.addSizeCharts(addItemSizeChartInputs);
     return await this.itemsRepository.save(item);
   }
 
-  async removeSizeCharts(item: Item): Promise<Item> {
+  async removeSizeChartsAll(item: Item): Promise<Item> {
     await this.itemSizeChartsRepository.bulkDelete(
       item.sizeCharts.map(({ id }) => id)
     );
@@ -249,27 +251,29 @@ export class ItemsService {
     return await this.itemsRepository.save(item);
   }
 
-  async modifySizeCharts(
+  async removeSizeChartsByIds(
     item: Item,
-    updateItemSizeChartInputs: UpdateItemSizeChartInput[],
-    removeItemSizeChartInputs?: RemoveItemSizeChartInput[]
+    removeItemSizeChartInputs: number[]
   ): Promise<Item> {
-    const addSizeChart = [],
-      updateSizeChart = [];
-
-    updateItemSizeChartInputs.forEach((input) => {
-      if (!input.id) {
-        addSizeChart.push(input);
-        return;
-      }
-      updateSizeChart.push(input);
-    });
-    item.addSizeCharts(addSizeChart);
-    item.updateSizeCharts(updateSizeChart);
     if (!removeItemSizeChartInputs) {
-      item.removeSizeChartsByIds(removeItemSizeChartInputs.map(({ id }) => id));
+      return item;
     }
 
+    item.removeSizeChartsByIds(removeItemSizeChartInputs);
+    await this.itemSizeChartsRepository.bulkDelete(removeItemSizeChartInputs);
+
+    return await this.itemsRepository.save(item);
+  }
+
+  async updateSizeCharts(
+    item: Item,
+    updateItemSizeChartInputs: UpdateItemSizeChartInput[]
+  ): Promise<Item> {
+    if (!updateItemSizeChartInputs) {
+      return item;
+    }
+
+    item.updateSizeCharts(updateItemSizeChartInputs);
     return await this.itemsRepository.save(item);
   }
 }

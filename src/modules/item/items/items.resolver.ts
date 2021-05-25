@@ -26,7 +26,6 @@ import { ItemFilter } from './dtos/item.filter';
 
 import {
   AddItemSizeChartInput,
-  RemoveItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from './dtos/item-size-chart.input';
 
@@ -226,31 +225,49 @@ export class ItemsResolver extends BaseResolver {
   }
 
   @Mutation(() => Item)
-  async removeItemSizeCharts(@IntArgs('itemId') itemId: number): Promise<Item> {
+  async removeItemSizeChartsAll(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['sizeCharts']);
-    return await this.itemsService.removeSizeCharts(item);
+    return await this.itemsService.removeSizeChartsAll(item);
   }
 
   @Mutation(() => Item)
   async modifyItemSizeCharts(
     @IntArgs('itemId') itemId: number,
-    @Args('updateItemSizeChart', {
+    @Args('updateItemSizeChartInput', {
       type: () => [UpdateItemSizeChartInput],
       nullable: true,
     })
     updateItemSizeChartInputs: UpdateItemSizeChartInput[],
-    @Args('removeItemSizeChart', {
-      type: () => [RemoveItemSizeChartInput],
+    @Args('removeItemSizeChartInput', {
+      type: () => [Int],
       nullable: true,
     })
-    removeItemSizeChartInputs: RemoveItemSizeChartInput[]
+    removeItemSizeChartInputs: number[]
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['sizeCharts']);
+    const updateSizeChartInputs = updateItemSizeChartInputs.filter(
+      (input) => input.id
+    );
+    const addSizeChartInputs: AddItemSizeChartInput[] = [];
+    updateItemSizeChartInputs.forEach((input) => {
+      if (!input.id) addSizeChartInputs.push(input as AddItemSizeChartInput);
+    });
 
-    return await this.itemsService.modifySizeCharts(
+    if (removeItemSizeChartInputs) {
+      await this.itemsService.removeSizeChartsByIds(
+        item,
+        removeItemSizeChartInputs
+      );
+    }
+    if (addSizeChartInputs) {
+      await this.itemsService.addSizeCharts(item, addSizeChartInputs);
+    }
+
+    return await this.itemsService.updateSizeCharts(
       item,
-      updateItemSizeChartInputs,
-      removeItemSizeChartInputs
+      updateSizeChartInputs
     );
   }
 }
