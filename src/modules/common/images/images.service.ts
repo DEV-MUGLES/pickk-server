@@ -25,7 +25,7 @@ export class ImagesService {
     return await Promise.all<S3UploadResultDto | null>(
       uploadBufferDtos.map((uploadBufferDto) =>
         new Promise<{ url: string; key: string }>(async (resolve) => {
-          const { buffer, mimetype, filename, prefix } = await uploadBufferDto;
+          const { buffer, mimetype, filename, prefix } = uploadBufferDto;
           resolve(
             await this.awsS3Service.uploadBuffer(
               buffer,

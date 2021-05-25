@@ -23,11 +23,13 @@ export class ItemImageUrlConsumer {
     const { data } = await axios.get<Buffer>(imageUrl, {
       responseType: 'arraybuffer',
     });
+
+    const mimetype = getMimeType(imageUrl);
     const [result] = await this.imagesService.uploadBufferDatas([
       {
         buffer: data,
-        filename: `ITEM_IMAGE_${itemId}`,
-        mimetype: getMimeType(imageUrl),
+        filename: `THUMBNAIL.${mimetype}`,
+        mimetype: mimetype,
         prefix: `item/${itemId}`,
       },
     ]);
