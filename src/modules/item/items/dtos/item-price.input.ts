@@ -1,4 +1,4 @@
-import { InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType, PickType } from '@nestjs/graphql';
 
 import { ItemPrice } from '../models/item-price.model';
 
@@ -8,19 +8,17 @@ export class AddItemPriceInput extends PickType(
   [
     'originalPrice',
     'sellPrice',
-    'finalPrice',
     'pickkDiscountAmount',
     'pickkDiscountRate',
-    'isActive',
-    'isBase',
     'isCrawlUpdating',
     'startAt',
     'endAt',
-    'displayPrice',
-    'unit',
   ],
   InputType
-) {}
+) {
+  @Field({ nullable: true })
+  isActive?: boolean;
+}
 
 @InputType()
 export class UpdateItemPriceInput extends PickType(
@@ -31,7 +29,6 @@ export class UpdateItemPriceInput extends PickType(
     'finalPrice',
     'pickkDiscountAmount',
     'pickkDiscountRate',
-    'isActive',
     'isCrawlUpdating',
     'startAt',
     'endAt',

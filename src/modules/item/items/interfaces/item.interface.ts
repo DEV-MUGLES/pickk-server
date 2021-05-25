@@ -44,4 +44,6 @@ export interface IItem {
   minorCategoryId?: number;
 
   sizeCharts?: IItemSizeChart[];
+  /** 판매가능시점(=활성전환일) */
+  sellableAt?: Date;
 }

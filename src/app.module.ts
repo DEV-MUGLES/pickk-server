@@ -4,6 +4,7 @@ import { Connection } from 'typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 import { AppConfigModule } from './config/app/config.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
+import { BullProviderModule } from './providers/bull/provider.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { SpiderModule } from './providers/spider/provider.module';
 
@@ -15,7 +16,6 @@ import { UserModule } from './modules/user/user.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { CommonModule } from './modules/common/common.module';
-import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -26,8 +26,8 @@ import { AdminModule } from './admin/admin.module';
       introspection: true,
     }),
     AppConfigModule,
-    AdminModule,
     AwsS3ProviderModule,
+    BullProviderModule,
     MysqlDatabaseProviderModule,
     SpiderModule,
     AuthModule,

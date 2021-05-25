@@ -36,10 +36,10 @@ export class UpdateItemInput extends PartialType(
     [
       'name',
       'description',
+      'imageUrl',
+      'description',
       'majorCategoryId',
       'minorCategoryId',
-      'isMdRecommended',
-      'isSellable',
     ],
     InputType
   )
@@ -66,4 +66,6 @@ export class BulkUpdateItemInput implements Partial<IItem> {
   @IsNumber()
   @IsOptional()
   minorCategoryId: number;
+
+  sellableAt?: Date;
 }

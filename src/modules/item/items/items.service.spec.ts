@@ -4,9 +4,11 @@ import * as faker from 'faker';
 
 import { AddItemUrlInput } from './dtos/item-url.input';
 import {
+  ItemDetailImagesRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
   ItemSizeChartsRepository,
+  ItemPricesRepository,
   ItemsRepository,
 } from './items.repository';
 import { ItemsService } from './items.service';
@@ -26,6 +28,8 @@ describe('ItemsService', () => {
         ItemOptionsRepository,
         ItemOptionValuesRepository,
         ItemSizeChartsRepository,
+        ItemPricesRepository,
+        ItemDetailImagesRepository,
       ],
     }).compile();
 

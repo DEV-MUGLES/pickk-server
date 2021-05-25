@@ -28,6 +28,7 @@ import { ItemNotice } from './item-notice.model';
 import { ItemSizeChart } from './item-size-chart.model';
 
 import { ItemOptionValue } from './item-option-value.model';
+import { CreateItemDetailImageInput } from '../dtos/item-detail-image.dto';
 
 @ObjectType()
 export class Item extends ItemEntity {
@@ -59,13 +60,13 @@ export class Item extends ItemEntity {
   }
 
   @Field()
-  get salePrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  get sellPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).sellPrice;
   }
 
   @Field()
   get finalPrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+    return this.prices.find(({ isActive }) => isActive === true).finalPrice;
   }
 
   private setPrimaryUrl = (index: number): void => {
@@ -80,6 +81,12 @@ export class Item extends ItemEntity {
     });
   };
 
+  private setBasePrice = (index: number): void => {
+    this.prices.forEach((price, _index) => {
+      price.isBase = _index === index;
+    });
+  };
+
   public addUrl = (addItemUrlInput: AddItemUrlInput): ItemUrl => {
     const itemUrl = new ItemUrl(addItemUrlInput);
     this.urls = (this.urls ?? []).concat(itemUrl);
@@ -89,11 +96,30 @@ export class Item extends ItemEntity {
     return itemUrl;
   };
 
+  public addDetailImages = (
+    createItemDetailImageInput: CreateItemDetailImageInput
+  ): ItemDetailImage[] => {
+    const { urls } = createItemDetailImageInput;
+
+    const detailImages = urls.map(
+      (url) =>
+        new ItemDetailImage({
+          key: new URL(url).pathname.slice(1),
+        })
+    );
+    this.detailImages = this.detailImages.concat(detailImages);
+    return this.detailImages;
+  };
+
   public addPrice = (addItemPriceInput: AddItemPriceInput): ItemPrice => {
     const itemPrice = new ItemPrice(addItemPriceInput);
     this.prices = (this.prices ?? []).concat(itemPrice);
-    if (addItemPriceInput.isActive || this.prices.length === 1) {
+    if (addItemPriceInput.isActive === true) {
       this.setActivePrice(this.prices.length - 1);
+    }
+    if (this.prices.length === 1) {
+      this.setActivePrice(this.prices.length - 1);
+      this.setBasePrice(this.prices.length - 1);
     }
     return itemPrice;
   };
@@ -108,6 +134,10 @@ export class Item extends ItemEntity {
     if (itemPrice.isBase) {
       throw new BadRequestException('Cannot remove base ItemPrice');
     }
+    if (itemPrice.isActive) {
+      const baseIndex = this.prices.findIndex(({ isBase }) => isBase);
+      this.setActivePrice(baseIndex);
+    }
 
     this.prices = [
       ...this.prices.slice(0, index),
@@ -115,6 +145,32 @@ export class Item extends ItemEntity {
     ];
 
     return itemPrice;
+  };
+
+  public basifyPrice = (priceId: number): ItemPrice => {
+    const index = this.prices.findIndex(({ id }) => id === priceId);
+    if (index < 0) {
+      throw new NotFoundException('해당 ItemPrice가 존재하지 않습니다.');
+    }
+    if (this.prices[index].isBase) {
+      throw new ConflictException('해당 Price는 이미 Base 상태입니다.');
+    }
+
+    this.setBasePrice(index);
+    return this.prices[index];
+  };
+
+  public activatePrice = (priceId: number): ItemPrice[] => {
+    const index = this.prices?.findIndex(({ id }) => id === priceId);
+    if (index < 0) {
+      throw new NotFoundException('해당 ItemPrice가 존재하지 않습니다.');
+    }
+    if (this.prices[index].isActive) {
+      throw new ConflictException('이미 활성화된 Price입니다.');
+    }
+
+    this.setActivePrice(index);
+    return this.prices;
   };
 
   public addNotice = (addItemNoticeInput: AddItemNoticeInput): ItemNotice => {

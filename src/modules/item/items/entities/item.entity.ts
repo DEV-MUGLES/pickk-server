@@ -1,6 +1,8 @@
 import { Optional } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
+  BeforeInsert,
+  BeforeUpdate,
   Column,
   Entity,
   Index,
@@ -44,6 +46,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     }
 
     this.name = attributes.name;
+    this.description = attributes.description;
     this.providedCode = attributes.providedCode;
     this.imageUrl = attributes.imageUrl;
 
@@ -67,6 +70,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.majorCategoryId = attributes.majorCategoryId;
     this.minorCategoryId = attributes.minorCategoryId;
     this.sizeCharts = attributes.sizeCharts;
+    this.sellableAt = attributes.sellableAt;
   }
 
   @Field()
@@ -231,4 +235,16 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     cascade: true,
   })
   sizeCharts: ItemSizeChart[];
+
+  @Field({ nullable: true, description: '판매가능시점(=활성전환일)' })
+  @Column({ nullable: true })
+  sellableAt?: Date;
+
+  @BeforeInsert()
+  @BeforeUpdate()
+  setSellableAt() {
+    if (this.isSellable && !this.sellableAt) {
+      this.sellableAt = new Date();
+    }
+  }
 }

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import * as Joi from 'joi';
+import Joi from 'joi';
 
 import configuration from './configuration';
-import { SpiderConfigService } from './config.service';
+import { BullConfigService } from './config.service';
 
 /**
  * Import and provide postgres configuration related classes.
@@ -15,11 +15,12 @@ import { SpiderConfigService } from './config.service';
     ConfigModule.forRoot({
       load: [configuration],
       validationSchema: Joi.object({
-        SPIDER_URL: Joi.string().default('https://spider.pickk.dev'),
+        REDIS_HOST: Joi.string().default('localhost'),
+        REDIS_PORT: Joi.number().default(6379),
       }),
     }),
   ],
-  providers: [ConfigService, SpiderConfigService],
-  exports: [ConfigService, SpiderConfigService],
+  providers: [ConfigService, BullConfigService],
+  exports: [ConfigService, BullConfigService],
 })
-export class SpiderConfigModule {}
+export class BullConfigModule {}

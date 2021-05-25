@@ -35,3 +35,6 @@ lerna-debug.log*
 
 # env var
 .env
+
+# ssh files
+.ssh

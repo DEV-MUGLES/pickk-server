@@ -11,6 +11,11 @@ import { ItemSizeChart } from './models/item-size-chart.model';
 import { ItemOption } from './models/item-option.model';
 import { ItemOptionValue } from './models/item-option-value.model';
 import { ItemOptionValueEntity } from './entities/item-option-value.entity';
+import { ItemPriceEntity } from './entities/item-price.entity';
+import { ItemPrice } from './models/item-price.model';
+import { ItemDetailImageEntity } from './entities/item-detail-image.entity';
+import { ItemDetailImage } from './models/item-detail-image.model';
+import { ImageRepository } from '@src/common/image.repository';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
@@ -76,6 +81,51 @@ export class ItemOptionValuesRepository extends BaseRepository<
     entities: ItemOptionValueEntity[],
     transformOptions = {}
   ): ItemOptionValue[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ItemPriceEntity)
+export class ItemPricesRepository extends BaseRepository<
+  ItemPriceEntity,
+  ItemPrice
+> {
+  entityToModel(entity: ItemPriceEntity, transformOptions = {}): ItemPrice {
+    return plainToClass(ItemPrice, entity, transformOptions) as ItemPrice;
+  }
+
+  entityToModelMany(
+    entities: ItemPriceEntity[],
+    transformOptions = {}
+  ): ItemPrice[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ItemDetailImageEntity)
+export class ItemDetailImagesRepository extends ImageRepository<
+  ItemDetailImageEntity,
+  ItemDetailImage
+> {
+  entityToModel(
+    entity: ItemDetailImageEntity,
+    transformOptions = {}
+  ): ItemDetailImage {
+    return plainToClass(
+      ItemDetailImage,
+      entity,
+      transformOptions
+    ) as ItemDetailImage;
+  }
+
+  entityToModelMany(
+    entities: ItemDetailImageEntity[],
+    transformOptions = {}
+  ): ItemDetailImage[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );

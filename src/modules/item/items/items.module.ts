@@ -3,10 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ProductsModule } from '../products/products.module';
 import {
+  ItemsRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
-  ItemsRepository,
   ItemSizeChartsRepository,
+  ItemPricesRepository,
+  ItemDetailImagesRepository,
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
@@ -18,6 +20,8 @@ import { ItemsService } from './items.service';
       ItemOptionsRepository,
       ItemOptionValuesRepository,
       ItemSizeChartsRepository,
+      ItemPricesRepository,
+      ItemDetailImagesRepository,
     ]),
     ProductsModule,
   ],

@@ -23,4 +23,16 @@ export class ItemFilter implements Partial<IItem> {
 
   @Field({ nullable: true, description: '아이템 이름(name)으로 검색합니다.' })
   search: string;
+
+  @Field({ nullable: true })
+  sellableAtMte: Date;
+
+  @Field({ nullable: true })
+  sellableAtLte: Date;
+
+  @Field({ nullable: true })
+  createdAtMte: Date;
+
+  @Field({ nullable: true })
+  createdAtLte: Date;
 }

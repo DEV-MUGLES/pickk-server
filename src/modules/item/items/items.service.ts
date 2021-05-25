@@ -21,24 +21,31 @@ import {
   CreateItemOptionInput,
   UpdateItemOptionInput,
 } from './dtos/item-option.input';
-import { AddItemPriceInput } from './dtos/item-price.input';
 import {
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from './dtos/item-size-chart.input';
+
+import {
+  AddItemPriceInput,
+  UpdateItemPriceInput,
+} from './dtos/item-price.input';
+import {
+  ItemDetailImagesRepository,
+  ItemOptionsRepository,
+  ItemOptionValuesRepository,
+  ItemPricesRepository,
+  ItemsRepository,
+  ItemSizeChartsRepository,
+} from './items.repository';
 
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
 import { ItemNotice } from './models/item-notice.model';
 import { ItemOption } from './models/item-option.model';
-
-import {
-  ItemOptionsRepository,
-  ItemOptionValuesRepository,
-  ItemsRepository,
-  ItemSizeChartsRepository,
-} from './items.repository';
+import { ItemDetailImage } from './models/item-detail-image.model';
+import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 
 @Injectable()
 export class ItemsService {
@@ -50,7 +57,11 @@ export class ItemsService {
     @InjectRepository(ItemOptionValuesRepository)
     private readonly itemOptionValuesRepository: ItemOptionValuesRepository,
     @InjectRepository(ItemSizeChartsRepository)
-    private readonly itemSizeChartsRepository: ItemSizeChartsRepository
+    private readonly itemSizeChartsRepository: ItemSizeChartsRepository,
+    @InjectRepository(ItemPricesRepository)
+    private readonly itemPricesRepository: ItemPricesRepository,
+    @InjectRepository(ItemDetailImagesRepository)
+    private readonly itemDetailImagesRepository: ItemDetailImagesRepository
   ) {}
 
   async list(
@@ -74,11 +85,22 @@ export class ItemsService {
     return await this.itemsRepository.get(id, relations);
   }
 
+  async getItemDetailImage(
+    key: string,
+    relations: string[] = []
+  ): Promise<ItemDetailImage> {
+    return await this.itemDetailImagesRepository.get(key, relations);
+  }
+
   async getItemOption(
     id: number,
     relations: string[] = []
   ): Promise<ItemOption> {
     return await this.itemOptionsRepository.get(id, relations);
+  }
+
+  async getItemPrice(id: number, relations: string[] = []): Promise<ItemPrice> {
+    return await this.itemPricesRepository.get(id, relations);
   }
 
   async create(
@@ -100,6 +122,18 @@ export class ItemsService {
     return await this.itemsRepository.findOneEntity(param, relations);
   }
 
+  async addDetailImages(
+    item: Item,
+    createItemDetailImageInput: CreateItemDetailImageInput
+  ): Promise<Item> {
+    item.addDetailImages(createItemDetailImageInput);
+    return await this.itemsRepository.save(item);
+  }
+
+  async removeDetailImage(itemDetailImage: ItemDetailImage): Promise<void> {
+    await this.itemDetailImagesRepository.remove(itemDetailImage);
+  }
+
   async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {
     const url = item.addUrl(addItemUrlInput);
     await this.itemsRepository.save(item);
@@ -115,9 +149,31 @@ export class ItemsService {
     return price;
   }
 
+  async updateItemPrice(
+    itemPrice: ItemPrice,
+    updateItemPriceInput: UpdateItemPriceInput,
+    relations: string[] = []
+  ): Promise<ItemPrice> {
+    return await this.itemPricesRepository.updateEntity(
+      itemPrice,
+      updateItemPriceInput,
+      relations
+    );
+  }
+
   async removePrice(item: Item, priceId: number): Promise<Item> {
     const price = item.removePrice(priceId);
     await price.remove();
+    return await this.itemsRepository.save(item);
+  }
+
+  async basifyPrice(item: Item, priceId: number): Promise<Item> {
+    item.basifyPrice(priceId);
+    return await this.itemsRepository.save(item);
+  }
+
+  async activateItemPrice(item: Item, priceId: number): Promise<Item> {
+    item.activatePrice(priceId);
     return await this.itemsRepository.save(item);
   }
 
@@ -166,6 +222,9 @@ export class ItemsService {
     ids: number[],
     bulkUpdateItemInput: BulkUpdateItemInput
   ): Promise<void> {
+    if (bulkUpdateItemInput.isSellable) {
+      bulkUpdateItemInput.sellableAt = new Date();
+    }
     await this.itemsRepository.bulkUpdate(ids, bulkUpdateItemInput);
   }
 
@@ -188,10 +247,6 @@ export class ItemsService {
       priceInput: {
         originalPrice: data.originalPrice,
         sellPrice: data.salePrice,
-        pickkDiscountRate: 5,
-        finalPrice: Math.floor((data.salePrice * 19) / 20),
-        isActive: true,
-        isBase: true,
         isCrawlUpdating: true,
       },
     });

@@ -20,14 +20,17 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
 
     this.originalPrice = attributes.originalPrice;
     this.sellPrice = attributes.sellPrice;
-    this.finalPrice = attributes.finalPrice;
 
     this.pickkDiscountAmount = attributes.pickkDiscountAmount;
-    this.pickkDiscountRate = attributes.pickkDiscountRate;
+    this.pickkDiscountRate = attributes.pickkDiscountRate || 5;
 
-    this.isActive = attributes.isActive;
+    this.finalPrice = this.pickkDiscountAmount
+      ? this.sellPrice - this.pickkDiscountAmount
+      : Math.floor((this.sellPrice * (100 - this.pickkDiscountRate)) / 100);
+
+    this.isActive = attributes.isActive || false;
     this.isCrawlUpdating = attributes.isCrawlUpdating;
-    this.isBase = attributes.isBase;
+    this.isBase = attributes.isBase || false;
 
     this.startAt = attributes.startAt;
     this.endAt = attributes.endAt;
@@ -66,19 +69,21 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   @Min(1)
   finalPrice: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @Column({
     type: 'mediumint',
     unsigned: true,
+    nullable: true,
   })
   @IsNumber()
   @Min(1)
   pickkDiscountAmount?: number;
 
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @Column({
     type: 'mediumint',
     unsigned: true,
+    nullable: true,
   })
   @IsNumber()
   @Min(1)

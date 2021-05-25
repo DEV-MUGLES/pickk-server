@@ -1,0 +1,55 @@
+name: Upload to S3
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  deploy:
+    name: Upload
+    runs-on: ubuntu-18.04
+    environment: production
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 # 👈 Required to retrieve git history
+
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Get npm cache directory
+        id: npm-cache
+        run: |
+          echo "::set-output name=dir::$(npm config get cache)"
+
+      - uses: actions/cache@v1
+        with:
+          path: ${{ steps.npm-cache.outputs.dir }}
+          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-
+
+      - name: Install project dependencies
+        if: |
+          steps.npm-cache.outputs.cache-hit != 'true' ||
+          steps.cache-node-modules.outputs.cache-hit != 'true'
+        run: npm install
+
+      - name: Set env
+        run: cp .env.prod .env
+
+      - name: Build
+        run: npm run build
+
+      - name: Zip Artifacts
+        run: zip pickk-server.zip -r . -x './.github/*' -x './test/*' -x './.git/*' -x './node_modules/*'
+
+      - name: Upload to S3
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_S3_UPLOAD_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_S3_UPLOAD_SECRET_ACCESS_KEY }}
+        run: |
+          aws s3 cp ./pickk-server.zip s3://pickk-server-zip
