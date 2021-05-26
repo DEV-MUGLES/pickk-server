@@ -29,6 +29,7 @@ export interface IItem {
   isSoldout: boolean;
 
   brand: IBrand;
+  brandId: number;
   notice: IItemNotice;
 
   prices: IItemPrice[];

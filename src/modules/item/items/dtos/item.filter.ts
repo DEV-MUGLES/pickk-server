@@ -1,4 +1,5 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
+
 import { IItem } from '../interfaces/item.interface';
 import { Item } from '../models/item.model';
 
@@ -35,4 +36,9 @@ export class ItemFilter implements Partial<IItem> {
 
   @Field({ nullable: true })
   createdAtLte: Date;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  brandId: number;
 }
