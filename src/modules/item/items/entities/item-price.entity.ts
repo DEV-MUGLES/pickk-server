@@ -1,6 +1,13 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
-import { IsBoolean, IsNumber, IsOptional, Min } from 'class-validator';
+import {
+  IsBoolean,
+  IsDate,
+  IsEnum,
+  IsNumber,
+  IsOptional,
+  Min,
+} from 'class-validator';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
 
@@ -67,6 +74,7 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   })
   @IsNumber()
   @Min(1)
+  @IsOptional()
   finalPrice: number;
 
   @Field(() => Int, { nullable: true })
@@ -77,6 +85,7 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   })
   @IsNumber()
   @Min(1)
+  @IsOptional()
   pickkDiscountAmount?: number;
 
   @Field(() => Int, { nullable: true })
@@ -87,6 +96,7 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   })
   @IsNumber()
   @Min(1)
+  @IsOptional()
   pickkDiscountRate?: number;
 
   @Field()
@@ -107,14 +117,20 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  @IsDate()
+  @IsOptional()
   startAt?: Date | null;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  @IsDate()
+  @IsOptional()
   endAt?: Date | null;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  @IsNumber()
+  @IsOptional()
   displayPrice?: number | null;
 
   @Field(() => ItemPriceUnit, { nullable: true })
@@ -123,6 +139,8 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
     enum: ItemPriceUnit,
     default: ItemPriceUnit.KRW,
   })
+  @IsEnum(ItemPriceUnit)
+  @IsOptional()
   unit?: ItemPriceUnit;
 
   @ManyToOne('ItemEntity', 'prices', {
