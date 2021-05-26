@@ -102,8 +102,8 @@ export class ItemsService {
 
     const item = new Item({
       ...itemAttributes,
-      prices: [new ItemPrice(priceInput)],
-      urls: [new ItemUrl(urlInput)],
+      prices: [new ItemPrice({ ...priceInput, isActive: true, isBase: true })],
+      urls: [new ItemUrl({ ...urlInput, isPrimary: true })],
     });
     const newEntity = await this.itemsRepository.save(item);
     return await this.get(newEntity.id, relations);
