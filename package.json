@@ -26,7 +26,7 @@
     "jest:e2e": "jest --config ./test/jest-e2e.json",
     "test": "npm run format && npm run lint && npm run tsc && npm run jest",
     "pretypeorm": "npm list ts-node -g || npm install ts-node -g",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "makemigrations": "npm run typeorm migration:generate --",
     "migrate": "npm run typeorm migration:run",
     "migrate:revert": "npm run typeorm migration:revert",
