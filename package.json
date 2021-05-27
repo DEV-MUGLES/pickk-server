@@ -60,6 +60,7 @@
     "graphql": "^15.5.0",
     "graphql-parse-resolve-info": "^4.11.0",
     "graphql-tools": "^7.0.4",
+    "inicis": "^1.0.3",
     "joi": "^17.4.0",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
