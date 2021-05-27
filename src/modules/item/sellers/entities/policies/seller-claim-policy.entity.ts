@@ -42,13 +42,13 @@ export class SellerClaimPolicyEntity
   @Min(0)
   fee: number;
 
-  @Field()
+  @Field({ description: '담당자 번호' })
   @Column({ type: 'char', length: 11 })
   @IsPhoneNumber('KR')
   @IsNumberString()
   phoneNumber: string;
 
-  @Field()
+  @Field({ description: '담당자 이름' })
   @Column({ type: 'varchar', length: 20 })
   @IsString()
   @MaxLength(20)
@@ -66,5 +66,5 @@ export class SellerClaimPolicyEntity
   @Field(() => SellerClaimAccount, { nullable: true })
   @OneToOne(() => SellerClaimAccountEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  account: SellerClaimAccount;
+  account?: SellerClaimAccount;
 }

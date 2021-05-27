@@ -13,5 +13,5 @@ export interface ISellerClaimPolicy {
   feePayMethod: ClaimFeePayMethod;
 
   /** 교환배송비 지불 게좌 */
-  account: IAccount;
+  account?: IAccount;
 }

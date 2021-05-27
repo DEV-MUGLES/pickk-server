@@ -8,6 +8,7 @@ import {
   ISellerCrawlPolicy,
   ISellerShippingPolicy,
 } from './policies';
+import { ISellerSettlePolicy } from './policies/seller-settle-policy.interface';
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {
@@ -42,6 +43,7 @@ export interface ISeller {
   claimPolicy: ISellerClaimPolicy;
   crawlPolicy: ISellerCrawlPolicy;
   shippingPolicy: ISellerShippingPolicy;
+  settlePolicy?: ISellerSettlePolicy;
 
   returnAddress: IAddress;
 }
