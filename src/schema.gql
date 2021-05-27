@@ -42,6 +42,12 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+"""교환/반품 배송비 지불 방식. (Trans:계좌입금, Enclose:택배상자 동봉)"""
+enum ClaimFeePayMethod {
+  Enclose
+  Trans
+}
+
 type Courier {
   code: String!
   createdAt: DateTime!
@@ -111,10 +117,12 @@ input CreateSellerInput {
   courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
   crawlStrategyInput: CreateSellerCrawlStrategyInput!
+  csNotiPhoneNumber: String
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
   operationTimeMessage: String!
+  orderNotiPhoneNumber: String
   phoneNumber: String!
   representativeName: String!
   returnAddressInput: CreateSellerReturnAddressInput!
@@ -221,6 +229,7 @@ type ItemDetailImage {
 }
 
 input ItemFilter {
+  brandId: Int
   createdAtLte: DateTime
   createdAtMte: DateTime
   isMdRecommended: Boolean
@@ -473,11 +482,13 @@ type Seller {
   crawlPolicy: SellerCrawlPolicy!
   crawlStrategy: SellerCrawlStrategy!
   createdAt: DateTime!
+  csNotiPhoneNumber: String
   email: String!
   id: Int!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
   operationTimeMessage: String!
+  orderNotiPhoneNumber: String
   phoneNumber: String!
   representativeName: String!
   returnAddress: SellerReturnAddress!
@@ -491,6 +502,7 @@ type Seller {
 type SellerClaimPolicy {
   createdAt: DateTime!
   fee: Int!
+  feePayMethod: ClaimFeePayMethod!
   id: Int!
   phoneNumber: String!
   picName: String!
@@ -603,12 +615,11 @@ input UpdateItemOptionInput {
 input UpdateItemPriceInput {
   displayPrice: Float
   endAt: DateTime
-  finalPrice: Int!
-  isCrawlUpdating: Boolean!
-  originalPrice: Int!
+  isCrawlUpdating: Boolean
+  originalPrice: Int
   pickkDiscountAmount: Int
   pickkDiscountRate: Int
-  sellPrice: Int!
+  sellPrice: Int
   startAt: DateTime
   unit: ItemPriceUnit
 }
