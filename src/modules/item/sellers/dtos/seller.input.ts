@@ -19,10 +19,12 @@ export class CreateSellerInput extends PickType(
     'businessCode',
     'mailOrderBusinessCode',
     'representativeName',
-    'phoneNumber',
     'email',
-    'kakaoTalkCode',
+    'orderNotiPhoneNumber',
+    'csNotiPhoneNumber',
+    'phoneNumber',
     'operationTimeMessage',
+    'kakaoTalkCode',
   ],
   InputType
 ) {

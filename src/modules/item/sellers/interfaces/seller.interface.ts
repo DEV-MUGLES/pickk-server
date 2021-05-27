@@ -11,14 +11,27 @@ import {
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {
+  /** 상호 */
   businessName: string;
+  /** 사업자번호 */
   businessCode: string;
+  /** 통신판매업신고번호 */
   mailOrderBusinessCode: string;
+  /** 대표자 이름 */
   representativeName: string;
-  phoneNumber: string;
   email: string;
-  kakaoTalkCode?: string;
+
+  /** 주문 알림톡 수신 번호 */
+  orderNotiPhoneNumber?: string;
+  /** CS 알림톡 수신 번호 */
+  csNotiPhoneNumber?: string;
+
+  /** 고객센터 번호 */
+  phoneNumber: string;
+  /** 고객센터 운영시간 */
   operationTimeMessage: string;
+  /** 고객센터 카카오톡 ID */
+  kakaoTalkCode?: string;
 
   brand: IBrand;
   courier: ICourier;

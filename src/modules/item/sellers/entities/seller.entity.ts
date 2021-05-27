@@ -63,6 +63,20 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @IsNumberString()
   phoneNumber: string;
 
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @IsOptional()
+  orderNotiPhoneNumber?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @IsOptional()
+  csNotiPhoneNumber?: string;
+
   @Field()
   @Column()
   @IsEmail()
