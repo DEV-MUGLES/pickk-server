@@ -12,6 +12,7 @@ import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerCrawlPolicyInput,
   UpdateSellerReturnAddressInput,
+  UpdateSellerSettlePolicyInput,
   UpdateSellerShippingPolicyInput,
 } from './dtos/seller-policies.input';
 import { SellerFilter } from './dtos/seller.filter';
@@ -24,6 +25,8 @@ import { SellerReturnAddress } from './models/seller-return-address.model';
 import { Seller } from './models/seller.model';
 import { SellersRepository } from './sellers.repository';
 import { SellerClaimAccount } from './models/policies/seller-claim-account.model';
+import { SellerSettlePolicy } from './models/policies/seller-settle-policy.model';
+import { SellerSettleAccount } from './models/policies/seller-settle-account.model';
 
 @Injectable()
 export class SellersService {
@@ -75,7 +78,11 @@ export class SellersService {
   ): Promise<Seller> {
     const {
       saleStrategyInput,
-      claimPolicyInput,
+      claimPolicyInput: {
+        accountInput: claimAccountInput,
+        ...claimPolicyInput
+      },
+      settlePolicyInput,
       crawlPolicyInput,
       shippingPolicyInput,
       returnAddressInput,
@@ -88,11 +95,20 @@ export class SellersService {
 
     const seller = new Seller({
       ...sellerAttributes,
-      claimPolicy: new SellerClaimPolicy(claimPolicyInput),
+      claimPolicy: new SellerClaimPolicy({
+        ...claimPolicyInput,
+        account: new SellerClaimAccount(claimAccountInput),
+      }),
       crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
       shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
       returnAddress: new SellerReturnAddress(returnAddressInput),
       saleStrategy,
+      settlePolicy: settlePolicyInput
+        ? new SellerSettlePolicy({
+            ...settlePolicyInput,
+            account: new SellerSettleAccount(settlePolicyInput.accountInput),
+          })
+        : null,
     });
     const newEntity = await this.sellersRepository.save(seller);
     return await this.get(newEntity.id, relations);
@@ -102,16 +118,16 @@ export class SellersService {
     seller: Seller,
     input: UpdateSellerClaimPolicyInput
   ): Promise<SellerClaimPolicy> {
-    const { accountInput, ...claimPolicyAttributes } = input;
-    seller.claimPolicy = new SellerClaimPolicy({
-      ...seller.claimPolicy,
-      ...claimPolicyAttributes,
-      account: new SellerClaimAccount({
-        ...seller.claimPolicy.account,
-        ...accountInput,
-      }),
-    });
+    seller.updateClaimPolicy(input);
     return (await this.sellersRepository.save(seller)).claimPolicy;
+  }
+
+  async updateSettlePolicy(
+    seller: Seller,
+    input: UpdateSellerSettlePolicyInput
+  ): Promise<SellerSettlePolicy> {
+    seller.updateSettlePolicy(input);
+    return (await this.sellersRepository.save(seller)).settlePolicy;
   }
 
   async updateCrawlPolicy(
