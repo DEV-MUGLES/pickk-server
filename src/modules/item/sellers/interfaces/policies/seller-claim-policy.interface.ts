@@ -1,3 +1,4 @@
+import { IAccount } from '@src/common/interfaces/account.interface';
 import { ClaimFeePayMethod } from '../../constants/seller-claim-policy.enum';
 
 export interface ISellerClaimPolicy {
@@ -10,4 +11,7 @@ export interface ISellerClaimPolicy {
   phoneNumber: string;
   /** 교환배송비 지불방식 */
   feePayMethod: ClaimFeePayMethod;
+
+  /** 교환배송비 지불 게좌 */
+  account: IAccount;
 }

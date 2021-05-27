@@ -12,6 +12,7 @@ import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
 import { SellerReturnAddress } from './models/seller-return-address.model';
+import { ClaimFeePayMethod } from './constants/seller-claim-policy.enum';
 
 describe('SellersService', () => {
   let sellersService: SellersService;
@@ -51,6 +52,7 @@ describe('SellersService', () => {
         fee: faker.datatype.number(),
         phoneNumber: '01044131261',
         picName: faker.lorem.text(),
+        feePayMethod: ClaimFeePayMethod.Enclose,
       },
       crawlPolicyInput: {
         isInspectingNew: faker.datatype.boolean(),
@@ -105,11 +107,21 @@ describe('SellersService', () => {
 
       const result = await sellersService.create(createSellerInput);
       expect(result.businessCode).toEqual(createSellerInput.businessCode);
-      expect(result.claimPolicy).toBeTruthy();
-      expect(result.crawlPolicy).toBeTruthy();
-      expect(result.shippingPolicy).toBeTruthy();
-      expect(result.saleStrategy).toBeTruthy();
-      expect(result.returnAddress).toBeTruthy();
+      expect(result.claimPolicy).toMatchObject(
+        createSellerInput.claimPolicyInput
+      );
+      expect(result.crawlPolicy).toMatchObject(
+        createSellerInput.crawlPolicyInput
+      );
+      expect(result.shippingPolicy).toMatchObject(
+        createSellerInput.shippingPolicyInput
+      );
+      expect(result.saleStrategy).toMatchObject(
+        createSellerInput.saleStrategyInput
+      );
+      expect(result.returnAddress).toMatchObject(
+        createSellerInput.returnAddressInput
+      );
       expect(salesStrategyResposytoryFindOrCreateSpy).toHaveBeenCalledWith(
         createSellerInput.saleStrategyInput
       );

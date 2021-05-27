@@ -87,8 +87,18 @@ input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
 }
 
+input CreateSellerClaimAccountInput {
+  bankCode: InicisBankCode!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+}
+
 input CreateSellerClaimPolicyInput {
+  accountInput: CreateSellerClaimAccountInput
   fee: Int!
+  feePayMethod: ClaimFeePayMethod!
   phoneNumber: String!
   picName: String!
 }
@@ -173,6 +183,59 @@ scalar DateTime
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
+}
+
+"""은행 코드입니다. KG Inicis와 관련 없는 일반 계좌를 저장할 때도 사용됩니다."""
+enum InicisBankCode {
+  AbnAmro
+  BcCard
+  Boa
+  Busan
+  ChBank
+  Chohung
+  Citi
+  Commercial
+  Cu
+  Daegu
+  Deutsche
+  EPost
+  ExShinhan
+  Hana
+  Hanil
+  Hanmi
+  Housing
+  Hsbc
+  Ibk
+  Jeju
+  Jeonbuk
+  JpMorgan
+  KBank
+  KakaoBank
+  KakaoMoney
+  Kangwon
+  Kb
+  Kdb
+  Keb
+  Kwangju
+  Kyongnam
+  LPoint
+  MitsubishiTokyo
+  MutualSavings
+  NaverPoint
+  NhBank
+  Nonghyup
+  Payco
+  Peace
+  Sc
+  Seoul
+  ShBank
+  Shinan
+  Shinhan
+  Shinsegae
+  Sj
+  SsgMoney
+  TossMoney
+  Woori
 }
 
 type Item {
@@ -499,7 +562,20 @@ type Seller {
   userId: Int
 }
 
+"""교환배송비 지불 계좌"""
+type SellerClaimAccount {
+  bankCode: InicisBankCode!
+  createdAt: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+  updatedAt: DateTime!
+}
+
 type SellerClaimPolicy {
+  account: SellerClaimAccount
   createdAt: DateTime!
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
@@ -629,7 +705,9 @@ input UpdateProductInput {
 }
 
 input UpdateSellerClaimPolicyInput {
+  accountInput: CreateSellerClaimAccountInput
   fee: Int
+  feePayMethod: ClaimFeePayMethod
   phoneNumber: String
   picName: String
 }

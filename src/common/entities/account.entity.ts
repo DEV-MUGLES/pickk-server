@@ -1,10 +1,16 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column } from 'typeorm';
 import { IsEnum, IsNumberString, IsString, MaxLength } from 'class-validator';
 import { InicisBankCode } from 'inicis';
 
 import { BaseIdEntity } from './base.entity';
 import { IAccount } from '../interfaces/account.interface';
+
+registerEnumType(InicisBankCode, {
+  name: 'InicisBankCode',
+  description:
+    '은행 코드입니다. KG Inicis와 관련 없는 일반 계좌를 저장할 때도 사용됩니다.',
+});
 
 @ObjectType()
 export abstract class AbstractAccountEntity

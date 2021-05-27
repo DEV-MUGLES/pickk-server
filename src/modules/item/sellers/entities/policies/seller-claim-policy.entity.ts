@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import {
   IsEnum,
   IsNumber,
@@ -14,6 +14,8 @@ import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { ISellerClaimPolicy } from '../../interfaces/policies';
 import { ClaimFeePayMethod } from '../../constants/seller-claim-policy.enum';
+import { SellerClaimAccount } from '../../models/policies/seller-claim-account.model';
+import { SellerClaimAccountEntity } from './seller-claim-account.entity';
 
 @ObjectType()
 @Entity('seller_claim_policy')
@@ -30,6 +32,8 @@ export class SellerClaimPolicyEntity
     this.phoneNumber = attributes.phoneNumber;
     this.picName = attributes.picName;
     this.feePayMethod = attributes.feePayMethod;
+
+    this.account = attributes.account;
   }
 
   @Field(() => Int)
@@ -58,4 +62,9 @@ export class SellerClaimPolicyEntity
   })
   @IsEnum(ClaimFeePayMethod)
   feePayMethod: ClaimFeePayMethod;
+
+  @Field(() => SellerClaimAccount, { nullable: true })
+  @OneToOne(() => SellerClaimAccountEntity, { cascade: true, nullable: true })
+  @JoinColumn()
+  account: SellerClaimAccount;
 }

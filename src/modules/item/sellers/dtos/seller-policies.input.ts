@@ -1,5 +1,6 @@
-import { InputType, PartialType, PickType } from '@nestjs/graphql';
+import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 
+import { SellerClaimAccount } from '../models/policies/seller-claim-account.model';
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
 import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
@@ -7,11 +8,21 @@ import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
 import { SellerReturnAddress } from '../models/seller-return-address.model';
 
 @InputType()
-export class CreateSellerClaimPolicyInput extends PickType(
-  SellerClaimPolicy,
-  ['fee', 'phoneNumber', 'picName'],
+export class CreateSellerClaimAccountInput extends PickType(
+  SellerClaimAccount,
+  ['bankCode', 'number', 'ownerName'],
   InputType
 ) {}
+
+@InputType()
+export class CreateSellerClaimPolicyInput extends PickType(
+  SellerClaimPolicy,
+  ['fee', 'phoneNumber', 'picName', 'feePayMethod'],
+  InputType
+) {
+  @Field({ nullable: true })
+  accountInput?: CreateSellerClaimAccountInput;
+}
 
 @InputType()
 export class CreateSellerCrawlPolicyInput extends PickType(
@@ -51,6 +62,11 @@ export class CreateSellerCrawlStrategyInput extends PickType(
 @InputType()
 export class UpdateSellerClaimPolicyInput extends PartialType(
   CreateSellerClaimPolicyInput
+) {}
+
+@InputType()
+export class UpdateSellerClaimAccountInput extends PartialType(
+  CreateSellerClaimAccountInput
 ) {}
 
 @InputType()

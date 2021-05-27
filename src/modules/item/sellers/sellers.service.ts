@@ -23,6 +23,7 @@ import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.m
 import { SellerReturnAddress } from './models/seller-return-address.model';
 import { Seller } from './models/seller.model';
 import { SellersRepository } from './sellers.repository';
+import { SellerClaimAccount } from './models/policies/seller-claim-account.model';
 
 @Injectable()
 export class SellersService {
@@ -101,9 +102,14 @@ export class SellersService {
     seller: Seller,
     input: UpdateSellerClaimPolicyInput
   ): Promise<SellerClaimPolicy> {
+    const { accountInput, ...claimPolicyAttributes } = input;
     seller.claimPolicy = new SellerClaimPolicy({
       ...seller.claimPolicy,
-      ...input,
+      ...claimPolicyAttributes,
+      account: new SellerClaimAccount({
+        ...seller.claimPolicy.account,
+        ...accountInput,
+      }),
     });
     return (await this.sellersRepository.save(seller)).claimPolicy;
   }
