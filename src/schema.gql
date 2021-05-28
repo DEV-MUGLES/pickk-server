@@ -779,10 +779,12 @@ input UpdateSellerCrawlPolicyInput {
 input UpdateSellerInput {
   businessCode: String
   businessName: String
+  csNotiPhoneNumber: String
   email: String
   kakaoTalkCode: String
   mailOrderBusinessCode: String
   operationTimeMessage: String
+  orderNotiPhoneNumber: String
   phoneNumber: String
   representativeName: String
 }

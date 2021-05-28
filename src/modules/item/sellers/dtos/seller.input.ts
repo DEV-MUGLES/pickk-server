@@ -73,6 +73,8 @@ export class UpdateSellerInput extends PartialType(
       'email',
       'kakaoTalkCode',
       'operationTimeMessage',
+      'orderNotiPhoneNumber',
+      'csNotiPhoneNumber',
     ],
     InputType
   )
