@@ -718,6 +718,7 @@ input UpdateCourierIssueInput {
 input UpdateItemInput {
   description: String
   imageUrl: String
+  isInfiniteStock: Boolean = true
   majorCategoryId: Float
   minorCategoryId: Float
   name: String
