@@ -2,9 +2,11 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { FloatColumn } from '@src/common/decorators/column.decorator';
 import { IItemSizeChart } from '../interfaces/item-size-chart.interface';
 import { ItemEntity } from './item.entity';
+
+const NullableFloatColumn = () =>
+  Column({ type: 'float', default: null, nullable: true });
 
 @ObjectType()
 @Entity({
@@ -42,123 +44,73 @@ export class ItemSizeChartEntity
     this.itemId = attributes.itemId;
     this.item = attributes.item;
   }
-  /**
-   * XS,S,M,L,XL등 사이즈 값들의 집합의 이름을 의미한다.
-   */
+
   @Field()
   @Column()
   name: string;
-  /**
-   * 총장을 의미한다.
-   */
+
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   totalLength?: number;
-  /**
-   * 어깨너비를 의미한다.
-   */
+
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   shoulderWidth?: number;
 
-  /**
-   * 가슴단면를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   chestWidth?: number;
 
-  /**
-   * 소매길이를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   sleeveLength?: number;
 
-  /**
-   * 허리단면을 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   waistWidth?: number;
 
-  /**
-   * 밑위를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   riseHeight?: number;
 
-  /**
-   * 허벅지 단면을 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   thighWidth?: number;
 
-  /**
-   * 밑단단면을 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   hemWidth?: number;
 
-  /**
-   * 악세사리류에 해당하는 너비(가로)를 의미한다.
-   * 시계케이스가로, 가방너비, 벨트버클가로, 안경렌즈너비, 지갑가로
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   accWidth?: number;
 
-  /**
-   * 악세사리류에 해당하는 높이(세로)를 의미한다.
-   * 시계케이스세로, 가방높이, 벨트버클세로, 안경렌즈높이, 지갑세로
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   accHeight?: number;
 
-  /**
-   * 악세사리류에 해당하는 폭을 의미한다.
-   * 시계케이스폭, 가방폭, 지갑폭등등
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   accDepth?: number;
 
-  /**
-   * 가방끈의 길이를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   crossStrapLength?: number;
 
-  /**
-   * 시계 밴드폭을 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   watchBandDepth?: number;
 
-  /**
-   * 안경전체 너비를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   glassWidth?: number;
 
-  /**
-   * 안경브릿지의 길이를 의미한다.
-   */
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   glassBridgeLength?: number;
-  /**
-   * 안경다리길이를 의미한다.
-   */
+
   @Field({ nullable: true })
-  @FloatColumn()
+  @NullableFloatColumn()
   glassLegLength?: number;
 
   @Field(() => Int)
