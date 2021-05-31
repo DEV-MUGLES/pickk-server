@@ -6,6 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "set": "cp .env.dev .env && docker compose -f docker-compose.yml up",
     "wset": "copy .env.dev .env && docker compose -f docker-compose.yml up",
     "set:down": "docker-compose -f docker-compose.yml down --volumes && docker system prune",
@@ -32,6 +33,10 @@
     "migrate:revert": "npm run typeorm migration:revert",
     "migrations": "npm run typeorm migration:show",
     "eb:prod": "npm install && npm run start:prod"
+  },
+  "resolutions": {
+    "fs-capacitor": "^6.2.0",
+    "graphql-upload": "^11.0.0"
   },
   "dependencies": {
     "@nestjs/bull": "^0.3.1",
