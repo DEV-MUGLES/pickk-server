@@ -26,6 +26,7 @@ import { AppService } from './app.service';
       sortSchema: true,
       playground: true,
       introspection: true,
+      cors: true,
     }),
     AppConfigModule,
     AwsS3ProviderModule,
