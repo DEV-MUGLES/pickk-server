@@ -18,6 +18,7 @@ import { UserModule } from './modules/user/user.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { OrderModule } from './modules/order/order.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AppService } from './app.service';
     CommonModule,
     ItemModule,
     MyModule,
+    OrderModule,
     UserModule,
   ],
   controllers: [AppController],
