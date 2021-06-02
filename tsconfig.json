@@ -14,6 +14,7 @@
       "@src/*": ["src/*"],
       "@item/*": ["src/modules/item/*"],
       "@my/*": ["src/modules/my/*"],
+      "@order/*": ["src/modules/order/*"],
       "@user/*": ["src/modules/user/*"],
     },
     "incremental": true,

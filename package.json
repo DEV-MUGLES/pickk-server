@@ -129,6 +129,7 @@
       "@src/(.*)$": "<rootDir>/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
+      "@order/(.*)$": "<rootDir>/modules/order/$1",
       "@user/(.*)$": "<rootDir>/modules/user/$1"
     }
   },
