@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddItemSizeChart1621936848554 implements MigrationInterface {
-  name = 'AddItemSizeChart1621936848554';
+export class AddItemSizeChart1622702487914 implements MigrationInterface {
+  name = 'AddItemSizeChart1622702487914';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
