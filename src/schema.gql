@@ -220,6 +220,7 @@ type Item {
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
   sizeCharts: [ItemSizeChart!]
+  sizeChartsMetaData: [ItemSizeChartMetaData!]!
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -358,6 +359,11 @@ type ItemSizeChart {
   watchBandDepth: Float
 }
 
+type ItemSizeChartMetaData {
+  columnName: String!
+  displayName: String!
+}
+
 type ItemUrl {
   createdAt: DateTime!
   id: Int!
@@ -401,7 +407,7 @@ type Mutation {
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
   addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
-  addItemSizeCharts(addItemSizeChartInput: [AddItemSizeChartInput!]!, itemId: Int!): Item!
+  addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
@@ -410,7 +416,7 @@ type Mutation {
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
-  modifyItemSizeCharts(itemId: Int!, removeItemSizeChartInput: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
+  modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
@@ -672,7 +678,7 @@ input UpdateItemSizeChartInput {
   glassWidth: Float
   hemWidth: Float
   id: Int
-  name: String
+  name: String!
   riseHeight: Float
   shoulderWidth: Float
   sleeveLength: Float
