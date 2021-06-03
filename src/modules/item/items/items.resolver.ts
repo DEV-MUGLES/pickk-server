@@ -1,5 +1,14 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Info,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@src/authentication/decorators/roles.decorator';
@@ -39,6 +48,8 @@ import {
 } from './dtos/item-option.input';
 import { ItemOption } from './models/item-option.model';
 import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
+import { ItemSizeChartMetaData } from './models/item-size-chart.model';
+import { getAvailItemSizeChartColumnDisplayNames } from './helpers/item.helper';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<Item> {
@@ -62,6 +73,15 @@ export class ItemsResolver extends BaseResolver<Item> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     return this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @ResolveField(() => [ItemSizeChartMetaData])
+  async sizeChartsMetaData(@Parent() item: Item) {
+    const {
+      majorCategory: { code: majorCode },
+      minorCategory: { code: minorCode },
+    } = item;
+    return getAvailItemSizeChartColumnDisplayNames(majorCode, minorCode);
   }
 
   @Query(() => [Item])
