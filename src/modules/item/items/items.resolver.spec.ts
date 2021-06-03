@@ -18,6 +18,8 @@ describe('itemsResolver', () => {
   let itemsService: ItemsService;
   let productsService: ProductsService;
   let itemsResolver: ItemsResolver;
+  const itemId = 1;
+  const item = new Item({ id: itemId });
 
   const getItemSizeChartMock = (id?: number) => ({
     id: id ?? null,
@@ -58,8 +60,9 @@ describe('itemsResolver', () => {
     itemsService = moduleRef.get<ItemsService>(ItemsService);
     productsService = moduleRef.get<ProductsService>(ProductsService);
     itemsResolver = new ItemsResolver(itemsService, productsService);
-    jest.spyOn(itemsService, 'get').mockResolvedValue(new Item());
-    jest.spyOn(itemsService, 'updateSizeCharts').mockResolvedValue(new Item());
+
+    jest.spyOn(itemsService, 'get').mockResolvedValue(item);
+    jest.spyOn(itemsService, 'updateSizeCharts').mockResolvedValue(item);
   });
 
   const addSizeChartInputs = [...Array(5)].map(getItemSizeChartMock);
@@ -69,42 +72,60 @@ describe('itemsResolver', () => {
   const removedChartIds = [...Array(5)].map((_, index) => index + 1);
   describe('modifyItemSizeCharts', () => {
     it('성공적으로 사이즈 차트가 추가된다.', async () => {
-      jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(new Item());
+      jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(item);
 
-      await itemsResolver.modifyItemSizeCharts(1, addSizeChartInputs, []);
+      await itemsResolver.modifyItemSizeCharts(itemId, addSizeChartInputs, []);
 
-      expect(itemsService.addSizeCharts).toBeCalledTimes(1);
+      expect(itemsService.addSizeCharts).toHaveBeenCalledWith(
+        item,
+        addSizeChartInputs
+      );
     });
 
     it('성공적으로 사이즈 차트를 업데이트한다.', async () => {
-      await itemsResolver.modifyItemSizeCharts(1, updateSizeChartInputs, []);
+      await itemsResolver.modifyItemSizeCharts(
+        itemId,
+        updateSizeChartInputs,
+        []
+      );
 
-      expect(itemsService.updateSizeCharts).toBeCalledTimes(1);
+      expect(itemsService.updateSizeCharts).toHaveBeenCalledWith(
+        item,
+        updateSizeChartInputs
+      );
     });
 
     it('성공적으로 사이즈 차트를 삭제한다.', async () => {
-      jest
-        .spyOn(itemsService, 'removeSizeChartsByIds')
-        .mockResolvedValue(new Item());
+      jest.spyOn(itemsService, 'removeSizeChartsByIds').mockResolvedValue(item);
 
-      await itemsResolver.modifyItemSizeCharts(1, [], removedChartIds);
-      expect(itemsService.removeSizeChartsByIds).toBeCalledTimes(1);
+      await itemsResolver.modifyItemSizeCharts(itemId, [], removedChartIds);
+      expect(itemsService.removeSizeChartsByIds).toHaveBeenCalledWith(
+        item,
+        removedChartIds
+      );
     });
 
     it('성공적으로 사이즈 차트에 추가, 삭제, 업데이트한다', async () => {
-      jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(new Item());
-      jest
-        .spyOn(itemsService, 'removeSizeChartsByIds')
-        .mockResolvedValue(new Item());
+      jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(item);
+      jest.spyOn(itemsService, 'removeSizeChartsByIds').mockResolvedValue(item);
 
       await itemsResolver.modifyItemSizeCharts(
-        1,
+        itemId,
         [...addSizeChartInputs, ...updateSizeChartInputs],
         removedChartIds
       );
-      expect(itemsService.removeSizeChartsByIds).toBeCalledTimes(1);
-      expect(itemsService.addSizeCharts).toBeCalledTimes(1);
-      expect(itemsService.updateSizeCharts).toBeCalledTimes(1);
+      expect(itemsService.removeSizeChartsByIds).toHaveBeenCalledWith(
+        item,
+        removedChartIds
+      );
+      expect(itemsService.addSizeCharts).toHaveBeenCalledWith(
+        item,
+        addSizeChartInputs
+      );
+      expect(itemsService.updateSizeCharts).toHaveBeenCalledWith(
+        item,
+        updateSizeChartInputs
+      );
     });
   });
 });
