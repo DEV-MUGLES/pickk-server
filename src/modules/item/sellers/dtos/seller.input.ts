@@ -8,6 +8,7 @@ import {
   CreateSellerShippingPolicyInput,
   CreateSellerReturnAddressInput,
   CreateSellerCrawlStrategyInput,
+  CreateSellerSettlePolicyInput,
 } from './seller-policies.input';
 import { Seller } from '../models/seller.model';
 
@@ -19,10 +20,12 @@ export class CreateSellerInput extends PickType(
     'businessCode',
     'mailOrderBusinessCode',
     'representativeName',
-    'phoneNumber',
     'email',
-    'kakaoTalkCode',
+    'orderNotiPhoneNumber',
+    'csNotiPhoneNumber',
+    'phoneNumber',
     'operationTimeMessage',
+    'kakaoTalkCode',
   ],
   InputType
 ) {
@@ -52,6 +55,9 @@ export class CreateSellerInput extends PickType(
 
   @Field()
   returnAddressInput: CreateSellerReturnAddressInput;
+
+  @Field({ nullable: true })
+  settlePolicyInput?: CreateSellerSettlePolicyInput;
 }
 
 @InputType()
@@ -67,6 +73,8 @@ export class UpdateSellerInput extends PartialType(
       'email',
       'kakaoTalkCode',
       'operationTimeMessage',
+      'orderNotiPhoneNumber',
+      'csNotiPhoneNumber',
     ],
     InputType
   )

@@ -1,4 +1,4 @@
-import { Field, InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 
 import { ItemPrice } from '../models/item-price.model';
 
@@ -21,19 +21,20 @@ export class AddItemPriceInput extends PickType(
 }
 
 @InputType()
-export class UpdateItemPriceInput extends PickType(
-  ItemPrice,
-  [
-    'originalPrice',
-    'sellPrice',
-    'finalPrice',
-    'pickkDiscountAmount',
-    'pickkDiscountRate',
-    'isCrawlUpdating',
-    'startAt',
-    'endAt',
-    'displayPrice',
-    'unit',
-  ],
-  InputType
+export class UpdateItemPriceInput extends PartialType(
+  PickType(
+    ItemPrice,
+    [
+      'originalPrice',
+      'sellPrice',
+      'pickkDiscountAmount',
+      'pickkDiscountRate',
+      'isCrawlUpdating',
+      'startAt',
+      'endAt',
+      'displayPrice',
+      'unit',
+    ],
+    InputType
+  )
 ) {}

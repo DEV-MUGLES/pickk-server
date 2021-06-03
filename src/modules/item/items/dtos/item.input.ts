@@ -40,6 +40,7 @@ export class UpdateItemInput extends PartialType(
       'description',
       'majorCategoryId',
       'minorCategoryId',
+      'isInfiniteStock',
     ],
     InputType
   )

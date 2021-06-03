@@ -62,6 +62,54 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+"""교환/반품 배송비 지불 방식. (Trans:계좌입금, Enclose:택배상자 동봉)"""
+enum ClaimFeePayMethod {
+  Enclose
+  Trans
+}
+
+type Coupon {
+  createdAt: DateTime!
+  id: Int!
+  spec: CouponSpecification!
+  specId: Float!
+  status: CouponStatus
+  updatedAt: DateTime!
+}
+
+type CouponSpecification {
+  """이 값으로 클라이언트에서 필터링 해주세요."""
+  availableAt: DateTime
+  brand: Brand
+  brandId: Float
+  createdAt: DateTime!
+  discountAmount: Int
+
+  """1~99 정수만 입력 가능합니다."""
+  discountRate: Int
+  expireAt: DateTime!
+  id: Int!
+  maximumDiscountPrice: Int
+  minimumForUse: Int
+
+  """최대 30자까지 입력할 수 있습니다."""
+  name: String!
+  type: CouponType!
+  updatedAt: DateTime!
+}
+
+"""쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)"""
+enum CouponStatus {
+  Applied
+  Ready
+}
+
+"""쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)"""
+enum CouponType {
+  Amount
+  Rate
+}
+
 type Courier {
   code: String!
   createdAt: DateTime!
@@ -101,9 +149,23 @@ input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
 }
 
+input CreateSellerClaimAccountInput {
+  bankCode: InicisBankCode!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+}
+
 input CreateSellerClaimPolicyInput {
+  accountInput: CreateSellerClaimAccountInput
   fee: Int!
+  feePayMethod: ClaimFeePayMethod!
+
+  """담당자 번호"""
   phoneNumber: String!
+
+  """담당자 이름"""
   picName: String!
 }
 
@@ -131,14 +193,17 @@ input CreateSellerInput {
   courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
   crawlStrategyInput: CreateSellerCrawlStrategyInput!
+  csNotiPhoneNumber: String
   email: String!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
   operationTimeMessage: String!
+  orderNotiPhoneNumber: String
   phoneNumber: String!
   representativeName: String!
   returnAddressInput: CreateSellerReturnAddressInput!
   saleStrategyInput: FindSaleStrategyInput!
+  settlePolicyInput: CreateSellerSettlePolicyInput
   shippingPolicyInput: CreateSellerShippingPolicyInput!
   userId: Int!
 }
@@ -147,6 +212,25 @@ input CreateSellerReturnAddressInput {
   baseAddress: String!
   detailAddress: String!
   postalCode: String!
+}
+
+input CreateSellerSettleAccountInput {
+  bankCode: InicisBankCode!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+}
+
+input CreateSellerSettlePolicyInput {
+  accountInput: CreateSellerSettleAccountInput
+
+  """세금계산서 수령이메일"""
+  email: String!
+
+  """담당자 번호"""
+  phoneNumber: String!
+  picName: String!
 }
 
 input CreateSellerShippingPolicyInput {
@@ -185,6 +269,59 @@ scalar DateTime
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
+}
+
+"""은행 코드입니다. KG Inicis와 관련 없는 일반 계좌를 저장할 때도 사용됩니다."""
+enum InicisBankCode {
+  AbnAmro
+  BcCard
+  Boa
+  Busan
+  ChBank
+  Chohung
+  Citi
+  Commercial
+  Cu
+  Daegu
+  Deutsche
+  EPost
+  ExShinhan
+  Hana
+  Hanil
+  Hanmi
+  Housing
+  Hsbc
+  Ibk
+  Jeju
+  Jeonbuk
+  JpMorgan
+  KBank
+  KakaoBank
+  KakaoMoney
+  Kangwon
+  Kb
+  Kdb
+  Keb
+  Kwangju
+  Kyongnam
+  LPoint
+  MitsubishiTokyo
+  MutualSavings
+  NaverPoint
+  NhBank
+  Nonghyup
+  Payco
+  Peace
+  Sc
+  Seoul
+  ShBank
+  Shinan
+  Shinhan
+  Shinsegae
+  Sj
+  SsgMoney
+  TossMoney
+  Woori
 }
 
 type Item {
@@ -243,6 +380,7 @@ type ItemDetailImage {
 }
 
 input ItemFilter {
+  brandId: Int
   createdAtLte: DateTime
   createdAtMte: DateTime
   isMdRecommended: Boolean
@@ -440,6 +578,9 @@ type Mutation {
   updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
   updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
   updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
+
+  """추가도 이거로 해주시면 됩니다!"""
+  updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
@@ -494,6 +635,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  myCoupons: [Coupon!]!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
@@ -527,26 +669,47 @@ type Seller {
   crawlPolicy: SellerCrawlPolicy!
   crawlStrategy: SellerCrawlStrategy!
   createdAt: DateTime!
+  csNotiPhoneNumber: String
   email: String!
   id: Int!
   kakaoTalkCode: String
   mailOrderBusinessCode: String!
   operationTimeMessage: String!
+  orderNotiPhoneNumber: String
   phoneNumber: String!
   representativeName: String!
   returnAddress: SellerReturnAddress!
   saleStrategy: SaleStrategy!
+  settlePolicy: SellerSettlePolicy
   shippingPolicy: SellerShippingPolicy!
   updatedAt: DateTime!
   user: User!
   userId: Int
 }
 
+"""교환배송비 지불 계좌"""
+type SellerClaimAccount {
+  bankCode: InicisBankCode!
+  createdAt: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+  updatedAt: DateTime!
+}
+
 type SellerClaimPolicy {
+  account: SellerClaimAccount
   createdAt: DateTime!
   fee: Int!
+  feePayMethod: ClaimFeePayMethod!
   id: Int!
+
+  """담당자 번호"""
   phoneNumber: String!
+
+  """담당자 이름"""
   picName: String!
   updatedAt: DateTime!
 }
@@ -585,6 +748,20 @@ type SellerReturnAddress {
   detailAddress: String!
   id: Int!
   postalCode: String!
+  updatedAt: DateTime!
+}
+
+type SellerSettlePolicy {
+  account: SellerClaimAccount!
+  createdAt: DateTime!
+
+  """세금계산서 수령이메일"""
+  email: String!
+  id: Int!
+
+  """담당자 번호"""
+  phoneNumber: String!
+  picName: String!
   updatedAt: DateTime!
 }
 
@@ -638,6 +815,7 @@ input UpdateCourierIssueInput {
 input UpdateItemInput {
   description: String
   imageUrl: String
+  isInfiniteStock: Boolean = true
   majorCategoryId: Float
   minorCategoryId: Float
   name: String
@@ -657,12 +835,11 @@ input UpdateItemOptionInput {
 input UpdateItemPriceInput {
   displayPrice: Float
   endAt: DateTime
-  finalPrice: Int!
-  isCrawlUpdating: Boolean!
-  originalPrice: Int!
+  isCrawlUpdating: Boolean
+  originalPrice: Int
   pickkDiscountAmount: Int
   pickkDiscountRate: Int
-  sellPrice: Int!
+  sellPrice: Int
   startAt: DateTime
   unit: ItemPriceUnit
 }
@@ -692,9 +869,23 @@ input UpdateProductInput {
   stock: Int!
 }
 
+input UpdateSellerClaimAccountInput {
+  bankCode: InicisBankCode
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String
+  ownerName: String
+}
+
 input UpdateSellerClaimPolicyInput {
+  accountInput: UpdateSellerClaimAccountInput
   fee: Int
+  feePayMethod: ClaimFeePayMethod
+
+  """담당자 번호"""
   phoneNumber: String
+
+  """담당자 이름"""
   picName: String
 }
 
@@ -706,10 +897,12 @@ input UpdateSellerCrawlPolicyInput {
 input UpdateSellerInput {
   businessCode: String
   businessName: String
+  csNotiPhoneNumber: String
   email: String
   kakaoTalkCode: String
   mailOrderBusinessCode: String
   operationTimeMessage: String
+  orderNotiPhoneNumber: String
   phoneNumber: String
   representativeName: String
 }
@@ -718,6 +911,25 @@ input UpdateSellerReturnAddressInput {
   baseAddress: String
   detailAddress: String
   postalCode: String
+}
+
+input UpdateSellerSettleAccountInput {
+  bankCode: InicisBankCode
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String
+  ownerName: String
+}
+
+input UpdateSellerSettlePolicyInput {
+  accountInput: UpdateSellerSettleAccountInput
+
+  """세금계산서 수령이메일"""
+  email: String
+
+  """담당자 번호"""
+  phoneNumber: String
+  picName: String
 }
 
 input UpdateSellerShippingPolicyInput {

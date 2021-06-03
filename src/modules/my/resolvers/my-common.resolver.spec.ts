@@ -14,6 +14,8 @@ import { UsersService } from '../../user/users/users.service';
 
 import { MyCommonResolver } from './my-common.resolver';
 import { UserAvatarImage } from '../../user/users/models/user-avatar-image.model';
+import { CouponsService } from '@src/modules/order/coupons/coupons.service';
+import { CouponsRepository } from '@src/modules/order/coupons/coupons.repository';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 
@@ -29,6 +31,8 @@ describe('MyCommonResolver', () => {
         MyCommonResolver,
         UsersService,
         UsersRepository,
+        CouponsService,
+        CouponsRepository,
         {
           provide: JwtService,
           useValue: {

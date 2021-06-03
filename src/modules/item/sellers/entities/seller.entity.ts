@@ -32,10 +32,47 @@ import { Courier } from '../../couriers/models/courier.model';
 import { CourierEntity } from '../../couriers/entities/courier.entity';
 import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
 import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
+import { SellerSettlePolicy } from '../models/policies/seller-settle-policy.model';
+import { SellerSettlePolicyEntity } from './policies/seller-settle-policy.entity';
 
 @ObjectType()
 @Entity('seller')
 export class SellerEntity extends BaseIdEntity implements ISeller {
+  constructor(attributes?: Partial<SellerEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.businessName = attributes.businessName;
+    this.businessCode = attributes.businessCode;
+    this.mailOrderBusinessCode = attributes.mailOrderBusinessCode;
+    this.representativeName = attributes.representativeName;
+    this.email = attributes.email;
+
+    this.orderNotiPhoneNumber = attributes.orderNotiPhoneNumber;
+    this.csNotiPhoneNumber = attributes.csNotiPhoneNumber;
+
+    this.phoneNumber = attributes.phoneNumber;
+    this.operationTimeMessage = attributes.operationTimeMessage;
+    this.kakaoTalkCode = attributes.kakaoTalkCode;
+
+    this.user = attributes.user;
+    this.userId = attributes.userId;
+    this.brand = attributes.brand;
+    this.brandId = attributes.brandId;
+    this.courier = attributes.courier;
+    this.courierId = attributes.courierId;
+
+    this.saleStrategy = attributes.saleStrategy;
+    this.claimPolicy = attributes.claimPolicy;
+    this.crawlPolicy = attributes.crawlPolicy;
+    this.shippingPolicy = attributes.shippingPolicy;
+    this.settlePolicy = attributes.settlePolicy;
+
+    this.returnAddress = attributes.returnAddress;
+  }
+
   @Field()
   @Column()
   @IsString()
@@ -62,6 +99,20 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @IsPhoneNumber('KR')
   @IsNumberString()
   phoneNumber: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @IsOptional()
+  orderNotiPhoneNumber?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @IsOptional()
+  csNotiPhoneNumber?: string;
 
   @Field()
   @Column()
@@ -133,6 +184,11 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @OneToOne(() => SellerShippingPolicyEntity, { cascade: true })
   @JoinColumn()
   shippingPolicy: SellerShippingPolicy;
+
+  @Field(() => SellerSettlePolicy, { nullable: true })
+  @OneToOne(() => SellerSettlePolicyEntity, { cascade: true, nullable: true })
+  @JoinColumn()
+  settlePolicy?: SellerSettlePolicy;
 
   @Field(() => SellerReturnAddress)
   @OneToOne(() => SellerReturnAddressEntity, { cascade: true })

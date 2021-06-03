@@ -17,12 +17,14 @@ import {
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '@src/modules/user/users/dtos/shipping-address.input';
-import { UpdateUserInput } from '@src/modules/user/users/dtos/user.input';
+} from '@user/users/dtos/shipping-address.input';
+import { UpdateUserInput } from '@user/users/dtos/user.input';
 import { User } from '@user/users/models/user.model';
 import { UsersService } from '@user/users/users.service';
 import { ShippingAddress } from '@user/users/models/shipping-address.model';
 import { UserAvatarImage } from '@user/users/models/user-avatar-image.model';
+import { Coupon } from '@order/coupons/models/coupon.model';
+import { CouponsService } from '@order/coupons/coupons.service';
 
 @Resolver()
 export class MyCommonResolver extends BaseResolver {
@@ -30,6 +32,7 @@ export class MyCommonResolver extends BaseResolver {
 
   constructor(
     @Inject(UsersService) private usersService: UsersService,
+    @Inject(CouponsService) private couponsService: CouponsService,
     @Inject(AwsS3ProviderService) private awsS3Service: AwsS3ProviderService
   ) {
     super();
@@ -168,5 +171,14 @@ export class MyCommonResolver extends BaseResolver {
   ): Promise<ShippingAddress[]> {
     const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
     return await this.usersService.removeShippingAddress(user, addressId);
+  }
+
+  @Query(() => [Coupon])
+  @UseGuards(JwtVerifyGuard)
+  async myCoupons(@CurrentUser() payload: JwtPayload): Promise<Coupon[]> {
+    return await this.couponsService.list({ userId: payload.sub }, null, [
+      'spec',
+      'spec.brand',
+    ]);
   }
 }

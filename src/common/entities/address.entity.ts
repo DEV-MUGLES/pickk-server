@@ -10,14 +10,10 @@ export abstract class AbstractAddressEntity
   extends BaseIdEntity
   implements IAddress {
   constructor(attributes?: Partial<AbstractAddressEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }
-
-    this.id = attributes.id;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
 
     this.baseAddress = attributes.baseAddress;
     this.detailAddress = attributes.detailAddress;

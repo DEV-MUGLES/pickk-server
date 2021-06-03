@@ -1,39 +1,52 @@
 import { ObjectType } from '@nestjs/graphql';
+
+import {
+  UpdateSellerClaimPolicyInput,
+  UpdateSellerSettlePolicyInput,
+} from '../dtos/seller-policies.input';
 import { SellerEntity } from '../entities/seller.entity';
+import { SellerClaimAccount } from './policies/seller-claim-account.model';
+import { SellerClaimPolicy } from './policies/seller-claim-policy.model';
+import { SellerSettleAccount } from './policies/seller-settle-account.model';
+import { SellerSettlePolicy } from './policies/seller-settle-policy.model';
 
 @ObjectType()
 export class Seller extends SellerEntity {
-  constructor(attributes?: Partial<SellerEntity>) {
-    super();
-    if (!attributes) {
-      return;
-    }
+  public updateClaimPolicy?(
+    claimPolicyInput: UpdateSellerClaimPolicyInput
+  ): SellerClaimPolicy {
+    const { accountInput, ...claimPolicyAttributes } = claimPolicyInput;
+    const isAddingAccount = this.claimPolicy.account || accountInput;
 
-    this.id = attributes.id;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
+    this.claimPolicy = new SellerClaimPolicy({
+      ...this.claimPolicy,
+      ...claimPolicyAttributes,
+      account: isAddingAccount
+        ? new SellerClaimAccount({
+            ...this.claimPolicy.account,
+            ...accountInput,
+          })
+        : null,
+    });
+    return this.claimPolicy;
+  }
 
-    this.businessName = attributes.businessName;
-    this.businessCode = attributes.businessCode;
-    this.mailOrderBusinessCode = attributes.mailOrderBusinessCode;
-    this.representativeName = attributes.representativeName;
-    this.phoneNumber = attributes.phoneNumber;
-    this.email = attributes.email;
-    this.kakaoTalkCode = attributes.kakaoTalkCode;
-    this.operationTimeMessage = attributes.operationTimeMessage;
+  public updateSettlePolicy?(
+    settlePolicyInput: UpdateSellerSettlePolicyInput
+  ): SellerSettlePolicy {
+    const { accountInput, ...settlePolicyAttributes } = settlePolicyInput;
+    const isAddingAccount = this.settlePolicy?.account || accountInput;
 
-    this.user = attributes.user;
-    this.userId = attributes.userId;
-    this.brand = attributes.brand;
-    this.brandId = attributes.brandId;
-    this.courier = attributes.courier;
-    this.courierId = attributes.courierId;
-
-    this.saleStrategy = attributes.saleStrategy;
-    this.claimPolicy = attributes.claimPolicy;
-    this.crawlPolicy = attributes.crawlPolicy;
-    this.shippingPolicy = attributes.shippingPolicy;
-
-    this.returnAddress = attributes.returnAddress;
+    this.settlePolicy = new SellerSettlePolicy({
+      ...this.settlePolicy,
+      ...settlePolicyAttributes,
+      account: isAddingAccount
+        ? new SellerSettleAccount({
+            ...this.settlePolicy?.account,
+            ...accountInput,
+          })
+        : null,
+    });
+    return this.settlePolicy;
   }
 }

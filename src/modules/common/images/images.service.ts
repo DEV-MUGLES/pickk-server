@@ -5,6 +5,7 @@ import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
 import { S3UploadResultDto } from '@src/providers/aws/s3/dto/s3.dto';
 
 import { BaseImageRepository } from './base-image.repository';
+import { UploadBufferDto } from './dtos/image.input';
 
 @Injectable()
 export class ImagesService {
@@ -16,6 +17,26 @@ export class ImagesService {
 
   async insertBaseImages(keys: string[]) {
     await this.baseImageRepository.bulkInsert(keys);
+  }
+
+  async uploadBufferDatas(
+    uploadBufferDtos: UploadBufferDto[]
+  ): Promise<Array<S3UploadResultDto | null>> {
+    return await Promise.all<S3UploadResultDto | null>(
+      uploadBufferDtos.map((uploadBufferDto) =>
+        new Promise<{ url: string; key: string }>(async (resolve) => {
+          const { buffer, mimetype, filename, prefix } = uploadBufferDto;
+          resolve(
+            await this.awsS3Service.uploadBuffer(
+              buffer,
+              filename,
+              mimetype,
+              prefix
+            )
+          );
+        }).catch(() => null)
+      )
+    );
   }
 
   /**

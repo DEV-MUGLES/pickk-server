@@ -1,18 +1,21 @@
 {
   "name": "pickk-server",
-  "version": "0.0.45",
+  "version": "0.0.59",
   "description": "",
   "author": "",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
+    "preinstall": "npx npm-force-resolutions",
     "set": "cp .env.dev .env && docker compose -f docker-compose.yml up",
+    "wset": "copy .env.dev .env && docker compose -f docker-compose.yml up",
     "set:down": "docker-compose -f docker-compose.yml down --volumes && docker system prune",
     "prebuild": "rimraf dist",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "cp .env.dev .env && nest start --watch",
+    "start:wdev": "copy .env.dev .env && nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "tsc": "tsc --noEmit",
@@ -24,12 +27,16 @@
     "jest:e2e": "jest --config ./test/jest-e2e.json",
     "test": "npm run format && npm run lint && npm run tsc && npm run jest",
     "pretypeorm": "npm list ts-node -g || npm install ts-node -g",
-    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/.bin/typeorm",
+    "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
     "makemigrations": "npm run typeorm migration:generate --",
     "migrate": "npm run typeorm migration:run",
     "migrate:revert": "npm run typeorm migration:revert",
     "migrations": "npm run typeorm migration:show",
     "eb:prod": "npm install && npm run start:prod"
+  },
+  "resolutions": {
+    "fs-capacitor": "^6.2.0",
+    "graphql-upload": "^11.0.0"
   },
   "dependencies": {
     "@nestjs/bull": "^0.3.1",
@@ -58,6 +65,7 @@
     "graphql": "^15.5.0",
     "graphql-parse-resolve-info": "^4.11.0",
     "graphql-tools": "^7.0.4",
+    "inicis": "^1.0.3",
     "joi": "^17.4.0",
     "mysql": "^2.18.1",
     "passport": "^0.4.1",
@@ -121,6 +129,7 @@
       "@src/(.*)$": "<rootDir>/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
+      "@order/(.*)$": "<rootDir>/modules/order/$1",
       "@user/(.*)$": "<rootDir>/modules/user/$1"
     }
   },

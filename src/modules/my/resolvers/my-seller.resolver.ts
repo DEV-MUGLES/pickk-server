@@ -14,11 +14,13 @@ import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerCrawlPolicyInput,
   UpdateSellerReturnAddressInput,
+  UpdateSellerSettlePolicyInput,
   UpdateSellerShippingPolicyInput,
 } from '@src/modules/item/sellers/dtos/seller-policies.input';
 import { SellerClaimPolicy } from '@src/modules/item/sellers/models/policies/seller-claim-policy.model';
 import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/seller-shipping-policy.model';
 import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
+import { SellerSettlePolicy } from '@src/modules/item/sellers/models/policies/seller-settle-policy.model';
 
 @Resolver()
 export class MySellerResolver extends BaseResolver {
@@ -60,6 +62,21 @@ export class MySellerResolver extends BaseResolver {
     return await this.sellersService.updateClaimPolicy(
       seller,
       updateSellerClaimPolicyInput
+    );
+  }
+
+  @Mutation(() => SellerSettlePolicy, {
+    description: '추가도 이거로 해주시면 됩니다!',
+  })
+  @UseGuards(JwtSellerGuard)
+  async updateMySellerSettlePolicy(
+    @CurrentSeller() seller: Seller,
+    @Args('updateSellerSettlePolicyInput')
+    updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput
+  ): Promise<SellerSettlePolicy> {
+    return await this.sellersService.updateSettlePolicy(
+      seller,
+      updateSellerSettlePolicyInput
     );
   }
 

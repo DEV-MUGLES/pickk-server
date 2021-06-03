@@ -212,7 +212,7 @@ export class ItemsResolver extends BaseResolver<Item> {
     @IntArgs('priceId') priceId: number
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['prices']);
-    return await this.itemsService.removePrice(item, priceId);
+    return await this.itemsService.activateItemPrice(item, priceId);
   }
 
   @Roles(UserRole.Seller)
