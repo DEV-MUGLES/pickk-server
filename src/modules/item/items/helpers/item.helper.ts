@@ -42,39 +42,7 @@ const isPredefinedCategoryCode = (
   );
 };
 
-export const getAvailItemSizeChartColumns = (
-  majorCode: string,
-  minorCode: string
-): ItemSizeChartColumnName[] => {
-  if (!isPredefinedCategoryCode(minorCode)) {
-    return AvailItemSizeChartColumns[majorCode];
-  }
-  return (
-    AvailItemSizeChartColumns[minorCode] ||
-    AvailItemSizeChartColumns[majorCode] ||
-    []
-  );
-};
-
-export const getAvailItemSizeChartColumnDisplayNames = (
-  majorCode: string,
-  minorCode: string
-) => {
-  console.log(getAvailItemSizeChartColumns(majorCode, minorCode));
-  return getAvailItemSizeChartColumns(majorCode, minorCode).map(
-    (columnName) =>
-      new ItemSizeChartMetaData({
-        columnName,
-        displayName: getItemSizeChartColumnDisplayName(
-          majorCode,
-          minorCode,
-          columnName
-        ),
-      })
-  );
-};
-
-export const getItemSizeChartColumnDisplayName = (
+const getItemSizeChartColumnDisplayName = (
   majorCode: string,
   minorCode: string,
   columnName: ItemSizeChartColumnName
@@ -94,4 +62,35 @@ export const getItemSizeChartColumnDisplayName = (
     ) ||
     matchedColumnDisplayName.displayNames[0]
   ).name;
+};
+
+export const getAvailItemSizeChartColumns = (
+  majorCode: string,
+  minorCode: string
+): ItemSizeChartColumnName[] => {
+  if (!isPredefinedCategoryCode(minorCode)) {
+    return AvailItemSizeChartColumns[majorCode];
+  }
+  return (
+    AvailItemSizeChartColumns[minorCode] ||
+    AvailItemSizeChartColumns[majorCode] ||
+    []
+  );
+};
+
+export const getAvailItemSizeChartColumnDisplayNames = (
+  majorCode: string,
+  minorCode: string
+) => {
+  return getAvailItemSizeChartColumns(majorCode, minorCode).map(
+    (columnName) =>
+      new ItemSizeChartMetaData({
+        columnName,
+        displayName: getItemSizeChartColumnDisplayName(
+          majorCode,
+          minorCode,
+          columnName
+        ),
+      })
+  );
 };
