@@ -35,7 +35,10 @@ const isPredefinedCategoryCode = (
   code: unknown
 ): code is PredefinedCategoryCode => {
   return (
-    code !== null && PredefinedCategoryCode[code as PredefinedCategoryCode]
+    code !== null &&
+    Object.values(PredefinedCategoryCode).includes(
+      code as PredefinedCategoryCode
+    )
   );
 };
 
@@ -57,6 +60,7 @@ export const getAvailItemSizeChartColumnDisplayNames = (
   majorCode: string,
   minorCode: string
 ) => {
+  console.log(getAvailItemSizeChartColumns(majorCode, minorCode));
   return getAvailItemSizeChartColumns(majorCode, minorCode).map(
     (columnName) =>
       new ItemSizeChartMetaData({
