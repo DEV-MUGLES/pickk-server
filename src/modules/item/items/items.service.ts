@@ -11,6 +11,7 @@ import {
   UpdateItemInput,
   BulkUpdateItemInput,
 } from './dtos/item.input';
+import { AddItemUrlInput } from './dtos/item-url.input';
 import { ItemFilter } from './dtos/item.filter';
 import {
   AddItemNoticeInput,
@@ -21,17 +22,23 @@ import {
   UpdateItemOptionInput,
 } from './dtos/item-option.input';
 import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from './dtos/item-size-chart.input';
+
+import {
   AddItemPriceInput,
   UpdateItemPriceInput,
 } from './dtos/item-price.input';
-import { AddItemUrlInput } from './dtos/item-url.input';
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
   ItemPricesRepository,
   ItemsRepository,
+  ItemSizeChartsRepository,
 } from './items.repository';
+
 import { ItemPrice } from './models/item-price.model';
 import { ItemUrl } from './models/item-url.model';
 import { Item } from './models/item.model';
@@ -49,6 +56,8 @@ export class ItemsService {
     private readonly itemOptionsRepository: ItemOptionsRepository,
     @InjectRepository(ItemOptionValuesRepository)
     private readonly itemOptionValuesRepository: ItemOptionValuesRepository,
+    @InjectRepository(ItemSizeChartsRepository)
+    private readonly itemSizeChartsRepository: ItemSizeChartsRepository,
     @InjectRepository(ItemPricesRepository)
     private readonly itemPricesRepository: ItemPricesRepository,
     @InjectRepository(ItemDetailImagesRepository)
@@ -276,5 +285,50 @@ export class ItemsService {
     item.createOptionSet(options);
     await this.itemsRepository.save(item);
     return this.get(item.id, ['options', 'options.values', 'products']);
+  }
+
+  async addSizeCharts(
+    item: Item,
+    addItemSizeChartInputs: AddItemSizeChartInput[]
+  ): Promise<Item> {
+    if (!addItemSizeChartInputs) {
+      return item;
+    }
+    item.addSizeCharts(addItemSizeChartInputs);
+    return await this.itemsRepository.save(item);
+  }
+
+  async removeSizeChartsAll(item: Item): Promise<Item> {
+    await this.itemSizeChartsRepository.bulkDelete(
+      item.sizeCharts.map(({ id }) => id)
+    );
+    item.removeSizeChartsAll();
+    return await this.itemsRepository.save(item);
+  }
+
+  async removeSizeChartsByIds(
+    item: Item,
+    removeItemSizeChartInputs: number[]
+  ): Promise<Item> {
+    if (!removeItemSizeChartInputs) {
+      return item;
+    }
+
+    item.removeSizeChartsByIds(removeItemSizeChartInputs);
+    await this.itemSizeChartsRepository.bulkDelete(removeItemSizeChartInputs);
+
+    return await this.itemsRepository.save(item);
+  }
+
+  async updateSizeCharts(
+    item: Item,
+    updateItemSizeChartInputs: UpdateItemSizeChartInput[]
+  ): Promise<Item> {
+    if (!updateItemSizeChartInputs) {
+      return item;
+    }
+
+    item.updateSizeCharts(updateItemSizeChartInputs);
+    return await this.itemsRepository.save(item);
   }
 }

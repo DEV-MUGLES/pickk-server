@@ -7,6 +7,7 @@ import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
+  ItemSizeChartsRepository,
   ItemPricesRepository,
   ItemsRepository,
 } from './items.repository';
@@ -26,6 +27,7 @@ describe('ItemsService', () => {
         ItemsRepository,
         ItemOptionsRepository,
         ItemOptionValuesRepository,
+        ItemSizeChartsRepository,
         ItemPricesRepository,
         ItemDetailImagesRepository,
       ],

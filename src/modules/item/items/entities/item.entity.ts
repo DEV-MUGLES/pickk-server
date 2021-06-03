@@ -1,3 +1,4 @@
+import { Optional } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   BeforeInsert,
@@ -27,10 +28,10 @@ import { ItemOption } from '../models/item-option.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemNotice } from '../models/item-notice.model';
+import { ItemSizeChart } from '../models/item-size-chart.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
-import { Optional } from '@nestjs/common';
 
 @ObjectType()
 @Entity({
@@ -68,7 +69,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.minorCategory = attributes.minorCategory;
     this.majorCategoryId = attributes.majorCategoryId;
     this.minorCategoryId = attributes.minorCategoryId;
-
+    this.sizeCharts = attributes.sizeCharts;
     this.sellableAt = attributes.sellableAt;
   }
 
@@ -229,6 +230,11 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
   @JoinColumn()
   notice: ItemNotice;
+
+  @OneToMany('ItemSizeChartEntity', 'item', {
+    cascade: true,
+  })
+  sizeCharts: ItemSizeChart[];
 
   @Field({ nullable: true, description: '판매가능시점(=활성전환일)' })
   @Column({ nullable: true })

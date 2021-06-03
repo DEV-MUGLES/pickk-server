@@ -20,6 +20,26 @@ input AddItemPriceInput {
   startAt: DateTime
 }
 
+input AddItemSizeChartInput {
+  accDepth: Float
+  accHeight: Float
+  accWidth: Float
+  chestWidth: Float
+  crossStrapLength: Float
+  glassBridgeLength: Float
+  glassLegLength: Float
+  glassWidth: Float
+  hemWidth: Float
+  name: String!
+  riseHeight: Float
+  shoulderWidth: Float
+  sleeveLength: Float
+  thighWidth: Float
+  totalLength: Float
+  waistWidth: Float
+  watchBandDepth: Float
+}
+
 input AddItemUrlInput {
   isPrimary: Boolean!
   url: String!
@@ -336,6 +356,8 @@ type Item {
 
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
+  sizeChartMetaDatas: [ItemSizeChartMetaData!]!
+  sizeCharts: [ItemSizeChart!]
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -451,6 +473,35 @@ type ItemSalePolicy {
   updatedAt: DateTime!
 }
 
+type ItemSizeChart {
+  accDepth: Float
+  accHeight: Float
+  accWidth: Float
+  chestWidth: Float
+  createdAt: DateTime!
+  crossStrapLength: Float
+  glassBridgeLength: Float
+  glassLegLength: Float
+  glassWidth: Float
+  hemWidth: Float
+  id: Int!
+  itemId: Int!
+  name: String!
+  riseHeight: Float
+  shoulderWidth: Float
+  sleeveLength: Float
+  thighWidth: Float
+  totalLength: Float
+  updatedAt: DateTime!
+  waistWidth: Float
+  watchBandDepth: Float
+}
+
+type ItemSizeChartMetaData {
+  columnName: String!
+  displayName: String!
+}
+
 type ItemUrl {
   createdAt: DateTime!
   id: Int!
@@ -494,6 +545,7 @@ type Mutation {
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
   addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
+  addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
@@ -502,10 +554,12 @@ type Mutation {
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
+  modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
+  removeItemSizeChartsAll(itemId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
@@ -788,6 +842,27 @@ input UpdateItemPriceInput {
   sellPrice: Int
   startAt: DateTime
   unit: ItemPriceUnit
+}
+
+input UpdateItemSizeChartInput {
+  accDepth: Float
+  accHeight: Float
+  accWidth: Float
+  chestWidth: Float
+  crossStrapLength: Float
+  glassBridgeLength: Float
+  glassLegLength: Float
+  glassWidth: Float
+  hemWidth: Float
+  id: Int
+  name: String!
+  riseHeight: Float
+  shoulderWidth: Float
+  sleeveLength: Float
+  thighWidth: Float
+  totalLength: Float
+  waistWidth: Float
+  watchBandDepth: Float
 }
 
 input UpdateProductInput {

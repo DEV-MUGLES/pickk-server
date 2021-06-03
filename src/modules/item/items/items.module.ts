@@ -2,11 +2,11 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ProductsModule } from '../products/products.module';
-
 import {
   ItemsRepository,
   ItemOptionsRepository,
   ItemOptionValuesRepository,
+  ItemSizeChartsRepository,
   ItemPricesRepository,
   ItemDetailImagesRepository,
 } from './items.repository';
@@ -19,6 +19,7 @@ import { ItemsService } from './items.service';
       ItemsRepository,
       ItemOptionsRepository,
       ItemOptionValuesRepository,
+      ItemSizeChartsRepository,
       ItemPricesRepository,
       ItemDetailImagesRepository,
     ]),

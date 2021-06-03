@@ -7,18 +7,25 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { AddItemUrlInput } from '../dtos/item-url.input';
 import { CreateItemOptionInput } from '../dtos/item-option.input';
+import { AddItemPriceInput } from '../dtos/item-price.input';
+import {
+  AddItemNoticeInput,
+  UpdateItemNoticeInput,
+} from '../dtos/item-notice.input';
+import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from '../dtos/item-size-chart.input';
+
 import { ItemEntity } from '../entities/item.entity';
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { Product } from '../../products/models/product.model';
 import { ItemPrice } from './item-price.model';
-import { AddItemPriceInput } from '../dtos/item-price.input';
-import {
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
-} from '../dtos/item-notice.input';
 import { ItemNotice } from './item-notice.model';
+import { ItemSizeChart } from './item-size-chart.model';
+
 import { ItemOptionValue } from './item-option-value.model';
 import { CreateItemDetailImageInput } from '../dtos/item-detail-image.dto';
 
@@ -42,6 +49,9 @@ export class Item extends ItemEntity {
     nullable: true,
   })
   products: Product[];
+
+  @Field(() => [ItemSizeChart], { nullable: true })
+  sizeCharts: ItemSizeChart[];
 
   @Field()
   get originalPrice(): number {
@@ -212,5 +222,51 @@ export class Item extends ItemEntity {
           ),
         })
     ));
+  };
+
+  public addSizeCharts = (
+    addItemSizeChartInputs: AddItemSizeChartInput[]
+  ): ItemSizeChart[] => {
+    this.sizeCharts = (this.sizeCharts ?? []).concat(
+      addItemSizeChartInputs.map((input) => new ItemSizeChart(input))
+    );
+    return this.sizeCharts;
+  };
+
+  public updateSizeCharts = (
+    updateSizeChartInputs: UpdateItemSizeChartInput[]
+  ): ItemSizeChart[] => {
+    updateSizeChartInputs.forEach((input) => {
+      const index = this.sizeCharts.findIndex((v) => v.id === input.id);
+      if (index < 0) {
+        throw new NotFoundException('수정할 사이즈차트가 존재하지 않습니다.');
+      }
+
+      this.sizeCharts[index] = new ItemSizeChart({
+        ...this.sizeCharts[index],
+        ...input,
+      });
+    });
+    return this.sizeCharts;
+  };
+
+  public removeSizeChartsAll = (): ItemSizeChart[] => {
+    const { sizeCharts } = this;
+    if ((this.sizeCharts ?? [])?.length === 0) {
+      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
+    }
+
+    this.sizeCharts = [];
+    return sizeCharts;
+  };
+
+  public removeSizeChartsByIds = (removeIds: number[]): ItemSizeChart[] => {
+    const { sizeCharts } = this;
+    if ((this.sizeCharts ?? [])?.length === 0) {
+      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
+    }
+
+    this.sizeCharts = sizeCharts.filter((size) => !removeIds.includes(size.id));
+    return this.sizeCharts;
   };
 }

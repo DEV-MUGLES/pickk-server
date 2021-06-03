@@ -18,6 +18,7 @@ export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'products.shippingReservePolicy',
   'notice',
   'prices',
+  'sizeCharts',
   'majorCategory',
   'minorCategory',
 ];

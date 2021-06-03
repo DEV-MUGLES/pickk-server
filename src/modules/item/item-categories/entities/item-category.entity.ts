@@ -8,9 +8,18 @@ import { IItemCategory } from '../interfaces/item-category.interface';
 @Entity({ name: 'item_category' })
 @Tree('nested-set')
 export class ItemCategoryEntity extends BaseIdEntity implements IItemCategory {
+  constructor(attributes?: Partial<ItemCategoryEntity>) {
+    super(attributes);
+    if (!attributes) return;
+
+    this.name = attributes.name;
+    this.code = attributes.code;
+    this.parent = attributes.parent;
+    this.children = attributes.children;
+  }
   @Column({
     type: 'varchar',
-    length: 10,
+    length: 20,
     unique: true,
   })
   @Field()
@@ -18,8 +27,7 @@ export class ItemCategoryEntity extends BaseIdEntity implements IItemCategory {
 
   @Column({
     type: 'varchar',
-    length: 10,
-    unique: true,
+    length: 20,
   })
   @Field()
   name: string;

@@ -4,11 +4,13 @@ import { plainToClass } from 'class-transformer';
 import { BaseRepository } from '@src/common/base.repository';
 
 import { ItemEntity } from './entities/item.entity';
-import { Item } from './models/item.model';
+import { ItemSizeChartEntity } from './entities/item-size-chart.entity';
 import { ItemOptionEntity } from './entities/item-option.entity';
+import { Item } from './models/item.model';
+import { ItemSizeChart } from './models/item-size-chart.model';
 import { ItemOption } from './models/item-option.model';
-import { ItemOptionValueEntity } from './entities/item-option-value.entity';
 import { ItemOptionValue } from './models/item-option-value.model';
+import { ItemOptionValueEntity } from './entities/item-option-value.entity';
 import { ItemPriceEntity } from './entities/item-price.entity';
 import { ItemPrice } from './models/item-price.model';
 import { ItemDetailImageEntity } from './entities/item-detail-image.entity';
@@ -127,5 +129,40 @@ export class ItemDetailImagesRepository extends ImageRepository<
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+}
+
+@EntityRepository(ItemSizeChartEntity)
+export class ItemSizeChartsRepository extends BaseRepository<
+  ItemSizeChartEntity,
+  ItemSizeChart
+> {
+  entityToModel(
+    entity: ItemSizeChartEntity,
+    transformOptions = {}
+  ): ItemSizeChart {
+    return plainToClass(
+      ItemSizeChart,
+      entity,
+      transformOptions
+    ) as ItemSizeChart;
+  }
+
+  entityToModelMany(
+    entities: ItemSizeChartEntity[],
+    transformOptions = {}
+  ): ItemSizeChart[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+
+  async bulkDelete(ids: number[]): Promise<void> {
+    await getConnection()
+      .createQueryBuilder()
+      .delete()
+      .from(ItemSizeChartEntity)
+      .where({ id: In(ids) })
+      .execute();
   }
 }

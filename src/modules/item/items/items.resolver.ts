@@ -1,5 +1,14 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
+import {
+  Resolver,
+  Query,
+  Info,
+  Mutation,
+  Args,
+  Int,
+  ResolveField,
+  Parent,
+} from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@src/authentication/decorators/roles.decorator';
@@ -26,6 +35,12 @@ import {
   UpdateItemNoticeInput,
 } from './dtos/item-notice.input';
 import { ItemFilter } from './dtos/item.filter';
+
+import {
+  AddItemSizeChartInput,
+  UpdateItemSizeChartInput,
+} from './dtos/item-size-chart.input';
+
 import { ProductsService } from '../products/products.service';
 import {
   CreateItemOptionSetInput,
@@ -33,6 +48,8 @@ import {
 } from './dtos/item-option.input';
 import { ItemOption } from './models/item-option.model';
 import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
+import { ItemSizeChartMetaData } from './models/item-size-chart.model';
+import { getSizeChartMetaDatas } from './helpers/item.helper';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<Item> {
@@ -56,6 +73,19 @@ export class ItemsResolver extends BaseResolver<Item> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     return this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @ResolveField(() => [ItemSizeChartMetaData])
+  async sizeChartMetaDatas(@Parent() item: Item) {
+    if (item.majorCategory === undefined || item.minorCategory === undefined) {
+      return null;
+    }
+    const {
+      majorCategory: { code: majorCode },
+      minorCategory: { code: minorCode },
+    } = item;
+
+    return getSizeChartMetaDatas(majorCode, minorCode);
   }
 
   @Query(() => [Item])
@@ -266,5 +296,65 @@ export class ItemsResolver extends BaseResolver<Item> {
     await this.productsService.createByOptionSet(newItem);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async addItemSizeCharts(
+    @IntArgs('itemId') itemId: number,
+    @Args({
+      name: 'addItemSizeChartInputs',
+      type: () => [AddItemSizeChartInput],
+    })
+    addItemSizeChartInputs: AddItemSizeChartInput[]
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+    return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async removeItemSizeChartsAll(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+    return await this.itemsService.removeSizeChartsAll(item);
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async modifyItemSizeCharts(
+    @IntArgs('itemId') itemId: number,
+    @Args('updateItemSizeChartInput', {
+      type: () => [UpdateItemSizeChartInput],
+      nullable: true,
+    })
+    updateItemSizeChartInputs: UpdateItemSizeChartInput[],
+    @Args('removedChartIds', {
+      type: () => [Int],
+      nullable: true,
+    })
+    removedChartIds: number[]
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+
+    const addInputs: AddItemSizeChartInput[] = updateItemSizeChartInputs.filter(
+      (input) => input.id === null
+    );
+    const updateInputs = updateItemSizeChartInputs.filter(
+      (input) => input.id !== null
+    );
+
+    if (removedChartIds?.length > 0) {
+      await this.itemsService.removeSizeChartsByIds(item, removedChartIds);
+    }
+    if (addInputs?.length > 0) {
+      await this.itemsService.addSizeCharts(item, addInputs);
+    }
+
+    return await this.itemsService.updateSizeCharts(item, updateInputs);
   }
 }
