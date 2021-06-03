@@ -78,10 +78,7 @@ export const getAvailItemSizeChartColumns = (
   );
 };
 
-export const getAvailItemSizeChartColumnDisplayNames = (
-  majorCode: string,
-  minorCode: string
-) => {
+export const getSizeChartMetaDatas = (majorCode: string, minorCode: string) => {
   return getAvailItemSizeChartColumns(majorCode, minorCode).map(
     (columnName) =>
       new ItemSizeChartMetaData({

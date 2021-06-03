@@ -356,8 +356,8 @@ type Item {
 
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
+  sizeChartMetaDatas: [ItemSizeChartMetaData!]!
   sizeCharts: [ItemSizeChart!]
-  sizeChartsMetaData: [ItemSizeChartMetaData!]!
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }

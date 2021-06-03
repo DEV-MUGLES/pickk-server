@@ -49,7 +49,7 @@ import {
 import { ItemOption } from './models/item-option.model';
 import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 import { ItemSizeChartMetaData } from './models/item-size-chart.model';
-import { getAvailItemSizeChartColumnDisplayNames } from './helpers/item.helper';
+import { getSizeChartMetaDatas } from './helpers/item.helper';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<Item> {
@@ -76,12 +76,16 @@ export class ItemsResolver extends BaseResolver<Item> {
   }
 
   @ResolveField(() => [ItemSizeChartMetaData])
-  async sizeChartsMetaData(@Parent() item: Item) {
+  async sizeChartMetaDatas(@Parent() item: Item) {
+    if (item.majorCategory === undefined || item.minorCategory === undefined) {
+      return null;
+    }
     const {
       majorCategory: { code: majorCode },
       minorCategory: { code: minorCode },
     } = item;
-    return getAvailItemSizeChartColumnDisplayNames(majorCode, minorCode);
+
+    return getSizeChartMetaDatas(majorCode, minorCode);
   }
 
   @Query(() => [Item])
@@ -294,7 +298,7 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async addItemSizeCharts(
@@ -309,7 +313,7 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemSizeChartsAll(
@@ -319,7 +323,7 @@ export class ItemsResolver extends BaseResolver<Item> {
     return await this.itemsService.removeSizeChartsAll(item);
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async modifyItemSizeCharts(
@@ -338,9 +342,11 @@ export class ItemsResolver extends BaseResolver<Item> {
     const item = await this.itemsService.get(itemId, ['sizeCharts']);
 
     const addInputs: AddItemSizeChartInput[] = updateItemSizeChartInputs.filter(
-      (input) => !input.id
+      (input) => input.id === null
     );
-    const updateInputs = updateItemSizeChartInputs.filter((input) => input.id);
+    const updateInputs = updateItemSizeChartInputs.filter(
+      (input) => input.id !== null
+    );
 
     if (removedChartIds?.length > 0) {
       await this.itemsService.removeSizeChartsByIds(item, removedChartIds);
