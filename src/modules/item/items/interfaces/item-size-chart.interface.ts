@@ -1,3 +1,4 @@
+import { ItemSizeChartColumnName } from '../constants/item-size-chart.enum';
 import { IItem } from './item.interface';
 
 export interface IItemSizeChart {
@@ -26,4 +27,9 @@ export interface IItemSizeChart {
 
   item?: IItem;
   itemId: number;
+}
+
+export interface IItemSizeChartMetaData {
+  columnName: ItemSizeChartColumnName;
+  displayName: string;
 }
