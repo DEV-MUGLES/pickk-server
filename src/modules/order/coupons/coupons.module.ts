@@ -15,5 +15,6 @@ import { CouponsService } from './coupons.service';
     ]),
   ],
   providers: [CouponsService],
+  exports: [CouponsService],
 })
 export class CouponsModule {}

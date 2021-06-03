@@ -48,6 +48,48 @@ enum ClaimFeePayMethod {
   Trans
 }
 
+type Coupon {
+  createdAt: DateTime!
+  id: Int!
+  spec: CouponSpecification!
+  specId: Float!
+  status: CouponStatus
+  updatedAt: DateTime!
+}
+
+type CouponSpecification {
+  """이 값으로 클라이언트에서 필터링 해주세요."""
+  availableAt: DateTime
+  brand: Brand
+  brandId: Float
+  createdAt: DateTime!
+  discountAmount: Int
+
+  """1~99 정수만 입력 가능합니다."""
+  discountRate: Int
+  expireAt: DateTime!
+  id: Int!
+  maximumDiscountPrice: Int
+  minimumForUse: Int
+
+  """최대 30자까지 입력할 수 있습니다."""
+  name: String!
+  type: CouponType!
+  updatedAt: DateTime!
+}
+
+"""쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)"""
+enum CouponStatus {
+  Applied
+  Ready
+}
+
+"""쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)"""
+enum CouponType {
+  Amount
+  Rate
+}
+
 type Courier {
   code: String!
   createdAt: DateTime!
@@ -539,6 +581,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  myCoupons: [Coupon!]!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!

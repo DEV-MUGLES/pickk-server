@@ -14,11 +14,9 @@ import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 @ObjectType()
 @Entity('coupon')
 export class CouponEntity extends BaseIdEntity implements ICoupon {
-  @Field()
   @Column()
   userId: number;
 
-  @Field(() => User)
   @ManyToOne(() => UserEntity, {
     onDelete: 'CASCADE',
   })
