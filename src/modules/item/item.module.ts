@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 
 import { BrandsModule } from './brands/brands.module';
+import { CartsModule } from './carts/carts.module';
 import { CouriersModule } from './couriers/couriers.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemsModule } from './items/items.module';
@@ -10,6 +11,7 @@ import { SellersModule } from './sellers/sellers.module';
 @Module({
   imports: [
     BrandsModule,
+    CartsModule,
     CouriersModule,
     ItemCategoriesModule,
     ItemsModule,

@@ -516,8 +516,8 @@ type JwtPayload {
   code: String
   exp: Timestamp!
   iat: Timestamp!
+  nickname: String!
   sub: Int!
-  username: String!
 }
 
 type JwtToken {
