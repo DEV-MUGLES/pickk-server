@@ -45,7 +45,7 @@ describe('AuthResolver', () => {
   describe('refreshJwtToken', () => {
     it('shoud return refreshed JwtToken', async () => {
       const payload: JwtPayload = {
-        username: faker.lorem.text(),
+        nickname: faker.lorem.text(),
         sub: faker.datatype.number(),
         code: faker.lorem.text(),
         iat: new Date().getTime(),
@@ -53,7 +53,7 @@ describe('AuthResolver', () => {
       };
       const user = new User({
         id: payload.sub,
-        name: payload.username,
+        nickname: payload.nickname,
         code: payload.code,
       });
       const token: JwtToken = {

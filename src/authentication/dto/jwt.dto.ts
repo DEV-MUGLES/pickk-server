@@ -15,7 +15,7 @@ export class JwtToken implements IJwtToken {
 @ObjectType()
 export class JwtPayload implements IJwtPayload {
   @Field()
-  username: string;
+  nickname: string;
 
   @Field({ nullable: true })
   code?: string;
@@ -34,7 +34,7 @@ export class CreateJwtPayloadInput extends OmitType(JwtPayload, [
   'iat',
   'exp',
 ]) {
-  username: string;
+  nickname: string;
   code?: string;
   sub: number;
 }

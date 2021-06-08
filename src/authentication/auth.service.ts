@@ -53,9 +53,9 @@ export class AuthService {
     return user;
   }
 
-  getToken(user: Pick<UserEntity, 'id' | 'name' | 'code'>): IJwtToken {
+  getToken(user: Pick<UserEntity, 'id' | 'nickname' | 'code'>): IJwtToken {
     const payload: CreateJwtPayloadInput = {
-      username: user.name,
+      nickname: user.nickname,
       code: user.code,
       sub: user.id,
     };

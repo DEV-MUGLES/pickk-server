@@ -54,7 +54,7 @@ describe('MyCommonResolver', () => {
   });
 
   const payload: JwtPayload = {
-    username: faker.lorem.text(),
+    nickname: faker.lorem.text(),
     sub: faker.datatype.number(),
     code: faker.lorem.text(),
     iat: new Date().getTime(),
@@ -63,7 +63,7 @@ describe('MyCommonResolver', () => {
   const user = new User({
     id: payload.sub,
     code: payload.code,
-    name: payload.username,
+    nickname: payload.nickname,
   });
 
   describe('myJwtPayload', () => {

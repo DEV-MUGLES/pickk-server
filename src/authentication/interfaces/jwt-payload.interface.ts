@@ -1,5 +1,5 @@
 export interface IJwtPayload {
-  username: string;
+  nickname: string;
   code?: string;
   sub: number;
   iat: number;
