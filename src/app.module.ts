@@ -6,6 +6,7 @@ import { AppConfigModule } from './config/app/config.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 import { BullProviderModule } from './providers/bull/provider.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
+import { SensProviderModule } from './providers/sens/provider.module';
 import { SpiderModule } from './providers/spider/provider.module';
 
 import { AuthModule } from './authentication/auth.module';
@@ -33,6 +34,7 @@ import { OrderModule } from './modules/order/order.module';
     AwsS3ProviderModule,
     BullProviderModule,
     MysqlDatabaseProviderModule,
+    SensProviderModule,
     SpiderModule,
     AuthModule,
     ...jobModules,
