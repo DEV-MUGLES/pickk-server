@@ -1,7 +1,7 @@
 import { PredefinedCategoryCode } from '../../item-categories/constants/item-category.enum';
 import { ItemSizeChartColumnName } from './item-size-chart.enum';
 
-const {
+export const {
   Outer,
   Top,
   Bag,
