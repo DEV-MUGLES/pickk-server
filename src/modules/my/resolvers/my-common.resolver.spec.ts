@@ -3,19 +3,15 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { FileUpload } from 'graphql-upload';
 
-import { JwtPayload } from '@src/authentication/dto/jwt.dto';
-import { AwsS3ProviderModule } from '@src/providers/aws/s3/provider.module';
-import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
+import { JwtPayload } from '@auth/dto/jwt.dto';
+import { AwsS3ProviderModule, AwsS3ProviderService } from '@providers/aws/s3';
 
-import { UpdateUserInput } from '../../user/users/dtos/user.input';
-import { User } from '../../user/users/models/user.model';
-import { UsersRepository } from '../../user/users/users.repository';
-import { UsersService } from '../../user/users/users.service';
+import { UpdateUserInput } from '@user/users/dtos/user.input';
+import { User, UserAvatarImage } from '@user/users/models';
+import { UsersRepository } from '@user/users/users.repository';
+import { UsersService } from '@user/users/users.service';
 
 import { MyCommonResolver } from './my-common.resolver';
-import { UserAvatarImage } from '../../user/users/models/user-avatar-image.model';
-import { CouponsService } from '@src/modules/order/coupons/coupons.service';
-import { CouponsRepository } from '@src/modules/order/coupons/coupons.repository';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 
@@ -31,8 +27,6 @@ describe('MyCommonResolver', () => {
         MyCommonResolver,
         UsersService,
         UsersRepository,
-        CouponsService,
-        CouponsRepository,
         {
           provide: JwtService,
           useValue: {

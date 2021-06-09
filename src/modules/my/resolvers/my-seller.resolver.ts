@@ -16,11 +16,11 @@ import {
   UpdateSellerReturnAddressInput,
   UpdateSellerSettlePolicyInput,
   UpdateSellerShippingPolicyInput,
-} from '@src/modules/item/sellers/dtos/seller-policies.input';
-import { SellerClaimPolicy } from '@src/modules/item/sellers/models/policies/seller-claim-policy.model';
-import { SellerShippingPolicy } from '@src/modules/item/sellers/models/policies/seller-shipping-policy.model';
-import { SellerReturnAddress } from '@src/modules/item/sellers/models/seller-return-address.model';
-import { SellerSettlePolicy } from '@src/modules/item/sellers/models/policies/seller-settle-policy.model';
+} from '@item/sellers/dtos/seller-policies.input';
+import { SellerClaimPolicy } from '@item/sellers/models/policies/seller-claim-policy.model';
+import { SellerShippingPolicy } from '@item/sellers/models/policies/seller-shipping-policy.model';
+import { SellerReturnAddress } from '@item/sellers/models/seller-return-address.model';
+import { SellerSettlePolicy } from '@item/sellers/models/policies/seller-settle-policy.model';
 
 @Resolver()
 export class MySellerResolver extends BaseResolver {

@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 
-import { SpiderConfigModule } from '@src/config/providers/spider/config.module';
-import { ItemImageUrlJobModule } from '@src/jobs/item-image-url/item-image.job.module';
-import { ItemsModule } from '@src/modules/item/items/items.module';
-import { SellersModule } from '@src/modules/item/sellers/sellers.module';
+import { SpiderConfigModule } from '@config/providers/spider/config.module';
+import { ItemImageUrlJobModule } from '@jobs/item-image-url/item-image.job.module';
+import { ItemsModule } from '@item/items/items.module';
+import { SellersModule } from '@item/sellers/sellers.module';
 
 import { SpiderController } from './provider.controller';
 import { SpiderService } from './provider.service';

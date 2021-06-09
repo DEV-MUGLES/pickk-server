@@ -12,6 +12,11 @@
     "baseUrl": "./",
     "paths": {
       "@src/*": ["src/*"],
+      "@auth/*": ["src/authentication/*"],
+      "@config/*": ["src/config/*"],
+      "@common/*": ["src/common/*"],
+      "@jobs/*": ["src/jobs/*"],
+      "@providers/*": ["src/providers/*"],
       "@item/*": ["src/modules/item/*"],
       "@my/*": ["src/modules/my/*"],
       "@order/*": ["src/modules/order/*"],

@@ -2,8 +2,8 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { BullModule, SharedBullAsyncConfiguration } from '@nestjs/bull';
 import { router } from 'bull-board';
 
-import { BullConfigModule } from '@src/config/providers/bull/config.module';
-import { BullConfigService } from '@src/config/providers/bull/config.service';
+import { BullConfigModule } from '@config/providers/bull/config.module';
+import { BullConfigService } from '@config/providers/bull/config.service';
 
 @Module({
   imports: [

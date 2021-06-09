@@ -128,6 +128,11 @@
     "testEnvironment": "node",
     "moduleNameMapper": {
       "@src/(.*)$": "<rootDir>/$1",
+      "@auth/(.*)$": ["<rootDir>/authentication/$1"],
+      "@config/(.*)$": ["<rootDir>/config/$1"],
+      "@common/(.*)$": ["<rootDir>/common/$1"],
+      "@jobs/(.*)$": ["<rootDir>/jobs/$1"],
+      "@providers/(.*)$": ["<rootDir>/providers/$1"],
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
       "@order/(.*)$": "<rootDir>/modules/order/$1",

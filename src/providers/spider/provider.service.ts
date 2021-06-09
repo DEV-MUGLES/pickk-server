@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 
-import { SpiderConfigService } from '@src/config/providers/spider/config.service';
-import { ItemImageUrlProducer } from '@src/jobs/item-image-url/item-image.producer';
+import { SpiderConfigService } from '@config/providers/spider/config.service';
+import { ItemImageUrlProducer } from '@jobs/item-image-url/item-image.producer';
 import { SellersService } from '@item/sellers/sellers.service';
 import { ItemsService } from '@item/items/items.service';
 

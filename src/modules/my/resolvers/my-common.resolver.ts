@@ -2,13 +2,13 @@ import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
-import { JwtPayload } from '@src/authentication/dto/jwt.dto';
-import { JwtAuthGuard, JwtVerifyGuard } from '@src/authentication/guards';
-import { IntArgs } from '@src/common/decorators/args.decorator';
-import { UploadSingleImageInput } from '@src/common/dtos/image.input';
-import { BaseResolver } from '@src/common/base.resolver';
-import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
+import { CurrentUser } from '@auth/decorators/current-user.decorator';
+import { JwtPayload } from '@auth/dto/jwt.dto';
+import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
+import { IntArgs } from '@common/decorators/args.decorator';
+import { UploadSingleImageInput } from '@common/dtos/image.input';
+import { BaseResolver } from '@common/base.resolver';
+import { AwsS3ProviderService } from '@providers/aws/s3/provider.service';
 
 import {
   SHIPPING_ADDRESSES,
