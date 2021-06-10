@@ -583,6 +583,7 @@ type Mutation {
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
+  removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!

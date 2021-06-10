@@ -44,4 +44,15 @@ export class CartsService {
   createCart(cartItems: CartItem[]): Cart {
     return Cart.create(cartItems);
   }
+
+  /** 입력된 ids가 모두 입력된 cartItems들과 매칭되는 경우 true를 반환합니다. */
+  checkIdsIncludedToItems(ids: number[], cartItems: CartItem[]): boolean {
+    return ids.every(
+      (id) => cartItems.findIndex((cartItem) => cartItem.id === id) > 0
+    );
+  }
+
+  async removeItemsByIds(ids: number[]): Promise<void> {
+    await this.cartItemsRepository.bulkDelete(ids);
+  }
 }

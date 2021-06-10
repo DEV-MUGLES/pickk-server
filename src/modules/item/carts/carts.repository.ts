@@ -1,4 +1,4 @@
-import { EntityRepository, getRepository } from 'typeorm';
+import { EntityRepository, getRepository, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
@@ -29,5 +29,13 @@ export class CartItemsRepository extends BaseRepository<
       .createQueryBuilder('cartItem')
       .where('cartItem.userId = :userId', { userId })
       .getCount();
+  }
+
+  async bulkDelete(ids: number[]): Promise<void> {
+    await getRepository(CartItemEntity)
+      .createQueryBuilder()
+      .delete()
+      .where({ id: In(ids) })
+      .execute();
   }
 }

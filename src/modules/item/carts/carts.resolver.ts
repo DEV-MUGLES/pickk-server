@@ -1,5 +1,5 @@
-import { Inject, UseGuards } from '@nestjs/common';
-import { Int, Query, Resolver } from '@nestjs/graphql';
+import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { JwtPayload } from '@auth/dto/jwt.dto';
@@ -26,5 +26,22 @@ export class CartsResolver {
     const cartItems = await this.cartsService.findItemsByUserId(userId);
     await this.cartsService.adjustQuantitiesToStock(cartItems);
     return this.cartsService.createCart(cartItems);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeMyCartItems(
+    @CurrentUser() payload: JwtPayload,
+    @Args('ids', { type: () => [Int] }) ids: number[]
+  ): Promise<boolean> {
+    const userId = payload.sub;
+    const cartItems = await this.cartsService.findItemsByUserId(userId);
+    if (this.cartsService.checkIdsIncludedToItems(ids, cartItems)) {
+      throw new UnauthorizedException(
+        '본인의 것이 아닌 CartItem이 포함되었습니다.'
+      );
+    }
+    await this.cartsService.removeItemsByIds(ids);
+    return true;
   }
 }
