@@ -1,20 +1,25 @@
 import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { CurrentUser } from '@src/authentication/decorators/current-user.decorator';
-import { Roles } from '@src/authentication/decorators/roles.decorator';
-import { JwtAuthGuard } from '@src/authentication/guards';
-import { BaseResolver } from '@src/common/base.resolver';
-import { IntArgs } from '@src/common/decorators/args.decorator';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
-import { User } from '@src/modules/user/users/models/user.model';
 import { GraphQLResolveInfo } from 'graphql';
+
+import { CurrentUser } from '@auth/decorators/current-user.decorator';
+import { Roles } from '@auth/decorators/roles.decorator';
+import { JwtAuthGuard } from '@auth/guards';
+import { BaseResolver } from '@common/base.resolver';
+import { IntArgs } from '@common/decorators/args.decorator';
+import { UserRole } from '@user/users/constants/user.enum';
+import { User } from '@user/users/models/user.model';
+
 import { SellersService } from '../sellers/sellers.service';
-import { BrandsService } from './brands.service';
-import { UpdateBrandInput } from './dtos/brand.input';
+import { BRAND_RELATIONS } from './constants/brand.relation';
 import { Brand } from './models/brand.model';
+import { UpdateBrandInput } from './dtos/brand.input';
+import { BrandsService } from './brands.service';
 
 @Resolver(() => Brand)
 export class BrandsResolver extends BaseResolver {
+  relations = BRAND_RELATIONS;
+
   constructor(
     @Inject(BrandsService) private brandsService: BrandsService,
     @Inject(SellersService) private sellersService: SellersService

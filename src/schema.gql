@@ -52,6 +52,7 @@ type Brand {
   imageUrl: String
   nameEng: String
   nameKor: String!
+  seller: Seller
   updatedAt: DateTime!
 }
 

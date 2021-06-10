@@ -1,4 +1,6 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Seller } from '../../sellers/models/seller.model';
+
 import { BrandEntity } from '../entities/brand.entity';
 
 @ObjectType()
@@ -18,4 +20,9 @@ export class Brand extends BrandEntity {
     this.description = attributes.description;
     this.imageUrl = attributes.imageUrl;
   }
+
+  @Field(() => Seller, {
+    nullable: true,
+  })
+  seller?: Seller;
 }

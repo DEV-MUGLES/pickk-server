@@ -1,8 +1,11 @@
 import { Seller } from '../models/seller.model';
 
-export const SELLER_RELATIONS: Array<
-  keyof Seller | 'claimPolicy.account' | 'settlePolicy.account'
-> = [
+export type SellerRelationType =
+  | keyof Seller
+  | 'claimPolicy.account'
+  | 'settlePolicy.account';
+
+export const SELLER_RELATIONS: SellerRelationType[] = [
   'user',
   'brand',
   'saleStrategy',

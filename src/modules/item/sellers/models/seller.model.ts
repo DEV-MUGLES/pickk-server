@@ -1,5 +1,6 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
+import { Brand } from '../../brands/models/brand.model';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerSettlePolicyInput,
@@ -12,6 +13,9 @@ import { SellerSettlePolicy } from './policies/seller-settle-policy.model';
 
 @ObjectType()
 export class Seller extends SellerEntity {
+  @Field(() => Brand)
+  brand: Brand;
+
   public updateClaimPolicy?(
     claimPolicyInput: UpdateSellerClaimPolicyInput
   ): SellerClaimPolicy {

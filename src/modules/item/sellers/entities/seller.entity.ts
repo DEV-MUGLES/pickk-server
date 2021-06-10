@@ -15,8 +15,6 @@ import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { User } from '@src/modules/user/users/models/user.model';
 
-import { Brand } from '../../brands/models/brand.model';
-import { BrandEntity } from '../../brands/entities/brand.entity';
 import { ISeller } from '../interfaces/seller.interface';
 import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
@@ -34,6 +32,7 @@ import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
 import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
 import { SellerSettlePolicy } from '../models/policies/seller-settle-policy.model';
 import { SellerSettlePolicyEntity } from './policies/seller-settle-policy.entity';
+import { BrandEntity } from '../../brands/entities/brand.entity';
 
 @ObjectType()
 @Entity('seller')
@@ -140,10 +139,9 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @Exclude()
   userId: number;
 
-  @Field(() => Brand)
-  @OneToOne(() => BrandEntity)
+  @OneToOne('BrandEntity', 'seller')
   @JoinColumn()
-  brand: Brand;
+  brand: BrandEntity;
 
   @Field(() => Int, { nullable: true })
   @Column()
