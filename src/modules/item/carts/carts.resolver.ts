@@ -24,6 +24,7 @@ export class CartsResolver {
   async myCart(@CurrentUser() payload: JwtPayload): Promise<Cart> {
     const userId = payload.sub;
     const cartItems = await this.cartsService.findItemsByUserId(userId);
+    await this.cartsService.adjustQuantitiesToStock(cartItems);
     return this.cartsService.createCart(cartItems);
   }
 }

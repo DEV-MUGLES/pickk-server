@@ -61,4 +61,12 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
   })
   @JoinColumn()
   shippingReservePolicy: ProductShippingReservePolicy;
+
+  @Field({
+    description:
+      '이 Product의 stock이 0이면 예약배송정책의 stock을 반환합니다.',
+  })
+  get stockThreshold(): number {
+    return this.stock || this.shippingReservePolicy?.stock || 0;
+  }
 }

@@ -16,20 +16,36 @@ export class CartsService {
   }
 
   async findItemsByUserId(userId: number): Promise<CartItem[]> {
-    return await this.cartItemsRepository.find({
-      where: {
-        userId,
-      },
-      relations: [
-        'product',
-        'product.itemOptionValues',
-        'product.item',
-        'product.item.prices',
-        'product.item.brand',
-        'product.item.brand.seller',
-        'product.item.brand.seller.shippingPolicy',
-      ],
+    return this.cartItemsRepository.entityToModelMany(
+      await this.cartItemsRepository.find({
+        where: {
+          userId,
+        },
+        relations: [
+          'product',
+          'product.itemOptionValues',
+          'product.item',
+          'product.item.prices',
+          'product.item.brand',
+          'product.item.brand.seller',
+          'product.item.brand.seller.shippingPolicy',
+        ],
+      })
+    );
+  }
+
+  async adjustQuantitiesToStock(cartItems: CartItem[]): Promise<CartItem[]> {
+    cartItems.forEach((cartItem) => {
+      const stockThreshold = cartItem.product.stockThreshold;
+
+      if (stockThreshold < cartItem.quantity) {
+        cartItem.quantity = stockThreshold;
+        cartItem.isAdjusted = true;
+      }
     });
+    return this.cartItemsRepository.save(
+      cartItems.filter((cartItem) => cartItem.isAdjusted)
+    );
   }
 
   createCart(cartItems: CartItem[]): Cart {

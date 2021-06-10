@@ -77,6 +77,7 @@ type CartBrand {
 type CartItem {
   createdAt: DateTime!
   id: Int!
+  isAdjusted: Boolean!
   product: Product!
   productId: Float!
   quantity: Int!
@@ -624,6 +625,9 @@ type Product {
   itemOptionValues: [ItemOptionValue!]!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
+
+  """이 Product의 stock이 0이면 예약배송정책의 stock을 반환합니다."""
+  stockThreshold: Float!
   updatedAt: DateTime!
 }
 
