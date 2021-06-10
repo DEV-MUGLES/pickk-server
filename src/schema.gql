@@ -63,6 +63,26 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+type Cart {
+  cartBrands: [CartBrand!]!
+  cartItems: [CartItem!]!
+  id: Int!
+  totalAmount: Int!
+  totalItemPrice: Int!
+  totalShippingFee: Int!
+}
+
+type CartBrand {
+  brand: Brand!
+  cartItems: [CartItem!]!
+  minimumAmountForFree: Int!
+
+  """부과된 배송비입니다. 무료배송인 경우 0입니다."""
+  shippingFee: Int!
+  totalAmount: Int!
+  totalItemPrice: Int!
+}
+
 type CartItem {
   createdAt: DateTime!
   id: Int!
@@ -366,7 +386,7 @@ type Item {
 
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
-  sizeChartMetaDatas: [ItemSizeChartMetaData!]!
+  sizeChartMetaDatas: [ItemSizeChartMetaData!]
   sizeCharts: [ItemSizeChart!]
   updatedAt: DateTime!
   urls: [ItemUrl!]!
@@ -609,6 +629,7 @@ input PageInput {
 type Product {
   createdAt: DateTime!
   id: Int!
+  item: Item!
   itemOptionValues: [ItemOptionValue!]!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
@@ -645,6 +666,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
 

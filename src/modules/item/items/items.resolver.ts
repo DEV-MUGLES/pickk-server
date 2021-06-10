@@ -75,7 +75,7 @@ export class ItemsResolver extends BaseResolver<Item> {
     return this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
-  @ResolveField(() => [ItemSizeChartMetaData])
+  @ResolveField(() => [ItemSizeChartMetaData], { nullable: true })
   async sizeChartMetaDatas(@Parent() item: Item) {
     if (item.majorCategory === undefined || item.minorCategory === undefined) {
       return null;

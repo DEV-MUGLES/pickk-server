@@ -1,4 +1,5 @@
-import { IUser } from '@src/modules/user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces/user.interface';
+
 import { IProduct } from '../../products/interfaces/product.interface';
 
 export interface ICartItem {
