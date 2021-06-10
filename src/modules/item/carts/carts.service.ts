@@ -32,7 +32,7 @@ export class CartsService {
     });
   }
 
-  createCart(userId: number, cartItems: CartItem[]): Cart {
-    return Cart.create(userId, cartItems);
+  createCart(cartItems: CartItem[]): Cart {
+    return Cart.create(cartItems);
   }
 }
