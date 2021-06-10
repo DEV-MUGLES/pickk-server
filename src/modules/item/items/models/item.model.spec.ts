@@ -52,7 +52,7 @@ describe('Item', () => {
     const [sellPrice, originalPrice] = [
       faker.datatype.number(),
       faker.datatype.number(),
-    ].sort();
+    ].sort((a, b) => a - b);
 
     const addItemPriceInput: AddItemPriceInput = {
       originalPrice,
@@ -91,7 +91,7 @@ describe('Item', () => {
       faker.datatype.number(),
       faker.datatype.number(),
       faker.datatype.number(),
-    ].sort();
+    ].sort((a, b) => a - b);
 
     const addItemPriceInput: AddItemPriceInput = {
       originalPrice,

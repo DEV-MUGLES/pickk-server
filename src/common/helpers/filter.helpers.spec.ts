@@ -106,7 +106,7 @@ describe('FilterHelpers', () => {
       const [start, end] = [
         faker.datatype.number(),
         faker.datatype.number(),
-      ].sort();
+      ].sort((a, b) => a - b);
 
       expect(parseFilter({ ageBetween: [start, end] })).toEqual({
         age: Between(start, end),

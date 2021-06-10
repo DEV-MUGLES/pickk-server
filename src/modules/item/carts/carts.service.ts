@@ -35,17 +35,10 @@ export class CartsService {
   }
 
   async adjustQuantitiesToStock(cartItems: CartItem[]): Promise<CartItem[]> {
-    cartItems.forEach((cartItem) => {
-      const stockThreshold = cartItem.product.stockThreshold;
-
-      if (stockThreshold < cartItem.quantity) {
-        cartItem.quantity = stockThreshold;
-        cartItem.isAdjusted = true;
-      }
-    });
-    return this.cartItemsRepository.save(
-      cartItems.filter((cartItem) => cartItem.isAdjusted)
+    const adjustedCartItems = cartItems.filter((cartItem) =>
+      cartItem.adjustQuantityToStock()
     );
+    return this.cartItemsRepository.save(adjustedCartItems);
   }
 
   createCart(cartItems: CartItem[]): Cart {
