@@ -1,4 +1,5 @@
 import {
+  FieldsByTypeName,
   parseResolveInfo,
   ResolveTree,
   simplifyParsedResolveInfoFragmentWithType,
@@ -10,6 +11,23 @@ import { BaseIdEntity } from './entities/base.entity';
 export type DerivedFieldsInfoType<T = unknown> = {
   [relationName: string]: Array<keyof T>;
 };
+declare type mixed =
+  | Record<string, any>
+  | string
+  | number
+  | boolean
+  | undefined
+  | null;
+
+export type SimplifiedInfo = {
+  fields: Record<string, any>;
+  name: string;
+  alias: string;
+  args: {
+    [str: string]: mixed;
+  };
+  fieldsByTypeName: FieldsByTypeName;
+};
 
 export class BaseResolver<
   T extends BaseIdEntity = BaseIdEntity,
@@ -18,7 +36,7 @@ export class BaseResolver<
   protected relations: Array<RelationType> = [];
   protected derivedFieldsInfo: DerivedFieldsInfoType<T> = {};
 
-  protected getSimplifiedInfo = (info: GraphQLResolveInfo) => {
+  protected getSimplifiedInfo = (info: GraphQLResolveInfo): SimplifiedInfo => {
     const parsedInfo = parseResolveInfo(info) as ResolveTree;
     return simplifyParsedResolveInfoFragmentWithType(
       parsedInfo,
@@ -35,9 +53,10 @@ export class BaseResolver<
     }
 
     const simplifiedInfo = this.getSimplifiedInfo(info);
-    const relations = this.relations.filter((relation) =>
-      relation.split('.').some((chunk) => chunk in simplifiedInfo.fields)
-    );
+    const relations = this.relations.filter((relation) => {
+      const chunks = relation.split('.');
+      return chunks[chunks.length - 1] in simplifiedInfo.fields;
+    });
 
     Object.entries(this.derivedFieldsInfo).forEach(([relationName, fields]) => {
       if (fields.some((field) => field in simplifiedInfo.fields)) {
@@ -46,5 +65,24 @@ export class BaseResolver<
     });
 
     return [...new Set(relations.concat(includes))];
+  }
+
+  private checkFieldInInfo(
+    fieldName: string,
+    fieldsByTypeName: FieldsByTypeName
+  ): boolean {
+    if (fieldsByTypeName === {}) {
+      return false;
+    }
+
+    return Object.values(fieldsByTypeName).some((fields) => {
+      return Object.values(fields).some((resolveTree) => {
+        if (resolveTree.name === fieldName) {
+          return true;
+        }
+
+        return this.checkFieldInInfo(fieldName, resolveTree.fieldsByTypeName);
+      });
+    });
   }
 }
