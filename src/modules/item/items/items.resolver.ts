@@ -18,7 +18,7 @@ import { IntArgs } from '@src/common/decorators/args.decorator';
 import { PageInput } from '@src/common/dtos/pagination.dto';
 import { UserRole } from '@user/users/constants/user.enum';
 
-import { ITEM_RELATIONS } from './constants/item.relation';
+import { ItemRelationType, ITEM_RELATIONS } from './constants/item.relation';
 import {
   AddItemPriceInput,
   UpdateItemPriceInput,
@@ -52,7 +52,7 @@ import { ItemSizeChartMetaData } from './models/item-size-chart.model';
 import { getSizeChartMetaDatas } from './helpers/item.helper';
 
 @Resolver(() => Item)
-export class ItemsResolver extends BaseResolver<Item> {
+export class ItemsResolver extends BaseResolver<ItemRelationType> {
   relations = ITEM_RELATIONS;
   derivedFieldsInfo: DerivedFieldsInfoType = {
     prices: ['originalPrice', 'sellPrice', 'finalPrice'],

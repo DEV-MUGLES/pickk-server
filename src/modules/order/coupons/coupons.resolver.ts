@@ -7,12 +7,15 @@ import { JwtPayload } from '@auth/dto/jwt.dto';
 import { JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
 
-import { COUPON_RELATIONS } from './constants/coupon.relation';
+import {
+  CouponRelationType,
+  COUPON_RELATIONS,
+} from './constants/coupon.relation';
 import { Coupon } from './models/coupon.model';
 import { CouponsService } from './coupons.service';
 
 @Resolver()
-export class CouponsResolver extends BaseResolver<Coupon> {
+export class CouponsResolver extends BaseResolver<CouponRelationType> {
   relations = COUPON_RELATIONS;
 
   constructor(@Inject(CouponsService) private couponsService: CouponsService) {

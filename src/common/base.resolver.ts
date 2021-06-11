@@ -6,8 +6,6 @@ import {
 } from 'graphql-parse-resolve-info';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { BaseIdEntity } from './entities/base.entity';
-
 export type DerivedFieldsInfoType = {
   [relationName: string]: string[];
 };
@@ -29,10 +27,7 @@ export type SimplifiedInfo = {
   fieldsByTypeName: FieldsByTypeName;
 };
 
-export class BaseResolver<
-  T extends BaseIdEntity = BaseIdEntity,
-  RelationType extends string = string
-> {
+export class BaseResolver<RelationType extends string = string> {
   protected relations: Array<RelationType> = [];
   protected derivedFieldsInfo: DerivedFieldsInfoType = {};
 

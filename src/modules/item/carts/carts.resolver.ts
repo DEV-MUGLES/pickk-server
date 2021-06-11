@@ -13,7 +13,10 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators/args.decorator';
 import { BaseResolver } from '@common/base.resolver';
 
-import { CART_ITEM_RELATIONS } from './constants/cart-item.relation';
+import {
+  CartItemRelationType,
+  CART_ITEM_RELATIONS,
+} from './constants/cart-item.relation';
 import {
   CreateCartItemInput,
   UpdateCartItemInput,
@@ -22,7 +25,7 @@ import { CartItem, Cart } from './models';
 import { CartsService } from './carts.service';
 
 @Resolver(() => CartItem)
-export class CartsResolver extends BaseResolver<CartItem> {
+export class CartsResolver extends BaseResolver<CartItemRelationType> {
   relations = CART_ITEM_RELATIONS;
   derivedFieldsInfo = {
     'product.item.prices': ['originalPrice', 'sellPrice', 'finalPrice'],
