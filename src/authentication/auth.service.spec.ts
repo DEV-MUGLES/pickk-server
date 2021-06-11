@@ -49,15 +49,15 @@ describe('AuthService', () => {
         .mockReturnValue(NICKNAME);
 
       let i = 0;
-      const usersServiceFindOneSpy = jest
-        .spyOn(usersService, 'findOne')
-        .mockImplementation(async () => (++i < count ? new User() : null));
+      const usersServiceCheckSpy = jest
+        .spyOn(usersService, 'checkUserExist')
+        .mockImplementation(async () => ++i < count);
 
       const result = await authService.genRandomNickname();
 
       expect(result).toBe(NICKNAME);
       // @WARNING: 상단에 같은 method의 spy를 사용하면 CalledTimes에 영향이 있습니다.
-      expect(usersServiceFindOneSpy).toBeCalledTimes(count);
+      expect(usersServiceCheckSpy).toBeCalledTimes(count);
       expect(authHelperGenRandomNumberSpy).toBeCalledTimes(count);
     });
 
@@ -68,14 +68,14 @@ describe('AuthService', () => {
         .spyOn(authHelper, 'genRandomNickname')
         .mockImplementationOnce(() => nickname);
 
-      const usersServiceFindOneSpy = jest
-        .spyOn(usersService, 'findOne')
-        .mockImplementationOnce(() => null);
+      const usersServiceCheckSpy = jest
+        .spyOn(usersService, 'checkUserExist')
+        .mockResolvedValueOnce(false);
 
       const result = await authService.genRandomNickname();
 
       expect(result).toBe(nickname);
-      expect(usersServiceFindOneSpy).toBeCalled();
+      expect(usersServiceCheckSpy).toBeCalled();
       expect(authHelperGenRandomNumberSpy).toBeCalled();
     });
   });
