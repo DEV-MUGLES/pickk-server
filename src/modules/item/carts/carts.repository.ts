@@ -1,4 +1,4 @@
-import { EntityRepository, getRepository, In } from 'typeorm';
+import { EntityRepository, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
@@ -25,26 +25,24 @@ export class CartItemsRepository extends BaseRepository<
   }
 
   async countByUserId(userId: number): Promise<number> {
-    return await getRepository(CartItemEntity)
-      .createQueryBuilder('cartItem')
+    return this.createQueryBuilder('cartItem')
       .where('cartItem.userId = :userId', { userId })
       .getCount();
   }
 
   async bulkDelete(ids: number[]): Promise<void> {
-    await getRepository(CartItemEntity)
-      .createQueryBuilder()
+    await this.createQueryBuilder()
       .delete()
       .where({ id: In(ids) })
       .execute();
   }
 
   async checkExist(userId: number, productId: number): Promise<boolean> {
-    const result = await getRepository(CartItemEntity)
-      .createQueryBuilder('cartItem')
+    const result = await this.createQueryBuilder('cartItem')
       .select('1')
       .where('cartItem.userId = :userId', { userId })
       .andWhere('cartItem.productId = :productId', { productId })
+      .take(1)
       .limit(1)
       .execute();
     return result?.length > 0;

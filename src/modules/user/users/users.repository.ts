@@ -1,4 +1,4 @@
-import { EntityRepository, getRepository } from 'typeorm';
+import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@src/common/base.repository';
@@ -18,10 +18,10 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
   }
 
   async checkExist(nickname: string): Promise<boolean> {
-    const result = await getRepository(UserEntity)
-      .createQueryBuilder('user')
+    const result = await this.createQueryBuilder('user')
       .select('1')
       .where('user.nickname = :nickname', { nickname })
+      .take(1)
       .limit(1)
       .execute();
     return result?.length > 0;
