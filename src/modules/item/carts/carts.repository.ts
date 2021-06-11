@@ -39,10 +39,7 @@ export class CartItemsRepository extends BaseRepository<
       .execute();
   }
 
-  async checkCartItemExist(
-    userId: number,
-    productId: number
-  ): Promise<boolean> {
+  async checkExist(userId: number, productId: number): Promise<boolean> {
     const result = await getRepository(CartItemEntity)
       .createQueryBuilder('cartItem')
       .select('1')
