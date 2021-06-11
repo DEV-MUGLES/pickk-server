@@ -111,6 +111,6 @@ export class UsersService {
   }
 
   async checkUserExist(nickname: string): Promise<boolean> {
-    return (await this.usersRepository.findOne({ nickname })) != null;
+    return await this.usersRepository.checkExist(nickname);
   }
 }

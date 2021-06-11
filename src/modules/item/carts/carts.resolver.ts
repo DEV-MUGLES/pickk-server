@@ -77,7 +77,7 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
   ): Promise<CartItem> {
     const userId = payload.sub;
     const { productId } = createCartItemInput;
-    if (this.cartsService.checkCartItemExist(userId, productId)) {
+    if (await this.cartsService.checkCartItemExist(userId, productId)) {
       throw new ConflictException('해당 Product가 이미 담겨있습니다.');
     }
 

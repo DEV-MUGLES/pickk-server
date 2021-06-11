@@ -36,4 +36,15 @@ export class CartItemsRepository extends BaseRepository<
       .where({ id: In(ids) })
       .execute();
   }
+
+  async checkExist(userId: number, productId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('cartItem')
+      .select('1')
+      .where('cartItem.userId = :userId', { userId })
+      .andWhere('cartItem.productId = :productId', { productId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }
