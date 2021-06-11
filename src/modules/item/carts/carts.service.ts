@@ -65,7 +65,9 @@ export class CartsService {
     userId: number,
     productId: number
   ): Promise<boolean> {
-    return await this.cartItemsRepository.checkExist(userId, productId);
+    return (
+      (await this.cartItemsRepository.findOne({ userId, productId })) != null
+    );
   }
 
   createCart(cartItems: CartItem[]): Cart {

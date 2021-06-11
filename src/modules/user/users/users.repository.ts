@@ -16,14 +16,4 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
       this.entityToModel(entity, transformOptions)
     );
   }
-
-  async checkExist(nickname: string): Promise<boolean> {
-    const result = await this.createQueryBuilder('user')
-      .select('1')
-      .where('user.nickname = :nickname', { nickname })
-      .take(1)
-      .limit(1)
-      .execute();
-    return result?.length > 0;
-  }
 }
