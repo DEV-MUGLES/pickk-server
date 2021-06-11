@@ -38,4 +38,18 @@ export class CartItemsRepository extends BaseRepository<
       .where({ id: In(ids) })
       .execute();
   }
+
+  async checkCartItemExist(
+    userId: number,
+    productId: number
+  ): Promise<boolean> {
+    const result = await getRepository(CartItemEntity)
+      .createQueryBuilder('cartItem')
+      .select('1')
+      .where('cartItem.userId = :userId', { userId })
+      .andWhere('cartItem.productId = :productId', { productId })
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }
