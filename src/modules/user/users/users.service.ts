@@ -109,4 +109,8 @@ export class UsersService {
     deletedShippingAddress.remove();
     return (await this.usersRepository.save(user)).shippingAddresses;
   }
+
+  async checkUserExist(nickname: string): Promise<boolean> {
+    return await this.usersRepository.checkExist(nickname);
+  }
 }

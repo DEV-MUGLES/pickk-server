@@ -69,7 +69,7 @@ export class AuthService {
     let nickname: string;
     do {
       nickname = genRandomNickname();
-    } while (await this.usersService.findOne({ nickname }));
+    } while (await this.usersService.checkUserExist(nickname));
 
     return nickname;
   }
