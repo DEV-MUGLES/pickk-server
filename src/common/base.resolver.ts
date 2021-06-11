@@ -8,8 +8,8 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { BaseIdEntity } from './entities/base.entity';
 
-export type DerivedFieldsInfoType<T = unknown> = {
-  [relationName: string]: Array<keyof T>;
+export type DerivedFieldsInfoType = {
+  [relationName: string]: string[];
 };
 declare type mixed =
   | Record<string, any>
@@ -34,7 +34,7 @@ export class BaseResolver<
   RelationType extends string = string
 > {
   protected relations: Array<RelationType> = [];
-  protected derivedFieldsInfo: DerivedFieldsInfoType<T> = {};
+  protected derivedFieldsInfo: DerivedFieldsInfoType = {};
 
   protected getSimplifiedInfo = (info: GraphQLResolveInfo): SimplifiedInfo => {
     const parsedInfo = parseResolveInfo(info) as ResolveTree;
@@ -53,10 +53,9 @@ export class BaseResolver<
     }
 
     const simplifiedInfo = this.getSimplifiedInfo(info);
-    const relations = this.relations.filter((relation) => {
-      const chunks = relation.split('.');
-      return chunks[chunks.length - 1] in simplifiedInfo.fields;
-    });
+    const relations = this.relations.filter((relation) =>
+      this.checkRelationInFields(relation, simplifiedInfo.fieldsByTypeName)
+    );
 
     Object.entries(this.derivedFieldsInfo).forEach(([relationName, fields]) => {
       if (fields.some((field) => field in simplifiedInfo.fields)) {
@@ -67,8 +66,8 @@ export class BaseResolver<
     return [...new Set(relations.concat(includes))];
   }
 
-  private checkFieldInInfo(
-    fieldName: string,
+  private checkRelationInFields(
+    relationName: string,
     fieldsByTypeName: FieldsByTypeName
   ): boolean {
     if (fieldsByTypeName === {}) {
@@ -77,11 +76,15 @@ export class BaseResolver<
 
     return Object.values(fieldsByTypeName).some((fields) => {
       return Object.values(fields).some((resolveTree) => {
+        const fieldName = relationName.split('.').pop();
         if (resolveTree.name === fieldName) {
           return true;
         }
 
-        return this.checkFieldInInfo(fieldName, resolveTree.fieldsByTypeName);
+        return this.checkRelationInFields(
+          relationName,
+          resolveTree.fieldsByTypeName
+        );
       });
     });
   }

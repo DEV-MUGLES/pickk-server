@@ -54,7 +54,7 @@ import { getSizeChartMetaDatas } from './helpers/item.helper';
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<Item> {
   relations = ITEM_RELATIONS;
-  derivedFieldsInfo: DerivedFieldsInfoType<Item> = {
+  derivedFieldsInfo: DerivedFieldsInfoType = {
     prices: ['originalPrice', 'sellPrice', 'finalPrice'],
   };
 
