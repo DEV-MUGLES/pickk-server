@@ -126,7 +126,7 @@ describe('AuthResolver', () => {
 
       const result = await authResolver.genRandomNickname();
 
-      expect(result).toBe(NICKNAME);
+      expect(result).toEqual(NICKNAME);
       // @WARNING: 상단에 같은 method의 spy를 사용하면 CalledTimes에 영향이 있습니다.
       expect(usersServiceCheckSpy).toBeCalledTimes(count);
       expect(authHelperGenRandomNumberSpy).toBeCalledTimes(count);
@@ -137,7 +137,7 @@ describe('AuthResolver', () => {
 
       const authHelperGenRandomNumberSpy = jest
         .spyOn(authHelper, 'genRandomNickname')
-        .mockImplementationOnce(() => nickname);
+        .mockReturnValueOnce(nickname);
 
       const usersServiceCheckSpy = jest
         .spyOn(usersService, 'checkUserExist')
@@ -145,9 +145,9 @@ describe('AuthResolver', () => {
 
       const result = await authResolver.genRandomNickname();
 
-      expect(result).toBe(nickname);
-      expect(usersServiceCheckSpy).toBeCalled();
+      expect(result).toEqual(nickname);
       expect(authHelperGenRandomNumberSpy).toBeCalled();
+      expect(usersServiceCheckSpy).toBeCalledWith(nickname);
     });
   });
 });
