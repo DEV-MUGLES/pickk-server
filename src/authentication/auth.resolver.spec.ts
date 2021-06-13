@@ -10,6 +10,7 @@ import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { LoginByCodeInput } from './dto/login.input';
 import { User } from '@src/modules/user/users/models/user.model';
 import { UserRole } from '@src/modules/user/users/constants/user.enum';
+import * as authHelper from './helpers/auth.helper';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -106,6 +107,47 @@ describe('AuthResolver', () => {
         loginByCodeInput.password
       );
       expect(authServiceGetTokenSpy).toHaveBeenCalledWith(existingUser);
+    });
+  });
+
+  describe('genRandomNickname', () => {
+    it('생성한 닉네임의 유저가 존재하는 경우 반복해서 다시 시도한다.', async () => {
+      const count = Math.max(faker.datatype.number(100), 1);
+      const NICKNAME = 'nickname';
+
+      const authHelperGenRandomNumberSpy = jest
+        .spyOn(authHelper, 'genRandomNickname')
+        .mockReturnValue(NICKNAME);
+
+      let i = 0;
+      const usersServiceCheckSpy = jest
+        .spyOn(usersService, 'checkUserExist')
+        .mockImplementation(async () => ++i < count);
+
+      const result = await authResolver.genRandomNickname();
+
+      expect(result).toBe(NICKNAME);
+      // @WARNING: 상단에 같은 method의 spy를 사용하면 CalledTimes에 영향이 있습니다.
+      expect(usersServiceCheckSpy).toBeCalledTimes(count);
+      expect(authHelperGenRandomNumberSpy).toBeCalledTimes(count);
+    });
+
+    it('생성한 닉네임을 그대로 반환한다.', async () => {
+      const nickname = faker.lorem.text();
+
+      const authHelperGenRandomNumberSpy = jest
+        .spyOn(authHelper, 'genRandomNickname')
+        .mockImplementationOnce(() => nickname);
+
+      const usersServiceCheckSpy = jest
+        .spyOn(usersService, 'checkUserExist')
+        .mockResolvedValueOnce(false);
+
+      const result = await authResolver.genRandomNickname();
+
+      expect(result).toBe(nickname);
+      expect(usersServiceCheckSpy).toBeCalled();
+      expect(authHelperGenRandomNumberSpy).toBeCalled();
     });
   });
 });

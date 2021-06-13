@@ -1,15 +1,16 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
-import { UsersService } from '@src/modules/user/users/users.service';
-import { checkIsPermitted } from '@src/modules/user/users/helpers/user-role.helper';
-import { AuthService } from './auth.service';
+import { UsersService } from '@user/users/users.service';
+import { checkIsPermitted } from '@user/users/helpers/user-role.helper';
 
 import { CurrentUser } from './decorators/current-user.decorator';
 import { LoginByCodeInput, LoginByOauthInput } from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { ForbiddenResourceException } from './exceptions/user.exception';
 import { JwtRefreshGuard } from './guards';
+import { genRandomNickname } from './helpers/auth.helper';
+import { AuthService } from './auth.service';
 
 @Resolver()
 export class AuthResolver {
@@ -57,16 +58,19 @@ export class AuthResolver {
   @Query(() => Boolean, {
     description: '중복이면 true, 아니면 false를 반환한다.',
   })
-  async checkNicknameDuplicate(@Args('nickname') nickname: string) {
-    const user = await this.usersService.findOne({ nickname });
-    if (user) {
-      return true;
-    }
-    return false;
+  async checkNicknameDuplicate(
+    @Args('nickname') nickname: string
+  ): Promise<boolean> {
+    return await this.usersService.checkUserExist(nickname);
   }
 
   @Query(() => String)
   async genRandomNickname(): Promise<string> {
-    return await this.authService.genRandomNickname();
+    let nickname: string;
+    do {
+      nickname = genRandomNickname();
+    } while (await this.usersService.checkUserExist(nickname));
+
+    return nickname;
   }
 }
