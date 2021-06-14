@@ -247,4 +247,19 @@ export class ItemEntity extends BaseIdEntity implements IItem {
       this.sellableAt = new Date();
     }
   }
+
+  @Field()
+  get originalPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
+  }
+
+  @Field()
+  get sellPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).sellPrice;
+  }
+
+  @Field()
+  get finalPrice(): number {
+    return this.prices.find(({ isActive }) => isActive === true).finalPrice;
+  }
 }

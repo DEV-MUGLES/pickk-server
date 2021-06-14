@@ -53,21 +53,6 @@ export class Item extends ItemEntity {
   @Field(() => [ItemSizeChart], { nullable: true })
   sizeCharts: ItemSizeChart[];
 
-  @Field()
-  get originalPrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).originalPrice;
-  }
-
-  @Field()
-  get sellPrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).sellPrice;
-  }
-
-  @Field()
-  get finalPrice(): number {
-    return this.prices.find(({ isActive }) => isActive === true).finalPrice;
-  }
-
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((url, _index) => {
       url.isPrimary = _index === index;

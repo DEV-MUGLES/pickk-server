@@ -43,6 +43,7 @@ export class CartsService {
         },
         relations: [
           'product',
+          'product.shippingReservePolicy',
           'product.itemOptionValues',
           'product.item',
           'product.item.prices',
