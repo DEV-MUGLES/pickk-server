@@ -136,7 +136,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
 
   @Field(() => UserAvatarImage, { nullable: true })
   @OneToOne(() => UserAvatarImageEntity, {
-    eager: true,
     nullable: true,
     cascade: true,
   })
