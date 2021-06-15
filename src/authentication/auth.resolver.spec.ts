@@ -61,7 +61,7 @@ describe('AuthResolver', () => {
       };
 
       const usersServiceGetSpy = jest
-        .spyOn(usersService, 'get')
+        .spyOn(usersService, 'getNicknameOnly')
         .mockResolvedValue(user);
       const authServiceGetTokenSpy = jest
         .spyOn(authService, 'getToken')
