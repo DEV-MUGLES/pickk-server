@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 
 import configuration from './configuration';
-import { BullConfigService } from './config.service';
+import { RedisConfigService } from './config.service';
 
 /**
  * Import and provide postgres configuration related classes.
@@ -20,7 +20,7 @@ import { BullConfigService } from './config.service';
       }),
     }),
   ],
-  providers: [ConfigService, BullConfigService],
-  exports: [ConfigService, BullConfigService],
+  providers: [ConfigService, RedisConfigService],
+  exports: [ConfigService, RedisConfigService],
 })
-export class BullConfigModule {}
+export class RedisConfigModule {}

@@ -2,21 +2,21 @@ import { MiddlewareConsumer, Module } from '@nestjs/common';
 import { BullModule, SharedBullAsyncConfiguration } from '@nestjs/bull';
 import { router } from 'bull-board';
 
-import { BullConfigModule } from '@config/providers/bull/config.module';
-import { BullConfigService } from '@config/providers/bull/config.service';
+import { RedisConfigModule } from '@config/cache/redis/config.module';
+import { RedisConfigService } from '@config/cache/redis/config.service';
 
 @Module({
   imports: [
     BullModule.forRootAsync({
-      imports: [BullConfigModule],
-      useFactory: async (bullConfigService: BullConfigService) => ({
+      imports: [RedisConfigModule],
+      useFactory: async (redisConfigService: RedisConfigService) => ({
         redis: {
-          host: bullConfigService.redisHost,
-          port: bullConfigService.redisPort,
+          host: redisConfigService.host,
+          port: redisConfigService.port,
           connectTimeout: 10000,
         },
       }),
-      inject: [BullConfigService],
+      inject: [RedisConfigService],
     } as SharedBullAsyncConfiguration),
   ],
 })
