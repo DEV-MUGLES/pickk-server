@@ -540,7 +540,6 @@ type ItemUrl {
 }
 
 type JwtPayload {
-  code: String
   exp: Timestamp!
   iat: Timestamp!
   nickname: String!

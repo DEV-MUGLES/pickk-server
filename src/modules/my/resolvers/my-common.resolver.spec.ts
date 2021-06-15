@@ -50,25 +50,15 @@ describe('MyCommonResolver', () => {
   const payload: JwtPayload = {
     nickname: faker.lorem.text(),
     sub: faker.datatype.number(),
-    code: faker.lorem.text(),
     iat: new Date().getTime(),
     exp: new Date().getTime(),
   };
   const user = new User({
     id: payload.sub,
-    code: payload.code,
     nickname: payload.nickname,
   });
 
   describe('myJwtPayload', () => {
-    it('should work without code', () => {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { code, ...payloadWithoutCode } = payload;
-
-      const result = myCommonResolver.myJwtPayload(payloadWithoutCode);
-      expect(result).toEqual(payloadWithoutCode);
-    });
-
     it('should return payload', () => {
       const result = myCommonResolver.myJwtPayload(payload);
       expect(result).toEqual(payload);

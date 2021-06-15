@@ -48,14 +48,12 @@ describe('AuthResolver', () => {
       const payload: JwtPayload = {
         nickname: faker.lorem.text(),
         sub: faker.datatype.number(),
-        code: faker.lorem.text(),
         iat: new Date().getTime(),
         exp: new Date().getTime(),
       };
       const user = new User({
         id: payload.sub,
         nickname: payload.nickname,
-        code: payload.code,
       });
       const token: JwtToken = {
         access: faker.lorem.text(),

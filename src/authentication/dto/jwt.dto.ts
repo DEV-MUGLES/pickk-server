@@ -17,9 +17,6 @@ export class JwtPayload implements IJwtPayload {
   @Field()
   nickname: string;
 
-  @Field({ nullable: true })
-  code?: string;
-
   @Field(() => Int)
   sub: number;
 
@@ -33,8 +30,4 @@ export class JwtPayload implements IJwtPayload {
 export class CreateJwtPayloadInput extends OmitType(JwtPayload, [
   'iat',
   'exp',
-]) {
-  nickname: string;
-  code?: string;
-  sub: number;
-}
+]) {}
