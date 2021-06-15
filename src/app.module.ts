@@ -5,6 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppConfigModule } from './config/app/config.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 import { BullProviderModule } from './providers/bull/provider.module';
+import { RedisCacheProviderModule } from './providers/cache/redis/provider.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { SensProviderModule } from './providers/sens/provider.module';
 import { SpiderModule } from './providers/spider/provider.module';
@@ -33,6 +34,7 @@ import { OrderModule } from './modules/order/order.module';
     AppConfigModule,
     AwsS3ProviderModule,
     BullProviderModule,
+    RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
     SensProviderModule,
     SpiderModule,
