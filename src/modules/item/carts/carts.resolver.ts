@@ -64,7 +64,7 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
         '본인의 것이 아니거나 존재하지 않는 CartItem이 포함되었습니다.'
       );
     }
-    await this.cartsService.removeItemsByIds(ids);
+    await this.cartsService.removeItemsByIds(ids, userId);
     return true;
   }
 

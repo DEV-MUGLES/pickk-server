@@ -1,5 +1,6 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CacheService } from '@src/providers/cache/redis/provider.service';
 
 import { CartItemsRepository } from './carts.repository';
 import {
@@ -12,8 +13,42 @@ import { Cart, CartItem } from './models';
 export class CartsService {
   constructor(
     @InjectRepository(CartItemsRepository)
-    private readonly cartItemsRepository: CartItemsRepository
+    private readonly cartItemsRepository: CartItemsRepository,
+    @Inject(CacheService) private cacheService: CacheService
   ) {}
+
+  async countItemsByUserId(
+    userId: number,
+    isUpdatingCache = true
+  ): Promise<number> {
+    const cacheKey = CartItem.getCountCacheKey(userId);
+    const cachedCount = await this.cacheService.get<number>(cacheKey);
+
+    if (cachedCount != null) {
+      return cachedCount;
+    }
+
+    const count = await this.cartItemsRepository.countByUserId(userId);
+
+    if (isUpdatingCache) {
+      this.cacheService.set<number>(cacheKey, count);
+    }
+    return count;
+  }
+
+  async createCartItem(
+    userId: number,
+    createCartItemInput: CreateCartItemInput
+  ): Promise<CartItem> {
+    const count = await this.countItemsByUserId(userId, false);
+    const cartItem = await this.cartItemsRepository.save(
+      new CartItem({ userId, ...createCartItemInput })
+    );
+
+    const cacheKey = CartItem.getCountCacheKey(userId);
+    this.cacheService.set<number>(cacheKey, count + 1);
+    return cartItem;
+  }
 
   async getItem(id: number, relations: string[] = []): Promise<CartItem> {
     return await this.cartItemsRepository.get(id, relations);
@@ -29,10 +64,6 @@ export class CartsService {
         ...updateCartItemInput,
       })
     );
-  }
-
-  async countItemsByUserId(userId: number): Promise<number> {
-    return await this.cartItemsRepository.countByUserId(userId);
   }
 
   async findItemsByUserId(userId: number): Promise<CartItem[]> {
@@ -80,15 +111,11 @@ export class CartsService {
     );
   }
 
-  async createCartItem(
-    userId: number,
-    createCartItemInput: CreateCartItemInput
-  ): Promise<CartItem> {
-    const cartItem = new CartItem({ userId, ...createCartItemInput });
-    return this.cartItemsRepository.save(cartItem);
-  }
-
-  async removeItemsByIds(ids: number[]): Promise<void> {
+  async removeItemsByIds(ids: number[], userId: number): Promise<void> {
+    const count = await this.countItemsByUserId(userId, false);
     await this.cartItemsRepository.bulkDelete(ids);
+
+    const cacheKey = CartItem.getCountCacheKey(userId);
+    this.cacheService.set<number>(cacheKey, count - ids.length);
   }
 }

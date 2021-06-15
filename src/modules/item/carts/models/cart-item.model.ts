@@ -19,4 +19,8 @@ export class CartItem extends CartItemEntity {
 
     return this.isAdjusted || false;
   }
+
+  public static getCountCacheKey(userId: number): string {
+    return `ciC:${userId}`;
+  }
 }
