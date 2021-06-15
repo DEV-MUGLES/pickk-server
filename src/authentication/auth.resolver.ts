@@ -24,7 +24,7 @@ export class AuthResolver {
   })
   @UseGuards(JwtRefreshGuard)
   async refreshJwtToken(@CurrentUser() payload: JwtPayload) {
-    const user = await this.usersService.get(payload.sub);
+    const user = await this.usersService.getNicknameOnly(payload.sub);
     return this.authService.getToken(user);
   }
 

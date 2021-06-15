@@ -10,7 +10,7 @@ export class BaseRepository<
   Entity extends BaseIdEntity,
   Model extends BaseIdEntity
 > extends Repository<Entity> {
-  private isEntity(obj: unknown): obj is Entity {
+  protected isEntity(obj: unknown): obj is Entity {
     return obj !== undefined && (obj as Entity).id !== undefined;
   }
 

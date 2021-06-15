@@ -28,6 +28,10 @@ export class UsersService {
     return await this.usersRepository.get(id, relations);
   }
 
+  async getNicknameOnly(id: number): Promise<Pick<User, 'id' | 'nickname'>> {
+    return await this.usersRepository.getNicknameOnly(id);
+  }
+
   async create({ password, ...input }: CreateUserInput): Promise<User> {
     const user = new User(input);
     if (password) {

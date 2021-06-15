@@ -1,7 +1,9 @@
+import { NotFoundException } from '@nestjs/common';
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
+
 import { UserEntity } from './entities/user.entity';
 import { User } from './models/user.model';
 
@@ -25,5 +27,18 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
       .limit(1)
       .execute();
     return result?.length > 0;
+  }
+
+  async getNicknameOnly(id: number): Promise<Pick<User, 'id' | 'nickname'>> {
+    return await this.findOne({
+      where: { id },
+      select: ['id', 'nickname'],
+    }).then((entity) => {
+      if (!this.isEntity(entity)) {
+        throw new NotFoundException('Model not found.');
+      }
+
+      return Promise.resolve(this.entityToModel(entity));
+    });
   }
 }
