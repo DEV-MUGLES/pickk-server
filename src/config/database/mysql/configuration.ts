@@ -8,4 +8,5 @@ export default registerAs('mysql', () => ({
   database: process.env.MYSQL_DATABASE,
   logging: process.env.MYSQL_LOGGING === 'true',
   migrationsRun: process.env.MYSQL_MIGRATIONS_RUN === 'true',
+  caches: process.env.MYSQL_CACHES,
 }));

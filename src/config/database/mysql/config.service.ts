@@ -31,4 +31,7 @@ export class MysqlConfigService {
   get migrationsRun(): boolean {
     return this.configService.get<boolean>('mysql.migrationsRun');
   }
+  get caches(): number {
+    return this.configService.get<number>('mysql.caches');
+  }
 }
