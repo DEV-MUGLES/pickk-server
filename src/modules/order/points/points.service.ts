@@ -16,6 +16,10 @@ export class PointsService {
     private readonly pointEventsRepository: PointEventsRepository
   ) {}
 
+  async getAvailableAmountByUserId(userId: number) {
+    return await this.pointEventsRepository.getSum(userId);
+  }
+
   async list(
     couponFilter?: PointEventFilter,
     pageInput?: PageInput
