@@ -11,7 +11,7 @@ import { PointType } from '../constants/points.enum';
 
 @ObjectType()
 @Entity('point_event')
-@Index('id_createdAt', ['userId', 'createdAt'])
+@Index('idx_createdAt', ['userId', 'createdAt'])
 @Index('idx_orderId', ['orderId'])
 export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   constructor(attributes?: Partial<PointEventEntity>) {
