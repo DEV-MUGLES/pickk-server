@@ -14,7 +14,7 @@ type TFilterValue = unknown | unknown[] | Record<string, unknown | unknown[]>;
 type TFilter = Record<string, unknown | unknown[] | TFilterValue>;
 
 export const isFilter = (value: unknown): value is TFilter => {
-  return isObject(value) && !isDate(value);
+  return value != null && isObject(value) && !isDate(value);
 };
 
 type TSearchableFilter = {
@@ -38,7 +38,7 @@ export const isArray = (value): value is Array<unknown> => {
 };
 
 export const parseFilter = (filter: unknown, idFilter: any = {}) => {
-  if (!filter || !isFilter(filter)) {
+  if (!isFilter(filter)) {
     return {};
   }
 

@@ -642,6 +642,8 @@ type PointEvent {
 }
 
 input PointEventFilter {
+  createdAtLte: DateTime
+  createdAtMte: DateTime
   userId: Int
 }
 
@@ -697,10 +699,11 @@ type Query {
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
+  myExpectedPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
 
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
-  myPointEvents(itemFilter: PointEventFilter, pageInput: PageInput): [PointEvent!]!
+  myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
 
@@ -1036,11 +1039,15 @@ input UploadSingleImageInput {
 }
 
 type User {
+  """[ResolveField] 사용가능 포인트 잔고"""
   availablePoint: Int!
   avatarImage: UserAvatarImage
   code: String
   createdAt: DateTime!
   email: String
+
+  """[ResolveField] 적립예정 포인트 잔고"""
+  expectedPoint: Int!
   height: Int
   id: Int!
   name: String
