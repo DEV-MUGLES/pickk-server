@@ -23,4 +23,12 @@ export class PointEventsRepository extends BaseRepository<
       this.entityToModel(entity, transformOptions)
     );
   }
+
+  async getSum(userId: number): Promise<number> {
+    const { sum } = await this.createQueryBuilder('pointEvent')
+      .select('SUM(pointEvent.amount)', 'sum')
+      .where('pointEvent.userId = :userId', { userId })
+      .getRawOne();
+    return sum ?? 0;
+  }
 }
