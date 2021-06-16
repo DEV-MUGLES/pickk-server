@@ -7,7 +7,7 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { PageInput } from '@common/dtos/pagination.dto';
 
 import { PointEventFilter } from './dtos/point-event.filter';
-import { PointEvent } from './models/point-event.model';
+import { ExpectedPointEvent, PointEvent } from './models';
 import { PointsService } from './points.service';
 
 @Resolver()
@@ -18,10 +18,25 @@ export class PointsResolver {
   @UseGuards(JwtVerifyGuard)
   async myPointEvents(
     @CurrentUser() payload: JwtPayload,
-    @Args('itemFilter', { nullable: true }) pointEventFilter?: PointEventFilter,
+    @Args('pointEventFilter', { nullable: true })
+    pointEventFilter?: PointEventFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput
   ): Promise<PointEvent[]> {
-    return await this.pointsService.list(
+    return await this.pointsService.listEvents(
+      { userId: payload.sub, ...pointEventFilter },
+      pageInput
+    );
+  }
+
+  @Query(() => [PointEvent])
+  @UseGuards(JwtVerifyGuard)
+  async myExpectedPointEvents(
+    @CurrentUser() payload: JwtPayload,
+    @Args('pointEventFilter', { nullable: true })
+    pointEventFilter?: PointEventFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<ExpectedPointEvent[]> {
+    return await this.pointsService.listExpectedEvents(
       { userId: payload.sub, ...pointEventFilter },
       pageInput
     );
