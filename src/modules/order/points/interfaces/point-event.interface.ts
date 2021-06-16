@@ -1,4 +1,5 @@
-import { IUser } from '@src/modules/user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces/user.interface';
+
 import { PointType } from '../constants/points.enum';
 
 export interface IPointEvent {
