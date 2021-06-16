@@ -602,7 +602,7 @@ type Mutation {
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
-  """(!) 예전 비밀번호와 현재 비밀번호를 입력해 """
+  """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
   updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
   updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
@@ -1036,6 +1036,7 @@ input UploadSingleImageInput {
 }
 
 type User {
+  availablePoint: Int!
   avatarImage: UserAvatarImage
   code: String
   createdAt: DateTime!

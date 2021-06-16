@@ -8,5 +8,6 @@ import { PointsService } from './points.service';
 @Module({
   imports: [TypeOrmModule.forFeature([PointEventsRepository])],
   providers: [PointsResolver, PointsService],
+  exports: [PointsService],
 })
 export class PointsModule {}
