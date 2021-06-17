@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { Brand } from '../../brands/models/brand.model';
 import { SellerShippingPolicy } from '../../sellers/models/policies/seller-shipping-policy.model';
@@ -40,7 +40,12 @@ export class CartBrand {
 
 @ObjectType()
 export class Cart {
-  @Field(() => [CartBrand])
+  @Field(() => Int, { description: 'userId와 동일한 더미값입니다.' })
+  id: number;
+
+  @Field(() => [CartBrand], {
+    description: 'CartItem들을 브랜드 단위로 묶은 단위입니다.',
+  })
   cartBrands: CartBrand[];
 
   @Field(() => [CartItem])
@@ -51,14 +56,16 @@ export class Cart {
       return;
     }
 
+    this.id = attributes.id;
     this.cartBrands = attributes.cartBrands;
     this.cartItems = attributes.cartItems;
   }
 
-  public static create(cartItems: CartItem[]): Cart {
+  public static create(userId: number, cartItems: CartItem[]): Cart {
     const cartBrands = Cart.createCartBrands(cartItems);
 
     return new Cart({
+      id: userId,
       cartBrands,
       cartItems,
     });

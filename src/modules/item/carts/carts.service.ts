@@ -100,8 +100,8 @@ export class CartsService {
     return await this.cartItemsRepository.checkExist(userId, productId);
   }
 
-  createCart(cartItems: CartItem[]): Cart {
-    return Cart.create(cartItems);
+  createCart(userId: number, cartItems: CartItem[]): Cart {
+    return Cart.create(userId, cartItems);
   }
 
   /** 입력된 ids가 모두 입력된 cartItems들과 매칭되는 경우 true를 반환합니다. */

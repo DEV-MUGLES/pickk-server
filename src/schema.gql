@@ -64,8 +64,12 @@ input BulkUpdateItemInput {
 }
 
 type Cart {
+  """CartItem들을 브랜드 단위로 묶은 단위입니다."""
   cartBrands: [CartBrand!]!
   cartItems: [CartItem!]!
+
+  """userId와 동일한 더미값입니다."""
+  id: Int!
 }
 
 type CartBrand {
