@@ -39,7 +39,7 @@ export const isArray = (value): value is Array<unknown> => {
 
 export const parseFilter = (filter: unknown, idFilter: any = {}) => {
   if (!isFilter(filter)) {
-    return {};
+    return idFilter;
   }
 
   const newFilter = Object.keys(filter ?? {}).reduce((acc, key) => {
@@ -83,7 +83,7 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
     }
 
     return { ...acc, [key]: value };
-  }, idFilter ?? {});
+  }, idFilter);
 
   if (!isSearchableFilter(filter)) {
     return newFilter;
