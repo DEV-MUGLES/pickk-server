@@ -75,7 +75,7 @@ export class ItemsService {
     return this.itemsRepository.entityToModelMany(
       await this.itemsRepository.find({
         relations,
-        where: parseFilter(_itemFilter, pageInput?.idFilter),
+        where: parseFilter(_itemFilter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
       })
     );

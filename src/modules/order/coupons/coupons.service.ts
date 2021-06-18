@@ -27,7 +27,10 @@ export class CouponsService {
     return this.couponsRepository.entityToModelMany(
       await this.couponsRepository.find({
         relations,
-        where: parseFilter(_couponFilter, pageInput?.idFilter),
+        where: parseFilter(_couponFilter, _pageInput?.idFilter),
+        order: {
+          id: 'DESC',
+        },
         ...(_pageInput?.pageFilter ?? {}),
       })
     );

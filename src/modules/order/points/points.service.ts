@@ -64,7 +64,7 @@ export class PointsService {
 
     return this.pointEventsRepository.entityToModelMany(
       await this.pointEventsRepository.find({
-        where: parseFilter(_pointEventFilter, pageInput?.idFilter),
+        where: parseFilter(_pointEventFilter, _pageInput?.idFilter),
         order: {
           id: 'DESC',
         },
@@ -82,7 +82,7 @@ export class PointsService {
 
     return this.expectedpointEventsRepository.entityToModelMany(
       await this.expectedpointEventsRepository.find({
-        where: parseFilter(_pointEventFilter, pageInput?.idFilter),
+        where: parseFilter(_pointEventFilter, _pageInput?.idFilter),
         order: {
           id: 'DESC',
         },

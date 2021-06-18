@@ -47,7 +47,7 @@ export class SellersService {
 
     return await this.sellersRepository.find({
       relations,
-      where: parseFilter(_sellerFilter, pageInput?.idFilter),
+      where: parseFilter(_sellerFilter, _pageInput?.idFilter),
       ...(_pageInput?.pageFilter ?? {}),
     });
   }
