@@ -1,7 +1,5 @@
-import { ApiExtraModels } from '@nestjs/swagger';
 import { ISellerCrawlStrategy } from '@item/sellers/interfaces/seller-crawl-strategy.interface';
-
-import { SpiderItem } from '../models/spider-item.model';
+import { ISpiderItem } from '../interfaces/spider.interface';
 
 export class SpiderSellerRequestDto
   implements Omit<ISellerCrawlStrategy, 'baseUrl' | 'startPathNamesJoin'> {
@@ -14,10 +12,20 @@ export class SpiderSellerRequestDto
   startUrls: string[];
 }
 
-@ApiExtraModels(SpiderItem)
 export class SpiderSellerResultDto {
   brandName: string;
   brandId: number;
   codeRegex: string;
   items: SpiderItem[];
+}
+
+export class SpiderItem implements ISpiderItem {
+  name: string;
+  brandKor: string;
+  imageUrl: string;
+  originalPrice: number;
+  salePrice: number;
+  isSoldout?: boolean;
+  images?: string[];
+  url: string;
 }
