@@ -1,8 +1,10 @@
 import { Controller, Post, HttpCode, Patch, Body } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { SpiderSellerResultDto } from './dto/spider.dto';
 import { SpiderService } from './provider.service';
 
+@ApiTags('spider')
 @Controller('/spider')
 export class SpiderController {
   constructor(private readonly spiderService: SpiderService) {}
