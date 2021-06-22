@@ -648,6 +648,7 @@ type PointEvent {
 input PointEventFilter {
   createdAtLte: DateTime
   createdAtMte: DateTime
+  type: PointType
   userId: Int
 }
 
