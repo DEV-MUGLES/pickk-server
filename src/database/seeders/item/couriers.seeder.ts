@@ -4,19 +4,26 @@ import { Injectable } from '@nestjs/common';
 import { CouriersService } from '@item/couriers/couriers.service';
 import { CreateCourierInput } from '@item/couriers/dtos/courier.input';
 import { Courier } from '@item/couriers/models/courier.model';
+import { COURIER_COUNT } from '../data';
 
 @Injectable()
 export class CouriersSeeder {
   constructor(private couriersService: CouriersService) {}
 
-  async create(): Promise<Courier> {
-    const createInput: CreateCourierInput = {
+  createCourierInputs(): CreateCourierInput[] {
+    return [...Array(COURIER_COUNT)].map(() => ({
       name: faker.name.firstName(),
       code: faker.datatype.string(10),
-      phoneNumber: '010' + faker.datatype.number({ precision: 8 }),
+      phoneNumber: faker.phone.phoneNumber('010########'),
       returnReserveUrl: faker.internet.url(),
-    };
+    }));
+  }
 
-    return await this.couriersService.create(createInput);
+  async create(): Promise<Courier[]> {
+    return await Promise.all(
+      this.createCourierInputs().map((courierInput) =>
+        this.couriersService.create(courierInput)
+      )
+    ).then((couriers) => couriers);
   }
 }

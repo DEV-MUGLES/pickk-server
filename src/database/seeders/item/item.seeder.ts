@@ -1,22 +1,35 @@
 import { Injectable } from '@nestjs/common';
 
-import { Seller } from '@item/sellers/models/seller.model';
-import { BrandsSeeder } from './brands.seeder';
-import { CouriersSeeder } from './couriers.seeder';
-import { SellersSeeder } from './sellers.seeder';
+import {
+  ProductsSeeder,
+  ItemsSeeder,
+  ItemCategoriesSeeder,
+  BrandsSeeder,
+  CouriersSeeder,
+  SellersSeeder,
+} from '.';
 
 @Injectable()
 export class ItemSeeder {
   constructor(
     private brandsSeeder: BrandsSeeder,
     private couriersSeeder: CouriersSeeder,
-    private sellersSeeder: SellersSeeder
+    private sellersSeeder: SellersSeeder,
+    private itemCategoriesSeeder: ItemCategoriesSeeder,
+    private itemsSeeder: ItemsSeeder,
+    private productsSeeder: ProductsSeeder
   ) {}
 
-  async createSeller(userId: number): Promise<Seller> {
-    const { id: brandId } = await this.brandsSeeder.create();
-    const { id: courierId } = await this.couriersSeeder.create();
+  async createBrandCourierSeller(userIds: number[]) {
+    const brands = await this.brandsSeeder.create();
+    const brandIds = brands.map((brand) => brand.id);
+    await this.couriersSeeder.create();
+    await this.sellersSeeder.create(userIds, brandIds);
+  }
 
-    return await this.sellersSeeder.create(userId, brandId, courierId);
+  async createItemProduct() {
+    await this.itemCategoriesSeeder.create();
+    const items = await this.itemsSeeder.create();
+    await this.productsSeeder.create(items);
   }
 }
