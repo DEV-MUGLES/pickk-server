@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+
 import { ItemSeeder } from './item/item.seeder';
 import { UsersSeeder } from './user/users.seeder';
 
@@ -11,8 +12,11 @@ export class Seeder {
 
   async seed() {
     try {
-      const { id: userId } = await this.usersSeeder.create();
-      await this.itemSeeder.createSeller(userId);
+      const users = await this.usersSeeder.create();
+      const userIds = users.map((user) => user.id);
+
+      await this.itemSeeder.createBrandCourierSeller(userIds);
+      await this.itemSeeder.createItemProduct();
     } catch (err) {
       throw new Error(err);
     }
