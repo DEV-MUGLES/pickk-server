@@ -5,18 +5,17 @@ import { Item } from '@item/items/models/item.model';
 import { ItemsService } from '@item/items/items.service';
 import { CreateItemInput } from '@item/items/dtos/item.input';
 import { CreateItemOptionInput } from '@item/items/dtos/item-option.input';
-import {
-  BRAND_COUNT,
-  ITEM_COUNT,
-  ITEM_MAJOR_CATEGORY_COUNT,
-  ITEM_MINOR_CATEGORY_COUNT,
-} from '../data';
+import { BrandsService } from '@item/brands/brands.service';
+import { ITEM_COUNT } from '../data';
 
 @Injectable()
 export class ItemsSeeder {
-  constructor(private itemsService: ItemsService) {}
+  constructor(
+    private itemsService: ItemsService,
+    private brandsService: BrandsService
+  ) {}
 
-  createItemInputs(): CreateItemInput[] {
+  createItemInputs(brandId: number): CreateItemInput[] {
     return [...Array(ITEM_COUNT)].map(() => {
       const originalPrice = Number(faker.commerce.price(10000, 100000));
       const discountAmount = faker.datatype.number({ min: 1000, max: 5000 });
@@ -33,15 +32,7 @@ export class ItemsSeeder {
         providedCode: faker.datatype.string(5),
         isMdRecommended: faker.datatype.boolean(),
         isSellable: faker.datatype.boolean(),
-        brandId: faker.datatype.number({ min: 1, max: BRAND_COUNT }),
-        majorCategoryId: faker.datatype.number({
-          min: 1,
-          max: ITEM_MAJOR_CATEGORY_COUNT,
-        }),
-        minorCategoryId: faker.datatype.number({
-          min: ITEM_MAJOR_CATEGORY_COUNT + 1,
-          max: ITEM_MAJOR_CATEGORY_COUNT + ITEM_MINOR_CATEGORY_COUNT,
-        }),
+        brandId,
         priceInput: {
           originalPrice,
           sellPrice: originalPrice - discountAmount,
@@ -69,8 +60,17 @@ export class ItemsSeeder {
   }
 
   async create(): Promise<Item[]> {
+    const { brandIds, brandCount } = await this.brandsService
+      .list()
+      .then((brands) => ({
+        brandIds: brands.map((brand) => brand.id),
+        brandCount: brands.length,
+      }));
+
     return await Promise.all(
-      this.createItemInputs().map(
+      this.createItemInputs(
+        brandIds[faker.datatype.number({ min: 0, max: brandCount })]
+      ).map(
         (itemInput) =>
           new Promise<Item>(async (resolve) => {
             const item = await this.itemsService.create(itemInput);
