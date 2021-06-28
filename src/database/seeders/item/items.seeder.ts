@@ -81,6 +81,6 @@ export class ItemsSeeder {
             resolve(item);
           })
       )
-    ).then((items) => items);
+    );
   }
 }

@@ -94,10 +94,17 @@ export class SellersSeeder {
   }
 
   async create(userIds: number[], brandIds: number[]) {
-    await Promise.all(
-      this.createSellerInputs(userIds, brandIds).map((sellerInput) =>
-        this.sellersService.create(sellerInput)
-      )
-    );
+    return new Promise(async (resolve, rejects) => {
+      try {
+        this.createSellerInputs(userIds, brandIds).forEach(
+          async (sellerInput) => {
+            await this.sellersService.create(sellerInput);
+          }
+        );
+        resolve(1);
+      } catch (err) {
+        rejects(err);
+      }
+    });
   }
 }

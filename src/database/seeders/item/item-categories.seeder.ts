@@ -14,7 +14,7 @@ export class ItemCategoriesSeeder {
       () =>
         new ItemCategoryEntity({
           name: faker.lorem.word(),
-          code: faker.lorem.word() + faker.hacker.noun(),
+          code: faker.datatype.string(14),
         })
     );
 
@@ -22,7 +22,7 @@ export class ItemCategoriesSeeder {
       (_, i) =>
         new ItemCategoryEntity({
           name: faker.lorem.word(),
-          code: i + faker.hacker.noun() + faker.lorem.word(),
+          code: faker.datatype.string(14),
           parent: itemMajorCateories[Math.floor(i / 2)],
         })
     );

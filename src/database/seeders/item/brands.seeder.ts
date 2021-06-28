@@ -24,6 +24,6 @@ export class BrandsSeeder {
       this.createBrandInputs().map((brandInput) =>
         this.brandsService.create(brandInput)
       )
-    ).then((brands) => brands);
+    );
   }
 }

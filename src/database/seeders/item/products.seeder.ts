@@ -9,14 +9,10 @@ export class ProductsSeeder {
   constructor(private productsService: ProductsService) {}
 
   async create(items: Item[]) {
-    await Promise.all([
-      ...Array(ITEM_COUNT).map(
-        (_, index) =>
-          new Promise(async (resolve) => {
-            await this.productsService.createByOptionSet(items[index]);
-            resolve(true);
-          })
-      ),
-    ]);
+    await Promise.all(
+      [...Array(ITEM_COUNT)].map((_, index) =>
+        this.productsService.createByOptionSet(items[index])
+      )
+    );
   }
 }

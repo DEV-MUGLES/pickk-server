@@ -12,7 +12,7 @@ export class CouriersSeeder {
 
   createCourierInputs(): CreateCourierInput[] {
     return [...Array(COURIER_COUNT)].map(() => ({
-      name: faker.name.firstName(),
+      name: faker.name.firstName() + faker.name.lastName(),
       code: faker.datatype.string(10),
       phoneNumber: faker.phone.phoneNumber('010########'),
       returnReserveUrl: faker.internet.url(),
