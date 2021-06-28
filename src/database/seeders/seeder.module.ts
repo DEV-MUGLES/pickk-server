@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 
 import { Seeder } from './seeder';
 import { ItemSeederModule } from './item/item-seeder.module';
@@ -13,6 +13,6 @@ import { MysqlDatabaseProviderModule } from '@providers/database/mysql/provider.
     UsersSeederModule,
     RedisCacheProviderModule,
   ],
-  providers: [Seeder],
+  providers: [Seeder, Logger],
 })
 export class SeederModule {}

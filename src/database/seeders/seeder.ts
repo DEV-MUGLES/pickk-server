@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 
 import { ItemSeeder } from './item/item.seeder';
 import { UsersSeeder } from './user/users.seeder';
@@ -6,19 +6,20 @@ import { UsersSeeder } from './user/users.seeder';
 @Injectable()
 export class Seeder {
   constructor(
-    private itemSeeder: ItemSeeder,
-    private usersSeeder: UsersSeeder
+    private readonly itemSeeder: ItemSeeder,
+    private readonly usersSeeder: UsersSeeder,
+    private readonly logger: Logger
   ) {}
 
   async seed() {
-    try {
-      const users = await this.usersSeeder.create();
-      const userIds = users.map((user) => user.id);
+    const users = await this.usersSeeder.create();
+    const userIds = users.map((user) => user.id);
+    this.logger.debug('Successfuly completed seeding users...');
 
-      await this.itemSeeder.createBrandCourierSeller(userIds);
-      await this.itemSeeder.createItemProduct();
-    } catch (err) {
-      throw new Error(err);
-    }
+    await this.itemSeeder.createBrandCourierSeller(userIds);
+    this.logger.debug('Successfuly completed seeding BrandCourierSeller...');
+
+    await this.itemSeeder.createItemProduct();
+    this.logger.debug('Successfuly completed seeding ItemProduct...');
   }
 }
