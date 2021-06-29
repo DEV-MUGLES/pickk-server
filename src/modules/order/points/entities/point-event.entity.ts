@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { IsEnum, IsNumber, IsString, Min } from 'class-validator';
+import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities/base.entity';
 import { UserEntity } from '@user/users/entities/user.entity';
@@ -27,6 +27,7 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
     this.content = attributes.content;
 
     this.orderId = attributes.orderId;
+    this.orderItemId = attributes.orderItemId;
     this.user = attributes.user;
     this.userId = attributes.userId;
   }
@@ -69,6 +70,11 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   @Field()
   @Column({ type: 'int' })
   orderId: number;
+
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
+  orderItemId?: number;
 
   @Field()
   @Column()

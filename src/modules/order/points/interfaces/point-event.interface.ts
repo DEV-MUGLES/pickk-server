@@ -17,6 +17,7 @@ export interface IPointEvent {
 
   /** 검색을 위한 field로 join하지 않는다. */
   orderId: number;
+  orderItemId?: number;
 
   userId: number;
   user: IUser;
