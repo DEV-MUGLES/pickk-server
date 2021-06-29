@@ -67,9 +67,10 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   @IsString()
   content: string;
 
-  @Field()
-  @Column({ type: 'int' })
-  orderId: number;
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  @IsOptional()
+  orderId?: number;
 
   @Field({ nullable: true })
   @Column({ type: 'int', nullable: true })
