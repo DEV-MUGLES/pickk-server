@@ -15,8 +15,8 @@ import {
 } from './points.repository';
 import { PointType } from './constants/points.enum';
 import {
-  AddPointEventInput,
-  SubstractPointEventInput,
+  CreateAddEventInput,
+  CreateSubstractEventInput,
 } from './dtos/point-event.dto';
 import { CreateExpectedPointEventInput } from './dtos/expected-point-event.dto';
 import { ForbiddenPointSubtractEventExeption } from './exceptions/point.exception';
@@ -105,9 +105,9 @@ export class PointsService {
   }
 
   async createSubstractEvent(
-    subtractPointEventInput: SubstractPointEventInput
+    createsubstractEventInput: CreateSubstractEventInput
   ): Promise<PointEvent> {
-    const { userId, amount: diff } = subtractPointEventInput;
+    const { userId, amount: diff } = createsubstractEventInput;
     const currentAmount = await this.getAvailableAmountByUserId(userId);
     const resultAmount = currentAmount + diff;
 
@@ -116,7 +116,7 @@ export class PointsService {
     }
 
     const pointEvent = new PointEvent({
-      ...subtractPointEventInput,
+      ...createsubstractEventInput,
       resultBalance: resultAmount,
       type: PointType.Sub,
     });
@@ -126,14 +126,14 @@ export class PointsService {
   }
 
   async createAddEventByInput(
-    addPointEventInput: AddPointEventInput
+    createAddEventInput: CreateAddEventInput
   ): Promise<PointEvent> {
-    const { userId, amount: diff } = addPointEventInput;
+    const { userId, amount: diff } = createAddEventInput;
     const currentAmount = await this.getAvailableAmountByUserId(userId);
     const resultAmount = currentAmount + diff;
 
     const pointEvent = new PointEvent({
-      ...addPointEventInput,
+      ...createAddEventInput,
       resultBalance: resultAmount,
       type: PointType.Add,
     });
