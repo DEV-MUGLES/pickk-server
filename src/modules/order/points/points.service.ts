@@ -14,8 +14,11 @@ import {
   PointEventsRepository,
 } from './points.repository';
 import { PointType } from './constants/points.enum';
-import { SubtractPointEventInput } from './dtos/point-event.dto';
-import { AddExpectedPointEventInput } from './dtos/expected-point-event.dto';
+import {
+  AddPointEventInput,
+  SubstractPointEventInput,
+} from './dtos/point-event.dto';
+import { CreateExpectedPointEventInput } from './dtos/expected-point-event.dto';
 import { ForbiddenPointSubtractEventExeption } from './exceptions/point.exception';
 
 @Injectable()
@@ -101,52 +104,70 @@ export class PointsService {
     );
   }
 
-  async subtractEvent(
-    subtractPointEventInput: SubtractPointEventInput
+  async createSubstractEvent(
+    subtractPointEventInput: SubstractPointEventInput
   ): Promise<PointEvent> {
-    const { userId, amount } = subtractPointEventInput;
-    const prevResultBalance = await this.getAvailableAmountByUserId(userId);
-    const resultBalance = prevResultBalance + amount;
+    const { userId, amount: diff } = subtractPointEventInput;
+    const currentAmount = await this.getAvailableAmountByUserId(userId);
+    const resultAmount = currentAmount + diff;
 
-    if (resultBalance < 0) {
+    if (resultAmount < 0) {
       throw new ForbiddenPointSubtractEventExeption();
     }
 
     const pointEvent = new PointEvent({
       ...subtractPointEventInput,
-      resultBalance,
+      resultBalance: resultAmount,
       type: PointType.Sub,
     });
 
-    await this.updateAvailableAmountByUserId(userId, resultBalance);
+    await this.updateAvailableAmountByUserId(userId, resultAmount);
     return await this.pointEventsRepository.save(pointEvent);
   }
 
-  async addEvent(
+  async createAddEventByInput(
+    addPointEventInput: AddPointEventInput
+  ): Promise<PointEvent> {
+    const { userId, amount: diff } = addPointEventInput;
+    const currentAmount = await this.getAvailableAmountByUserId(userId);
+    const resultAmount = currentAmount + diff;
+
+    const pointEvent = new PointEvent({
+      ...addPointEventInput,
+      resultBalance: resultAmount,
+      type: PointType.Add,
+    });
+
+    await this.updateAvailableAmountByUserId(userId, resultAmount);
+    return await this.pointEventsRepository.save(pointEvent);
+  }
+
+  async createAddEventByExpectedEvent(
     userId: number,
     expectedPointEventId: number
   ): Promise<PointEvent> {
     const expectedPointEvent = await this.expectedpointEventsRepository.get(
       expectedPointEventId
     );
-    const prevResultBalance = await this.getAvailableAmountByUserId(userId);
-    const resultBalance = prevResultBalance + expectedPointEvent.amount;
+    const currentAmount = await this.getAvailableAmountByUserId(userId);
+    const resultAmount = currentAmount + expectedPointEvent.amount;
     const pointEvent = new PointEvent({
       ...expectedPointEvent,
-      resultBalance,
+      resultBalance: resultAmount,
       type: PointType.Add,
     });
 
-    await this.updateAvailableAmountByUserId(userId, resultBalance);
+    const pointEventResult = await this.pointEventsRepository.save(pointEvent);
+    await this.updateAvailableAmountByUserId(userId, resultAmount);
     await this.removeExpectedEvent(expectedPointEventId);
-    return await this.pointEventsRepository.save(pointEvent);
+    return pointEventResult;
   }
 
-  async addExpectedEvent(
-    addExpectedPointEventInput: AddExpectedPointEventInput
+  async createExpectedEvent(
+    createExpectedPointEventInput: CreateExpectedPointEventInput
   ): Promise<ExpectedPointEvent> {
     const expectedPointEvent = new ExpectedPointEvent(
-      addExpectedPointEventInput
+      createExpectedPointEventInput
     );
     return await this.expectedpointEventsRepository.save(expectedPointEvent);
   }

@@ -1,6 +1,9 @@
+import { InputType, PickType } from '@nestjs/graphql';
 import { ExpectedPointEvent } from '../models';
 
-export type AddExpectedPointEventInput = Pick<
+@InputType()
+export class CreateExpectedPointEventInput extends PickType(
   ExpectedPointEvent,
-  'amount' | 'title' | 'orderId' | 'content' | 'userId'
->;
+  ['amount', 'title', 'orderId', 'content', 'userId'],
+  InputType
+) {}
