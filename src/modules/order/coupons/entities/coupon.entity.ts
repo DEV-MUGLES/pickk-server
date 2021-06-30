@@ -14,6 +14,20 @@ import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 @ObjectType()
 @Entity('coupon')
 export class CouponEntity extends BaseIdEntity implements ICoupon {
+  constructor(attributes?: Partial<CouponEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.user = attributes.user;
+    this.userId = attributes.userId;
+
+    this.spec = attributes.spec;
+    this.specId = attributes.specId;
+    this.status = attributes.status;
+  }
+
   @Column()
   userId: number;
 
@@ -27,7 +41,7 @@ export class CouponEntity extends BaseIdEntity implements ICoupon {
   @Column()
   specId: number;
 
-  @Field(() => CouponSpecification)
+  @Field(() => CouponSpecification, { nullable: true })
   @ManyToOne(() => CouponSpecificationEntity, {
     onDelete: 'CASCADE',
   })

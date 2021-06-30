@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { ItemsModule } from '@item/items/items.module';
+import { SellersModule } from '@item/sellers/sellers.module';
 import {
   CouponSpecificationsRepository,
   CouponsRepository,
@@ -14,6 +16,8 @@ import { CouponsService } from './coupons.service';
       CouponsRepository,
       CouponSpecificationsRepository,
     ]),
+    ItemsModule,
+    SellersModule,
   ],
   providers: [CouponsResolver, CouponsService],
 })
