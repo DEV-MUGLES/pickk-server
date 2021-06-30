@@ -23,6 +23,7 @@ import {
   checkMinimumFotUse,
   checkStatus,
 } from './helpers/coupon.helper';
+import { CouponSpecificationFilter } from './dtos/coupon-specification.filter';
 
 @Injectable()
 export class CouponsService {
@@ -46,6 +47,29 @@ export class CouponsService {
       await this.couponsRepository.find({
         relations,
         where: parseFilter(_couponFilter, _pageInput?.idFilter),
+        order: {
+          id: 'DESC',
+        },
+        ...(_pageInput?.pageFilter ?? {}),
+      })
+    );
+  }
+
+  async listSpecifications(
+    couponSpecificationFilter?: CouponSpecificationFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ) {
+    const _couponSpecificationFilter = plainToClass(
+      CouponSpecificationFilter,
+      couponSpecificationFilter
+    );
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.couponSpecificationsRepository.entityToModelMany(
+      await this.couponSpecificationsRepository.find({
+        relations,
+        where: parseFilter(_couponSpecificationFilter, _pageInput?.idFilter),
         order: {
           id: 'DESC',
         },
@@ -101,5 +125,13 @@ export class CouponsService {
     return await this.couponsRepository.update(id, updateCouponInput);
   }
 
-  // async removeExpired() {}
+  async removeExpired() {
+    const currentDate = new Date();
+    const expiredCouponSpecifications = await this.listSpecifications({
+      expireAtLte: currentDate,
+    });
+    await this.couponSpecificationsRepository.remove(
+      expiredCouponSpecifications
+    );
+  }
 }

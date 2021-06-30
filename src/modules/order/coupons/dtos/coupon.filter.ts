@@ -7,5 +7,5 @@ export class CouponFilter implements Partial<ICoupon> {
   @Field(() => Int, {
     nullable: true,
   })
-  userId: number;
+  userId?: number;
 }

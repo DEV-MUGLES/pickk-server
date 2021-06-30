@@ -14,6 +14,7 @@ async function bootstrap() {
     .setDescription('The pickk-server API description')
     .setVersion('1.0')
     .addTag('spider')
+    .addTag('coupons')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);
 

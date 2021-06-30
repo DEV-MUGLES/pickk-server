@@ -9,6 +9,7 @@ import {
 } from './coupons.repository';
 import { CouponsResolver } from './coupons.resolver';
 import { CouponsService } from './coupons.service';
+import { CouponController } from './coupons.controller';
 
 @Module({
   imports: [
@@ -20,5 +21,6 @@ import { CouponsService } from './coupons.service';
     SellersModule,
   ],
   providers: [CouponsResolver, CouponsService],
+  controllers: [CouponController],
 })
 export class CouponsModule {}
