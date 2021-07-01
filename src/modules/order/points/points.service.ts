@@ -1,4 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  PreconditionFailedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm';
@@ -31,12 +35,12 @@ export class PointsService {
     @Inject(CacheService) private cacheService: CacheService
   ) {}
 
-  async updateAvailableAmountByUserId(userId: number, amount: number) {
+  async updateAvailableAmount(userId: number, amount: number) {
     const cacheKey = PointEvent.getAmountCacheKey(userId);
     this.cacheService.set<number>(cacheKey, amount);
   }
 
-  async getAvailableAmountByUserId(userId: number, isUpdatingCache = true) {
+  async getAvailableAmount(userId: number, isUpdatingCache = true) {
     const cacheKey = PointEvent.getAmountCacheKey(userId);
     const cachedCount = await this.cacheService.get<number>(cacheKey);
 
@@ -52,7 +56,7 @@ export class PointsService {
     return Number(amount);
   }
 
-  async getExpectedAmountByUserId(userId: number, isUpdatingCache = true) {
+  async getExpectedAmount(userId: number, isUpdatingCache = true) {
     const cacheKey = ExpectedPointEvent.getAmountCacheKey(userId);
     const cachedCount = await this.cacheService.get<number>(cacheKey);
 
@@ -108,7 +112,7 @@ export class PointsService {
     createsubstractEventInput: CreateSubstractEventInput
   ): Promise<PointEvent> {
     const { userId, amount: diff } = createsubstractEventInput;
-    const currentAmount = await this.getAvailableAmountByUserId(userId);
+    const currentAmount = await this.getAvailableAmount(userId);
     const resultAmount = currentAmount + diff;
 
     if (resultAmount < 0) {
@@ -121,45 +125,55 @@ export class PointsService {
       type: PointType.Sub,
     });
 
-    await this.updateAvailableAmountByUserId(userId, resultAmount);
+    await this.updateAvailableAmount(userId, resultAmount);
     return await this.pointEventsRepository.save(pointEvent);
   }
 
-  async createAddEventByInput(
-    createAddEventInput: CreateAddEventInput
-  ): Promise<PointEvent> {
-    const { userId, amount: diff } = createAddEventInput;
-    const currentAmount = await this.getAvailableAmountByUserId(userId);
-    const resultAmount = currentAmount + diff;
-
-    const pointEvent = new PointEvent({
-      ...createAddEventInput,
-      resultBalance: resultAmount,
-      type: PointType.Add,
-    });
-
-    await this.updateAvailableAmountByUserId(userId, resultAmount);
-    return await this.pointEventsRepository.save(pointEvent);
-  }
-
-  async createAddEventByExpectedEvent(
+  async createAddEvent(
     userId: number,
-    expectedPointEventId: number
+    createAddEventInput?: CreateAddEventInput,
+    expectedPointEventId?: number
   ): Promise<PointEvent> {
-    const expectedPointEvent = await this.expectedpointEventsRepository.get(
-      expectedPointEventId
-    );
-    const currentAmount = await this.getAvailableAmountByUserId(userId);
-    const resultAmount = currentAmount + expectedPointEvent.amount;
+    const currentAmount = await this.getAvailableAmount(userId);
     const pointEvent = new PointEvent({
-      ...expectedPointEvent,
-      resultBalance: resultAmount,
       type: PointType.Add,
     });
+
+    if (
+      createAddEventInput === undefined &&
+      expectedPointEventId === undefined
+    ) {
+      throw new PreconditionFailedException(
+        '포인트 추가시에 필요한 정보가 부족하므로, 포인트 이벤트가 생성되지 않습니다.'
+      );
+    }
+    if (createAddEventInput && expectedPointEventId) {
+      throw new PreconditionFailedException(
+        'createAddEventInput과 expectedPointEventId 중 하나만으로 포인트 이벤트를 생성할 수 있습니다.'
+      );
+    }
+
+    if (expectedPointEventId) {
+      const expectedPointEvent = await this.expectedpointEventsRepository.get(
+        expectedPointEventId
+      );
+      pointEvent.update({
+        ...expectedPointEvent,
+        resultBalance: currentAmount + expectedPointEvent.amount,
+      });
+    }
+    if (createAddEventInput) {
+      pointEvent.update({
+        ...createAddEventInput,
+        resultBalance: currentAmount + createAddEventInput.amount,
+      });
+    }
 
     const pointEventResult = await this.pointEventsRepository.save(pointEvent);
-    await this.updateAvailableAmountByUserId(userId, resultAmount);
-    await this.removeExpectedEvent(expectedPointEventId);
+    await this.updateAvailableAmount(userId, pointEventResult.resultBalance);
+    if (expectedPointEventId) {
+      await this.removeExpectedEvent(expectedPointEventId);
+    }
     return pointEventResult;
   }
 
