@@ -129,51 +129,21 @@ export class PointsService {
     return await this.pointEventsRepository.save(pointEvent);
   }
 
+  // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
   async createAddEvent(
-    userId: number,
-    createAddEventInput?: CreateAddEventInput,
-    expectedPointEventId?: number
+    createAddEventInput: CreateAddEventInput
   ): Promise<PointEvent> {
+    const { userId, amount: diff } = createAddEventInput;
     const currentAmount = await this.getAvailableAmount(userId);
+    const resultAmount = currentAmount + diff;
     const pointEvent = new PointEvent({
+      ...createAddEventInput,
+      resultBalance: resultAmount,
       type: PointType.Add,
     });
 
-    if (
-      createAddEventInput === undefined &&
-      expectedPointEventId === undefined
-    ) {
-      throw new PreconditionFailedException(
-        '포인트 추가시에 필요한 정보가 부족하므로, 포인트 이벤트가 생성되지 않습니다.'
-      );
-    }
-    if (createAddEventInput && expectedPointEventId) {
-      throw new PreconditionFailedException(
-        'createAddEventInput과 expectedPointEventId 중 하나만으로 포인트 이벤트를 생성할 수 있습니다.'
-      );
-    }
-
-    if (expectedPointEventId) {
-      const expectedPointEvent = await this.expectedpointEventsRepository.get(
-        expectedPointEventId
-      );
-      pointEvent.update({
-        ...expectedPointEvent,
-        resultBalance: currentAmount + expectedPointEvent.amount,
-      });
-    }
-    if (createAddEventInput) {
-      pointEvent.update({
-        ...createAddEventInput,
-        resultBalance: currentAmount + createAddEventInput.amount,
-      });
-    }
-
     const pointEventResult = await this.pointEventsRepository.save(pointEvent);
-    await this.updateAvailableAmount(userId, pointEventResult.resultBalance);
-    if (expectedPointEventId) {
-      await this.removeExpectedEvent(expectedPointEventId);
-    }
+    await this.updateAvailableAmount(userId, resultAmount);
     return pointEventResult;
   }
 
@@ -186,7 +156,8 @@ export class PointsService {
     return await this.expectedpointEventsRepository.save(expectedPointEvent);
   }
 
-  async removeExpectedEvent(id: number): Promise<DeleteResult> {
-    return await this.expectedpointEventsRepository.delete(id);
+  // @TODO: AWS SQS적용해서 업데이트하기
+  async removeExpectedEvent(orderId: number): Promise<DeleteResult> {
+    return await this.expectedpointEventsRepository.delete(orderId);
   }
 }
