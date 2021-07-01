@@ -635,7 +635,8 @@ type PointEvent {
   content: String!
   createdAt: DateTime!
   id: Int!
-  orderId: Float!
+  orderId: Float
+  orderItemId: Float
 
   """적립/사용 이후 잔고"""
   resultBalance: Int!
