@@ -12,6 +12,6 @@ export class CreateCouponInput extends PickType(
 @InputType()
 export class UpdateCouponInput extends PickType(
   Coupon,
-  ['id', 'status'],
+  ['status'],
   InputType
 ) {}

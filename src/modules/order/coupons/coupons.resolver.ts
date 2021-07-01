@@ -1,4 +1,4 @@
-import { Inject, UseGuards, UnauthorizedException } from '@nestjs/common';
+import { Inject, UseGuards, ForbiddenException } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -54,22 +54,14 @@ export class CouponsResolver extends BaseResolver<CouponRelationType> {
     createCouponSpecificationInput: CreateCouponSpecificationInput
   ): Promise<CouponSpecification> {
     const { brandId } = createCouponSpecificationInput;
-
     if (user.role === UserRole.Seller) {
-      if (brandId === undefined) {
-        throw new UnauthorizedException(
-          '모든 브랜드에 대한 쿠폰을 생성할 수 없습니다.'
-        );
-      }
-
       const seller = await this.sellersService.findOne({ userId: user.id });
-      if (seller?.brandId !== brandId) {
-        throw new UnauthorizedException(
+      if (brandId !== seller.brandId) {
+        throw new ForbiddenException(
           '자신의 브랜드의 쿠폰만 생성할 수 있습니다.'
         );
       }
     }
-
     return await this.couponsService.createSpecification(
       createCouponSpecificationInput
     );

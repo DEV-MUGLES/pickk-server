@@ -1,11 +1,11 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@src/common/dtos/pagination.dto';
 import { parseFilter } from '@src/common/helpers/filter.helpers';
-import { ItemsService } from '@item/items/items.service';
+import { Item } from '@item/items/models/item.model';
 
 import {
   CouponSpecificationsRepository,
@@ -17,12 +17,6 @@ import { CouponStatus } from './constants/coupon.enum';
 import { CouponSpecification } from './models/coupon-specification.model';
 import { CreateCouponSpecificationInput } from './dtos/coupon-specification.input';
 import { CreateCouponInput, UpdateCouponInput } from './dtos/coupon.input';
-import {
-  checkBrand,
-  checkExpireAt,
-  checkMinimumFotUse,
-  checkStatus,
-} from './helpers/coupon.helper';
 import { CouponSpecificationFilter } from './dtos/coupon-specification.filter';
 
 @Injectable()
@@ -31,9 +25,12 @@ export class CouponsService {
     @InjectRepository(CouponsRepository)
     private readonly couponsRepository: CouponsRepository,
     @InjectRepository(CouponSpecificationsRepository)
-    private readonly couponSpecificationsRepository: CouponSpecificationsRepository,
-    private readonly itemsService: ItemsService
+    private readonly couponSpecificationsRepository: CouponSpecificationsRepository
   ) {}
+
+  async get(id) {
+    return await this.couponsRepository.get(id, ['spec']);
+  }
 
   async list(
     couponFilter?: CouponFilter,
@@ -89,11 +86,10 @@ export class CouponsService {
 
   async create(createCouponInput: CreateCouponInput): Promise<Coupon> {
     const { userId, specId } = createCouponInput;
-    const myCoupons = await this.list({ userId });
-    const hasCoupon = myCoupons.findIndex((v) => v.specId === specId) > -1;
+    const isExist = await this.couponsRepository.checkExist(userId, specId);
 
-    if (hasCoupon) {
-      throw new ForbiddenException('이미 발급한 쿠폰입니다.');
+    if (isExist) {
+      throw new ConflictException('이미 발급한 쿠폰입니다.');
     }
 
     const coupon = new Coupon({
@@ -103,26 +99,11 @@ export class CouponsService {
     return await this.couponsRepository.save(coupon);
   }
 
-  async checkUsable(coupon: Coupon, itemId: number): Promise<boolean> {
-    const {
-      spec: { expireAt, brandId, minimumForUse },
-      status,
-    } = coupon;
-    const { finalPrice, brandId: itemBrandId } = await this.itemsService.get(
-      itemId
-    );
-
-    return (
-      checkStatus(status) &&
-      checkExpireAt(expireAt) &&
-      checkMinimumFotUse(minimumForUse, finalPrice) &&
-      checkBrand(brandId, itemBrandId)
-    );
-  }
-
-  async update(updateCouponInput: UpdateCouponInput): Promise<UpdateResult> {
-    const { id } = updateCouponInput;
-    return await this.couponsRepository.update(id, updateCouponInput);
+  async update(
+    couponId: number,
+    updateCouponInput: UpdateCouponInput
+  ): Promise<UpdateResult> {
+    return await this.couponsRepository.update(couponId, updateCouponInput);
   }
 
   async removeExpired() {
@@ -133,5 +114,9 @@ export class CouponsService {
     await this.couponSpecificationsRepository.remove(
       expiredCouponSpecifications
     );
+  }
+
+  checkUsable(coupon: Coupon, item: Item): boolean {
+    return coupon.checkUsableOn(item);
   }
 }
