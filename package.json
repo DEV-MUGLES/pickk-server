@@ -70,6 +70,7 @@
     "graphql-tools": "^7.0.4",
     "inicis": "^1.0.3",
     "joi": "^17.4.0",
+    "jwks-rsa": "^2.0.3",
     "mysql": "^2.18.1",
     "nest-sens": "^0.1.2",
     "passport": "^0.4.1",
