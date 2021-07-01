@@ -45,6 +45,12 @@ input AddItemUrlInput {
   url: String!
 }
 
+"""애플 로그인시 사용됩니다. [App, Web]"""
+enum AppleClientType {
+  App
+  Web
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
