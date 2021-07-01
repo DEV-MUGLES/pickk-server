@@ -576,6 +576,11 @@ input LoginByOauthInput {
   oauthProvider: UserProviderType
 }
 
+input LoginWithAppleInput {
+  clientType: AppleClientType!
+  code: String!
+}
+
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
@@ -706,6 +711,7 @@ type Query {
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
+  loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
   myCart: Cart!

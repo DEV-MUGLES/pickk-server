@@ -1,8 +1,9 @@
 import { Field, InputType, PickType } from '@nestjs/graphql';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
-import { User } from '@src/modules/user/users/models/user.model';
+import { UserRole } from '@user/users/constants/user.enum';
+import { User } from '@user/users/models/user.model';
+import { AppleClientType } from '@providers/apple/apple.enum';
 
 @InputType()
 export class LoginByCodeInput extends PickType(User, ['code'], InputType) {
@@ -33,4 +34,15 @@ export class LoginByOauthInput extends PickType(
   @IsEnum(UserRole)
   @IsOptional()
   minRole?: UserRole;
+}
+
+@InputType()
+export class LoginWithAppleInput {
+  @Field()
+  @IsString()
+  code: string;
+
+  @Field(() => AppleClientType)
+  @IsEnum(AppleClientType)
+  clientType: AppleClientType;
 }
