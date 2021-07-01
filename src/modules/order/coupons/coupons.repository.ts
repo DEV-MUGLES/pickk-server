@@ -19,6 +19,17 @@ export class CouponsRepository extends BaseRepository<CouponEntity, Coupon> {
       this.entityToModel(entity, transformOptions)
     );
   }
+
+  async checkExist(userId: number, specId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('coupon')
+      .select('1')
+      .where('coupon.userId = :userId', { userId })
+      .andWhere('coupon.specId = :specId', { specId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }
 
 @EntityRepository(CouponSpecificationEntity)
