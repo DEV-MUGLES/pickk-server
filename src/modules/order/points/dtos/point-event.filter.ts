@@ -7,9 +7,7 @@ import { IPointEvent } from '../interfaces/point-event.interface';
 @InputType()
 export class PointEventFilter implements Partial<IPointEvent> {
   @Field({ nullable: true })
-  createdAtMte?: Date;
-
-  @Field({ nullable: true })
+  @IsOptional()
   createdAtLte?: Date;
 
   @Field(() => PointType, { nullable: true })
@@ -20,5 +18,6 @@ export class PointEventFilter implements Partial<IPointEvent> {
   @Field(() => Int, {
     nullable: true,
   })
+  @IsOptional()
   userId?: number;
 }
