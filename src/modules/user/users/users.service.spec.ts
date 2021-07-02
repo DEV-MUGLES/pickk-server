@@ -168,11 +168,11 @@ describe('UsersService', () => {
       const oldPassword = USER_PASSWORD_1;
       const newPassword = USER_PASSWORD_2;
       const user = new User({
-        password: UserPassword.create(oldPassword),
+        password: UserPassword.of(oldPassword),
       });
       const updatedUser = new User({
         ...user,
-        password: UserPassword.create(newPassword),
+        password: UserPassword.of(newPassword),
       });
 
       const userModelUpdatePasswordSpy = jest

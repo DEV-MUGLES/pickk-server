@@ -15,7 +15,7 @@ const validPasswords = [
 describe('UserPasswordModel', () => {
   describe('create', () => {
     it('should be created well', () => {
-      const userPassword = UserPassword.create(validPasswords[0]);
+      const userPassword = UserPassword.of(validPasswords[0]);
       expect(userPassword).toBeTruthy();
       expect(userPassword.salt).toBeTruthy();
       expect(userPassword.encrypted).toBeTruthy();
@@ -29,7 +29,7 @@ describe('UserPasswordModel', () => {
         .mockReturnValueOnce(false);
 
       expect(() => {
-        UserPassword.create(invalidPassword);
+        UserPassword.of(invalidPassword);
       }).toThrow(UserPasswordInvalidException);
       expect(userPasswordValidateSpy).toHaveBeenCalledWith(invalidPassword);
     });
@@ -37,7 +37,7 @@ describe('UserPasswordModel', () => {
 
   describe('compare', () => {
     it('should return true when matched', () => {
-      const userPassword = UserPassword.create(validPasswords[0]);
+      const userPassword = UserPassword.of(validPasswords[0]);
       expect(userPassword.compare(validPasswords[0])).toEqual(true);
     });
   });
