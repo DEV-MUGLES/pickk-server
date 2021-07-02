@@ -42,10 +42,10 @@ export class CreateSellerSettleAccountInput extends PickType(
 @InputType()
 export class CreateSellerSettlePolicyInput extends PickType(
   SellerSettlePolicy,
-  ['email', 'phoneNumber', 'picName'],
+  ['email', 'phoneNumber', 'picName', 'rate'],
   InputType
 ) {
-  @Field({ nullable: true })
+  @Field({ nullable: true, description: '정산 받을 계좌' })
   accountInput?: CreateSellerSettleAccountInput;
 }
 

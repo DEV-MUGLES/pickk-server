@@ -281,6 +281,7 @@ input CreateSellerSettleAccountInput {
 }
 
 input CreateSellerSettlePolicyInput {
+  """정산 받을 계좌"""
   accountInput: CreateSellerSettleAccountInput
 
   """세금계산서 수령이메일"""
@@ -289,6 +290,9 @@ input CreateSellerSettlePolicyInput {
   """담당자 번호"""
   phoneNumber: String!
   picName: String!
+
+  """정산율"""
+  rate: Int!
 }
 
 input CreateSellerShippingPolicyInput {
@@ -858,6 +862,7 @@ type SellerReturnAddress {
 }
 
 type SellerSettlePolicy {
+  """정산 받을 계좌"""
   account: SellerClaimAccount!
   createdAt: DateTime!
 
@@ -868,6 +873,9 @@ type SellerSettlePolicy {
   """담당자 번호"""
   phoneNumber: String!
   picName: String!
+
+  """정산율"""
+  rate: Int!
   updatedAt: DateTime!
 }
 
@@ -1040,6 +1048,9 @@ input UpdateSellerSettlePolicyInput {
   """담당자 번호"""
   phoneNumber: String
   picName: String
+
+  """정산율"""
+  rate: Int
 }
 
 input UpdateSellerShippingPolicyInput {
