@@ -10,7 +10,7 @@ import {
   CreateSellerCrawlStrategyInput,
   CreateSellerSettlePolicyInput,
 } from './seller-policies.input';
-import { Seller } from '../models/seller.model';
+import { Seller } from '../models';
 
 @InputType()
 export class CreateSellerInput extends PickType(

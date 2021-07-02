@@ -6,14 +6,16 @@ import {
   PickType,
 } from '@nestjs/graphql';
 
-import { SellerClaimAccount } from '../models/policies/seller-claim-account.model';
-import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
-import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
-import { SellerSettleAccount } from '../models/policies/seller-settle-account.model';
-import { SellerSettlePolicy } from '../models/policies/seller-settle-policy.model';
-import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
-import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
-import { SellerReturnAddress } from '../models/seller-return-address.model';
+import {
+  SellerClaimAccount,
+  SellerClaimPolicy,
+  SellerCrawlPolicy,
+  SellerSettleAccount,
+  SellerSettlePolicy,
+  SellerShippingPolicy,
+  SellerCrawlStrategy,
+  SellerReturnAddress,
+} from '../models';
 
 @InputType()
 export class CreateSellerClaimAccountInput extends PickType(

@@ -6,10 +6,12 @@ import {
   UpdateSellerSettlePolicyInput,
 } from '../dtos/seller-policies.input';
 import { SellerEntity } from '../entities/seller.entity';
-import { SellerClaimAccount } from './policies/seller-claim-account.model';
-import { SellerClaimPolicy } from './policies/seller-claim-policy.model';
-import { SellerSettleAccount } from './policies/seller-settle-account.model';
-import { SellerSettlePolicy } from './policies/seller-settle-policy.model';
+import {
+  SellerClaimAccount,
+  SellerClaimPolicy,
+  SellerSettleAccount,
+  SellerSettlePolicy,
+} from './policies';
 
 @ObjectType()
 export class Seller extends SellerEntity {

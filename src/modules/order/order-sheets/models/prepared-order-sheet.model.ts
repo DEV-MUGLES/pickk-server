@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-import { Coupon } from '@order/coupons/models/coupon.model';
-import { RefundAccount, ShippingAddress } from '@user/users/models';
 import { Brand } from '@item/brands/models/brand.model';
-import { SellerShippingPolicy } from '@item/sellers/models/policies/seller-shipping-policy.model';
+import { SellerShippingPolicy } from '@item/sellers/models/policies';
 import { Product } from '@item/products/models/product.model';
+import { RefundAccount, ShippingAddress } from '@user/users/models';
+import { Coupon } from '@order/coupons/models/coupon.model';
 
 @ObjectType()
 export class PreparedOrderSheetItem {
