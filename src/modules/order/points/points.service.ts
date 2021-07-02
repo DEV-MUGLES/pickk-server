@@ -1,6 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  Inject,
+  Injectable,
+  PreconditionFailedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { DeleteResult } from 'typeorm';
 
 import { PageInput } from '@common/dtos/pagination.dto';
 import { parseFilter } from '@common/helpers/filter.helpers';
@@ -12,6 +17,13 @@ import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
 } from './points.repository';
+import { PointType } from './constants/points.enum';
+import {
+  CreateAddEventInput,
+  CreateSubstractEventInput,
+} from './dtos/point-event.dto';
+import { CreateExpectedPointEventInput } from './dtos/expected-point-event.dto';
+import { ForbiddenPointSubtractEventExeption } from './exceptions/point.exception';
 
 @Injectable()
 export class PointsService {
@@ -23,12 +35,17 @@ export class PointsService {
     @Inject(CacheService) private cacheService: CacheService
   ) {}
 
-  async getAvailableAmountByUserId(userId: number, isUpdatingCache = true) {
+  async updateAvailableAmount(userId: number, amount: number) {
+    const cacheKey = PointEvent.getAmountCacheKey(userId);
+    this.cacheService.set<number>(cacheKey, amount);
+  }
+
+  async getAvailableAmount(userId: number, isUpdatingCache = true) {
     const cacheKey = PointEvent.getAmountCacheKey(userId);
     const cachedCount = await this.cacheService.get<number>(cacheKey);
 
     if (cachedCount != null) {
-      return cachedCount;
+      return Number(cachedCount);
     }
 
     const amount = await this.pointEventsRepository.getSum(userId);
@@ -36,10 +53,10 @@ export class PointsService {
     if (isUpdatingCache) {
       this.cacheService.set<number>(cacheKey, amount);
     }
-    return amount;
+    return Number(amount);
   }
 
-  async getExpectedAmountByUserId(userId: number, isUpdatingCache = true) {
+  async getExpectedAmount(userId: number, isUpdatingCache = true) {
     const cacheKey = ExpectedPointEvent.getAmountCacheKey(userId);
     const cachedCount = await this.cacheService.get<number>(cacheKey);
 
@@ -89,5 +106,58 @@ export class PointsService {
         ...(_pageInput?.pageFilter ?? {}),
       })
     );
+  }
+
+  async createSubstractEvent(
+    createsubstractEventInput: CreateSubstractEventInput
+  ): Promise<PointEvent> {
+    const { userId, amount: diff } = createsubstractEventInput;
+    const currentAmount = await this.getAvailableAmount(userId);
+    const resultAmount = currentAmount + diff;
+
+    if (resultAmount < 0) {
+      throw new ForbiddenPointSubtractEventExeption();
+    }
+
+    const pointEvent = new PointEvent({
+      ...createsubstractEventInput,
+      resultBalance: resultAmount,
+      type: PointType.Sub,
+    });
+
+    await this.updateAvailableAmount(userId, resultAmount);
+    return await this.pointEventsRepository.save(pointEvent);
+  }
+
+  // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
+  async createAddEvent(
+    createAddEventInput: CreateAddEventInput
+  ): Promise<PointEvent> {
+    const { userId, amount: diff } = createAddEventInput;
+    const currentAmount = await this.getAvailableAmount(userId);
+    const resultAmount = currentAmount + diff;
+    const pointEvent = new PointEvent({
+      ...createAddEventInput,
+      resultBalance: resultAmount,
+      type: PointType.Add,
+    });
+
+    const pointEventResult = await this.pointEventsRepository.save(pointEvent);
+    await this.updateAvailableAmount(userId, resultAmount);
+    return pointEventResult;
+  }
+
+  async createExpectedEvent(
+    createExpectedPointEventInput: CreateExpectedPointEventInput
+  ): Promise<ExpectedPointEvent> {
+    const expectedPointEvent = new ExpectedPointEvent(
+      createExpectedPointEventInput
+    );
+    return await this.expectedpointEventsRepository.save(expectedPointEvent);
+  }
+
+  // @TODO: AWS SQS적용해서 업데이트하기
+  async removeExpectedEvent(orderId: number): Promise<DeleteResult> {
+    return await this.expectedpointEventsRepository.delete(orderId);
   }
 }

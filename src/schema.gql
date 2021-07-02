@@ -45,6 +45,12 @@ input AddItemUrlInput {
   url: String!
 }
 
+"""애플 로그인시 사용됩니다. [App, Web]"""
+enum AppleClientType {
+  App
+  Web
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -591,6 +597,11 @@ input LoginByOauthInput {
   oauthProvider: UserProviderType
 }
 
+input LoginWithAppleInput {
+  clientType: AppleClientType!
+  code: String!
+}
+
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
@@ -658,7 +669,8 @@ type PointEvent {
   content: String!
   createdAt: DateTime!
   id: Int!
-  orderId: Float!
+  orderId: Float
+  orderItemId: Float
 
   """적립/사용 이후 잔고"""
   resultBalance: Int!
@@ -722,6 +734,7 @@ type Query {
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
+  loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
   myCart: Cart!

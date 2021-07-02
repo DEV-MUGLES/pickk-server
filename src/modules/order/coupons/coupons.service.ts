@@ -28,6 +28,10 @@ export class CouponsService {
     private readonly couponSpecificationsRepository: CouponSpecificationsRepository
   ) {}
 
+  async get(id) {
+    return await this.couponsRepository.get(id, ['spec']);
+  }
+
   async list(
     couponFilter?: CouponFilter,
     pageInput?: PageInput,

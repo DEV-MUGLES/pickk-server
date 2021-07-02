@@ -44,14 +44,14 @@ export class UsersResolver extends BaseResolver {
     description: '[ResolveField] 사용가능 포인트 잔고',
   })
   async availablePoint(@Parent() user: User) {
-    return await this.pointsService.getAvailableAmountByUserId(user.id);
+    return await this.pointsService.getAvailableAmount(user.id);
   }
 
   @ResolveField(() => Int, {
     description: '[ResolveField] 적립예정 포인트 잔고',
   })
   async expectedPoint(@Parent() user: User) {
-    return await this.pointsService.getExpectedAmountByUserId(user.id);
+    return await this.pointsService.getExpectedAmount(user.id);
   }
 
   @Query(() => User)

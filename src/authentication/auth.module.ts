@@ -12,8 +12,9 @@ import {
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 
-import { UsersModule } from '@src/modules/user/users/users.module';
-import { SellersModule } from '@src/modules/item/sellers/sellers.module';
+import { UsersModule } from '@user/users/users.module';
+import { SellersModule } from '@item/sellers/sellers.module';
+import { AppleProviderModule } from '@providers/apple';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SellersModule } from '@src/modules/item/sellers/sellers.module';
       secret: jwtConstants.secret,
       signOptions: { expiresIn: jwtConstants.expiresIn },
     }),
+    AppleProviderModule,
   ],
   providers: [
     AuthResolver,

@@ -2,15 +2,17 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { UsersRepository } from '@src/modules/user/users/users.repository';
-import { UsersService } from '@src/modules/user/users/users.service';
-import { AuthResolver } from './auth.resolver';
-import { AuthService } from './auth.service';
+import { User } from '@user/users/models/user.model';
+import { UserRole } from '@user/users/constants/user.enum';
+import { UsersRepository } from '@user/users/users.repository';
+import { UsersService } from '@user/users/users.service';
+import { AppleProviderService } from '@providers/apple';
+
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { LoginByCodeInput } from './dto/login.input';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import * as authHelper from './helpers/auth.helper';
+import { AuthResolver } from './auth.resolver';
+import { AuthService } from './auth.service';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -29,6 +31,12 @@ describe('AuthResolver', () => {
           provide: JwtService,
           useValue: {
             sign: jest.fn(() => JWT_TOKEN),
+          },
+        },
+        {
+          provide: AppleProviderService,
+          useValue: {
+            auth: jest.fn(),
           },
         },
       ],
