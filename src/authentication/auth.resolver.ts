@@ -1,11 +1,17 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
-import { UsersService } from '@user/users/users.service';
+import { UserOauthProvider } from '@user/users/constants/user.enum';
 import { checkIsPermitted } from '@user/users/helpers/user-role.helper';
+import { UsersService } from '@user/users/users.service';
+import { AppleProviderService } from '@providers/apple';
 
 import { CurrentUser } from './decorators/current-user.decorator';
-import { LoginByCodeInput, LoginByOauthInput } from './dto/login.input';
+import {
+  LoginWithAppleInput,
+  LoginByCodeInput,
+  LoginByOauthInput,
+} from './dto/login.input';
 import { JwtPayload, JwtToken } from './dto/jwt.dto';
 import { ForbiddenResourceException } from './exceptions/user.exception';
 import { JwtRefreshGuard } from './guards';
@@ -16,7 +22,8 @@ import { AuthService } from './auth.service';
 export class AuthResolver {
   constructor(
     @Inject(UsersService) private usersService: UsersService,
-    @Inject(AuthService) private authService: AuthService
+    @Inject(AuthService) private authService: AuthService,
+    @Inject(AppleProviderService) private appleService: AppleProviderService
   ) {}
 
   @Query(() => JwtToken, {
@@ -53,6 +60,18 @@ export class AuthResolver {
       throw new ForbiddenResourceException(minRole);
     }
     return this.authService.getToken(user);
+  }
+
+  @Query(() => JwtToken)
+  async loginWithApple(
+    @Args('getAppleProviderIdInput')
+    { code, clientType }: LoginWithAppleInput
+  ): Promise<JwtToken> {
+    const oauthCode = await this.appleService.auth(code, clientType);
+    return await this.loginByOauth({
+      oauthProvider: UserOauthProvider.Apple,
+      oauthCode,
+    });
   }
 
   @Query(() => Boolean, {

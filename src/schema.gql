@@ -45,6 +45,12 @@ input AddItemUrlInput {
   url: String!
 }
 
+"""애플 로그인시 사용됩니다. [App, Web]"""
+enum AppleClientType {
+  App
+  Web
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -97,7 +103,7 @@ enum ClaimFeePayMethod {
 type Coupon {
   createdAt: DateTime!
   id: Int!
-  spec: CouponSpecification!
+  spec: CouponSpecification
   specId: Float!
   status: CouponStatus
   updatedAt: DateTime!
@@ -158,6 +164,27 @@ type CourierIssue {
 input CreateCartItemInput {
   productId: Float!
   quantity: Int!
+}
+
+input CreateCouponInput {
+  specId: Float!
+}
+
+input CreateCouponSpecificationInput {
+  """이 값으로 클라이언트에서 필터링 해주세요."""
+  availableAt: DateTime
+  brandId: Float
+  discountAmount: Int
+
+  """1~99 정수만 입력 가능합니다."""
+  discountRate: Int
+  expireAt: DateTime!
+  maximumDiscountPrice: Int
+  minimumForUse: Int
+
+  """최대 30자까지 입력할 수 있습니다."""
+  name: String!
+  type: CouponType!
 }
 
 input CreateCourierInput {
@@ -570,6 +597,11 @@ input LoginByOauthInput {
   oauthProvider: UserProviderType
 }
 
+input LoginWithAppleInput {
+  clientType: AppleClientType!
+  code: String!
+}
+
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
@@ -580,6 +612,8 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  createCoupon(createCouponInput: CreateCouponInput!): Coupon!
+  createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
@@ -700,6 +734,7 @@ type Query {
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
+  loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
   myCart: Cart!
