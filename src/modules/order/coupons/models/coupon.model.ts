@@ -21,33 +21,20 @@ export class Coupon extends CouponEntity {
     this.status = attributes.status;
   }
 
-  private checkExpireAt(): boolean {
-    return dayjs().isBefore(this.spec.expireAt);
-  }
-
-  private checkStatus(): boolean {
-    return this.status === CouponStatus.Ready;
-  }
-
-  private checkMinimumFotUse(finalPrice: number): boolean {
-    return finalPrice >= this.spec.minimumForUse;
-  }
-
-  private checkBrand(itemBrandId: number): boolean {
-    if (!this.spec.brandId) {
-      return true;
-    }
-    return this.spec.brandId === itemBrandId;
-  }
-
   public checkUsableOn(item: Item): boolean {
-    const { finalPrice, brandId } = item;
+    const {
+      status,
+      spec: { minimumForUse, brandId, expireAt },
+    } = this;
+    const { finalPrice, brandId: itemBrandId } = item;
+    if (status !== CouponStatus.Ready || dayjs().isAfter(expireAt)) {
+      return false;
+    }
 
-    return (
-      this.checkStatus() &&
-      this.checkExpireAt() &&
-      this.checkMinimumFotUse(finalPrice) &&
-      this.checkBrand(brandId)
-    );
+    if (finalPrice < minimumForUse && brandId && brandId !== itemBrandId) {
+      return false;
+    }
+
+    return true;
   }
 }
