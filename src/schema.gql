@@ -69,6 +69,18 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+type Campaign {
+  createdAt: DateTime!
+  endAt: DateTime!
+  id: Int!
+  items: [Item!]!
+
+  """적용 정산률 (0~100)"""
+  rate: Int!
+  startAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Cart {
   """CartItem들을 브랜드 단위로 묶은 단위입니다."""
   cartBrands: [CartBrand!]!
@@ -389,6 +401,7 @@ enum InicisBankCode {
 type Item {
   brand: Brand!
   brandId: Int!
+  campaigns: [Campaign!]
   createdAt: DateTime!
   description: String
   detailImages: [ItemDetailImage!]

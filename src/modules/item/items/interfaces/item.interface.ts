@@ -9,6 +9,7 @@ import { IItemNotice } from './item-notice.interface';
 import { IItemOption } from './item-option.interface';
 import { IItemPrice } from './item-price.interface';
 import { IItemUrl } from './item-url.interface';
+import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
 
 export interface IItem {
   name: string;
@@ -38,6 +39,8 @@ export interface IItem {
   detailImages: IImage[];
   options: IItemOption[];
   products: IProduct[];
+
+  campaigns: ICampaign[];
 
   majorCategory?: IItemCategory;
   majorCategoryId?: number;

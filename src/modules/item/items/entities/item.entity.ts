@@ -7,6 +7,8 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   OneToOne,
@@ -19,12 +21,10 @@ import { BrandEntity } from '../../brands/entities/brand.entity';
 import { Brand } from '../../brands/models/brand.model';
 import { ItemCategory } from '../../item-categories/models/item-category.model';
 import { ItemCategoryEntity } from '../../item-categories/entities/item-category.entity';
-import { Product } from '../../products/models/product.model';
 
 import { IItem } from '../interfaces/item.interface';
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
-import { ItemOption } from '../models/item-option.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemNotice } from '../models/item-notice.model';
@@ -32,6 +32,9 @@ import { ItemSizeChart } from '../models/item-size-chart.model';
 
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
+import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
+import { IProduct } from '@item/products/interfaces/product.interface';
+import { IItemOption } from '../interfaces/item-option.interface';
 
 @ObjectType()
 @Entity({
@@ -173,7 +176,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToMany('ItemOptionEntity', 'item', {
     cascade: true,
   })
-  options: ItemOption[];
+  options: IItemOption[];
 
   @Field(() => ItemSalePolicy, {
     nullable: true,
@@ -185,7 +188,11 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToMany('ProductEntity', 'item', {
     cascade: true,
   })
-  products: Product[];
+  products: IProduct[];
+
+  @ManyToMany('CampaignEntity', 'items')
+  @JoinTable()
+  campaigns: ICampaign[];
 
   @Field({
     nullable: true,

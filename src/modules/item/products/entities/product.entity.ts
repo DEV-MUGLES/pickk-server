@@ -10,12 +10,13 @@ import {
   OneToOne,
 } from 'typeorm';
 
+import { IItem } from '@item/items/interfaces/item.interface';
+import { ItemOptionValue } from '@item/items/models/item-option-value.model';
+import { ItemOptionValueEntity } from '@item/items/entities/item-option-value.entity';
+
 import { IProduct } from '../interfaces/product.interface';
-import { ItemEntity } from '../../items/entities/item.entity';
-import { ItemOptionValue } from '../../items/models/item-option-value.model';
-import { ItemOptionValueEntity } from '../../items/entities/item-option-value.entity';
-import { ProductShippingReservePolicyEntity } from './product-shipping-reserve-policy.entity';
 import { ProductShippingReservePolicy } from '../models/product-shipping-reserve-policy.model';
+import { ProductShippingReservePolicyEntity } from './product-shipping-reserve-policy.entity';
 
 @ObjectType()
 @Entity({
@@ -45,7 +46,7 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
   @ManyToOne('ItemEntity', 'products', {
     onDelete: 'CASCADE',
   })
-  item: ItemEntity;
+  item: IItem;
 
   @Field(() => [ItemOptionValue])
   @ManyToMany(() => ItemOptionValueEntity)
