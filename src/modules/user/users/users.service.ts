@@ -35,7 +35,7 @@ export class UsersService {
   async create({ password, ...input }: CreateUserInput): Promise<User> {
     const user = new User(input);
     if (password) {
-      user.password = UserPassword.create(password);
+      user.password = UserPassword.of(password);
     }
     return await this.usersRepository.save(user);
   }

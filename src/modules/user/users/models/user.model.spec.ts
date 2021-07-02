@@ -52,9 +52,9 @@ describe('UserModel', () => {
 
     it('should return user when matched', () => {
       const user = new User({});
-      user.password = UserPassword.create(OLD_PASSWORD);
+      user.password = UserPassword.of(OLD_PASSWORD);
 
-      const newUserPassword = UserPassword.create(NEW_PASSWORD);
+      const newUserPassword = UserPassword.of(NEW_PASSWORD);
       const updatedUser = new User({
         password: newUserPassword,
       });
@@ -63,7 +63,7 @@ describe('UserModel', () => {
         .spyOn(user.password, 'compare')
         .mockReturnValue(true);
       const userPasswordCreateSpy = jest
-        .spyOn(UserPassword, 'create')
+        .spyOn(UserPassword, 'of')
         .mockReturnValue(newUserPassword);
 
       const result = user.updatePassword(OLD_PASSWORD, NEW_PASSWORD);
@@ -75,7 +75,7 @@ describe('UserModel', () => {
 
     it('should throw PasswordIncorrectException when oldPassword incorrect', () => {
       const user = new User({
-        password: UserPassword.create(OLD_PASSWORD),
+        password: UserPassword.of(OLD_PASSWORD),
       });
       const strangePassword = faker.lorem.text();
 
@@ -91,7 +91,7 @@ describe('UserModel', () => {
 
     it('should throw UserPasswordDuplicatedException when old/new passwords are same', () => {
       const user = new User({
-        password: UserPassword.create(OLD_PASSWORD),
+        password: UserPassword.of(OLD_PASSWORD),
       });
 
       const userPasswordCompareSpy = jest
@@ -110,7 +110,7 @@ describe('UserModel', () => {
 
     it('should return true when matched', () => {
       const user = new User({});
-      user.password = UserPassword.create(OLD_PASSWORD);
+      user.password = UserPassword.of(OLD_PASSWORD);
 
       const userPasswordCompareSpy = jest
         .spyOn(user.password, 'compare')
@@ -124,7 +124,7 @@ describe('UserModel', () => {
 
     it('should return false when unmatched', () => {
       const user = new User({});
-      user.password = UserPassword.create(OLD_PASSWORD);
+      user.password = UserPassword.of(OLD_PASSWORD);
 
       const strangePassword = faker.lorem.text();
 

@@ -69,7 +69,7 @@ export class User extends UserEntity {
     }
 
     this.updatedAt = new Date();
-    this.password = UserPassword.create(input);
+    this.password = UserPassword.of(input);
     return this;
   };
 
