@@ -1,3 +1,8 @@
-export const SHIPPING_ADDRESSES = 'shippingAddresses';
+import { User } from '../models';
 
-export const USER_RELATIONS = [SHIPPING_ADDRESSES];
+export type UserRelationType = keyof User;
+
+export const USER_RELATIONS: UserRelationType[] = [
+  'shippingAddresses',
+  'refundAccount',
+];

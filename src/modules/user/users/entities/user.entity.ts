@@ -26,6 +26,8 @@ import { ShippingAddress } from '../models/shipping-address.model';
 import { UserAvatarImage } from '../models/user-avatar-image.model';
 import { IUser } from '../interfaces/user.interface';
 import { UserAvatarImageEntity } from './user-avatar-image.entity';
+import { RefundAccountEntity } from './refund-account.entity';
+import { RefundAccount } from '../models/refund-account.model';
 
 @ObjectType()
 @Entity({
@@ -141,4 +143,12 @@ export class UserEntity extends BaseIdEntity implements IUser {
   })
   @JoinColumn()
   avatarImage: UserAvatarImageEntity;
+
+  @Field(() => RefundAccount, { nullable: true })
+  @OneToOne(() => RefundAccountEntity, {
+    nullable: true,
+    cascade: true,
+  })
+  @JoinColumn()
+  refundAccount: RefundAccountEntity;
 }

@@ -773,6 +773,18 @@ type Query {
   users: [User!]!
 }
 
+"""가상계좌 결제시 환불 받을 계좌 정보"""
+type RefundAccount {
+  bankCode: InicisBankCode!
+  createdAt: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+  updatedAt: DateTime!
+}
+
 type SaleStrategy {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
@@ -1119,6 +1131,7 @@ type User {
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
+  refundAccount: RefundAccount
   role: UserRole
   shippingAddresses: [ShippingAddress!]
   updatedAt: DateTime!

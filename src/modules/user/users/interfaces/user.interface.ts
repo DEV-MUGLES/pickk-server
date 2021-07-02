@@ -1,3 +1,5 @@
+import { IAccount } from '@common/interfaces/account.interface';
+
 import { UserOauthProvider, UserRole } from '../constants/user.enum';
 import { IShippingAddress } from './shipping-address.interface';
 
@@ -20,4 +22,5 @@ export interface IUser {
   height?: number;
 
   shippingAddresses: IShippingAddress[];
+  refundAccount: IAccount;
 }

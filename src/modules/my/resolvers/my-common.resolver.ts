@@ -7,10 +7,7 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators/args.decorator';
 import { BaseResolver } from '@common/base.resolver';
 
-import {
-  SHIPPING_ADDRESSES,
-  USER_RELATIONS,
-} from '@user/users/constants/user.relation';
+import { USER_RELATIONS } from '@user/users/constants/user.relation';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
@@ -40,7 +37,9 @@ export class MyCommonResolver extends BaseResolver {
     @CurrentUser() payload: JwtPayload,
     @IntArgs('id') id: number
   ): Promise<ShippingAddress> {
-    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    const user = await this.usersService.get(payload.sub, [
+      'shippingAddresses',
+    ]);
     const shippingAddress = (
       await this.usersService.getShippingAddresses(user)
     ).find((address) => address.id === id);
@@ -57,7 +56,9 @@ export class MyCommonResolver extends BaseResolver {
   async myShippingAddresses(
     @CurrentUser() payload: JwtPayload
   ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    const user = await this.usersService.get(payload.sub, [
+      'shippingAddresses',
+    ]);
     return await this.usersService.getShippingAddresses(user);
   }
 
@@ -68,7 +69,9 @@ export class MyCommonResolver extends BaseResolver {
     @Args('createShippingAddressInput')
     createShippingAddressInput: CreateShippingAddressInput
   ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    const user = await this.usersService.get(payload.sub, [
+      'shippingAddresses',
+    ]);
     return await this.usersService.addShippingAddress(
       user,
       createShippingAddressInput
@@ -83,7 +86,7 @@ export class MyCommonResolver extends BaseResolver {
     @Args('updateShippingAddressInput')
     updateShippingAddressInput: UpdateShippingAddressInput
   ): Promise<ShippingAddress> {
-    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    const user = await this.usersService.get(payload.sub, []);
     return await this.usersService.updateShippingAddress(
       user,
       addressId,
@@ -97,7 +100,9 @@ export class MyCommonResolver extends BaseResolver {
     @CurrentUser() payload: JwtPayload,
     @IntArgs('addressId') addressId: number
   ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [SHIPPING_ADDRESSES]);
+    const user = await this.usersService.get(payload.sub, [
+      'shippingAddresses',
+    ]);
     return await this.usersService.removeShippingAddress(user, addressId);
   }
 }
