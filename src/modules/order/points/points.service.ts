@@ -1,8 +1,4 @@
-import {
-  Inject,
-  Injectable,
-  PreconditionFailedException,
-} from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm';
@@ -17,13 +13,8 @@ import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
 } from './points.repository';
-import { PointType } from './constants/points.enum';
-import {
-  CreateAddEventInput,
-  CreateSubstractEventInput,
-} from './dtos/point-event.dto';
+import { CreateEventInput } from './dtos/point-event.dto';
 import { CreateExpectedPointEventInput } from './dtos/expected-point-event.dto';
-import { ForbiddenPointSubtractEventExeption } from './exceptions/point.exception';
 
 @Injectable()
 export class PointsService {
@@ -108,43 +99,25 @@ export class PointsService {
     );
   }
 
-  async createSubstractEvent(
-    createsubstractEventInput: CreateSubstractEventInput
-  ): Promise<PointEvent> {
-    const { userId, amount: diff } = createsubstractEventInput;
+  // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
+  async createEvent(createEventInput: CreateEventInput): Promise<PointEvent> {
+    const { userId, amount: diff } = createEventInput;
     const currentAmount = await this.getAvailableAmount(userId);
     const resultAmount = currentAmount + diff;
 
     if (resultAmount < 0) {
-      throw new ForbiddenPointSubtractEventExeption();
+      throw new BadRequestException(
+        '보유한 포인트보다 사용한 포인트가 더 많습니다.'
+      );
     }
 
     const pointEvent = new PointEvent({
-      ...createsubstractEventInput,
+      ...createEventInput,
       resultBalance: resultAmount,
-      type: PointType.Sub,
     });
 
     await this.updateAvailableAmount(userId, resultAmount);
     return await this.pointEventsRepository.save(pointEvent);
-  }
-
-  // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
-  async createAddEvent(
-    createAddEventInput: CreateAddEventInput
-  ): Promise<PointEvent> {
-    const { userId, amount: diff } = createAddEventInput;
-    const currentAmount = await this.getAvailableAmount(userId);
-    const resultAmount = currentAmount + diff;
-    const pointEvent = new PointEvent({
-      ...createAddEventInput,
-      resultBalance: resultAmount,
-      type: PointType.Add,
-    });
-
-    const pointEventResult = await this.pointEventsRepository.save(pointEvent);
-    await this.updateAvailableAmount(userId, resultAmount);
-    return pointEventResult;
   }
 
   async createExpectedEvent(
