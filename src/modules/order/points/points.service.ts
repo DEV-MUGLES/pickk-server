@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm';
@@ -101,22 +101,11 @@ export class PointsService {
 
   // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
   async createEvent(createEventInput: CreateEventInput): Promise<PointEvent> {
-    const { userId, amount: diff } = createEventInput;
+    const { userId } = createEventInput;
     const currentAmount = await this.getAvailableAmount(userId);
-    const resultAmount = currentAmount + diff;
+    const pointEvent = PointEvent.of(createEventInput, currentAmount);
 
-    if (resultAmount < 0) {
-      throw new BadRequestException(
-        '보유한 포인트보다 사용한 포인트가 더 많습니다.'
-      );
-    }
-
-    const pointEvent = new PointEvent({
-      ...createEventInput,
-      resultBalance: resultAmount,
-    });
-
-    await this.updateAvailableAmount(userId, resultAmount);
+    await this.updateAvailableAmount(userId, pointEvent.resultBalance);
     return await this.pointEventsRepository.save(pointEvent);
   }
 
