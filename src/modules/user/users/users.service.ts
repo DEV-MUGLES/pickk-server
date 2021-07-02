@@ -1,16 +1,23 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersRepository } from './users.repository';
-import { CreateUserInput, UpdateUserInput } from './dtos/user.input';
-import { User } from './models/user.model';
-import { UserPassword } from './models/user-password.model';
-import { ShippingAddress } from './models/shipping-address.model';
+
 import {
+  User,
+  UserPassword,
+  ShippingAddress,
+  UserAvatarImage,
+  RefundAccount,
+} from './models';
+import {
+  CreateUserInput,
+  UpdateUserInput,
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from './dtos/shipping-address.input';
-import { UserEntity } from './entities/user.entity';
-import { UserAvatarImage } from './models/user-avatar-image.model';
+  CreateRefundAccountInput,
+  UpdateRefundAccountInput,
+} from './dtos';
+import { UserEntity } from './entities';
+import { UsersRepository } from './users.repository';
 
 @Injectable()
 export class UsersService {
@@ -112,6 +119,28 @@ export class UsersService {
     const deletedShippingAddress = user.removeShippingAddress(addressId);
     deletedShippingAddress.remove();
     return (await this.usersRepository.save(user)).shippingAddresses;
+  }
+
+  async addRefundAccount(
+    user: User,
+    createRefundAccountInput: CreateRefundAccountInput
+  ): Promise<RefundAccount> {
+    user.addRefundAccount(createRefundAccountInput);
+    return (await this.usersRepository.save(user)).refundAccount;
+  }
+
+  async updateRefundAccount(
+    user: User,
+    updateRefundAccountInput: UpdateRefundAccountInput
+  ): Promise<RefundAccount> {
+    user.updateRefundAccount(updateRefundAccountInput);
+    return (await this.usersRepository.save(user)).refundAccount;
+  }
+
+  async removeRefundAccount(user: User): Promise<User> {
+    const deleted = user.removeRefundAccount();
+    deleted.remove();
+    return await this.usersRepository.save(user);
   }
 
   async checkUserExist(nickname: string): Promise<boolean> {

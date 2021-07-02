@@ -1,10 +1,13 @@
+import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
 import {
+  CreateRefundAccountInput,
+  UpdateRefundAccountInput,
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '../dtos/shipping-address.input';
+} from '../dtos';
 
 import { UserEntity } from '../entities/user.entity';
 import {
@@ -12,6 +15,7 @@ import {
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
 } from '../exceptions/user.exception';
+import { RefundAccount } from './refund-account.model';
 import { ShippingAddress } from './shipping-address.model';
 import { UserAvatarImage } from './user-avatar-image.model';
 import { UserPassword } from './user-password.model';
@@ -148,5 +152,40 @@ export class User extends UserEntity {
     }
 
     return deletedShippingAddress;
+  };
+
+  public addRefundAccount = (
+    createRefundAccountInput: CreateRefundAccountInput
+  ): RefundAccount => {
+    if (this.refundAccount) {
+      throw new ConflictException('이미 환불계좌가 존재합니다.');
+    }
+
+    this.refundAccount = new RefundAccount(createRefundAccountInput);
+    return this.refundAccount;
+  };
+
+  public updateRefundAccount = (
+    updateRefundAccountInput: UpdateRefundAccountInput
+  ): RefundAccount => {
+    if (!this.refundAccount) {
+      throw new NotFoundException('변경할 환불계좌가 존재하지 않습니다.');
+    }
+
+    this.refundAccount = new RefundAccount({
+      ...this.refundAccount,
+      ...updateRefundAccountInput,
+    });
+    return this.refundAccount;
+  };
+
+  public removeRefundAccount = (): RefundAccount => {
+    if (!this.refundAccount) {
+      throw new NotFoundException('삭제할 환불계좌가 존재하지 않습니다.');
+    }
+
+    const deleted = this.refundAccount;
+    this.refundAccount = null;
+    return deleted;
   };
 }

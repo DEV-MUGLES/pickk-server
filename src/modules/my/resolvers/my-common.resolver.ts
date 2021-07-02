@@ -1,5 +1,6 @@
 import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { JwtPayload } from '@auth/dto/jwt.dto';
@@ -11,9 +12,11 @@ import { USER_RELATIONS } from '@user/users/constants/user.relation';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '@user/users/dtos/shipping-address.input';
+  CreateRefundAccountInput,
+  UpdateRefundAccountInput,
+} from '@user/users/dtos';
+import { RefundAccount, ShippingAddress, User } from '@user/users/models';
 import { UsersService } from '@user/users/users.service';
-import { ShippingAddress } from '@user/users/models/shipping-address.model';
 
 @Resolver()
 export class MyCommonResolver extends BaseResolver {
@@ -104,5 +107,47 @@ export class MyCommonResolver extends BaseResolver {
       'shippingAddresses',
     ]);
     return await this.usersService.removeShippingAddress(user, addressId);
+  }
+
+  @Mutation(() => RefundAccount)
+  @UseGuards(JwtVerifyGuard)
+  async addMyRefundAccount(
+    @CurrentUser() payload: JwtPayload,
+    @Args('createRefundAccountInput')
+    createRefundAccountInput: CreateRefundAccountInput
+  ): Promise<RefundAccount> {
+    const user = await this.usersService.get(payload.sub, ['refundAccount']);
+    return await this.usersService.addRefundAccount(
+      user,
+      createRefundAccountInput
+    );
+  }
+
+  @Mutation(() => RefundAccount)
+  @UseGuards(JwtVerifyGuard)
+  async updateMyRefundAccount(
+    @CurrentUser() payload: JwtPayload,
+    @Args('updateRefundAccountInput')
+    updateRefundAccountInput: UpdateRefundAccountInput
+  ): Promise<RefundAccount> {
+    const user = await this.usersService.get(payload.sub, []);
+    return await this.usersService.updateRefundAccount(
+      user,
+      updateRefundAccountInput
+    );
+  }
+
+  @Mutation(() => User)
+  @UseGuards(JwtVerifyGuard)
+  async removeMyRefundAccount(
+    @CurrentUser() payload: JwtPayload,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<User> {
+    const user = await this.usersService.get(payload.sub, ['refundAccount']);
+    await this.usersService.removeRefundAccount(user);
+    return await this.usersService.get(
+      payload.sub,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

@@ -219,6 +219,14 @@ input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
 }
 
+input CreateRefundAccountInput {
+  bankCode: InicisBankCode!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+}
+
 input CreateSellerClaimAccountInput {
   bankCode: InicisBankCode!
 
@@ -626,6 +634,7 @@ type Mutation {
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
+  addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
@@ -644,6 +653,7 @@ type Mutation {
   removeItemSizeChartsAll(itemId: Int!): Item!
   removeMyAvatarImage: UserAvatarImage!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
@@ -659,6 +669,7 @@ type Mutation {
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
+  updateMyRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
   updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
   updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
@@ -1010,6 +1021,14 @@ input UpdateItemSizeChartInput {
 
 input UpdateProductInput {
   stock: Int!
+}
+
+input UpdateRefundAccountInput {
+  bankCode: InicisBankCode
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String
+  ownerName: String
 }
 
 input UpdateSellerClaimAccountInput {
