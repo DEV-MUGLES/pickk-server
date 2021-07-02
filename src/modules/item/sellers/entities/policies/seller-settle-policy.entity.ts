@@ -1,11 +1,14 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import {
   IsEmail,
+  IsNumber,
   IsNumberString,
   IsPhoneNumber,
   IsString,
+  Max,
   MaxLength,
+  Min,
 } from 'class-validator';
 
 import { BaseIdEntity } from '@src/common/entities/base.entity';
@@ -30,6 +33,7 @@ export class SellerSettlePolicyEntity
     this.email = attributes.email;
 
     this.account = attributes.account;
+    this.rate = attributes.rate;
   }
 
   @Field({ description: '담당자 번호' })
@@ -49,8 +53,15 @@ export class SellerSettlePolicyEntity
   @IsEmail()
   email: string;
 
-  @Field(() => SellerClaimAccount)
+  @Field(() => SellerClaimAccount, { description: '정산 받을 계좌' })
   @OneToOne(() => SellerClaimAccountEntity, { cascade: true })
   @JoinColumn()
   account: SellerClaimAccount;
+
+  @Field(() => Int, { description: '정산율' })
+  @Column({ type: 'tinyint', unsigned: true, default: 70 })
+  @IsNumber()
+  @Min(0)
+  @Max(100)
+  rate: number;
 }

@@ -69,6 +69,18 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+type Campaign {
+  createdAt: DateTime!
+  endAt: DateTime!
+  id: Int!
+  items: [Item!]!
+
+  """적용 정산률 (0~100)"""
+  rate: Int!
+  startAt: DateTime!
+  updatedAt: DateTime!
+}
+
 type Cart {
   """CartItem들을 브랜드 단위로 묶은 단위입니다."""
   cartBrands: [CartBrand!]!
@@ -281,6 +293,7 @@ input CreateSellerSettleAccountInput {
 }
 
 input CreateSellerSettlePolicyInput {
+  """정산 받을 계좌"""
   accountInput: CreateSellerSettleAccountInput
 
   """세금계산서 수령이메일"""
@@ -289,6 +302,9 @@ input CreateSellerSettlePolicyInput {
   """담당자 번호"""
   phoneNumber: String!
   picName: String!
+
+  """정산율"""
+  rate: Int!
 }
 
 input CreateSellerShippingPolicyInput {
@@ -385,6 +401,7 @@ enum InicisBankCode {
 type Item {
   brand: Brand!
   brandId: Int!
+  campaigns: [Campaign!]
   createdAt: DateTime!
   description: String
   detailImages: [ItemDetailImage!]
@@ -858,6 +875,7 @@ type SellerReturnAddress {
 }
 
 type SellerSettlePolicy {
+  """정산 받을 계좌"""
   account: SellerClaimAccount!
   createdAt: DateTime!
 
@@ -868,6 +886,9 @@ type SellerSettlePolicy {
   """담당자 번호"""
   phoneNumber: String!
   picName: String!
+
+  """정산율"""
+  rate: Int!
   updatedAt: DateTime!
 }
 
@@ -1040,6 +1061,9 @@ input UpdateSellerSettlePolicyInput {
   """담당자 번호"""
   phoneNumber: String
   picName: String
+
+  """정산율"""
+  rate: Int
 }
 
 input UpdateSellerShippingPolicyInput {

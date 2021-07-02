@@ -6,7 +6,7 @@ import { BaseIdEntity } from '@src/common/entities/base.entity';
 
 import { IItemOption } from '../interfaces/item-option.interface';
 import { ItemOptionValue } from '../models/item-option-value.model';
-import { ItemEntity } from './item.entity';
+import { IItem } from '../interfaces/item.interface';
 
 @ObjectType()
 @Entity({ name: 'item_option' })
@@ -49,5 +49,5 @@ export class ItemOptionEntity extends BaseIdEntity implements IItemOption {
   @ManyToOne('ItemEntity', 'options', {
     onDelete: 'CASCADE',
   })
-  item: ItemEntity;
+  item: IItem;
 }
