@@ -51,6 +51,40 @@ enum AppleClientType {
   Web
 }
 
+type BaseOrderSheet {
+  availableCoupons: [Coupon!]!
+  availablePointAmount: Int!
+
+  """요청한 유저의 ID와 동일한 값입니다."""
+  id: Int!
+
+  """OrderSheetItem들을 브랜드별로 묶은 단위입니다."""
+  orderSheetBrands: [BaseOrderSheetBrand!]!
+  orderSheetItems: [BaseOrderSheetItem!]!
+  refundAccount: RefundAccount!
+  shippingAddresses: [ShippingAddress!]!
+}
+
+type BaseOrderSheetBrand {
+  brand: Brand!
+  orderSheetItems: [BaseOrderSheetItem!]!
+  sellerShippingPolicy: SellerShippingPolicy!
+}
+
+input BaseOrderSheetInput {
+  productInputs: [BaseOrderSheetProductInput!]!
+}
+
+type BaseOrderSheetItem {
+  product: Product!
+  quantity: Int!
+}
+
+input BaseOrderSheetProductInput {
+  productId: Int!
+  quantity: Int!
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -775,6 +809,7 @@ type Query {
   myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
+  prepareOrder(prepareOrderSheetInput: BaseOrderSheetInput!): BaseOrderSheet!
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!

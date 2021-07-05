@@ -19,6 +19,7 @@ import { CouponController } from './coupons.controller';
     SellersModule,
   ],
   providers: [CouponsResolver, CouponsService],
+  exports: [CouponsService],
   controllers: [CouponController],
 })
 export class CouponsModule {}

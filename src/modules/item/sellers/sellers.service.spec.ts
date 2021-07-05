@@ -4,15 +4,18 @@ import * as faker from 'faker';
 import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
 
+import { ClaimFeePayMethod } from './constants/seller-claim-policy.enum';
 import { CreateSellerInput } from './dtos/seller.input';
+import {
+  Seller,
+  SellerClaimPolicy,
+  SellerCrawlPolicy,
+  SellerShippingPolicy,
+  SellerReturnAddress,
+} from './models';
+
 import { SellersRepository } from './sellers.repository';
 import { SellersService } from './sellers.service';
-import { Seller } from './models/seller.model';
-import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
-import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
-import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
-import { SellerReturnAddress } from './models/seller-return-address.model';
-import { ClaimFeePayMethod } from './constants/seller-claim-policy.enum';
 
 describe('SellersService', () => {
   let sellersService: SellersService;

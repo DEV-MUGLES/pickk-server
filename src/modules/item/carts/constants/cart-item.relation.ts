@@ -13,7 +13,7 @@ export type CartItemRelationType =
 export const CART_ITEM_RELATIONS: Array<CartItemRelationType> = [
   'user',
   'product',
-  ...PRODUCT_RELATIONS.map(
-    (relation) => `product.${relation}` as CartItemRelationType
-  ),
+  ...PRODUCT_RELATIONS.filter(
+    (relation) => relation !== 'item.detailImages'
+  ).map((relation) => `product.${relation}` as CartItemRelationType),
 ];

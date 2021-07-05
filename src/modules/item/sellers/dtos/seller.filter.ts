@@ -1,7 +1,7 @@
 import { Field, InputType } from '@nestjs/graphql';
 
 import { ISeller } from '../interfaces/seller.interface';
-import { Seller } from '../models/seller.model';
+import { Seller } from '../models';
 
 @InputType()
 export class SellerFilter implements Partial<ISeller> {
