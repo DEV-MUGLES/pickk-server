@@ -1,8 +1,12 @@
+import { PageInput } from '@common/index';
+import { parseFilter } from '@common/helpers/filter.helpers';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 import { getOptionValueCombinations } from '../items/helpers/item.helper';
 
 import { Item } from '../items/models/item.model';
+import { ProductFilter } from './dtos/product.filter';
 import { UpdateProductInput } from './dtos/product.input';
 
 import { Product } from './models/product.model';
@@ -17,6 +21,23 @@ export class ProductsService {
 
   async get(id: number, relations: string[] = []): Promise<Product> {
     return await this.productsRepository.get(id, relations);
+  }
+
+  async list(
+    productFilter?: ProductFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<Product[]> {
+    const _productFilter = plainToClass(ProductFilter, productFilter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.productsRepository.entityToModelMany(
+      await this.productsRepository.find({
+        relations,
+        where: parseFilter(_productFilter, _pageInput?.idFilter),
+        ...(_pageInput?.pageFilter ?? {}),
+      })
+    );
   }
 
   async update(
