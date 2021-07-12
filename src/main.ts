@@ -4,11 +4,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AppConfigService } from './config/app/config.service';
 
-const APP_CONFIG_SERVICE = 'AppConfigService';
-
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const appConfig: AppConfigService = app.get(APP_CONFIG_SERVICE);
+  const appConfig: AppConfigService = app.get(AppConfigService);
   const swaggerConfig = new DocumentBuilder()
     .setTitle('pickk-server')
     .setDescription('The pickk-server API description')

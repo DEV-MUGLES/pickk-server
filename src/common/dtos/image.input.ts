@@ -1,6 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { GraphQLUpload } from 'apollo-server-express';
-import { FileUpload } from 'graphql-upload';
+import { GraphQLUpload, FileUpload } from 'graphql-upload';
 
 import { Exclude } from 'class-transformer';
 

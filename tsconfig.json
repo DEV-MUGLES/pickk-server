@@ -20,8 +20,9 @@
       "@my/*": ["src/modules/my/*"],
       "@order/*": ["src/modules/order/*"],
       "@user/*": ["src/modules/user/*"],
-      "@src/*": ["src/*"],
+      "@src/*": ["src/*"]
     },
-    "incremental": true,
-  }
+    "incremental": true
+  },
+  "exclude": ["node_modules"]
 }

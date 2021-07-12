@@ -57,6 +57,7 @@ export class AppleProviderService {
       sub: clientId,
     };
     const header = {
+      alg: 'ES256',
       kid: keyId,
     };
 
