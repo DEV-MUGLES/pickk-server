@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import axios from 'axios';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 
 import { SpiderConfigService } from '@config/providers/spider/config.service';
 import { ItemImageUrlProducer } from '@jobs/item-image-url/item-image.producer';
@@ -15,6 +16,7 @@ import { splitRegexString } from './helpers/spider.helper';
 @Injectable()
 export class SpiderService {
   constructor(
+    private readonly httpService: HttpService,
     private readonly spiderConfigService: SpiderConfigService,
     private readonly sellersService: SellersService,
     private readonly itemsService: ItemsService,
@@ -46,7 +48,9 @@ export class SpiderService {
 
     const requestUrl = this.spiderConfigService.url + '/brands';
     await Promise.all(
-      requestDtos.map((requestDto) => axios.post(requestUrl, requestDto))
+      requestDtos.map((requestDto) =>
+        firstValueFrom(this.httpService.post(requestUrl, requestDto))
+      )
     );
     return requestDtos.length;
   }

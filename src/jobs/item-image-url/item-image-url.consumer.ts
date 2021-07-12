@@ -1,6 +1,7 @@
 import { Process, Processor } from '@nestjs/bull';
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
 import { Job } from 'bullmq';
-import axios from 'axios';
 
 import { ItemsService } from '@src/modules/item/items/items.service';
 
@@ -13,6 +14,7 @@ import { getMimeType } from '@src/modules/common/images/helpers/image.helper';
 @Processor(ITEM_IMAGE_URL_QUEUE_NAME)
 export class ItemImageUrlConsumer {
   constructor(
+    private readonly httpService: HttpService,
     private readonly imagesService: ImagesService,
     private readonly itemsService: ItemsService
   ) {}
@@ -20,9 +22,11 @@ export class ItemImageUrlConsumer {
   @Process()
   async update(job: Job<IItemImageUrlJob>): Promise<void> {
     const { itemId, imageUrl } = job.data;
-    const { data } = await axios.get<Buffer>(imageUrl, {
-      responseType: 'arraybuffer',
-    });
+    const { data } = await firstValueFrom(
+      this.httpService.get<Buffer>(imageUrl, {
+        responseType: 'arraybuffer',
+      })
+    );
 
     const mimetype = getMimeType(imageUrl);
     const [result] = await this.imagesService.uploadBufferDatas([

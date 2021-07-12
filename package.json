@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "@apollo/gateway": "^0.33.0",
+    "@nestjs/axios": "^0.0.1",
     "@nestjs/bull": "^0.4.0",
     "@nestjs/common": "^8.0.1",
     "@nestjs/config": "^1.0.0",
@@ -54,7 +55,6 @@
     "apollo-server-express": "^2.25.2",
     "apollo-server-types": "^0.9.0",
     "aws-sdk": "^2.869.0",
-    "axios": "^0.21.1",
     "bcryptjs": "^2.4.3",
     "bull": "^3.22.6",
     "bull-board": "1.5.1",
@@ -89,7 +89,6 @@
     "@nestjs/schematics": "^8.0.0",
     "@nestjs/testing": "^8.0.1",
     "@types/aws-sdk": "^2.7.0",
-    "@types/axios": "^0.14.0",
     "@types/bcryptjs": "^2.4.2",
     "@types/bull": "^3.15.1",
     "@types/cache-manager": "^3.4.0",

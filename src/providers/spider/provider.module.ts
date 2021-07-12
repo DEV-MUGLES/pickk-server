@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { HttpModule } from '@nestjs/axios';
 
 import { SpiderConfigModule } from '@config/providers/spider/config.module';
 import { ItemImageUrlJobModule } from '@jobs/item-image-url/item-image.job.module';
@@ -10,6 +11,7 @@ import { SpiderService } from './provider.service';
 
 @Module({
   imports: [
+    HttpModule,
     SpiderConfigModule,
     SellersModule,
     ItemsModule,

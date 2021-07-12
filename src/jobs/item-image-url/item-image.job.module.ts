@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bull';
+import { HttpModule } from '@nestjs/axios';
 
 import { ItemsModule } from '@src/modules/item/items/items.module';
 
@@ -11,6 +12,7 @@ import { ImagesModule } from '@src/modules/common/images/images.module';
 
 @Module({
   imports: [
+    HttpModule,
     BullModule.registerQueue({
       name: ITEM_IMAGE_URL_QUEUE_NAME,
       settings: {
