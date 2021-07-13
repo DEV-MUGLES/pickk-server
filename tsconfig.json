@@ -7,6 +7,7 @@
     "experimentalDecorators": true,
     "esModuleInterop": true,
     "target": "es2017",
+    "skipLibCheck": true,
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
@@ -24,5 +25,5 @@
     },
     "incremental": true
   },
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "dist"]
 }
