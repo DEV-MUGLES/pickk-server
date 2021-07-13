@@ -1,72 +1,26 @@
-import { BadRequestException } from '@nestjs/common';
-
 import { Product } from '@item/products/models/product.model';
 import { Coupon } from '@order/coupons/models/coupon.model';
 import { RefundAccount, ShippingAddress } from '@user/users/models';
 
 import { BaseOrderSheetProductInput } from '../dtos';
-import { ProductOutOfStockException } from '../exceptions/out-of-stock.exception';
 import {
   BaseOrderSheet,
   BaseOrderSheetBrand,
   BaseOrderSheetItem,
 } from '../models';
+import { AbstractOrderSheetBuilder } from './abstract-order-sheet.builder';
 
-export class BaseOrderSheetBuilder {
+export class BaseOrderSheetBuilder extends AbstractOrderSheetBuilder {
   constructor(
-    private readonly data: {
-      userId: number;
-      products: Product[];
-      productInputs: BaseOrderSheetProductInput[];
-      availablePointAmount: number;
-      availableCoupons: Coupon[];
-      shippingAddresses: ShippingAddress[];
-      refundAccount?: RefundAccount;
-    }
-  ) {}
-
-  validate(): BaseOrderSheetBuilder {
-    this.checkProducts();
-    this.checkStocks();
-    return this;
-  }
-
-  /** 입력된 모든 products가 productInputs에 mapping 되어야한다. */
-  protected checkProducts() {
-    const { products, productInputs } = this.data;
-
-    if (products.length !== productInputs.length) {
-      throw new BadRequestException(
-        'prepareOrder: 프로덕트 정보가 잘못됐습니다. (length)'
-      );
-    }
-
-    products.forEach((product) => {
-      const productInput = productInputs.find(
-        (input) => input.productId === product.id
-      );
-
-      if (!productInput) {
-        throw new BadRequestException(
-          `prepareOrder: 프로덕트 정보를 찾지 못 했습니다. (${product.id})`
-        );
-      }
-    });
-  }
-
-  /** 입력된 모든 products가 quantity만큼의 stock을 갖고 있어야한다. */
-  protected checkStocks() {
-    const { products, productInputs } = this.data;
-
-    products.forEach((product) => {
-      const productInput = productInputs.find(
-        (input) => input.productId === product.id
-      );
-
-      if (productInput.quantity > product.stockThreshold) {
-        throw new ProductOutOfStockException(product, productInput.quantity);
-      }
-    });
+    readonly userId: number,
+    readonly products: Product[],
+    readonly productInputs: BaseOrderSheetProductInput[],
+    private readonly availablePointAmount: number,
+    private readonly availableCoupons: Coupon[],
+    private readonly shippingAddresses: ShippingAddress[],
+    private readonly refundAccount?: RefundAccount
+  ) {
+    super();
   }
 
   build(): BaseOrderSheet {
@@ -78,7 +32,7 @@ export class BaseOrderSheetBuilder {
       availableCoupons,
       shippingAddresses,
       refundAccount,
-    } = this.data;
+    } = this;
 
     const orderSheetItems: BaseOrderSheetItem[] = productInputs.map((input) => {
       const product = products.find(({ id }) => id === input.productId);

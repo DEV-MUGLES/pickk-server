@@ -8,7 +8,8 @@ import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interf
 @Entity('seller_crawl_strategy')
 export class SellerCrawlStrategyEntity
   extends BaseIdEntity
-  implements ISellerCrawlStrategy {
+  implements ISellerCrawlStrategy
+{
   @Field()
   @Column({
     type: 'varchar',

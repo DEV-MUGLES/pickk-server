@@ -15,7 +15,8 @@ registerEnumType(InicisBankCode, {
 @ObjectType()
 export abstract class AbstractAccountEntity
   extends BaseIdEntity
-  implements IAccount {
+  implements IAccount
+{
   constructor(attributes?: Partial<AbstractAccountEntity>) {
     super(attributes);
     if (!attributes) {

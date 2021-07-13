@@ -90,10 +90,9 @@ export class Cart {
 
       brandItemsObj[brand.id].cartItems.push(cartItem);
     });
-    return Object.values(
-      brandItemsObj
-    ).map(({ brand, cartItems, sellerShippingPolicy }) =>
-      CartBrand.create(brand, cartItems, sellerShippingPolicy)
+    return Object.values(brandItemsObj).map(
+      ({ brand, cartItems, sellerShippingPolicy }) =>
+        CartBrand.create(brand, cartItems, sellerShippingPolicy)
     );
   }
 }

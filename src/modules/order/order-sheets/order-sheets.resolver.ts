@@ -11,13 +11,17 @@ import { PointsService } from '@order/points/points.service';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { UsersService } from '@user/users/users.service';
 
-import { BaseOrderSheetInput } from './dtos';
+import { BaseOrderSheetBuilder } from './builders';
+import { BaseOrderSheetInput, OrderSheetInput } from './dtos';
 import { BaseOrderSheet } from './models';
-import { BaseOrderSheetBuilder } from './builders/base-order-sheet.builder';
+import { OrderSheet } from './models/order-sheet.model';
+import { OrderSheetsService } from './order-sheets.service';
 
 @Injectable()
 export class OrderSheetsResolver {
   constructor(
+    @Inject(OrderSheetsService)
+    private readonly orderSheetsService: OrderSheetsService,
     @Inject(ProductsService)
     private readonly productsService: ProductsService,
     @Inject(PointsService)
@@ -60,16 +64,32 @@ export class OrderSheetsResolver {
       this.usersService.getShippingAddresses(user),
     ]);
 
-    return new BaseOrderSheetBuilder({
+    return new BaseOrderSheetBuilder(
       userId,
       products,
       productInputs,
       availablePointAmount,
       availableCoupons,
       shippingAddresses,
-      refundAccount,
-    })
+      refundAccount
+    )
       .validate()
       .build();
+  }
+
+  @Query(() => OrderSheet)
+  @UseGuards(JwtVerifyGuard)
+  async createOrderSheet(
+    @CurrentUser() payload: JwtPayload,
+    @Args('orderSheetInput')
+    orderSheetInput: OrderSheetInput
+  ): Promise<OrderSheet> {
+    const baseOrderSheet = await this.prepareOrder(payload, orderSheetInput);
+    OrderSheetInput.validate(orderSheetInput, baseOrderSheet);
+
+    return await this.orderSheetsService.createOrderSheet(
+      payload.sub,
+      orderSheetInput
+    );
   }
 }

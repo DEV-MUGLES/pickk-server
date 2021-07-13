@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddPointEventEntityOrderItemIdField1624947692108
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddPointEventEntityOrderItemIdField1624947692108';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

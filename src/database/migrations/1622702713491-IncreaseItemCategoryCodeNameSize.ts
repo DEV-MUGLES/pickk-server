@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class IncreaseItemCategoryCodeNameSize1622702713491
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'IncreaseItemCategoryCodeNameSize1622702713491';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

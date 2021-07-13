@@ -8,7 +8,8 @@ import { IAddress } from '../interfaces/address.interface';
 @ObjectType()
 export abstract class AbstractAddressEntity
   extends BaseIdEntity
-  implements IAddress {
+  implements IAddress
+{
   constructor(attributes?: Partial<AbstractAddressEntity>) {
     super(attributes);
     if (!attributes) {

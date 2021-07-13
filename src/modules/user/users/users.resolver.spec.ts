@@ -35,9 +35,8 @@ describe('UsersResolver', () => {
 
     usersResolver = module.get<UsersResolver>(UsersResolver);
     usersService = module.get<UsersService>(UsersService);
-    awsS3ProviderService = module.get<AwsS3ProviderService>(
-      AwsS3ProviderService
-    );
+    awsS3ProviderService =
+      module.get<AwsS3ProviderService>(AwsS3ProviderService);
   });
 
   it('should be defined', () => {

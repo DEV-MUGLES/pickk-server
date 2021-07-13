@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class RemovePricePropertiesFromItem1620631045307
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'RemovePricePropertiesFromItem1620631045307';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

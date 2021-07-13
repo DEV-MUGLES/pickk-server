@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class ChangeItemCategoryRelationForeignKey1620655999301
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'ChangeItemCategoryRelationForeignKey1620655999301';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddProductShippingReservePolicy1617956843594
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddProductShippingReservePolicy1617956843594';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

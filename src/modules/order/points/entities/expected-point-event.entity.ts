@@ -14,7 +14,8 @@ import { IExpectedPointEvent } from '../interfaces/expected-point-event.interfac
 @Index('idx_orderId', ['orderId'])
 export class ExpectedPointEventEntity
   extends BaseIdEntity
-  implements IExpectedPointEvent {
+  implements IExpectedPointEvent
+{
   constructor(attributes?: Partial<ExpectedPointEventEntity>) {
     super(attributes);
     if (!attributes) {

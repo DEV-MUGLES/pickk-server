@@ -21,7 +21,8 @@ import { ISellerSettlePolicy } from '../../interfaces/policies/seller-settle-pol
 @Entity('seller_settle_policy')
 export class SellerSettlePolicyEntity
   extends BaseIdEntity
-  implements ISellerSettlePolicy {
+  implements ISellerSettlePolicy
+{
   constructor(attributes?: Partial<SellerSettlePolicyEntity>) {
     super(attributes);
     if (!attributes) {

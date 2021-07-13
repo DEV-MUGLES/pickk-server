@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class RemoveItemThumbnailImageEntity1620725104166
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'RemoveItemThumbnailImageEntity1620725104166';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

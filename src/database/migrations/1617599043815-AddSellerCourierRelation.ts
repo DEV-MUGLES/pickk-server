@@ -8,7 +8,8 @@ import {
 const COURIER_ID = 'courierId';
 
 export class AddSellerCourierRelation1617599043815
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddSellerCourierRelation1617599043815';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

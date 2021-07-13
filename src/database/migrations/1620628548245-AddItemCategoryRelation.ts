@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddItemCategoryRelation1620628548245
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddItemCategoryRelation1620628548245';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

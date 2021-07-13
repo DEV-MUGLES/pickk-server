@@ -12,7 +12,8 @@ import { IProductShippingReservePolicy } from '../interfaces/product-shipping-re
 })
 export class ProductShippingReservePolicyEntity
   extends BaseIdEntity
-  implements IProductShippingReservePolicy {
+  implements IProductShippingReservePolicy
+{
   constructor(attributes?: Partial<ProductShippingReservePolicyEntity>) {
     super(attributes);
     if (!attributes) {
