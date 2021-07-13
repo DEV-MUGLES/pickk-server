@@ -60,15 +60,15 @@ export class OrderSheetsResolver {
       this.usersService.getShippingAddresses(user),
     ]);
 
-    return new BaseOrderSheetBuilder({
+    return new BaseOrderSheetBuilder(
       userId,
       products,
       productInputs,
       availablePointAmount,
       availableCoupons,
       shippingAddresses,
-      refundAccount,
-    })
+      refundAccount
+    )
       .validate()
       .build();
   }
