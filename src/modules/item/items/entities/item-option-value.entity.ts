@@ -11,7 +11,8 @@ import { ItemOptionEntity } from './item-option.entity';
 @Entity({ name: 'item_option_value' })
 export class ItemOptionValueEntity
   extends BaseIdEntity
-  implements IItemOptionValue {
+  implements IItemOptionValue
+{
   constructor(attributes?: Partial<ItemOptionValueEntity>) {
     super(attributes);
     if (!attributes) {

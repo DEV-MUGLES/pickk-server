@@ -10,7 +10,8 @@ import { ISellerShippingPolicy } from '../../interfaces/policies';
 @Entity('seller_shipping_policy')
 export class SellerShippingPolicyEntity
   extends BaseIdEntity
-  implements ISellerShippingPolicy {
+  implements ISellerShippingPolicy
+{
   constructor(attributes?: Partial<SellerShippingPolicyEntity>) {
     super();
     if (!attributes) {

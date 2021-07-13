@@ -10,7 +10,8 @@ import { ISellerCrawlPolicy } from '../../interfaces/policies';
 @Entity('seller_crawl_policy')
 export class SellerCrawlPolicyEntity
   extends BaseIdEntity
-  implements ISellerCrawlPolicy {
+  implements ISellerCrawlPolicy
+{
   constructor(attributes?: Partial<SellerCrawlPolicyEntity>) {
     super();
     if (!attributes) {

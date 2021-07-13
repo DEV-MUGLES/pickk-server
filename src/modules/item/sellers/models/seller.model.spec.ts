@@ -45,9 +45,8 @@ describe('Seller', () => {
       };
       delete updateInput['account'];
 
-      const { account, ...claimPolicyAttributes } = seller.updateClaimPolicy(
-        updateInput
-      );
+      const { account, ...claimPolicyAttributes } =
+        seller.updateClaimPolicy(updateInput);
       expect(account).toMatchObject(updateInput.accountInput);
       delete updateInput['accountInput'];
       expect(claimPolicyAttributes).toMatchObject(updateInput);
@@ -66,9 +65,8 @@ describe('Seller', () => {
       };
       delete updateInput['account'];
 
-      const { account, ...claimPolicyAttributes } = seller.updateClaimPolicy(
-        updateInput
-      );
+      const { account, ...claimPolicyAttributes } =
+        seller.updateClaimPolicy(updateInput);
       expect(account).toMatchObject(updateInput.accountInput);
       delete updateInput['accountInput'];
       expect(claimPolicyAttributes).toMatchObject(updateInput);
@@ -86,9 +84,8 @@ describe('Seller', () => {
       };
       delete updateInput['account'];
 
-      const { account, ...settlePolicyAttributes } = seller.updateSettlePolicy(
-        updateInput
-      );
+      const { account, ...settlePolicyAttributes } =
+        seller.updateSettlePolicy(updateInput);
       expect(account).toMatchObject(updateInput.accountInput);
       delete updateInput['accountInput'];
       expect(settlePolicyAttributes).toMatchObject(updateInput);
@@ -107,9 +104,8 @@ describe('Seller', () => {
       };
       delete updateInput['account'];
 
-      const { account, ...settlePolicyAttributes } = seller.updateSettlePolicy(
-        updateInput
-      );
+      const { account, ...settlePolicyAttributes } =
+        seller.updateSettlePolicy(updateInput);
       expect(account).toMatchObject(updateInput.accountInput);
       delete updateInput['accountInput'];
       expect(settlePolicyAttributes).toMatchObject(updateInput);
@@ -124,9 +120,8 @@ describe('Seller', () => {
       };
       delete updateInput['account'];
 
-      const { account, ...settlePolicyAttributes } = seller.updateSettlePolicy(
-        updateInput
-      );
+      const { account, ...settlePolicyAttributes } =
+        seller.updateSettlePolicy(updateInput);
       expect(account).toMatchObject(updateInput.accountInput);
       delete updateInput['accountInput'];
       expect(settlePolicyAttributes).toMatchObject(updateInput);

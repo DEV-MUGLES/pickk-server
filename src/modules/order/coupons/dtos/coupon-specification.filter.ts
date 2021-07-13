@@ -6,7 +6,8 @@ import { ICouponSpecification } from '../interfaces/coupon-specification.interfa
 
 @InputType()
 export class CouponSpecificationFilter
-  implements Partial<ICouponSpecification> {
+  implements Partial<ICouponSpecification>
+{
   @Field({ nullable: true })
   @IsOptional()
   expireAtLte?: Date;

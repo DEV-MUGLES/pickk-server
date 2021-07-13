@@ -11,7 +11,8 @@ import { IsNumber, Max, Min } from 'class-validator';
 })
 export class ItemSalePolicyEntity
   extends BaseIdEntity
-  implements IItemSalePolicy {
+  implements IItemSalePolicy
+{
   @Field()
   @Column()
   isUsingStock: boolean;

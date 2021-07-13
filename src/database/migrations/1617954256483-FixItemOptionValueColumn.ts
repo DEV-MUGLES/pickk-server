@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class FixItemOptionValueColumn1617954256483
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'FixItemOptionValueColumn1617954256483';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

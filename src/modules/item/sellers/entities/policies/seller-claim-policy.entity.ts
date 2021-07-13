@@ -21,7 +21,8 @@ import { SellerClaimAccountEntity } from './seller-claim-account.entity';
 @Entity('seller_claim_policy')
 export class SellerClaimPolicyEntity
   extends BaseIdEntity
-  implements ISellerClaimPolicy {
+  implements ISellerClaimPolicy
+{
   constructor(attributes?: Partial<SellerClaimPolicyEntity>) {
     super(attributes);
     if (!attributes) {

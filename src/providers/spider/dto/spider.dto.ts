@@ -2,7 +2,8 @@ import { ISellerCrawlStrategy } from '@item/sellers/interfaces/seller-crawl-stra
 import { ISpiderItem } from '../interfaces/spider.interface';
 
 export class SpiderSellerRequestDto
-  implements Omit<ISellerCrawlStrategy, 'baseUrl' | 'startPathNamesJoin'> {
+  implements Omit<ISellerCrawlStrategy, 'baseUrl' | 'startPathNamesJoin'>
+{
   itemsSelector: string;
   codeRegex: string;
   pagination: boolean;

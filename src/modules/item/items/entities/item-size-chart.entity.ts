@@ -14,7 +14,8 @@ const NullableFloatColumn = () =>
 })
 export class ItemSizeChartEntity
   extends BaseIdEntity
-  implements IItemSizeChart {
+  implements IItemSizeChart
+{
   constructor(attributes?: Partial<ItemSizeChartEntity>) {
     super(attributes);
     if (!attributes) {

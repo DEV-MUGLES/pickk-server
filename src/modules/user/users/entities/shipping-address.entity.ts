@@ -13,7 +13,8 @@ import { IShippingAddress } from '../interfaces/shipping-address.interface';
 })
 export class ShippingAddressEntity
   extends AbstractAddressEntity
-  implements IShippingAddress {
+  implements IShippingAddress
+{
   @Field()
   @Column()
   name: string;

@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class RenameSalePriceToSellPrice1620007001189
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'RenameSalePriceToSellPrice1620007001189';
 
   public async up(queryRunner: QueryRunner): Promise<void> {

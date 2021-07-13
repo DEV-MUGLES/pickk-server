@@ -22,7 +22,8 @@ import { ICouponSpecification } from '../interfaces/coupon-specification.interfa
 @Entity('coupon_specification')
 export class CouponSpecificationEntity
   extends BaseIdEntity
-  implements ICouponSpecification {
+  implements ICouponSpecification
+{
   constructor(attributes?: Partial<CouponSpecificationEntity>) {
     super(attributes);
     if (!attributes) {

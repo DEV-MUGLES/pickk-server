@@ -12,7 +12,8 @@ import { IImage } from '../interfaces/image.interface';
 @ObjectType()
 export abstract class AbstractImageEntity
   extends _TypeORMBaseEntity
-  implements IImage {
+  implements IImage
+{
   constructor(attributes?: Partial<AbstractImageEntity>) {
     super();
     if (!attributes) {
