@@ -4,6 +4,7 @@ import { IsEnum, IsNumber } from 'class-validator';
 import { PayMethod } from '@order/orders/constants/order.enum';
 
 import { OrderSheetInput } from '../dtos';
+import { randomUUID } from 'crypto';
 
 @ObjectType()
 export class OrderSheetProductData {
@@ -26,6 +27,9 @@ export class OrderSheetProductData {
 
 @ObjectType()
 export class OrderSheet {
+  @Field()
+  uuid: string;
+
   @Field(() => Int)
   userId: number;
 
@@ -50,6 +54,7 @@ export class OrderSheet {
 
   public static from(userId: number, input: OrderSheetInput): OrderSheet {
     return new OrderSheet({
+      uuid: randomUUID(),
       userId,
       ...input,
       productDatas: input.productInputs,

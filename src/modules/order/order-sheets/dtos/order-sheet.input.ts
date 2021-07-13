@@ -19,7 +19,7 @@ export class OrderSheetProductInput extends OmitType(
 @InputType()
 export class OrderSheetInput extends OmitType(
   OrderSheet,
-  ['userId', 'productDatas'] as const,
+  ['uuid', 'userId', 'productDatas'] as const,
   InputType
 ) {
   @Field(() => [OrderSheetProductInput])
