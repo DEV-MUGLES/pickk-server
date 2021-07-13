@@ -6,9 +6,10 @@ import { PointsModule } from '@order/points/points.module';
 import { UsersModule } from '@user/users/users.module';
 
 import { OrderSheetsResolver } from './order-sheets.resolver';
+import { OrderSheetsService } from './order-sheets.service';
 
 @Module({
   imports: [ProductsModule, CouponsModule, PointsModule, UsersModule],
-  providers: [OrderSheetsResolver],
+  providers: [OrderSheetsResolver, OrderSheetsService],
 })
 export class OrderSheetsModule {}

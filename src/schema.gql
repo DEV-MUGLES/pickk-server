@@ -719,10 +719,61 @@ type Mutation {
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
+type OrderSheet {
+  payMethod: PayMethod!
+  productDatas: [OrderSheetProductData!]!
+  shippingAddressId: Int!
+  usedPointAmount: Int!
+  userId: Int!
+}
+
+input OrderSheetInput {
+  payMethod: PayMethod!
+  productInputs: [OrderSheetProductInput!]!
+  shippingAddressId: Int!
+  usedPointAmount: Int!
+}
+
+type OrderSheetProductData {
+  couponId: Int
+  productId: Int!
+  quantity: Int!
+  recommenderId: Int
+}
+
+input OrderSheetProductInput {
+  couponId: Int
+  productId: Int!
+  quantity: Int!
+  recommenderId: Int
+}
+
 input PageInput {
   limit: Int = 20
   offset: Int
   startId: Int
+}
+
+"""결제수단입니다."""
+enum PayMethod {
+  Booknlife
+  Card
+  Chaipay
+  Cultureland
+  Happymoney
+  Kakaopay
+  Kpay
+  Lpay
+  Naverpay
+  Payco
+  Phone
+  Point
+  Samsungpay
+  Smartculture
+  Ssgpay
+  Tosspay
+  Trans
+  Vbank
 }
 
 type PointEvent {
@@ -788,6 +839,7 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  createOrderSheet(orderSheetInput: OrderSheetInput!): OrderSheet!
   genRandomNickname: String!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
