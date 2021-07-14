@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 
 import { CacheService } from '@providers/cache/redis/provider.service';
 
@@ -19,5 +19,16 @@ export class OrderSheetsService {
     await this.cacheService.set<OrderSheet>(cacheKey, orderSheet);
 
     return orderSheet;
+  }
+
+  async get(userId: number, orderSheetUuid): Promise<OrderSheet> {
+    const cacheKey = OrderSheet.getCacheKey(userId);
+    const orderSheet = await this.cacheService.get<OrderSheet>(cacheKey);
+
+    if (orderSheet?.uuid === orderSheetUuid) {
+      return orderSheet;
+    } else {
+      throw new NotFoundException('일치하는 OrderSheet이 존재하지 않습니다.');
+    }
   }
 }
