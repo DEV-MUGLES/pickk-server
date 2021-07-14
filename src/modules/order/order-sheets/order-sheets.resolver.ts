@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Inject, Injectable } from '@nestjs/common';
-import { Args, Query } from '@nestjs/graphql';
+import { Args, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { JwtPayload } from '@auth/dto/jwt.dto';
@@ -77,7 +77,7 @@ export class OrderSheetsResolver {
       .build();
   }
 
-  @Query(() => OrderSheet)
+  @Mutation(() => OrderSheet)
   @UseGuards(JwtVerifyGuard)
   async createOrderSheet(
     @CurrentUser() payload: JwtPayload,
