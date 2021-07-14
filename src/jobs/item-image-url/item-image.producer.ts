@@ -1,22 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectQueue } from '@nestjs/bull';
-import { Queue } from 'bull';
-import { setQueues, BullAdapter } from 'bull-board';
+import { Inject, Injectable } from '@nestjs/common';
+import { SqsService } from '@pickk/nest-sqs';
 
 import { IItemImageUrlJob } from './item-image.interface';
-
-import { ITEM_IMAGE_URL_QUEUE_NAME } from './item-image-url.constant';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './item-image-url.constant';
 
 @Injectable()
 export class ItemImageUrlProducer {
-  constructor(
-    @InjectQueue(ITEM_IMAGE_URL_QUEUE_NAME)
-    private imageUrlQueue: Queue<IItemImageUrlJob>
-  ) {
-    setQueues([new BullAdapter(this.imageUrlQueue)]);
-  }
+  constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
   async add(createDto: IItemImageUrlJob) {
-    return await this.imageUrlQueue.add(createDto);
+    return await this.sqsService.send<IItemImageUrlJob>(
+      UPDATE_ITEM_IMAGE_URL_QUEUE,
+      {
+        id: createDto.itemId.toString(),
+        body: createDto,
+      }
+    );
   }
 }

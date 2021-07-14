@@ -1,17 +1,20 @@
-import { Process, Processor } from '@nestjs/bull';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
-import { Job } from 'bullmq';
+import {
+  SqsConsumerEvent,
+  SqsConsumerEventHandler,
+  SqsMessageHandler,
+  SqsProcess,
+} from '@pickk/nest-sqs';
 
 import { ItemsService } from '@src/modules/item/items/items.service';
-
-import { IItemImageUrlJob } from './item-image.interface';
-
-import { ITEM_IMAGE_URL_QUEUE_NAME } from './item-image-url.constant';
 import { ImagesService } from '@src/modules/common/images/images.service';
 import { getMimeType } from '@src/modules/common/images/helpers/image.helper';
 
-@Processor(ITEM_IMAGE_URL_QUEUE_NAME)
+import { IItemImageUrlJob } from './item-image.interface';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './item-image-url.constant';
+
+@SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class ItemImageUrlConsumer {
   constructor(
     private readonly httpService: HttpService,
@@ -19,9 +22,12 @@ export class ItemImageUrlConsumer {
     private readonly itemsService: ItemsService
   ) {}
 
-  @Process()
-  async update(job: Job<IItemImageUrlJob>): Promise<void> {
-    const { itemId, imageUrl } = job.data;
+  @SqsMessageHandler()
+  async update(message: AWS.SQS.Message): Promise<void> {
+    const { Body } = message;
+    const messageData: IItemImageUrlJob = JSON.parse(Body);
+    const { itemId, imageUrl } = messageData;
+
     const { data } = await firstValueFrom(
       this.httpService.get<Buffer>(imageUrl, {
         responseType: 'arraybuffer',
@@ -42,5 +48,10 @@ export class ItemImageUrlConsumer {
     await this.itemsService.update(item, {
       imageUrl: result.url,
     });
+  }
+
+  @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)
+  processingError(error) {
+    console.log(error);
   }
 }

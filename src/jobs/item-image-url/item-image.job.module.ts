@@ -1,26 +1,25 @@
 import { Module } from '@nestjs/common';
-import { BullModule } from '@nestjs/bull';
 import { HttpModule } from '@nestjs/axios';
+import { SqsModule, SqsQueueType } from '@pickk/nest-sqs';
 
 import { ItemsModule } from '@src/modules/item/items/items.module';
+import { ImagesModule } from '@src/modules/common/images/images.module';
 
 import { ItemImageUrlConsumer } from './item-image-url.consumer';
 import { ItemImageUrlProducer } from './item-image.producer';
-
-import { ITEM_IMAGE_URL_QUEUE_NAME } from './item-image-url.constant';
-import { ImagesModule } from '@src/modules/common/images/images.module';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './item-image-url.constant';
 
 @Module({
   imports: [
     HttpModule,
-    BullModule.registerQueue({
-      name: ITEM_IMAGE_URL_QUEUE_NAME,
-      settings: {
-        maxStalledCount: 500,
-      },
-    }),
     ItemsModule,
     ImagesModule,
+    SqsModule.registerQueue([
+      {
+        name: UPDATE_ITEM_IMAGE_URL_QUEUE,
+        type: SqsQueueType.All,
+      },
+    ]),
   ],
   providers: [ItemImageUrlProducer, ItemImageUrlConsumer],
   exports: [ItemImageUrlProducer],
