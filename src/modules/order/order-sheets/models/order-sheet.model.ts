@@ -27,6 +27,9 @@ export class OrderSheetProductData {
 
 @ObjectType()
 export class OrderSheet {
+  @Field(() => Int)
+  id: number;
+
   @Field()
   uuid: string;
 
@@ -55,6 +58,7 @@ export class OrderSheet {
   public static from(userId: number, input: OrderSheetInput): OrderSheet {
     return new OrderSheet({
       uuid: randomUUID(),
+      id: userId,
       userId,
       ...input,
       productDatas: input.productInputs,
