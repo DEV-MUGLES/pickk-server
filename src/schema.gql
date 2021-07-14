@@ -680,6 +680,9 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
+
+  """입력된 정보를 기반으로 OrderSheet을 찾아낸 뒤, 재고 검사 및 차감을 수행합니다."""
+  prepareOrder(orderSheetUuid: String!, userId: Int!): Boolean!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
@@ -862,7 +865,7 @@ type Query {
   myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
-  prepareOrder(prepareOrderSheetInput: BaseOrderSheetInput!): BaseOrderSheet!
+  prepareOrderSheet(prepareOrderSheetInput: BaseOrderSheetInput!): BaseOrderSheet!
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
