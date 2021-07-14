@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { IsEnum, IsNumber } from 'class-validator';
 
+import { getRandomUuid } from '@common/helpers';
 import { PayMethod } from '@order/orders/constants/order.enum';
 
 import { OrderSheetInput } from '../dtos';
-import { randomUUID } from 'crypto';
 
 @ObjectType()
 export class OrderSheetProductData {
@@ -57,7 +57,7 @@ export class OrderSheet {
 
   public static from(userId: number, input: OrderSheetInput): OrderSheet {
     return new OrderSheet({
-      uuid: randomUUID(),
+      uuid: getRandomUuid(),
       id: userId,
       userId,
       ...input,

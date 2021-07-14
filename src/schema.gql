@@ -677,6 +677,7 @@ type Mutation {
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createOrderSheet(orderSheetInput: OrderSheetInput!): OrderSheet!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
@@ -723,6 +724,7 @@ type Mutation {
 }
 
 type OrderSheet {
+  id: Int!
   payMethod: PayMethod!
   productDatas: [OrderSheetProductData!]!
   shippingAddressId: Int!
@@ -843,7 +845,6 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
-  createOrderSheet(orderSheetInput: OrderSheetInput!): OrderSheet!
   genRandomNickname: String!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
