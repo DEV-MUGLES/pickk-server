@@ -24,3 +24,16 @@ services:
       - '${MYSQL_PORT}:${MYSQL_PORT}'
     healthcheck:
       test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+  localstack:
+    container_name: localstack
+    image: localstack/localstack:latest
+    ports:
+      - '${LOCALSTACK_PORT}:${LOCALSTACK_PORT}'
+    environment:
+      - SERVICES=sqs
+      - DEBUG=1
+      - DEFAULT_REGION=${LOCALSTACK_REGION}
+      - EDGE_PORT=${LOCALSTACK_PORT}
+    volumes:
+      - '${LOCALSTACK_TMPDIR:-/tmp/localstack}:/tmp/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
