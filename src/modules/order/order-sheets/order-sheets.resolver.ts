@@ -34,7 +34,7 @@ export class OrderSheetsResolver {
 
   @Query(() => BaseOrderSheet)
   @UseGuards(JwtVerifyGuard)
-  async prepareOrder(
+  async prepareOrderSheet(
     @CurrentUser() payload: JwtPayload,
     @Args('prepareOrderSheetInput')
     { productInputs }: BaseOrderSheetInput
@@ -84,7 +84,10 @@ export class OrderSheetsResolver {
     @Args('orderSheetInput')
     orderSheetInput: OrderSheetInput
   ): Promise<OrderSheet> {
-    const baseOrderSheet = await this.prepareOrder(payload, orderSheetInput);
+    const baseOrderSheet = await this.prepareOrderSheet(
+      payload,
+      orderSheetInput
+    );
     OrderSheetInput.validate(orderSheetInput, baseOrderSheet);
 
     return await this.orderSheetsService.createOrderSheet(
