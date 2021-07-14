@@ -46,7 +46,7 @@ services:
     volumes:
       - '${LOCALSTACK_TMPDIR:-/tmp/localstack}:/tmp/localstack'
       - '/var/run/docker.sock:/var/run/docker.sock'
-      - '${PWD}/scripts/init-localstack.sh:/docker-entrypoint-initaws.d/init.sh'
+      - '${PWD}/scripts/init-localstack.sh:/docker-entrypoint-initaws.d/init-localstack.sh'
     networks:
       - webnet
 networks:
