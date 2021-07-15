@@ -5,7 +5,6 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppConfigModule } from './config/app/config.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 import { AwsSqsProviderModule } from '@providers/aws/sqs/provider.module';
-import { BullProviderModule } from './providers/bull/provider.module';
 import { RedisCacheProviderModule } from './providers/cache/redis/provider.module';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { SensProviderModule } from './providers/sens/provider.module';
@@ -34,7 +33,6 @@ import { AppService } from './app.service';
     AppConfigModule,
     AwsS3ProviderModule,
     AwsSqsProviderModule,
-    BullProviderModule,
     RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
     SensProviderModule,
