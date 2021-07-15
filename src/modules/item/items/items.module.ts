@@ -1,6 +1,8 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nest-sqs';
+import { ImagesModule } from '@src/modules/common/images/images.module';
 
 import { ProductsModule } from '../products/products.module';
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './constants/item-image-url.constant';
@@ -28,6 +30,8 @@ import { Producers } from './producers';
       ItemDetailImagesRepository,
     ]),
     ProductsModule,
+    HttpModule,
+    ImagesModule,
     SqsModule.registerQueue([
       {
         name: UPDATE_ITEM_IMAGE_URL_QUEUE,
