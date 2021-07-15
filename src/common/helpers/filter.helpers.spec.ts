@@ -103,21 +103,14 @@ describe('FilterHelpers', () => {
     });
 
     it('should parse Between', () => {
-      const [from, to] = [
+      const [start, end] = [
         faker.datatype.number(),
         faker.datatype.number(),
       ].sort((a, b) => a - b);
 
-      const inputs = [
-        [from, to],
-        [new Date(from), new Date(to)],
-      ];
-
-      for (const input of inputs) {
-        expect(parseFilter({ nameBetween: input })).toEqual({
-          name: Between(input[0], input[1]),
-        });
-      }
+      expect(parseFilter({ ageBetween: [start, end] })).toEqual({
+        age: Between(start, end),
+      });
     });
 
     it('should parse Mte', () => {

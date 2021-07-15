@@ -3,12 +3,13 @@ import { parseFilter } from '@common/helpers/filter.helpers';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { getOptionValueCombinations } from '../items/helpers/item.helper';
 
-import { getOptionValueCombinations } from '@item/items/helpers';
-import { Item } from '@item/items/models';
+import { Item } from '../items/models/item.model';
+import { ProductFilter } from './dtos/product.filter';
+import { UpdateProductInput } from './dtos/product.input';
 
-import { ProductFilter, DestockProductInput, UpdateProductInput } from './dtos';
-import { Product } from './models';
+import { Product } from './models/product.model';
 import { ProductsRepository } from './products.repository';
 
 @Injectable()
@@ -63,20 +64,6 @@ export class ProductsService {
     const products = getOptionValueCombinations(item.options).map(
       (values) => new Product({ item, itemOptionValues: values })
     );
-    await this.productsRepository.save(products);
-  }
-
-  async bulkDestock(destockProductInputs: DestockProductInput[]) {
-    const productIds = destockProductInputs.map(({ productId }) => productId);
-    const products = await this.productsRepository.findByIds(productIds);
-
-    products.forEach((product) => {
-      const { quantity } = destockProductInputs.find(({ productId }) => {
-        return product.id === productId;
-      });
-      product.destock(quantity);
-    });
-
     await this.productsRepository.save(products);
   }
 }

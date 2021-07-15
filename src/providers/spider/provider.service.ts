@@ -3,9 +3,9 @@ import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
 import { SpiderConfigService } from '@config/providers/spider/config.service';
-import { ItemImageUrlProducer } from '@jobs/item-image-url/item-image.producer';
 import { SellersService } from '@item/sellers/sellers.service';
 import { ItemsService } from '@item/items/items.service';
+import { ItemImageUrlProducer } from '@item/items/producers/item-image-url.producer';
 
 import {
   SpiderSellerRequestDto,
@@ -77,7 +77,7 @@ export class SpiderService {
           code,
           itemData
         );
-        await this.itemImageUrlProducer.add({
+        await this.itemImageUrlProducer.send({
           itemId: id,
           imageUrl: itemData.imageUrl,
         });

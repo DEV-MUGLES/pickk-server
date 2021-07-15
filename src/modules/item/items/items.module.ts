@@ -1,7 +1,12 @@
+import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SqsModule, SqsQueueType } from '@pickk/nest-sqs';
+import { ImagesModule } from '@src/modules/common/images/images.module';
 
 import { ProductsModule } from '../products/products.module';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './constants/item-image-url.constant';
+import { Consumers } from './consumers';
 import {
   ItemsRepository,
   ItemOptionsRepository,
@@ -12,6 +17,7 @@ import {
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
+import { Producers } from './producers';
 
 @Module({
   imports: [
@@ -24,8 +30,16 @@ import { ItemsService } from './items.service';
       ItemDetailImagesRepository,
     ]),
     ProductsModule,
+    HttpModule,
+    ImagesModule,
+    SqsModule.registerQueue([
+      {
+        name: UPDATE_ITEM_IMAGE_URL_QUEUE,
+        type: SqsQueueType.All,
+      },
+    ]),
   ],
-  providers: [ItemsResolver, ItemsService],
-  exports: [ItemsService],
+  providers: [ItemsResolver, ItemsService, ...Producers, ...Consumers],
+  exports: [ItemsService, ...Producers, ...Consumers],
 })
 export class ItemsModule {}

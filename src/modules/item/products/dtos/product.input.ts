@@ -1,7 +1,5 @@
-import { Field, InputType, Int, PickType } from '@nestjs/graphql';
-import { IsNumber } from 'class-validator';
-
-import { Product } from '../models';
+import { InputType, PickType } from '@nestjs/graphql';
+import { Product } from '../models/product.model';
 
 @InputType()
 export class UpdateProductInput extends PickType(
@@ -9,14 +7,3 @@ export class UpdateProductInput extends PickType(
   ['stock'],
   InputType
 ) {}
-
-@InputType()
-export class DestockProductInput {
-  @Field(() => Int)
-  @IsNumber()
-  quantity: number;
-
-  @Field(() => Int)
-  @IsNumber()
-  productId: number;
-}
