@@ -12,7 +12,6 @@ import { SensProviderModule } from './providers/sens/provider.module';
 import { SpiderModule } from './providers/spider/provider.module';
 
 import { AuthModule } from './authentication/auth.module';
-import { jobModules } from './jobs';
 
 import { CommonModule } from './modules/common/common.module';
 import { ItemModule } from './modules/item/item.module';
@@ -41,7 +40,6 @@ import { AppService } from './app.service';
     SensProviderModule,
     SpiderModule,
     AuthModule,
-    ...jobModules,
     CommonModule,
     ItemModule,
     MyModule,

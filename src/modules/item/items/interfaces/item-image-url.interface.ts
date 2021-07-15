@@ -1,4 +1,4 @@
-export interface IItemImageUrlJob {
+export interface UpdateItemImageUrlDto {
   itemId: number;
 
   imageUrl: string;
