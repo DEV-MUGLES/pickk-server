@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { SqsModule, SqsConfig } from '@pickk/nest-sqs';
 
-import { AwsSqsConfigModule } from '@config/providers/aws/sqs/config.module';
-import { AwsSqsConfigService } from '@config/providers/aws/sqs/config.service';
+import {
+  AwsSqsConfigModule,
+  AwsSqsConfigService,
+} from '@config/providers/aws/sqs';
 
 @Module({
   imports: [

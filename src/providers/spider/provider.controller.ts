@@ -1,7 +1,7 @@
 import { Controller, Post, HttpCode, Patch, Body } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
-import { SpiderSellerResultDto } from './dto/spider.dto';
+import { SpiderSellerResultDto } from './dtos';
 import { SpiderService } from './provider.service';
 
 @ApiTags('spider')

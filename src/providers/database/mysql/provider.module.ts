@@ -6,8 +6,7 @@ import {
   TypeOrmModuleOptions,
 } from '@nestjs/typeorm';
 
-import { MysqlConfigModule } from '../../../config/database/mysql/config.module';
-import { MysqlConfigService } from '../../../config/database/mysql/config.service';
+import { MysqlConfigModule, MysqlConfigService } from '@config/database/mysql';
 
 @Module({
   imports: [

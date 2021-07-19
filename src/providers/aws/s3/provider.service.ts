@@ -3,9 +3,9 @@ import * as AWS from 'aws-sdk';
 import { ReadStream } from 'fs-capacitor';
 import dayjs from 'dayjs';
 
-import { AwsS3ConfigService } from '@config/providers/aws/s3/config.service';
+import { AwsS3ConfigService } from '@config/providers/aws/s3';
 
-import { S3UploadResultDto } from './dto/s3.dto';
+import { S3UploadResultDto } from './dtos';
 
 @Injectable()
 export class AwsS3ProviderService {

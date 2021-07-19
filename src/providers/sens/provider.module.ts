@@ -1,8 +1,7 @@
 import { Module } from '@nestjs/common';
 import { SensModule, SensModuleAsyncOptions } from 'nest-sens';
 
-import { SensConfigModule } from '@config/providers/sens/config.module';
-import { SensConfigService } from '@config/providers/sens/config.service';
+import { SensConfigModule, SensConfigService } from '@config/providers/sens';
 
 @Module({
   imports: [
