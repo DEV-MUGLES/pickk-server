@@ -1,13 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { CacheService } from '@src/providers/cache/redis/provider.service';
 
-import { CartItemsRepository } from './carts.repository';
-import {
-  CreateCartItemInput,
-  UpdateCartItemInput,
-} from './dtos/cart-item.input';
+import { CacheService } from '@providers/cache/redis/provider.service';
+
+import { CreateCartItemInput, UpdateCartItemInput } from './dtos';
 import { Cart, CartItem } from './models';
+import { CartItemsRepository } from './carts.repository';
 
 @Injectable()
 export class CartsService {

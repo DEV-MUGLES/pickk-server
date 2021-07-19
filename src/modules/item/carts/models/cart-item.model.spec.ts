@@ -1,5 +1,6 @@
 import * as faker from 'faker';
-import { Product } from '../../products/models/product.model';
+
+import { Product } from '@item/products/models/product.model';
 
 import { CartItem } from './cart-item.model';
 
