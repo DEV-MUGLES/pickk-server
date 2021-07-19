@@ -2,7 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { JwtPayload } from '@auth/dtos';
 import { AwsS3ProviderModule } from '@providers/aws/s3';
 
 import { UsersRepository } from '@user/users/users.repository';

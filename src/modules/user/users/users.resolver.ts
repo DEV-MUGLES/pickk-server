@@ -11,8 +11,8 @@ import {
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { CurrentUser } from '@auth/decorators';
+import { JwtPayload } from '@auth/dtos';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 ('@common/decorators');

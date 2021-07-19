@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { UserOauthProvider } from '@src/modules/user/users/constants/user.enum';
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UsersService } from '@src/modules/user/users/users.service';
+import { UserOauthProvider } from '@user/users/constants/user.enum';
+import { UserEntity } from '@user/users/entities/user.entity';
+import { User } from '@user/users/models/user.model';
+import { UsersService } from '@user/users/users.service';
 
-import { IJwtToken } from './interfaces/token.interface';
-import { jwtRefreshConstants } from './constants/jwt.constant';
-import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
+import { jwtRefreshConstants } from './constants';
+import { CreateJwtPayloadInput } from './dtos';
 import {
+  PasswordIncorrectException,
   UserCodeNotFoundExeption,
   UserOauthNotFoundExeption,
-} from './exceptions/user.exception';
-import { CreateJwtPayloadInput } from './dto/jwt.dto';
+} from './exceptions';
+import { IJwtToken } from './interfaces';
 
 @Injectable()
 export class AuthService {

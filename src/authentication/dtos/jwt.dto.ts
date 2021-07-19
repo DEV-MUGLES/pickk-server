@@ -1,7 +1,8 @@
 import { Field, Int, ObjectType, OmitType } from '@nestjs/graphql';
-import { Timestamp } from '@src/common/scalars/timestamp.scalar';
-import { IJwtPayload } from '../interfaces/jwt-payload.interface';
-import { IJwtToken } from '../interfaces/token.interface';
+
+import { Timestamp } from '@common/scalars';
+
+import { IJwtPayload, IJwtToken } from '../interfaces';
 
 @ObjectType()
 export class JwtToken implements IJwtToken {

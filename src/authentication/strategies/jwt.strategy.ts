@@ -6,8 +6,8 @@ import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
 import { SellersService } from '@item/sellers/sellers.service';
 import { UsersService } from '@user/users/users.service';
 
-import { jwtConstants, jwtRefreshConstants } from '../constants/jwt.constant';
-import { JwtPayload } from '../dto/jwt.dto';
+import { jwtConstants, jwtRefreshConstants } from '../constants';
+import { JwtPayload } from '../dtos';
 
 export const CustomJwtStrategy = (
   name?: string,

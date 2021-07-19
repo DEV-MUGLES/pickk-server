@@ -1,7 +1,8 @@
 import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+
+import { PasswordIncorrectException } from '@auth/exceptions';
 import {
   CreateRefundAccountInput,
   UpdateRefundAccountInput,

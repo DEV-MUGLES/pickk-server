@@ -2,8 +2,8 @@ import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { CurrentUser } from '@auth/decorators';
+import { JwtPayload } from '@auth/dtos';
 import { JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';

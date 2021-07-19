@@ -2,11 +2,10 @@ import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { Roles } from '@auth/decorators/roles.decorator';
+import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
-import { BaseResolver } from '@common/base.resolver';
 import { IntArgs } from '@common/decorators';
+import { BaseResolver } from '@common/base.resolver';
 import { UserRole } from '@user/users/constants/user.enum';
 import { User } from '@user/users/models/user.model';
 

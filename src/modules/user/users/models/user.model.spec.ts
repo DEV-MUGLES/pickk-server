@@ -1,7 +1,7 @@
 import { NotFoundException } from '@nestjs/common';
 import * as faker from 'faker';
 
-import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+import { PasswordIncorrectException } from '@auth/exceptions';
 
 import {
   CreateShippingAddressInput,

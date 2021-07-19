@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 import { FileUpload } from 'graphql-upload';
 
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { JwtPayload } from '@auth/dtos';
 import { AwsS3ProviderModule, AwsS3ProviderService } from '@providers/aws/s3';
 
 import { User } from './models/user.model';

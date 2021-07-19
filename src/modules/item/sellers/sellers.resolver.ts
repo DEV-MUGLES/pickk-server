@@ -2,7 +2,7 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@auth/decorators/roles.decorator';
+import { Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
 import { FindSaleStrategyInput, PageInput } from '@common/dtos';

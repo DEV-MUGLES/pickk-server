@@ -11,11 +11,11 @@ import {
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@src/authentication/decorators/roles.decorator';
-import { JwtAuthGuard } from '@src/authentication/guards';
-import { BaseResolver, DerivedFieldsInfoType } from '@src/common/base.resolver';
-import { IntArgs } from '@src/common/decorators/args.decorator';
-import { PageInput } from '@src/common/dtos/pagination.dto';
+import { Roles } from '@auth/decorators';
+import { JwtAuthGuard } from '@auth/guards';
+import { IntArgs } from '@common/decorators';
+import { PageInput } from '@common/dtos';
+import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 import { UserRole } from '@user/users/constants/user.enum';
 
 import { ItemRelationType, ITEM_RELATIONS } from './constants/item.relation';
