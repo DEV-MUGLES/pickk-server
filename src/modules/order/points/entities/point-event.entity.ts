@@ -6,8 +6,8 @@ import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 
-import { IPointEvent } from '../interfaces/point-event.interface';
-import { PointType } from '../constants/points.enum';
+import { PointType } from '../constants';
+import { IPointEvent } from '../interfaces';
 
 @ObjectType()
 @Entity('point_event')

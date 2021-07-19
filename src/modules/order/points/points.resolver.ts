@@ -6,8 +6,9 @@ import { JwtPayload } from '@auth/dtos';
 import { JwtVerifyGuard } from '@auth/guards';
 import { PageInput } from '@common/dtos';
 
-import { PointEventFilter } from './dtos/point-event.filter';
+import { PointEventFilter } from './dtos';
 import { ExpectedPointEvent, PointEvent } from './models';
+
 import { PointsService } from './points.service';
 
 @Resolver()
