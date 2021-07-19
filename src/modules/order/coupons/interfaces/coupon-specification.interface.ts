@@ -1,4 +1,4 @@
-import { IBrand } from '@item/brands/interfaces/brand.interface';
+import { IBrand } from '@item/brands/interfaces';
 
 import { CouponType } from '../constants';
 

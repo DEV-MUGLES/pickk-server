@@ -1,4 +1,4 @@
-import { ISeller } from '../../sellers/interfaces/seller.interface';
+import { ISeller } from '@item/sellers/interfaces';
 
 export interface IBrand {
   nameKor: string;

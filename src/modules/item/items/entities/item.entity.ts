@@ -17,8 +17,8 @@ import { IsBoolean, IsOptional, IsString, IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { BrandEntity } from '@item/brands/entities/brand.entity';
-import { Brand } from '@item/brands/models/brand.model';
+import { BrandEntity } from '@item/brands/entities';
+import { Brand } from '@item/brands/models';
 import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
 import { ItemCategory } from '@item/item-categories/models/item-category.model';
 import { ItemCategoryEntity } from '@item/item-categories/entities/item-category.entity';

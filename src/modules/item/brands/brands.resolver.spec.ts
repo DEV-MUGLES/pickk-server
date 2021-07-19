@@ -3,17 +3,17 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
 import { SaleStrategyRepository } from '@common/repositories';
+import { Seller } from '@item/sellers/models/seller.model';
+import { SellersRepository } from '@item/sellers/sellers.repository';
+import { SellersService } from '@item/sellers/sellers.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 
-import { Seller } from '../sellers/models/seller.model';
-import { SellersRepository } from '../sellers/sellers.repository';
-import { SellersService } from '../sellers/sellers.service';
+import { UpdateBrandInput } from './dtos';
+import { Brand } from './models';
 import { BrandsRepository } from './brands.repository';
 import { BrandsResolver } from './brands.resolver';
 import { BrandsService } from './brands.service';
-import { UpdateBrandInput } from './dtos/brand.input';
-import { Brand } from './models/brand.model';
 
 describe('BrandsResolver', () => {
   let brandsResolver: BrandsResolver;

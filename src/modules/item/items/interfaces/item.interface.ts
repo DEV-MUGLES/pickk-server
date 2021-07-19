@@ -1,6 +1,6 @@
 import { IImage } from '@common/interfaces';
 
-import { IBrand } from '@item/brands/interfaces/brand.interface';
+import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
 import { IItemCategory } from '@item/item-categories/interfaces/item-category.interface';
 import { IProduct } from '@item/products/interfaces/product.interface';

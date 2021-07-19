@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { CreateBrandInput, UpdateBrandInput } from './dtos';
+import { Brand } from './models';
 import { BrandsRepository } from './brands.repository';
-import { CreateBrandInput, UpdateBrandInput } from './dtos/brand.input';
-import { Brand } from './models/brand.model';
 
 @Injectable()
 export class BrandsService {

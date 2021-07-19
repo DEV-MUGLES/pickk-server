@@ -12,8 +12,8 @@ import {
 } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
-import { Brand } from '@item/brands/models/brand.model';
-import { BrandEntity } from '@item/brands/entities/brand.entity';
+import { BrandEntity } from '@item/brands/entities';
+import { Brand } from '@item/brands/models';
 
 import { CouponType } from '../constants';
 import { ICouponSpecification } from '../interfaces';

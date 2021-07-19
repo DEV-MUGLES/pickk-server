@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Brand } from '@item/brands/models/brand.model';
+import { Brand } from '@item/brands/models';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerSettlePolicyInput,

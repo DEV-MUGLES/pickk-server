@@ -1,9 +1,10 @@
 import faker from 'faker';
 import { Injectable } from '@nestjs/common';
 
-import { CreateBrandInput } from '@item/brands/dtos/brand.input';
+import { CreateBrandInput } from '@item/brands/dtos';
+import { Brand } from '@item/brands/models';
 import { BrandsService } from '@item/brands/brands.service';
-import { Brand } from '@item/brands/models/brand.model';
+
 import { BRAND_COUNT } from '../data';
 
 @Injectable()
