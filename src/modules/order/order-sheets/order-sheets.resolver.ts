@@ -13,8 +13,8 @@ import { UsersService } from '@user/users/users.service';
 
 import { BaseOrderSheetBuilder } from './builders';
 import { BaseOrderSheetInput, OrderSheetInput } from './dtos';
-import { BaseOrderSheet } from './models';
-import { OrderSheet } from './models/order-sheet.model';
+import { BaseOrderSheet, OrderSheet } from './models';
+
 import { OrderSheetsService } from './order-sheets.service';
 
 @Injectable()

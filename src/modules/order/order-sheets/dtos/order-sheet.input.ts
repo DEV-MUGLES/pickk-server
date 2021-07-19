@@ -2,12 +2,11 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, InputType, OmitType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
-import { PayMethod } from '@order/orders/constants/order.enum';
+import { PayMethod } from '@order/orders/constants';
 import { ShippingAddress } from '@user/users/models';
 
 import { PointNotEnoughException } from '../exceptions';
-import { BaseOrderSheet } from '../models';
-import { OrderSheet, OrderSheetProductData } from '../models/order-sheet.model';
+import { BaseOrderSheet, OrderSheet, OrderSheetProductData } from '../models';
 
 @InputType()
 export class OrderSheetProductInput extends OmitType(

@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 
 import { Product } from '@item/products/models/product.model';
 
-import { ProductOutOfStockException } from '../exceptions/out-of-stock.exception';
+import { ProductOutOfStockException } from '../exceptions';
 
 export abstract class AbstactProductInput {
   productId: number;
