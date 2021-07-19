@@ -3,8 +3,8 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { CampaignEntity } from './entities/campaign.entity';
-import { Campaign } from './models/campaign.model';
+import { CampaignEntity } from './entities';
+import { Campaign } from './models';
 
 @EntityRepository(CampaignEntity)
 export class CampaignsRepository extends BaseRepository<

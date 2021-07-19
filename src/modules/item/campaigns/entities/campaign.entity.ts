@@ -5,7 +5,7 @@ import { IsDate, IsNumber, Max, Min } from 'class-validator';
 import { BaseIdEntity } from '@common/entities';
 import { IItem } from '@item/items/interfaces';
 
-import { ICampaign } from '../interfaces/campaign.interface';
+import { ICampaign } from '../interfaces';
 
 @ObjectType()
 @Entity('campaign')

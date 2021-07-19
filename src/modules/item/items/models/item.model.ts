@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Campaign } from '@item/campaigns/models/campaign.model';
+import { Campaign } from '@item/campaigns/models';
 import { Product } from '@item/products/models/product.model';
 
 import {

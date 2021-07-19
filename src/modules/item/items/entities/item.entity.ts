@@ -19,7 +19,7 @@ import { BaseIdEntity } from '@common/entities';
 
 import { BrandEntity } from '@item/brands/entities';
 import { Brand } from '@item/brands/models';
-import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
+import { ICampaign } from '@item/campaigns/interfaces';
 import { ItemCategoryEntity } from '@item/item-categories/entities';
 import { ItemCategory } from '@item/item-categories/models';
 import { IProduct } from '@item/products/interfaces/product.interface';
