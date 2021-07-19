@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-import { Product } from '@item/products/models/product.model';
+import { Product } from '@item/products/models';
 
 import { ProductOutOfStockException } from '../exceptions';
 

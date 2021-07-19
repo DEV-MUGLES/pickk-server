@@ -1,6 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
-import { IProduct } from '../interfaces/product.interface';
+import { IProduct } from '../interfaces';
 
 @InputType()
 export class ProductFilter implements Partial<IProduct> {

@@ -5,8 +5,9 @@ import { GraphQLResolveInfo } from 'graphql';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
-import { UpdateProductInput } from './dtos/product.input';
-import { Product } from './models/product.model';
+import { UpdateProductInput } from './dtos';
+import { Product } from './models';
+
 import { ProductsService } from './products.service';
 
 @Resolver(() => Product)

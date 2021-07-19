@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { Brand } from '@item/brands/models';
 import { SellerShippingPolicy } from '@item/sellers/models';
-import { Product } from '@item/products/models/product.model';
+import { Product } from '@item/products/models';
 import { Coupon } from '@order/coupons/models';
 import { RefundAccount, ShippingAddress } from '@user/users/models';
 

@@ -22,7 +22,7 @@ import { Brand } from '@item/brands/models';
 import { ICampaign } from '@item/campaigns/interfaces';
 import { ItemCategoryEntity } from '@item/item-categories/entities';
 import { ItemCategory } from '@item/item-categories/models';
-import { IProduct } from '@item/products/interfaces/product.interface';
+import { IProduct } from '@item/products/interfaces';
 
 import { IItem, IItemOption } from '../interfaces';
 

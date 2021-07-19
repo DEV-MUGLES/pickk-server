@@ -5,7 +5,7 @@ import { Args, Query } from '@nestjs/graphql';
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/dtos';
 import { JwtVerifyGuard } from '@auth/guards';
-import { PRODUCT_RELATIONS } from '@item/products/constants/product.relation';
+import { PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
 import { PointsService } from '@order/points/points.service';
 import { CouponsService } from '@order/coupons/coupons.service';

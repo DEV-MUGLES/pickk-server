@@ -1,4 +1,4 @@
-import { IProduct } from '@item/products/interfaces/product.interface';
+import { IProduct } from '@item/products/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 export interface ICartItem {

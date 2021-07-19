@@ -15,7 +15,8 @@ import { ItemOptionValueEntity } from '@item/items/entities';
 // @TODO:BARREL
 import { ItemOptionValue } from '@item/items/models/item-option-value.model';
 
-import { IProduct } from '../interfaces/product.interface';
+import { IProduct } from '../interfaces';
+
 import { ProductShippingReservePolicy } from '../models/product-shipping-reserve-policy.model';
 import { ProductShippingReservePolicyEntity } from './product-shipping-reserve-policy.entity';
 

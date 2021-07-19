@@ -3,7 +3,7 @@ import { IImage } from '@common/interfaces';
 import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
 import { IItemCategory } from '@item/item-categories/interfaces';
-import { IProduct } from '@item/products/interfaces/product.interface';
+import { IProduct } from '@item/products/interfaces';
 
 import { IItemSizeChart } from './item-size-chart.interface';
 import { IItemNotice } from './item-notice.interface';

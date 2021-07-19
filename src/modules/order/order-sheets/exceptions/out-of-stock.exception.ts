@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 
-import { Product } from '@item/products/models/product.model';
+import { Product } from '@item/products/models';
 
 export class ProductOutOfStockException extends BadRequestException {
   constructor(product: Product, requiredQuantity: number) {

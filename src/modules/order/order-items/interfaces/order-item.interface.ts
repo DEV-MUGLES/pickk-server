@@ -1,6 +1,6 @@
 import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
-import { IProduct } from '@item/products/interfaces/product.interface';
+import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
 import { IUser } from '@user/users/interfaces';
 

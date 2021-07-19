@@ -4,14 +4,12 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
+import { getOptionValueCombinations } from '@item/items/helpers';
+import { Item } from '@item/items/models';
 
-import { getOptionValueCombinations } from '../items/helpers/item.helper';
+import { ProductFilter, UpdateProductInput } from './dtos';
+import { Product } from './models';
 
-import { Item } from '../items/models/item.model';
-import { ProductFilter } from './dtos/product.filter';
-import { UpdateProductInput } from './dtos/product.input';
-
-import { Product } from './models/product.model';
 import { ProductsRepository } from './products.repository';
 
 @Injectable()

@@ -1,7 +1,7 @@
 import {
   ProductRelationType,
   PRODUCT_RELATIONS,
-} from '@item/products/constants/product.relation';
+} from '@item/products/constants';
 
 import { CartItem } from '../models';
 
