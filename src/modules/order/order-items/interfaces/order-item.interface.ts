@@ -24,8 +24,6 @@ export interface IOrderItem {
   claimStatus?: OrderItemClaimStatus;
   quantity: number;
 
-  /** 예약배송건인가 */
-  isShipReserved: boolean;
   isConfirmed: boolean;
   isSettled: boolean;
 
@@ -70,7 +68,7 @@ export interface IOrderItem {
   refundRequestedAt?: Date;
   refundedAt?: Date;
 
-  /** 예약배송으로 전환된 시점 */
+  /** 예약발송 예정일 */
   shipReservedAt?: Date;
   confirmedAt?: Date;
   /** 정산된 시점 */
