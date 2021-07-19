@@ -17,24 +17,23 @@ import { IsBoolean, IsOptional, IsString, IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { BrandEntity } from '../../brands/entities/brand.entity';
-import { Brand } from '../../brands/models/brand.model';
-import { ItemCategory } from '../../item-categories/models/item-category.model';
-import { ItemCategoryEntity } from '../../item-categories/entities/item-category.entity';
+import { BrandEntity } from '@item/brands/entities/brand.entity';
+import { Brand } from '@item/brands/models/brand.model';
+import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
+import { ItemCategory } from '@item/item-categories/models/item-category.model';
+import { ItemCategoryEntity } from '@item/item-categories/entities/item-category.entity';
+import { IProduct } from '@item/products/interfaces/product.interface';
 
-import { IItem } from '../interfaces/item.interface';
+import { IItem, IItemOption } from '../interfaces';
+
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemNotice } from '../models/item-notice.model';
 import { ItemSizeChart } from '../models/item-size-chart.model';
-
 import { ItemSalePolicyEntity } from './item-sale-policy.entity';
 import { ItemNoticeEntity } from './item-notice.entity';
-import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
-import { IProduct } from '@item/products/interfaces/product.interface';
-import { IItemOption } from '../interfaces/item-option.interface';
 
 @ObjectType()
 @Entity({

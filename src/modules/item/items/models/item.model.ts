@@ -8,28 +8,26 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Campaign } from '@item/campaigns/models/campaign.model';
 import { Product } from '@item/products/models/product.model';
 
-import { AddItemUrlInput } from '../dtos/item-url.input';
-import { CreateItemOptionInput } from '../dtos/item-option.input';
-import { AddItemPriceInput } from '../dtos/item-price.input';
 import {
+  AddItemUrlInput,
+  CreateItemOptionInput,
+  AddItemPriceInput,
   AddItemNoticeInput,
   UpdateItemNoticeInput,
-} from '../dtos/item-notice.input';
-import {
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
-} from '../dtos/item-size-chart.input';
-
+  CreateItemDetailImageInput,
+} from '../dtos';
+// @TODO:BARREL
 import { ItemEntity } from '../entities/item.entity';
+
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { ItemPrice } from './item-price.model';
 import { ItemNotice } from './item-notice.model';
 import { ItemSizeChart } from './item-size-chart.model';
-
 import { ItemOptionValue } from './item-option-value.model';
-import { CreateItemDetailImageInput } from '../dtos/item-detail-image.dto';
 
 @ObjectType()
 export class Item extends ItemEntity {

@@ -11,9 +11,9 @@ import {
 
 import { BaseIdEntity } from '@common/entities';
 
+import { ItemPriceUnit } from '../constants';
+import { IItemPrice } from '../interfaces';
 import { ItemEntity } from './item.entity';
-import { IItemPrice } from '../interfaces/item-price.interface';
-import { ItemPriceUnit } from '../constants/item-price.enum';
 
 @ObjectType()
 @Entity('item_price')

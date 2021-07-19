@@ -10,26 +10,26 @@ import {
   CreateItemInput,
   UpdateItemInput,
   BulkUpdateItemInput,
-} from './dtos/item.input';
-import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemFilter } from './dtos/item.filter';
-import {
+  AddItemUrlInput,
+  ItemFilter,
   AddItemNoticeInput,
   UpdateItemNoticeInput,
-} from './dtos/item-notice.input';
-import {
   CreateItemOptionInput,
   UpdateItemOptionInput,
-} from './dtos/item-option.input';
-import {
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
-} from './dtos/item-size-chart.input';
-
-import {
   AddItemPriceInput,
   UpdateItemPriceInput,
-} from './dtos/item-price.input';
+  CreateItemDetailImageInput,
+} from './dtos';
+import {
+  ItemPrice,
+  ItemUrl,
+  Item,
+  ItemNotice,
+  ItemOption,
+  ItemDetailImage,
+} from './models';
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -38,14 +38,6 @@ import {
   ItemsRepository,
   ItemSizeChartsRepository,
 } from './items.repository';
-
-import { ItemPrice } from './models/item-price.model';
-import { ItemUrl } from './models/item-url.model';
-import { Item } from './models/item.model';
-import { ItemNotice } from './models/item-notice.model';
-import { ItemOption } from './models/item-option.model';
-import { ItemDetailImage } from './models/item-detail-image.model';
-import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
 
 @Injectable()
 export class ItemsService {

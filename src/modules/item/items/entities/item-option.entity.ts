@@ -4,9 +4,8 @@ import { IsOptional, Max, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItemOption } from '../interfaces/item-option.interface';
-import { ItemOptionValue } from '../models/item-option-value.model';
-import { IItem } from '../interfaces/item.interface';
+import { IItem, IItemOption } from '../interfaces';
+import { ItemOptionValue } from '../models';
 
 @ObjectType()
 @Entity({ name: 'item_option' })

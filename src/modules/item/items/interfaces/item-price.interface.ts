@@ -1,4 +1,5 @@
-import { ItemPriceUnit } from '../constants/item-price.enum';
+import { ItemPriceUnit } from '../constants';
+
 import { IItem } from './item.interface';
 
 export interface IItemPrice {

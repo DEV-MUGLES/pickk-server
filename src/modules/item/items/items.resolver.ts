@@ -16,40 +16,35 @@ import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
+import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
-import { ItemRelationType, ITEM_RELATIONS } from './constants/item.relation';
+import { ItemRelationType, ITEM_RELATIONS } from './constants';
 import {
   AddItemPriceInput,
   UpdateItemPriceInput,
-} from './dtos/item-price.input';
-import { UpdateItemInput, BulkUpdateItemInput } from './dtos/item.input';
-import { AddItemUrlInput } from './dtos/item-url.input';
-import { ItemsService } from './items.service';
-import { ItemPrice } from './models/item-price.model';
-import { ItemUrl } from './models/item-url.model';
-import { Item } from './models/item.model';
-import { ItemNotice } from './models/item-notice.model';
-import {
+  UpdateItemInput,
+  BulkUpdateItemInput,
+  AddItemUrlInput,
   AddItemNoticeInput,
   UpdateItemNoticeInput,
-} from './dtos/item-notice.input';
-import { ItemFilter } from './dtos/item.filter';
-
-import {
+  ItemFilter,
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
-} from './dtos/item-size-chart.input';
-
-import { ProductsService } from '../products/products.service';
-import {
   CreateItemOptionSetInput,
   UpdateItemOptionInput,
-} from './dtos/item-option.input';
-import { ItemOption } from './models/item-option.model';
-import { CreateItemDetailImageInput } from './dtos/item-detail-image.dto';
-import { ItemSizeChartMetaData } from './models/item-size-chart.model';
-import { getSizeChartMetaDatas } from './helpers/item.helper';
+  CreateItemDetailImageInput,
+} from './dtos';
+import { getSizeChartMetaDatas } from './helpers';
+import {
+  ItemPrice,
+  ItemUrl,
+  Item,
+  ItemNotice,
+  ItemOption,
+  ItemSizeChartMetaData,
+} from './models';
+import { ItemsService } from './items.service';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<ItemRelationType> {

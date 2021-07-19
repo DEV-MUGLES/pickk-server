@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { ItemNoticeEntity } from '../entities/item-notice.entity';
+import { ItemNoticeEntity } from '../entities';
 
 @ObjectType()
 export class ItemNotice extends ItemNoticeEntity {}

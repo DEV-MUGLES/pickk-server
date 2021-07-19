@@ -1,6 +1,6 @@
 import { Field, InputType, PartialType, PickType } from '@nestjs/graphql';
 
-import { ItemPrice } from '../models/item-price.model';
+import { ItemPrice } from '../models';
 
 @InputType()
 export class AddItemPriceInput extends PickType(

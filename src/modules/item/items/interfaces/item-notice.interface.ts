@@ -1,4 +1,4 @@
-import { ItemNoticeType } from '../constants/item-notice.enum';
+import { ItemNoticeType } from '../constants';
 
 export interface IItemNotice {
   type: ItemNoticeType;

@@ -2,7 +2,8 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseIdEntity } from '@common/entities';
-import { IItemSizeChart } from '../interfaces/item-size-chart.interface';
+
+import { IItemSizeChart } from '../interfaces';
 import { ItemEntity } from './item.entity';
 
 const NullableFloatColumn = () =>

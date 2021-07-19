@@ -1,8 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
 import * as faker from 'faker';
 
-import { AddItemUrlInput } from './dtos/item-url.input';
+import { ISpiderItem } from '@providers/spider/interfaces/spider.interface';
+
+import { AddItemUrlInput } from './dtos';
+import { ItemPrice, ItemUrl, Item } from './models';
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -12,9 +14,6 @@ import {
   ItemsRepository,
 } from './items.repository';
 import { ItemsService } from './items.service';
-import { ItemPrice } from './models/item-price.model';
-import { ItemUrl } from './models/item-url.model';
-import { Item } from './models/item.model';
 
 describe('ItemsService', () => {
   let itemsService: ItemsService;

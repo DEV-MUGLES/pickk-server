@@ -4,7 +4,7 @@ import { IsBoolean, IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItemUrl } from '../interfaces/item-url.interface';
+import { IItemUrl } from '../interfaces';
 import { ItemEntity } from './item.entity';
 
 @ObjectType()

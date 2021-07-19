@@ -1,5 +1,6 @@
 import { InputType, Field, PickType } from '@nestjs/graphql';
-import { ItemOption } from '../models/item-option.model';
+
+import { ItemOption } from '../models';
 
 @InputType()
 export class CreateItemOptionInput {

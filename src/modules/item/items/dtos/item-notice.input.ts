@@ -1,6 +1,6 @@
 import { InputType, PartialType, PickType } from '@nestjs/graphql';
 
-import { ItemNotice } from '../models/item-notice.model';
+import { ItemNotice } from '../models';
 
 @InputType()
 export class AddItemNoticeInput extends PickType(

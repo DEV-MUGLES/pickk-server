@@ -1,9 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
+import { IsNumber, Max, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
-import { IItemSalePolicy } from '../interfaces/item-sale-policy.interface';
-import { IsNumber, Max, Min } from 'class-validator';
+
+import { IItemSalePolicy } from '../interfaces';
 
 @ObjectType()
 @Entity({

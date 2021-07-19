@@ -1,8 +1,8 @@
 import { InputType, PickType, PartialType, Field, Int } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
-import { IItem } from '../interfaces/item.interface';
 
-import { Item } from '../models/item.model';
+import { IItem } from '../interfaces';
+import { Item } from '../models';
 import { AddItemPriceInput } from './item-price.input';
 import { AddItemUrlInput } from './item-url.input';
 

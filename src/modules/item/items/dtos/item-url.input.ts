@@ -1,6 +1,6 @@
 import { InputType, PickType } from '@nestjs/graphql';
 
-import { ItemUrl } from '../models/item-url.model';
+import { ItemUrl } from '../models';
 
 @InputType()
 export class AddItemUrlInput extends PickType(

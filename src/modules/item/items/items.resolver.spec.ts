@@ -1,7 +1,10 @@
 import { Test } from '@nestjs/testing';
 import faker from 'faker';
-import { ProductsRepository } from '../products/products.repository';
-import { ProductsService } from '../products/products.service';
+
+import { ProductsRepository } from '@item/products/products.repository';
+import { ProductsService } from '@item/products/products.service';
+
+import { Item } from './models';
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -12,7 +15,6 @@ import {
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
-import { Item } from './models/item.model';
 
 describe('itemsResolver', () => {
   let itemsService: ItemsService;

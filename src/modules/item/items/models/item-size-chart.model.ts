@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ItemSizeChartColumnName } from '../constants/item-size-chart.enum';
-import { ItemSizeChartEntity } from '../entities/item-size-chart.entity';
-import { IItemSizeChartMetaData } from '../interfaces/item-size-chart.interface';
+import { ItemSizeChartColumnName } from '../constants';
+import { ItemSizeChartEntity } from '../entities';
+import { IItemSizeChartMetaData } from '../interfaces';
 
 @ObjectType()
 export class ItemSizeChart extends ItemSizeChartEntity {}

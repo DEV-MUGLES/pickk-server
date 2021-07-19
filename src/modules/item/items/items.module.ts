@@ -2,11 +2,15 @@ import { HttpModule } from '@nestjs/axios';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nest-sqs';
+
 import { ImagesModule } from '@src/modules/common/images/images.module';
 
-import { ProductsModule } from '../products/products.module';
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './constants/item-image-url.constant';
+import { ProductsModule } from '@item/products/products.module';
+
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './constants';
 import { Consumers } from './consumers';
+import { Producers } from './producers';
+
 import {
   ItemsRepository,
   ItemOptionsRepository,
@@ -17,7 +21,6 @@ import {
 } from './items.repository';
 import { ItemsResolver } from './items.resolver';
 import { ItemsService } from './items.service';
-import { Producers } from './producers';
 
 @Module({
   imports: [

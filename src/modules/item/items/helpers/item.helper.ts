@@ -1,12 +1,11 @@
-import { PredefinedCategoryCode } from '../../item-categories/constants/item-category.enum';
+import { PredefinedCategoryCode } from '@item/item-categories/constants/item-category.enum';
+
 import {
   AvailItemSizeChartColumns,
   ItemSizeChartColumnDisplayName,
-} from '../constants/item-size-chart.contant';
-import { ItemSizeChartColumnName } from '../constants/item-size-chart.enum';
-import { ItemOptionValue } from '../models/item-option-value.model';
-import { ItemOption } from '../models/item-option.model';
-import { ItemSizeChartMetaData } from '../models/item-size-chart.model';
+  ItemSizeChartColumnName,
+} from '../constants';
+import { ItemOptionValue, ItemOption, ItemSizeChartMetaData } from '../models';
 
 export const getOptionValueCombinations = (
   options: ItemOption[]
