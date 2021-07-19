@@ -1,4 +1,4 @@
-import { PredefinedCategoryCode } from '@item/item-categories/constants/item-category.enum';
+import { PredefinedCategoryCode } from '@item/item-categories/constants';
 
 import {
   AvailItemSizeChartColumns,

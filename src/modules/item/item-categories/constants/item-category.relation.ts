@@ -1,4 +1,4 @@
-import { ItemCategory } from '../../item-categories/models/item-category.model';
+import { ItemCategory } from '../models';
 
 export const ITEM_CATEGORY_RELATIONS: Array<keyof ItemCategory> = [
   'children',

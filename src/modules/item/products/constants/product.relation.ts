@@ -1,5 +1,6 @@
+import { Item } from '@item/items/models';
+
 import { Product } from '../models/product.model';
-import { Item } from '../../items/models/item.model';
 
 export type ProductRelationType =
   | keyof Product

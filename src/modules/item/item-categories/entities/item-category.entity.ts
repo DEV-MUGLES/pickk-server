@@ -3,7 +3,7 @@ import { Entity, Tree, Column, TreeChildren, TreeParent } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItemCategory } from '../interfaces/item-category.interface';
+import { IItemCategory } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'item_category' })

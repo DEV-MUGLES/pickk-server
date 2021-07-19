@@ -20,8 +20,8 @@ import { BaseIdEntity } from '@common/entities';
 import { BrandEntity } from '@item/brands/entities';
 import { Brand } from '@item/brands/models';
 import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
-import { ItemCategory } from '@item/item-categories/models/item-category.model';
-import { ItemCategoryEntity } from '@item/item-categories/entities/item-category.entity';
+import { ItemCategoryEntity } from '@item/item-categories/entities';
+import { ItemCategory } from '@item/item-categories/models';
 import { IProduct } from '@item/products/interfaces/product.interface';
 
 import { IItem, IItemOption } from '../interfaces';
