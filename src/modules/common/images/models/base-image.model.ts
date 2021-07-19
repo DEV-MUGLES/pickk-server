@@ -1,5 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { BaseImageEntity } from '../entities/base-image.entity';
+
+import { BaseImageEntity } from '../entities';
 
 @ObjectType()
 export class BaseImage extends BaseImageEntity {

@@ -1,11 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { FileUpload } from 'graphql-upload';
 
-import { AwsS3ProviderService } from '@src/providers/aws/s3/provider.service';
-import { S3UploadResultDto } from '@src/providers/aws/s3/dto/s3.dto';
+import { AwsS3ProviderService } from '@providers/aws/s3';
+import { S3UploadResultDto } from '@providers/aws/s3/dto/s3.dto';
 
+import { UploadBufferDto } from './dtos';
 import { BaseImageRepository } from './base-image.repository';
-import { UploadBufferDto } from './dtos/image.input';
 
 @Injectable()
 export class ImagesService {

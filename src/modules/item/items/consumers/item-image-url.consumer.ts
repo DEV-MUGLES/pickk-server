@@ -7,7 +7,7 @@ import {
   SqsProcess,
 } from '@pickk/nest-sqs';
 
-import { getMimeType } from '@src/modules/common/images/helpers/image.helper';
+import { getMimeType } from '@src/modules/common/images/helpers';
 import { ImagesService } from '@src/modules/common/images/images.service';
 import { ItemsService } from '@item/items/items.service';
 
