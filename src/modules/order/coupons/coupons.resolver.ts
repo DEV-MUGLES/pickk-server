@@ -10,15 +10,10 @@ import { SellersService } from '@item/sellers/sellers.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 
-import {
-  CouponRelationType,
-  COUPON_RELATIONS,
-} from './constants/coupon.relation';
-import { Coupon } from './models/coupon.model';
+import { CouponRelationType, COUPON_RELATIONS } from './constants';
+import { CreateCouponInput, CreateCouponSpecificationInput } from './dtos';
+import { Coupon, CouponSpecification } from './models';
 import { CouponsService } from './coupons.service';
-import { CouponSpecification } from './models/coupon-specification.model';
-import { CreateCouponSpecificationInput } from './dtos/coupon-specification.input';
-import { CreateCouponInput } from './dtos/coupon.input';
 
 @Resolver()
 export class CouponsResolver extends BaseResolver<CouponRelationType> {

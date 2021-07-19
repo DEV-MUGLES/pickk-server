@@ -7,17 +7,20 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { Item } from '@item/items/models/item.model';
 
+import { CouponStatus } from './constants';
+import {
+  CreateCouponInput,
+  UpdateCouponInput,
+  CouponSpecificationFilter,
+  CouponFilter,
+  CreateCouponSpecificationInput,
+} from './dtos';
+import { Coupon, CouponSpecification } from './models';
+
 import {
   CouponSpecificationsRepository,
   CouponsRepository,
 } from './coupons.repository';
-import { Coupon } from './models/coupon.model';
-import { CouponFilter } from './dtos/coupon.filter';
-import { CouponStatus } from './constants/coupon.enum';
-import { CouponSpecification } from './models/coupon-specification.model';
-import { CreateCouponSpecificationInput } from './dtos/coupon-specification.input';
-import { CreateCouponInput, UpdateCouponInput } from './dtos/coupon.input';
-import { CouponSpecificationFilter } from './dtos/coupon-specification.filter';
 
 @Injectable()
 export class CouponsService {

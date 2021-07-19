@@ -1,4 +1,4 @@
-import { Coupon } from '../models/coupon.model';
+import { Coupon } from '../models';
 
 export type CouponRelationType =
   | keyof Coupon

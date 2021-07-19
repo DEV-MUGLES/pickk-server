@@ -12,11 +12,11 @@ import {
 } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
-import { Brand } from '@src/modules/item/brands/models/brand.model';
-import { BrandEntity } from '@src/modules/item/brands/entities/brand.entity';
+import { Brand } from '@item/brands/models/brand.model';
+import { BrandEntity } from '@item/brands/entities/brand.entity';
 
-import { CouponType } from '../constants/coupon.enum';
-import { ICouponSpecification } from '../interfaces/coupon-specification.interface';
+import { CouponType } from '../constants';
+import { ICouponSpecification } from '../interfaces';
 
 @ObjectType()
 @Entity('coupon_specification')

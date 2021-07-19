@@ -1,8 +1,8 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsEnum, IsOptional } from 'class-validator';
 
-import { CouponType } from '../constants/coupon.enum';
-import { ICouponSpecification } from '../interfaces/coupon-specification.interface';
+import { CouponType } from '../constants';
+import { ICouponSpecification } from '../interfaces';
 
 @InputType()
 export class CouponSpecificationFilter

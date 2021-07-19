@@ -3,10 +3,8 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { CouponEntity } from './entities/coupon.entity';
-import { Coupon } from './models/coupon.model';
-import { CouponSpecificationEntity } from './entities/coupon-specification.entity';
-import { CouponSpecification } from './models/coupon-specification.model';
+import { CouponEntity, CouponSpecificationEntity } from './entities';
+import { Coupon, CouponSpecification } from './models';
 
 @EntityRepository(CouponEntity)
 export class CouponsRepository extends BaseRepository<CouponEntity, Coupon> {

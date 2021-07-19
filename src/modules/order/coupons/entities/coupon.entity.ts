@@ -6,8 +6,10 @@ import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 
-import { ICoupon } from '../interfaces/coupon.interface';
-import { CouponStatus } from '../constants/coupon.enum';
+import { CouponStatus } from '../constants';
+import { ICoupon } from '../interfaces';
+
+// @TODO:BARREL circular dependency
 import { CouponSpecification } from '../models/coupon-specification.model';
 import { CouponSpecificationEntity } from './coupon-specification.entity';
 

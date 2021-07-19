@@ -1,7 +1,7 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, InputType, OmitType } from '@nestjs/graphql';
 
-import { Coupon } from '@order/coupons/models/coupon.model';
+import { Coupon } from '@order/coupons/models';
 import { PayMethod } from '@order/orders/constants/order.enum';
 import { ShippingAddress } from '@user/users/models';
 
