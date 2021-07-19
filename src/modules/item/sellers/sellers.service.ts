@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { PageInput } from '@common/dtos';
-import { FindSaleStrategyInput } from '@common/dtos';
+import { PageInput, FindSaleStrategyInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { SaleStrategy } from '@common/models';
 import { SaleStrategyRepository } from '@common/repositories';
@@ -14,19 +13,22 @@ import {
   UpdateSellerReturnAddressInput,
   UpdateSellerSettlePolicyInput,
   UpdateSellerShippingPolicyInput,
-} from './dtos/seller-policies.input';
-import { SellerFilter } from './dtos/seller.filter';
-import { CreateSellerInput, UpdateSellerInput } from './dtos/seller.input';
-import { SellerEntity } from './entities/seller.entity';
-import { SellerClaimPolicy } from './models/policies/seller-claim-policy.model';
-import { SellerCrawlPolicy } from './models/policies/seller-crawl-policy.model';
-import { SellerShippingPolicy } from './models/policies/seller-shipping-policy.model';
-import { SellerReturnAddress } from './models/seller-return-address.model';
-import { Seller } from './models/seller.model';
+  SellerFilter,
+  CreateSellerInput,
+  UpdateSellerInput,
+} from './dtos';
+import {
+  SellerClaimPolicy,
+  SellerCrawlPolicy,
+  SellerShippingPolicy,
+  SellerReturnAddress,
+  Seller,
+  SellerClaimAccount,
+  SellerSettlePolicy,
+  SellerSettleAccount,
+} from './models';
+
 import { SellersRepository } from './sellers.repository';
-import { SellerClaimAccount } from './models/policies/seller-claim-account.model';
-import { SellerSettlePolicy } from './models/policies/seller-settle-policy.model';
-import { SellerSettleAccount } from './models/policies/seller-settle-account.model';
 
 @Injectable()
 export class SellersService {
@@ -57,7 +59,7 @@ export class SellersService {
   }
 
   async findOne(
-    param: Partial<SellerEntity>,
+    param: Partial<Seller>,
     relations: string[] = []
   ): Promise<Seller | null> {
     return await this.sellersRepository.findOneEntity(param, relations);

@@ -4,7 +4,7 @@ import { IsBoolean } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { ISellerCrawlPolicy } from '../../interfaces/policies';
+import { ISellerCrawlPolicy } from '../../interfaces';
 
 @ObjectType()
 @Entity('seller_crawl_policy')

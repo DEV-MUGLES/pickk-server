@@ -1,6 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
 
-import { ISeller } from '../interfaces/seller.interface';
+import { ISeller } from '../interfaces';
 import { Seller } from '../models';
 
 @InputType()

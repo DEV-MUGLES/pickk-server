@@ -4,7 +4,7 @@ import { IsNumber, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { ISellerShippingPolicy } from '../../interfaces/policies';
+import { ISellerShippingPolicy } from '../../interfaces';
 
 @ObjectType()
 @Entity('seller_shipping_policy')

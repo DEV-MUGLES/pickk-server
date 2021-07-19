@@ -13,9 +13,10 @@ import {
 
 import { BaseIdEntity } from '@common/entities';
 
+import { ISellerSettlePolicy } from '../../interfaces';
+
 import { SellerClaimAccount } from '../../models/policies/seller-claim-account.model';
 import { SellerClaimAccountEntity } from './seller-claim-account.entity';
-import { ISellerSettlePolicy } from '../../interfaces/policies/seller-settle-policy.interface';
 
 @ObjectType()
 @Entity('seller_settle_policy')

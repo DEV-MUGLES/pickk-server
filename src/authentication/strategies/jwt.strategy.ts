@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
+import { SELLER_RELATIONS } from '@item/sellers/constants';
 import { SellersService } from '@item/sellers/sellers.service';
 import { UsersService } from '@user/users/users.service';
 

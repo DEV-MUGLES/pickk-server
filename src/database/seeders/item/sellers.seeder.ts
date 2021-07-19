@@ -3,16 +3,16 @@ import { InicisBankCode } from 'inicis';
 import { Injectable } from '@nestjs/common';
 
 import { FindSaleStrategyInput } from '@common/dtos';
-import { SellersService } from '@item/sellers/sellers.service';
-import { CreateSellerInput } from '@item/sellers/dtos/seller.input';
+import { ClaimFeePayMethod } from '@item/sellers/constants';
 import {
+  CreateSellerInput,
   CreateSellerClaimPolicyInput,
   CreateSellerCrawlPolicyInput,
   CreateSellerCrawlStrategyInput,
   CreateSellerReturnAddressInput,
   CreateSellerShippingPolicyInput,
-} from '@item/sellers/dtos/seller-policies.input';
-import { ClaimFeePayMethod } from '@item/sellers/constants/seller-claim-policy.enum';
+} from '@item/sellers/dtos';
+import { SellersService } from '@item/sellers/sellers.service';
 
 import { COURIER_COUNT, SELLER_COUNT } from '../data';
 

@@ -7,8 +7,8 @@ import {
   ISellerClaimPolicy,
   ISellerCrawlPolicy,
   ISellerShippingPolicy,
+  ISellerSettlePolicy,
 } from './policies';
-import { ISellerSettlePolicy } from './policies/seller-settle-policy.interface';
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {

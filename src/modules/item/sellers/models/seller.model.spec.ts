@@ -3,14 +3,16 @@ import { InicisBankCode } from 'inicis';
 
 import { IAccount } from '@common/interfaces';
 
-import { ClaimFeePayMethod } from '../constants/seller-claim-policy.enum';
+import { ClaimFeePayMethod } from '../constants';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerSettlePolicyInput,
-} from '../dtos/seller-policies.input';
-import { SellerClaimAccount } from './policies/seller-claim-account.model';
-import { SellerClaimPolicy } from './policies/seller-claim-policy.model';
-import { SellerSettlePolicy } from './policies/seller-settle-policy.model';
+} from '../dtos';
+import {
+  SellerClaimAccount,
+  SellerClaimPolicy,
+  SellerSettlePolicy,
+} from './policies';
 
 import { Seller } from './seller.model';
 

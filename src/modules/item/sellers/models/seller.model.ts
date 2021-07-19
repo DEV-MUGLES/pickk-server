@@ -1,11 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Brand } from '../../brands/models/brand.model';
+import { Brand } from '@item/brands/models/brand.model';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerSettlePolicyInput,
-} from '../dtos/seller-policies.input';
-import { SellerEntity } from '../entities/seller.entity';
+} from '../dtos';
+import { SellerEntity } from '../entities';
 import {
   SellerClaimAccount,
   SellerClaimPolicy,

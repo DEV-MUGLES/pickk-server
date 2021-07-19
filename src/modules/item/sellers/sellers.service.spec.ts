@@ -4,8 +4,8 @@ import * as faker from 'faker';
 import { SaleStrategy } from '@common/models';
 import { SaleStrategyRepository } from '@common/repositories';
 
-import { ClaimFeePayMethod } from './constants/seller-claim-policy.enum';
-import { CreateSellerInput } from './dtos/seller.input';
+import { ClaimFeePayMethod } from './constants';
+import { CreateSellerInput } from './dtos';
 import {
   Seller,
   SellerClaimPolicy,

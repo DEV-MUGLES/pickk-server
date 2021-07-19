@@ -1,4 +1,5 @@
-import { ISellerCrawlStrategy } from '@item/sellers/interfaces/seller-crawl-strategy.interface';
+import { ISellerCrawlStrategy } from '@item/sellers/interfaces';
+
 import { ISpiderItem } from '../interfaces/spider.interface';
 
 export class SpiderSellerRequestDto
