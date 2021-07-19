@@ -8,11 +8,14 @@ import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 import { UserRole } from '@user/users/constants';
 
+import {
+  CreateCourierInput,
+  UpdateCourierInput,
+  UpdateCourierIssueInput,
+} from './dtos';
+import { Courier, CourierIssue } from './models';
+
 import { CouriersService } from './couriers.service';
-import { Courier } from './models/courier.model';
-import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
-import { CourierIssue } from './models/courier-issue.model';
-import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 
 @Resolver(() => Courier)
 export class CouriersResolver extends BaseResolver {

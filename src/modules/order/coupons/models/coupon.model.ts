@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 import dayjs from 'dayjs';
 
-import { Item } from '@item/items/models/item.model';
+import { Item } from '@item/items/models';
 
 import { CouponStatus } from '../constants';
 import { CouponEntity } from '../entities';

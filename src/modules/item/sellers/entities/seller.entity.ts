@@ -14,7 +14,8 @@ import { IsBusinessCode } from '@common/decorators';
 import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
 import { SaleStrategy } from '@common/models';
 import { BrandEntity } from '@item/brands/entities';
-import { Courier } from '@item/couriers/models/courier.model';
+import { Courier } from '@item/couriers/models';
+// @TODO:jBARREL
 import { CourierEntity } from '@item/couriers/entities/courier.entity';
 // @TODO:jBARREL 경로 '@user/users/entities'로 바꾸면 circulrar dependency 생김! 없애기
 import { UserEntity } from '@user/users/entities/user.entity';

@@ -4,7 +4,7 @@ import { IsString } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { ICourierIssue } from '../interfaces/courier-issue.interface';
+import { ICourierIssue } from '../interfaces';
 
 @ObjectType()
 @Entity({

@@ -10,9 +10,10 @@ import {
 } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
-import { IItem } from '@item/items/interfaces/item.interface';
+import { IItem } from '@item/items/interfaces';
+import { ItemOptionValueEntity } from '@item/items/entities';
+// @TODO:BARREL
 import { ItemOptionValue } from '@item/items/models/item-option-value.model';
-import { ItemOptionValueEntity } from '@item/items/entities/item-option-value.entity';
 
 import { IProduct } from '../interfaces/product.interface';
 import { ProductShippingReservePolicy } from '../models/product-shipping-reserve-policy.model';

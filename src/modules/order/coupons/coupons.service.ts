@@ -5,7 +5,7 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
-import { Item } from '@item/items/models/item.model';
+import { Item } from '@item/items/models';
 
 import { CouponStatus } from './constants';
 import {

@@ -1,4 +1,4 @@
-import { IItem } from '@item/items/interfaces/item.interface';
+import { IItem } from '@item/items/interfaces';
 
 export interface ICampaign {
   /** 적용될 정산률 */

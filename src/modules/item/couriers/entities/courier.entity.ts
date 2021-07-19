@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@common/entities';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import {
   IsPhoneNumber,
   IsNumberString,
@@ -7,9 +7,11 @@ import {
   IsUrl,
   MaxLength,
 } from 'class-validator';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import { ICourier } from '../interfaces/courier.interface';
-import { CourierIssue } from '../models/courier-issue.model';
+
+import { BaseIdEntity } from '@common/entities';
+
+import { ICourier } from '../interfaces';
+import { CourierIssue } from '../models';
 import { CourierIssueEntity } from './courier-issue.entity';
 
 @ObjectType()

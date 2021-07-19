@@ -1,6 +1,7 @@
-import { IItem } from '@item/items/interfaces/item.interface';
-import { Item } from '@item/items/models/item.model';
 import { Field, ObjectType } from '@nestjs/graphql';
+
+import { IItem } from '@item/items/interfaces';
+import { Item } from '@item/items/models';
 
 import { CampaignEntity } from '../entities/campaign.entity';
 

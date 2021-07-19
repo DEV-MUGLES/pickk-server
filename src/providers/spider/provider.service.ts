@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { SpiderConfigService } from '@config/providers/spider/config.service';
 import { SellersService } from '@item/sellers/sellers.service';
 import { ItemsService } from '@item/items/items.service';
-import { ItemImageUrlProducer } from '@item/items/producers/item-image-url.producer';
+import { ItemImageUrlProducer } from '@item/items/producers';
 
 import {
   SpiderSellerRequestDto,
