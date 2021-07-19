@@ -1,5 +1,6 @@
-import { ISellerCrawlStrategy } from '@item/sellers/interfaces/seller-crawl-strategy.interface';
-import { ISpiderItem } from '../interfaces/spider.interface';
+import { ISellerCrawlStrategy } from '@item/sellers/interfaces';
+
+import { ISpiderItem } from '../interfaces';
 
 export class SpiderSellerRequestDto
   implements Omit<ISellerCrawlStrategy, 'baseUrl' | 'startPathNamesJoin'>

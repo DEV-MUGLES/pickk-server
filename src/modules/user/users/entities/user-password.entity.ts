@@ -1,6 +1,6 @@
 import { Column } from 'typeorm';
 
-import { IUserPassword } from '../interfaces/user-password.interface';
+import { IUserPassword } from '../interfaces';
 
 export class UserPasswordEntity implements IUserPassword {
   @Column('varchar', { nullable: true })

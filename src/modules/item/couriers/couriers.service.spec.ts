@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
+import { UpdateCourierIssueInput } from './dtos';
+import { CourierIssueNotFoundException } from './exceptions';
+import { Courier, CourierIssue } from './models';
+
 import { CouriersRepository } from './couriers.repository';
 import { CouriersService } from './couriers.service';
-import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
-import { CourierIssueNotFoundException } from './exceptions/courier.exception';
-import { CourierIssue } from './models/courier-issue.model';
-import { Courier } from './models/courier.model';
 
 describe('CouriersService', () => {
   let couriersService: CouriersService;

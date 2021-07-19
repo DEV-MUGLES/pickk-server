@@ -1,4 +1,4 @@
-import { IAccount } from '@src/common/interfaces/account.interface';
+import { IAccount } from '@common/interfaces';
 
 export interface ISellerSettlePolicy {
   /** 담당자 이름 */

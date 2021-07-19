@@ -1,7 +1,8 @@
 import { Field, InputType, Int, PartialType, PickType } from '@nestjs/graphql';
 
-import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
+import { FindSaleStrategyInput } from '@common/dtos';
 
+import { Seller } from '../models';
 import {
   CreateSellerClaimPolicyInput,
   CreateSellerCrawlPolicyInput,
@@ -10,7 +11,6 @@ import {
   CreateSellerCrawlStrategyInput,
   CreateSellerSettlePolicyInput,
 } from './seller-policies.input';
-import { Seller } from '../models';
 
 @InputType()
 export class CreateSellerInput extends PickType(

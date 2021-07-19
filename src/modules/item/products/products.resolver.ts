@@ -2,11 +2,12 @@ import { Inject } from '@nestjs/common';
 import { Args, Info, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { BaseResolver } from '@src/common/base.resolver';
-import { IntArgs } from '@src/common/decorators/args.decorator';
+import { IntArgs } from '@common/decorators';
+import { BaseResolver } from '@common/base.resolver';
 
-import { UpdateProductInput } from './dtos/product.input';
-import { Product } from './models/product.model';
+import { UpdateProductInput } from './dtos';
+import { Product } from './models';
+
 import { ProductsService } from './products.service';
 
 @Resolver(() => Product)

@@ -1,8 +1,8 @@
 import { EntityRepository, TreeRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { ItemCategoryEntity } from './entities/item-category.entity';
-import { ItemCategory } from './models/item-category.model';
+import { ItemCategoryEntity } from './entities';
+import { ItemCategory } from './models';
 
 @EntityRepository(ItemCategoryEntity)
 export class ItemCategoriesRepository extends TreeRepository<ItemCategoryEntity> {

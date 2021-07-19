@@ -1,11 +1,11 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
+import { Product } from '@item/products/models';
+import { User } from '@user/users/models';
 
-import { ICartItem } from '../interfaces/cart-item.interface';
-import { Product } from '../../products/models/product.model';
-import { User } from '@src/modules/user/users/models/user.model';
+import { ICartItem } from '../interfaces';
 
 @ObjectType()
 @Entity('cart_item')

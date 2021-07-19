@@ -1,5 +1,5 @@
-import { Product } from '@item/products/models/product.model';
-import { Coupon } from '@order/coupons/models/coupon.model';
+import { Product } from '@item/products/models';
+import { Coupon } from '@order/coupons/models';
 import { RefundAccount, ShippingAddress } from '@user/users/models';
 
 import { BaseOrderSheetProductInput } from '../dtos';

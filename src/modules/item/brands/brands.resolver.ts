@@ -2,18 +2,17 @@ import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { Roles } from '@auth/decorators/roles.decorator';
+import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
+import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
-import { IntArgs } from '@common/decorators/args.decorator';
-import { UserRole } from '@user/users/constants/user.enum';
-import { User } from '@user/users/models/user.model';
+import { SellersService } from '@item/sellers/sellers.service';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 
-import { SellersService } from '../sellers/sellers.service';
-import { BRAND_RELATIONS } from './constants/brand.relation';
-import { Brand } from './models/brand.model';
-import { UpdateBrandInput } from './dtos/brand.input';
+import { BRAND_RELATIONS } from './constants';
+import { UpdateBrandInput } from './dtos';
+import { Brand } from './models';
 import { BrandsService } from './brands.service';
 
 @Resolver(() => Brand)

@@ -5,18 +5,16 @@ import {
 } from '@nestjs/common';
 import * as faker from 'faker';
 
-import { ItemNoticeType } from '../constants/item-notice.enum';
+import { ItemNoticeType } from '../constants';
 import {
   AddItemNoticeInput,
   UpdateItemNoticeInput,
-} from '../dtos/item-notice.input';
-import { CreateItemOptionSetInput } from '../dtos/item-option.input';
-import { AddItemPriceInput } from '../dtos/item-price.input';
-import {
+  CreateItemOptionSetInput,
+  AddItemPriceInput,
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
-} from '../dtos/item-size-chart.input';
-import { AddItemUrlInput } from '../dtos/item-url.input';
+  AddItemUrlInput,
+} from '../dtos';
 
 import { ItemNotice } from './item-notice.model';
 import { ItemOption } from './item-option.model';

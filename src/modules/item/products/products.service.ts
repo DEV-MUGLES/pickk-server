@@ -1,15 +1,15 @@
-import { PageInput } from '@common/index';
-import { parseFilter } from '@common/helpers/filter.helpers';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
-import { getOptionValueCombinations } from '../items/helpers/item.helper';
 
-import { Item } from '../items/models/item.model';
-import { ProductFilter } from './dtos/product.filter';
-import { UpdateProductInput } from './dtos/product.input';
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
+import { getOptionValueCombinations } from '@item/items/helpers';
+import { Item } from '@item/items/models';
 
-import { Product } from './models/product.model';
+import { ProductFilter, UpdateProductInput } from './dtos';
+import { Product } from './models';
+
 import { ProductsRepository } from './products.repository';
 
 @Injectable()

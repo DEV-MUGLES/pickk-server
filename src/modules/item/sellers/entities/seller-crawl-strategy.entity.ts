@@ -1,8 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { IsBoolean, IsOptional, IsUrl, MaxLength } from 'class-validator';
 import { Column, Entity } from 'typeorm';
-import { ISellerCrawlStrategy } from '../interfaces/seller-crawl-strategy.interface';
+import { IsBoolean, IsOptional, IsUrl, MaxLength } from 'class-validator';
+
+import { BaseIdEntity } from '@common/entities';
+
+import { ISellerCrawlStrategy } from '../interfaces';
 
 @ObjectType()
 @Entity('seller_crawl_strategy')

@@ -7,20 +7,14 @@ import {
 import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { CurrentUser } from '@auth/decorators';
+import { JwtPayload } from '@auth/dtos';
 import { JwtVerifyGuard } from '@auth/guards';
-import { IntArgs } from '@common/decorators/args.decorator';
+import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
-import {
-  CartItemRelationType,
-  CART_ITEM_RELATIONS,
-} from './constants/cart-item.relation';
-import {
-  CreateCartItemInput,
-  UpdateCartItemInput,
-} from './dtos/cart-item.input';
+import { CartItemRelationType, CART_ITEM_RELATIONS } from './constants';
+import { CreateCartItemInput, UpdateCartItemInput } from './dtos';
 import { CartItem, Cart } from './models';
 import { CartsService } from './carts.service';
 

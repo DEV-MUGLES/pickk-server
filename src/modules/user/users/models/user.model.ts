@@ -1,20 +1,22 @@
 import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+
+import { PasswordIncorrectException } from '@auth/exceptions';
+
 import {
   CreateRefundAccountInput,
   UpdateRefundAccountInput,
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
 } from '../dtos';
-
-import { UserEntity } from '../entities/user.entity';
+import { UserEntity } from '../entities';
 import {
   UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
-} from '../exceptions/user.exception';
+} from '../exceptions';
+
 import { RefundAccount } from './refund-account.model';
 import { ShippingAddress } from './shipping-address.model';
 import { UserAvatarImage } from './user-avatar-image.model';

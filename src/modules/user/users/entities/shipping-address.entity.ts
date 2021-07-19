@@ -2,10 +2,11 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsNumberString, IsOptional, IsPhoneNumber } from 'class-validator';
 
-import { AbstractAddressEntity } from '@src/common/entities/address.entity';
+import { AbstractAddressEntity } from '@common/entities';
+
+import { IShippingAddress } from '../interfaces';
 
 import { UserEntity } from './user.entity';
-import { IShippingAddress } from '../interfaces/shipping-address.interface';
 
 @ObjectType()
 @Entity({

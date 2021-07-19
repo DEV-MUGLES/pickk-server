@@ -1,6 +1,6 @@
 import { Entity } from 'typeorm';
 
-import { AbstractImageEntity } from '@src/common/entities/image.entity';
+import { AbstractImageEntity } from '@common/entities';
 
 @Entity({
   name: 'user_avatar_image',

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { Item } from '@item/items/models/item.model';
+import { Item } from '@item/items/models';
 import { ProductsService } from '@item/products/products.service';
 import { ITEM_COUNT } from '../data';
 

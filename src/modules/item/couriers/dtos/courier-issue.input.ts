@@ -1,6 +1,6 @@
 import { InputType, PickType } from '@nestjs/graphql';
 
-import { CourierIssue } from '../models/courier-issue.model';
+import { CourierIssue } from '../models';
 
 @InputType()
 export class UpdateCourierIssueInput extends PickType(

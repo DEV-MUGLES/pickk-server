@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { SellerClaimAccountEntity } from '../../entities/policies/seller-claim-account.entity';
+import { SellerClaimAccountEntity } from '../../entities';
 
 @ObjectType({
   description: '교환배송비 지불 계좌',

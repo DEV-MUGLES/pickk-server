@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
 import {
   Column,
   Entity,
@@ -10,11 +9,14 @@ import {
   OneToOne,
 } from 'typeorm';
 
-import { IItem } from '@item/items/interfaces/item.interface';
+import { BaseIdEntity } from '@common/entities';
+import { IItem } from '@item/items/interfaces';
+import { ItemOptionValueEntity } from '@item/items/entities';
+// @TODO:BARREL
 import { ItemOptionValue } from '@item/items/models/item-option-value.model';
-import { ItemOptionValueEntity } from '@item/items/entities/item-option-value.entity';
 
-import { IProduct } from '../interfaces/product.interface';
+import { IProduct } from '../interfaces';
+
 import { ProductShippingReservePolicy } from '../models/product-shipping-reserve-policy.model';
 import { ProductShippingReservePolicyEntity } from './product-shipping-reserve-policy.entity';
 

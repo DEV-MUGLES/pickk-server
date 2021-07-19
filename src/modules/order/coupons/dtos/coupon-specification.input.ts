@@ -1,5 +1,6 @@
 import { InputType, PickType } from '@nestjs/graphql';
-import { CouponSpecification } from '../models/coupon-specification.model';
+
+import { CouponSpecification } from '../models';
 
 @InputType()
 export class CreateCouponSpecificationInput extends PickType(

@@ -2,19 +2,20 @@ import { Module } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
 
-import { jwtConstants } from './constants/jwt.constant';
+import { UsersModule } from '@user/users/users.module';
+import { SellersModule } from '@item/sellers/sellers.module';
+import { AppleProviderModule } from '@providers/apple';
+
+import { jwtConstants } from './constants';
 import {
   JwtRefreshStrategy,
   JwtStrategy,
   JwtVerifyStrategy,
   JwtSellerStrategy,
-} from './strategies/jwt.strategy';
+} from './strategies';
+
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-
-import { UsersModule } from '@user/users/users.module';
-import { SellersModule } from '@item/sellers/sellers.module';
-import { AppleProviderModule } from '@providers/apple';
 
 @Module({
   imports: [

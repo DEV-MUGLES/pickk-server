@@ -1,4 +1,4 @@
-import { IAccount } from '@common/interfaces/account.interface';
+import { IAccount } from '@common/interfaces';
 
 import { UserOauthProvider, UserRole } from '../constants/user.enum';
 import { IShippingAddress } from './shipping-address.interface';

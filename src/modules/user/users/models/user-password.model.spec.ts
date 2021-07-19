@@ -1,5 +1,5 @@
 import * as faker from 'faker';
-import { UserPasswordInvalidException } from '../exceptions/user.exception';
+import { UserPasswordInvalidException } from '../exceptions';
 
 import { UserPassword } from './user-password.model';
 

@@ -1,7 +1,7 @@
 import * as faker from 'faker';
 
-import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
-import { CourierIssueInvalidEndAtException } from '../exceptions/courier.exception';
+import { UpdateCourierIssueInput } from '../dtos';
+import { CourierIssueInvalidEndAtException } from '../exceptions';
 import { Courier } from './courier.model';
 
 describe('Courier', () => {

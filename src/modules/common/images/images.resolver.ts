@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-import { UploadMultipleImageInput } from '@src/common/dtos/image.input';
+import { UploadMultipleImageInput } from '@common/dtos';
 
 import { ImagesService } from './images.service';
 

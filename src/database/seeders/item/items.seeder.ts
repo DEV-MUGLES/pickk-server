@@ -1,11 +1,11 @@
 import faker from 'faker';
 import { Injectable } from '@nestjs/common';
 
-import { Item } from '@item/items/models/item.model';
-import { ItemsService } from '@item/items/items.service';
-import { CreateItemInput } from '@item/items/dtos/item.input';
-import { CreateItemOptionInput } from '@item/items/dtos/item-option.input';
 import { BrandsService } from '@item/brands/brands.service';
+import { Item } from '@item/items/models';
+import { CreateItemInput, CreateItemOptionInput } from '@item/items/dtos';
+import { ItemsService } from '@item/items/items.service';
+
 import { ITEM_COUNT } from '../data';
 
 @Injectable()

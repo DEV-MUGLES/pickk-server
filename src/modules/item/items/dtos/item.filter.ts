@@ -1,7 +1,7 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 
-import { IItem } from '../interfaces/item.interface';
-import { Item } from '../models/item.model';
+import { IItem } from '../interfaces';
+import { Item } from '../models';
 
 @InputType()
 export class ItemFilter implements Partial<IItem> {

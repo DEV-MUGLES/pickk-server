@@ -1,9 +1,11 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { ROLES_KEY } from '@src/authentication/decorators/roles.decorator';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
-import { User } from '@src/modules/user/users/models/user.model';
-import { ForbiddenResourceException } from '../exceptions/user.exception';
+
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
+
+import { ROLES_KEY } from '../decorators';
+import { ForbiddenResourceException } from '../exceptions';
 
 import { GqlAuthGuard } from './gql-auth.guard';
 

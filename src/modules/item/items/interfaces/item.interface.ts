@@ -1,15 +1,15 @@
-import { IImage } from '@src/common/interfaces/image.interface';
+import { IImage } from '@common/interfaces';
 
-import { IBrand } from '../../brands/interfaces/brand.interface';
-import { IItemCategory } from '../../item-categories/interfaces/item-category.interface';
-import { IProduct } from '../../products/interfaces/product.interface';
+import { IBrand } from '@item/brands/interfaces';
+import { ICampaign } from '@item/campaigns/interfaces';
+import { IItemCategory } from '@item/item-categories/interfaces';
+import { IProduct } from '@item/products/interfaces';
+
 import { IItemSizeChart } from './item-size-chart.interface';
 import { IItemNotice } from './item-notice.interface';
-
 import { IItemOption } from './item-option.interface';
 import { IItemPrice } from './item-price.interface';
 import { IItemUrl } from './item-url.interface';
-import { ICampaign } from '@item/campaigns/interfaces/campaign.interface';
 
 export interface IItem {
   name: string;

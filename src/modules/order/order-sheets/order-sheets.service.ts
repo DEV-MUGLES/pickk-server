@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CacheService } from '@providers/cache/redis/provider.service';
 
 import { OrderSheetInput } from './dtos';
-import { OrderSheet } from './models/order-sheet.model';
+import { OrderSheet } from './models';
 
 @Injectable()
 export class OrderSheetsService {

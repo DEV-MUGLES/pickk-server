@@ -3,18 +3,21 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm';
 
-import { PageInput } from '@common/dtos/pagination.dto';
-import { parseFilter } from '@common/helpers/filter.helpers';
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis/provider.service';
 
-import { PointEventFilter } from './dtos/point-event.filter';
+import {
+  PointEventFilter,
+  CreateEventInput,
+  CreateExpectedPointEventInput,
+} from './dtos';
 import { ExpectedPointEvent, PointEvent } from './models';
+
 import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
 } from './points.repository';
-import { CreateEventInput } from './dtos/point-event.dto';
-import { CreateExpectedPointEventInput } from './dtos/expected-point-event.dto';
 
 @Injectable()
 export class PointsService {

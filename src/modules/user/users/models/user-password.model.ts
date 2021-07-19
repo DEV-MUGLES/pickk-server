@@ -1,8 +1,8 @@
+import { ObjectType } from '@nestjs/graphql';
 import bcrypt from 'bcryptjs';
 
-import { ObjectType } from '@nestjs/graphql';
 import { UserPasswordEntity } from '../entities/user-password.entity';
-import { UserPasswordInvalidException } from '../exceptions/user.exception';
+import { UserPasswordInvalidException } from '../exceptions';
 
 @ObjectType()
 export class UserPassword extends UserPasswordEntity {

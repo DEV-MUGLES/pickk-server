@@ -1,13 +1,13 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { PointType } from '../constants/points.enum';
-import { CreateEventInput } from '../dtos/point-event.dto';
-import { PointEventEntity } from '../entities/point-event.entity';
+import { PointType } from '../constants';
+import { CreateEventInput } from '../dtos';
+import { PointEventEntity } from '../entities';
 import {
   AddPointTypeAmountInvalidException,
   NotEnoughPointAmountException,
   SubPointTypeAmountInvalidException,
-} from '../exceptions/point.exceptions';
+} from '../exceptions';
 
 @ObjectType()
 export class PointEvent extends PointEventEntity {

@@ -1,5 +1,6 @@
-import { IBrand } from '@src/modules/item/brands/interfaces/brand.interface';
-import { CouponType } from '../constants/coupon.enum';
+import { IBrand } from '@item/brands/interfaces';
+
+import { CouponType } from '../constants';
 
 export interface ICouponSpecification {
   brand?: IBrand;

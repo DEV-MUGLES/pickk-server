@@ -2,10 +2,10 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 import { IsEnum, IsOptional } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
-import { ItemNoticeType } from '../constants/item-notice.enum';
-import { IItemNotice } from '../interfaces/item-notice.interface';
+import { ItemNoticeType } from '../constants';
+import { IItemNotice } from '../interfaces';
 
 @ObjectType()
 @Entity({

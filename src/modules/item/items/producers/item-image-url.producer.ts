@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nest-sqs';
 
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants/item-image-url.constant';
-import { UpdateItemImageUrlDto } from '../interfaces/item-image-url.interface';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants';
+import { UpdateItemImageUrlDto } from '../interfaces';
 
 @Injectable()
 export class ItemImageUrlProducer {

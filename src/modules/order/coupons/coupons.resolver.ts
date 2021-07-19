@@ -2,24 +2,18 @@ import { Inject, UseGuards, ForbiddenException } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { CurrentUser, Roles } from '@auth/decorators';
+import { JwtPayload } from '@auth/dtos';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
-import { Roles } from '@auth/decorators/roles.decorator';
 import { BaseResolver } from '@common/base.resolver';
 import { SellersService } from '@item/sellers/sellers.service';
-import { UserRole } from '@user/users/constants/user.enum';
+import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 
-import {
-  CouponRelationType,
-  COUPON_RELATIONS,
-} from './constants/coupon.relation';
-import { Coupon } from './models/coupon.model';
+import { CouponRelationType, COUPON_RELATIONS } from './constants';
+import { CreateCouponInput, CreateCouponSpecificationInput } from './dtos';
+import { Coupon, CouponSpecification } from './models';
 import { CouponsService } from './coupons.service';
-import { CouponSpecification } from './models/coupon-specification.model';
-import { CreateCouponSpecificationInput } from './dtos/coupon-specification.input';
-import { CreateCouponInput } from './dtos/coupon.input';
 
 @Resolver()
 export class CouponsResolver extends BaseResolver<CouponRelationType> {

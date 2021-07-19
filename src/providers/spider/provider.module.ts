@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 
-import { SpiderConfigModule } from '@config/providers/spider/config.module';
+import { SpiderConfigModule } from '@config/providers/spider';
 import { ItemsModule } from '@item/items/items.module';
 import { SellersModule } from '@item/sellers/sellers.module';
 

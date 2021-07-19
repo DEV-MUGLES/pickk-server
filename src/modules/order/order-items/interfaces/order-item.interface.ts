@@ -1,8 +1,8 @@
-import { ICourier } from '@item/couriers/interfaces/courier.interface';
-import { IItem } from '@item/items/interfaces/item.interface';
-import { IProduct } from '@item/products/interfaces/product.interface';
-import { ISeller } from '@item/sellers/interfaces/seller.interface';
-import { IUser } from '@user/users/interfaces/user.interface';
+import { ICourier } from '@item/couriers/interfaces';
+import { IItem } from '@item/items/interfaces';
+import { IProduct } from '@item/products/interfaces';
+import { ISeller } from '@item/sellers/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 

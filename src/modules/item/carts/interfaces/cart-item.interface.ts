@@ -1,6 +1,5 @@
-import { IUser } from '@user/users/interfaces/user.interface';
-
-import { IProduct } from '../../products/interfaces/product.interface';
+import { IProduct } from '@item/products/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 export interface ICartItem {
   id: number;

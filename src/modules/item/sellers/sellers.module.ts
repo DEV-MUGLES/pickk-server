@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
+import { SaleStrategyRepository } from '@common/repositories';
 
 import { SellersRepository } from './sellers.repository';
 import { SellersResolver } from './sellers.resolver';

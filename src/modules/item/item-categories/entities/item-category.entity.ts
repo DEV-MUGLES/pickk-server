@@ -1,8 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
 import { Entity, Tree, Column, TreeChildren, TreeParent } from 'typeorm';
 
-import { IItemCategory } from '../interfaces/item-category.interface';
+import { BaseIdEntity } from '@common/entities';
+
+import { IItemCategory } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'item_category' })

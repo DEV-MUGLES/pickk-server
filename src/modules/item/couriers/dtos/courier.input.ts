@@ -1,6 +1,6 @@
 import { InputType, PartialType, PickType } from '@nestjs/graphql';
 
-import { Courier } from '../models/courier.model';
+import { Courier } from '../models';
 
 @InputType()
 export class CreateCourierInput extends PickType(

@@ -1,17 +1,21 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { JwtAuthGuard } from '@src/authentication/guards';
-
-import { BaseResolver } from '@src/common/base.resolver';
-import { IntArgs } from '@src/common/decorators/args.decorator';
-import { Roles } from '@src/authentication/decorators/roles.decorator';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
 import { GraphQLResolveInfo } from 'graphql';
+
+import { Roles } from '@auth/decorators';
+import { JwtAuthGuard } from '@auth/guards';
+import { IntArgs } from '@common/decorators';
+import { BaseResolver } from '@common/base.resolver';
+import { UserRole } from '@user/users/constants';
+
+import {
+  CreateCourierInput,
+  UpdateCourierInput,
+  UpdateCourierIssueInput,
+} from './dtos';
+import { Courier, CourierIssue } from './models';
+
 import { CouriersService } from './couriers.service';
-import { Courier } from './models/courier.model';
-import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
-import { CourierIssue } from './models/courier-issue.model';
-import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
 
 @Resolver(() => Courier)
 export class CouriersResolver extends BaseResolver {

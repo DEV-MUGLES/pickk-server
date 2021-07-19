@@ -10,29 +10,35 @@ import {
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
-import { IsBusinessCode } from '@src/common/decorators/validations/is-business-code';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
-import { User } from '@src/modules/user/users/models/user.model';
+import { IsBusinessCode } from '@common/decorators';
+import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
+import { SaleStrategy } from '@common/models';
+import { BrandEntity } from '@item/brands/entities';
+import { Courier } from '@item/couriers/models';
+// @TODO:jBARREL
+import { CourierEntity } from '@item/couriers/entities/courier.entity';
+// @TODO:jBARREL 경로 '@user/users/entities'로 바꾸면 circulrar dependency 생김! 없애기
+import { UserEntity } from '@user/users/entities/user.entity';
+import { User } from '@user/users/models';
 
-import { ISeller } from '../interfaces/seller.interface';
-import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
-import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.entity';
-import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
-import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';
-import { SellerClaimPolicyEntity } from './policies/seller-claim-policy.entity';
-import { SellerCrawlPolicy } from '../models/policies/seller-crawl-policy.model';
-import { SellerCrawlPolicyEntity } from './policies/seller-crawl-policy.entity';
+import { ISeller } from '../interfaces';
+import {
+  SellerShippingPolicyEntity,
+  SellerClaimPolicyEntity,
+  SellerCrawlPolicyEntity,
+  SellerSettlePolicyEntity,
+} from './policies';
+
+import {
+  SellerShippingPolicy,
+  SellerClaimPolicy,
+  SellerCrawlPolicy,
+  SellerSettlePolicy,
+} from '../models/policies';
 import { SellerReturnAddress } from '../models/seller-return-address.model';
-import { SellerReturnAddressEntity } from './seller-return-address.entity';
-import { Courier } from '../../couriers/models/courier.model';
-import { CourierEntity } from '../../couriers/entities/courier.entity';
 import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
 import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
-import { SellerSettlePolicy } from '../models/policies/seller-settle-policy.model';
-import { SellerSettlePolicyEntity } from './policies/seller-settle-policy.entity';
-import { BrandEntity } from '../../brands/entities/brand.entity';
+import { SellerReturnAddressEntity } from './seller-return-address.entity';
 
 @ObjectType()
 @Entity('seller')

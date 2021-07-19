@@ -3,8 +3,9 @@ import { Column } from 'typeorm';
 import { IsEnum, IsNumberString, IsString, MaxLength } from 'class-validator';
 import { InicisBankCode } from 'inicis';
 
+import { IAccount } from '../interfaces';
+
 import { BaseIdEntity } from './base.entity';
-import { IAccount } from '../interfaces/account.interface';
 
 registerEnumType(InicisBankCode, {
   name: 'InicisBankCode',

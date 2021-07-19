@@ -1,5 +1,6 @@
 import { InputType, PartialType, PickType } from '@nestjs/graphql';
-import { Brand } from '../models/brand.model';
+
+import { Brand } from '../models';
 
 @InputType()
 export class CreateBrandInput extends PickType(

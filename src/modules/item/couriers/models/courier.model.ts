@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import dayjs from 'dayjs';
 
-import { UpdateCourierIssueInput } from '../dtos/courier-issue.input';
-import { CourierEntity } from '../entities/courier.entity';
-import { CourierIssueInvalidEndAtException } from '../exceptions/courier.exception';
+import { UpdateCourierIssueInput } from '../dtos';
+import { CourierEntity } from '../entities';
+import { CourierIssueInvalidEndAtException } from '../exceptions';
 import { CourierIssue } from './courier-issue.model';
 
 @ObjectType()

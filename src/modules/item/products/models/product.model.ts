@@ -1,7 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { Item } from '../../items/models/item.model';
-import { ProductEntity } from '../entities/product.entity';
+import { Item } from '@item/items/models';
+
+import { ProductEntity } from '../entities';
 
 @ObjectType()
 export class Product extends ProductEntity {

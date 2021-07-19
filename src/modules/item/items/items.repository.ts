@@ -1,21 +1,25 @@
 import { DeepPartial, EntityRepository, getConnection, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
+import { ImageRepository } from '@common/image.repository';
 
-import { ItemEntity } from './entities/item.entity';
-import { ItemSizeChartEntity } from './entities/item-size-chart.entity';
-import { ItemOptionEntity } from './entities/item-option.entity';
-import { Item } from './models/item.model';
-import { ItemSizeChart } from './models/item-size-chart.model';
-import { ItemOption } from './models/item-option.model';
-import { ItemOptionValue } from './models/item-option-value.model';
-import { ItemOptionValueEntity } from './entities/item-option-value.entity';
-import { ItemPriceEntity } from './entities/item-price.entity';
-import { ItemPrice } from './models/item-price.model';
-import { ItemDetailImageEntity } from './entities/item-detail-image.entity';
-import { ItemDetailImage } from './models/item-detail-image.model';
-import { ImageRepository } from '@src/common/image.repository';
+import {
+  ItemEntity,
+  ItemSizeChartEntity,
+  ItemOptionEntity,
+  ItemOptionValueEntity,
+  ItemDetailImageEntity,
+  ItemPriceEntity,
+} from './entities';
+import {
+  Item,
+  ItemSizeChart,
+  ItemOption,
+  ItemOptionValue,
+  ItemPrice,
+  ItemDetailImage,
+} from './models';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {

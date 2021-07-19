@@ -1,5 +1,5 @@
-import { IAddress } from '@src/common/interfaces/address.interface';
-import { ISaleStrategy } from '@src/common/interfaces/sale-strategy.interface';
+import { IAddress, ISaleStrategy } from '@common/interfaces';
+
 import { IBrand } from '../../brands/interfaces/brand.interface';
 import { ICourier } from '../../couriers/interfaces/courier.interface';
 
@@ -7,8 +7,8 @@ import {
   ISellerClaimPolicy,
   ISellerCrawlPolicy,
   ISellerShippingPolicy,
+  ISellerSettlePolicy,
 } from './policies';
-import { ISellerSettlePolicy } from './policies/seller-settle-policy.interface';
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {

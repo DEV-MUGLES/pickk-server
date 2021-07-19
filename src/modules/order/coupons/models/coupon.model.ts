@@ -1,9 +1,10 @@
-import dayjs from 'dayjs';
 import { ObjectType } from '@nestjs/graphql';
+import dayjs from 'dayjs';
 
-import { CouponEntity } from '../entities/coupon.entity';
-import { CouponStatus } from '../constants/coupon.enum';
-import { Item } from '@item/items/models/item.model';
+import { Item } from '@item/items/models';
+
+import { CouponStatus } from '../constants';
+import { CouponEntity } from '../entities';
 
 @ObjectType()
 export class Coupon extends CouponEntity {

@@ -1,16 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { JwtService } from '@nestjs/jwt';
 import * as faker from 'faker';
 
-import { UsersService } from '@src/modules/user/users/users.service';
-import { AuthService } from './auth.service';
-import { JwtService } from '@nestjs/jwt';
-import { UsersRepository } from '@src/modules/user/users/users.repository';
+import { User, UserPassword } from '@user/users/models';
+import { UsersRepository } from '@user/users/users.repository';
+import { UsersService } from '@user/users/users.service';
 
-import { IJwtToken } from './interfaces/token.interface';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UserPassword } from '@src/modules/user/users/models/user-password.model';
-import { PasswordIncorrectException } from './exceptions/password-incorrect.exception';
-import { UserCodeNotFoundExeption } from './exceptions/user.exception';
+import {
+  PasswordIncorrectException,
+  UserCodeNotFoundExeption,
+} from './exceptions';
+import { IJwtToken } from './interfaces';
+
+import { AuthService } from './auth.service';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {

@@ -1,11 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+
+import {
+  CreateCourierInput,
+  UpdateCourierInput,
+  UpdateCourierIssueInput,
+} from './dtos';
+import { CourierIssueNotFoundException } from './exceptions';
+import { Courier, CourierIssue } from './models';
+
 import { CouriersRepository } from './couriers.repository';
-import { UpdateCourierIssueInput } from './dtos/courier-issue.input';
-import { CreateCourierInput, UpdateCourierInput } from './dtos/courier.input';
-import { CourierIssueNotFoundException } from './exceptions/courier.exception';
-import { CourierIssue } from './models/courier-issue.model';
-import { Courier } from './models/courier.model';
 
 @Injectable()
 export class CouriersService {

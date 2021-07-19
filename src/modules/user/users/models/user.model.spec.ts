@@ -1,17 +1,18 @@
 import { NotFoundException } from '@nestjs/common';
 import * as faker from 'faker';
 
-import { PasswordIncorrectException } from '@src/authentication/exceptions/password-incorrect.exception';
+import { PasswordIncorrectException } from '@auth/exceptions';
 
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '../dtos/shipping-address.input';
+} from '../dtos';
 import {
   UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
-} from '../exceptions/user.exception';
+} from '../exceptions';
+
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
 import { ShippingAddress } from './shipping-address.model';

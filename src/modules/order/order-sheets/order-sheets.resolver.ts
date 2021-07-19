@@ -2,10 +2,10 @@ import { UseGuards } from '@nestjs/common';
 import { Inject, Injectable } from '@nestjs/common';
 import { Args, Query } from '@nestjs/graphql';
 
-import { CurrentUser } from '@auth/decorators/current-user.decorator';
-import { JwtPayload } from '@auth/dto/jwt.dto';
+import { CurrentUser } from '@auth/decorators';
+import { JwtPayload } from '@auth/dtos';
 import { JwtVerifyGuard } from '@auth/guards';
-import { PRODUCT_RELATIONS } from '@item/products/constants/product.relation';
+import { PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
 import { PointsService } from '@order/points/points.service';
 import { CouponsService } from '@order/coupons/coupons.service';
@@ -13,8 +13,8 @@ import { UsersService } from '@user/users/users.service';
 
 import { BaseOrderSheetBuilder } from './builders';
 import { BaseOrderSheetInput, OrderSheetInput } from './dtos';
-import { BaseOrderSheet } from './models';
-import { OrderSheet } from './models/order-sheet.model';
+import { BaseOrderSheet, OrderSheet } from './models';
+
 import { OrderSheetsService } from './order-sheets.service';
 
 @Injectable()

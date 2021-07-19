@@ -2,14 +2,16 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEnum, IsOptional } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
+import { UserEntity } from '@user/users/entities';
+import { User } from '@user/users/models';
 
-import { ICoupon } from '../interfaces/coupon.interface';
-import { CouponStatus } from '../constants/coupon.enum';
+import { CouponStatus } from '../constants';
+import { ICoupon } from '../interfaces';
+
+// @TODO:BARREL circular dependency
 import { CouponSpecification } from '../models/coupon-specification.model';
 import { CouponSpecificationEntity } from './coupon-specification.entity';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 
 @ObjectType()
 @Entity('coupon')

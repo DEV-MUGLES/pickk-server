@@ -2,21 +2,18 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@auth/decorators/roles.decorator';
+import { Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
-import {
-  BaseResolver,
-  FindSaleStrategyInput,
-  PageInput,
-  IntArgs,
-  SaleStrategy,
-} from '@common/index';
-import { UserRole } from '@user/users/constants/user.enum';
+import { BaseResolver } from '@common/base.resolver';
+import { FindSaleStrategyInput, PageInput } from '@common/dtos';
+import { IntArgs } from '@common/decorators';
+import { SaleStrategy } from '@common/models';
+import { UserRole } from '@user/users/constants';
 
-import { SELLER_RELATIONS } from './constants/seller.relation';
-import { SellerFilter } from './dtos/seller.filter';
-import { CreateSellerInput } from './dtos/seller.input';
+import { SELLER_RELATIONS } from './constants';
+import { SellerFilter, CreateSellerInput } from './dtos';
 import { Seller } from './models';
+
 import { SellersService } from './sellers.service';
 
 @Resolver(() => Seller)

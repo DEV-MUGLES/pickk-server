@@ -1,9 +1,9 @@
-import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-
+import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { MultipleEntityReturnedException } from '@src/common/exceptions/multiple-entity-returned.exception';
-import { AbstractImageEntity } from './entities/image.entity';
+
+import { AbstractImageEntity } from './entities';
+import { MultipleEntityReturnedException } from './exceptions';
 
 export abstract class ImageRepository<
   Entity extends AbstractImageEntity,

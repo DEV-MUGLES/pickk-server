@@ -1,6 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
-import { AbstractAddressEntity } from '@src/common/entities/address.entity';
 import { Entity } from 'typeorm';
+
+import { AbstractAddressEntity } from '@common/entities';
 
 @ObjectType()
 @Entity('seller_return_address')

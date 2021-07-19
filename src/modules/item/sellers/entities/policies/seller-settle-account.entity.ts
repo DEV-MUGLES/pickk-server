@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 import { Entity } from 'typeorm';
 
-import { AbstractAccountEntity } from '@src/common/entities/account.entity';
+import { AbstractAccountEntity } from '@common/entities';
 
 @ObjectType()
 @Entity('seller_settle_account')

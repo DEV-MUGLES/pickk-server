@@ -1,7 +1,4 @@
-import {
-  randomNicknameAdj,
-  randomNicknameNoun,
-} from '@src/authentication/constants/nickname.constant';
+import { randomNicknameAdj, randomNicknameNoun } from '@auth/constants';
 
 export const genRandomNickname = () => {
   return (

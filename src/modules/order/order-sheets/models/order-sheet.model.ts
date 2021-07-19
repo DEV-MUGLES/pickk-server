@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { IsEnum, IsNumber } from 'class-validator';
+import { randomUUID } from 'crypto';
 
-import { PayMethod } from '@order/orders/constants/order.enum';
+import { PayMethod } from '@order/orders/constants';
 
 import { OrderSheetInput } from '../dtos';
-import { randomUUID } from 'crypto';
 
 @ObjectType()
 export class OrderSheetProductData {

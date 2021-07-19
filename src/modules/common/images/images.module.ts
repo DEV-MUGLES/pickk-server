@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { AwsS3ProviderModule } from '@src/providers/aws/s3/provider.module';
+import { AwsS3ProviderModule } from '@providers/aws/s3';
 
 import { ImagesResolver } from './images.resolver';
 import { ImagesService } from './images.service';

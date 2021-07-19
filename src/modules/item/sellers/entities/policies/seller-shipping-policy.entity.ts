@@ -2,9 +2,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 import { IsNumber, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
-import { ISellerShippingPolicy } from '../../interfaces/policies';
+import { ISellerShippingPolicy } from '../../interfaces';
 
 @ObjectType()
 @Entity('seller_shipping_policy')

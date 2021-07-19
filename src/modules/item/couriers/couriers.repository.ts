@@ -1,10 +1,10 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
 
-import { CourierEntity } from './entities/courier.entity';
-import { Courier } from './models/courier.model';
+import { CourierEntity } from './entities';
+import { Courier } from './models';
 
 @EntityRepository(CourierEntity)
 export class CouriersRepository extends BaseRepository<CourierEntity, Courier> {

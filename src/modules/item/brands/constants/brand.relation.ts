@@ -1,4 +1,4 @@
-import { Brand } from '../models/brand.model';
+import { Brand } from '../models';
 
 import {
   SellerRelationType,

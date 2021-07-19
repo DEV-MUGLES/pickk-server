@@ -2,12 +2,12 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities/base.entity';
-import { UserEntity } from '@user/users/entities/user.entity';
+import { BaseIdEntity } from '@common/entities';
+import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 
-import { IPointEvent } from '../interfaces/point-event.interface';
-import { PointType } from '../constants/points.enum';
+import { PointType } from '../constants';
+import { IPointEvent } from '../interfaces';
 
 @ObjectType()
 @Entity('point_event')

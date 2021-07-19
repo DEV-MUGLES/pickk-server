@@ -1,9 +1,10 @@
 import faker from 'faker';
 import { Injectable } from '@nestjs/common';
 
+import { CreateCourierInput } from '@item/couriers/dtos';
+import { Courier } from '@item/couriers/models';
 import { CouriersService } from '@item/couriers/couriers.service';
-import { CreateCourierInput } from '@item/couriers/dtos/courier.input';
-import { Courier } from '@item/couriers/models/courier.model';
+
 import { COURIER_COUNT } from '../data';
 
 @Injectable()

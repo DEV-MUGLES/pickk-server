@@ -1,8 +1,9 @@
 import { getManager } from 'typeorm';
 import { Injectable } from '@nestjs/common';
 
-import { ItemCategory } from '@item/item-categories/models/item-category.model';
-import { ItemCategoryEntity } from '@item/item-categories/entities/item-category.entity';
+import { ItemCategoryEntity } from '@item/item-categories/entities';
+import { ItemCategory } from '@item/item-categories/models';
+
 import { ItemCategories } from '../data';
 
 @Injectable()

@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { SellerCrawlPolicyEntity } from '../../entities/policies/seller-crawl-policy.entity';
+import { SellerCrawlPolicyEntity } from '../../entities/policies';
 
 @ObjectType()
 export class SellerCrawlPolicy extends SellerCrawlPolicyEntity {}

@@ -7,11 +7,12 @@ import {
   SqsProcess,
 } from '@pickk/nest-sqs';
 
-import { ItemsService } from '@src/modules/item/items/items.service';
+import { getMimeType } from '@src/modules/common/images/helpers';
 import { ImagesService } from '@src/modules/common/images/images.service';
-import { getMimeType } from '@src/modules/common/images/helpers/image.helper';
-import { UpdateItemImageUrlDto } from '../interfaces/item-image-url.interface';
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants/item-image-url.constant';
+import { ItemsService } from '@item/items/items.service';
+
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants';
+import { UpdateItemImageUrlDto } from '../interfaces';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class ItemImageUrlConsumer {

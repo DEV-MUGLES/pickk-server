@@ -1,5 +1,6 @@
-import { IAccount } from '@src/common/interfaces/account.interface';
-import { ClaimFeePayMethod } from '../../constants/seller-claim-policy.enum';
+import { IAccount } from '@common/interfaces';
+
+import { ClaimFeePayMethod } from '../../constants';
 
 export interface ISellerClaimPolicy {
   /** 교환/반품 배송비

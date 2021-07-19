@@ -1,4 +1,4 @@
-import { Item } from '../models/item.model';
+import { Item } from '../models';
 
 export type ItemRelationType =
   | keyof Item

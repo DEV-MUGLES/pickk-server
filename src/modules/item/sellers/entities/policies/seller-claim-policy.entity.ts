@@ -10,10 +10,11 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
-import { ISellerClaimPolicy } from '../../interfaces/policies';
-import { ClaimFeePayMethod } from '../../constants/seller-claim-policy.enum';
+import { ClaimFeePayMethod } from '../../constants';
+import { ISellerClaimPolicy } from '../../interfaces';
+
 import { SellerClaimAccount } from '../../models/policies/seller-claim-account.model';
 import { SellerClaimAccountEntity } from './seller-claim-account.entity';
 

@@ -1,7 +1,8 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
-import { Brand } from '../../brands/models/brand.model';
-import { SellerShippingPolicy } from '../../sellers/models/policies/seller-shipping-policy.model';
+import { Brand } from '@item/brands/models';
+import { SellerShippingPolicy } from '@item/sellers/models';
+
 import { CartItem } from './cart-item.model';
 
 @ObjectType()

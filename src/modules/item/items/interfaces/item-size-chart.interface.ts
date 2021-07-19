@@ -1,4 +1,5 @@
-import { ItemSizeChartColumnName } from '../constants/item-size-chart.enum';
+import { ItemSizeChartColumnName } from '../constants';
+
 import { IItem } from './item.interface';
 
 export interface IItemSizeChart {

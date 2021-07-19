@@ -2,25 +2,27 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { JwtSellerGuard } from '@src/authentication/guards/jwt-seller.guard';
-import { BaseResolver } from '@src/common/base.resolver';
-import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
-import { CurrentSeller } from '@item/sellers/decorators/current-seller.decorator';
-import { UpdateSellerInput } from '@src/modules/item/sellers/dtos/seller.input';
-import { Seller } from '@item/sellers/models/seller.model';
-import { SellersService } from '@item/sellers/sellers.service';
-import { SellerCrawlPolicy } from '@item/sellers/models/policies/seller-crawl-policy.model';
+import { JwtSellerGuard } from '@auth/guards';
+import { BaseResolver } from '@common/base.resolver';
+import { SELLER_RELATIONS } from '@item/sellers/constants';
+import { CurrentSeller } from '@item/sellers/decorators';
 import {
+  UpdateSellerInput,
   UpdateSellerClaimPolicyInput,
   UpdateSellerCrawlPolicyInput,
   UpdateSellerReturnAddressInput,
   UpdateSellerSettlePolicyInput,
   UpdateSellerShippingPolicyInput,
-} from '@item/sellers/dtos/seller-policies.input';
-import { SellerClaimPolicy } from '@item/sellers/models/policies/seller-claim-policy.model';
-import { SellerShippingPolicy } from '@item/sellers/models/policies/seller-shipping-policy.model';
-import { SellerReturnAddress } from '@item/sellers/models/seller-return-address.model';
-import { SellerSettlePolicy } from '@item/sellers/models/policies/seller-settle-policy.model';
+} from '@item/sellers/dtos';
+import {
+  Seller,
+  SellerCrawlPolicy,
+  SellerClaimPolicy,
+  SellerShippingPolicy,
+  SellerReturnAddress,
+  SellerSettlePolicy,
+} from '@item/sellers/models';
+import { SellersService } from '@item/sellers/sellers.service';
 
 @Resolver()
 export class MySellerResolver extends BaseResolver {

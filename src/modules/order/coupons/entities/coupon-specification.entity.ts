@@ -11,12 +11,12 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { Brand } from '@src/modules/item/brands/models/brand.model';
-import { BrandEntity } from '@src/modules/item/brands/entities/brand.entity';
+import { BaseIdEntity } from '@common/entities';
+import { BrandEntity } from '@item/brands/entities';
+import { Brand } from '@item/brands/models';
 
-import { CouponType } from '../constants/coupon.enum';
-import { ICouponSpecification } from '../interfaces/coupon-specification.interface';
+import { CouponType } from '../constants';
+import { ICouponSpecification } from '../interfaces';
 
 @ObjectType()
 @Entity('coupon_specification')

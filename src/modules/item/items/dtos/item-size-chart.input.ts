@@ -1,5 +1,6 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
-import { ItemSizeChart } from '../models/item-size-chart.model';
+
+import { ItemSizeChart } from '../models';
 
 @InputType()
 export class AddItemSizeChartInput extends PickType(

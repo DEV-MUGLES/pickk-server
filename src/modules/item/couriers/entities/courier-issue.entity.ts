@@ -1,8 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
-import { IsString } from 'class-validator';
 import { Column, Entity } from 'typeorm';
-import { ICourierIssue } from '../interfaces/courier-issue.interface';
+import { IsString } from 'class-validator';
+
+import { BaseIdEntity } from '@common/entities';
+
+import { ICourierIssue } from '../interfaces';
 
 @ObjectType()
 @Entity({

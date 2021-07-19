@@ -2,16 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
-import { SpiderConfigService } from '@config/providers/spider/config.service';
+import { SpiderConfigService } from '@config/providers/spider';
 import { SellersService } from '@item/sellers/sellers.service';
 import { ItemsService } from '@item/items/items.service';
-import { ItemImageUrlProducer } from '@item/items/producers/item-image-url.producer';
+import { ItemImageUrlProducer } from '@item/items/producers';
 
-import {
-  SpiderSellerRequestDto,
-  SpiderSellerResultDto,
-} from './dto/spider.dto';
-import { splitRegexString } from './helpers/spider.helper';
+import { SpiderSellerRequestDto, SpiderSellerResultDto } from './dtos';
+import { splitRegexString } from './helpers';
 
 @Injectable()
 export class SpiderService {

@@ -2,15 +2,15 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { User } from '@user/users/models/user.model';
-import { UserRole } from '@user/users/constants/user.enum';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 import { UsersRepository } from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 import { AppleProviderService } from '@providers/apple';
 
-import { JwtPayload, JwtToken } from './dto/jwt.dto';
-import { LoginByCodeInput } from './dto/login.input';
+import { JwtPayload, JwtToken, LoginByCodeInput } from './dtos';
 import * as authHelper from './helpers/auth.helper';
+
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 

@@ -1,5 +1,6 @@
 import * as faker from 'faker';
-import { UserRole } from '../constants/user.enum';
+
+import { UserRole } from '../constants';
 
 import { checkIsPermitted } from './user-role.helper';
 

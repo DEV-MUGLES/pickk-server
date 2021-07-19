@@ -1,9 +1,10 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
-import { ProductEntity } from './entities/product.entity';
-import { Product } from './models/product.model';
+import { BaseRepository } from '@common/base.repository';
+
+import { ProductEntity } from './entities';
+import { Product } from './models';
 
 @EntityRepository(ProductEntity)
 export class ProductsRepository extends BaseRepository<ProductEntity, Product> {

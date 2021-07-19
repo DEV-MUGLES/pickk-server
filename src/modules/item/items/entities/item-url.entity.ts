@@ -2,9 +2,9 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsBoolean, IsUrl } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
-import { IItemUrl } from '../interfaces/item-url.interface';
+import { IItemUrl } from '../interfaces';
 import { ItemEntity } from './item.entity';
 
 @ObjectType()

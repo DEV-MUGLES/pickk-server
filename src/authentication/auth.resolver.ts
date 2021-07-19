@@ -1,21 +1,23 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
-import { UserOauthProvider } from '@user/users/constants/user.enum';
-import { checkIsPermitted } from '@user/users/helpers/user-role.helper';
+import { UserOauthProvider } from '@user/users/constants';
+import { checkIsPermitted } from '@user/users/helpers';
 import { UsersService } from '@user/users/users.service';
 import { AppleProviderService } from '@providers/apple';
 
-import { CurrentUser } from './decorators/current-user.decorator';
+import { CurrentUser } from './decorators';
 import {
   LoginWithAppleInput,
   LoginByCodeInput,
   LoginByOauthInput,
-} from './dto/login.input';
-import { JwtPayload, JwtToken } from './dto/jwt.dto';
-import { ForbiddenResourceException } from './exceptions/user.exception';
+  JwtPayload,
+  JwtToken,
+} from './dtos';
+import { ForbiddenResourceException } from './exceptions';
 import { JwtRefreshGuard } from './guards';
-import { genRandomNickname } from './helpers/auth.helper';
+import { genRandomNickname } from './helpers';
+
 import { AuthService } from './auth.service';
 
 @Resolver()

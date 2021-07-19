@@ -1,6 +1,6 @@
-import { IUser } from '@user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces';
 
-import { PointType } from '../constants/points.enum';
+import { PointType } from '../constants';
 
 export interface IPointEvent {
   id: number;

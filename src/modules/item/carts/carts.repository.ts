@@ -1,10 +1,10 @@
 import { EntityRepository, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
 
-import { CartItemEntity } from './entities/cart-item.entity';
-import { CartItem } from './models/cart-item.model';
+import { CartItemEntity } from './entities';
+import { CartItem } from './models';
 
 @EntityRepository(CartItemEntity)
 export class CartItemsRepository extends BaseRepository<

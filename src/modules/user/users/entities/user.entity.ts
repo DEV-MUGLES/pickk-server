@@ -18,15 +18,17 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
-import { UserOauthProvider, UserRole } from '../constants/user.enum';
+import { UserOauthProvider, UserRole } from '../constants';
+import { IUser } from '../interfaces';
+
+import { UserAvatarImageEntity } from './user-avatar-image.entity';
+import { RefundAccountEntity } from './refund-account.entity';
+
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
 import { UserAvatarImage } from '../models/user-avatar-image.model';
-import { IUser } from '../interfaces/user.interface';
-import { UserAvatarImageEntity } from './user-avatar-image.entity';
-import { RefundAccountEntity } from './refund-account.entity';
 import { RefundAccount } from '../models/refund-account.model';
 
 @ObjectType()

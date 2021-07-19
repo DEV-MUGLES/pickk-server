@@ -1,4 +1,4 @@
-import { Seller } from '../models/seller.model';
+import { Seller } from '../models';
 
 export type SellerRelationType =
   | keyof Seller

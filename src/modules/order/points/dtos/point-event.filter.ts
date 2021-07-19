@@ -1,8 +1,8 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsEnum, IsOptional } from 'class-validator';
-import { PointType } from '../constants/points.enum';
 
-import { IPointEvent } from '../interfaces/point-event.interface';
+import { PointType } from '../constants';
+import { IPointEvent } from '../interfaces';
 
 @InputType()
 export class PointEventFilter implements Partial<IPointEvent> {

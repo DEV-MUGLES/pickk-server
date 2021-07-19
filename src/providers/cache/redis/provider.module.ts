@@ -7,8 +7,7 @@ import {
   CacheModuleOptions,
 } from '@nestjs/common';
 
-import { RedisConfigModule } from '@config/cache/redis/config.module';
-import { RedisConfigService } from '@config/cache/redis/config.service';
+import { RedisConfigModule, RedisConfigService } from '@config/cache/redis';
 
 import { CacheService } from './provider.service';
 
