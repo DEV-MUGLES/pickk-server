@@ -2,8 +2,8 @@ import { BaseRepository } from '@src/common/base.repository';
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { SaleStrategyEntity } from '../entities/sale-strategy.entity';
-import { SaleStrategy } from '../models/sale-strategy.model';
+import { SaleStrategyEntity } from '../entities';
+import { SaleStrategy } from '../models';
 
 @EntityRepository(SaleStrategyEntity)
 export class SaleStrategyRepository extends BaseRepository<

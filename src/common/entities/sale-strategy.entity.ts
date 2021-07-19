@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { ISaleStrategy } from '../interfaces';
 
-import { ISaleStrategy } from '../interfaces/sale-strategy.interface';
+import { BaseIdEntity } from './base.entity';
 
 @ObjectType()
 @Entity('sale_strategy')

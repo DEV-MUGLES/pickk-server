@@ -4,13 +4,10 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '@auth/guards';
-import {
-  BaseResolver,
-  FindSaleStrategyInput,
-  PageInput,
-  IntArgs,
-  SaleStrategy,
-} from '@common/index';
+import { BaseResolver } from '@common/base.resolver';
+import { FindSaleStrategyInput, PageInput } from '@common/dtos';
+import { IntArgs } from '@common/decorators';
+import { SaleStrategy } from '@common/models';
 import { UserRole } from '@user/users/constants/user.enum';
 
 import { SELLER_RELATIONS } from './constants/seller.relation';

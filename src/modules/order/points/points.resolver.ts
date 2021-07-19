@@ -4,7 +4,7 @@ import { Args, Query, Resolver } from '@nestjs/graphql';
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { JwtPayload } from '@auth/dto/jwt.dto';
 import { JwtVerifyGuard } from '@auth/guards';
-import { PageInput } from '@common/dtos/pagination.dto';
+import { PageInput } from '@common/dtos';
 
 import { PointEventFilter } from './dtos/point-event.filter';
 import { ExpectedPointEvent, PointEvent } from './models';

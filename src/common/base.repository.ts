@@ -1,10 +1,10 @@
-import { plainToClass } from 'class-transformer';
-import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-
-import { BaseIdEntity } from './entities/base.entity';
+import { Repository, DeepPartial, FindOneOptions } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import { MultipleEntityReturnedException } from '@src/common/exceptions/multiple-entity-returned.exception';
+import { plainToClass } from 'class-transformer';
+
+import { BaseIdEntity } from './entities';
+import { MultipleEntityReturnedException } from './exceptions';
 
 export class BaseRepository<
   Entity extends BaseIdEntity,

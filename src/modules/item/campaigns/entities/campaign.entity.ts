@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToMany } from 'typeorm';
 import { IsDate, IsNumber, Max, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 import { IItem } from '@item/items/interfaces/item.interface';
 
 import { ICampaign } from '../interfaces/campaign.interface';

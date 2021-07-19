@@ -2,8 +2,9 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column } from 'typeorm';
 import { IsPostalCode } from 'class-validator';
 
+import { IAddress } from '../interfaces';
+
 import { BaseIdEntity } from './base.entity';
-import { IAddress } from '../interfaces/address.interface';
 
 @ObjectType()
 export abstract class AbstractAddressEntity

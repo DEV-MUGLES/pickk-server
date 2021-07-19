@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { IsNumber, IsString } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities/user.entity';
 import { User } from '@user/users/models';
 

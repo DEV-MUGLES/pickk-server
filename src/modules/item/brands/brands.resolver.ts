@@ -6,7 +6,7 @@ import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { Roles } from '@auth/decorators/roles.decorator';
 import { JwtAuthGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
-import { IntArgs } from '@common/decorators/args.decorator';
+import { IntArgs } from '@common/decorators';
 import { UserRole } from '@user/users/constants/user.enum';
 import { User } from '@user/users/models/user.model';
 

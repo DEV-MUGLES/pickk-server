@@ -7,7 +7,7 @@ import {
 } from 'typeorm';
 import { S3 } from 'aws-sdk';
 
-import { IImage } from '../interfaces/image.interface';
+import { IImage } from '../interfaces';
 
 @ObjectType()
 export abstract class AbstractImageEntity

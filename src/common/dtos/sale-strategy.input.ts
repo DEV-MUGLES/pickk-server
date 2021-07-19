@@ -1,5 +1,6 @@
 import { InputType, PickType } from '@nestjs/graphql';
-import { SaleStrategy } from '../models/sale-strategy.model';
+
+import { SaleStrategy } from '../models';
 
 @InputType()
 export class FindSaleStrategyInput extends PickType(

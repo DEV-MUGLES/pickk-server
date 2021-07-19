@@ -3,7 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import { DeleteResult } from 'typeorm';
 
-import { PageInput } from '@common/dtos/pagination.dto';
+import { PageInput } from '@common/dtos';
+('@common/dtos');
 import { parseFilter } from '@common/helpers/filter.helpers';
 import { CacheService } from '@providers/cache/redis/provider.service';
 

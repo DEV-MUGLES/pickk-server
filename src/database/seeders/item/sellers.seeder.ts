@@ -2,9 +2,9 @@ import faker from 'faker';
 import { InicisBankCode } from 'inicis';
 import { Injectable } from '@nestjs/common';
 
+import { FindSaleStrategyInput } from '@common/dtos';
 import { SellersService } from '@item/sellers/sellers.service';
 import { CreateSellerInput } from '@item/sellers/dtos/seller.input';
-import { FindSaleStrategyInput } from '@common/dtos/sale-strategy.input';
 import {
   CreateSellerClaimPolicyInput,
   CreateSellerCrawlPolicyInput,

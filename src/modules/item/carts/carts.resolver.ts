@@ -10,7 +10,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser } from '@auth/decorators/current-user.decorator';
 import { JwtPayload } from '@auth/dto/jwt.dto';
 import { JwtVerifyGuard } from '@auth/guards';
-import { IntArgs } from '@common/decorators/args.decorator';
+import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
 import {

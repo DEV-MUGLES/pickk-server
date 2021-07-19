@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { IsOptional, IsUrl, MaxLength } from 'class-validator';
 import { Column, Entity, OneToOne } from 'typeorm';
 
-import { BaseIdEntity } from '@common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { IBrand } from '../interfaces/brand.interface';
 import { SellerEntity } from '../../sellers/entities/seller.entity';
