@@ -6,12 +6,13 @@ import { PasswordIncorrectException } from '@auth/exceptions';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from '../dtos/shipping-address.input';
+} from '../dtos';
 import {
   UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
-} from '../exceptions/user.exception';
+} from '../exceptions';
+
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
 import { ShippingAddress } from './shipping-address.model';

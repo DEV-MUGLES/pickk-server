@@ -1,8 +1,8 @@
 import { Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
-import { UserOauthProvider } from '@user/users/constants/user.enum';
-import { checkIsPermitted } from '@user/users/helpers/user-role.helper';
+import { UserOauthProvider } from '@user/users/constants';
+import { checkIsPermitted } from '@user/users/helpers';
 import { UsersService } from '@user/users/users.service';
 import { AppleProviderService } from '@providers/apple';
 

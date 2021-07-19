@@ -3,7 +3,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
 import { IsNumber, IsString } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
-import { UserEntity } from '@user/users/entities/user.entity';
+import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 
 import { IExpectedPointEvent } from '../interfaces/expected-point-event.interface';

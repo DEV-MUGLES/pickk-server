@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
-import { UserOauthProvider } from '@user/users/constants/user.enum';
-import { UserEntity } from '@user/users/entities/user.entity';
-import { User } from '@user/users/models/user.model';
+import { UserOauthProvider } from '@user/users/constants';
+import { UserEntity } from '@user/users/entities';
+import { User } from '@user/users/models';
 import { UsersService } from '@user/users/users.service';
 
 import { jwtRefreshConstants } from './constants';

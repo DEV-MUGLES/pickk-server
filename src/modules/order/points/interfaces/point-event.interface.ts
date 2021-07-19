@@ -1,4 +1,4 @@
-import { IUser } from '@user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces';
 
 import { PointType } from '../constants/points.enum';
 

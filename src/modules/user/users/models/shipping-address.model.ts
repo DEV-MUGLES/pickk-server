@@ -1,5 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { ShippingAddressEntity } from '../entities/shipping-address.entity';
+
+import { ShippingAddressEntity } from '../entities';
 
 @ObjectType()
 export class ShippingAddress extends ShippingAddressEntity {

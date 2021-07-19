@@ -1,4 +1,4 @@
-import { UserRole } from '../constants/user.enum';
+import { UserRole } from '../constants';
 
 export const checkIsPermitted = (
   userRole: UserRole,

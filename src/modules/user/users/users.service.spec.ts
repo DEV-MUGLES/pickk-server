@@ -1,14 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
+
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
-} from './dtos/shipping-address.input';
-import { CreateUserInput } from './dtos/user.input';
-import { ShippingAddress } from './models/shipping-address.model';
-import { UserAvatarImage } from './models/user-avatar-image.model';
-import { UserPassword } from './models/user-password.model';
-import { User } from './models/user.model';
+  CreateUserInput,
+} from './dtos';
+import { ShippingAddress, UserAvatarImage, UserPassword, User } from './models';
 
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';

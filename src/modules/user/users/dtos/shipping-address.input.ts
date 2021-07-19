@@ -1,5 +1,6 @@
 import { InputType, PartialType, PickType, OmitType } from '@nestjs/graphql';
-import { ShippingAddress } from '../models/shipping-address.model';
+
+import { ShippingAddress } from '../models';
 
 @InputType()
 export class CreateShippingAddressInput extends PickType(

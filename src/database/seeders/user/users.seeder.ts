@@ -2,10 +2,10 @@ import faker from 'faker';
 import { Injectable } from '@nestjs/common';
 
 import { genRandomNickname } from '@auth/helpers';
-import { CreateUserInput } from '@user/users/dtos/user.input';
+import { UserOauthProvider } from '@user/users/constants';
+import { CreateUserInput } from '@user/users/dtos';
 import { User } from '@user/users/models';
 import { UsersService } from '@user/users/users.service';
-import { UserOauthProvider } from '@user/users/constants/user.enum';
 
 import { USER_COUNT } from '../data';
 

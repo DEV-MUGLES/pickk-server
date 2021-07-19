@@ -8,7 +8,7 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
-import { USER_RELATIONS } from '@user/users/constants/user.relation';
+import { USER_RELATIONS } from '@user/users/constants';
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,

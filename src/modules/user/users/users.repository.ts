@@ -4,8 +4,8 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { UserEntity } from './entities/user.entity';
-import { User } from './models/user.model';
+import { UserEntity } from './entities';
+import { User } from './models';
 
 @EntityRepository(UserEntity)
 export class UsersRepository extends BaseRepository<UserEntity, User> {

@@ -1,5 +1,6 @@
 import { InputType, PartialType, PickType } from '@nestjs/graphql';
-import { RefundAccount } from '../models/refund-account.model';
+
+import { RefundAccount } from '../models';
 
 @InputType()
 export class CreateRefundAccountInput extends PickType(

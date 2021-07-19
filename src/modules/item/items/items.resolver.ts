@@ -16,7 +16,7 @@ import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
-import { UserRole } from '@user/users/constants/user.enum';
+import { UserRole } from '@user/users/constants';
 
 import { ItemRelationType, ITEM_RELATIONS } from './constants/item.relation';
 import {

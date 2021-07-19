@@ -8,7 +8,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { FindSaleStrategyInput, PageInput } from '@common/dtos';
 import { IntArgs } from '@common/decorators';
 import { SaleStrategy } from '@common/models';
-import { UserRole } from '@user/users/constants/user.enum';
+import { UserRole } from '@user/users/constants';
 
 import { SELLER_RELATIONS } from './constants/seller.relation';
 import { SellerFilter } from './dtos/seller.filter';

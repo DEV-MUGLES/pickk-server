@@ -6,8 +6,8 @@ import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
-import { UserRole } from '@user/users/constants/user.enum';
-import { User } from '@user/users/models/user.model';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 
 import { SellersService } from '../sellers/sellers.service';
 import { BRAND_RELATIONS } from './constants/brand.relation';

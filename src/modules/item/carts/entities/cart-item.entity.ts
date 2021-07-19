@@ -2,10 +2,10 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
+import { User } from '@user/users/models';
 
 import { ICartItem } from '../interfaces/cart-item.interface';
 import { Product } from '../../products/models/product.model';
-import { User } from '@src/modules/user/users/models/user.model';
 
 @ObjectType()
 @Entity('cart_item')

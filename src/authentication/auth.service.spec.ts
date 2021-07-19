@@ -2,10 +2,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import * as faker from 'faker';
 
-import { UsersService } from '@user/users/users.service';
+import { User, UserPassword } from '@user/users/models';
 import { UsersRepository } from '@user/users/users.repository';
-import { User } from '@user/users/models/user.model';
-import { UserPassword } from '@user/users/models/user-password.model';
+import { UsersService } from '@user/users/users.service';
 
 import {
   PasswordIncorrectException,

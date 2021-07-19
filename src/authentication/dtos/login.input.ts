@@ -1,8 +1,8 @@
 import { Field, InputType, PickType } from '@nestjs/graphql';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
 
-import { UserRole } from '@user/users/constants/user.enum';
-import { User } from '@user/users/models/user.model';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 import { AppleClientType } from '@providers/apple/apple.enum';
 
 @InputType()

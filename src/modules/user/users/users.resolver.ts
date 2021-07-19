@@ -17,16 +17,15 @@ import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { UploadSingleImageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
+import { PointsService } from '@order/points/points.service';
 import { AwsS3ProviderService } from '@providers/aws/s3';
 
-import { PointsService } from '@order/points/points.service';
+import { USER_RELATIONS } from './constants';
+import { CreateUserInput, UpdateUserInput } from './dtos';
+import { UserEntity } from './entities';
+import { User, UserAvatarImage } from './models';
 
-import { USER_RELATIONS } from './constants/user.relation';
-import { CreateUserInput, UpdateUserInput } from './dtos/user.input';
-import { UserEntity } from './entities/user.entity';
-import { User } from './models/user.model';
 import { UsersService } from './users.service';
-import { UserAvatarImage } from './models';
 
 @Resolver(() => User)
 export class UsersResolver extends BaseResolver {

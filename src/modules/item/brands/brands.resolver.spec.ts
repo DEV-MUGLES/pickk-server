@@ -3,8 +3,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
 import { SaleStrategyRepository } from '@common/repositories';
-import { UserRole } from '@user/users/constants/user.enum';
-import { User } from '@user/users/models/user.model';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 
 import { Seller } from '../sellers/models/seller.model';
 import { SellersRepository } from '../sellers/sellers.repository';

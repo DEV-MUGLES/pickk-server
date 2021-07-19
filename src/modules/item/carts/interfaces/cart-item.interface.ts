@@ -1,4 +1,4 @@
-import { IUser } from '@user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces';
 
 import { IProduct } from '../../products/interfaces/product.interface';
 

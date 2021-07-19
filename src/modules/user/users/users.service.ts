@@ -2,13 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import {
-  User,
-  UserPassword,
-  ShippingAddress,
-  UserAvatarImage,
-  RefundAccount,
-} from './models';
-import {
   CreateUserInput,
   UpdateUserInput,
   CreateShippingAddressInput,
@@ -17,6 +10,14 @@ import {
   UpdateRefundAccountInput,
 } from './dtos';
 import { UserEntity } from './entities';
+import {
+  User,
+  UserPassword,
+  ShippingAddress,
+  UserAvatarImage,
+  RefundAccount,
+} from './models';
+
 import { UsersRepository } from './users.repository';
 
 @Injectable()

@@ -1,4 +1,4 @@
-import { IUser } from '@src/modules/user/users/interfaces/user.interface';
+import { IUser } from '@user/users/interfaces';
 
 import { CouponStatus } from '../constants/coupon.enum';
 import { ICouponSpecification } from './coupon-specification.interface';

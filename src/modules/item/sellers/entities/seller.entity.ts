@@ -13,8 +13,9 @@ import { Exclude } from 'class-transformer';
 import { IsBusinessCode } from '@common/decorators';
 import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
 import { SaleStrategy } from '@common/models';
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
-import { User } from '@src/modules/user/users/models/user.model';
+// @TODO:jBARREL 경로 '@user/users/entities'로 바꾸면 circulrar dependency 생김! 없애기
+import { UserEntity } from '@user/users/entities/user.entity';
+import { User } from '@user/users/models';
 
 import { ISeller } from '../interfaces/seller.interface';
 import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.entity';

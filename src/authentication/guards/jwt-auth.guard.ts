@@ -1,8 +1,8 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
-import { User } from '@src/modules/user/users/models/user.model';
+import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 
 import { ROLES_KEY } from '../decorators';
 import { ForbiddenResourceException } from '../exceptions';

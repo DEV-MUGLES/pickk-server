@@ -3,13 +3,13 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEnum, IsOptional } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
+import { UserEntity } from '@user/users/entities';
+import { User } from '@user/users/models';
 
 import { ICoupon } from '../interfaces/coupon.interface';
 import { CouponStatus } from '../constants/coupon.enum';
 import { CouponSpecification } from '../models/coupon-specification.model';
 import { CouponSpecificationEntity } from './coupon-specification.entity';
-import { User } from '@src/modules/user/users/models/user.model';
-import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 
 @ObjectType()
 @Entity('coupon')

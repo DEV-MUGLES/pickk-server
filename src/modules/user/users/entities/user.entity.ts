@@ -20,14 +20,16 @@ import {
 
 import { BaseIdEntity } from '@common/entities';
 
-import { UserOauthProvider, UserRole } from '../constants/user.enum';
+import { UserOauthProvider, UserRole } from '../constants';
+import { IUser } from '../interfaces';
+
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
 import { UserAvatarImage } from '../models/user-avatar-image.model';
-import { IUser } from '../interfaces/user.interface';
+import { RefundAccount } from '../models/refund-account.model';
+
 import { UserAvatarImageEntity } from './user-avatar-image.entity';
 import { RefundAccountEntity } from './refund-account.entity';
-import { RefundAccount } from '../models/refund-account.model';
 
 @ObjectType()
 @Entity({

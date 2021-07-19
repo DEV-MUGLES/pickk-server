@@ -7,7 +7,7 @@ import { JwtPayload } from '@auth/dtos';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
 import { SellersService } from '@item/sellers/sellers.service';
-import { UserRole } from '@user/users/constants/user.enum';
+import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 
 import {
