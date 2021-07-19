@@ -1,6 +1,7 @@
-import { BaseRepository } from '@src/common/base.repository';
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
+
+import { BaseRepository } from '@common/base.repository';
 
 import { SaleStrategyEntity } from '../entities';
 import { SaleStrategy } from '../models';

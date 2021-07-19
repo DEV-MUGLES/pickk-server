@@ -1,7 +1,7 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
 
 import { ExpectedPointEventEntity, PointEventEntity } from './entities';
 import { ExpectedPointEvent, PointEvent } from './models';

@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { SellerClaimAccount } from '../../models/policies/seller-claim-account.model';
 import { SellerClaimAccountEntity } from './seller-claim-account.entity';

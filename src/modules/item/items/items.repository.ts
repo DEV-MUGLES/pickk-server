@@ -1,7 +1,8 @@
 import { DeepPartial, EntityRepository, getConnection, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
+import { ImageRepository } from '@common/image.repository';
 
 import { ItemEntity } from './entities/item.entity';
 import { ItemSizeChartEntity } from './entities/item-size-chart.entity';
@@ -15,7 +16,6 @@ import { ItemPriceEntity } from './entities/item-price.entity';
 import { ItemPrice } from './models/item-price.model';
 import { ItemDetailImageEntity } from './entities/item-detail-image.entity';
 import { ItemDetailImage } from './models/item-detail-image.model';
-import { ImageRepository } from '@src/common/image.repository';
 
 @EntityRepository(ItemEntity)
 export class ItemsRepository extends BaseRepository<ItemEntity, Item> {

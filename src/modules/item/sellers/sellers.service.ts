@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { PageInput } from '@src/common/dtos/pagination.dto';
-import { FindSaleStrategyInput } from '@src/common/dtos/sale-strategy.input';
-import { parseFilter } from '@src/common/helpers/filter.helpers';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
-import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
+import { PageInput } from '@common/dtos';
+import { FindSaleStrategyInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
+import { SaleStrategy } from '@common/models';
+import { SaleStrategyRepository } from '@common/repositories';
 
 import {
   UpdateSellerClaimPolicyInput,

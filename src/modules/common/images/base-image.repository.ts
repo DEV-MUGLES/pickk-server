@@ -1,9 +1,10 @@
 import { getConnection, EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
+import { ImageRepository } from '@common/image.repository';
+
 import { BaseImageEntity } from './entities/base-image.entity';
 import { BaseImage } from './models/base-image.model';
-import { ImageRepository } from '@src/common/image.repository';
 
 @EntityRepository(BaseImageEntity)
 export class BaseImageRepository extends ImageRepository<

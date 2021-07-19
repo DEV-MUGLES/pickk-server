@@ -1,4 +1,4 @@
-import { IImage } from '@src/common/interfaces/image.interface';
+import { IImage } from '@common/interfaces';
 
 import { IBrand } from '../../brands/interfaces/brand.interface';
 import { IItemCategory } from '../../item-categories/interfaces/item-category.interface';

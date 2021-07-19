@@ -1,5 +1,4 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
 import {
   Column,
   Entity,
@@ -10,6 +9,7 @@ import {
   OneToOne,
 } from 'typeorm';
 
+import { BaseIdEntity } from '@common/entities';
 import { IItem } from '@item/items/interfaces/item.interface';
 import { ItemOptionValue } from '@item/items/models/item-option-value.model';
 import { ItemOptionValueEntity } from '@item/items/entities/item-option-value.entity';

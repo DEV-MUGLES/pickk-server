@@ -3,8 +3,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { UpdateResult } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { PageInput } from '@src/common/dtos/pagination.dto';
-import { parseFilter } from '@src/common/helpers/filter.helpers';
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 import { Item } from '@item/items/models/item.model';
 
 import {

@@ -1,5 +1,6 @@
-import { AbstractImageEntity } from '@src/common/entities/image.entity';
 import { Entity } from 'typeorm';
+
+import { AbstractImageEntity } from '@common/entities';
 
 @Entity('base_image')
 export class BaseImageEntity extends AbstractImageEntity {}

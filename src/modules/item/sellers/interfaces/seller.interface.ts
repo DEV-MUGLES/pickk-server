@@ -1,5 +1,5 @@
-import { IAddress } from '@src/common/interfaces/address.interface';
-import { ISaleStrategy } from '@src/common/interfaces/sale-strategy.interface';
+import { IAddress, ISaleStrategy } from '@common/interfaces';
+
 import { IBrand } from '../../brands/interfaces/brand.interface';
 import { ICourier } from '../../couriers/interfaces/courier.interface';
 

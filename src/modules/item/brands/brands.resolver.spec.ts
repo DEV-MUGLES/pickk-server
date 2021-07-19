@@ -2,9 +2,9 @@ import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { SaleStrategyRepository } from '@src/common/repositories/sale-strategy.repository';
-import { UserRole } from '@src/modules/user/users/constants/user.enum';
-import { User } from '@src/modules/user/users/models/user.model';
+import { SaleStrategyRepository } from '@common/repositories';
+import { UserRole } from '@user/users/constants/user.enum';
+import { User } from '@user/users/models/user.model';
 
 import { Seller } from '../sellers/models/seller.model';
 import { SellersRepository } from '../sellers/sellers.repository';

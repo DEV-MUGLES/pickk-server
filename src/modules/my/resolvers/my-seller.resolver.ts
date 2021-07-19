@@ -3,7 +3,7 @@ import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { JwtSellerGuard } from '@auth/guards';
-import { BaseResolver } from '@src/common/base.resolver';
+import { BaseResolver } from '@common/base.resolver';
 import { SELLER_RELATIONS } from '@item/sellers/constants/seller.relation';
 import { CurrentSeller } from '@item/sellers/decorators/current-seller.decorator';
 import { UpdateSellerInput } from '@src/modules/item/sellers/dtos/seller.input';

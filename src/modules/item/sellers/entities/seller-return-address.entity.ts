@@ -1,5 +1,5 @@
 import { ObjectType } from '@nestjs/graphql';
-import { AbstractAddressEntity } from '@src/common/entities/address.entity';
+import { AbstractAddressEntity } from '@common/entities';
 import { Entity } from 'typeorm';
 
 @ObjectType()

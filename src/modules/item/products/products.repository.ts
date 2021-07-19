@@ -1,7 +1,7 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@src/common/base.repository';
+import { BaseRepository } from '@common/base.repository';
 import { ProductEntity } from './entities/product.entity';
 import { Product } from './models/product.model';
 

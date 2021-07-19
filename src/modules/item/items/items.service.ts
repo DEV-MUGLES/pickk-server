@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { PageInput } from '@src/common/dtos/pagination.dto';
-import { parseFilter } from '@src/common/helpers/filter.helpers';
-import { ISpiderItem } from '@src/providers/spider/interfaces/spider.interface';
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
+import { ISpiderItem } from '@providers/spider/interfaces/spider.interface';
 
 import {
   CreateItemInput,

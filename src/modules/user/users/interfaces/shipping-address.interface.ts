@@ -1,4 +1,4 @@
-import { IAddress } from '@src/common/interfaces/address.interface';
+import { IAddress } from '@common/interfaces';
 
 export interface IShippingAddress extends IAddress {
   name: string;

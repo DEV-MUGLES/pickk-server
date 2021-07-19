@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsOptional, Max, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { IItemOptionValue } from '../interfaces/item-option-value.interface';
 import { ItemOptionEntity } from './item-option.entity';

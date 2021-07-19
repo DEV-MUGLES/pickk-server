@@ -5,7 +5,7 @@ import { DeleteResult } from 'typeorm';
 
 import { PageInput } from '@common/dtos';
 ('@common/dtos');
-import { parseFilter } from '@common/helpers/filter.helpers';
+import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis/provider.service';
 
 import { PointEventFilter } from './dtos/point-event.filter';

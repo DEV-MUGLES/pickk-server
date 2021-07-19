@@ -15,8 +15,7 @@ import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/dtos';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
-('@common/decorators');
-import { UploadSingleImageInput } from '@common/dtos/image.input';
+import { UploadSingleImageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { AwsS3ProviderService } from '@providers/aws/s3';
 

@@ -1,4 +1,5 @@
-import { IAccount } from '@src/common/interfaces/account.interface';
+import { IAccount } from '@common/interfaces';
+
 import { ClaimFeePayMethod } from '../../constants/seller-claim-policy.enum';
 
 export interface ISellerClaimPolicy {

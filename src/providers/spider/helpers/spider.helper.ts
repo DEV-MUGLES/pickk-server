@@ -1,4 +1,4 @@
-import { isRegexString } from '@src/common/decorators/validations/is-regex-string';
+import { isRegexString } from '@common/decorators';
 
 /**
  * regexString을 입력 받아 pattern, flag를 반환합니다.

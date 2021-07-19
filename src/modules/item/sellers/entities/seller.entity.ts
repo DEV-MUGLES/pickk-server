@@ -10,14 +10,13 @@ import {
 } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
-import { IsBusinessCode } from '@src/common/decorators/validations/is-business-code';
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { IsBusinessCode } from '@common/decorators';
+import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
+import { SaleStrategy } from '@common/models';
 import { UserEntity } from '@src/modules/user/users/entities/user.entity';
 import { User } from '@src/modules/user/users/models/user.model';
 
 import { ISeller } from '../interfaces/seller.interface';
-import { SaleStrategyEntity } from '@src/common/entities/sale-strategy.entity';
-import { SaleStrategy } from '@src/common/models/sale-strategy.model';
 import { SellerShippingPolicyEntity } from './policies/seller-shipping-policy.entity';
 import { SellerShippingPolicy } from '../models/policies/seller-shipping-policy.model';
 import { SellerClaimPolicy } from '../models/policies/seller-claim-policy.model';

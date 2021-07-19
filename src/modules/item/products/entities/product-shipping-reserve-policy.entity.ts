@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { IsDate, IsNumber } from 'class-validator';
 import { Column, Entity } from 'typeorm';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { IProductShippingReservePolicy } from '../interfaces/product-shipping-reserve-policy.interface';
 

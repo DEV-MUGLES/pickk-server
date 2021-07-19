@@ -11,7 +11,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 import { Brand } from '@src/modules/item/brands/models/brand.model';
 import { BrandEntity } from '@src/modules/item/brands/entities/brand.entity';
 

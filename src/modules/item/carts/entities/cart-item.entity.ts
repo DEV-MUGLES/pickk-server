@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { ICartItem } from '../interfaces/cart-item.interface';
 import { Product } from '../../products/models/product.model';

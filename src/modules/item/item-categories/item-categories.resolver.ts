@@ -1,7 +1,7 @@
 import { Inject } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
 
-import { BaseResolver } from '@src/common/base.resolver';
+import { BaseResolver } from '@common/base.resolver';
 
 import { ITEM_CATEGORY_RELATIONS } from './constants/item-category.relation';
 import { ItemCategoriesService } from './item-categories.service';

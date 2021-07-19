@@ -18,7 +18,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { UserOauthProvider, UserRole } from '../constants/user.enum';
 import { UserPassword } from '../models/user-password.model';

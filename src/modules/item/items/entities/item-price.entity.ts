@@ -9,7 +9,7 @@ import {
   Min,
 } from 'class-validator';
 
-import { BaseIdEntity } from '@src/common/entities/base.entity';
+import { BaseIdEntity } from '@common/entities';
 
 import { ItemEntity } from './item.entity';
 import { IItemPrice } from '../interfaces/item-price.interface';
