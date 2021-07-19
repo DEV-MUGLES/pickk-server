@@ -26,14 +26,15 @@ import { IProduct } from '@item/products/interfaces/product.interface';
 
 import { IItem, IItemOption } from '../interfaces';
 
+import { ItemNoticeEntity } from './item-notice.entity';
+import { ItemSalePolicyEntity } from './item-sale-policy.entity';
+
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemNotice } from '../models/item-notice.model';
 import { ItemSizeChart } from '../models/item-size-chart.model';
-import { ItemSalePolicyEntity } from './item-sale-policy.entity';
-import { ItemNoticeEntity } from './item-notice.entity';
 
 @ObjectType()
 @Entity({

@@ -23,13 +23,13 @@ import { BaseIdEntity } from '@common/entities';
 import { UserOauthProvider, UserRole } from '../constants';
 import { IUser } from '../interfaces';
 
+import { UserAvatarImageEntity } from './user-avatar-image.entity';
+import { RefundAccountEntity } from './refund-account.entity';
+
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
 import { UserAvatarImage } from '../models/user-avatar-image.model';
 import { RefundAccount } from '../models/refund-account.model';
-
-import { UserAvatarImageEntity } from './user-avatar-image.entity';
-import { RefundAccountEntity } from './refund-account.entity';
 
 @ObjectType()
 @Entity({
