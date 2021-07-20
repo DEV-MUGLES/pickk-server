@@ -2,6 +2,7 @@ import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
+import { IOrder } from '@order/orders/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -20,12 +21,13 @@ export interface IOrderItem {
   product?: IProduct;
   productId?: number;
 
+  order: IOrder;
+  orderId: number;
+
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
   quantity: number;
 
-  /** 예약배송건인가 */
-  isShipReserved: boolean;
   isConfirmed: boolean;
   isSettled: boolean;
 
@@ -70,7 +72,7 @@ export interface IOrderItem {
   refundRequestedAt?: Date;
   refundedAt?: Date;
 
-  /** 예약배송으로 전환된 시점 */
+  /** 예약발송 예정일 */
   shipReservedAt?: Date;
   confirmedAt?: Date;
   /** 정산된 시점 */
