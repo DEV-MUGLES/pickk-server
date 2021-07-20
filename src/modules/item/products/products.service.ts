@@ -7,7 +7,7 @@ import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
 import { Item } from '@item/items/models';
 
-import { ProductFilter, UpdateProductInput } from './dtos';
+import { DestockProductInput, ProductFilter, UpdateProductInput } from './dtos';
 import { Product } from './models';
 
 import { ProductsRepository } from './products.repository';
@@ -64,6 +64,20 @@ export class ProductsService {
     const products = getOptionValueCombinations(item.options).map(
       (values) => new Product({ item, itemOptionValues: values })
     );
+    await this.productsRepository.save(products);
+  }
+
+  async bulkDestock(destockProductInputs: DestockProductInput[]) {
+    const productIds = destockProductInputs.map(({ productId }) => productId);
+    const products = await this.productsRepository.findByIds(productIds);
+
+    products.forEach((product) => {
+      const { quantity } = destockProductInputs.find(({ productId }) => {
+        return product.id === productId;
+      });
+      product.destock(quantity);
+    });
+
     await this.productsRepository.save(products);
   }
 }

@@ -1,4 +1,4 @@
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
@@ -19,5 +19,15 @@ export class ProductsRepository extends BaseRepository<ProductEntity, Product> {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+
+  async findByIds(ids: number[]): Promise<Product[]> {
+    const entities = await this.find({
+      relations: ['item', 'itemOptionValues', 'shippingReservePolicy'],
+      where: {
+        id: In(ids),
+      },
+    });
+    return this.entityToModelMany(entities);
   }
 }

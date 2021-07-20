@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Field, InputType, OmitType } from '@nestjs/graphql';
+import { Field, InputType, OmitType, PickType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
 import { PayMethod } from '@order/orders/constants';
@@ -16,9 +16,9 @@ export class OrderSheetProductInput extends OmitType(
 ) {}
 
 @InputType()
-export class OrderSheetInput extends OmitType(
+export class OrderSheetInput extends PickType(
   OrderSheet,
-  ['uuid', 'userId', 'productDatas'] as const,
+  ['shippingAddressId', 'usedPointAmount', 'payMethod'] as const,
   InputType
 ) {
   @Field(() => [OrderSheetProductInput])

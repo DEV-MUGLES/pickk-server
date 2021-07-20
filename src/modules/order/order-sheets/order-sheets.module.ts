@@ -11,5 +11,6 @@ import { OrderSheetsService } from './order-sheets.service';
 @Module({
   imports: [ProductsModule, CouponsModule, PointsModule, UsersModule],
   providers: [OrderSheetsResolver, OrderSheetsService],
+  exports: [OrderSheetsService],
 })
 export class OrderSheetsModule {}

@@ -1,6 +1,6 @@
 import { UseGuards } from '@nestjs/common';
 import { Inject, Injectable } from '@nestjs/common';
-import { Args, Query } from '@nestjs/graphql';
+import { Args, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/dtos';
@@ -34,7 +34,7 @@ export class OrderSheetsResolver {
 
   @Query(() => BaseOrderSheet)
   @UseGuards(JwtVerifyGuard)
-  async prepareOrder(
+  async prepareOrderSheet(
     @CurrentUser() payload: JwtPayload,
     @Args('prepareOrderSheetInput')
     { productInputs }: BaseOrderSheetInput
@@ -77,14 +77,17 @@ export class OrderSheetsResolver {
       .build();
   }
 
-  @Query(() => OrderSheet)
+  @Mutation(() => OrderSheet)
   @UseGuards(JwtVerifyGuard)
   async createOrderSheet(
     @CurrentUser() payload: JwtPayload,
     @Args('orderSheetInput')
     orderSheetInput: OrderSheetInput
   ): Promise<OrderSheet> {
-    const baseOrderSheet = await this.prepareOrder(payload, orderSheetInput);
+    const baseOrderSheet = await this.prepareOrderSheet(
+      payload,
+      orderSheetInput
+    );
     OrderSheetInput.validate(orderSheetInput, baseOrderSheet);
 
     return await this.orderSheetsService.create(payload.sub, orderSheetInput);

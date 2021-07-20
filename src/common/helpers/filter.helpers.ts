@@ -57,10 +57,14 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
       };
     }
     if (/Between$/.test(key) && isArray(value)) {
-      const [start, end] = value;
+      /** sort given array, get first, second element. array values can be Date or Number */
+      const [from, to] = [].concat(value).sort((a, b) => {
+        return a < b ? -1 : a > b ? 1 : 0;
+      });
+
       return {
         ...acc,
-        [key.replace(/Between$/, '')]: Between(start, end),
+        [key.replace(/Between$/, '')]: Between(from, to),
       };
     }
     if (/Mte$/.test(key)) {
