@@ -7,6 +7,7 @@ import { Courier } from '@item/couriers/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
+import { IOrder } from '@order/orders/interfaces';
 import { User } from '@user/users/models';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -125,6 +126,13 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     nullable: true,
   })
   productId?: number;
+
+  @ManyToOne('OrderEntity')
+  order: IOrder;
+
+  @Field()
+  @Column({ type: 'int' })
+  orderId: number;
 
   @Field(() => OrderItemStatus)
   @Column({

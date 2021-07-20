@@ -2,6 +2,7 @@ import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
+import { IOrder } from '@order/orders/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -19,6 +20,9 @@ export interface IOrderItem {
   itemId?: number;
   product?: IProduct;
   productId?: number;
+
+  order: IOrder;
+  orderId: number;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;

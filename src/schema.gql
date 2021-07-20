@@ -719,6 +719,27 @@ type Mutation {
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
+type OrderBuyer {
+  createdAt: DateTime!
+  email: String!
+  id: Int!
+  name: String!
+  phoneNumber: String!
+  updatedAt: DateTime!
+}
+
+type OrderReceiver {
+  baseAddress: String!
+  createdAt: DateTime!
+  detailAddress: String!
+  email: String!
+  id: Int!
+  name: String!
+  phoneNumber: String!
+  postalCode: String!
+  updatedAt: DateTime!
+}
+
 type OrderSheet {
   payMethod: PayMethod!
   productDatas: [OrderSheetProductData!]!
@@ -747,6 +768,18 @@ input OrderSheetProductInput {
   productId: Int!
   quantity: Int!
   recommenderId: Int
+}
+
+type OrderVbankReceipt {
+  bankCode: InicisBankCode!
+  createdAt: DateTime!
+  due: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
+  updatedAt: DateTime!
 }
 
 input PageInput {
