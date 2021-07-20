@@ -719,6 +719,27 @@ type Mutation {
   uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
+type Order {
+  buyer: OrderBuyer!
+  createdAt: DateTime!
+  id: Int!
+  orderItems: [OrderItem!]!
+  paidAt: DateTime
+  payMethod: OrderStatus!
+  receiver: OrderReceiver!
+  status: OrderStatus!
+  totalCouponDiscountAmount: Int!
+  totalItemFinalPrice: Int!
+  totalPayAmount: Int!
+  totalShippingFee: Int!
+  totalUsedPointAmount: Int!
+  updatedAt: DateTime!
+  user: User
+  userId: Float
+  vbankInfo: OrderVbankReceipt
+  withdrawnAt: DateTime
+}
+
 type OrderBuyer {
   createdAt: DateTime!
   email: String!
@@ -726,6 +747,78 @@ type OrderBuyer {
   name: String!
   phoneNumber: String!
   updatedAt: DateTime!
+}
+
+type OrderItem {
+  Order: Order!
+  brandNameKor: String!
+  cancelRequestedAt: DateTime
+  cancelledAt: DateTime
+  claimStatus: OrderItemClaimStatus
+  confirmedAt: DateTime
+  couponDiscountAmount: Int!
+  courier: Courier
+  courierId: Float
+  createdAt: DateTime!
+  exchangeRequestedAt: DateTime
+  exchangedAt: DateTime
+  id: Int!
+  isConfirmed: Boolean!
+  isSettled: Boolean!
+  item: Item
+  itemFinalPrice: Int!
+  itemId: Float
+  itemName: String!
+  orderId: Float!
+  paidAt: DateTime
+  payAmount: Int!
+  product: Product
+  productId: Float
+  productVariantName: String!
+  quantity: Int!
+  recommenderId: Float
+  recommenderNickname: String
+  referrer: User
+  referrerId: Float
+  refundRequestedAt: DateTime
+  refundedAt: DateTime
+  seller: Seller
+  sellerId: Float
+  settledAt: DateTime
+  shipReadyAt: DateTime
+
+  """예약발송 예정일"""
+  shipReservedAt: DateTime
+  shippedAt: DateTime
+  shippingAt: DateTime
+  status: OrderItemStatus!
+  trackCode: String
+  updatedAt: DateTime!
+  usedPointAmount: Int!
+  user: User
+  userId: Float
+  withdrawnAt: DateTime
+}
+
+"""주문상품 클레임상태입니다."""
+enum OrderItemClaimStatus {
+  CancelRequested
+  Cancelled
+  ExchangeRequested
+  Exchanged
+  RefundRequested
+  Refunded
+}
+
+"""주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
+enum OrderItemStatus {
+  Paid
+  ShipPending
+  ShipReady
+  Shipped
+  Shipping
+  VbankReady
+  Withdrawn
 }
 
 type OrderReceiver {
@@ -768,6 +861,13 @@ input OrderSheetProductInput {
   productId: Int!
   quantity: Int!
   recommenderId: Int
+}
+
+"""주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
+enum OrderStatus {
+  Paid
+  VbankReady
+  Withdrawn
 }
 
 type OrderVbankReceipt {
