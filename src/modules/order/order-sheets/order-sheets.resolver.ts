@@ -87,9 +87,6 @@ export class OrderSheetsResolver {
     const baseOrderSheet = await this.prepareOrder(payload, orderSheetInput);
     OrderSheetInput.validate(orderSheetInput, baseOrderSheet);
 
-    return await this.orderSheetsService.createOrderSheet(
-      payload.sub,
-      orderSheetInput
-    );
+    return await this.orderSheetsService.create(payload.sub, orderSheetInput);
   }
 }

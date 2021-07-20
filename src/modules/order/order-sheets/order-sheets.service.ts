@@ -9,10 +9,7 @@ import { OrderSheet } from './models';
 export class OrderSheetsService {
   constructor(@Inject(CacheService) private cacheService: CacheService) {}
 
-  async createOrderSheet(
-    userId: number,
-    input: OrderSheetInput
-  ): Promise<OrderSheet> {
+  async create(userId: number, input: OrderSheetInput): Promise<OrderSheet> {
     const orderSheet = OrderSheet.from(userId, input);
 
     const cacheKey = OrderSheet.getCacheKey(userId);
