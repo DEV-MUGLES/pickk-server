@@ -74,7 +74,7 @@ export class SpiderService {
           code,
           itemData
         );
-        await this.itemImageUrlProducer.send({
+        await this.itemImageUrlProducer.update({
           itemId: id,
           imageUrl: itemData.imageUrl,
         });

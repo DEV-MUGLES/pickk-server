@@ -5,7 +5,7 @@ import {
   SqsConsumerEventHandler,
   SqsMessageHandler,
   SqsProcess,
-} from '@pickk/nest-sqs';
+} from '@pickk/nestjs-sqs';
 
 import { getMimeType } from '@src/modules/common/images/helpers';
 import { ImagesService } from '@src/modules/common/images/images.service';
