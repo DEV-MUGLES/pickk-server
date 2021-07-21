@@ -8,7 +8,7 @@ import { IOrderReceiver } from './order-receiver.interface';
 import { IOrderVbankReceipt } from './order-vbank-receipt.interface';
 
 export interface IOrder {
-  id: number;
+  merchantUid: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -16,9 +16,8 @@ export interface IOrder {
   userId?: number;
   orderItems: IOrderItem[];
 
-  merchantUid: string;
   status: OrderStatus;
-  payMethod: PayMethod;
+  payMethod?: PayMethod;
 
   /** 총 상품 가격 */
   totalItemFinalPrice: number;
@@ -34,10 +33,14 @@ export interface IOrder {
   // 가상계좌 관련 정보
   vbankInfo?: IOrderVbankReceipt;
   // 구매자 정보
-  buyer: IOrderBuyer;
+  buyer?: IOrderBuyer;
   // 수령인 정보
-  receiver: IOrderReceiver;
+  receiver?: IOrderReceiver;
 
+  pendingAt?: Date;
+  payingAt?: Date;
+  failedAt?: Date;
+  vbankReadyAt?: Date;
   paidAt?: Date;
   withdrawnAt?: Date;
 }

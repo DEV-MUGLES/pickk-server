@@ -1,15 +1,18 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   Column,
+  CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
   OneToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
 } from 'typeorm';
 import { IsEnum, IsString, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { User } from '@user/users/models';
 
@@ -27,12 +30,63 @@ import {
 
 @ObjectType()
 @Entity({ name: 'order' })
-export class OrderEntity extends BaseIdEntity implements IOrder {
+@Index('idx_merchantUid', ['merchantUid'])
+export class OrderEntity implements IOrder {
+  constructor(attributes?: Partial<OrderEntity>) {
+    if (!attributes) {
+      return;
+    }
+
+    this.merchantUid = attributes.merchantUid;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
+
+    this.user = attributes.user;
+    this.userId = attributes.userId;
+
+    this.orderItems = attributes.orderItems;
+
+    this.status = attributes.status;
+    this.payMethod = attributes.payMethod;
+
+    this.totalItemFinalPrice = attributes.totalItemFinalPrice;
+    this.totalShippingFee = attributes.totalShippingFee;
+    this.totalCouponDiscountAmount = attributes.totalCouponDiscountAmount;
+    this.totalUsedPointAmount = attributes.totalUsedPointAmount;
+    this.totalPayAmount = attributes.totalPayAmount;
+
+    this.vbankInfo = attributes.vbankInfo;
+    this.buyer = attributes.buyer;
+    this.receiver = attributes.receiver;
+
+    this.pendingAt = attributes.pendingAt;
+    this.payingAt = attributes.payingAt;
+    this.failedAt = attributes.failedAt;
+    this.vbankReadyAt = attributes.vbankReadyAt;
+    this.paidAt = attributes.paidAt;
+    this.withdrawnAt = attributes.withdrawnAt;
+  }
+  @Field(() => String, {
+    description:
+      '주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다.',
+  })
+  @PrimaryColumn({ type: 'char', length: 17 })
+  @IsString()
+  merchantUid: string;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -44,10 +98,6 @@ export class OrderEntity extends BaseIdEntity implements IOrder {
   @OneToMany('OrderItemEntity', 'order', { cascade: true, onDelete: 'CASCADE' })
   orderItems: IOrderItem[];
 
-  @Column()
-  @IsString()
-  merchantUid: string;
-
   @Field(() => OrderStatus)
   @Column({
     type: 'enum',
@@ -56,13 +106,14 @@ export class OrderEntity extends BaseIdEntity implements IOrder {
   @IsEnum(OrderStatus)
   status: OrderStatus;
 
-  @Field(() => OrderStatus)
+  @Field(() => OrderStatus, { nullable: true })
   @Column({
     type: 'enum',
     enum: OrderStatus,
+    nullable: true,
   })
   @IsEnum(OrderStatus)
-  payMethod: PayMethod;
+  payMethod?: PayMethod;
 
   @Field(() => Int)
   @Column({ unsigned: true })
@@ -99,19 +150,37 @@ export class OrderEntity extends BaseIdEntity implements IOrder {
   @JoinColumn()
   vbankInfo?: OrderVbankReceipt;
 
-  @Field(() => OrderBuyer)
+  @Field(() => OrderBuyer, { nullable: true })
   @OneToOne(() => OrderBuyerEntity, {
     cascade: true,
+    nullable: true,
   })
   @JoinColumn()
   buyer: OrderBuyer;
 
-  @Field(() => OrderReceiver)
+  @Field(() => OrderReceiver, { nullable: true })
   @OneToOne(() => OrderReceiverEntity, {
     cascade: true,
+    nullable: true,
   })
   @JoinColumn()
   receiver: OrderReceiver;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  pendingAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  payingAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  failedAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  vbankReadyAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

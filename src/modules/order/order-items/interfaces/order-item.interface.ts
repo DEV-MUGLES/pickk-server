@@ -1,3 +1,4 @@
+import { ContentType } from '@common/constants';
 import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
@@ -8,7 +9,7 @@ import { IUser } from '@user/users/interfaces';
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 
 export interface IOrderItem {
-  id: number;
+  merchantUid: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -22,7 +23,7 @@ export interface IOrderItem {
   productId?: number;
 
   order: IOrder;
-  orderId: number;
+  orderMerchantUid: number;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
@@ -48,9 +49,9 @@ export interface IOrderItem {
   recommenderId?: number;
   recommenderNickname?: string;
 
-  // 공유인 관련 정보
-  referrer?: IUser;
-  referrerId?: number;
+  // 추천 컨텐츠 관련 정보
+  recommendContentType?: ContentType;
+  recommendContentItemId?: number;
 
   // 배송 정보
   courier?: ICourier;

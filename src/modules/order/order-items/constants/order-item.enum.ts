@@ -1,6 +1,9 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum OrderItemStatus {
+  Pending = 'pending',
+  Paying = 'paying',
+  Failed = 'failed',
   VbankReady = 'vbank_ready',
   Paid = 'paid',
   Withdrawn = 'withdrawn',

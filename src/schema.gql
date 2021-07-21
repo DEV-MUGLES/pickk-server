@@ -112,6 +112,12 @@ enum ClaimFeePayMethod {
   Trans
 }
 
+"""컨텐츠 타입입니다."""
+enum ContentType {
+  Look
+  Pickk
+}
+
 type Coupon {
   createdAt: DateTime!
   id: Int!
@@ -686,13 +692,18 @@ type Mutation {
 }
 
 type Order {
-  buyer: OrderBuyer!
+  buyer: OrderBuyer
   createdAt: DateTime!
-  id: Int!
+  failedAt: DateTime
+
+  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  merchantUid: String!
   orderItems: [OrderItem!]!
   paidAt: DateTime
-  payMethod: OrderStatus!
-  receiver: OrderReceiver!
+  payMethod: OrderStatus
+  payingAt: DateTime
+  pendingAt: DateTime
+  receiver: OrderReceiver
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -701,8 +712,9 @@ type Order {
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   user: User
-  userId: Float
+  userId: Int
   vbankInfo: OrderVbankReceipt
+  vbankReadyAt: DateTime
   withdrawnAt: DateTime
 }
 
@@ -724,32 +736,34 @@ type OrderItem {
   confirmedAt: DateTime
   couponDiscountAmount: Int!
   courier: Courier
-  courierId: Float
+  courierId: Int
   createdAt: DateTime!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
-  id: Int!
   isConfirmed: Boolean!
   isSettled: Boolean!
   item: Item
   itemFinalPrice: Int!
-  itemId: Float
+  itemId: Int
   itemName: String!
-  orderId: Float!
+
+  """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
+  merchantUid: String!
+  orderMerchantUid: Int!
   paidAt: DateTime
   payAmount: Int!
   product: Product
-  productId: Float
+  productId: Int
   productVariantName: String!
   quantity: Int!
-  recommenderId: Float
+  recommendContentItemId: Int
+  recommendContentType: ContentType
+  recommenderId: Int
   recommenderNickname: String
-  referrer: User
-  referrerId: Float
   refundRequestedAt: DateTime
   refundedAt: DateTime
   seller: Seller
-  sellerId: Float
+  sellerId: Int
   settledAt: DateTime
   shipReadyAt: DateTime
 
@@ -762,7 +776,7 @@ type OrderItem {
   updatedAt: DateTime!
   usedPointAmount: Int!
   user: User
-  userId: Float
+  userId: Int
   withdrawnAt: DateTime
 }
 
@@ -778,7 +792,10 @@ enum OrderItemClaimStatus {
 
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
 enum OrderItemStatus {
+  Failed
   Paid
+  Paying
+  Pending
   ShipPending
   ShipReady
   Shipped
@@ -801,7 +818,10 @@ type OrderReceiver {
 
 """주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
 enum OrderStatus {
+  Failed
   Paid
+  Paying
+  Pending
   VbankReady
   Withdrawn
 }

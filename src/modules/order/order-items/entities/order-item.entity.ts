@@ -1,8 +1,15 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities';
+import { ContentType } from '@common/constants';
 import { Courier } from '@item/couriers/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
@@ -15,9 +22,8 @@ import { IOrderItem } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'order_item' })
-export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
+export class OrderItemEntity implements IOrderItem {
   constructor(attributes?: Partial<OrderItemEntity>) {
-    super(attributes);
     if (!attributes) {
       return;
     }
@@ -30,6 +36,9 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     this.itemId = attributes.itemId;
     this.product = attributes.product;
     this.productId = attributes.productId;
+
+    this.order = attributes.order;
+    this.orderMerchantUid = attributes.orderMerchantUid;
 
     this.status = attributes.status;
     this.claimStatus = attributes.claimStatus;
@@ -49,9 +58,8 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
 
     this.recommenderId = attributes.recommenderId;
     this.recommenderNickname = attributes.recommenderNickname;
-
-    this.referrer = attributes.referrer;
-    this.referrerId = attributes.referrerId;
+    this.recommendContentType = attributes.recommendContentType;
+    this.recommendContentItemId = attributes.recommendContentItemId;
 
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
@@ -75,11 +83,27 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     this.settledAt = attributes.settledAt;
   }
 
+  @Field(() => String, {
+    description:
+      '주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다.',
+  })
+  @PrimaryColumn({ type: 'char', length: 19 })
+  @IsString()
+  merchantUid: string;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -92,7 +116,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('SellerEntity', { nullable: true })
   seller?: Seller;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -105,7 +129,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('ItemEntity', { nullable: true })
   item?: Item;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -118,7 +142,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('ProductEntity', { nullable: true })
   product?: Product;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -130,9 +154,9 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('OrderEntity')
   order: IOrder;
 
-  @Field()
+  @Field(() => Int)
   @Column({ type: 'int' })
-  orderId: number;
+  orderMerchantUid: number;
 
   @Field(() => OrderItemStatus)
   @Column({
@@ -205,7 +229,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @IsString()
   productVariantName: string;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -224,24 +248,28 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   })
   recommenderNickname?: string;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  referrer?: User;
+  @Field(() => ContentType, { nullable: true })
+  @Column({
+    type: 'enum',
+    enum: ContentType,
+    nullable: true,
+  })
+  recommendContentType?: ContentType;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
     type: 'int',
     nullable: true,
   })
-  referrerId?: number;
+  recommendContentItemId?: number;
 
   @Field(() => Courier, { nullable: true })
   @ManyToOne('CourierEntity', { nullable: true })
   courier?: Courier;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
