@@ -51,40 +51,6 @@ enum AppleClientType {
   Web
 }
 
-type BaseOrderSheet {
-  availableCoupons: [Coupon!]!
-  availablePointAmount: Int!
-
-  """요청한 유저의 ID와 동일한 값입니다."""
-  id: Int!
-
-  """OrderSheetItem들을 브랜드별로 묶은 단위입니다."""
-  orderSheetBrands: [BaseOrderSheetBrand!]!
-  orderSheetItems: [BaseOrderSheetItem!]!
-  refundAccount: RefundAccount!
-  shippingAddresses: [ShippingAddress!]!
-}
-
-type BaseOrderSheetBrand {
-  brand: Brand!
-  orderSheetItems: [BaseOrderSheetItem!]!
-  sellerShippingPolicy: SellerShippingPolicy!
-}
-
-input BaseOrderSheetInput {
-  productInputs: [BaseOrderSheetProductInput!]!
-}
-
-type BaseOrderSheetItem {
-  product: Product!
-  quantity: Int!
-}
-
-input BaseOrderSheetProductInput {
-  productId: Int!
-  quantity: Int!
-}
-
 type Brand {
   createdAt: DateTime!
   description: String
@@ -833,36 +799,6 @@ type OrderReceiver {
   updatedAt: DateTime!
 }
 
-type OrderSheet {
-  payMethod: PayMethod!
-  productDatas: [OrderSheetProductData!]!
-  shippingAddressId: Int!
-  usedPointAmount: Int!
-  userId: Int!
-  uuid: String!
-}
-
-input OrderSheetInput {
-  payMethod: PayMethod!
-  productInputs: [OrderSheetProductInput!]!
-  shippingAddressId: Int!
-  usedPointAmount: Int!
-}
-
-type OrderSheetProductData {
-  couponId: Int
-  productId: Int!
-  quantity: Int!
-  recommenderId: Int
-}
-
-input OrderSheetProductInput {
-  couponId: Int
-  productId: Int!
-  quantity: Int!
-  recommenderId: Int
-}
-
 """주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
 enum OrderStatus {
   Paid
@@ -886,28 +822,6 @@ input PageInput {
   limit: Int = 20
   offset: Int
   startId: Int
-}
-
-"""결제수단입니다."""
-enum PayMethod {
-  Booknlife
-  Card
-  Chaipay
-  Cultureland
-  Happymoney
-  Kakaopay
-  Kpay
-  Lpay
-  Naverpay
-  Payco
-  Phone
-  Point
-  Samsungpay
-  Smartculture
-  Ssgpay
-  Tosspay
-  Trans
-  Vbank
 }
 
 type PointEvent {
@@ -973,7 +887,6 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
-  createOrderSheet(orderSheetInput: OrderSheetInput!): OrderSheet!
   genRandomNickname: String!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
@@ -995,7 +908,6 @@ type Query {
   myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
-  prepareOrder(prepareOrderSheetInput: BaseOrderSheetInput!): BaseOrderSheet!
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
