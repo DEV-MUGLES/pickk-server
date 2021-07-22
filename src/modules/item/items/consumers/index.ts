@@ -1,5 +1,5 @@
-import { ItemImageUrlConsumer } from './item-image-url.consumer';
+import { UpdateItemImageUrlConsumer } from './update-item-image-url.consumer';
 
-export const Consumers = [ItemImageUrlConsumer];
+export const Consumers = [UpdateItemImageUrlConsumer];
 
-export { ItemImageUrlConsumer };
+export { UpdateItemImageUrlConsumer };

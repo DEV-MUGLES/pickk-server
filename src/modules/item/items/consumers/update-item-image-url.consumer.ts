@@ -15,7 +15,7 @@ import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants';
 import { UpdateItemImageUrlDto } from '../interfaces';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
-export class ItemImageUrlConsumer {
+export class UpdateItemImageUrlConsumer {
   constructor(
     private readonly httpService: HttpService,
     private readonly imagesService: ImagesService,
