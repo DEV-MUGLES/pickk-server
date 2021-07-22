@@ -13,11 +13,11 @@ import {
   CreateExpectedPointEventInput,
 } from './dtos';
 import { ExpectedPointEvent, PointEvent } from './models';
-
 import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
 } from './points.repository';
+import { ExpectedPointEventProducer } from './producers';
 
 @Injectable()
 export class PointsService {
@@ -26,7 +26,8 @@ export class PointsService {
     private readonly pointEventsRepository: PointEventsRepository,
     @InjectRepository(ExpectedPointEventsRepository)
     private readonly expectedpointEventsRepository: ExpectedPointEventsRepository,
-    @Inject(CacheService) private cacheService: CacheService
+    @Inject(CacheService) private cacheService: CacheService,
+    private readonly expectedPointEventProducer: ExpectedPointEventProducer
   ) {}
 
   async updateAvailableAmount(userId: number, amount: number) {
@@ -102,14 +103,19 @@ export class PointsService {
     );
   }
 
-  // @TODO: AWS SQS로 orderId에 따라 removeExpectedEvent를 큐에 등록하기
   async createEvent(createEventInput: CreateEventInput): Promise<PointEvent> {
-    const { userId } = createEventInput;
+    const { userId, orderId } = createEventInput;
     const currentAmount = await this.getAvailableAmount(userId);
     const pointEvent = PointEvent.of(createEventInput, currentAmount);
 
     await this.updateAvailableAmount(userId, pointEvent.resultBalance);
-    return await this.pointEventsRepository.save(pointEvent);
+    const createdPointEvent = await this.pointEventsRepository.save(pointEvent);
+
+    if (orderId) {
+      this.expectedPointEventProducer.removeByOrderId(orderId);
+    }
+
+    return createdPointEvent;
   }
 
   async createExpectedEvent(
@@ -121,7 +127,6 @@ export class PointsService {
     return await this.expectedpointEventsRepository.save(expectedPointEvent);
   }
 
-  // @TODO: AWS SQS적용해서 업데이트하기
   async removeExpectedEvent(orderId: number): Promise<DeleteResult> {
     return await this.expectedpointEventsRepository.delete(orderId);
   }

@@ -1,4 +1,3 @@
-export * from './item-image-url.interface';
 export * from './item-notice.interface';
 export * from './item-option-value.interface';
 export * from './item-option.interface';
