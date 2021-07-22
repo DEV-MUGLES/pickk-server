@@ -18,7 +18,7 @@ import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
 } from './points.repository';
-import { ExpectedPointEventProducer } from './producers/expected-point-event.producer';
+import { ExpectedPointEventProducer } from './producers';
 
 @Injectable()
 export class PointsService {

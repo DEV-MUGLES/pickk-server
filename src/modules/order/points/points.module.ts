@@ -3,8 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from './constants';
-import Consumers from './consumers';
-import Producers from './producers';
+import { Consumers } from './consumers';
+import { Producers } from './producers';
 import {
   ExpectedPointEventsRepository,
   PointEventsRepository,
