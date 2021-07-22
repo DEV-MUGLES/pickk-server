@@ -1,9 +1,16 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis/provider.service';
 
-import { CreateCartItemInput, UpdateCartItemInput } from './dtos';
+import {
+  CartItemFilter,
+  CreateCartItemInput,
+  UpdateCartItemInput,
+} from './dtos';
 import { Cart, CartItem } from './models';
 import { CartItemsRepository } from './carts.repository';
 
@@ -14,6 +21,23 @@ export class CartsService {
     private readonly cartItemsRepository: CartItemsRepository,
     @Inject(CacheService) private cacheService: CacheService
   ) {}
+
+  async list(
+    cartItemFilter?: CartItemFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<CartItem[]> {
+    const _productFilter = plainToClass(CartItemFilter, cartItemFilter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.cartItemsRepository.entityToModelMany(
+      await this.cartItemsRepository.find({
+        relations,
+        where: parseFilter(_productFilter, _pageInput?.idFilter),
+        ...(_pageInput?.pageFilter ?? {}),
+      })
+    );
+  }
 
   async countItemsByUserId(
     userId: number,
@@ -65,23 +89,16 @@ export class CartsService {
   }
 
   async findItemsByUserId(userId: number): Promise<CartItem[]> {
-    return this.cartItemsRepository.entityToModelMany(
-      await this.cartItemsRepository.find({
-        where: {
-          userId,
-        },
-        relations: [
-          'product',
-          'product.shippingReservePolicy',
-          'product.itemOptionValues',
-          'product.item',
-          'product.item.prices',
-          'product.item.brand',
-          'product.item.brand.seller',
-          'product.item.brand.seller.shippingPolicy',
-        ],
-      })
-    );
+    return await this.list({ userId }, null, [
+      'product',
+      'product.shippingReservePolicy',
+      'product.itemOptionValues',
+      'product.item',
+      'product.item.prices',
+      'product.item.brand',
+      'product.item.brand.seller',
+      'product.item.brand.seller.shippingPolicy',
+    ]);
   }
 
   async adjustQuantitiesToStock(cartItems: CartItem[]): Promise<CartItem[]> {
