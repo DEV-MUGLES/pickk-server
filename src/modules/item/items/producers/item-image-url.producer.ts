@@ -8,12 +8,12 @@ import { UpdateItemImageUrlMto } from '../mtos';
 export class ItemImageUrlProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async update(updateItemImageUrlDto: UpdateItemImageUrlMto) {
+  async update(itemId: number, imageUrl: string) {
     await this.sqsService.send<UpdateItemImageUrlMto>(
       UPDATE_ITEM_IMAGE_URL_QUEUE,
       {
-        id: updateItemImageUrlDto.itemId.toString(),
-        body: updateItemImageUrlDto,
+        id: itemId.toString(),
+        body: { itemId, imageUrl },
       }
     );
   }

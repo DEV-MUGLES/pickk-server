@@ -69,15 +69,13 @@ export class SpiderService {
       );
       if (!item) {
         // @TODO: 추가된 item들에 대해서 썸네일 이미지 업로드를 진행하고, 업데이트 해야함
-        const { id } = await this.itemsService.addByCrawlData(
+        const { imageUrl } = itemData;
+        const { id: itemId } = await this.itemsService.addByCrawlData(
           brandId,
           code,
           itemData
         );
-        await this.itemImageUrlProducer.update({
-          itemId: id,
-          imageUrl: itemData.imageUrl,
-        });
+        await this.itemImageUrlProducer.update(itemId, imageUrl);
         continue;
       }
 

@@ -112,7 +112,7 @@ export class PointsService {
     const createdPointEvent = await this.pointEventsRepository.save(pointEvent);
 
     if (orderId) {
-      this.expectedPointEventProducer.remove({ orderId });
+      this.expectedPointEventProducer.removeByOrderId(orderId);
     }
 
     return createdPointEvent;

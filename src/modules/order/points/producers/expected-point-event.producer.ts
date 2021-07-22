@@ -8,14 +8,12 @@ import { RemoveExpectedPointEventMto } from '../mtos';
 export class ExpectedPointEventProducer {
   constructor(private readonly sqsService: SqsService) {}
 
-  public async remove(
-    removeExpectedPointEventMto: RemoveExpectedPointEventMto
-  ) {
+  public async removeByOrderId(orderId: number) {
     await this.sqsService.send<RemoveExpectedPointEventMto>(
       REMOVE_EXPECTED_POINT_EVENT_QUEUE,
       {
-        id: removeExpectedPointEventMto.orderId.toString(),
-        body: removeExpectedPointEventMto,
+        id: orderId.toString(),
+        body: { orderId },
       }
     );
   }
