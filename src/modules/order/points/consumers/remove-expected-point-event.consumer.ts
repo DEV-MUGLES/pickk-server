@@ -6,7 +6,7 @@ import {
 } from '@pickk/nestjs-sqs';
 
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '../constants';
-import { RemoveExpectedPointEventDto } from '../dtos';
+import { RemoveExpectedPointEventMto } from '../mtos';
 import { PointsService } from '../points.service';
 
 @SqsProcess(REMOVE_EXPECTED_POINT_EVENT_QUEUE)
@@ -16,8 +16,8 @@ export class RemoveExpectedPointEventConsumer {
   @SqsMessageHandler()
   public async remove(message: AWS.SQS.Message) {
     const { Body } = message;
-    const data: RemoveExpectedPointEventDto = JSON.parse(Body);
-    await this.pointsService.removeExpectedEvent(data);
+    const { orderId }: RemoveExpectedPointEventMto = JSON.parse(Body);
+    await this.pointsService.removeExpectedEvent(orderId);
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)

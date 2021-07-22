@@ -8,7 +8,3 @@ export class CreateExpectedPointEventInput extends PickType(
   ['amount', 'title', 'orderId', 'content', 'userId'],
   InputType
 ) {}
-
-export class RemoveExpectedPointEventDto {
-  orderId: number;
-}

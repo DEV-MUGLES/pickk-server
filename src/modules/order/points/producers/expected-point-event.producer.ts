@@ -2,20 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '../constants';
-import { RemoveExpectedPointEventDto } from '../dtos';
+import { RemoveExpectedPointEventMto } from '../mtos';
 
 @Injectable()
 export class ExpectedPointEventProducer {
   constructor(private readonly sqsService: SqsService) {}
 
   public async remove(
-    removeExpectedPointEventDto: RemoveExpectedPointEventDto
+    removeExpectedPointEventMto: RemoveExpectedPointEventMto
   ) {
-    await this.sqsService.send<RemoveExpectedPointEventDto>(
+    await this.sqsService.send<RemoveExpectedPointEventMto>(
       REMOVE_EXPECTED_POINT_EVENT_QUEUE,
       {
-        id: removeExpectedPointEventDto.orderId.toString(),
-        body: removeExpectedPointEventDto,
+        id: removeExpectedPointEventMto.orderId.toString(),
+        body: removeExpectedPointEventMto,
       }
     );
   }

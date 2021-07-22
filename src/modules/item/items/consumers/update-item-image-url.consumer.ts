@@ -12,7 +12,7 @@ import { ImagesService } from '@src/modules/common/images/images.service';
 import { ItemsService } from '@item/items/items.service';
 
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants';
-import { UpdateItemImageUrlDto } from '../interfaces';
+import { UpdateItemImageUrlMto } from '../mtos';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class UpdateItemImageUrlConsumer {
@@ -25,7 +25,7 @@ export class UpdateItemImageUrlConsumer {
   @SqsMessageHandler()
   async update(message: AWS.SQS.Message): Promise<void> {
     const { Body } = message;
-    const messageData: UpdateItemImageUrlDto = JSON.parse(Body);
+    const messageData: UpdateItemImageUrlMto = JSON.parse(Body);
     const { itemId, imageUrl } = messageData;
 
     const { data } = await firstValueFrom(

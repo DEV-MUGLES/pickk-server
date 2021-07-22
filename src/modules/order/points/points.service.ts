@@ -11,7 +11,6 @@ import {
   PointEventFilter,
   CreateEventInput,
   CreateExpectedPointEventInput,
-  RemoveExpectedPointEventDto,
 } from './dtos';
 import { ExpectedPointEvent, PointEvent } from './models';
 import {
@@ -128,10 +127,7 @@ export class PointsService {
     return await this.expectedpointEventsRepository.save(expectedPointEvent);
   }
 
-  async removeExpectedEvent(
-    removeExpectedEventDto: RemoveExpectedPointEventDto
-  ): Promise<DeleteResult> {
-    const { orderId } = removeExpectedEventDto;
+  async removeExpectedEvent(orderId: number): Promise<DeleteResult> {
     return await this.expectedpointEventsRepository.delete(orderId);
   }
 }
