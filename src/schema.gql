@@ -820,6 +820,25 @@ type OrderReceiver {
   updatedAt: DateTime!
 }
 
+type OrderSheet {
+  availablePointAmount: Int!
+  brands: [OrderSheetBrand!]!
+  coupons: [Coupon!]!
+
+  """ApolloClient 최적화를 위한 필드입니다. order의 merchantUid와 같습니다."""
+  id: String!
+  order: Order!
+  refundAccount: RefundAccount
+  shippingAddresses: [ShippingAddress!]!
+}
+
+type OrderSheetBrand {
+  items: [OrderItem!]!
+  nameKor: String!
+  shippingFee: Int!
+  totalItemFinalPrice: Int!
+}
+
 """주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
 enum OrderStatus {
   Failed
@@ -912,6 +931,7 @@ type Query {
 
   """중복이면 true, 아니면 false를 반환한다."""
   checkNicknameDuplicate(nickname: String!): Boolean!
+  checkoutOrder(merchantUid: String!): OrderSheet!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   genRandomNickname: String!

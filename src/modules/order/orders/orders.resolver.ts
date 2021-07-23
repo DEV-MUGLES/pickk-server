@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Mutation } from '@nestjs/graphql';
+import { Args, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/dtos';
@@ -9,10 +9,15 @@ import { CART_ITEM_RELATIONS } from '@item/carts/constants';
 import { CartsService } from '@item/carts/carts.service';
 import { PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
+import { CouponStatus } from '@order/coupons/constants';
+import { CouponsService } from '@order/coupons/coupons.service';
+import { PointsService } from '@order/points/points.service';
+import { UsersService } from '@user/users/users.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
 import { RegisterOrderInput, RegisterOrderOutput } from './dtos';
-import { Order } from './models';
+import { Order, OrderSheet } from './models';
+
 import { OrdersService } from './orders.service';
 
 @Injectable()
@@ -20,9 +25,12 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
 
   constructor(
+    private readonly couponsService: CouponsService,
     private readonly cartsService: CartsService,
     private readonly productsService: ProductsService,
-    private readonly ordersService: OrdersService
+    private readonly pointsService: PointsService,
+    private readonly ordersService: OrdersService,
+    private readonly usersService: UsersService
   ) {
     super();
   }
@@ -74,5 +82,29 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
 
       return await this.ordersService.register(payload.sub, inputs);
     }
+  }
+
+  @Query(() => OrderSheet)
+  @UseGuards(JwtVerifyGuard)
+  async checkoutOrder(
+    @CurrentUser() payload: JwtPayload,
+    @Args('merchantUid') merchantUid: string
+  ): Promise<OrderSheet> {
+    const userId = payload.sub;
+
+    const [order, user, availablePointAmount, coupons] = await Promise.all([
+      this.ordersService.get(merchantUid, [
+        'orderItems',
+        'orderItems.seller',
+        'orderItems.seller.shippingPolicy',
+      ]),
+      this.usersService.get(userId, ['shippingAddresses', 'refundAccount']),
+      this.pointsService.getAvailableAmount(userId),
+      this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [
+        'spec',
+      ]),
+    ]);
+
+    return OrderSheet.from(order, user, availablePointAmount, coupons);
   }
 }

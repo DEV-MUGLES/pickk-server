@@ -8,6 +8,7 @@ import { Product } from '@item/products/models';
 
 import { OrderFactory } from './factories';
 import { Order } from './models';
+
 import { OrdersRepository } from './orders.repository';
 
 dayjs.extend(utc);
@@ -19,6 +20,10 @@ export class OrdersService {
     @InjectRepository(OrdersRepository)
     private readonly ordersRepository: OrdersRepository
   ) {}
+
+  async get(merchantUid: string, relations: string[] = []): Promise<Order> {
+    return await this.ordersRepository.get(merchantUid, relations);
+  }
 
   async register(
     userId: number,
