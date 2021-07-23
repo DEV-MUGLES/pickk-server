@@ -72,4 +72,12 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
   get stockThreshold(): number {
     return this.stock || this.shippingReservePolicy?.stock || 0;
   }
+
+  @Field({ description: '예약배송 적용 여부' })
+  get isShipReserving(): boolean {
+    if (!this.shippingReservePolicy) {
+      return false;
+    }
+    return this.stock === 0 && this.shippingReservePolicy.stock > 0;
+  }
 }

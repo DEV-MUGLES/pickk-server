@@ -1,8 +1,15 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  ManyToOne,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
-import { BaseIdEntity } from '@common/entities';
+import { ContentType } from '@common/constants';
 import { Courier } from '@item/couriers/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
@@ -15,12 +22,15 @@ import { IOrderItem } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'order_item' })
-export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
+export class OrderItemEntity implements IOrderItem {
   constructor(attributes?: Partial<OrderItemEntity>) {
-    super(attributes);
     if (!attributes) {
       return;
     }
+
+    this.merchantUid = attributes.merchantUid;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
 
     this.user = attributes.user;
     this.userId = attributes.userId;
@@ -30,6 +40,9 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     this.itemId = attributes.itemId;
     this.product = attributes.product;
     this.productId = attributes.productId;
+
+    this.order = attributes.order;
+    this.orderMerchantUid = attributes.orderMerchantUid;
 
     this.status = attributes.status;
     this.claimStatus = attributes.claimStatus;
@@ -41,7 +54,6 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     this.itemFinalPrice = attributes.itemFinalPrice;
     this.couponDiscountAmount = attributes.couponDiscountAmount;
     this.usedPointAmount = attributes.usedPointAmount;
-    this.payAmount = attributes.payAmount;
 
     this.brandNameKor = attributes.brandNameKor;
     this.itemName = attributes.itemName;
@@ -49,14 +61,14 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
 
     this.recommenderId = attributes.recommenderId;
     this.recommenderNickname = attributes.recommenderNickname;
-
-    this.referrer = attributes.referrer;
-    this.referrerId = attributes.referrerId;
+    this.recommendContentType = attributes.recommendContentType;
+    this.recommendContentItemId = attributes.recommendContentItemId;
 
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
     this.trackCode = attributes.trackCode;
 
+    this.failedAt = attributes.failedAt;
     this.paidAt = attributes.paidAt;
     this.withdrawnAt = attributes.withdrawnAt;
     this.shipReadyAt = attributes.shipReadyAt;
@@ -75,11 +87,27 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
     this.settledAt = attributes.settledAt;
   }
 
+  @Field(() => String, {
+    description:
+      '주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다.',
+  })
+  @PrimaryColumn({ type: 'char', length: 22 })
+  @IsString()
+  merchantUid: string;
+
+  @Field()
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @Field()
+  @UpdateDateColumn()
+  updatedAt: Date;
+
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -92,7 +120,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('SellerEntity', { nullable: true })
   seller?: Seller;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -105,7 +133,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('ItemEntity', { nullable: true })
   item?: Item;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -118,7 +146,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @ManyToOne('ProductEntity', { nullable: true })
   product?: Product;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -131,8 +159,8 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   order: IOrder;
 
   @Field()
-  @Column({ type: 'int' })
-  orderId: number;
+  @Column({ type: 'char', length: 20 })
+  orderMerchantUid: string;
 
   @Field(() => OrderItemStatus)
   @Column({
@@ -173,19 +201,14 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   itemFinalPrice: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   couponDiscountAmount: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   usedPointAmount: number;
-
-  @Field(() => Int)
-  @Column({ unsigned: true })
-  @Min(1)
-  payAmount: number;
 
   @Field()
   @Column({
@@ -205,7 +228,7 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   @IsString()
   productVariantName: string;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -224,24 +247,28 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   })
   recommenderNickname?: string;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  referrer?: User;
+  @Field(() => ContentType, { nullable: true })
+  @Column({
+    type: 'enum',
+    enum: ContentType,
+    nullable: true,
+  })
+  recommendContentType?: ContentType;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
     type: 'int',
     nullable: true,
   })
-  referrerId?: number;
+  recommendContentItemId?: number;
 
   @Field(() => Courier, { nullable: true })
   @ManyToOne('CourierEntity', { nullable: true })
   courier?: Courier;
 
-  @Field({
+  @Field(() => Int, {
     nullable: true,
   })
   @Column({
@@ -260,6 +287,10 @@ export class OrderItemEntity extends BaseIdEntity implements IOrderItem {
   })
   @MaxLength(30)
   trackCode?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  failedAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

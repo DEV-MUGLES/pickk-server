@@ -1,3 +1,4 @@
+import { ContentType } from '@common/constants';
 import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
@@ -8,7 +9,7 @@ import { IUser } from '@user/users/interfaces';
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 
 export interface IOrderItem {
-  id: number;
+  merchantUid: string;
   createdAt: Date;
   updatedAt: Date;
 
@@ -22,7 +23,7 @@ export interface IOrderItem {
   productId?: number;
 
   order: IOrder;
-  orderId: number;
+  orderMerchantUid: string;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
@@ -35,7 +36,6 @@ export interface IOrderItem {
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
-  payAmount: number;
 
   // 상품 관련 정보
   brandNameKor: string;
@@ -48,9 +48,9 @@ export interface IOrderItem {
   recommenderId?: number;
   recommenderNickname?: string;
 
-  // 공유인 관련 정보
-  referrer?: IUser;
-  referrerId?: number;
+  // 추천 컨텐츠 관련 정보
+  recommendContentType?: ContentType;
+  recommendContentItemId?: number;
 
   // 배송 정보
   courier?: ICourier;
@@ -58,6 +58,7 @@ export interface IOrderItem {
   trackCode?: string;
 
   // 상태 변경 시점 값들
+  failedAt?: Date;
   paidAt?: Date;
   withdrawnAt?: Date;
   shipReadyAt?: Date;
