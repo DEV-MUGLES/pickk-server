@@ -697,6 +697,9 @@ type Order {
   createdAt: DateTime!
   failedAt: DateTime
 
+  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  id: String!
+
   """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
   merchantUid: String!
   orderItems: [OrderItem!]!
@@ -741,6 +744,9 @@ type OrderItem {
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime
+
+  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  id: String!
   isConfirmed: Boolean!
   isSettled: Boolean!
   item: Item
@@ -965,6 +971,9 @@ input RegisterOrderItemInput {
 type RegisterOrderOutput {
   createdAt: DateTime!
   failedAt: DateTime
+
+  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  id: String!
 
   """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
   merchantUid: String!
