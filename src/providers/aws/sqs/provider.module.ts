@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SqsModule, SqsConfig } from '@pickk/nest-sqs';
+import { SqsModule, SqsConfig } from '@pickk/nestjs-sqs';
 
 import {
   AwsSqsConfigModule,

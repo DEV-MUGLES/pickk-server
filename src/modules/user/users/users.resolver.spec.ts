@@ -28,7 +28,7 @@ describe('UsersResolver', () => {
         },
         {
           provide: PointsService,
-          useValue: new PointsService(null, null, null),
+          useValue: new PointsService(null, null, null, null),
         },
       ],
     }).compile();
