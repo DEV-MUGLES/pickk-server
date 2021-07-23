@@ -34,4 +34,12 @@ export class OrdersRepository extends Repository<OrderEntity> {
       })
       .catch((error) => Promise.reject(error));
   }
+
+  async checkExist(merchantUid: string): Promise<boolean> {
+    const result = await this.createQueryBuilder('order')
+      .select('1')
+      .where('order.merchantUid = :merchantUid', { merchantUid })
+      .execute();
+    return result?.length > 0;
+  }
 }

@@ -652,6 +652,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
+  registerOrder(registerOrderInput: RegisterOrderInput!): RegisterOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
@@ -947,6 +948,39 @@ type RefundAccount {
   number: String!
   ownerName: String!
   updatedAt: DateTime!
+}
+
+input RegisterOrderInput {
+  cartItemIds: [Int!]
+  orderItemInputs: [RegisterOrderItemInput!]
+}
+
+input RegisterOrderItemInput {
+  productId: Int!
+  quantity: Int!
+  recommendContentItemId: Int
+  recommendContentType: ContentType
+}
+
+type RegisterOrderOutput {
+  createdAt: DateTime!
+  failedAt: DateTime
+
+  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  merchantUid: String!
+  paidAt: DateTime
+  payMethod: OrderStatus
+  payingAt: DateTime
+  status: OrderStatus!
+  totalCouponDiscountAmount: Int!
+  totalItemFinalPrice: Int!
+  totalPayAmount: Int!
+  totalShippingFee: Int!
+  totalUsedPointAmount: Int!
+  updatedAt: DateTime!
+  userId: Int
+  vbankReadyAt: DateTime
+  withdrawnAt: DateTime
 }
 
 type SaleStrategy {
