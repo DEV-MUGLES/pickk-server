@@ -1,3 +1,4 @@
+import { IAccount } from '@common/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IUser } from '@user/users/interfaces';
 
@@ -36,6 +37,7 @@ export interface IOrder {
   buyer?: IOrderBuyer;
   // 수령인 정보
   receiver?: IOrderReceiver;
+  refundAccount?: IAccount;
 
   payingAt?: Date;
   failedAt?: Date;

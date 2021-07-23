@@ -707,6 +707,7 @@ type Order {
   payMethod: OrderStatus
   payingAt: DateTime
   receiver: OrderReceiver
+  refundAccount: OrderRefundAccount
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -817,6 +818,18 @@ type OrderReceiver {
   name: String!
   phoneNumber: String!
   postalCode: String!
+  updatedAt: DateTime!
+}
+
+"""가상계좌 결제시 환불 받을 계좌 정보"""
+type OrderRefundAccount {
+  bankCode: InicisBankCode!
+  createdAt: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
   updatedAt: DateTime!
 }
 
@@ -1000,6 +1013,7 @@ type RegisterOrderOutput {
   paidAt: DateTime
   payMethod: OrderStatus
   payingAt: DateTime
+  refundAccount: OrderRefundAccount
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!

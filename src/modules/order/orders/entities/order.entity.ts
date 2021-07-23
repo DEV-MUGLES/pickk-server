@@ -21,11 +21,13 @@ import { IOrder } from '../interfaces';
 
 import { OrderBuyer } from '../models/order-buyer.model';
 import { OrderReceiver } from '../models/order-receiver.model';
+import { OrderRefundAccount } from '../models/order-refund-account.model';
 import { OrderVbankReceipt } from '../models/order-vbank-receipt.model';
 import {
   OrderVbankReceiptEntity,
   OrderBuyerEntity,
   OrderReceiverEntity,
+  OrderRefundAccountEntity,
 } from '.';
 
 @ObjectType()
@@ -58,6 +60,7 @@ export class OrderEntity implements IOrder {
     this.vbankInfo = attributes.vbankInfo;
     this.buyer = attributes.buyer;
     this.receiver = attributes.receiver;
+    this.refundAccount = attributes.refundAccount;
 
     this.payingAt = attributes.payingAt;
     this.failedAt = attributes.failedAt;
@@ -164,6 +167,14 @@ export class OrderEntity implements IOrder {
   })
   @JoinColumn()
   receiver: OrderReceiver;
+
+  @Field(() => OrderRefundAccount, { nullable: true })
+  @OneToOne(() => OrderRefundAccountEntity, {
+    cascade: true,
+    nullable: true,
+  })
+  @JoinColumn()
+  refundAccount: OrderRefundAccount;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
