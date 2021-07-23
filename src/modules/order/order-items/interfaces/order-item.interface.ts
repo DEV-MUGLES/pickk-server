@@ -23,7 +23,7 @@ export interface IOrderItem {
   productId?: number;
 
   order: IOrder;
-  orderMerchantUid: number;
+  orderMerchantUid: string;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
@@ -36,7 +36,6 @@ export interface IOrderItem {
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
-  payAmount: number;
 
   // 상품 관련 정보
   brandNameKor: string;
@@ -59,6 +58,7 @@ export interface IOrderItem {
   trackCode?: string;
 
   // 상태 변경 시점 값들
+  failedAt?: Date;
   paidAt?: Date;
   withdrawnAt?: Date;
   shipReadyAt?: Date;

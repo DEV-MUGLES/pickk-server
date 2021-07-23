@@ -59,7 +59,6 @@ export class OrderEntity implements IOrder {
     this.buyer = attributes.buyer;
     this.receiver = attributes.receiver;
 
-    this.pendingAt = attributes.pendingAt;
     this.payingAt = attributes.payingAt;
     this.failedAt = attributes.failedAt;
     this.vbankReadyAt = attributes.vbankReadyAt;
@@ -70,7 +69,7 @@ export class OrderEntity implements IOrder {
     description:
       '주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다.',
   })
-  @PrimaryColumn({ type: 'char', length: 17 })
+  @PrimaryColumn({ type: 'char', length: 20 })
   @IsString()
   merchantUid: string;
 
@@ -126,17 +125,17 @@ export class OrderEntity implements IOrder {
   totalShippingFee: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   totalCouponDiscountAmount: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   totalUsedPointAmount: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(1)
   totalPayAmount: number;
 
@@ -165,10 +164,6 @@ export class OrderEntity implements IOrder {
   })
   @JoinColumn()
   receiver: OrderReceiver;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  pendingAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

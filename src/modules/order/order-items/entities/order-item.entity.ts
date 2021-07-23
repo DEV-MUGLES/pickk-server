@@ -28,6 +28,10 @@ export class OrderItemEntity implements IOrderItem {
       return;
     }
 
+    this.merchantUid = attributes.merchantUid;
+    this.createdAt = attributes.createdAt;
+    this.updatedAt = attributes.updatedAt;
+
     this.user = attributes.user;
     this.userId = attributes.userId;
     this.seller = attributes.seller;
@@ -50,7 +54,6 @@ export class OrderItemEntity implements IOrderItem {
     this.itemFinalPrice = attributes.itemFinalPrice;
     this.couponDiscountAmount = attributes.couponDiscountAmount;
     this.usedPointAmount = attributes.usedPointAmount;
-    this.payAmount = attributes.payAmount;
 
     this.brandNameKor = attributes.brandNameKor;
     this.itemName = attributes.itemName;
@@ -65,6 +68,7 @@ export class OrderItemEntity implements IOrderItem {
     this.courierId = attributes.courierId;
     this.trackCode = attributes.trackCode;
 
+    this.failedAt = attributes.failedAt;
     this.paidAt = attributes.paidAt;
     this.withdrawnAt = attributes.withdrawnAt;
     this.shipReadyAt = attributes.shipReadyAt;
@@ -87,7 +91,7 @@ export class OrderItemEntity implements IOrderItem {
     description:
       '주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다.',
   })
-  @PrimaryColumn({ type: 'char', length: 19 })
+  @PrimaryColumn({ type: 'char', length: 22 })
   @IsString()
   merchantUid: string;
 
@@ -154,9 +158,9 @@ export class OrderItemEntity implements IOrderItem {
   @ManyToOne('OrderEntity')
   order: IOrder;
 
-  @Field(() => Int)
-  @Column({ type: 'int' })
-  orderMerchantUid: number;
+  @Field()
+  @Column({ type: 'char', length: 20 })
+  orderMerchantUid: string;
 
   @Field(() => OrderItemStatus)
   @Column({
@@ -197,19 +201,14 @@ export class OrderItemEntity implements IOrderItem {
   itemFinalPrice: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   couponDiscountAmount: number;
 
   @Field(() => Int)
-  @Column({ unsigned: true })
+  @Column({ unsigned: true, default: 0 })
   @Min(0)
   usedPointAmount: number;
-
-  @Field(() => Int)
-  @Column({ unsigned: true })
-  @Min(1)
-  payAmount: number;
 
   @Field()
   @Column({
@@ -288,6 +287,10 @@ export class OrderItemEntity implements IOrderItem {
   })
   @MaxLength(30)
   trackCode?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  failedAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

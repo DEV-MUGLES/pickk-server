@@ -702,7 +702,6 @@ type Order {
   paidAt: DateTime
   payMethod: OrderStatus
   payingAt: DateTime
-  pendingAt: DateTime
   receiver: OrderReceiver
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
@@ -740,6 +739,7 @@ type OrderItem {
   createdAt: DateTime!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
+  failedAt: DateTime
   isConfirmed: Boolean!
   isSettled: Boolean!
   item: Item
@@ -749,9 +749,8 @@ type OrderItem {
 
   """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
   merchantUid: String!
-  orderMerchantUid: Int!
+  orderMerchantUid: String!
   paidAt: DateTime
-  payAmount: Int!
   product: Product
   productId: Int
   productVariantName: String!
@@ -794,13 +793,11 @@ enum OrderItemClaimStatus {
 enum OrderItemStatus {
   Failed
   Paid
-  Paying
   Pending
   ShipPending
   ShipReady
   Shipped
   Shipping
-  VbankReady
   Withdrawn
 }
 

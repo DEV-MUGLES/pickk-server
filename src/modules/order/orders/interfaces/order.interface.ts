@@ -37,7 +37,6 @@ export interface IOrder {
   // 수령인 정보
   receiver?: IOrderReceiver;
 
-  pendingAt?: Date;
   payingAt?: Date;
   failedAt?: Date;
   vbankReadyAt?: Date;
