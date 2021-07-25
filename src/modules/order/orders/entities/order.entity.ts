@@ -108,13 +108,13 @@ export class OrderEntity implements IOrder {
   @IsEnum(OrderStatus)
   status: OrderStatus;
 
-  @Field(() => OrderStatus, { nullable: true })
+  @Field(() => PayMethod, { nullable: true })
   @Column({
     type: 'enum',
-    enum: OrderStatus,
+    enum: PayMethod,
     nullable: true,
   })
-  @IsEnum(OrderStatus)
+  @IsEnum(PayMethod)
   payMethod?: PayMethod;
 
   @Field(() => Int)
