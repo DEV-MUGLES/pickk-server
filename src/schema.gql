@@ -881,6 +881,28 @@ input PageInput {
   startId: Int
 }
 
+"""결제수단입니다."""
+enum PayMethod {
+  Booknlife
+  Card
+  Chaipay
+  Cultureland
+  Happymoney
+  Kakaopay
+  Kpay
+  Lpay
+  Naverpay
+  Payco
+  Phone
+  Point
+  Samsungpay
+  Smartculture
+  Ssgpay
+  Tosspay
+  Trans
+  Vbank
+}
+
 type PointEvent {
   """적립/사용 금액. 적립인 경우 양수, 사용인 경우 음수입니다."""
   amount: Int!
@@ -1012,7 +1034,7 @@ type RegisterOrderOutput {
   """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
   merchantUid: String!
   paidAt: DateTime
-  payMethod: OrderStatus
+  payMethod: PayMethod
   payingAt: DateTime
   refundAccount: OrderRefundAccount
   status: OrderStatus!

@@ -1,11 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import {
-  IsEmail,
-  IsNumberString,
-  IsPhoneNumber,
-  IsString,
-} from 'class-validator';
+import { IsNumberString, IsPhoneNumber, IsString } from 'class-validator';
 
 import { AbstractAddressEntity } from '@common/entities';
 
@@ -22,6 +17,9 @@ export class OrderReceiverEntity
     if (!attributes) {
       return;
     }
+
+    this.name = attributes.name;
+    this.phoneNumber = attributes.phoneNumber;
   }
 
   @Field()
@@ -31,11 +29,6 @@ export class OrderReceiverEntity
   })
   @IsString()
   name: string;
-
-  @Field()
-  @Column()
-  @IsEmail()
-  email: string;
 
   @Field()
   @Column({ type: 'char', length: 11 })
