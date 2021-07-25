@@ -19,6 +19,10 @@ export class OrderBuyerEntity extends BaseIdEntity implements IOrderBuyer {
     if (!attributes) {
       return;
     }
+
+    this.name = attributes.name;
+    this.email = attributes.email;
+    this.phoneNumber = attributes.phoneNumber;
   }
 
   @Field()

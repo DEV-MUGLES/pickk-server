@@ -18,4 +18,10 @@ export class CouponFilter implements Partial<ICoupon> {
   @IsEnum(CouponStatus)
   @IsOptional()
   status?: CouponStatus;
+
+  @Field(() => [Int], {
+    nullable: true,
+  })
+  @IsOptional()
+  idIn?: number[];
 }

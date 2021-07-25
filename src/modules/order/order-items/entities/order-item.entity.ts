@@ -157,7 +157,7 @@ export class OrderItemEntity implements IOrderItem {
     type: 'int',
     nullable: true,
   })
-  productId?: number;
+  productId: number;
 
   @Field(() => Coupon, { nullable: true })
   @ManyToOne('CouponEntity', { nullable: true })

@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -15,7 +20,7 @@ import { PointsService } from '@order/points/points.service';
 import { UsersService } from '@user/users/users.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
-import { RegisterOrderInput, RegisterOrderOutput } from './dtos';
+import { RegisterOrderInput, BaseOrderOutput, StartOrderInput } from './dtos';
 import { Order, OrderSheet } from './models';
 
 import { OrdersService } from './orders.service';
@@ -25,17 +30,23 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
 
   constructor(
+    @Inject(CouponsService)
     private readonly couponsService: CouponsService,
+    @Inject(CartsService)
     private readonly cartsService: CartsService,
+    @Inject(ProductsService)
     private readonly productsService: ProductsService,
+    @Inject(PointsService)
     private readonly pointsService: PointsService,
+    @Inject(OrdersService)
     private readonly ordersService: OrdersService,
+    @Inject(UsersService)
     private readonly usersService: UsersService
   ) {
     super();
   }
 
-  @Mutation(() => RegisterOrderOutput)
+  @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async registerOrder(
     @CurrentUser() payload: JwtPayload,
@@ -106,5 +117,29 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     ]);
 
     return OrderSheet.from(order, user, availablePointAmount, coupons);
+  }
+
+  @Mutation(() => BaseOrderOutput)
+  @UseGuards(JwtVerifyGuard)
+  async startOrder(
+    @Args('merchantUid') merchantUid: string,
+    @Args('startOrderInput') startOrderInput: StartOrderInput
+  ): Promise<Order> {
+    const order = await this.ordersService.get(merchantUid, [
+      'orderItems',
+      'orderItems.product',
+      'orderItems.product.item',
+      'orderItems.product.item.prices',
+      'orderItems.product.shippingReservePolicy',
+    ]);
+
+    const couponIds =
+      startOrderInput.orderItemInputs?.map((v) => v.usedCouponId) || [];
+    const coupons =
+      couponIds.length > 0
+        ? await this.couponsService.list({ idIn: couponIds }, null, ['spec'])
+        : [];
+
+    return await this.ordersService.start(order, startOrderInput, coupons);
   }
 }

@@ -3,7 +3,7 @@ import { ObjectType, OmitType } from '@nestjs/graphql';
 import { Order } from '../models';
 
 @ObjectType()
-export class RegisterOrderOutput extends OmitType(Order, [
+export class BaseOrderOutput extends OmitType(Order, [
   'vbankInfo',
   'buyer',
   'receiver',

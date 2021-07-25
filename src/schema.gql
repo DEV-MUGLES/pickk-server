@@ -51,6 +51,31 @@ enum AppleClientType {
   Web
 }
 
+type BaseOrderOutput {
+  createdAt: DateTime!
+  failedAt: DateTime
+
+  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  id: String!
+
+  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  merchantUid: String!
+  paidAt: DateTime
+  payMethod: PayMethod
+  payingAt: DateTime
+  refundAccount: OrderRefundAccount
+  status: OrderStatus!
+  totalCouponDiscountAmount: Int!
+  totalItemFinalPrice: Int!
+  totalPayAmount: Int!
+  totalShippingFee: Int!
+  totalUsedPointAmount: Int!
+  updatedAt: DateTime!
+  userId: Int
+  vbankReadyAt: DateTime
+  withdrawnAt: DateTime
+}
+
 type Brand {
   createdAt: DateTime!
   description: String
@@ -652,7 +677,7 @@ type Mutation {
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
-  registerOrder(registerOrderInput: RegisterOrderInput!): RegisterOrderOutput!
+  registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
@@ -662,6 +687,7 @@ type Mutation {
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
@@ -704,7 +730,7 @@ type Order {
   merchantUid: String!
   orderItems: [OrderItem!]!
   paidAt: DateTime
-  payMethod: OrderStatus
+  payMethod: PayMethod
   payingAt: DateTime
   receiver: OrderReceiver
   refundAccount: OrderRefundAccount
@@ -731,6 +757,12 @@ type OrderBuyer {
   updatedAt: DateTime!
 }
 
+input OrderBuyerInput {
+  email: String!
+  name: String!
+  phoneNumber: String!
+}
+
 type OrderItem {
   Order: Order!
   brandNameKor: String!
@@ -750,6 +782,7 @@ type OrderItem {
   id: String!
   isConfirmed: Boolean!
   isSettled: Boolean!
+  isShipReserved: Boolean!
   item: Item
   itemFinalPrice: Int!
   itemId: Int
@@ -781,6 +814,8 @@ type OrderItem {
   status: OrderItemStatus!
   trackCode: String
   updatedAt: DateTime!
+  usedCoupon: Coupon
+  usedCouponId: Int
   usedCouponName: String
   usedPointAmount: Int!
   user: User
@@ -814,12 +849,19 @@ type OrderReceiver {
   baseAddress: String!
   createdAt: DateTime!
   detailAddress: String!
-  email: String!
   id: Int!
   name: String!
   phoneNumber: String!
   postalCode: String!
   updatedAt: DateTime!
+}
+
+input OrderReceiverInput {
+  baseAddress: String!
+  detailAddress: String!
+  name: String!
+  phoneNumber: String!
+  postalCode: String!
 }
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
@@ -832,6 +874,14 @@ type OrderRefundAccount {
   number: String!
   ownerName: String!
   updatedAt: DateTime!
+}
+
+input OrderRefundAccountInput {
+  bankCode: InicisBankCode!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
 }
 
 type OrderSheet {
@@ -1024,31 +1074,6 @@ input RegisterOrderItemInput {
   recommendContentType: ContentType
 }
 
-type RegisterOrderOutput {
-  createdAt: DateTime!
-  failedAt: DateTime
-
-  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
-  id: String!
-
-  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
-  merchantUid: String!
-  paidAt: DateTime
-  payMethod: PayMethod
-  payingAt: DateTime
-  refundAccount: OrderRefundAccount
-  status: OrderStatus!
-  totalCouponDiscountAmount: Int!
-  totalItemFinalPrice: Int!
-  totalPayAmount: Int!
-  totalShippingFee: Int!
-  totalUsedPointAmount: Int!
-  updatedAt: DateTime!
-  userId: Int
-  vbankReadyAt: DateTime
-  withdrawnAt: DateTime
-}
-
 type SaleStrategy {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
@@ -1189,6 +1214,21 @@ type ShippingAddress {
   receiverName: String!
   updatedAt: DateTime!
   userId: Int!
+}
+
+input StartOrderInput {
+  buyerInput: OrderBuyerInput!
+  orderItemInputs: [StartOrderItemInput!]
+  payMethod: PayMethod
+  receiverInput: OrderReceiverInput!
+  refundAccountInput: OrderRefundAccountInput
+  usedPointAmount: Int!
+}
+
+input StartOrderItemInput {
+  """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
+  merchantUid: String!
+  usedCouponId: Int
 }
 
 """

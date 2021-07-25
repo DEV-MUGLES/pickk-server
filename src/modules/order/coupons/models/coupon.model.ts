@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import { Item } from '@item/items/models';
 
-import { CouponStatus } from '../constants';
+import { CouponStatus, CouponType } from '../constants';
 import { CouponEntity } from '../entities';
 
 @ObjectType()
@@ -37,5 +37,21 @@ export class Coupon extends CouponEntity {
     }
 
     return true;
+  }
+
+  public getDiscountAmountFor(item: Item): number {
+    const { min, ceil } = Math;
+
+    const {
+      spec: { type, maximumDiscountPrice, discountAmount },
+    } = this;
+    if (type === CouponType.Rate) {
+      return min(
+        maximumDiscountPrice,
+        ceil((item.finalPrice * this.spec.discountRate) / 100)
+      );
+    } else {
+      return min(maximumDiscountPrice, discountAmount);
+    }
   }
 }

@@ -1,15 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 import { Product } from '@item/products/models';
+import { ProductsService } from '@item/products/products.service';
+import { Coupon } from '@order/coupons/models';
 
 import { OrderFactory } from './factories';
 import { Order } from './models';
 
 import { OrdersRepository } from './orders.repository';
+import { StartOrderInput } from './dtos';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -17,6 +20,8 @@ dayjs.extend(timezone);
 @Injectable()
 export class OrdersService {
   constructor(
+    @Inject(ProductsService)
+    private readonly productsService: ProductsService,
     @InjectRepository(OrdersRepository)
     private readonly ordersRepository: OrdersRepository
   ) {}
@@ -48,5 +53,16 @@ export class OrdersService {
     } while (await this.ordersRepository.checkExist(merchantUid));
 
     return merchantUid;
+  }
+
+  async start(
+    order: Order,
+    startOrderInput: StartOrderInput,
+    usedCoupons: Coupon[]
+  ): Promise<Order> {
+    order.start(startOrderInput, usedCoupons);
+    await this.productsService.bulkDestock(order.orderItems);
+
+    return await this.ordersRepository.save(order);
   }
 }
