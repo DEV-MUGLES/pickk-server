@@ -68,8 +68,17 @@ export class ProductsService {
   }
 
   async bulkDestock(destockProductInputs: DestockProductInput[]) {
-    const productIds = destockProductInputs.map(({ productId }) => productId);
-    const products = await this.productsRepository.findByIds(productIds);
+    const isProductsGiven = destockProductInputs.every(
+      ({ product }) => !!product
+    );
+
+    let products: Product[];
+    if (isProductsGiven) {
+      const productIds = destockProductInputs.map(({ productId }) => productId);
+      products = await this.productsRepository.findByIds(productIds);
+    } else {
+      products = destockProductInputs.map(({ product }) => product);
+    }
 
     products.forEach((product) => {
       const { quantity } = destockProductInputs.find(({ productId }) => {

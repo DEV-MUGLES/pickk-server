@@ -11,7 +11,7 @@ export class NotEnoughStockException extends BadRequestException {
       .join('/')}`;
 
     super(
-      `${name}의 재고가 부족합니다. (요청됨: ${required}, 보유중: ${stockThreshold}`
+      `${name}의 재고가 부족합니다. (요청됨: ${required}, 재고: ${stockThreshold}`
     );
   }
 }

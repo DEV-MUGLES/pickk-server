@@ -1,5 +1,5 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 import { Product } from '../models';
 
@@ -19,4 +19,8 @@ export class DestockProductInput {
   @Field(() => Int)
   @IsNumber()
   productId: number;
+
+  @Field(() => Product, { nullable: true })
+  @IsOptional()
+  product?: Product;
 }

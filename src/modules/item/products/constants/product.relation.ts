@@ -9,6 +9,7 @@ export type ProductRelationType =
   | 'item.brand.seller.shippingPolicy';
 
 export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
+  'shippingReservePolicy',
   'itemOptionValues',
   'item',
   'item.detailImages',
