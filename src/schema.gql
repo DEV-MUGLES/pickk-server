@@ -781,6 +781,7 @@ type OrderItem {
   status: OrderItemStatus!
   trackCode: String
   updatedAt: DateTime!
+  usedCouponName: String
   usedPointAmount: Int!
   user: User
   userId: Int

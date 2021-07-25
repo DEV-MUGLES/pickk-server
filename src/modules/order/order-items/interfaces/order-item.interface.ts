@@ -3,6 +3,7 @@ import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
+import { ICoupon } from '@order/coupons/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 import { IUser } from '@user/users/interfaces';
 
@@ -21,6 +22,8 @@ export interface IOrderItem {
   itemId?: number;
   product?: IProduct;
   productId?: number;
+  usedCoupon?: ICoupon;
+  usedCouponId?: number;
 
   order: IOrder;
   orderMerchantUid: string;
@@ -29,6 +32,7 @@ export interface IOrderItem {
   claimStatus?: OrderItemClaimStatus;
   quantity: number;
 
+  isShipReserved: boolean;
   isConfirmed: boolean;
   isSettled: boolean;
 
@@ -36,6 +40,8 @@ export interface IOrderItem {
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
+
+  usedCouponName?: string;
 
   // 상품 관련 정보
   brandNameKor: string;

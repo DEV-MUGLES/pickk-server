@@ -10,9 +10,6 @@ export class AddOrderRefundAccount1627031170824 implements MigrationInterface {
     await queryRunner.query(
       'ALTER TABLE `order` ADD `refundAccountId` int NULL'
     );
-    await queryRunner.query(
-      'ALTER TABLE `order` ADD UNIQUE INDEX `IDX_7b8ec169516a3cd948e47f2116` (`refundAccountId`)'
-    );
 
     await queryRunner.query(
       'CREATE UNIQUE INDEX `REL_7b8ec169516a3cd948e47f2116` ON `order` (`refundAccountId`)'
@@ -32,9 +29,6 @@ export class AddOrderRefundAccount1627031170824 implements MigrationInterface {
       'DROP INDEX `REL_7b8ec169516a3cd948e47f2116` ON `order`'
     );
 
-    await queryRunner.query(
-      'ALTER TABLE `order` DROP INDEX `IDX_7b8ec169516a3cd948e47f2116`'
-    );
     await queryRunner.query(
       'ALTER TABLE `order` DROP COLUMN `refundAccountId`'
     );

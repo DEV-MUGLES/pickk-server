@@ -14,6 +14,7 @@ import { Courier } from '@item/couriers/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
+import { Coupon } from '@order/coupons/models';
 import { IOrder } from '@order/orders/interfaces';
 import { User } from '@user/users/models';
 
@@ -40,6 +41,8 @@ export class OrderItemEntity implements IOrderItem {
     this.itemId = attributes.itemId;
     this.product = attributes.product;
     this.productId = attributes.productId;
+    this.usedCoupon = attributes.usedCoupon;
+    this.usedCouponId = attributes.usedCouponId;
 
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
@@ -48,6 +51,7 @@ export class OrderItemEntity implements IOrderItem {
     this.claimStatus = attributes.claimStatus;
     this.quantity = attributes.quantity;
 
+    this.isShipReserved = attributes.isShipReserved;
     this.isConfirmed = attributes.isConfirmed;
     this.isSettled = attributes.isSettled;
 
@@ -155,6 +159,19 @@ export class OrderItemEntity implements IOrderItem {
   })
   productId?: number;
 
+  @Field(() => Coupon, { nullable: true })
+  @ManyToOne('CouponEntity', { nullable: true })
+  usedCoupon?: Coupon;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  usedCouponId?: number;
+
   @ManyToOne('OrderEntity')
   order: IOrder;
 
@@ -193,6 +210,11 @@ export class OrderItemEntity implements IOrderItem {
   @Field({ defaultValue: false })
   @Column({ default: false })
   @IsOptional()
+  isShipReserved: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsOptional()
   isSettled: boolean;
 
   @Field(() => Int)
@@ -209,6 +231,16 @@ export class OrderItemEntity implements IOrderItem {
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   usedPointAmount: number;
+
+  @Field({ nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 30,
+    nullable: true,
+  })
+  @MaxLength(30)
+  @IsOptional()
+  usedCouponName?: string;
 
   @Field()
   @Column({
