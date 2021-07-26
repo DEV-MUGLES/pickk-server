@@ -13,6 +13,7 @@ import * as authHelper from './helpers/auth.helper';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
+import { SellersService } from '@item/sellers/sellers.service';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -24,9 +25,16 @@ describe('AuthResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         AuthResolver,
-        AuthService,
+        {
+          provide: AuthService,
+          useValue: {
+            getUserByCodeAuth: jest.fn(),
+            getToken: jest.fn(),
+          },
+        },
         UsersService,
         UsersRepository,
+        { provide: SellersService, useValue: {} },
         {
           provide: JwtService,
           useValue: {

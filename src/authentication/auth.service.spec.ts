@@ -2,6 +2,8 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { JwtService } from '@nestjs/jwt';
 import * as faker from 'faker';
 
+import { SellersService } from '@item/sellers/sellers.service';
+import { SellersRepository } from '@item/sellers/sellers.repository';
 import { User, UserPassword } from '@user/users/models';
 import { UsersRepository } from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
@@ -26,6 +28,7 @@ describe('AuthService', () => {
         AuthService,
         UsersService,
         UsersRepository,
+        { provide: SellersService, useValue: { findOne: jest.fn() } },
         {
           provide: JwtService,
           useValue: {
