@@ -94,4 +94,16 @@ export class AuthResolver {
 
     return nickname;
   }
+
+  @Query(() => JwtToken)
+  async loginSellerByCode(
+    @Args('loginByCodeInput') loginByCodeInput: LoginByCodeInput
+  ) {
+    const { code, password, minRole } = loginByCodeInput;
+    const seller = await this.authService.getSellerByCodeAuth(code, password);
+    if (!checkIsPermitted(seller.user.role, minRole)) {
+      throw new ForbiddenResourceException(minRole);
+    }
+    return this.authService.getSellerToken(seller);
+  }
 }

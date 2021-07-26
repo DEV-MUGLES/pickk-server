@@ -15,6 +15,12 @@ export class JwtToken implements IJwtToken {
 
 @ObjectType()
 export class JwtPayload implements IJwtPayload {
+  @Field({ nullable: true, description: 'Seller 로그인인 경우에만 발급된다.' })
+  sellerId?: number;
+
+  @Field({ nullable: true, description: 'Seller 로그인인 경우에만 발급된다.' })
+  brandId?: number;
+
   @Field()
   nickname: string;
 

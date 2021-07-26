@@ -627,9 +627,14 @@ type ItemUrl {
 }
 
 type JwtPayload {
+  """Seller 로그인인 경우에만 발급된다."""
+  brandId: Float
   exp: Timestamp!
   iat: Timestamp!
   nickname: String!
+
+  """Seller 로그인인 경우에만 발급된다."""
+  sellerId: Float
   sub: Int!
 }
 
@@ -1028,6 +1033,7 @@ type Query {
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
+  loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
