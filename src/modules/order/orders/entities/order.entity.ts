@@ -14,9 +14,10 @@ import {
 import { IsEnum, IsString, Min } from 'class-validator';
 
 import { IOrderItem } from '@order/order-items/interfaces';
+import { PayMethod } from '@payment/payments/constants';
 import { User } from '@user/users/models';
 
-import { OrderStatus, PayMethod } from '../constants';
+import { OrderStatus } from '../constants';
 import { IOrder } from '../interfaces';
 
 import { OrderBuyer } from '../models/order-buyer.model';

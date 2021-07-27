@@ -20,6 +20,7 @@ import { OrderModule } from './modules/order/order.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { PaymentModule } from '@payment/payment.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { AppService } from './app.service';
     ItemModule,
     MyModule,
     OrderModule,
+    PaymentModule,
     UserModule,
   ],
   controllers: [AppController],

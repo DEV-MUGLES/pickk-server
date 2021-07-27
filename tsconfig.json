@@ -20,6 +20,7 @@
       "@item/*": ["src/modules/item/*"],
       "@my/*": ["src/modules/my/*"],
       "@order/*": ["src/modules/order/*"],
+      "@payment/*": ["src/modules/payment/*"],
       "@user/*": ["src/modules/user/*"],
       "@src/*": ["src/*"]
     },
