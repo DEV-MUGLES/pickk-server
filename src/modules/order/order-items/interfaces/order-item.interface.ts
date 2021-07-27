@@ -65,6 +65,7 @@ export interface IOrderItem {
 
   // 상태 변경 시점 값들
   failedAt?: Date;
+  vbankReadyAt?: Date;
   paidAt?: Date;
   withdrawnAt?: Date;
   shipReadyAt?: Date;

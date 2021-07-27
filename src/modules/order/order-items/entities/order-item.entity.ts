@@ -73,6 +73,7 @@ export class OrderItemEntity implements IOrderItem {
     this.trackCode = attributes.trackCode;
 
     this.failedAt = attributes.failedAt;
+    this.vbankReadyAt = attributes.vbankReadyAt;
     this.paidAt = attributes.paidAt;
     this.withdrawnAt = attributes.withdrawnAt;
     this.shipReadyAt = attributes.shipReadyAt;
@@ -323,6 +324,10 @@ export class OrderItemEntity implements IOrderItem {
   @Field({ nullable: true })
   @Column({ nullable: true })
   failedAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  vbankReadyAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
