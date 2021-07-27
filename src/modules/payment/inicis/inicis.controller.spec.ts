@@ -81,15 +81,15 @@ describe('InicisController', () => {
 
       const dto = CreatePaymentDtoCreator.create();
 
-      const paymentsServiceCreateSpy = jest
-        .spyOn(paymentsService, 'create')
+      const paymentsServiceCreateOrUpdateSpy = jest
+        .spyOn(paymentsService, 'createOrUpdate')
         .mockImplementationOnce(async () => null);
       const resDtoOfSpy = jest
         .spyOn(InicisPrepareResponseDto, 'of')
         .mockImplementationOnce(() => null);
 
       await inicisController.prepare(dto, now);
-      expect(paymentsServiceCreateSpy).toHaveBeenCalledWith(dto);
+      expect(paymentsServiceCreateOrUpdateSpy).toHaveBeenCalledWith(dto);
       expect(resDtoOfSpy).toHaveBeenCalledWith(
         dto.merchantUid,
         dto.amount,

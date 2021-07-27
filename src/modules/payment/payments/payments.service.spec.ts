@@ -1,6 +1,6 @@
+import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { HttpService } from '@nestjs/axios';
 
 import { InicisService } from '@payment/inicis/inicis.service';
 
@@ -8,33 +8,26 @@ import { PaymentStatus } from './constants';
 import { CreatePaymentDtoCreator } from './creators';
 import { Payment } from './models';
 
-import { PaymentsController } from './payments.controller';
 import { PaymentsRepository } from './payments.repository';
 import { PaymentsService } from './payments.service';
 
-describe('PaymentsController', () => {
-  let paymentsController: PaymentsController;
+describe('PaymentsService', () => {
   let paymentsService: PaymentsService;
 
   beforeEach(async () => {
-    const app: TestingModule = await Test.createTestingModule({
-      controllers: [PaymentsController],
+    const module: TestingModule = await Test.createTestingModule({
       providers: [
         PaymentsService,
         PaymentsRepository,
         InicisService,
         {
           provide: HttpService,
-          useValue: {
-            get: jest.fn(),
-            post: jest.fn(),
-          },
+          useValue: { get: jest.fn(), post: jest.fn() },
         },
       ],
     }).compile();
 
-    paymentsController = app.get<PaymentsController>(PaymentsController);
-    paymentsService = app.get<PaymentsService>(PaymentsService);
+    paymentsService = module.get<PaymentsService>(PaymentsService);
   });
 
   describe('createOrUpdate', () => {
@@ -53,7 +46,7 @@ describe('PaymentsController', () => {
           new Payment({ ...dto, status: PaymentStatus.Pending })
         );
 
-      const result = await paymentsController.createOrUpdate(dto);
+      const result = await paymentsService.createOrUpdate(dto);
       expect(result).toMatchObject(dto);
       expect(paymentsServiceGetSpy).toHaveBeenCalledWith(dto.merchantUid);
       expect(paymentsServiceUpdateSpy).toHaveBeenCalledTimes(0);
@@ -72,7 +65,7 @@ describe('PaymentsController', () => {
         .mockResolvedValueOnce(new Payment({ ...payment, ...dto }));
       const paymentsServiceCreateSpy = jest.spyOn(paymentsService, 'create');
 
-      const result = await paymentsController.createOrUpdate(dto);
+      const result = await paymentsService.createOrUpdate(dto);
       expect(result).toMatchObject(dto);
       expect(paymentsServiceGetSpy).toHaveBeenCalledWith(dto.merchantUid);
       expect(paymentsServiceUpdateSpy).toHaveBeenCalledWith(payment, {

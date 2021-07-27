@@ -60,7 +60,7 @@ export class InicisController {
     now?: Date
   ): Promise<InicisPrepareResponseDto> {
     const timestamp = new Date(now).getTime().toString();
-    await this.paymentsService.create(dto);
+    await this.paymentsService.createOrUpdate(dto);
 
     return InicisPrepareResponseDto.of(dto.merchantUid, dto.amount, timestamp);
   }

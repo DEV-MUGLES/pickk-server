@@ -49,9 +49,21 @@ export class PaymentsService {
     );
   }
 
-  async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
+  async createOrUpdate(dto: CreatePaymentDto): Promise<Payment> {
+    try {
+      const payment = await this.get(dto.merchantUid);
+      return await this.update(payment, {
+        ...dto,
+        status: PaymentStatus.Pending,
+      });
+    } catch {
+      return await this.create(dto);
+    }
+  }
+
+  async create(dto: CreatePaymentDto): Promise<Payment> {
     const payment = new Payment({
-      ...createPaymentDto,
+      ...dto,
       status: PaymentStatus.Pending,
     });
     return await this.paymentsRepository.save(payment);
