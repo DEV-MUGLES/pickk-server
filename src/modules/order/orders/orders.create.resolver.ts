@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ForbiddenException,
   Inject,
   Injectable,
   UseGuards,
@@ -21,12 +22,12 @@ import { UsersService } from '@user/users/users.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
 import { RegisterOrderInput, BaseOrderOutput, StartOrderInput } from './dtos';
-import { Order, OrderSheet } from './models';
+import { OrderSheet } from './models';
 
 import { OrdersService } from './orders.service';
 
 @Injectable()
-export class OrdersResolver extends BaseResolver<OrderRelationType> {
+export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
 
   constructor(
@@ -52,7 +53,7 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() payload: JwtPayload,
     @Args('registerOrderInput')
     { cartItemIds, orderItemInputs }: RegisterOrderInput
-  ): Promise<Order> {
+  ): Promise<BaseOrderOutput> {
     if (
       (!cartItemIds && !orderItemInputs) ||
       (cartItemIds && orderItemInputs)
@@ -124,7 +125,7 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
   async startOrder(
     @Args('merchantUid') merchantUid: string,
     @Args('startOrderInput') startOrderInput: StartOrderInput
-  ): Promise<Order> {
+  ): Promise<BaseOrderOutput> {
     const order = await this.ordersService.get(merchantUid, [
       'orderItems',
       'orderItems.product',
@@ -141,5 +142,20 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
         : [];
 
     return await this.ordersService.start(order, startOrderInput, coupons);
+  }
+
+  // @TODO: Queue에서 재고 되돌리기
+  @Mutation(() => BaseOrderOutput)
+  @UseGuards(JwtVerifyGuard)
+  async failOrder(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string
+  ): Promise<BaseOrderOutput> {
+    const order = await this.ordersService.get(merchantUid, ['orderItems']);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('자신의 주문건만 실패처리할 수 있습니다.');
+    }
+
+    return await this.ordersService.fail(order);
   }
 }

@@ -65,4 +65,9 @@ export class OrdersService {
 
     return await this.ordersRepository.save(order);
   }
+
+  async fail(order: Order): Promise<Order> {
+    order.fail();
+    return await this.ordersRepository.save(order);
+  }
 }

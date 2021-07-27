@@ -2,6 +2,7 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
+import { OrderItemStatus } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 
 import { OrderStatus } from '../constants';
@@ -77,6 +78,13 @@ export class Order extends OrderEntity {
       this.totalCouponDiscountAmount;
   }
 
+  fail() {
+    this.markFailed();
+    for (const orderItem of this.orderItems) {
+      orderItem.status = OrderItemStatus.Failed;
+    }
+  }
+
   /** evenly spread usedPointAmount to each orderItem */
   private spreadUsedPoint(usedPointAmount: number) {
     const { orderItems, totalItemFinalPrice } = this;
@@ -102,5 +110,16 @@ export class Order extends OrderEntity {
 
     this.status = OrderStatus.Paying;
     this.payingAt = new Date();
+  }
+
+  private markFailed() {
+    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+
+    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+      throw new BadRequestException('완료된 주문을 실패처리할 수 없습니다');
+    }
+
+    this.status = OrderStatus.Failed;
+    this.failedAt = new Date();
   }
 }

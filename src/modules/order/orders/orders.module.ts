@@ -7,8 +7,8 @@ import { CouponsModule } from '@order/coupons/coupons.module';
 import { PointsModule } from '@order/points/points.module';
 import { UsersModule } from '@user/users/users.module';
 
+import { OrdersCreateResolver } from './orders.create.resolver';
 import { OrdersRepository } from './orders.repository';
-import { OrdersResolver } from './orders.resolver';
 import { OrdersService } from './orders.service';
 
 @Module({
@@ -20,6 +20,6 @@ import { OrdersService } from './orders.service';
     PointsModule,
     UsersModule,
   ],
-  providers: [OrdersResolver, OrdersService],
+  providers: [OrdersCreateResolver, OrdersService],
 })
 export class OrdersModule {}
