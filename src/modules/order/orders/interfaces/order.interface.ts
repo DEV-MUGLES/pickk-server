@@ -1,8 +1,9 @@
 import { IAccount } from '@common/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
+import { PayMethod } from '@payment/payments/constants';
 import { IUser } from '@user/users/interfaces';
 
-import { OrderStatus, PayMethod } from '../constants';
+import { OrderStatus } from '../constants';
 
 import { IOrderBuyer } from './order-buyer.interface';
 import { IOrderReceiver } from './order-receiver.interface';

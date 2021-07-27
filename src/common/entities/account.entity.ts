@@ -1,17 +1,12 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Column } from 'typeorm';
 import { IsEnum, IsNumberString, IsString, MaxLength } from 'class-validator';
-import { InicisBankCode } from 'inicis';
+
+import { BankCode } from '@common/constants';
 
 import { IAccount } from '../interfaces';
 
 import { BaseIdEntity } from './base.entity';
-
-registerEnumType(InicisBankCode, {
-  name: 'InicisBankCode',
-  description:
-    '은행 코드입니다. KG Inicis와 관련 없는 일반 계좌를 저장할 때도 사용됩니다.',
-});
 
 @ObjectType()
 export abstract class AbstractAccountEntity
@@ -29,13 +24,13 @@ export abstract class AbstractAccountEntity
     this.ownerName = attributes.ownerName;
   }
 
-  @Field(() => InicisBankCode)
+  @Field(() => BankCode)
   @Column({
     type: 'enum',
-    enum: InicisBankCode,
+    enum: BankCode,
   })
-  @IsEnum(InicisBankCode)
-  bankCode: InicisBankCode;
+  @IsEnum(BankCode)
+  bankCode: BankCode;
 
   @Field({
     description: '계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.',

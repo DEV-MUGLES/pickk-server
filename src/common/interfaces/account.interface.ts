@@ -1,4 +1,4 @@
-import { InicisBankCode } from 'inicis';
+import { BankCode } from '@common/constants';
 
 /**
  * 배송지 정보를 저장합니다.
@@ -7,7 +7,7 @@ import { InicisBankCode } from 'inicis';
  */
 export interface IAccount {
   /** 은행코드 */
-  bankCode: InicisBankCode;
+  bankCode: BankCode;
   /** 계좌번호 */
   number: string;
   /** 예금주 이름 */

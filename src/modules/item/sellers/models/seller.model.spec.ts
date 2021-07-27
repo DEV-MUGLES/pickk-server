@@ -1,6 +1,6 @@
 import * as faker from 'faker';
-import { InicisBankCode } from 'inicis';
 
+import { BankCode } from '@common/constants';
 import { IAccount } from '@common/interfaces';
 
 import { ClaimFeePayMethod } from '../constants';
@@ -17,7 +17,7 @@ import {
 import { Seller } from './seller.model';
 
 const getAccountMockData = (): IAccount => ({
-  bankCode: InicisBankCode.AbnAmro,
+  bankCode: BankCode.AbnAmro,
   ownerName: faker.name.findName(),
   number: faker.phone.phoneNumber('###########'),
 });

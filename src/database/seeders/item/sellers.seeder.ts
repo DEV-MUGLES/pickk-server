@@ -1,7 +1,7 @@
 import faker from 'faker';
-import { InicisBankCode } from 'inicis';
 import { Injectable } from '@nestjs/common';
 
+import { BankCode } from '@common/constants';
 import { FindSaleStrategyInput } from '@common/dtos';
 import { ClaimFeePayMethod } from '@item/sellers/constants';
 import {
@@ -39,7 +39,7 @@ export class SellersSeeder {
           ? ClaimFeePayMethod.Trans
           : ClaimFeePayMethod.Enclose,
         accountInput: {
-          bankCode: InicisBankCode.BcCard,
+          bankCode: BankCode.BcCard,
           number: faker.finance.account(14),
           ownerName: faker.name.firstName(),
         },

@@ -51,6 +51,59 @@ enum AppleClientType {
   Web
 }
 
+"""은행 식별 코드입니다. InicisBankCode와 값이 같습니다."""
+enum BankCode {
+  AbnAmro
+  BcCard
+  Boa
+  Busan
+  ChBank
+  Chohung
+  Citi
+  Commercial
+  Cu
+  Daegu
+  Deutsche
+  EPost
+  ExShinhan
+  Hana
+  Hanil
+  Hanmi
+  Housing
+  Hsbc
+  Ibk
+  Jeju
+  Jeonbuk
+  JpMorgan
+  KBank
+  KakaoBank
+  KakaoMoney
+  Kangwon
+  Kb
+  Kdb
+  Keb
+  Kwangju
+  Kyongnam
+  LPoint
+  MitsubishiTokyo
+  MutualSavings
+  NaverPoint
+  NhBank
+  Nonghyup
+  Payco
+  Peace
+  Sc
+  Seoul
+  ShBank
+  Shinan
+  Shinhan
+  Shinsegae
+  Sj
+  SsgMoney
+  TossMoney
+  Woori
+}
+
 type BaseOrderOutput {
   createdAt: DateTime!
   failedAt: DateTime
@@ -104,6 +157,39 @@ type Campaign {
   rate: Int!
   startAt: DateTime!
   updatedAt: DateTime!
+}
+
+input CancelPaymentInput {
+  amount: Int!
+  checksum: Int!
+  reason: String!
+  refundVbankCode: BankCode!
+  refundVbankHolder: String!
+  refundVbankNum: String!
+}
+
+enum CardCode {
+  Amex
+  Bc
+  Diners
+  Hanask
+  Hanmi
+  Hyundai
+  Jcb
+  KakaoMoney
+  Kb
+  Keb
+  LPoint
+  Lotte
+  Master
+  NaverPoint
+  Nh
+  Payco
+  Samsung
+  Shinhan
+  SsgMoney
+  TossMoney
+  Visa
 }
 
 type Cart {
@@ -251,7 +337,7 @@ input CreateItemOptionSetInput {
 }
 
 input CreateRefundAccountInput {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String!
@@ -259,7 +345,7 @@ input CreateRefundAccountInput {
 }
 
 input CreateSellerClaimAccountInput {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String!
@@ -324,7 +410,7 @@ input CreateSellerReturnAddressInput {
 }
 
 input CreateSellerSettleAccountInput {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String!
@@ -382,59 +468,6 @@ scalar DateTime
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
-}
-
-"""은행 코드입니다. KG Inicis와 관련 없는 일반 계좌를 저장할 때도 사용됩니다."""
-enum InicisBankCode {
-  AbnAmro
-  BcCard
-  Boa
-  Busan
-  ChBank
-  Chohung
-  Citi
-  Commercial
-  Cu
-  Daegu
-  Deutsche
-  EPost
-  ExShinhan
-  Hana
-  Hanil
-  Hanmi
-  Housing
-  Hsbc
-  Ibk
-  Jeju
-  Jeonbuk
-  JpMorgan
-  KBank
-  KakaoBank
-  KakaoMoney
-  Kangwon
-  Kb
-  Kdb
-  Keb
-  Kwangju
-  Kyongnam
-  LPoint
-  MitsubishiTokyo
-  MutualSavings
-  NaverPoint
-  NhBank
-  Nonghyup
-  Payco
-  Peace
-  Sc
-  Seoul
-  ShBank
-  Shinan
-  Shinhan
-  Shinsegae
-  Sj
-  SsgMoney
-  TossMoney
-  Woori
 }
 
 type Item {
@@ -674,6 +707,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  cancel(cancelPaymentDto: CancelPaymentInput!, merchantUid: String!): Boolean!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
@@ -871,7 +905,7 @@ input OrderReceiverInput {
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
 type OrderRefundAccount {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
@@ -882,7 +916,7 @@ type OrderRefundAccount {
 }
 
 input OrderRefundAccountInput {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String!
@@ -919,7 +953,7 @@ enum OrderStatus {
 }
 
 type OrderVbankReceipt {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
   createdAt: DateTime!
   due: DateTime!
   id: Int!
@@ -934,6 +968,11 @@ input PageInput {
   limit: Int = 20
   offset: Int
   startId: Int
+}
+
+enum PayEnviroment {
+  Mobile
+  Pc
 }
 
 """결제수단입니다."""
@@ -956,6 +995,121 @@ enum PayMethod {
   Tosspay
   Trans
   Vbank
+}
+
+type Payment {
+  amount: Int!
+  applyNum: String
+  buyerAddr: String!
+  buyerEmail: String!
+  buyerName: String!
+  buyerPostalcode: String!
+  buyerTel: String!
+  cancellations: [PaymentCancellation!]!
+  cancelledAt: DateTime
+  cardCode: CardCode
+  cardNum: String
+  createdAt: DateTime!
+  env: PayEnviroment!
+  failedAt: DateTime
+  failedReason: String
+
+  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  merchantUid: String!
+  name: String!
+  origin: String!
+  paidAt: DateTime
+  payMethod: PayMethod!
+  pg: Pg!
+  pgTid: String
+  remainAmount: Int!
+  status: PaymentStatus!
+  updatedAt: DateTime!
+  vbankCode: BankCode
+  vbankDate: String
+  vbankHolder: String
+  vbankNum: String
+  vbankReadyAt: DateTime
+}
+
+type PaymentCancellation {
+  amount: Int!
+  createdAt: DateTime!
+  id: Int!
+  payment: Payment!
+  reason: String!
+  refundVbankCode: BankCode!
+  refundVbankHolder: String!
+  refundVbankNum: String!
+  taxFree: Int!
+  type: PaymentCancellationType!
+  updatedAt: DateTime!
+}
+
+enum PaymentCancellationType {
+  Cancel
+  PatialCancel
+}
+
+input PaymentFilter {
+  buyerEmailSearch: String
+  buyerNameSearch: String
+  buyerTelSearch: String
+  createdAtBetween: [DateTime!]
+  merchantUid: String
+  merchantUidSearch: String
+  payMethodIn: [PayMethod!]
+  pgIn: [Pg!]
+  pgTid: String
+  pgTidSearch: String
+  statusIn: [PaymentStatus!]
+}
+
+type PaymentListOutput {
+  amounts: PaymentsListAmount!
+  payMethodCount: PaymentsListPayMethodCount!
+  payments: [Payment!]!
+  pgCount: PaymentsListPgCount!
+  statusCount: PaymentsListStatusCount!
+}
+
+enum PaymentStatus {
+  Cancelled
+  Failed
+  Paid
+  PartialCancelled
+  Pending
+  VbankReady
+}
+
+type PaymentsListAmount {
+  totalCancelledAmount: Float!
+  totalPaidAmount: Float!
+}
+
+type PaymentsListPayMethodCount {
+  card: Float!
+  kakaopay: Float!
+  trans: Float!
+  vbank: Float!
+}
+
+type PaymentsListPgCount {
+  inicis: Float!
+}
+
+type PaymentsListStatusCount {
+  cancelled: Float!
+  failed: Float!
+  paid: Float!
+  partial_cancelled: Float!
+  pending: Float!
+  vbank_ready: Float!
+}
+
+"""PG사입니다."""
+enum Pg {
+  Inicis
 }
 
 type PointEvent {
@@ -1048,6 +1202,9 @@ type Query {
   myShippingAddress(id: Int!): ShippingAddress!
   myShippingAddresses: [ShippingAddress!]!
 
+  """[Admin] 결제 목록을 조회합니다."""
+  payments(paymentFilter: PaymentFilter!): PaymentListOutput!
+
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   seller(id: Int!): Seller!
@@ -1058,7 +1215,7 @@ type Query {
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
 type RefundAccount {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
@@ -1119,7 +1276,7 @@ type Seller {
 
 """교환배송비 지불 계좌"""
 type SellerClaimAccount {
-  bankCode: InicisBankCode!
+  bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
@@ -1323,7 +1480,7 @@ input UpdateProductInput {
 }
 
 input UpdateRefundAccountInput {
-  bankCode: InicisBankCode
+  bankCode: BankCode
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String
@@ -1331,7 +1488,7 @@ input UpdateRefundAccountInput {
 }
 
 input UpdateSellerClaimAccountInput {
-  bankCode: InicisBankCode
+  bankCode: BankCode
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String
@@ -1375,7 +1532,7 @@ input UpdateSellerReturnAddressInput {
 }
 
 input UpdateSellerSettleAccountInput {
-  bankCode: InicisBankCode
+  bankCode: BankCode
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
   number: String
