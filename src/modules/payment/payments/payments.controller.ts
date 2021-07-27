@@ -12,8 +12,8 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
 import { PaymentStatus } from './constants';
 import { CompletePaymentDto, CreatePaymentDto, UpdatePaymentDto } from './dtos';
-import { PaymentEntity } from './entities';
 import { PaySuperSecretGuard } from './guards';
+import { Payment } from './models';
 
 import { PaymentsService } from './payments.service';
 
@@ -32,7 +32,7 @@ export class PaymentsController {
   @Post()
   async createOrUpdate(
     @Body() createPaymentDto: CreatePaymentDto
-  ): Promise<PaymentEntity> {
+  ): Promise<Payment> {
     try {
       const payment = await this.paymentsService.get(
         createPaymentDto.merchantUid
@@ -51,7 +51,7 @@ export class PaymentsController {
   async update(
     @Param('merchantUid') merchantUid: string,
     @Body() updatePaymentDto: UpdatePaymentDto
-  ): Promise<PaymentEntity> {
+  ): Promise<Payment> {
     const payment = await this.paymentsService.get(merchantUid, [
       'cancellations',
     ]);
@@ -69,9 +69,9 @@ export class PaymentsController {
     description: '[SuperSecret] 지정한 결제건을 실패 처리합니다.',
   })
   @Post('/:merchantUid/fail')
-  async fail(@Param('merchantUid') merchantUid: string) {
+  async fail(@Param('merchantUid') merchantUid: string): Promise<Payment> {
     const payment = await this.paymentsService.get(merchantUid);
-    await this.paymentsService.fail(payment);
+    return await this.paymentsService.fail(payment);
   }
 
   @ApiOperation({
@@ -81,8 +81,8 @@ export class PaymentsController {
   async complete(
     @Param('merchantUid') merchantUid: string,
     @Body() completePaymentDto: CompletePaymentDto
-  ) {
+  ): Promise<Payment> {
     const payment = await this.paymentsService.get(merchantUid);
-    await this.paymentsService.complete(payment, completePaymentDto);
+    return await this.paymentsService.complete(payment, completePaymentDto);
   }
 }

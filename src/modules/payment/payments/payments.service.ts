@@ -15,7 +15,6 @@ import {
   CompletePaymentDto,
   PaymentFilter,
 } from './dtos';
-import { PaymentEntity } from './entities';
 import { Payment } from './models';
 
 import { PaymentsRepository } from './payments.repository';
@@ -51,21 +50,19 @@ export class PaymentsService {
   }
 
   async create(createPaymentDto: CreatePaymentDto): Promise<Payment> {
-    const payment = new PaymentEntity({
+    const payment = new Payment({
       ...createPaymentDto,
       status: PaymentStatus.Pending,
     });
-    return this.paymentsRepository.entityToModel(
-      await this.paymentsRepository.save(payment)
-    );
+    return await this.paymentsRepository.save(payment);
   }
 
   async update(
-    payment: PaymentEntity,
+    payment: Payment,
     updatePaymentDto: UpdatePaymentDto
-  ): Promise<PaymentEntity> {
+  ): Promise<Payment> {
     return await this.paymentsRepository.save(
-      new PaymentEntity({
+      new Payment({
         ...payment,
         ...updatePaymentDto,
       })
@@ -73,7 +70,7 @@ export class PaymentsService {
   }
 
   async findOne(
-    param: Partial<PaymentEntity>,
+    param: Partial<Payment>,
     relations: string[] = []
   ): Promise<Payment | null> {
     return this.paymentsRepository.entityToModel(
@@ -99,7 +96,7 @@ export class PaymentsService {
     return await this.paymentsRepository.save(payment);
   }
 
-  async remove(payment: PaymentEntity): Promise<void> {
+  async remove(payment: Payment): Promise<void> {
     if (
       ![PaymentStatus.Pending, PaymentStatus.Failed].includes(payment.status)
     ) {
