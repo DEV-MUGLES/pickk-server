@@ -21,10 +21,17 @@ import { PointsService } from '@order/points/points.service';
 import { UsersService } from '@user/users/users.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
-import { RegisterOrderInput, BaseOrderOutput, StartOrderInput } from './dtos';
+import {
+  RegisterOrderInput,
+  BaseOrderOutput,
+  StartOrderInput,
+  CreateOrderVbankReceiptInput,
+} from './dtos';
 import { OrderSheet } from './models';
 
 import { OrdersService } from './orders.service';
+import { PaymentsService } from '@payment/payments/payments.service';
+import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 
 @Injectable()
 export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
@@ -41,6 +48,8 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     private readonly pointsService: PointsService,
     @Inject(OrdersService)
     private readonly ordersService: OrdersService,
+    @Inject(PaymentsService)
+    private readonly paymentsService: PaymentsService,
     @Inject(UsersService)
     private readonly usersService: UsersService
   ) {
@@ -157,5 +166,40 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     }
 
     return await this.ordersService.fail(order);
+  }
+
+  // @TODO: Queue에서 주문완료 카톡 알림 보내기
+  @Mutation(() => BaseOrderOutput)
+  @UseGuards(JwtVerifyGuard)
+  async completeOrder(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('createOrderVbankReceiptInput', {
+      nullable: true,
+      description: '가상계좌 주문건인 경우에만 필요합니다.',
+    })
+    createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
+  ): Promise<BaseOrderOutput> {
+    const order = await this.ordersService.get(merchantUid, [
+      'orderItems',
+      'vbankInfo',
+    ]);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
+    }
+
+    const { status } = await this.paymentsService.get(merchantUid);
+    const paymentStatusMustBe =
+      order.payMethod === PayMethod.Vbank
+        ? PaymentStatus.VbankReady
+        : PaymentStatus.Paid;
+    if (status !== paymentStatusMustBe) {
+      throw new BadRequestException('결제가 정상적으로 처리되지 않았습니다.');
+    }
+
+    return await this.ordersService.complete(
+      order,
+      createOrderVbankReceiptInput
+    );
   }
 }

@@ -8,11 +8,11 @@ import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
 import { Coupon } from '@order/coupons/models';
 
+import { CreateOrderVbankReceiptInput, StartOrderInput } from './dtos';
 import { OrderFactory } from './factories';
 import { Order } from './models';
 
 import { OrdersRepository } from './orders.repository';
-import { StartOrderInput } from './dtos';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -68,6 +68,14 @@ export class OrdersService {
 
   async fail(order: Order): Promise<Order> {
     order.fail();
+    return await this.ordersRepository.save(order);
+  }
+
+  async complete(
+    order: Order,
+    createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput
+  ): Promise<Order> {
+    order.complete(createOrderVbankReceiptInput);
     return await this.ordersRepository.save(order);
   }
 }

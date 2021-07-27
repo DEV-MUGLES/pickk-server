@@ -4,14 +4,16 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Coupon } from '@order/coupons/models';
 import { OrderItemStatus } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
+import { PayMethod } from '@payment/payments/constants';
 
 import { OrderStatus } from '../constants';
-import { StartOrderInput } from '../dtos';
+import { CreateOrderVbankReceiptInput, StartOrderInput } from '../dtos';
 import { OrderEntity } from '../entities';
 
 import { OrderBuyer } from './order-buyer.model';
 import { OrderReceiver } from './order-receiver.model';
 import { OrderRefundAccount } from './order-refund-account.model';
+import { OrderVbankReceipt } from './order-vbank-receipt.model';
 
 @ObjectType()
 export class Order extends OrderEntity {
@@ -80,8 +82,20 @@ export class Order extends OrderEntity {
 
   fail() {
     this.markFailed();
-    for (const orderItem of this.orderItems) {
-      orderItem.status = OrderItemStatus.Failed;
+  }
+
+  complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
+    if (this.payMethod === PayMethod.Vbank) {
+      if (!createOrderVbankReceiptInput) {
+        throw new BadRequestException(
+          '가상결제 주문건을 완료처리하기 위한 정보가 제공되지 않았습니다.'
+        );
+      }
+
+      this.markVbankReady();
+      this.vbankInfo = new OrderVbankReceipt(createOrderVbankReceiptInput);
+    } else {
+      this.markPaid();
     }
   }
 
@@ -121,5 +135,44 @@ export class Order extends OrderEntity {
 
     this.status = OrderStatus.Failed;
     this.failedAt = new Date();
+
+    for (const orderItem of this.orderItems) {
+      orderItem.status = OrderItemStatus.Failed;
+      orderItem.failedAt = new Date();
+    }
+  }
+
+  private markVbankReady() {
+    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+
+    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+      throw new BadRequestException(
+        '완료된 주문을 가상결제대기 처리할 수 없습니다'
+      );
+    }
+
+    this.status = OrderStatus.VbankReady;
+    this.vbankReadyAt = new Date();
+
+    for (const orderItem of this.orderItems) {
+      orderItem.status = OrderItemStatus.VbankReady;
+      orderItem.vbankReadyAt = new Date();
+    }
+  }
+
+  private markPaid() {
+    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+
+    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+      throw new BadRequestException('완료된 주문을 완료할 수 없습니다');
+    }
+
+    this.status = OrderStatus.Paid;
+    this.paidAt = new Date();
+
+    for (const orderItem of this.orderItems) {
+      orderItem.status = OrderItemStatus.Paid;
+      orderItem.paidAt = new Date();
+    }
   }
 }

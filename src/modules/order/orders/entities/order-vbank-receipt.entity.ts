@@ -11,6 +11,15 @@ export class OrderVbankReceiptEntity
   extends AbstractAccountEntity
   implements IOrderVbankReceipt
 {
+  constructor(attributes?: Partial<OrderVbankReceiptEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.due = attributes.due;
+  }
+
   @Field()
   @Column()
   due: Date;
