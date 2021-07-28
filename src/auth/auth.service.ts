@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
 import { SellerEntity } from '@item/sellers/entities';
@@ -38,8 +38,20 @@ export class AuthService {
     return code;
   }
 
-    return pin;
+  async checkPinCode(
+    userId: number,
+    phoneNumber: string,
+    inputCode: string
+  ): Promise<boolean> {
+    const cacheKey = Pin.getCacheKey(userId, phoneNumber);
+    const code = await this.cacheService.get<string>(cacheKey);
+    if (!code) {
+      throw new NotFoundException('만료된 인증입니다.');
+    }
+
+    return code === inputCode;
   }
+
   async getUserByCodeAuth(
     code: string,
     password: string

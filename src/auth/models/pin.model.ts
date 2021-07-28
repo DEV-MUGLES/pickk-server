@@ -33,6 +33,6 @@ export class Pin {
   @IsNumberString()
   phoneNumber: string;
 
-  /** 인증코드입니다. graphql에서 노출되지 않습니다. */
+  @Field()
   code: string;
 }

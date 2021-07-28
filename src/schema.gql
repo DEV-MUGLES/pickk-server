@@ -208,6 +208,11 @@ type CartItem {
   updatedAt: DateTime!
 }
 
+input CheckPinInput {
+  code: String!
+  phoneNumber: String!
+}
+
 """교환/반품 배송비 지불 방식. (Trans:계좌입금, Enclose:택배상자 동봉)"""
 enum ClaimFeePayMethod {
   Enclose
@@ -1183,6 +1188,7 @@ type Query {
 
   """중복이면 true, 아니면 false를 반환한다."""
   checkNicknameDuplicate(nickname: String!): Boolean!
+  checkPin(checkPinInput: CheckPinInput!): Boolean!
   checkoutOrder(merchantUid: String!): OrderSheet!
   courier(id: Int!): Courier!
   couriers: [Courier!]!

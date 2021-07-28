@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { BadRequestException, Inject, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
 import { UserOauthProvider } from '@user/users/constants';
@@ -13,6 +13,7 @@ import {
   LoginByCodeInput,
   LoginByOauthInput,
   RequestPinInput,
+  CheckPinInput,
 } from './dtos';
 import { ForbiddenResourceException } from './exceptions';
 import { JwtRefreshGuard, JwtVerifyGuard } from './guards';
@@ -117,6 +118,25 @@ export class AuthResolver {
   ): Promise<boolean> {
     const pinCode = await this.authService.createPinCode(userId, phoneNumber);
     await this.smsService.sendPin(phoneNumber, pinCode);
+
+    return true;
+  }
+
+  @Query(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async checkPin(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('checkPinInput') { phoneNumber, code }: CheckPinInput
+  ): Promise<boolean> {
+    const success = await this.authService.checkPinCode(
+      userId,
+      phoneNumber,
+      code
+    );
+
+    if (success === false) {
+      throw new BadRequestException('인증번호 확인 후 다시 입력해주세요.');
+    }
 
     return true;
   }
