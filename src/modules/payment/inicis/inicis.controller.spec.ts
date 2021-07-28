@@ -76,8 +76,10 @@ describe('InicisController', () => {
 
   describe('prepare', () => {
     it('성공!', async () => {
-      const now = faker.date.recent();
+      const now = faker.date.recent().getTime();
       const timestamp = new Date(now).getTime().toString();
+
+      const dateNowSpy = jest.spyOn(Date, 'now').mockReturnValueOnce(now);
 
       const dto = CreatePaymentDtoCreator.create();
 
@@ -88,8 +90,9 @@ describe('InicisController', () => {
         .spyOn(InicisPrepareResponseDto, 'of')
         .mockImplementationOnce(() => null);
 
-      await inicisController.prepare(dto, now);
+      await inicisController.prepare(dto);
       expect(paymentsServiceCreateOrUpdateSpy).toHaveBeenCalledWith(dto);
+      expect(dateNowSpy).toHaveBeenCalledTimes(1);
       expect(resDtoOfSpy).toHaveBeenCalledWith(
         dto.merchantUid,
         dto.amount,

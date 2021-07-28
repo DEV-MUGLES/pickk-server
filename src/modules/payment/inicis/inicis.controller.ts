@@ -56,10 +56,9 @@ export class InicisController {
 
   @Post('/prepare')
   async prepare(
-    @Body() dto: CreatePaymentDto,
-    now?: Date
+    @Body() dto: CreatePaymentDto
   ): Promise<InicisPrepareResponseDto> {
-    const timestamp = new Date(now).getTime().toString();
+    const timestamp = Date.now().toString();
     await this.paymentsService.createOrUpdate(dto);
 
     return InicisPrepareResponseDto.of(dto.merchantUid, dto.amount, timestamp);
