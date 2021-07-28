@@ -12,7 +12,7 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "paths": {
-      "@auth/*": ["src/authentication/*"],
+      "@auth/*": ["src/auth/*"],
       "@config/*": ["src/config/*"],
       "@common/*": ["src/common/*"],
       "@jobs/*": ["src/jobs/*"],

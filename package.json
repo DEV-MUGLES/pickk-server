@@ -134,7 +134,7 @@
     "moduleNameMapper": {
       "@src/(.*)$": "<rootDir>/$1",
       "@auth/(.*)$": [
-        "<rootDir>/authentication/$1"
+        "<rootDir>/auth/$1"
       ],
       "@config/(.*)$": [
         "<rootDir>/config/$1"
