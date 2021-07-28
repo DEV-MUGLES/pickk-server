@@ -1,17 +1,7 @@
-import { Field, Int, ObjectType, OmitType } from '@nestjs/graphql';
+import { ObjectType, Field, Int } from '@nestjs/graphql';
 
+import { IJwtPayload } from '@auth/interfaces';
 import { Timestamp } from '@common/scalars';
-
-import { IJwtPayload, IJwtToken } from '../interfaces';
-
-@ObjectType()
-export class JwtToken implements IJwtToken {
-  @Field()
-  access: string;
-
-  @Field()
-  refresh: string;
-}
 
 @ObjectType()
 export class JwtPayload implements IJwtPayload {
@@ -33,8 +23,3 @@ export class JwtPayload implements IJwtPayload {
   @Field(() => Timestamp)
   exp: number;
 }
-
-export class CreateJwtPayloadInput extends OmitType(JwtPayload, [
-  'iat',
-  'exp',
-]) {}

@@ -8,7 +8,7 @@ import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtPayload } from '@auth/dtos';
+import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';

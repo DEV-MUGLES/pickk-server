@@ -12,7 +12,7 @@ import {
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtPayload } from '@auth/dtos';
+import { JwtPayload } from '@auth/models';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { UploadSingleImageInput } from '@common/dtos';

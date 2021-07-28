@@ -7,7 +7,7 @@ import { SellersService } from '@item/sellers/sellers.service';
 import { UsersService } from '@user/users/users.service';
 
 import { jwtConstants, jwtRefreshConstants } from '../constants';
-import { JwtPayload } from '../dtos';
+import { JwtPayload } from '../models';
 
 export const CustomJwtStrategy = (
   name?: string,

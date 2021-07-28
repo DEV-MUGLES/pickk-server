@@ -8,7 +8,7 @@ import {
 import { Args, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtPayload } from '@auth/dtos';
+import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
 import { CART_ITEM_RELATIONS } from '@item/carts/constants';

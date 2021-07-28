@@ -2,7 +2,7 @@ import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Query, Resolver } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtPayload } from '@auth/dtos';
+import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { PageInput } from '@common/dtos';
 

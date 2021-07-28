@@ -1,2 +1,2 @@
-export * from './jwt.dto';
+export * from './create-jwt-payload.input';
 export * from './login.input';

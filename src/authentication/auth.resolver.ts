@@ -11,12 +11,11 @@ import {
   LoginWithAppleInput,
   LoginByCodeInput,
   LoginByOauthInput,
-  JwtPayload,
-  JwtToken,
 } from './dtos';
 import { ForbiddenResourceException } from './exceptions';
 import { JwtRefreshGuard } from './guards';
 import { genRandomNickname } from './helpers';
+import { JwtPayload, JwtToken } from './models';
 
 import { AuthService } from './auth.service';
 
