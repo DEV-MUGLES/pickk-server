@@ -148,6 +148,9 @@
       "@providers/(.*)$": [
         "<rootDir>/providers/$1"
       ],
+      "@templates/(.*)$": [
+        "<rootDir>/templates/$1"
+      ],
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
       "@order/(.*)$": "<rootDir>/modules/order/$1",

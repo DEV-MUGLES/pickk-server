@@ -7,6 +7,9 @@ import {
 
 import { SensConfigModule, SensConfigService } from '@config/providers/sens';
 
+import { AlimtalkService } from './provider.alimtalk.service';
+import { SmsService } from './provider.sms.service';
+
 @Global()
 @Module({
   imports: [
@@ -29,5 +32,7 @@ import { SensConfigModule, SensConfigService } from '@config/providers/sens';
       inject: [SensConfigService],
     } as SensModuleAsyncOptions),
   ],
+  providers: [AlimtalkService, SmsService],
+  exports: [AlimtalkService, SmsService],
 })
 export class SensProviderModule {}
