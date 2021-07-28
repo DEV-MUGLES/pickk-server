@@ -8,6 +8,7 @@ import { UserOauthProvider } from '@user/users/constants';
 import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 import { UsersService } from '@user/users/users.service';
+import { CacheService } from '@providers/cache/redis';
 
 import { jwtRefreshConstants } from './constants';
 import { CreateJwtPayloadInput } from './dtos';
@@ -17,15 +18,28 @@ import {
   UserOauthNotFoundExeption,
 } from './exceptions';
 import { IJwtToken } from './interfaces';
+import { Pin } from './models';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private sellersService: SellersService,
-    private jwtService: JwtService
+    private jwtService: JwtService,
+    private cacheService: CacheService
   ) {}
 
+  async createPinCode(userId: number, phoneNumber: string): Promise<string> {
+    const { code } = Pin.create(userId, phoneNumber);
+
+    const cacheKey = Pin.getCacheKey(userId, phoneNumber);
+    await this.cacheService.set<string>(cacheKey, code);
+
+    return code;
+  }
+
+    return pin;
+  }
   async getUserByCodeAuth(
     code: string,
     password: string

@@ -15,6 +15,7 @@ import { JwtPayload, JwtToken } from './models';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
+import { SmsService } from '@providers/sens';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -46,6 +47,12 @@ describe('AuthResolver', () => {
           provide: AppleProviderService,
           useValue: {
             auth: jest.fn(),
+          },
+        },
+        {
+          provide: SmsService,
+          useValue: {
+            sendPin: jest.fn(),
           },
         },
       ],

@@ -5,7 +5,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { AppConfigModule } from './config/app/config.module';
 import { AwsS3ProviderModule } from './providers/aws/s3/provider.module';
 import { AwsSqsProviderModule } from '@providers/aws/sqs/provider.module';
-import { RedisCacheProviderModule } from './providers/cache/redis/provider.module';
+import { RedisCacheProviderModule } from './providers/cache/redis';
 import { MysqlDatabaseProviderModule } from './providers/database/mysql/provider.module';
 import { SensProviderModule } from './providers/sens/provider.module';
 import { SpiderModule } from './providers/spider/provider.module';

@@ -14,6 +14,7 @@ import {
 import { IJwtToken } from './interfaces';
 
 import { AuthService } from './auth.service';
+import { CacheService } from '@providers/cache/redis';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -32,6 +33,13 @@ describe('AuthService', () => {
           provide: JwtService,
           useValue: {
             sign: jest.fn(() => JWT_TOKEN),
+          },
+        },
+        {
+          provide: CacheService,
+          useValue: {
+            get: jest.fn(),
+            set: jest.fn(),
           },
         },
       ],

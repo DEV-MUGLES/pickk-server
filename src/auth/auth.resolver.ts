@@ -5,15 +5,17 @@ import { UserOauthProvider } from '@user/users/constants';
 import { checkIsPermitted } from '@user/users/helpers';
 import { UsersService } from '@user/users/users.service';
 import { AppleProviderService } from '@providers/apple';
+import { SmsService } from '@providers/sens';
 
 import { CurrentUser } from './decorators';
 import {
   LoginWithAppleInput,
   LoginByCodeInput,
   LoginByOauthInput,
+  RequestPinInput,
 } from './dtos';
 import { ForbiddenResourceException } from './exceptions';
-import { JwtRefreshGuard } from './guards';
+import { JwtRefreshGuard, JwtVerifyGuard } from './guards';
 import { genRandomNickname } from './helpers';
 import { JwtPayload, JwtToken } from './models';
 
@@ -24,7 +26,8 @@ export class AuthResolver {
   constructor(
     @Inject(UsersService) private usersService: UsersService,
     @Inject(AuthService) private authService: AuthService,
-    @Inject(AppleProviderService) private appleService: AppleProviderService
+    @Inject(AppleProviderService) private appleService: AppleProviderService,
+    @Inject(SmsService) private smsService: SmsService
   ) {}
 
   @Query(() => JwtToken, {
@@ -104,5 +107,17 @@ export class AuthResolver {
       throw new ForbiddenResourceException(minRole);
     }
     return this.authService.getSellerToken(seller);
+  }
+
+  @Query(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async requestPin(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('requestPinInput') { phoneNumber }: RequestPinInput
+  ): Promise<boolean> {
+    const pinCode = await this.authService.createPinCode(userId, phoneNumber);
+    await this.smsService.sendPin(phoneNumber, pinCode);
+
+    return true;
   }
 }
