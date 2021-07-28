@@ -37,6 +37,7 @@ export class User extends UserEntity {
     this.updatedAt = attributes.updatedAt;
 
     this.email = attributes.email;
+    this.phoneNumber = attributes.phoneNumber;
     this.code = attributes.code;
     this.nickname = attributes.nickname;
 

@@ -11,7 +11,9 @@ import {
   IsEmail,
   IsEnum,
   IsInt,
+  IsNumberString,
   IsOptional,
+  IsPhoneNumber,
   IsString,
   Max,
   MaxLength,
@@ -76,6 +78,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsEmail()
   @IsOptional()
   email: string;
+
+  @Field({ nullable: true })
+  @Column({ type: 'char', length: 11, nullable: true })
+  @IsPhoneNumber('KR')
+  @IsNumberString()
+  @MaxLength(11)
+  @IsOptional()
+  phoneNumber?: string;
 
   @Field({ nullable: true })
   @Column({

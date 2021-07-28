@@ -15,6 +15,7 @@ export interface IUser {
 
   code?: string;
   email: string;
+  phoneNumber?: string;
   nickname: string;
 
   name?: string | null;
