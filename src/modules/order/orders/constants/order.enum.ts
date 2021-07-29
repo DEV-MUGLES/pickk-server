@@ -5,9 +5,9 @@ export enum OrderStatus {
   Paying = 'paying',
   Failed = 'failed',
   VbankReady = 'vbank_ready',
+  /** 발주 전 즉시 취소된 경우 */
+  VbankDodged = 'vbank_dodged',
   Paid = 'paid',
-  /** 발주 전 즉시 취소된 경우만 Withdrawn으로 변경됨 */
-  Withdrawn = 'withdrawn',
 }
 
 registerEnumType(OrderStatus, {

@@ -125,6 +125,7 @@ type BaseOrderOutput {
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   userId: Int
+  vbankDodgedAt: DateTime
   vbankReadyAt: DateTime
   withdrawnAt: DateTime
 }
@@ -792,6 +793,7 @@ type Order {
   updatedAt: DateTime!
   user: User
   userId: Int
+  vbankDodgedAt: DateTime
   vbankInfo: OrderVbankReceipt
   vbankReadyAt: DateTime
   withdrawnAt: DateTime
@@ -869,6 +871,7 @@ type OrderItem {
   usedPointAmount: Int!
   user: User
   userId: Int
+  vbankDodgedAt: DateTime
   vbankReadyAt: DateTime
   withdrawnAt: DateTime
 }
@@ -892,8 +895,8 @@ enum OrderItemStatus {
   ShipReady
   Shipped
   Shipping
+  VbankDodged
   VbankReady
-  Withdrawn
 }
 
 type OrderReceiver {
@@ -960,8 +963,8 @@ enum OrderStatus {
   Paid
   Paying
   Pending
+  VbankDodged
   VbankReady
-  Withdrawn
 }
 
 type OrderVbankReceipt {

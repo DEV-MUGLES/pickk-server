@@ -43,6 +43,7 @@ export interface IOrder {
   payingAt?: Date;
   failedAt?: Date;
   vbankReadyAt?: Date;
+  vbankDodgedAt?: Date;
   paidAt?: Date;
   withdrawnAt?: Date;
 }

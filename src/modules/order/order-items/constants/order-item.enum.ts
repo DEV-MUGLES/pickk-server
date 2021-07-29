@@ -4,8 +4,8 @@ export enum OrderItemStatus {
   Pending = 'pending',
   Failed = 'failed',
   VbankReady = 'vbank_ready',
+  VbankDodged = 'vbank_dodged',
   Paid = 'paid',
-  Withdrawn = 'withdrawn',
   ShipPending = 'ship_pending',
   /** 배송 줁비중. (발주 완료와 동일) */
   ShipReady = 'ship_ready',

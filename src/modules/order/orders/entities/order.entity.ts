@@ -3,7 +3,6 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   JoinColumn,
   ManyToOne,
   OneToMany,
@@ -33,7 +32,6 @@ import {
 
 @ObjectType()
 @Entity({ name: 'order' })
-@Index('idx_merchantUid', ['merchantUid'])
 export class OrderEntity implements IOrder {
   constructor(attributes?: Partial<OrderEntity>) {
     if (!attributes) {
@@ -66,6 +64,7 @@ export class OrderEntity implements IOrder {
     this.payingAt = attributes.payingAt;
     this.failedAt = attributes.failedAt;
     this.vbankReadyAt = attributes.vbankReadyAt;
+    this.vbankDodgedAt = attributes.vbankDodgedAt;
     this.paidAt = attributes.paidAt;
     this.withdrawnAt = attributes.withdrawnAt;
   }
@@ -188,6 +187,10 @@ export class OrderEntity implements IOrder {
   @Field({ nullable: true })
   @Column({ nullable: true })
   vbankReadyAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  vbankDodgedAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
