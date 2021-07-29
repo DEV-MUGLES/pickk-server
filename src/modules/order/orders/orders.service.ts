@@ -78,4 +78,9 @@ export class OrdersService {
     order.complete(createOrderVbankReceiptInput);
     return await this.ordersRepository.save(order);
   }
+
+  async dodgeVbank(order: Order): Promise<Order> {
+    order.dodgeVbank();
+    return await this.ordersRepository.save(order);
+  }
 }

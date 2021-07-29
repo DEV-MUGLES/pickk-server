@@ -99,6 +99,10 @@ export class Order extends OrderEntity {
     }
   }
 
+  dodgeVbank() {
+    this.markVbankDodged();
+  }
+
   /** evenly spread usedPointAmount to each orderItem */
   private spreadUsedPoint(usedPointAmount: number) {
     const { orderItems, totalItemFinalPrice } = this;
@@ -116,9 +120,9 @@ export class Order extends OrderEntity {
   }
 
   private markPaying() {
-    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+    const { VbankReady, Paid, VbankDodged } = OrderStatus;
 
-    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
       throw new BadRequestException('해당 주문은 결제할 수 없습니다.');
     }
 
@@ -127,9 +131,9 @@ export class Order extends OrderEntity {
   }
 
   private markFailed() {
-    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+    const { VbankReady, Paid, VbankDodged } = OrderStatus;
 
-    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
       throw new BadRequestException('완료된 주문을 실패처리할 수 없습니다');
     }
 
@@ -143,9 +147,9 @@ export class Order extends OrderEntity {
   }
 
   private markVbankReady() {
-    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+    const { VbankReady, Paid, VbankDodged } = OrderStatus;
 
-    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
       throw new BadRequestException(
         '완료된 주문을 가상결제대기 처리할 수 없습니다'
       );
@@ -161,9 +165,9 @@ export class Order extends OrderEntity {
   }
 
   private markPaid() {
-    const { VbankReady, Paid, Withdrawn } = OrderStatus;
+    const { VbankReady, Paid, VbankDodged } = OrderStatus;
 
-    if ([VbankReady, Paid, Withdrawn].includes(this.status)) {
+    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
       throw new BadRequestException('완료된 주문을 완료할 수 없습니다');
     }
 
@@ -173,6 +177,22 @@ export class Order extends OrderEntity {
     for (const orderItem of this.orderItems) {
       orderItem.status = OrderItemStatus.Paid;
       orderItem.paidAt = new Date();
+    }
+  }
+
+  private markVbankDodged() {
+    if (this.status !== OrderStatus.VbankReady) {
+      throw new BadRequestException(
+        '입금 대기 상태인 주문만 취소할 수 있습니다.'
+      );
+    }
+
+    this.status = OrderStatus.VbankDodged;
+    this.vbankDodgedAt = new Date();
+
+    for (const orderItem of this.orderItems) {
+      orderItem.status = OrderItemStatus.VbankDodged;
+      orderItem.vbankDodgedAt = new Date();
     }
   }
 }

@@ -9,6 +9,7 @@ import { PaymentsModule } from '@payment/payments/payments.module';
 import { UsersModule } from '@user/users/users.module';
 
 import { OrdersCreateResolver } from './orders.create.resolver';
+import { OrdersProcessResolver } from './orders.process.resolver';
 import { OrdersRepository } from './orders.repository';
 import { OrdersService } from './orders.service';
 
@@ -22,6 +23,6 @@ import { OrdersService } from './orders.service';
     PaymentsModule,
     UsersModule,
   ],
-  providers: [OrdersCreateResolver, OrdersService],
+  providers: [OrdersCreateResolver, OrdersProcessResolver, OrdersService],
 })
 export class OrdersModule {}

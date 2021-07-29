@@ -725,6 +725,7 @@ type Mutation {
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
+  dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
