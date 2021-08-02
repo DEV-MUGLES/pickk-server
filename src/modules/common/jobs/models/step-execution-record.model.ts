@@ -1,23 +1,39 @@
 import { ObjectType } from '@nestjs/graphql';
 
 import { StepStatus } from '../constants';
-import { StepExecutionRecordEntity } from '../entities/step-execution-record.entity';
+import { StepExecutionRecordEntity } from '../entities';
 
 @ObjectType()
 export class StepExecutionRecord extends StepExecutionRecordEntity {
-  public recordComplete() {
+  private markCompleted() {
     this.status = StepStatus.Completed;
-    this.endAt = new Date();
   }
 
-  public recordStart() {
+  private markStarted() {
     this.status = StepStatus.Started;
-    this.startAt = new Date();
+    this.startedAt = new Date();
   }
 
-  public recordFail(err: Error) {
-    this.exitMessage = err.message;
+  private markFailed() {
     this.status = StepStatus.Failed;
+  }
+
+  private markEnd() {
     this.endAt = new Date();
+  }
+
+  public start() {
+    this.markStarted();
+  }
+
+  public complete() {
+    this.markCompleted();
+    this.markEnd();
+  }
+
+  public fail(err: Error) {
+    this.markFailed();
+    this.markEnd();
+    this.errorMessage = err.message;
   }
 }

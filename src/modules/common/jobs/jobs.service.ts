@@ -5,11 +5,12 @@ import {
   CreateJobExecutionRecordDto,
   CreateStepExecutionRecordDto,
 } from './dtos';
+import { JobExecutionRecord, StepExecutionRecord } from './models';
+
 import {
   JobExecutionRecordRepository,
   StepExecutionRecordRepository,
 } from './jobs.repository';
-import { JobExecutionRecord, StepExecutionRecord } from './models';
 
 @Injectable()
 export class JobsService {
@@ -20,29 +21,23 @@ export class JobsService {
     private readonly stepExecutionRecordRepository: StepExecutionRecordRepository
   ) {}
 
-  async createJobExecutionRecord(
-    createJobExecutionRecordDto: CreateJobExecutionRecordDto
-  ) {
-    const { jobName } = createJobExecutionRecordDto;
-    const jobExecutionRecord = new JobExecutionRecord({
-      jobName,
-    });
-    return await this.jobExecutionRecordRepository.save(jobExecutionRecord);
-  }
-
-  async updateJobExecutionRecord(jobExecutionRecord: JobExecutionRecord) {
-    return await this.jobExecutionRecordRepository.save(jobExecutionRecord);
-  }
-
-  async createStepExecutionRecord(
-    createStepExecutionRecordDto: CreateStepExecutionRecordDto
-  ) {
-    return await this.stepExecutionRecordRepository.save(
-      new StepExecutionRecord(createStepExecutionRecordDto)
+  async createJobExecutionRecord(dto: CreateJobExecutionRecordDto) {
+    return await this.jobExecutionRecordRepository.save(
+      new JobExecutionRecord(dto)
     );
   }
 
-  async updateStepExecutionRecord(stepExecutionRecord: StepExecutionRecord) {
-    return await this.stepExecutionRecordRepository.save(stepExecutionRecord);
+  async updateJobExecutionRecord(model: JobExecutionRecord) {
+    return await this.jobExecutionRecordRepository.save(model);
+  }
+
+  async createStepExecutionRecord(dto: CreateStepExecutionRecordDto) {
+    return await this.stepExecutionRecordRepository.save(
+      new StepExecutionRecord(dto)
+    );
+  }
+
+  async updateStepExecutionRecord(model: StepExecutionRecord) {
+    return await this.stepExecutionRecordRepository.save(model);
   }
 }

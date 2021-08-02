@@ -1,5 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
-import { JobEntity } from '../entities/job.entity';
+
+import { JobEntity } from '../entities';
 
 @ObjectType()
 export class Job extends JobEntity {}

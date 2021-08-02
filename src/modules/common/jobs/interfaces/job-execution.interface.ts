@@ -1,14 +1,15 @@
-import { IStepExecutionRecord, IJobExecutionContextRecord } from '.';
 import { Job } from '../models';
+
+import { IStepExecutionRecord, IJobExecutionContextRecord } from '.';
 
 export interface IJobExecutionRecord {
   id: number;
   createdAt: Date;
   updatedAt: Date;
-  startAt: Date;
+  startedAt: Date;
   endAt: Date;
   status: string;
-  exitMessage: string;
+  errorMessage: string;
 
   jobName: string;
   job?: Job;

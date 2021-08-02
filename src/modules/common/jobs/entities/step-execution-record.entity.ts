@@ -7,7 +7,7 @@ import { IStepExecutionRecord } from '../interfaces';
 
 import { JobExecutionRecordEntity } from './job-execution-record.entity';
 
-@Entity('step-execution_record')
+@Entity('step_execution_record')
 export class StepExecutionRecordEntity
   extends BaseIdEntity
   implements IStepExecutionRecord
@@ -18,11 +18,10 @@ export class StepExecutionRecordEntity
       return;
     }
     this.stepName = attributes.stepName;
-    this.startAt = attributes.startAt;
+    this.startedAt = attributes.startedAt;
     this.endAt = attributes.endAt;
     this.status = attributes.status;
-    this.exitCode = attributes.exitCode;
-    this.exitMessage = attributes.exitMessage;
+    this.errorMessage = attributes.errorMessage;
     this.jobExecutionRecord = attributes.jobExecutionRecord;
     this.jobExecutionRecordId = attributes.jobExecutionRecordId;
   }
@@ -36,10 +35,8 @@ export class StepExecutionRecordEntity
   })
   status: string;
 
-  @Column({ nullable: true })
-  exitCode: string;
-  @Column({ nullable: true })
-  exitMessage: string;
+  @Column({ nullable: true, length: 100 })
+  errorMessage: string;
 
   @Column({ nullable: true })
   jobExecutionRecordId: number;
@@ -53,7 +50,7 @@ export class StepExecutionRecordEntity
 
   @Column({ nullable: true })
   @IsDate()
-  startAt: Date;
+  startedAt: Date;
 
   @Column({ nullable: true })
   @IsDate()

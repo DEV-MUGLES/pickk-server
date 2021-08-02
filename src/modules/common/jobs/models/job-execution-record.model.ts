@@ -1,7 +1,7 @@
 import { ObjectType } from '@nestjs/graphql';
 
 import { JobStatus } from '../constants';
-import { JobExecutionRecordEntity } from '../entities/job-execution-record.entity';
+import { JobExecutionRecordEntity } from '../entities';
 
 @ObjectType()
 export class JobExecutionRecord extends JobExecutionRecordEntity {
@@ -9,19 +9,35 @@ export class JobExecutionRecord extends JobExecutionRecordEntity {
     super(attributes);
   }
 
-  public recordComplete() {
+  private markCompleted() {
     this.status = JobStatus.Completed;
-    this.endAt = new Date();
   }
 
-  public recordStart() {
+  private markStarted() {
     this.status = JobStatus.Started;
-    this.startAt = new Date();
+    this.startedAt = new Date();
   }
 
-  public async recordFail(err: Error) {
-    this.exitMessage = err.message;
+  private markFailed() {
     this.status = JobStatus.Failed;
+  }
+
+  private markEnd() {
     this.endAt = new Date();
+  }
+
+  public start() {
+    this.markStarted();
+  }
+
+  public complete() {
+    this.markCompleted();
+    this.markEnd();
+  }
+
+  public fail(err: Error) {
+    this.markFailed();
+    this.markEnd();
+    this.errorMessage = err.message;
   }
 }

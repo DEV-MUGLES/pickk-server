@@ -2,10 +2,10 @@ export interface IStepExecutionRecord {
   id: number;
   createdAt: Date;
   updatedAt: Date;
-  startAt: Date;
+  startedAt: Date;
   endAt: Date;
   status: string;
-  exitMessage: string;
+  errorMessage: string;
   stepName: string;
 
   jobExecutionRecordId?: number;

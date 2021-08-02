@@ -27,10 +27,10 @@ export class JobExecutionRecordEntity
     if (!attributes) {
       return;
     }
-    this.startAt = attributes.startAt;
+    this.startedAt = attributes.startedAt;
     this.endAt = attributes.endAt;
     this.status = attributes.status;
-    this.exitMessage = attributes.exitMessage;
+    this.errorMessage = attributes.errorMessage;
     this.job = attributes.job;
     this.jobName = attributes.jobName;
     this.stepExecutionRecords = attributes.stepExecutionRecords;
@@ -45,8 +45,8 @@ export class JobExecutionRecordEntity
   })
   status: string;
 
-  @Column({ nullable: true, length: 50 })
-  exitMessage: string;
+  @Column({ nullable: true, length: 100 })
+  errorMessage: string;
 
   @Column({ nullable: true, length: 50 })
   jobName: string;
@@ -75,7 +75,7 @@ export class JobExecutionRecordEntity
 
   @Column({ nullable: true })
   @IsDate()
-  startAt: Date;
+  startedAt: Date;
 
   @Column({ nullable: true })
   @IsDate()
