@@ -1,5 +1,4 @@
 import { JobExecutionContext } from '../job-execution.context';
-
 import { IStep } from './step.interface';
 
 export interface IJobExecution {

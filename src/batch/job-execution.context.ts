@@ -11,7 +11,7 @@ export class JobExecutionContext {
     return this.record[key];
   }
 
-  public convertToJobExecutionContextRecord() {
+  public convertToRecord() {
     return new JobExecutionContextRecord({
       shortContext: JSON.stringify(this.record),
     });

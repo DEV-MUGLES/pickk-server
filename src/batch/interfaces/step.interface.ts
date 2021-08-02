@@ -1,5 +1,7 @@
-import { ITasklet } from './tasklet.interface';
+import { IRead } from './read.interface';
+import { IWrite } from './write.interface';
 
-export interface IStep {
-  tasklet: ITasklet;
+export interface IStep<T = unknown> {
+  read: IRead<T>;
+  write?: IWrite<T>;
 }
