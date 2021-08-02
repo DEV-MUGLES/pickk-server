@@ -1,18 +1,20 @@
-import { IJobExecution, IStep } from './interfaces';
-import { JobExecutionContext } from './job-execution.context';
+import { BaseStep } from '../base.step';
+import { IJobExecution } from '../interfaces';
+
+import { JobExecutionContext } from '.';
 
 export class JobExecution implements IJobExecution {
-  steps: IStep[];
+  steps: BaseStep[];
   jobName: string;
   context: JobExecutionContext;
   errorHandler: (err: Error) => void | Promise<void>;
-  _saveContext: boolean;
+  isSavingContext: boolean;
 
   constructor(attributes?: Partial<JobExecution>) {
     this.steps = attributes.steps;
     this.jobName = attributes.jobName;
     this.context = attributes.context;
     this.errorHandler = attributes.errorHandler;
-    this._saveContext = attributes._saveContext;
+    this.isSavingContext = attributes.isSavingContext;
   }
 }

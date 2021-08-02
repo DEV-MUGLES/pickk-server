@@ -1,9 +1,7 @@
 import { Module } from '@nestjs/common';
 
-import { ItemJobModule } from './jobs/item/item-job.module';
-
 @Module({
-  imports: [ItemJobModule],
+  imports: [],
   providers: [],
 })
 export class BatchModule {}

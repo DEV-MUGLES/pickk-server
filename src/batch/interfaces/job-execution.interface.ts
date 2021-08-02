@@ -1,10 +1,10 @@
-import { JobExecutionContext } from '../job-execution.context';
-import { IStep } from './step.interface';
+import { BaseStep } from '../base.step';
+import { JobExecutionContext } from '../models';
 
 export interface IJobExecution {
-  steps: IStep[];
+  steps: BaseStep[];
   jobName: string;
   context: JobExecutionContext;
   errorHandler?: (err: Error) => void | Promise<void>;
-  _saveContext: boolean;
+  isSavingContext: boolean;
 }

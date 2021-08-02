@@ -1,20 +1,20 @@
-import { IJobExecution, IStep } from './interfaces';
-import { JobExecutionContext } from './job-execution.context';
-import { JobExecution } from './job.execution';
+import { BaseStep } from '../base.step';
+import { IJobExecution } from '../interfaces';
+import { JobExecution, JobExecutionContext } from '../models';
 
 export class JobExecutionBuilder implements IJobExecution {
-  steps: IStep[] = [];
+  steps: BaseStep[] = [];
   jobName: string;
   context: JobExecutionContext = new JobExecutionContext();
   errorHandler: (err: Error) => void | Promise<void>;
-  _saveContext = false;
+  isSavingContext = false;
 
   public get(jobName: string) {
     this.jobName = jobName;
     return this;
   }
 
-  public start(step: IStep) {
+  public start(step: BaseStep) {
     if (this.steps.length !== 0) {
       throw new Error('start must call for first step');
     }
@@ -22,7 +22,7 @@ export class JobExecutionBuilder implements IJobExecution {
     return this;
   }
 
-  public next(step: IStep) {
+  public next(step: BaseStep) {
     if (this.steps.length < 1) {
       throw new Error('next is not for first step');
     }
@@ -31,7 +31,7 @@ export class JobExecutionBuilder implements IJobExecution {
   }
 
   public saveContext() {
-    this._saveContext = true;
+    this.isSavingContext = true;
     return this;
   }
 

@@ -1,23 +1,19 @@
 import { Injectable } from '@nestjs/common';
 import { JobsService } from '@src/modules/common/jobs/jobs.service';
 import { JobExecutionRecord } from '@src/modules/common/jobs/models';
-import { Connection, EntityManager } from 'typeorm';
+
+import { JobExecution, JobExecutionContext } from './models';
 
 import { BaseJob } from './base.job';
-import { IStep } from './interfaces';
-import { JobExecutionContext } from './job-execution.context';
-import { JobExecution } from './job.execution';
+import { BaseStep } from './base.step';
 
 @Injectable()
 export class BatchWorker {
-  constructor(
-    private readonly jobsService: JobsService,
-    private readonly connection: Connection
-  ) {}
+  constructor(private readonly jobsService: JobsService) {}
 
   async run(job: BaseJob) {
     const execution: JobExecution = job.createExecution();
-    const { steps, context, jobName, _saveContext: saveContext } = execution;
+    const { steps, context, jobName, isSavingContext } = execution;
 
     const jobExecutionRecord: JobExecutionRecord =
       await this.jobsService.createJobExecutionRecord({ jobName });
@@ -30,7 +26,7 @@ export class BatchWorker {
       jobExecutionRecord.recordFail(err);
       execution.errorHandler(err);
     } finally {
-      if (saveContext) {
+      if (isSavingContext) {
         jobExecutionRecord.contextRecord = context.convertToRecord();
       }
       await this.jobsService.updateJobExecutionRecord(jobExecutionRecord);
@@ -38,26 +34,18 @@ export class BatchWorker {
   }
 
   async runSteps(
-    steps: IStep[],
+    steps: BaseStep[],
     context: JobExecutionContext,
     jobExecutionRecordId: number
   ) {
-    await this.connection.transaction(async (transactionalEntityManager) => {
-      for (const step of steps) {
-        await this.runStep(
-          step,
-          context,
-          transactionalEntityManager,
-          jobExecutionRecordId
-        );
-      }
-    });
+    for (const step of steps) {
+      await this.runStep(step, context, jobExecutionRecordId);
+    }
   }
 
   async runStep(
-    step: IStep,
+    step: BaseStep,
     context: JobExecutionContext,
-    transactionalEntityManager: EntityManager,
     jobExecutionRecordId: number
   ) {
     const stepExecutionRecord =
@@ -67,16 +55,7 @@ export class BatchWorker {
       });
     try {
       stepExecutionRecord.recordStart();
-
-      if (step.tasklet) {
-        await step.tasklet(transactionalEntityManager, context);
-      } else {
-        const result = step.process
-          ? await step.process(await step.read(context), context)
-          : await step.read(context);
-        await step.write(result, transactionalEntityManager, context);
-      }
-
+      await step.tasklet(context);
       stepExecutionRecord.recordComplete();
     } catch (err) {
       stepExecutionRecord.recordFail(err);
