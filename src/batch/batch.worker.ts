@@ -67,8 +67,16 @@ export class BatchWorker {
       });
     try {
       stepExecutionRecord.recordStart();
-      const result = await step.read(context);
-      await step.write(result, transactionalEntityManager, context);
+
+      if (step.tasklet) {
+        await step.tasklet(transactionalEntityManager, context);
+      } else {
+        const result = step.process
+          ? await step.process(await step.read(context), context)
+          : await step.read(context);
+        await step.write(result, transactionalEntityManager, context);
+      }
+
       stepExecutionRecord.recordComplete();
     } catch (err) {
       stepExecutionRecord.recordFail(err);

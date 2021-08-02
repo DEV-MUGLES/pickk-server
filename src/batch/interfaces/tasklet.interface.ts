@@ -1,9 +1,8 @@
 import { EntityManager } from 'typeorm';
 import { JobExecutionContext } from '../job-execution.context';
 
-export interface IWrite<T = unknown> {
+export interface ITasklet {
   (
-    result: T,
     transactionalEntityManager: EntityManager,
     context: JobExecutionContext
   ): Promise<void>;
