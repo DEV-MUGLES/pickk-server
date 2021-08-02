@@ -1,10 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { JobExecutionRecordRepository } from './jobs.repository';
+import {
+  JobExecutionRecordRepository,
+  StepExecutionRecordRepository,
+} from './jobs.repository';
 import { JobsService } from './jobs.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([JobExecutionRecordRepository])],
+  imports: [
+    TypeOrmModule.forFeature([
+      JobExecutionRecordRepository,
+      StepExecutionRecordRepository,
+    ]),
+  ],
   providers: [JobsService],
   exports: [JobsService],
 })

@@ -1,6 +1,7 @@
-import { IStep } from '@src/batch/interfaces';
+import { PickType } from '@nestjs/mapped-types';
 
-export class CreateJobExecutionRecordDto {
-  steps: IStep[];
-  jobName: string;
-}
+import { JobExecutionRecord } from '../models';
+
+export class CreateJobExecutionRecordDto extends PickType(JobExecutionRecord, [
+  'jobName',
+]) {}

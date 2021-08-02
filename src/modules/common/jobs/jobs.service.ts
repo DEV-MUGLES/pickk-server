@@ -1,33 +1,48 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { CreateJobExecutionRecordDto } from './dtos';
-import { JobExecutionRecordRepository } from './jobs.repository';
+import {
+  CreateJobExecutionRecordDto,
+  CreateStepExecutionRecordDto,
+} from './dtos';
+import {
+  JobExecutionRecordRepository,
+  StepExecutionRecordRepository,
+} from './jobs.repository';
 import { JobExecutionRecord, StepExecutionRecord } from './models';
 
 @Injectable()
 export class JobsService {
   constructor(
     @InjectRepository(JobExecutionRecordRepository)
-    private readonly jobExecutionRecordRepository: JobExecutionRecordRepository
+    private readonly jobExecutionRecordRepository: JobExecutionRecordRepository,
+    @InjectRepository(StepExecutionRecordRepository)
+    private readonly stepExecutionRecordRepository: StepExecutionRecordRepository
   ) {}
 
   async createJobExecutionRecord(
     createJobExecutionRecordDto: CreateJobExecutionRecordDto
   ) {
-    const { steps, jobName } = createJobExecutionRecordDto;
-    const stepExecutionRecords = steps.map(
-      (step) => new StepExecutionRecord({ stepName: step.constructor.name })
-    );
+    const { jobName } = createJobExecutionRecordDto;
     const jobExecutionRecord = new JobExecutionRecord({
       jobName,
-      stepExecutionRecords,
     });
     return await this.jobExecutionRecordRepository.save(jobExecutionRecord);
   }
 
   async updateJobExecutionRecord(jobExecutionRecord: JobExecutionRecord) {
-    console.log(jobExecutionRecord);
     return await this.jobExecutionRecordRepository.save(jobExecutionRecord);
+  }
+
+  async createStepExecutionRecord(
+    createStepExecutionRecordDto: CreateStepExecutionRecordDto
+  ) {
+    return await this.stepExecutionRecordRepository.save(
+      new StepExecutionRecord(createStepExecutionRecordDto)
+    );
+  }
+
+  async updateStepExecutionRecord(stepExecutionRecord: StepExecutionRecord) {
+    return await this.stepExecutionRecordRepository.save(stepExecutionRecord);
   }
 }
