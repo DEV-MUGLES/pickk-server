@@ -18,13 +18,13 @@ import { BaseJob } from './jobs/base.job';
 
 import { BatchWorker } from './batch.worker';
 
-class MockStep extends BaseStep {
+class TestStep extends BaseStep {
   async tasklet() {
     return null;
   }
 }
 
-class MockJob extends BaseJob {
+class TestJob extends BaseJob {
   createExecution(jobExecutionBuilder: JobExecutionBuilder) {
     return jobExecutionBuilder.build();
   }
@@ -49,96 +49,96 @@ describe('BatchWorker', () => {
   });
 
   describe('runStep', () => {
-    let mockStep: MockStep;
-    let mockStepExecutionRecord: StepExecutionRecord;
+    let testStep: TestStep;
+    let testStepExecutionRecord: StepExecutionRecord;
     let jobsServiceCreateStepExecutionRecordSpy: jest.SpyInstance;
     let jobsServiceUpdateStepExecutionRecordSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      mockStep = new MockStep();
-      mockStepExecutionRecord = new StepExecutionRecord();
+      testStep = new TestStep();
+      testStepExecutionRecord = new StepExecutionRecord();
       jobsServiceCreateStepExecutionRecordSpy = jest
         .spyOn(jobsService, 'createStepExecutionRecord')
-        .mockImplementationOnce(async () => mockStepExecutionRecord);
+        .mockImplementationOnce(async () => testStepExecutionRecord);
       jobsServiceUpdateStepExecutionRecordSpy = jest
         .spyOn(jobsService, 'updateStepExecutionRecord')
         .mockImplementationOnce(() => null);
     });
     it('성공적으로 step을 실행한다', async () => {
-      const mockJobExecutionContext = new JobExecutionContext();
-      const mockJobExecutionRecordId = faker.datatype.number({
+      const testJobExecutionContext = new JobExecutionContext();
+      const testJobExecutionRecordId = faker.datatype.number({
         min: 1,
         max: 100,
       });
 
       const mockStepExecutionRecordStartSpy = jest.spyOn(
-        mockStepExecutionRecord,
+        testStepExecutionRecord,
         'start'
       );
       const mockStepExecutionRecordCompleteSpy = jest.spyOn(
-        mockStepExecutionRecord,
+        testStepExecutionRecord,
         'complete'
       );
-      const mockStepTaskletSpy = jest.spyOn(mockStep, 'tasklet');
+      const mockStepTaskletSpy = jest.spyOn(testStep, 'tasklet');
 
       await batchWorker.runStep(
-        mockStep,
-        mockJobExecutionContext,
-        mockJobExecutionRecordId
+        testStep,
+        testJobExecutionContext,
+        testJobExecutionRecordId
       );
       expect(jobsServiceCreateStepExecutionRecordSpy).toHaveBeenCalledWith({
-        stepName: mockStep.constructor.name,
-        jobExecutionRecordId: mockJobExecutionRecordId,
+        stepName: testStep.constructor.name,
+        jobExecutionRecordId: testJobExecutionRecordId,
       });
       expect(mockStepExecutionRecordStartSpy).toHaveBeenCalledTimes(1);
       expect(mockStepExecutionRecordCompleteSpy).toHaveBeenCalledTimes(1);
       expect(jobsServiceUpdateStepExecutionRecordSpy).toHaveBeenCalledWith(
-        mockStepExecutionRecord
+        testStepExecutionRecord
       );
       expect(mockStepTaskletSpy).toHaveBeenCalledTimes(1);
-      expect(mockStepTaskletSpy).toHaveBeenCalledWith(mockJobExecutionContext);
+      expect(mockStepTaskletSpy).toHaveBeenCalledWith(testJobExecutionContext);
     });
 
     it('step실행 시 에러가 발생할경우, 성공적으로 에러를 처리한다.', async () => {
-      const mockError = new Error('error');
+      const testError = new Error('error');
 
       const mockStepExecutionRecordFailSpy = jest.spyOn(
-        mockStepExecutionRecord,
+        testStepExecutionRecord,
         'fail'
       );
 
-      jest.spyOn(mockStep, 'tasklet').mockImplementationOnce(() => {
-        throw mockError;
+      jest.spyOn(testStep, 'tasklet').mockImplementationOnce(() => {
+        throw testError;
       });
 
       try {
-        await batchWorker.runStep(mockStep, null, null);
+        await batchWorker.runStep(testStep, null, null);
       } catch (err) {}
 
-      expect(mockStepExecutionRecordFailSpy).toHaveBeenCalledWith(mockError);
+      expect(mockStepExecutionRecordFailSpy).toHaveBeenCalledWith(testError);
     });
   });
 
   describe('run', () => {
-    let mockJob: MockJob;
-    let mockJobExecution: JobExecution;
-    let mockJobExecutionRecord: JobExecutionRecord;
+    let testJob: TestJob;
+    let testJobExecution: JobExecution;
+    let testJobExecutionRecord: JobExecutionRecord;
     let jobsServiceCreateJobExecutionRecordSpy: jest.SpyInstance;
     let jobsServiceUpdateJobExecutionRecordSpy: jest.SpyInstance;
 
     const genMockSteps = (stepCount: number) =>
-      faker.datatype.array(stepCount).map(() => new MockStep());
+      Array(stepCount).fill(new TestStep());
 
     beforeEach(() => {
-      mockJob = new MockJob();
-      mockJobExecution = new JobExecution({
+      testJob = new TestJob();
+      testJobExecution = new JobExecution({
         jobName: faker.name.jobTitle(),
         steps: genMockSteps(5),
         errorHandler: jest.fn(),
         isSavingContext: true,
         context: new JobExecutionContext(),
       });
-      mockJobExecutionRecord = new JobExecutionRecord({
+      testJobExecutionRecord = new JobExecutionRecord({
         id: faker.datatype.number({
           min: 1,
           max: 100,
@@ -147,28 +147,28 @@ describe('BatchWorker', () => {
 
       jobsServiceCreateJobExecutionRecordSpy = jest
         .spyOn(jobsService, 'createJobExecutionRecord')
-        .mockImplementationOnce(async () => mockJobExecutionRecord);
+        .mockImplementationOnce(async () => testJobExecutionRecord);
 
       jobsServiceUpdateJobExecutionRecordSpy = jest
         .spyOn(jobsService, 'updateJobExecutionRecord')
         .mockImplementationOnce(() => null);
 
       jest
-        .spyOn(mockJob, 'createExecution')
-        .mockImplementationOnce(() => mockJobExecution);
+        .spyOn(testJob, 'createExecution')
+        .mockImplementationOnce(() => testJobExecution);
     });
 
     it('성공적으로 job을 수행한다', async () => {
       const jobExecutionRecordStartSpy = jest.spyOn(
-        mockJobExecutionRecord,
+        testJobExecutionRecord,
         'start'
       );
       const jobExecutionRecordCompleteSpy = jest.spyOn(
-        mockJobExecutionRecord,
+        testJobExecutionRecord,
         'complete'
       );
       const jobExecutionRecordSaveContextRecord = jest.spyOn(
-        mockJobExecutionRecord,
+        testJobExecutionRecord,
         'saveContextRecord'
       );
 
@@ -176,45 +176,45 @@ describe('BatchWorker', () => {
         .spyOn(batchWorker, 'runSteps')
         .mockImplementationOnce(() => null);
 
-      await batchWorker.run(mockJob);
+      await batchWorker.run(testJob);
 
       expect(jobsServiceCreateJobExecutionRecordSpy).toHaveBeenCalledWith({
-        jobName: mockJobExecution.jobName,
+        jobName: testJobExecution.jobName,
       });
       expect(jobExecutionRecordStartSpy).toHaveBeenCalled();
       expect(batchWorkerRunStepsSpy).toHaveBeenCalledWith(
-        mockJobExecution.steps,
-        mockJobExecution.context,
-        mockJobExecutionRecord.id
+        testJobExecution.steps,
+        testJobExecution.context,
+        testJobExecutionRecord.id
       );
       expect(jobExecutionRecordSaveContextRecord).toHaveBeenCalledWith(
-        mockJobExecution.context.convertToRecord()
+        testJobExecution.context.convertToRecord()
       );
       expect(jobExecutionRecordCompleteSpy).toHaveBeenCalled();
       expect(jobsServiceUpdateJobExecutionRecordSpy).toHaveBeenCalledWith(
-        mockJobExecutionRecord
+        testJobExecutionRecord
       );
     });
 
     it('job 실행시 에러가 발생하면, 성공적으로 에러를 처리한다.', async () => {
-      const mockError = new Error('mock error');
+      const testError = new Error('mock error');
       const jobExecutionRecordFailSpy = jest.spyOn(
-        mockJobExecutionRecord,
+        testJobExecutionRecord,
         'fail'
       );
 
       const mockJobExecutionErrorHandlerSpy = jest
-        .spyOn(mockJobExecution, 'errorHandler')
+        .spyOn(testJobExecution, 'errorHandler')
         .mockImplementationOnce(() => null);
 
       jest.spyOn(batchWorker, 'runSteps').mockImplementationOnce(() => {
-        throw mockError;
+        throw testError;
       });
 
-      await batchWorker.run(mockJob);
+      await batchWorker.run(testJob);
 
-      expect(jobExecutionRecordFailSpy).toHaveBeenCalledWith(mockError);
-      expect(mockJobExecutionErrorHandlerSpy).toHaveBeenCalledWith(mockError);
+      expect(jobExecutionRecordFailSpy).toHaveBeenCalledWith(testError);
+      expect(mockJobExecutionErrorHandlerSpy).toHaveBeenCalledWith(testError);
     });
   });
 });
