@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 
 /**
- * 이 가드는 Rest api endpoint에 적용되는 가드입니다.
+ * 이 가드는 Rest api endpoint(@Controller)에서만 적용되는 가드입니다.
  */
 @Injectable()
 export class SuperSecretGuard implements CanActivate {
