@@ -16,6 +16,11 @@ export class BatchWorker {
       new JobExecutionBuilder()
     );
     const { steps, context, jobName, isSavingContext } = execution;
+    if (steps.length < 1) {
+      throw new Error(
+        'job needs at least one step, you must register step to job'
+      );
+    }
 
     const jobExecutionRecord: JobExecutionRecord =
       await this.jobsService.createJobExecutionRecord({ jobName });
