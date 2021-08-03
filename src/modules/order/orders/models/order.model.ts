@@ -2,13 +2,18 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
-import { OrderItemStatus } from '@order/order-items/constants';
+import {
+  OrderItemClaimStatus,
+  OrderItemStatus,
+} from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 import { PayMethod } from '@payment/payments/constants';
+import { plainToClass } from 'class-transformer';
 
 import { OrderStatus } from '../constants';
 import { CreateOrderVbankReceiptInput, StartOrderInput } from '../dtos';
 import { OrderEntity } from '../entities';
+import { calcTotalShippingFee } from '../helpers';
 
 import { OrderBuyer } from './order-buyer.model';
 import { OrderReceiver } from './order-receiver.model';
@@ -101,6 +106,52 @@ export class Order extends OrderEntity {
 
   dodgeVbank() {
     this.markVbankDodged();
+  }
+
+  cancel(orderItemMerchantUids: string[]) {
+    if (orderItemMerchantUids.length === 0) {
+      throw new BadRequestException('1개 이상의 주문 상품을 입력해주세요.');
+    }
+
+    for (const merchantUid of orderItemMerchantUids) {
+      const orderItem = this.getOrderItem(merchantUid);
+      orderItem.cancel();
+
+      this.totalItemFinalPrice -= orderItem.itemFinalPrice;
+      this.totalUsedPointAmount -= orderItem.usedPointAmount;
+      this.totalCouponDiscountAmount -= orderItem.couponDiscountAmount;
+    }
+
+    this.totalShippingFee = this.calcTotalShippingFee();
+    this.totalPayAmount =
+      this.totalItemFinalPrice +
+      this.totalShippingFee -
+      this.totalUsedPointAmount -
+      this.totalCouponDiscountAmount;
+  }
+
+  private getOrderItem(merchantUid: string): OrderItem {
+    const orderItem = this.orderItems.find(
+      (orderItem) => orderItem.merchantUid === merchantUid
+    );
+    if (!orderItem) {
+      throw new NotFoundException(
+        `주문 상품[${merchantUid}]이 존재하지 않습니다.`
+      );
+    }
+
+    return plainToClass(OrderItem, orderItem);
+  }
+
+  private calcTotalShippingFee() {
+    const { CancelRequested, Cancelled } = OrderItemClaimStatus;
+    const calcInput = this.orderItems
+      .filter(
+        (oi) => [CancelRequested, Cancelled].includes(oi.claimStatus) === false
+      )
+      .map((oi) => ({ product: oi.product, quantity: oi.quantity }));
+
+    return calcTotalShippingFee(calcInput);
   }
 
   /** evenly spread usedPointAmount to each orderItem */

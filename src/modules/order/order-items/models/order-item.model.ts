@@ -4,6 +4,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Coupon } from '@order/coupons/models';
 import { Order } from '@order/orders/models';
 
+import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { OrderItemEntity } from '../entities/order-item.entity';
 
 @ObjectType()
@@ -29,5 +30,20 @@ export class OrderItem extends OrderItemEntity {
     this.usedCouponId = coupon.id;
     this.usedCouponName = coupon.spec.name;
     this.couponDiscountAmount = coupon.getDiscountAmountFor(item);
+  }
+
+  cancel() {
+    this.markCancelled();
+  }
+
+  private markCancelled() {
+    if (this.status !== OrderItemStatus.Paid) {
+      throw new BadRequestException(
+        `결제 완료 상태인 주문 상품만 취소할 수 있습니다.\n문제 주문상품: ${this.itemName}(${this.productVariantName})`
+      );
+    }
+
+    this.claimStatus = OrderItemClaimStatus.Cancelled;
+    this.cancelledAt = new Date();
   }
 }

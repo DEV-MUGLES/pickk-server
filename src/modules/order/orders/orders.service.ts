@@ -9,6 +9,10 @@ import { ProductsService } from '@item/products/products.service';
 import { Coupon } from '@order/coupons/models';
 
 import { CreateOrderVbankReceiptInput, StartOrderInput } from './dtos';
+import {
+  InvalidCancelAmountException,
+  InvalidCancelChecksumException,
+} from './exceptions';
 import { OrderFactory } from './factories';
 import { Order } from './models';
 
@@ -81,6 +85,28 @@ export class OrdersService {
 
   async dodgeVbank(order: Order): Promise<Order> {
     order.dodgeVbank();
+    return await this.ordersRepository.save(order);
+  }
+
+  /** cancel orderItems of given Order matching orderItemMerchantUids */
+  async cancel(
+    order: Order,
+    orderItemMerchantUids: string[],
+    amount: number,
+    checksum: number
+  ): Promise<Order> {
+    const { totalPayAmount: beforeAmount } = order;
+    order.cancel(orderItemMerchantUids);
+    const { totalPayAmount: afterAmount } = order;
+
+    if (afterAmount !== checksum) {
+      throw new InvalidCancelChecksumException(afterAmount, checksum);
+    }
+    const cancelledAmount = beforeAmount - afterAmount;
+    if (cancelledAmount !== amount) {
+      throw new InvalidCancelAmountException(cancelledAmount, amount);
+    }
+
     return await this.ordersRepository.save(order);
   }
 }
