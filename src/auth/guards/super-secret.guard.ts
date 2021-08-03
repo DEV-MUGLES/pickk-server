@@ -5,8 +5,11 @@ import {
   Injectable,
 } from '@nestjs/common';
 
+/**
+ * 이 가드는 Rest api endpoint에 적용되는 가드입니다.
+ */
 @Injectable()
-export class PaySuperSecretGuard implements CanActivate {
+export class SuperSecretGuard implements CanActivate {
   canActivate(context: ExecutionContext) {
     const request = context.switchToHttp().getRequest();
     if (request.headers['super-pass'] !== 'aMOrPhaTI1!') {
