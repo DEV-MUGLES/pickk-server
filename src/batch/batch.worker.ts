@@ -3,10 +3,9 @@ import { JobsService } from '@src/modules/common/jobs/jobs.service';
 import { JobExecutionRecord } from '@src/modules/common/jobs/models';
 
 import { JobExecutionBuilder } from './builders';
+import { BaseJob } from './jobs/base.job';
+import { BaseStep } from './jobs/base.step';
 import { JobExecution, JobExecutionContext } from './models';
-
-import { BaseJob } from './base.job';
-import { BaseStep } from './base.step';
 
 @Injectable()
 export class BatchWorker {

@@ -1,4 +1,4 @@
-import { BaseStep } from '../base.step';
+import { BaseStep } from '../jobs/base.step';
 import { JobExecutionContext } from '../models';
 
 export interface IJobExecution {

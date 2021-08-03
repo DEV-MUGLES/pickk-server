@@ -1,5 +1,5 @@
-import { BaseStep } from '../base.step';
 import { IJobExecution } from '../interfaces';
+import { BaseStep } from '../jobs/base.step';
 import { JobExecution, JobExecutionContext } from '../models';
 
 export class JobExecutionBuilder implements IJobExecution {

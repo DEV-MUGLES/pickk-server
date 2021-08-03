@@ -13,9 +13,9 @@ import {
 
 import { JobExecutionBuilder } from './builders';
 import { JobExecution, JobExecutionContext } from './models';
+import { BaseStep } from './jobs/base.step';
+import { BaseJob } from './jobs/base.job';
 
-import { BaseJob } from './base.job';
-import { BaseStep } from './base.step';
 import { BatchWorker } from './batch.worker';
 
 class MockStep extends BaseStep {

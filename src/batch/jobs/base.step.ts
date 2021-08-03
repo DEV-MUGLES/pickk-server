@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
-import { JobExecutionContext } from './models';
+import { JobExecutionContext } from '../models';
 
 @Injectable()
 export abstract class BaseStep {
