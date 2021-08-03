@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { JobsService } from '@src/modules/common/jobs/jobs.service';
 import { JobExecutionRecord } from '@src/modules/common/jobs/models';
 
+import { JobExecutionBuilder } from './builders';
 import { JobExecution, JobExecutionContext } from './models';
 
 import { BaseJob } from './base.job';
@@ -12,7 +13,9 @@ export class BatchWorker {
   constructor(private readonly jobsService: JobsService) {}
 
   async run(job: BaseJob) {
-    const execution: JobExecution = job.createExecution();
+    const execution: JobExecution = job.createExecution(
+      new JobExecutionBuilder()
+    );
     const { steps, context, jobName, isSavingContext } = execution;
 
     const jobExecutionRecord: JobExecutionRecord =
