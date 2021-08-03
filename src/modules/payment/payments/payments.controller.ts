@@ -10,15 +10,16 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { SuperSecretGuard } from '@auth/guards';
+
 import { CompletePaymentDto, UpdatePaymentDto } from './dtos';
-import { PaySuperSecretGuard } from './guards';
 import { Payment } from './models';
 
 import { PaymentsService } from './payments.service';
 
 @ApiTags('payments')
 @Controller('/payments')
-@UseGuards(PaySuperSecretGuard)
+@UseGuards(SuperSecretGuard)
 export class PaymentsController {
   constructor(
     @Inject(PaymentsService) private readonly paymentsService: PaymentsService

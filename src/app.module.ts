@@ -21,6 +21,7 @@ import { OrderModule } from './modules/order/order.module';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { PaymentModule } from '@payment/payment.module';
+import { BatchModule } from './batch/batch.module';
 
 @Module({
   imports: [
@@ -45,6 +46,7 @@ import { PaymentModule } from '@payment/payment.module';
     OrderModule,
     PaymentModule,
     UserModule,
+    BatchModule,
   ],
   controllers: [AppController],
   providers: [AppService],
