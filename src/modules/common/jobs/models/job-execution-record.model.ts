@@ -2,6 +2,7 @@ import { ObjectType } from '@nestjs/graphql';
 
 import { JobStatus } from '../constants';
 import { JobExecutionRecordEntity } from '../entities';
+import { JobExecutionContextRecord } from './job-execution-context-record.model';
 
 @ObjectType()
 export class JobExecutionRecord extends JobExecutionRecordEntity {
@@ -39,5 +40,9 @@ export class JobExecutionRecord extends JobExecutionRecordEntity {
     this.markFailed();
     this.markEnd();
     this.errorMessage = err.message;
+  }
+
+  public saveContextRecord(contextRecord: JobExecutionContextRecord) {
+    this.contextRecord = contextRecord;
   }
 }

@@ -26,11 +26,15 @@ export class BatchWorker {
       await this.runSteps(steps, context, jobExecutionRecord.id);
       jobExecutionRecord.complete();
     } catch (err) {
-      jobExecutionRecord.fail(err);
-      execution.errorHandler(err);
+      if (err instanceof Error) {
+        jobExecutionRecord.fail(err);
+        if (execution.errorHandler) {
+          execution.errorHandler(err);
+        }
+      }
     } finally {
       if (isSavingContext) {
-        jobExecutionRecord.contextRecord = context.convertToRecord();
+        jobExecutionRecord.saveContextRecord(context.convertToRecord());
       }
       await this.jobsService.updateJobExecutionRecord(jobExecutionRecord);
     }
@@ -61,8 +65,10 @@ export class BatchWorker {
       await step.tasklet(context);
       stepExecutionRecord.complete();
     } catch (err) {
-      stepExecutionRecord.fail(err);
-      throw new Error(err);
+      if (err instanceof Error) {
+        stepExecutionRecord.fail(err);
+        throw err;
+      }
     } finally {
       await this.jobsService.updateStepExecutionRecord(stepExecutionRecord);
     }
