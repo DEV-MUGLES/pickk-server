@@ -1,10 +1,8 @@
-export const USER_COUNT = 10;
-export const SELLER_COUNT = 10;
-export const BRAND_COUNT = 10;
-export const ITEM_COUNT = 20;
-export const COURIER_COUNT = 10;
-
-export const ItemCategories = [
+export const ItemCategoryData: {
+  name: string;
+  code: string;
+  minorCategories: { name: string; code: string }[];
+}[] = [
   {
     name: '아우터',
     code: 'OUTER',
