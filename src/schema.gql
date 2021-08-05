@@ -117,7 +117,7 @@ type BaseOrderOutput {
   payMethod: PayMethod
   payingAt: DateTime
   refundAccount: OrderRefundAccount
-  refundRequest: RefundRequest!
+  refundRequests: [RefundRequest!]!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -758,6 +758,7 @@ type Mutation {
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
@@ -805,7 +806,7 @@ type Order {
   payingAt: DateTime
   receiver: OrderReceiver
   refundAccount: OrderRefundAccount
-  refundRequest: RefundRequest!
+  refundRequests: [RefundRequest!]!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -865,6 +866,9 @@ type OrderItem {
   order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
+
+  """itemFinalPrice - usedPointAmount - couponDiscountAmount"""
+  payAmount: Float!
   product: Product
   productId: Int
   productVariantName: String!
@@ -1281,7 +1285,7 @@ type RefundRequest {
   reason: String!
 
   """255자 이내로 적어주세요"""
-  rejectReason: String!
+  rejectReason: String
   rejectedAt: DateTime
   requestedAt: DateTime!
   status: RefundRequestStatus!
@@ -1311,6 +1315,27 @@ input RegisterOrderItemInput {
   quantity: Int!
   recommendContentItemId: Int
   recommendContentType: ContentType
+}
+
+input RequestOrderRefundInput {
+  """
+  반품로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  반품 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+  faultOf: RefundRequestFaultOf!
+
+  """반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다."""
+  orderItemMerchantUids: [String!]!
+
+  """255자 이내로 적어주세요"""
+  reason: String!
 }
 
 input RequestPinInput {

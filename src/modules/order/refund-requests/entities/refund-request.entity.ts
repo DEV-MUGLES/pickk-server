@@ -74,8 +74,8 @@ export class RefundRequestEntity implements IRefundRequest {
   @Min(0)
   amount: number;
 
-  @Field({ description: '255자 이내로 적어주세요' })
-  @Column()
+  @Field({ description: '255자 이내로 적어주세요', nullable: true })
+  @Column({ nullable: true })
   @IsString()
   rejectReason: string;
 

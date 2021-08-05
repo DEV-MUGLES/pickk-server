@@ -5,7 +5,7 @@ export class AddRefundRequest1628183081418 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      "CREATE TABLE `refund_request` (`id` int NOT NULL AUTO_INCREMENT, `status` enum ('requested', 'picked', 'rejected', 'confirmed') NOT NULL, `orderMerchantUid` char(20) NOT NULL, `faultOf` enum ('customer', 'seller') NOT NULL, `reason` varchar(255) NOT NULL, `amount` int UNSIGNED NOT NULL DEFAULT '0', `rejectReason` varchar(255) NOT NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB"
+      "CREATE TABLE `refund_request` (`id` int NOT NULL AUTO_INCREMENT, `status` enum ('requested', 'picked', 'rejected', 'confirmed') NOT NULL, `orderMerchantUid` char(20) NOT NULL, `faultOf` enum ('customer', 'seller') NOT NULL, `reason` varchar(255) NOT NULL, `amount` int UNSIGNED NOT NULL DEFAULT '0', `rejectReason` varchar(255) NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
 
     await queryRunner.query(
