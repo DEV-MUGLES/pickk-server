@@ -52,12 +52,10 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   @UseGuards(JwtVerifyGuard)
   async cancelOrder(
     @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
     @Args('cancelOrderInput')
     cancelOrderInput: CancelOrderInput
   ): Promise<Order> {
-    const { merchantUid, orderItemMerchantUids, amount, checksum } =
-      cancelOrderInput;
-
     const order = await this.ordersService.get(merchantUid, [
       'orderItems',
       'orderItems.product',
@@ -70,6 +68,8 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     if (order.userId !== userId) {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
+
+    const { orderItemMerchantUids, amount, checksum } = cancelOrderInput;
 
     const cancelledOrder = await this.ordersService.cancel(
       order,

@@ -173,9 +173,6 @@ input CancelOrderInput {
   서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
   """
   checksum: Int!
-
-  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
-  merchantUid: String!
   orderItemMerchantUids: [String!]!
 
   """취소 사유"""
@@ -735,7 +732,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
-  cancelOrder(cancelOrderInput: CancelOrderInput!): Order!
+  cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
     """가상계좌 주문건인 경우에만 필요합니다."""
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
