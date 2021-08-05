@@ -11,17 +11,31 @@ import { JobExecution, JobExecutionContext } from './models';
 export class BatchWorker {
   constructor(private readonly jobsService: JobsService) {}
 
-  async run(job: BaseJob) {
-    const execution: JobExecution = job.createExecution(
-      new JobExecutionBuilder()
-    );
-    const { steps, context, jobName, isSavingContext } = execution;
+  /**
+   * execution의 steps과 jobName의 제약사항을 확인한다.
+   * steps가 존재하지 않거나, jobName의 job이 데이터베이스에 없다면 에러를 발생한다.
+   * @param execution
+   */
+  private async checkExecutionConstraints(execution: JobExecution) {
+    const { steps, jobName } = execution;
     if (steps.length < 1) {
       throw new Error(
         'job needs at least one step, you must register step to job'
       );
     }
 
+    if (!(await this.jobsService.getJob(jobName))) {
+      throw new Error(`${jobName} job doesn\'t exist`);
+    }
+  }
+
+  async run(job: BaseJob) {
+    const execution: JobExecution = job.createExecution(
+      new JobExecutionBuilder()
+    );
+    await this.checkExecutionConstraints(execution);
+
+    const { steps, context, jobName, isSavingContext } = execution;
     const jobExecutionRecord: JobExecutionRecord =
       await this.jobsService.createJobExecutionRecord({ jobName });
 
