@@ -5,10 +5,11 @@ import {
   CreateJobExecutionRecordDto,
   CreateStepExecutionRecordDto,
 } from './dtos';
-import { JobExecutionRecord, StepExecutionRecord } from './models';
+import { Job, JobExecutionRecord, StepExecutionRecord } from './models';
 
 import {
   JobExecutionRecordRepository,
+  JobRepository,
   StepExecutionRecordRepository,
 } from './jobs.repository';
 
@@ -18,8 +19,23 @@ export class JobsService {
     @InjectRepository(JobExecutionRecordRepository)
     private readonly jobExecutionRecordRepository: JobExecutionRecordRepository,
     @InjectRepository(StepExecutionRecordRepository)
-    private readonly stepExecutionRecordRepository: StepExecutionRecordRepository
+    private readonly stepExecutionRecordRepository: StepExecutionRecordRepository,
+    @InjectRepository(JobRepository)
+    private readonly jobRepository: JobRepository
   ) {}
+
+  async findJob(name: string) {
+    return await this.jobRepository.findOne(name);
+  }
+
+  async createJob(name: string) {
+    return await this.jobRepository.save(new Job({ name }));
+  }
+
+  async getJob(name: string) {
+    const job = await this.findJob(name);
+    return job ?? (await this.createJob(name));
+  }
 
   async createJobExecutionRecord(dto: CreateJobExecutionRecordDto) {
     return await this.jobExecutionRecordRepository.save(

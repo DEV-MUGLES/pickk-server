@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import {
   JobExecutionRecordRepository,
+  JobRepository,
   StepExecutionRecordRepository,
 } from './jobs.repository';
 import { JobsService } from './jobs.service';
@@ -12,6 +13,7 @@ import { JobsService } from './jobs.service';
     TypeOrmModule.forFeature([
       JobExecutionRecordRepository,
       StepExecutionRecordRepository,
+      JobRepository,
     ]),
   ],
   providers: [JobsService],
