@@ -137,6 +137,9 @@
       "@auth/(.*)$": [
         "<rootDir>/auth/$1"
       ],
+      "@batch/(.*)$": [
+        "<rootDir>/batch/$1"
+      ],
       "@config/(.*)$": [
         "<rootDir>/config/$1"
       ],
@@ -152,6 +155,7 @@
       "@templates/(.*)$": [
         "<rootDir>/templates/$1"
       ],
+      "@mcommon/(.*)$": "<rootDir>/modules/common/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
       "@order/(.*)$": "<rootDir>/modules/order/$1",
