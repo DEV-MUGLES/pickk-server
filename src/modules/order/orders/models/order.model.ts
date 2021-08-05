@@ -7,12 +7,20 @@ import {
   OrderItemStatus,
 } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
+import {
+  RefundRequestFaultOf,
+  RefundRequestStatus,
+} from '@order/refund-requests/constants';
 import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
 import { PayMethod } from '@payment/payments/constants';
 import { plainToClass } from 'class-transformer';
 
 import { OrderStatus } from '../constants';
-import { CreateOrderVbankReceiptInput, StartOrderInput } from '../dtos';
+import {
+  CreateOrderVbankReceiptInput,
+  RequestOrderRefundInput,
+  StartOrderInput,
+} from '../dtos';
 import { OrderEntity } from '../entities';
 import { calcTotalShippingFee } from '../helpers';
 
@@ -134,6 +142,67 @@ export class Order extends OrderEntity {
       this.totalCouponDiscountAmount;
   }
 
+  requestRefund(input: RequestOrderRefundInput) {
+    const { orderItemMerchantUids, amount, checksum, faultOf } = input;
+
+    const orderItems = this.getOrderItems(orderItemMerchantUids);
+
+    if (orderItems.length === 0) {
+      throw new BadRequestException('1개 이상의 주문 상품을 입력해주세요.');
+    }
+    if ([...new Set(orderItems.map((oi) => oi.sellerId))].length > 1) {
+      throw new BadRequestException(
+        '한번에 같은 브랜드의 상품만 반품할 수 있습니다.'
+      );
+    }
+
+    const { minimumAmountForFree, fee } = orderItems[0].seller.shippingPolicy;
+
+    const totalItemFinalPrice = orderItems.reduce(
+      (sum, oi) => sum + oi.itemFinalPrice,
+      0
+    );
+    const isFreeShipped = totalItemFinalPrice >= minimumAmountForFree;
+    const refundShippingFee =
+      faultOf === RefundRequestFaultOf.Seller
+        ? 0
+        : isFreeShipped
+        ? fee * 2
+        : fee;
+
+    const totalPayAmount = orderItems.reduce(
+      (sum, oi) => sum + oi.payAmount,
+      0
+    );
+    const refundAmount = totalPayAmount - refundShippingFee;
+
+    if (amount !== refundAmount) {
+      throw new BadRequestException(
+        `입력한 환불금액이 계산된 금액과 일치하지 않습니다.\n입력: ${amount}, 계산됨: ${refundAmount}`
+      );
+    }
+
+    const remainPayAmount = this.totalPayAmount - refundAmount;
+    if (checksum !== remainPayAmount) {
+      throw new BadRequestException(
+        `입력한 잔여금액이 계산된 금액과 일치하지 않습니다.\n입력: ${amount}, 계산됨: ${remainPayAmount}`
+      );
+    }
+
+    for (const oi of orderItems) {
+      oi.requestRefund();
+    }
+
+    this.orderItems = this.applyOrderItems(this.orderItems, orderItems);
+    this.refundRequests.push(
+      new RefundRequest({
+        ...input,
+        status: RefundRequestStatus.Requested,
+        orderItems,
+      })
+    );
+  }
+
   private getOrderItem(merchantUid: string): OrderItem {
     const orderItem = this.orderItems.find(
       (orderItem) => orderItem.merchantUid === merchantUid
@@ -145,6 +214,24 @@ export class Order extends OrderEntity {
     }
 
     return plainToClass(OrderItem, orderItem);
+  }
+
+  private getOrderItems(merchantUids: string[]): OrderItem[] {
+    return merchantUids.map((merchantUid) => this.getOrderItem(merchantUid));
+  }
+
+  private applyOrderItems(
+    existings: OrderItem[],
+    incomings: OrderItem[]
+  ): OrderItem[] {
+    return existings
+      .filter(
+        (existing) =>
+          !incomings.find(
+            ({ merchantUid }) => merchantUid === existing.merchantUid
+          )
+      )
+      .concat(incomings);
   }
 
   private calcTotalShippingFee() {
