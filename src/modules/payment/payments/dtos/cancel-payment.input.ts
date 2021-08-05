@@ -25,6 +25,9 @@ export class CancelPaymentInput extends PickType(
 
   constructor(attributes: CancelPaymentInput) {
     super(attributes);
+    if (!attributes) {
+      return;
+    }
 
     this.checksum = attributes.checksum;
   }
