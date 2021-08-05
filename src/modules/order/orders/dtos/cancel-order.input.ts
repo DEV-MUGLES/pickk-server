@@ -1,14 +1,8 @@
-import { Field, InputType, Int, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 import { IsNumber, IsString } from 'class-validator';
 
-import { Order } from '../models';
-
 @InputType()
-export class CancelOrderInput extends PickType(
-  Order,
-  ['merchantUid'],
-  InputType
-) {
+export class CancelOrderInput {
   @Field({ description: '취소 사유' })
   @IsString()
   reason: string;

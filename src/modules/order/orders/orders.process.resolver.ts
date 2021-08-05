@@ -4,7 +4,7 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Mutation } from '@nestjs/graphql';
+import { Args, Info, Mutation } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
@@ -14,10 +14,15 @@ import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
-import { BaseOrderOutput, CancelOrderInput } from './dtos';
+import {
+  BaseOrderOutput,
+  CancelOrderInput,
+  RequestOrderRefundInput,
+} from './dtos';
 import { Order } from './models';
 
 import { OrdersService } from './orders.service';
+import { GraphQLResolveInfo } from 'graphql';
 
 @Injectable()
 export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
@@ -52,12 +57,10 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   @UseGuards(JwtVerifyGuard)
   async cancelOrder(
     @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
     @Args('cancelOrderInput')
-    cancelOrderInput: CancelOrderInput
+    input: CancelOrderInput
   ): Promise<Order> {
-    const { merchantUid, orderItemMerchantUids, amount, checksum } =
-      cancelOrderInput;
-
     const order = await this.ordersService.get(merchantUid, [
       'orderItems',
       'orderItems.product',
@@ -71,6 +74,8 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
+    const { orderItemMerchantUids, amount, checksum } = input;
+
     const cancelledOrder = await this.ordersService.cancel(
       order,
       orderItemMerchantUids,
@@ -81,9 +86,37 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     const payment = await this.paymentsService.get(merchantUid);
     await this.paymentsService.cancel(
       payment,
-      CancelPaymentInput.of(cancelledOrder, cancelOrderInput)
+      CancelPaymentInput.of(cancelledOrder, input)
     );
 
     return order;
+  }
+
+  // @TODO: 필요하다면 완료 알림톡 전송. (현재 없음. 무신사는 있음)
+  @Mutation(() => Order)
+  @UseGuards(JwtVerifyGuard)
+  async requestOrderRefund(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('requestOrderRefundInput')
+    input: RequestOrderRefundInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Order> {
+    const order = await this.ordersService.get(merchantUid, [
+      'orderItems',
+      'orderItems.seller',
+      'orderItems.seller.shippingPolicy',
+      'refundRequests',
+    ]);
+    if (order.userId !== userId) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
+    }
+
+    await this.ordersService.requestRefund(order, input);
+
+    return await this.ordersService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

@@ -3,6 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
 import { Order } from '@order/orders/models';
+import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { OrderItemEntity } from '../entities/order-item.entity';
@@ -17,8 +18,20 @@ export class OrderItem extends OrderItemEntity {
     return this.merchantUid;
   }
 
-  @Field({ name: 'Order' })
+  @Field({
+    description: 'itemFinalPrice - usedPointAmount - couponDiscountAmount',
+  })
+  get payAmount(): number {
+    return (
+      this.itemFinalPrice - this.usedPointAmount - this.couponDiscountAmount
+    );
+  }
+
+  @Field()
   order: Order;
+
+  @Field()
+  refundRequest: RefundRequest;
 
   useCoupon(coupon: Coupon) {
     const { item } = this.product;
@@ -36,6 +49,10 @@ export class OrderItem extends OrderItemEntity {
     this.markCancelled();
   }
 
+  requestRefund() {
+    this.markRefundRequested();
+  }
+
   private markCancelled() {
     if (this.status !== OrderItemStatus.Paid) {
       throw new BadRequestException(
@@ -45,5 +62,23 @@ export class OrderItem extends OrderItemEntity {
 
     this.claimStatus = OrderItemClaimStatus.Cancelled;
     this.cancelledAt = new Date();
+  }
+
+  private markRefundRequested() {
+    const { ShipReady, Shipping, Shipped } = OrderItemStatus;
+
+    if (![ShipReady, Shipping, Shipped].includes(this.status)) {
+      throw new BadRequestException(
+        `배송준비중/배송중/배송완료 상태인 주문 상품만 반품 신청할 수 있습니다.\n문제 주문상품: ${this.itemName}(${this.productVariantName})`
+      );
+    }
+    if (this.claimStatus !== null) {
+      throw new BadRequestException(
+        `이미 ${this.claimStatus} 상태인 주문상품은 반품할 수 없습니다.\n문제 주문상품: ${this.itemName}(${this.productVariantName})`
+      );
+    }
+
+    this.claimStatus = OrderItemClaimStatus.RefundRequested;
+    this.refundRequestedAt = new Date();
   }
 }

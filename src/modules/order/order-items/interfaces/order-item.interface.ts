@@ -5,6 +5,7 @@ import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
 import { ICoupon } from '@order/coupons/interfaces';
 import { IOrder } from '@order/orders/interfaces';
+import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -27,6 +28,8 @@ export interface IOrderItem {
 
   order: IOrder;
   orderMerchantUid: string;
+
+  refundRequest: IRefundRequest;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
