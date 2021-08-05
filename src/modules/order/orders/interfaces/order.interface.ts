@@ -19,7 +19,7 @@ export interface IOrder {
   userId?: number;
   orderItems: IOrderItem[];
 
-  refundRequest?: IRefundRequest;
+  refundRequests?: IRefundRequest[];
 
   status: OrderStatus;
   payMethod?: PayMethod;

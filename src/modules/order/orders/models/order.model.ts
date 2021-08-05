@@ -34,8 +34,8 @@ export class Order extends OrderEntity {
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 
-  @Field(() => RefundRequest)
-  refundRequest: RefundRequest;
+  @Field(() => [RefundRequest])
+  refundRequests: RefundRequest[];
 
   start(input: StartOrderInput, coupons: Coupon[]) {
     this.payMethod = input.payMethod;

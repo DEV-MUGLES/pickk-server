@@ -47,7 +47,7 @@ export class OrderEntity implements IOrder {
     this.userId = attributes.userId;
     this.orderItems = attributes.orderItems;
 
-    this.refundRequest = attributes.refundRequest;
+    this.refundRequests = attributes.refundRequests;
 
     this.status = attributes.status;
     this.payMethod = attributes.payMethod;
@@ -106,7 +106,7 @@ export class OrderEntity implements IOrder {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  refundRequest: IRefundRequest;
+  refundRequests: IRefundRequest[];
 
   @Field(() => OrderStatus)
   @Column({

@@ -8,4 +8,5 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'buyer',
   'receiver',
   'vbankInfo',
+  'refundRequests',
 ];
