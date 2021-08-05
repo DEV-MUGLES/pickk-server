@@ -8,7 +8,11 @@ import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
 import { Coupon } from '@order/coupons/models';
 
-import { CreateOrderVbankReceiptInput, StartOrderInput } from './dtos';
+import {
+  CreateOrderVbankReceiptInput,
+  RequestOrderRefundInput,
+  StartOrderInput,
+} from './dtos';
 import {
   InvalidCancelAmountException,
   InvalidCancelChecksumException,
@@ -106,6 +110,15 @@ export class OrdersService {
     if (cancelledAmount !== amount) {
       throw new InvalidCancelAmountException(cancelledAmount, amount);
     }
+
+    return await this.ordersRepository.save(order);
+  }
+
+  async requestRefund(
+    order: Order,
+    input: RequestOrderRefundInput
+  ): Promise<Order> {
+    order.requestRefund(input);
 
     return await this.ordersRepository.save(order);
   }
