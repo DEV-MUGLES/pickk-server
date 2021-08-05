@@ -4,6 +4,8 @@ import { IOrder } from '@order/orders/interfaces';
 import { RefundRequestFaultOf, RefundRequestStatus } from '../constants';
 
 export interface IRefundRequest {
+  id: number;
+
   status: RefundRequestStatus;
 
   order: IOrder;
@@ -15,7 +17,7 @@ export interface IRefundRequest {
   reason: string;
   amount: number;
 
-  rejectReasons: string;
+  rejectReason: string;
 
   requestedAt: Date;
   /** 수거완료 시점 */

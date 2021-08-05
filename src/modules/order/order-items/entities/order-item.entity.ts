@@ -16,6 +16,7 @@ import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
 import { Coupon } from '@order/coupons/models';
 import { IOrder } from '@order/orders/interfaces';
+import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { User } from '@user/users/models';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -46,6 +47,8 @@ export class OrderItemEntity implements IOrderItem {
 
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
+
+    this.refundRequest = attributes.refundRequest;
 
     this.status = attributes.status;
     this.claimStatus = attributes.claimStatus;
@@ -180,6 +183,9 @@ export class OrderItemEntity implements IOrderItem {
   @Field()
   @Column({ type: 'char', length: 20 })
   orderMerchantUid: string;
+
+  @ManyToOne('RefundRequestEntity', 'orderItems')
+  refundRequest: IRefundRequest;
 
   @Field(() => OrderItemStatus)
   @Column({

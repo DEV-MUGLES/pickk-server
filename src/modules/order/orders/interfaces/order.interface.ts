@@ -1,5 +1,6 @@
 import { IAccount } from '@common/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
+import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { PayMethod } from '@payment/payments/constants';
 import { IUser } from '@user/users/interfaces';
 
@@ -17,6 +18,8 @@ export interface IOrder {
   user?: IUser;
   userId?: number;
   orderItems: IOrderItem[];
+
+  refundRequest?: IRefundRequest;
 
   status: OrderStatus;
   payMethod?: PayMethod;

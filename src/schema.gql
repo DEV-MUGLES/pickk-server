@@ -117,6 +117,7 @@ type BaseOrderOutput {
   payMethod: PayMethod
   payingAt: DateTime
   refundAccount: OrderRefundAccount
+  refundRequest: RefundRequest!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -158,6 +159,27 @@ type Campaign {
   rate: Int!
   startAt: DateTime!
   updatedAt: DateTime!
+}
+
+input CancelOrderInput {
+  """
+  취소로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  취소 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+
+  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  merchantUid: String!
+  orderItemMerchantUids: [String!]!
+
+  """취소 사유"""
+  reason: String!
 }
 
 enum CardCode {
@@ -713,6 +735,7 @@ type Mutation {
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  cancelOrder(cancelOrderInput: CancelOrderInput!): Order!
   completeOrder(
     """가상계좌 주문건인 경우에만 필요합니다."""
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
@@ -785,6 +808,7 @@ type Order {
   payingAt: DateTime
   receiver: OrderReceiver
   refundAccount: OrderRefundAccount
+  refundRequest: RefundRequest!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -816,7 +840,6 @@ input OrderBuyerInput {
 }
 
 type OrderItem {
-  Order: Order!
   brandNameKor: String!
   cancelRequestedAt: DateTime
   cancelledAt: DateTime
@@ -842,6 +865,7 @@ type OrderItem {
 
   """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
   merchantUid: String!
+  order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
   product: Product
@@ -852,6 +876,7 @@ type OrderItem {
   recommendContentType: ContentType
   recommenderId: Int
   recommenderNickname: String
+  refundRequest: RefundRequest!
   refundRequestedAt: DateTime
   refundedAt: DateTime
   seller: Seller
@@ -1241,6 +1266,42 @@ type RefundAccount {
   number: String!
   ownerName: String!
   updatedAt: DateTime!
+}
+
+type RefundRequest {
+  amount: Int!
+  confirmedAt: DateTime
+  faultOf: RefundRequestFaultOf!
+  id: Int!
+  order: Order!
+  orderItems: [OrderItem!]!
+  orderMerchantUid: String!
+
+  """수거 완료 시점"""
+  pickedAt: DateTime
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+
+  """255자 이내로 적어주세요"""
+  rejectReason: String!
+  rejectedAt: DateTime
+  requestedAt: DateTime!
+  status: RefundRequestStatus!
+}
+
+"""반품 책임자?입니다. (구매자 or 판매자)"""
+enum RefundRequestFaultOf {
+  Customer
+  Seller
+}
+
+"""반품요청 상태입니다."""
+enum RefundRequestStatus {
+  Confirmed
+  PICKED
+  Rejected
+  Requested
 }
 
 input RegisterOrderInput {

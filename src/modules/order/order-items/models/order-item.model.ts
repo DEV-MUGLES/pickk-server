@@ -3,6 +3,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
 import { Order } from '@order/orders/models';
+import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { OrderItemEntity } from '../entities/order-item.entity';
@@ -17,8 +18,11 @@ export class OrderItem extends OrderItemEntity {
     return this.merchantUid;
   }
 
-  @Field({ name: 'Order' })
+  @Field()
   order: Order;
+
+  @Field()
+  refundRequest: RefundRequest;
 
   useCoupon(coupon: Coupon) {
     const { item } = this.product;

@@ -7,6 +7,7 @@ import {
   OrderItemStatus,
 } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
+import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
 import { PayMethod } from '@payment/payments/constants';
 import { plainToClass } from 'class-transformer';
 
@@ -32,6 +33,9 @@ export class Order extends OrderEntity {
 
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
+
+  @Field(() => RefundRequest)
+  refundRequest: RefundRequest;
 
   start(input: StartOrderInput, coupons: Coupon[]) {
     this.payMethod = input.payMethod;

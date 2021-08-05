@@ -13,6 +13,7 @@ import {
 import { IsEnum, IsString, Min } from 'class-validator';
 
 import { IOrderItem } from '@order/order-items/interfaces';
+import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { PayMethod } from '@payment/payments/constants';
 import { User } from '@user/users/models';
 
@@ -44,8 +45,9 @@ export class OrderEntity implements IOrder {
 
     this.user = attributes.user;
     this.userId = attributes.userId;
-
     this.orderItems = attributes.orderItems;
+
+    this.refundRequest = attributes.refundRequest;
 
     this.status = attributes.status;
     this.payMethod = attributes.payMethod;
@@ -99,6 +101,12 @@ export class OrderEntity implements IOrder {
 
   @OneToMany('OrderItemEntity', 'order', { cascade: true, onDelete: 'CASCADE' })
   orderItems: IOrderItem[];
+
+  @OneToMany('RefundRequestEntity', 'order', {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  refundRequest: IRefundRequest;
 
   @Field(() => OrderStatus)
   @Column({
