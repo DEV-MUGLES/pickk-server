@@ -45,7 +45,6 @@ export class ItemCategorySeeder extends BaseSeeder {
     await this.createCategory(newMinorCategories);
 
     await this.updateCategory();
-    await this.removeCategory();
   }
 
   private findSameCodeCategoryIndex(code: string) {
@@ -61,28 +60,5 @@ export class ItemCategorySeeder extends BaseSeeder {
 
   private async updateCategory() {
     await getManager().save(this.existCategories);
-  }
-  /**
-   * 데이터베이스에 존재하는 카테고리 중, 변경된 ItemCategories에 따라 삭제되어야하는 카테고리들을 삭제하는 메소드입니다.
-   */
-  private async removeCategory() {
-    const categoryCodes = this.getAllCategoryCodes();
-
-    const deleteCategories = this.existCategories.filter(
-      ({ code }) => !categoryCodes.includes(code)
-    );
-
-    await getManager().remove(deleteCategories);
-  }
-
-  private getAllCategoryCodes() {
-    const result: string[] = [];
-    ItemCategoryData.forEach(({ code, minorCategories }) => {
-      result.push(code);
-      minorCategories.forEach(({ code }) => {
-        result.push(code);
-      });
-    });
-    return result;
   }
 }
