@@ -14,6 +14,7 @@ import { IOrder } from '@order/orders/interfaces';
 
 import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
 import { IRefundRequest } from '../interfaces';
+import { User } from '@user/users/models';
 
 @ObjectType()
 @Entity({ name: 'refund_request' })
@@ -24,27 +25,40 @@ export class RefundRequestEntity implements IRefundRequest {
     }
 
     this.id = attributes.id;
-    this.status = attributes.status;
 
+    this.user = attributes.user;
+    this.userId = attributes.userId;
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
     this.orderItems = attributes.orderItems;
 
+    this.status = attributes.status;
     this.faultOf = attributes.faultOf;
     this.reason = attributes.reason;
     this.amount = attributes.amount;
+
+    this.requestedAt = attributes.requestedAt;
+    this.pickedAt = attributes.pickedAt;
+    this.rejectedAt = attributes.rejectedAt;
+    this.confirmedAt = attributes.confirmedAt;
   }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Field(() => RefundRequestStatus)
-  @Column({
-    type: 'enum',
-    enum: RefundRequestStatus,
+  @Field(() => User, { nullable: true })
+  @ManyToOne('UserEntity', { nullable: true })
+  user?: User;
+
+  @Field(() => Int, {
+    nullable: true,
   })
-  @IsEnum(RefundRequestStatus)
-  status: RefundRequestStatus;
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  userId?: number;
 
   @ManyToOne('OrderEntity', 'refundRequests')
   order: IOrder;
@@ -55,6 +69,14 @@ export class RefundRequestEntity implements IRefundRequest {
 
   @OneToMany('OrderItemEntity', 'refundRequest')
   orderItems: IOrderItem[];
+
+  @Field(() => RefundRequestStatus)
+  @Column({
+    type: 'enum',
+    enum: RefundRequestStatus,
+  })
+  @IsEnum(RefundRequestStatus)
+  status: RefundRequestStatus;
 
   @Field(() => OrderClaimFaultOf)
   @Column({

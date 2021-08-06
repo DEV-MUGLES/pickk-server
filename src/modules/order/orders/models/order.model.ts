@@ -193,6 +193,7 @@ export class Order extends OrderEntity {
     this.refundRequests.push(
       new RefundRequest({
         ...input,
+        user: this.user,
         status: RefundRequestStatus.Requested,
         orderItems,
       })

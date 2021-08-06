@@ -103,6 +103,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
     const order = await this.ordersService.get(merchantUid, [
+      'user',
       'orderItems',
       'orderItems.seller',
       'orderItems.seller.shippingPolicy',

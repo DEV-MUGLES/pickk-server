@@ -1289,9 +1289,11 @@ type RefundRequest {
   rejectedAt: DateTime
   requestedAt: DateTime!
   status: RefundRequestStatus!
+  user: User
+  userId: Int
 }
 
-"""반품 책임자?입니다. (구매자 or 판매자)"""
+"""교환/반품 책임자?입니다. (구매자 or 판매자)"""
 enum RefundRequestFaultOf {
   Customer
   Seller
@@ -1300,7 +1302,7 @@ enum RefundRequestFaultOf {
 """반품요청 상태입니다."""
 enum RefundRequestStatus {
   Confirmed
-  PICKED
+  Picked
   Rejected
   Requested
 }
