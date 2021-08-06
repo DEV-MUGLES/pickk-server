@@ -13,12 +13,12 @@ registerEnumType(RefundRequestStatus, {
   description: '반품요청 상태입니다.',
 });
 
-export enum RefundRequestFaultOf {
+export enum OrderClaimFaultOf {
   Customer = 'customer',
   Seller = 'seller',
 }
 
-registerEnumType(RefundRequestFaultOf, {
+registerEnumType(OrderClaimFaultOf, {
   name: 'RefundRequestFaultOf',
   description: '반품 책임자?입니다. (구매자 or 판매자)',
 });

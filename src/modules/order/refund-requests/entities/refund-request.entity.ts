@@ -12,7 +12,7 @@ import { IsEnum, IsString, Min } from 'class-validator';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 
-import { RefundRequestFaultOf, RefundRequestStatus } from '../constants';
+import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
 import { IRefundRequest } from '../interfaces';
 
 @ObjectType()
@@ -56,13 +56,13 @@ export class RefundRequestEntity implements IRefundRequest {
   @OneToMany('OrderItemEntity', 'refundRequest')
   orderItems: IOrderItem[];
 
-  @Field(() => RefundRequestFaultOf)
+  @Field(() => OrderClaimFaultOf)
   @Column({
     type: 'enum',
-    enum: RefundRequestFaultOf,
+    enum: OrderClaimFaultOf,
   })
-  @IsEnum(RefundRequestFaultOf)
-  faultOf: RefundRequestFaultOf;
+  @IsEnum(OrderClaimFaultOf)
+  faultOf: OrderClaimFaultOf;
 
   @Field({ description: '255자 이내로 적어주세요' })
   @Column()

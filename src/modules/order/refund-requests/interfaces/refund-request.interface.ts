@@ -1,7 +1,7 @@
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 
-import { RefundRequestFaultOf, RefundRequestStatus } from '../constants';
+import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
 
 export interface IRefundRequest {
   id: number;
@@ -13,7 +13,7 @@ export interface IRefundRequest {
 
   orderItems: IOrderItem[];
 
-  faultOf: RefundRequestFaultOf;
+  faultOf: OrderClaimFaultOf;
   reason: string;
   amount: number;
 

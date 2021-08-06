@@ -8,7 +8,7 @@ import {
 } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 import {
-  RefundRequestFaultOf,
+  OrderClaimFaultOf,
   RefundRequestStatus,
 } from '@order/refund-requests/constants';
 import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
@@ -164,11 +164,7 @@ export class Order extends OrderEntity {
     );
     const isFreeShipped = totalItemFinalPrice >= minimumAmountForFree;
     const refundShippingFee =
-      faultOf === RefundRequestFaultOf.Seller
-        ? 0
-        : isFreeShipped
-        ? fee * 2
-        : fee;
+      faultOf === OrderClaimFaultOf.Seller ? 0 : isFreeShipped ? fee * 2 : fee;
 
     const totalPayAmount = orderItems.reduce(
       (sum, oi) => sum + oi.payAmount,
