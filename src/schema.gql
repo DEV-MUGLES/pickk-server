@@ -490,6 +490,47 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type ExchangeRequest {
+  confirmedAt: DateTime
+  faultOf: RefundRequestFaultOf!
+  id: Int!
+  itemName: String!
+  orderItem: OrderItem!
+  orderItemMerchantUid: String!
+
+  """수거 완료 시점"""
+  pickedAt: DateTime
+  product: Product
+  productId: Int
+  productVariantName: String!
+  quantity: Int!
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+
+  """255자 이내로 적어주세요"""
+  rejectReason: String
+  rejectedAt: DateTime
+  requestedAt: DateTime!
+  reshippedAt: DateTime
+  reshippingAt: DateTime
+
+  """결제된 교환 배송비"""
+  shippingFee: Int!
+  status: ExchangeRequestStatus!
+  user: User
+  userId: Int
+}
+
+"""교한신청 상태입니다."""
+enum ExchangeRequestStatus {
+  Picked
+  Rejected
+  Requested
+  Reshipped
+  Reshipping
+}
+
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
@@ -847,6 +888,7 @@ type OrderItem {
   courier: Courier
   courierId: Int
   createdAt: DateTime!
+  exchangeRequest: ExchangeRequest!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime

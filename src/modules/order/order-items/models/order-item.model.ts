@@ -2,6 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
+import { ExchangeRequest } from '@order/exchange-requests/models';
 import { Order } from '@order/orders/models';
 import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
 
@@ -32,6 +33,9 @@ export class OrderItem extends OrderItemEntity {
 
   @Field()
   refundRequest: RefundRequest;
+
+  @Field()
+  exchangeRequest: ExchangeRequest;
 
   useCoupon(coupon: Coupon) {
     const { item } = this.product;

@@ -4,6 +4,7 @@ import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
 import { ICoupon } from '@order/coupons/interfaces';
+import { IExchangeRequest } from '@order/exchange-requests/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { IUser } from '@user/users/interfaces';
@@ -30,6 +31,7 @@ export interface IOrderItem {
   orderMerchantUid: string;
 
   refundRequest: IRefundRequest;
+  exchangeRequest: IExchangeRequest;
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;

@@ -17,10 +17,12 @@ export interface IExchangeRequest {
   orderItemMerchantUid: string;
 
   status: ExchangeRequestStatus;
-
   faultOf: OrderClaimFaultOf;
   reason: string;
   rejectReason: string;
+
+  /** 결제된 교환 배송비 */
+  shippingFee: number;
 
   quantity: number;
   itemName: string;

@@ -4,22 +4,24 @@ import {
   CreateDateColumn,
   Column,
   ManyToOne,
-  OneToMany,
   Entity,
+  OneToOne,
+  JoinColumn,
 } from 'typeorm';
 import { IsEnum, IsString, Min } from 'class-validator';
 
+import { Product } from '@item/products/models';
 import { IOrderItem } from '@order/order-items/interfaces';
-import { IOrder } from '@order/orders/interfaces';
-
-import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
-import { IRefundRequest } from '../interfaces';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { User } from '@user/users/models';
 
+import { ExchangeRequestStatus } from '../constants';
+import { IExchangeRequest } from '../interfaces';
+
 @ObjectType()
-@Entity({ name: 'refund_request' })
-export class RefundRequestEntity implements IRefundRequest {
-  constructor(attributes?: Partial<RefundRequestEntity>) {
+@Entity({ name: 'exchange_request' })
+export class ExchangeRequestEntity implements IExchangeRequest {
+  constructor(attributes?: Partial<ExchangeRequestEntity>) {
     if (!attributes) {
       return;
     }
@@ -28,15 +30,22 @@ export class RefundRequestEntity implements IRefundRequest {
 
     this.user = attributes.user;
     this.userId = attributes.userId;
-    this.order = attributes.order;
-    this.orderMerchantUid = attributes.orderMerchantUid;
-    this.orderItems = attributes.orderItems;
+    this.product = attributes.product;
+    this.productId = attributes.productId;
+
+    this.orderItem = attributes.orderItem;
+    this.orderItemMerchantUid = attributes.orderItemMerchantUid;
 
     this.status = attributes.status;
     this.faultOf = attributes.faultOf;
     this.reason = attributes.reason;
-    this.amount = attributes.amount;
     this.rejectReason = attributes.rejectReason;
+
+    this.shippingFee = attributes.shippingFee;
+
+    this.quantity = attributes.quantity;
+    this.itemName = attributes.itemName;
+    this.productVariantName = attributes.productVariantName;
 
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
@@ -61,23 +70,34 @@ export class RefundRequestEntity implements IRefundRequest {
   })
   userId?: number;
 
-  @ManyToOne('OrderEntity', 'refundRequests')
-  order: IOrder;
+  @Field(() => Product, { nullable: true })
+  @ManyToOne('ProductEntity', { nullable: true })
+  product?: Product;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  productId: number;
+
+  @OneToOne('OrderItemEntity', 'refundRequests')
+  @JoinColumn()
+  orderItem: IOrderItem;
 
   @Field()
   @Column({ type: 'char', length: 20 })
-  orderMerchantUid: string;
+  orderItemMerchantUid: string;
 
-  @OneToMany('OrderItemEntity', 'refundRequest')
-  orderItems: IOrderItem[];
-
-  @Field(() => RefundRequestStatus)
+  @Field(() => ExchangeRequestStatus)
   @Column({
     type: 'enum',
-    enum: RefundRequestStatus,
+    enum: ExchangeRequestStatus,
   })
-  @IsEnum(RefundRequestStatus)
-  status: RefundRequestStatus;
+  @IsEnum(ExchangeRequestStatus)
+  status: ExchangeRequestStatus;
 
   @Field(() => OrderClaimFaultOf)
   @Column({
@@ -92,15 +112,30 @@ export class RefundRequestEntity implements IRefundRequest {
   @IsString()
   reason: string;
 
-  @Field(() => Int)
-  @Column({ unsigned: true, default: 0 })
-  @Min(0)
-  amount: number;
-
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })
   @IsString()
   rejectReason: string;
+
+  @Field(() => Int, { description: '결제된 교환 배송비' })
+  @Column({ type: 'mediumint', unsigned: true })
+  @Min(1)
+  shippingFee: number;
+
+  @Field(() => Int)
+  @Column({ type: 'smallint', unsigned: true })
+  @Min(1)
+  quantity: number;
+
+  @Field()
+  @Column()
+  @IsString()
+  itemName: string;
+
+  @Field()
+  @Column()
+  @IsString()
+  productVariantName: string;
 
   @Field()
   @CreateDateColumn()
@@ -109,6 +144,14 @@ export class RefundRequestEntity implements IRefundRequest {
   @Field({ nullable: true, description: '수거 완료 시점' })
   @Column({ nullable: true })
   pickedAt: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  reshippingAt: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  reshippedAt: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
