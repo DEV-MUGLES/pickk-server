@@ -92,7 +92,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     return order;
   }
 
-  // @TODO: 필요하다면 완료 알림톡 전송. (현재 없음. 무신사는 있음)
+  // @TODO: 완료 알림톡 전송.
   @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async requestOrderRefund(

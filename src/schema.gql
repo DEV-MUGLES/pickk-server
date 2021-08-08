@@ -799,6 +799,7 @@ type Mutation {
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
@@ -1360,6 +1361,17 @@ input RegisterOrderItemInput {
   quantity: Int!
   recommendContentItemId: Int
   recommendContentType: ContentType
+}
+
+input RequestOrderItemExchangeInput {
+  faultOf: RefundRequestFaultOf!
+  productId: Int
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+
+  """결제된 교환 배송비"""
+  shippingFee: Int!
 }
 
 input RequestOrderRefundInput {
