@@ -958,6 +958,21 @@ enum OrderItemClaimStatus {
   Refunded
 }
 
+input OrderItemFilter {
+  claimStatus: OrderItemClaimStatus
+  claimStatusIn: [OrderItemClaimStatus!]
+  paidAtBetween: [DateTime!]
+
+  """주문번호, 주문상품번호로 검색합니다."""
+  search: String
+  sellerId: Int
+  shipReadyAtBetween: [DateTime!]
+  shippedAtBetween: [DateTime!]
+  shippingAtBetween: [DateTime!]
+  status: OrderItemStatus
+  statusIn: [OrderItemStatus!]
+}
+
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
 enum OrderItemStatus {
   Failed
