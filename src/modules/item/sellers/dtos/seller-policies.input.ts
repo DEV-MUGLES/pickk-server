@@ -27,7 +27,14 @@ export class CreateSellerClaimAccountInput extends PickType(
 @InputType()
 export class CreateSellerClaimPolicyInput extends PickType(
   SellerClaimPolicy,
-  ['fee', 'phoneNumber', 'picName', 'feePayMethod'],
+  [
+    'fee',
+    'phoneNumber',
+    'picName',
+    'feePayMethod',
+    'isExchangable',
+    'isRefundable',
+  ],
   InputType
 ) {
   @Field({ nullable: true })

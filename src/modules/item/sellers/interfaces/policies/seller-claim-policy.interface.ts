@@ -13,6 +13,9 @@ export interface ISellerClaimPolicy {
   /** 교환배송비 지불방식 */
   feePayMethod: ClaimFeePayMethod;
 
+  isExchangable: boolean;
+  isRefundable: boolean;
+
   /** 교환배송비 지불 게좌 */
   account?: IAccount;
 }

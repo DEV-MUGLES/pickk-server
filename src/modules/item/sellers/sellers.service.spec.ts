@@ -56,6 +56,8 @@ describe('SellersService', () => {
         phoneNumber: '01044131261',
         picName: faker.lorem.text(),
         feePayMethod: ClaimFeePayMethod.Enclose,
+        isExchangable: faker.datatype.boolean(),
+        isRefundable: faker.datatype.boolean(),
       },
       crawlPolicyInput: {
         isInspectingNew: faker.datatype.boolean(),

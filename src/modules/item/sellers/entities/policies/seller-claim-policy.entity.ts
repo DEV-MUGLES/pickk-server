@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import {
+  IsBoolean,
   IsEnum,
   IsNumber,
   IsNumberString,
@@ -35,6 +36,9 @@ export class SellerClaimPolicyEntity
     this.picName = attributes.picName;
     this.feePayMethod = attributes.feePayMethod;
 
+    this.isExchangable = attributes.isExchangable;
+    this.isRefundable = attributes.isRefundable;
+
     this.account = attributes.account;
   }
 
@@ -64,6 +68,16 @@ export class SellerClaimPolicyEntity
   })
   @IsEnum(ClaimFeePayMethod)
   feePayMethod: ClaimFeePayMethod;
+
+  @Field()
+  @Column({ default: true })
+  @IsBoolean()
+  isExchangable: boolean;
+
+  @Field()
+  @Column({ default: true })
+  @IsBoolean()
+  isRefundable: boolean;
 
   @Field(() => SellerClaimAccount, { nullable: true })
   @OneToOne(() => SellerClaimAccountEntity, { cascade: true, nullable: true })

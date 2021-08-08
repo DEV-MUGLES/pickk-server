@@ -381,6 +381,8 @@ input CreateSellerClaimPolicyInput {
   accountInput: CreateSellerClaimAccountInput
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
+  isExchangable: Boolean!
+  isRefundable: Boolean!
 
   """담당자 번호"""
   phoneNumber: String!
@@ -1454,6 +1456,8 @@ type SellerClaimPolicy {
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
   id: Int!
+  isExchangable: Boolean!
+  isRefundable: Boolean!
 
   """담당자 번호"""
   phoneNumber: String!
@@ -1661,6 +1665,8 @@ input UpdateSellerClaimPolicyInput {
   accountInput: UpdateSellerClaimAccountInput
   fee: Int
   feePayMethod: ClaimFeePayMethod
+  isExchangable: Boolean
+  isRefundable: Boolean
 
   """담당자 번호"""
   phoneNumber: String
