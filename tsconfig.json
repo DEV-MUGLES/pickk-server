@@ -18,6 +18,7 @@
       "@jobs/*": ["src/jobs/*"],
       "@providers/*": ["src/providers/*"],
       "@templates/*": ["src/templates/*"],
+      "@admin/*": ["src/modules/admin/*"],
       "@item/*": ["src/modules/item/*"],
       "@my/*": ["src/modules/my/*"],
       "@order/*": ["src/modules/order/*"],

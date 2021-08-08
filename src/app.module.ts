@@ -12,6 +12,7 @@ import { SpiderModule } from './providers/spider/provider.module';
 
 import { AuthModule } from './auth/auth.module';
 
+import { AdminModule } from './modules/admin/admin.module';
 import { CommonModule } from './modules/common/common.module';
 import { ItemModule } from './modules/item/item.module';
 import { MyModule } from './modules/my/my.module';
@@ -40,6 +41,7 @@ import { BatchModule } from './batch/batch.module';
     SensProviderModule,
     SpiderModule,
     AuthModule,
+    AdminModule,
     CommonModule,
     ItemModule,
     MyModule,
