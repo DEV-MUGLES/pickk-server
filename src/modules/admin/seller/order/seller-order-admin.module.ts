@@ -1,8 +1,11 @@
 import { Module } from '@nestjs/common';
 
-import { SellerOrderAdminResolver } from './seller-order-admin.resolver';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
+
+import { SellerOrderItemResolver } from './seller-order-item.resolver';
 
 @Module({
-  providers: [SellerOrderAdminResolver],
+  imports: [OrderItemsModule],
+  providers: [SellerOrderItemResolver],
 })
 export class SellerOrderAdminModule {}

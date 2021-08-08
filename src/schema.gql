@@ -1295,6 +1295,7 @@ type Query {
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
