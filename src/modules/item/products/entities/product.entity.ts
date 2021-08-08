@@ -12,7 +12,7 @@ import {
 import { BaseIdEntity } from '@common/entities';
 import { IItem } from '@item/items/interfaces';
 import { ItemOptionValueEntity } from '@item/items/entities';
-// @TODO:BARREL
+// @BARREL
 import { ItemOptionValue } from '@item/items/models/item-option-value.model';
 
 import { IProduct } from '../interfaces';
@@ -49,6 +49,10 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
     onDelete: 'CASCADE',
   })
   item: IItem;
+
+  @Field(() => Int)
+  @Column()
+  itemId: number;
 
   @Field(() => [ItemOptionValue])
   @ManyToMany(() => ItemOptionValueEntity)

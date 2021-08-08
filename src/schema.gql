@@ -1233,6 +1233,7 @@ type Product {
   """예약배송 적용 여부"""
   isShipReserving: Boolean!
   item: Item!
+  itemId: Int!
   itemOptionValues: [ItemOptionValue!]!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
