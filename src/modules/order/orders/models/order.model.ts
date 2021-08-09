@@ -7,11 +7,9 @@ import {
   OrderItemStatus,
 } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
-import {
-  OrderClaimFaultOf,
-  RefundRequestStatus,
-} from '@order/refund-requests/constants';
-import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
+import { RefundRequestFactory } from '@order/refund-requests/factories';
+import { RefundRequest } from '@order/refund-requests/models';
 import { PayMethod } from '@payment/payments/constants';
 import { plainToClass } from 'class-transformer';
 
@@ -191,13 +189,7 @@ export class Order extends OrderEntity {
 
     this.orderItems = this.applyOrderItems(this.orderItems, orderItems);
     this.refundRequests.push(
-      new RefundRequest({
-        ...input,
-        user: this.user,
-        status: RefundRequestStatus.Requested,
-        orderItems,
-        sellerId: orderItems[0].sellerId,
-      })
+      RefundRequestFactory.create(this.userId, orderItems, input)
     );
   }
 

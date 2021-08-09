@@ -1,7 +1,9 @@
 import { InternalServerErrorException } from '@nestjs/common';
-import { RequestOrderItemExchangeInput } from '@order/order-items/dtos';
 
 import { Product } from '@item/products/models';
+import { RequestOrderItemExchangeInput } from '@order/order-items/dtos';
+import { ShipmentOwnerType } from '@order/shipments/constants';
+import { ShipmentFactory } from '@order/shipments/factories';
 
 import { ExchangeRequestStatus } from '../constants';
 import { ExchangeRequest } from '../models';
@@ -25,7 +27,7 @@ export class ExchangeRequestFactory {
       .map(({ name }) => name)
       .join('/');
 
-    return new ExchangeRequest({
+    const result = new ExchangeRequest({
       userId,
       sellerId,
       product,
@@ -35,5 +37,15 @@ export class ExchangeRequestFactory {
       itemName,
       productVariantName,
     });
+
+    if (input.shipmentInput) {
+      result.pickShipment = ShipmentFactory.create({
+        ...input.shipmentInput,
+        ownerType: ShipmentOwnerType.ExchangeRequestPick,
+        ownerId: null,
+      });
+    }
+
+    return result;
   }
 }

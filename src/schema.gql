@@ -464,6 +464,11 @@ input CreateSellerShippingPolicyInput {
   minimumAmountForFree: Int!
 }
 
+input CreateShipmentInput {
+  courierId: Int
+  trackCode: String
+}
+
 input CreateShippingAddressInput {
   baseAddress: String!
   detailAddress: String!
@@ -499,6 +504,8 @@ type ExchangeRequest {
   itemName: String!
   orderItem: OrderItem!
   orderItemMerchantUid: String!
+  pickShipment: Shipment
+  pickShipmentId: Int
 
   """수거 완료 시점"""
   pickedAt: DateTime
@@ -506,6 +513,8 @@ type ExchangeRequest {
   productId: Int
   productVariantName: String!
   quantity: Int!
+  reShipment: Shipment
+  reShipmentId: Int
 
   """255자 이내로 적어주세요"""
   reason: String!
@@ -518,8 +527,6 @@ type ExchangeRequest {
   reshippingAt: DateTime
   seller: Seller
   sellerId: Int
-  shipment: Shipment
-  shipmentId: Int
 
   """결제된 교환 배송비"""
   shippingFee: Int!
@@ -1398,6 +1405,7 @@ input RequestOrderItemExchangeInput {
 
   """255자 이내로 적어주세요"""
   reason: String!
+  shipmentInput: CreateShipmentInput
 
   """결제된 교환 배송비"""
   shippingFee: Int!
@@ -1422,6 +1430,7 @@ input RequestOrderRefundInput {
 
   """255자 이내로 적어주세요"""
   reason: String!
+  shipmentInput: CreateShipmentInput
 }
 
 input RequestPinInput {
@@ -1571,7 +1580,8 @@ type Shipment {
 
 """배송 연관 객체 분류입니다."""
 enum ShipmentOwnerType {
-  ExchangeRequest
+  ExchangeRequestPick
+  ExchangeRequestReShip
   OrderItem
   RefundRequest
 }
