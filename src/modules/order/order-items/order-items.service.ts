@@ -51,6 +51,7 @@ export class OrderItemsService {
     orderItem.requestExchange(
       ExchanteRequestFactory.create(
         orderItem.userId,
+        orderItem.sellerId,
         product,
         input,
         orderItem.quantity

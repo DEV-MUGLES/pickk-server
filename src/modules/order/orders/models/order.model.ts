@@ -196,6 +196,7 @@ export class Order extends OrderEntity {
         user: this.user,
         status: RefundRequestStatus.Requested,
         orderItems,
+        sellerId: orderItems[0].sellerId,
       })
     );
   }

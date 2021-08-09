@@ -11,6 +11,7 @@ import {
 import { IsEnum, IsString, Min } from 'class-validator';
 
 import { Product } from '@item/products/models';
+import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { User } from '@user/users/models';
@@ -32,6 +33,8 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.userId = attributes.userId;
     this.product = attributes.product;
     this.productId = attributes.productId;
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
 
     this.orderItem = attributes.orderItem;
     this.orderItemMerchantUid = attributes.orderItemMerchantUid;
@@ -82,6 +85,19 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     nullable: true,
   })
   productId: number;
+
+  @Field(() => Seller, { nullable: true })
+  @ManyToOne('SellerEntity', { nullable: true })
+  seller?: Seller;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  sellerId?: number;
 
   @OneToOne('OrderItemEntity', 'refundRequests')
   @JoinColumn()

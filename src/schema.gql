@@ -516,6 +516,8 @@ type ExchangeRequest {
   requestedAt: DateTime!
   reshippedAt: DateTime
   reshippingAt: DateTime
+  seller: Seller
+  sellerId: Int
 
   """결제된 교환 배송비"""
   shippingFee: Int!
@@ -908,6 +910,7 @@ type OrderItem {
 
   """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
   merchantUid: String!
+  name: String!
   order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
@@ -1350,6 +1353,8 @@ type RefundRequest {
   rejectReason: String
   rejectedAt: DateTime
   requestedAt: DateTime!
+  seller: Seller
+  sellerId: Int
   status: RefundRequestStatus!
   user: User
   userId: Int

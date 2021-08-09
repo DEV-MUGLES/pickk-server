@@ -1,4 +1,5 @@
 import { IProduct } from '@item/products/interfaces';
+import { ISeller } from '@item/sellers/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { IUser } from '@user/users/interfaces';
@@ -12,6 +13,8 @@ export interface IExchangeRequest {
   userId?: number;
   product?: IProduct;
   productId?: number;
+  seller?: ISeller;
+  sellerId?: number;
 
   orderItem: IOrderItem;
   orderItemMerchantUid: string;

@@ -1,3 +1,4 @@
+import { ISeller } from '@item/sellers/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 import { IUser } from '@user/users/interfaces';
@@ -11,6 +12,8 @@ export interface IRefundRequest {
   userId?: number;
   order: IOrder;
   orderMerchantUid: string;
+  seller?: ISeller;
+  sellerId?: number;
 
   orderItems: IOrderItem[];
 
