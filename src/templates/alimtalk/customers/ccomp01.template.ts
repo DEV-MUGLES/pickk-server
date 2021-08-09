@@ -2,7 +2,7 @@ import { addCommas } from '@common/helpers';
 
 import { Order } from '@order/orders/models';
 
-import { getPurchaseItemInfo } from '../helpers';
+import { getPurchaseItemInfo } from '../../helpers';
 
 export const createCcomp01Template = (order: Order) => {
   const { buyer, merchantUid, totalPayAmount, receiver, orderItems } = order;
