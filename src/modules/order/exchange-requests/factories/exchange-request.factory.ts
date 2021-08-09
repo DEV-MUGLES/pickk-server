@@ -6,7 +6,7 @@ import { Product } from '@item/products/models';
 import { ExchangeRequestStatus } from '../constants';
 import { ExchangeRequest } from '../models';
 
-export class ExchanteRequestFactory {
+export class ExchangeRequestFactory {
   static create(
     userId: number,
     sellerId: number,

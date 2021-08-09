@@ -5,7 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { Product } from '@item/products/models';
-import { ExchanteRequestFactory } from '@order/exchange-requests/factories';
+import { ExchangeRequestFactory } from '@order/exchange-requests/factories';
 
 import { OrderItemFilter, RequestOrderItemExchangeInput } from './dtos';
 import { OrderItem } from './models';
@@ -49,7 +49,7 @@ export class OrderItemsService {
     input: RequestOrderItemExchangeInput
   ): Promise<OrderItem> {
     orderItem.requestExchange(
-      ExchanteRequestFactory.create(
+      ExchangeRequestFactory.create(
         orderItem.userId,
         orderItem.sellerId,
         product,
