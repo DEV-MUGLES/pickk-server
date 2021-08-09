@@ -2,6 +2,7 @@ import { Field, InputType, Int, PickType } from '@nestjs/graphql';
 import { IsNumber, IsString } from 'class-validator';
 
 import { RefundRequest } from '@order/refund-requests/models';
+import { CreateShipmentInput } from '@order/shipments/dtos';
 
 @InputType()
 export class RequestOrderRefundInput extends PickType(
@@ -28,4 +29,7 @@ export class RequestOrderRefundInput extends PickType(
   })
   @IsString({ each: true })
   orderItemMerchantUids: string[];
+
+  @Field(() => CreateShipmentInput, { nullable: true })
+  shipmentInput: CreateShipmentInput;
 }

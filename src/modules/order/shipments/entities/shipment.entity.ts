@@ -26,6 +26,10 @@ export class ShipmentEntity implements IShipment {
     this.id = attributes.id;
     this.createdAt = attributes.createdAt;
 
+    this.status = attributes.status;
+    this.ownerType = attributes.ownerType;
+    this.ownerId = attributes.ownerId;
+
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
     this.trackCode = attributes.trackCode;
