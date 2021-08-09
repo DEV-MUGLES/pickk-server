@@ -14,6 +14,7 @@ import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
+import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
 import { ExchangeRequestStatus } from '../constants';
@@ -35,6 +36,11 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.productId = attributes.productId;
     this.seller = attributes.seller;
     this.sellerId = attributes.sellerId;
+
+    this.pickShipment = attributes.pickShipment;
+    this.pickShipmentId = attributes.pickShipmentId;
+    this.reShipment = attributes.reShipment;
+    this.reShipmentId = attributes.reShipmentId;
 
     this.orderItem = attributes.orderItem;
     this.orderItemMerchantUid = attributes.orderItemMerchantUid;
@@ -98,6 +104,34 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     nullable: true,
   })
   sellerId?: number;
+
+  @Field(() => Shipment, { nullable: true })
+  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @JoinColumn()
+  pickShipment: Shipment;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  pickShipmentId: number;
+
+  @Field(() => Shipment, { nullable: true })
+  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @JoinColumn()
+  reShipment: Shipment;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  reShipmentId: number;
 
   @OneToOne('OrderItemEntity', 'refundRequests')
   @JoinColumn()

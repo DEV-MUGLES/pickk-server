@@ -6,12 +6,15 @@ import {
   ManyToOne,
   OneToMany,
   Entity,
+  JoinColumn,
+  OneToOne,
 } from 'typeorm';
 import { IsEnum, IsString, Min } from 'class-validator';
 
 import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
+import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
 import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
@@ -31,6 +34,10 @@ export class RefundRequestEntity implements IRefundRequest {
     this.sellerId = attributes.sellerId;
     this.user = attributes.user;
     this.userId = attributes.userId;
+
+    this.shipment = attributes.shipment;
+    this.shipmentId = attributes.shipmentId;
+
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
     this.orderItems = attributes.orderItems;
@@ -76,6 +83,20 @@ export class RefundRequestEntity implements IRefundRequest {
     nullable: true,
   })
   userId?: number;
+
+  @Field(() => Shipment, { nullable: true })
+  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @JoinColumn()
+  shipment: Shipment;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  shipmentId: number;
 
   @ManyToOne('OrderEntity', 'refundRequests')
   order: IOrder;

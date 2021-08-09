@@ -518,6 +518,8 @@ type ExchangeRequest {
   reshippingAt: DateTime
   seller: Seller
   sellerId: Int
+  shipment: Shipment
+  shipmentId: Int
 
   """결제된 교환 배송비"""
   shippingFee: Int!
@@ -935,6 +937,8 @@ type OrderItem {
 
   """예약발송 예정일"""
   shipReservedAt: DateTime
+  shipment: Shipment
+  shipmentId: Int
   shippedAt: DateTime
   shippingAt: DateTime
   status: OrderItemStatus!
@@ -1355,6 +1359,8 @@ type RefundRequest {
   requestedAt: DateTime!
   seller: Seller
   sellerId: Int
+  shipment: Shipment
+  shipmentId: Int
   status: RefundRequestStatus!
   user: User
   userId: Int
@@ -1549,6 +1555,32 @@ type SellerShippingPolicy {
   id: Int!
   minimumAmountForFree: Int!
   updatedAt: DateTime!
+}
+
+type Shipment {
+  courier: Courier
+  courierId: Int
+  createdAt: DateTime!
+  id: Int!
+  lastTrackedAt: DateTime
+  ownerId: Int
+  ownerType: ShipmentOwnerType
+  status: ShipmentStatus!
+  trackCode: String
+}
+
+"""배송 연관 객체 분류입니다."""
+enum ShipmentOwnerType {
+  ExchangeRequest
+  OrderItem
+  RefundRequest
+}
+
+enum ShipmentStatus {
+  Cancelled
+  Failed
+  Shipped
+  Shipping
 }
 
 type ShippingAddress {

@@ -8,9 +8,11 @@ export type OrderItemRelationType =
 export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'user',
   'product',
-  'exchangeRequest',
   'item',
   'item.brand',
   'seller',
   'seller.shippingPolicy',
+  'shipment',
+  'refundRequest',
+  'exchangeRequest',
 ];

@@ -1,6 +1,7 @@
 import { ISeller } from '@item/sellers/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
+import { IShipment } from '@order/shipments/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
@@ -10,11 +11,13 @@ export interface IRefundRequest {
 
   user?: IUser;
   userId?: number;
-  order: IOrder;
-  orderMerchantUid: string;
   seller?: ISeller;
   sellerId?: number;
 
+  order: IOrder;
+  orderMerchantUid: string;
+  shipment: IShipment;
+  shipmentId: number;
   orderItems: IOrderItem[];
 
   status: RefundRequestStatus;
