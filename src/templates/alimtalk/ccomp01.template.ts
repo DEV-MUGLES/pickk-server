@@ -1,7 +1,8 @@
 import { addCommas } from '@common/helpers';
 
-import { OrderItem } from '@order/order-items/models';
 import { Order } from '@order/orders/models';
+
+import { getPurchaseItemInfo } from '../helpers';
 
 export const createCcomp01Template = (order: Order) => {
   const { buyer, merchantUid, totalPayAmount, receiver, orderItems } = order;
@@ -16,14 +17,4 @@ export const createCcomp01Template = (order: Order) => {
 ▶ 배송지 : [${receiver.postalCode}] ${receiver.baseAddress} ${
     receiver.detailAddress
   }`;
-};
-
-const getPurchaseItemInfo = (orderItems: OrderItem[]) => {
-  const { brandNameKor, itemName, productVariantName, quantity } =
-    orderItems[0];
-
-  return (
-    `[${brandNameKor}] ${itemName} (${productVariantName}) ${quantity}개` +
-    (orderItems.length > 1 ? `외 ${orderItems.length - 1}건` : '')
-  );
 };
