@@ -32,6 +32,11 @@ export class OrderItem extends OrderItemEntity {
   }
 
   @Field()
+  get name(): string {
+    return `[${this.brandNameKor}] ${this.itemName} (${this.productVariantName}) ${this.quantity}개`;
+  }
+
+  @Field()
   order: Order;
 
   @Field()
