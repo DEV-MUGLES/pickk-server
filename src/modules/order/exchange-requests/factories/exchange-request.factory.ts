@@ -9,6 +9,7 @@ import { ExchangeRequest } from '../models';
 export class ExchanteRequestFactory {
   static create(
     userId: number,
+    sellerId: number,
     product: Product,
     input: RequestOrderItemExchangeInput,
     quantity: number
@@ -26,6 +27,7 @@ export class ExchanteRequestFactory {
 
     return new ExchangeRequest({
       userId,
+      sellerId,
       product,
       status: ExchangeRequestStatus.Requested,
       ...input,

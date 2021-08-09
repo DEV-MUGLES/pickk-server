@@ -9,12 +9,13 @@ import {
 } from 'typeorm';
 import { IsEnum, IsString, Min } from 'class-validator';
 
+import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IOrder } from '@order/orders/interfaces';
+import { User } from '@user/users/models';
 
 import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
 import { IRefundRequest } from '../interfaces';
-import { User } from '@user/users/models';
 
 @ObjectType()
 @Entity({ name: 'refund_request' })
@@ -26,6 +27,8 @@ export class RefundRequestEntity implements IRefundRequest {
 
     this.id = attributes.id;
 
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
     this.user = attributes.user;
     this.userId = attributes.userId;
     this.order = attributes.order;
@@ -47,6 +50,19 @@ export class RefundRequestEntity implements IRefundRequest {
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Field(() => Seller, { nullable: true })
+  @ManyToOne('SellerEntity', { nullable: true })
+  seller?: Seller;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  sellerId?: number;
 
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
