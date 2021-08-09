@@ -4,3 +4,4 @@ aws configure set region "$DEFAULT_REGION"
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name main2main:update-item-image-url
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name main2main:remove-expected-point-event
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name S2I:update-seller-items
