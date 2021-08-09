@@ -3,6 +3,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryColumn,
@@ -19,6 +20,7 @@ import { Coupon } from '@order/coupons/models';
 import { IExchangeRequest } from '@order/exchange-requests/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
+import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
@@ -50,6 +52,8 @@ export class OrderItemEntity implements IOrderItem {
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
 
+    this.shipment = attributes.shipment;
+    this.shipmentId = attributes.shipmentId;
     this.refundRequest = attributes.refundRequest;
     this.exchangeRequest = attributes.exchangeRequest;
 
@@ -179,6 +183,20 @@ export class OrderItemEntity implements IOrderItem {
     nullable: true,
   })
   usedCouponId?: number;
+
+  @Field(() => Shipment, { nullable: true })
+  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @JoinColumn()
+  shipment: Shipment;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  shipmentId: number;
 
   @ManyToOne('OrderEntity')
   order: IOrder;

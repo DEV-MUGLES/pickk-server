@@ -5,6 +5,7 @@ import { OrderItemsModule } from './order-items/order-items.module';
 import { OrdersModule } from './orders/orders.module';
 import { PointsModule } from './points/points.module';
 import { RefundRequestsModule } from './refund-requests/refund-requests.module';
+import { ShipmentsModule } from './shipments/shipments.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { RefundRequestsModule } from './refund-requests/refund-requests.module';
     OrdersModule,
     PointsModule,
     RefundRequestsModule,
+    ShipmentsModule,
   ],
 })
 export class OrderModule {}

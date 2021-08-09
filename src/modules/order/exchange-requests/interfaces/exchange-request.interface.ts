@@ -2,6 +2,7 @@ import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
+import { IShipment } from '@order/shipments/interfaces';
 import { IUser } from '@user/users/interfaces';
 
 import { ExchangeRequestStatus } from '../constants';
@@ -15,6 +16,11 @@ export interface IExchangeRequest {
   productId?: number;
   seller?: ISeller;
   sellerId?: number;
+
+  pickShipment: IShipment;
+  pickShipmentId: number;
+  reShipment: IShipment;
+  reShipmentId: number;
 
   orderItem: IOrderItem;
   orderItemMerchantUid: string;
