@@ -9,7 +9,8 @@
     "admin",
     "common",
     "job",
-    "auth"
+    "auth",
+    "templates"
   ],
   "jestrunner.jestCommand": "npm run jest --",
   "editor.formatOnSave": true
