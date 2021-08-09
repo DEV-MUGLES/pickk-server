@@ -33,7 +33,35 @@ export const isSearchableFilter = (
   );
 };
 
-export const isArray = (value): value is Array<unknown> => {
+export const getSearchFilter = (searchField: string, search: string) => {
+  if (searchField.indexOf('.') === -1) {
+    return {
+      [searchField]: Like(`%${search}%`),
+    };
+  }
+
+  const chunks = searchField.split('.');
+
+  if (chunks.length === 2) {
+    const [relation, field] = chunks;
+    return {
+      [relation]: {
+        [field]: Like(`%${search}%`),
+      },
+    };
+  } else {
+    const [relation1, relation2, field] = chunks;
+    return {
+      [relation1]: {
+        [relation2]: {
+          [field]: Like(`%${search}%`),
+        },
+      },
+    };
+  }
+};
+
+export const isArray = (value: unknown): value is Array<unknown> => {
   return _isArray(value);
 };
 
@@ -95,6 +123,6 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
 
   return filter.searchFields.map((searchField: string) => ({
     ...newFilter,
-    [searchField]: Like(`%${filter.search}%`),
+    ...getSearchFilter(searchField, filter.search),
   }));
 };
