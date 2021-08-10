@@ -165,6 +165,23 @@ type Campaign {
   updatedAt: DateTime!
 }
 
+input CancelMeSellerOrderItemInput {
+  """
+  취소로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  취소 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+
+  """취소 사유"""
+  reason: String!
+}
+
 input CancelOrderInput {
   """
   취소로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
@@ -798,6 +815,7 @@ type Mutation {
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  cancelMeSellerOrderItem(cancelMeSellerOrderItemInput: CancelMeSellerOrderItemInput!, merchantUid: String!): OrderItem!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
     """가상계좌 주문건인 경우에만 필요합니다."""

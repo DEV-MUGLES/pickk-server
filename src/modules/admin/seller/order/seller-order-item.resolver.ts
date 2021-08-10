@@ -21,8 +21,15 @@ import {
 import { OrderItemFilter, ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsService } from '@order/order-items/order-items.service';
+import { OrdersService } from '@order/orders/orders.service';
+import { CancelPaymentInput } from '@payment/payments/dtos';
+import { PaymentsService } from '@payment/payments/payments.service';
 
-import { BulkShipOrderItemInput, OrderItemsCountOutput } from './dtos';
+import {
+  BulkShipOrderItemInput,
+  CancelMeSellerOrderItemInput,
+  OrderItemsCountOutput,
+} from './dtos';
 
 import { SellerOrderItemService } from './seller-order-item.service';
 
@@ -33,6 +40,10 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   constructor(
     @Inject(OrderItemsService)
     private readonly orderItemsService: OrderItemsService,
+    @Inject(OrdersService)
+    private readonly ordersService: OrdersService,
+    @Inject(PaymentsService)
+    private readonly paymentsService: PaymentsService,
     @Inject(SellerOrderItemService)
     private readonly sellerOrderItemService: SellerOrderItemService,
     @Inject(CacheService) private cacheService: CacheService
@@ -141,5 +152,47 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     await this.sellerOrderItemService.bulkShip(orderItems, shipOrderItemInputs);
 
     return true;
+  }
+
+  @Mutation(() => OrderItem)
+  @UseGuards(JwtSellerVerifyGuard)
+  async cancelMeSellerOrderItem(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('cancelMeSellerOrderItemInput')
+    input: CancelMeSellerOrderItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<OrderItem> {
+    const orderItem = await this.orderItemsService.get(merchantUid);
+    if (orderItem.sellerId !== sellerId) {
+      throw new ForbiddenException('자신의 주문 상품이 아닙니다.');
+    }
+
+    const order = await this.ordersService.get(orderItem.orderMerchantUid, [
+      'orderItems',
+      'orderItems.product',
+      'orderItems.product.item',
+      'orderItems.product.item.brand',
+      'orderItems.product.item.brand.seller',
+      'orderItems.product.item.brand.seller.shippingPolicy',
+      'vbankInfo',
+    ]);
+    const cancelledOrder = await this.ordersService.cancel(
+      order,
+      [merchantUid],
+      input.amount,
+      input.checksum
+    );
+
+    const payment = await this.paymentsService.get(merchantUid);
+    await this.paymentsService.cancel(
+      payment,
+      CancelPaymentInput.of(cancelledOrder, input)
+    );
+
+    return await this.orderItemsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

@@ -34,7 +34,7 @@ export class CancelPaymentInput extends PickType(
 
   static of(
     order: Order,
-    cancelOrderInput: CancelOrderInput
+    cancelOrderInput: Omit<CancelOrderInput, 'orderItemMerchantUids'>
   ): CancelPaymentInput {
     const result = new CancelPaymentInput({ ...cancelOrderInput });
 
