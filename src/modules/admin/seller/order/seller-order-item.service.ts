@@ -4,7 +4,9 @@ import { In, MoreThanOrEqual } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { OrderItemStatus } from '@order/order-items/constants';
+import { ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItemEntity } from '@order/order-items/entities';
+import { OrderItem } from '@order/order-items/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
 import { OrderItemsCountOutput } from './dtos';
@@ -60,5 +62,10 @@ export class SellerOrderItemService {
       .execute();
 
     return null;
+  }
+
+  async ship(orderItem: OrderItem, input: ShipOrderItemInput) {
+    orderItem.ship(input);
+    await this.orderItemsRepository.save(orderItem);
   }
 }

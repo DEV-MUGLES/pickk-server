@@ -1,4 +1,9 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -13,7 +18,7 @@ import {
   OrderItemRelationType,
   ORDER_ITEM_RELATIONS,
 } from '@order/order-items/constants';
-import { OrderItemFilter } from '@order/order-items/dtos';
+import { OrderItemFilter, ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 
@@ -84,11 +89,32 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   @UseGuards(JwtSellerVerifyGuard)
   async bulkShipReadyMeSellerOrderItems(
     @CurrentUser() { sellerId }: JwtPayload,
-    @Args('merchantUids', { type: () => [String], nullable: true })
-    merchantUids?: string[]
+    @Args('merchantUids', { type: () => [String] })
+    merchantUids: string[]
   ): Promise<boolean> {
     await this.sellerOrderItemService.bulkShipReady(sellerId, merchantUids);
 
     return true;
+  }
+
+  @Mutation(() => OrderItem)
+  @UseGuards(JwtSellerVerifyGuard)
+  async shipMeSellerOrderItem(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('shipOrderItemInput') input: ShipOrderItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<OrderItem> {
+    const orderItem = await this.orderItemsService.get(merchantUid);
+    if (orderItem.sellerId !== sellerId) {
+      throw new ForbiddenException('자신의 주문 상품이 아닙니다.');
+    }
+
+    await this.sellerOrderItemService.ship(orderItem, input);
+
+    return await this.orderItemsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

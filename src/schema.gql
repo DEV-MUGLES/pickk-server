@@ -785,7 +785,7 @@ type Mutation {
   addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
-  bulkShipReadyMeSellerOrderItems(merchantUids: [String!]): Boolean!
+  bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
@@ -815,6 +815,7 @@ type Mutation {
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
+  shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
@@ -1621,6 +1622,11 @@ type SellerShippingPolicy {
   id: Int!
   minimumAmountForFree: Int!
   updatedAt: DateTime!
+}
+
+input ShipOrderItemInput {
+  courierId: Int
+  trackCode: String
 }
 
 type Shipment {
