@@ -17,7 +17,6 @@ import { AwsSqsProviderModule } from '@providers/aws/sqs/provider.module';
 import { RedisCacheProviderModule } from '@providers/cache/redis';
 import { MysqlDatabaseProviderModule } from '@providers/database/mysql/provider.module';
 import { SensProviderModule } from '@providers/sens/provider.module';
-import { SpiderModule } from '@providers/spider/provider.module';
 import { CrawlerProviderModule } from '@providers/crawler/provider.module';
 
 import { AppController } from './app.controller';
@@ -38,7 +37,6 @@ import { AppService } from './app.service';
     RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
     SensProviderModule,
-    SpiderModule,
     AuthModule,
     CommonModule,
     ItemModule,
