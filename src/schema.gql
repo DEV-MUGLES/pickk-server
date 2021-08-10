@@ -581,6 +581,28 @@ enum ExchangeRequestStatus {
   Reshipping
 }
 
+"""생성일 기준 1달 이내의 건들만 count합니다."""
+type ExchangeRequestsCountOutput {
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """수거 완료"""
+  picked: Int!
+
+  """교환 거부"""
+  rejected: Int!
+
+  """교환 요청 (= 수거중)"""
+  requested: Int!
+
+  """교환 배송 완료"""
+  reshipped: Int!
+
+  """교환 배송 중"""
+  reshipping: Int!
+}
+
 input ExtendedShipOrderItemInput {
   courierId: Int
   merchantUid: String!
@@ -1414,6 +1436,7 @@ type Query {
   me: User!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
+  meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
