@@ -4,7 +4,6 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
-import { ISpiderItem } from '@providers/spider/interfaces/spider.interface';
 
 import {
   CreateItemInput,
@@ -21,6 +20,8 @@ import {
   AddItemPriceInput,
   UpdateItemPriceInput,
   CreateItemDetailImageInput,
+  UpdateByCrawlDatasDto,
+  AddByCrawlDatasDto,
 } from './dtos';
 import {
   ItemPrice,
@@ -108,6 +109,21 @@ export class ItemsService {
     });
     const newEntity = await this.itemsRepository.save(item);
     return await this.get(newEntity.id, relations);
+  }
+
+  async createMany(createItemInputs: CreateItemInput[]) {
+    const newItems = createItemInputs.map((createItemInput) => {
+      const { priceInput, urlInput, ...itemAttributes } = createItemInput;
+
+      return new Item({
+        ...itemAttributes,
+        prices: [
+          new ItemPrice({ ...priceInput, isActive: true, isBase: true }),
+        ],
+        urls: [new ItemUrl({ ...urlInput, isPrimary: true })],
+      });
+    });
+    return await this.itemsRepository.save(newItems);
   }
 
   async findOne(param: Partial<Item>, relations: string[] = []): Promise<Item> {
@@ -220,43 +236,50 @@ export class ItemsService {
     await this.itemsRepository.bulkUpdate(ids, bulkUpdateItemInput);
   }
 
-  async addByCrawlData(
-    brandId: number,
-    code: string,
-    data: ISpiderItem
-  ): Promise<Item> {
-    return await this.create({
-      brandId,
-      name: data.name,
-      providedCode: code,
-      imageUrl: data.imageUrl,
-      isMdRecommended: false,
-      isSellable: false,
-      urlInput: {
-        isPrimary: true,
-        url: data.url,
-      },
-      priceInput: {
-        originalPrice: data.originalPrice,
-        sellPrice: data.salePrice,
-        isCrawlUpdating: true,
-      },
+  async addByCrawlDatas(dto: AddByCrawlDatasDto) {
+    const { datas } = dto;
+    const createItemInputs = datas.map((v) => {
+      return {
+        brandId: v.brandId,
+        name: v.name,
+        providedCode: v.code,
+        imageUrl: v.imageUrl,
+        isMdRecommended: false,
+        isSellable: false,
+        urlInput: {
+          isPrimary: true,
+          url: v.url,
+        },
+        priceInput: {
+          originalPrice: v.originalPrice,
+          sellPrice: v.salePrice,
+          isCrawlUpdating: true,
+        },
+      };
     });
+    await this.createMany(createItemInputs);
   }
 
-  async updateByCrawlData(item: Item, data: ISpiderItem): Promise<Item> {
-    item.prices.forEach((price) => {
-      if (!price.isCrawlUpdating) {
-        return;
-      }
-      price.originalPrice = data.originalPrice;
-      price.sellPrice = data.salePrice;
-      price.finalPrice =
-        (data.salePrice * (100 - price.pickkDiscountRate)) / 100;
-    });
-    item.name = data.name;
+  async updateByCrawlDatas(dto: UpdateByCrawlDatasDto) {
+    const { datas: updateItemDatas } = dto;
+    const updatedItems = [];
+    for (const updateItemData of updateItemDatas) {
+      const { item, data } = updateItemData;
+      item.prices.forEach((price) => {
+        if (!price.isCrawlUpdating) {
+          return;
+        }
+        price.originalPrice = data.originalPrice;
+        price.sellPrice = data.salePrice;
+        price.finalPrice =
+          (data.salePrice * (100 - price.pickkDiscountRate)) / 100;
+      });
+      item.name = data.name;
+      item.isSoldout = data.isSoldout;
 
-    return await this.itemsRepository.save(item);
+      updatedItems.push(item);
+    }
+    return await this.itemsRepository.save(updatedItems);
   }
 
   /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */
