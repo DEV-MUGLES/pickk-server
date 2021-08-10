@@ -556,6 +556,22 @@ type ExchangeRequest {
   userId: Int
 }
 
+input ExchangeRequestFilter {
+  orderItem: ExchangeRequestOrderItemFilter
+  requestedAtBetween: [DateTime!]
+
+  """재배송 완료일 (기간). 교환 완료와 동일한 의미로 사용됩니다."""
+  reshippedAtBetween: [DateTime!]
+
+  """주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색할 수 있습니다."""
+  search: String
+  sellerId: Int
+}
+
+input ExchangeRequestOrderItemFilter {
+  paidAtBetween: [DateTime!]
+}
+
 """교한신청 상태입니다."""
 enum ExchangeRequestStatus {
   Picked
@@ -1397,6 +1413,7 @@ type Query {
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
@@ -1472,6 +1489,7 @@ enum RefundRequestFaultOf {
 
 input RefundRequestFilter {
   confirmedAtBetween: [DateTime!]
+  order: RefundRequestOrderFilter
   pickedAtBetween: [DateTime!]
   requestedAtBetween: [DateTime!]
 
@@ -1480,6 +1498,10 @@ input RefundRequestFilter {
   sellerId: Int
   status: RefundRequestStatus
   statusIn: [RefundRequestStatus!]
+}
+
+input RefundRequestOrderFilter {
+  paidAtBetween: [DateTime!]
 }
 
 """반품요청 상태입니다."""
