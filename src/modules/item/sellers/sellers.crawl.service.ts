@@ -3,8 +3,13 @@ import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import * as cheerio from 'cheerio';
 
-import { allSettled, FulfillResponse, isFulfilled } from '@common/utils';
-import { isEqualSet, splitRegexString } from '@common/helpers';
+import {
+  isEqualSet,
+  splitRegexString,
+  allSettled,
+  FulfillResponse,
+  isFulfilled,
+} from '@common/helpers';
 
 import { ScrapSellerItemUrlsDto } from './dtos';
 import { ISellerCrawlStrategy } from './interfaces';
@@ -88,13 +93,9 @@ export class SellersCrawlService {
     const url = new URL(pageUrl);
     const searchParams = new URLSearchParams(url.search);
 
-    if (!searchParams.get(pageParam)) {
-      return null;
-    }
-
     searchParams.set(
       pageParam,
-      (Number(searchParams.get(pageParam)) + 1).toString()
+      (Number(searchParams.get(pageParam) ?? 1) + 1).toString()
     );
     return `${url.origin}${url.pathname}?${searchParams.toString()}`;
   }

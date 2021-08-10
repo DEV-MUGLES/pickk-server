@@ -16,12 +16,21 @@ describe('SellersCrawlService', () => {
   });
 
   describe('getNextPage', () => {
+    it("when pageParam doesn't exist in url, should return next page url's pageParam value 2", () => {
+      const pageParam = 'PAGE-PARAM';
+      const url = `https://naver.com?foo=bar`;
+
+      const result = sellersCrawlService.getNextPage(url, true, pageParam);
+
+      expect(new URLSearchParams(result).get(pageParam)).toEqual('2');
+    });
     it('should return next page url', () => {
       const pageParam = 'PAGE-PARAM';
       const pageNum = faker.datatype.number();
       const url = `https://naver.com?foo=bar&${pageParam}=${pageNum}`;
 
       const result = sellersCrawlService.getNextPage(url, true, pageParam);
+
       expect(new URLSearchParams(result).get(pageParam)).toEqual(
         (pageNum + 1).toString()
       );
