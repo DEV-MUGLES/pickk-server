@@ -977,9 +977,7 @@ input OrderItemFilter {
   claimStatusIn: [OrderItemClaimStatus!]
   paidAtBetween: [DateTime!]
 
-  """
-  주문번호, 주문상품번호, 아이템 명, 구매자 명, 구매자 번호, 수취인 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!
-  """
+  """주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!"""
   search: String
   sellerId: Int
   shipReadyAtBetween: [DateTime!]
@@ -1000,6 +998,58 @@ enum OrderItemStatus {
   Shipping
   VbankDodged
   VbankReady
+}
+
+"""생성일 기준 1달 이내의 건들만 count합니다."""
+type OrderItemsCountOutput {
+  """취소 요청됨 (deprecated)"""
+  cancel_requested: Int! @deprecated(reason: "현재 취소는 신청 즉시 완료됩니다.")
+
+  """취소 완료"""
+  cancelled: Int!
+
+  """교환 요청됨"""
+  exchange_requested: Int!
+
+  """교환 완료"""
+  exchanged: Int!
+
+  """결제 실패"""
+  failed: Int!
+
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """결제 완료"""
+  paid: Int!
+
+  """결제대기 (입금대기와 다릅니다.)"""
+  pending: Int!
+
+  """반품 요청됨"""
+  refund_requested: Int!
+
+  """반품 완료"""
+  refunded: Int!
+
+  """배송 보류중(예약중)"""
+  ship_pending: Int!
+
+  """배송 준비중"""
+  ship_ready: Int!
+
+  """배송 완료"""
+  shipped: Int!
+
+  """배송 중"""
+  shipping: Int!
+
+  """입금 전 취소"""
+  vbank_dodged: Int!
+
+  """입금 대기"""
+  vbank_ready: Int!
 }
 
 type OrderReceiver {
@@ -1312,6 +1362,7 @@ type Query {
   me: User!
   meSeller: Seller!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
+  meSellerOrderItemsCount: OrderItemsCountOutput!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
