@@ -23,7 +23,12 @@ import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
-import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
+import {
+  OrderItemStatus,
+  OrderItemClaimStatus,
+  getOrderItemClaimStatusDisplayName,
+  getOrderItemStatusDisplayName,
+} from '../constants';
 import { IOrderItem } from '../interfaces';
 
 @ObjectType()
@@ -210,6 +215,17 @@ export class OrderItemEntity implements IOrderItem {
 
   @OneToOne('ExchangeRequestEntity', 'orderItem', { cascade: true })
   exchangeRequest: IExchangeRequest;
+
+  @Field(() => String, {
+    description:
+      '프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다.',
+  })
+  get statusDisplayName(): string {
+    return (
+      getOrderItemClaimStatusDisplayName(this.claimStatus) ??
+      getOrderItemStatusDisplayName(this.status)
+    );
+  }
 
   @Field(() => OrderItemStatus)
   @Column({

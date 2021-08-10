@@ -949,6 +949,9 @@ type OrderItem {
   shippedAt: DateTime
   shippingAt: DateTime
   status: OrderItemStatus!
+
+  """프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다."""
+  statusDisplayName: String!
   trackCode: String
   updatedAt: DateTime!
   usedCoupon: Coupon
