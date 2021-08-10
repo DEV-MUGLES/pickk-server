@@ -1362,7 +1362,7 @@ type Query {
   me: User!
   meSeller: Seller!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
-  meSellerOrderItemsCount: OrderItemsCountOutput!
+  meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
