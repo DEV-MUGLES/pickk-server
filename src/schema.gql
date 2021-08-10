@@ -142,6 +142,10 @@ type Brand {
   updatedAt: DateTime!
 }
 
+input BulkShipOrderItemInput {
+  shipOrderItemInputs: [ExtendedShipOrderItemInput!]!
+}
+
 input BulkUpdateItemInput {
   isMdRecommended: Boolean
   isSellable: Boolean
@@ -544,6 +548,12 @@ enum ExchangeRequestStatus {
   Reshipping
 }
 
+input ExtendedShipOrderItemInput {
+  courierId: Int
+  merchantUid: String!
+  trackCode: String
+}
+
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
   canUseMileage: Boolean!
@@ -785,6 +795,7 @@ type Mutation {
   addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
+  bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
@@ -980,6 +991,7 @@ enum OrderItemClaimStatus {
 input OrderItemFilter {
   claimStatus: OrderItemClaimStatus
   claimStatusIn: [OrderItemClaimStatus!]
+  merchantUidIn: [String!]
   paidAtBetween: [DateTime!]
 
   """주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!"""

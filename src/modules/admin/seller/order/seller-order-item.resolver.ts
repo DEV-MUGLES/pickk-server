@@ -22,7 +22,7 @@ import { OrderItemFilter, ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 
-import { OrderItemsCountOutput } from './dtos';
+import { BulkShipOrderItemInput, OrderItemsCountOutput } from './dtos';
 
 import { SellerOrderItemService } from './seller-order-item.service';
 
@@ -116,5 +116,30 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       merchantUid,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtSellerVerifyGuard)
+  async bulkShipMeSellerOrderItems(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('bulkShipOrderItemInput')
+    { shipOrderItemInputs }: BulkShipOrderItemInput
+  ): Promise<boolean> {
+    const merchantUids = shipOrderItemInputs.map((input) => input.merchantUid);
+
+    const orderItems = await this.orderItemsService.list({
+      merchantUidIn: merchantUids,
+    });
+    if (orderItems.some((oi) => oi.sellerId !== sellerId)) {
+      const { merchantUid } = orderItems.find((oi) => oi.sellerId !== sellerId);
+
+      throw new ForbiddenException(
+        `자신의 주문 상품이 아닙니다. (${merchantUid})`
+      );
+    }
+
+    await this.sellerOrderItemService.bulkShip(orderItems, shipOrderItemInputs);
+
+    return true;
   }
 }

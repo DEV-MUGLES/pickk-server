@@ -9,7 +9,7 @@ import { OrderItemEntity } from '@order/order-items/entities';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
-import { OrderItemsCountOutput } from './dtos';
+import { ExtendedShipOrderItemInput, OrderItemsCountOutput } from './dtos';
 
 @Injectable()
 export class SellerOrderItemService {
@@ -60,12 +60,22 @@ export class SellerOrderItemService {
       .set({ status: OrderItemStatus.ShipReady, shipReadyAt: new Date() })
       .where({ merchantUid: In(merchantUids) })
       .execute();
-
-    return null;
   }
 
   async ship(orderItem: OrderItem, input: ShipOrderItemInput) {
     orderItem.ship(input);
     await this.orderItemsRepository.save(orderItem);
+  }
+
+  async bulkShip(
+    orderItems: OrderItem[],
+    inputs: ExtendedShipOrderItemInput[]
+  ) {
+    for (const oi of orderItems) {
+      const input = inputs.find((i) => i.merchantUid === oi.merchantUid);
+      oi.ship(input);
+    }
+
+    await this.orderItemsRepository.save(orderItems);
   }
 }
