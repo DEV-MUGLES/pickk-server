@@ -25,8 +25,8 @@ export const getOrderItemStatusDisplayName = (status: OrderItemStatus) => {
     Paid,
     ShipPending,
     ShipReady,
-    Shipped,
     Shipping,
+    Shipped,
   } = OrderItemStatus;
 
   return (
@@ -38,8 +38,8 @@ export const getOrderItemStatusDisplayName = (status: OrderItemStatus) => {
       [Paid]: '결제 완료',
       [ShipPending]: '배송 예약중',
       [ShipReady]: '배송 준비중',
-      [Shipped]: '배송중',
-      [Shipping]: '배송 완료',
+      [Shipping]: '배송중',
+      [Shipped]: '배송 완료',
     }[status] || status
   );
 };
