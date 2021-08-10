@@ -13,17 +13,11 @@ export class RefundRequestOrderFilter {
 }
 
 @InputType()
-export class RefundRequestFilter implements Partial<IRefundRequest> {
-  searchFields?: Array<
-    | keyof RefundRequest
-    | 'order.merchantUid'
-    | 'orderItems.itemName'
-    | 'orderItems.productVariantName'
-    | 'shipment.trackCode'
-  > = [
-    'order.merchantUid',
-    // 'orderItems.itemName',
-    // 'orderItems.productVariantName',
+export class RefundRequestFilter
+  implements Partial<Omit<IRefundRequest, 'order'>>
+{
+  searchFields?: Array<keyof RefundRequest | 'shipment.trackCode'> = [
+    'orderMerchantUid',
     'shipment.trackCode',
   ];
 
@@ -64,4 +58,7 @@ export class RefundRequestFilter implements Partial<IRefundRequest> {
   @Field(() => [Date, Date], { nullable: true })
   @IsOptional()
   confirmedAtBetween?: [Date, Date];
+
+  @Field(() => RefundRequestOrderFilter, { nullable: true })
+  order?: RefundRequestOrderFilter;
 }
