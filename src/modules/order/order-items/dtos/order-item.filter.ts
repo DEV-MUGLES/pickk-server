@@ -7,11 +7,24 @@ import { OrderItem } from '../models';
 
 @InputType()
 export class OrderItemFilter implements Partial<IOrderItem> {
-  searchFields: Array<keyof OrderItem> = ['orderMerchantUid', 'merchantUid'];
+  searchFields: Array<
+    | keyof OrderItem
+    | 'order.buyer.name'
+    | 'order.buyer.phoneNumber'
+    | 'order.receiver.name'
+  > = [
+    'itemName',
+    'orderMerchantUid',
+    'merchantUid',
+    'order.buyer.name',
+    'order.buyer.phoneNumber',
+    'order.receiver.name',
+  ];
 
   @Field({
     nullable: true,
-    description: '주문번호, 주문상품번호로 검색합니다.',
+    description:
+      '주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!',
   })
   search: string;
 

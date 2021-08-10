@@ -39,7 +39,7 @@ export class OrderItem extends OrderItemEntity {
   @Field()
   order: Order;
 
-  @Field()
+  @Field(() => RefundRequest)
   refundRequest: RefundRequest;
 
   @Field(() => ExchangeRequest)

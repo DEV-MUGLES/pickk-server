@@ -977,7 +977,9 @@ input OrderItemFilter {
   claimStatusIn: [OrderItemClaimStatus!]
   paidAtBetween: [DateTime!]
 
-  """주문번호, 주문상품번호로 검색합니다."""
+  """
+  주문번호, 주문상품번호, 아이템 명, 구매자 명, 구매자 번호, 수취인 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!
+  """
   search: String
   sellerId: Int
   shipReadyAtBetween: [DateTime!]
