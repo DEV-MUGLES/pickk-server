@@ -11,9 +11,10 @@ import {
   FulfillResponse,
   isFulfilled,
   RejectResponse,
+  splitRegexString,
 } from '@common/helpers';
 import { SCRAP_SELLER_ITEMS_QUEUE } from '@src/queue/constants';
-import { ScrapSellerItemsMto } from '@src/queue/mtos';
+import { ScrapSellerItemsMto, SellerItemsScrapResult } from '@src/queue/mtos';
 import { CrawlerProviderService } from '@providers/crawler';
 import { InfoCrawlResultDto } from '@providers/crawler/dtos';
 
@@ -43,15 +44,25 @@ export class ScrapSellerItemsConsumer {
       scrapSellerItemsMto
     );
     const items = await this.crawlItems(itemUrls);
+    const uniqueItems: SellerItemsScrapResult[] = [];
+    for (const item of items) {
+      const [, code] = item.url.match(
+        new RegExp(...splitRegexString(codeRegex))
+      );
+      if (uniqueItems.findIndex((v) => v.code === code) !== -1) {
+        continue;
+      }
+
+      uniqueItems.push({ ...item, code });
+    }
 
     await this.sellerProducer.processSellerItemsScrapResult({
       brandId: brand.id,
-      codeRegex,
-      items,
+      items: uniqueItems,
     });
   }
 
-  async crawlItems(itemUrls: string[]) {
+  async crawlItems(itemUrls: string[]): Promise<InfoCrawlResultDto[]> {
     const MAX_CRAWL_COUNT = 70;
     const CRAWL_TERM = 1500;
     const items: (RejectResponse | FulfillResponse<InfoCrawlResultDto>)[] = [];
