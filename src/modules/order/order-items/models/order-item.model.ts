@@ -7,9 +7,12 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Coupon } from '@order/coupons/models';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 import { Order } from '@order/orders/models';
-import { RefundRequest } from '@order/refund-requests/models/refund-request.model';
+import { RefundRequest } from '@order/refund-requests/models';
+import { ShipmentOwnerType } from '@order/shipments/constants';
+import { ShipmentFactory } from '@order/shipments/factories';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
+import { ShipOrderItemInput } from '../dtos';
 import { OrderItemEntity } from '../entities/order-item.entity';
 
 @ObjectType()
@@ -57,6 +60,21 @@ export class OrderItem extends OrderItemEntity {
     this.couponDiscountAmount = coupon.getDiscountAmountFor(item);
   }
 
+  ship(shipInput: ShipOrderItemInput) {
+    if (this.status !== OrderItemStatus.ShipReady) {
+      throw new BadRequestException(
+        `배송준비중 상태인 주문 상품만 배송 처리할 수 있습니다.\n문제 주문상품: ${this.itemName}(${this.productVariantName})`
+      );
+    }
+
+    this.markShipping();
+    this.shipment = ShipmentFactory.create({
+      ownerType: ShipmentOwnerType.OrderItem,
+      ownerPk: this.merchantUid,
+      ...shipInput,
+    });
+  }
+
   cancel() {
     this.markCancelled();
   }
@@ -71,7 +89,6 @@ export class OrderItem extends OrderItemEntity {
         'exchangeRequest의 product를 Join해야합니다.'
       );
     }
-    console.log(this.itemId, exchangeRequest);
     if (this.itemId !== exchangeRequest.product.itemId) {
       throw new BadRequestException(
         '같은 아이템의 Product로만 교환할 수 있습니다.'
@@ -133,5 +150,10 @@ export class OrderItem extends OrderItemEntity {
 
     this.claimStatus = OrderItemClaimStatus.ExchangeRequested;
     this.exchangeRequestedAt = new Date();
+  }
+
+  private markShipping() {
+    this.status = OrderItemStatus.Shipping;
+    this.shippingAt = new Date();
   }
 }
