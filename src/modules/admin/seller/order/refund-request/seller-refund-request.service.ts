@@ -54,7 +54,7 @@ export class SellerRefundRequestService {
         (rr) => rr.status !== RefundRequestStatus.Requested
       );
       throw new BadRequestException(
-        `입력된 주문상품 ${id}가 결제완료 상태가 아닙니다.`
+        `입력된 반품신청 ${id}가 요청됨 상태가 아닙니다.`
       );
     }
 
