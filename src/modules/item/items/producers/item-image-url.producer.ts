@@ -1,19 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '../constants';
-import { UpdateItemImageUrlMto } from '../mtos';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@src/queue/constants';
+import { UpdateItemImageUrlByCodeMto } from '@src/queue/mtos';
 
 @Injectable()
 export class ItemImageUrlProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async update(itemId: number, imageUrl: string) {
-    await this.sqsService.send<UpdateItemImageUrlMto>(
+  async updateBycode(brandId: number, code: string, imageUrl: string) {
+    await this.sqsService.send<UpdateItemImageUrlByCodeMto>(
       UPDATE_ITEM_IMAGE_URL_QUEUE,
       {
-        id: itemId.toString(),
-        body: { itemId, imageUrl },
+        id: brandId + code,
+        body: { brandId, code, imageUrl },
       }
     );
   }

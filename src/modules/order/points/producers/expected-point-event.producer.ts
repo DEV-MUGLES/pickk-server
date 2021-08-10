@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
-import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '../constants';
-import { RemoveExpectedPointEventMto } from '../mtos';
+import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@src/queue/constants';
+import { RemoveExpectedPointEventMto } from '@src/queue/mtos';
 
 @Injectable()
 export class ExpectedPointEventProducer {
