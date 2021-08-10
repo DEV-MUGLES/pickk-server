@@ -1,5 +1,5 @@
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -78,5 +78,17 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     });
 
     return count;
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtSellerVerifyGuard)
+  async bulkShipReadyMeSellerOrderItems(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUids', { type: () => [String], nullable: true })
+    merchantUids?: string[]
+  ): Promise<boolean> {
+    await this.sellerOrderItemService.bulkShipReady(sellerId, merchantUids);
+
+    return true;
   }
 }

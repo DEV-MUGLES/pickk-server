@@ -785,6 +785,7 @@ type Mutation {
   addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
+  bulkShipReadyMeSellerOrderItems(merchantUids: [String!]): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
