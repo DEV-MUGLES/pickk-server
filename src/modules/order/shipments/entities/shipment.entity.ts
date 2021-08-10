@@ -28,7 +28,7 @@ export class ShipmentEntity implements IShipment {
 
     this.status = attributes.status;
     this.ownerType = attributes.ownerType;
-    this.ownerId = attributes.ownerId;
+    this.ownerPk = attributes.ownerPk;
 
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
@@ -64,14 +64,14 @@ export class ShipmentEntity implements IShipment {
   @IsOptional()
   ownerType: ShipmentOwnerType;
 
-  @Field(() => Int, {
+  @Field({
     nullable: true,
   })
   @Column({
-    type: 'int',
+    length: 30,
     nullable: true,
   })
-  ownerId: number;
+  ownerPk: string;
 
   // 배송 정보
 

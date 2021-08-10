@@ -42,7 +42,7 @@ export class ExchangeRequestFactory {
       result.pickShipment = ShipmentFactory.create({
         ...input.shipmentInput,
         ownerType: ShipmentOwnerType.ExchangeRequestPick,
-        ownerId: null,
+        ownerPk: null,
       });
     }
 

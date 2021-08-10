@@ -8,7 +8,7 @@ export interface IShipment {
 
   status: ShipmentStatus;
   ownerType: ShipmentOwnerType;
-  ownerId: number;
+  ownerPk: string;
 
   courier: ICourier;
   courierId: number;

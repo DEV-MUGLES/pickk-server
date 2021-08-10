@@ -5,7 +5,7 @@ export class AddShipment1628514224393 implements MigrationInterface {
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      "CREATE TABLE `shipment` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `status` enum ('shipping', 'shipped', 'cancelled', 'failed') NOT NULL, `ownerType` enum ('exchange_request_pick', 'exchange_request_reship', 'refund_request', 'order_item') NULL, `ownerId` int NULL, `courierId` int NULL, `trackCode` varchar(30) NULL, `lastTrackedAt` datetime NULL, INDEX `idx_status` (`status`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
+      "CREATE TABLE `shipment` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `status` enum ('shipping', 'shipped', 'cancelled', 'failed') NOT NULL, `ownerType` enum ('exchange_request_pick', 'exchange_request_reship', 'refund_request', 'order_item') NULL, `ownerPk` varchar(30) NULL, `courierId` int NULL, `trackCode` varchar(30) NULL, `lastTrackedAt` datetime NULL, INDEX `idx_status` (`status`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
 
     await queryRunner.query(

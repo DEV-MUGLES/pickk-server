@@ -27,7 +27,7 @@ export class RefundRequestFactory {
       result.shipment = ShipmentFactory.create({
         ...input.shipmentInput,
         ownerType: ShipmentOwnerType.ExchangeRequestPick,
-        ownerId: null,
+        ownerPk: null,
       });
     }
 
