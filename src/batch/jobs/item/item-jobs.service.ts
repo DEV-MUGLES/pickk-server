@@ -11,7 +11,7 @@ export class ItemJobsService {
     private readonly updateSellerItemsJob: UpdateSellerItemsJob
   ) {}
 
-  async updateBrandItems() {
+  async updateSellerItems() {
     await this.batchWorker.run(this.updateSellerItemsJob);
   }
 }

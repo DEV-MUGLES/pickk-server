@@ -9,8 +9,8 @@ import { ItemJobsService } from './item-jobs.service';
 export class ItemJobsController {
   constructor(private readonly itemJobsService: ItemJobsService) {}
 
-  @Post('/update-brand-items')
+  @Post('/update-seller-items')
   async updateBrandItems() {
-    await this.itemJobsService.updateBrandItems();
+    await this.itemJobsService.updateSellerItems();
   }
 }
