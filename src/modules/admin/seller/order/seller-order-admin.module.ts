@@ -5,9 +5,10 @@ import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
 import { SellerOrderItemResolver } from './seller-order-item.resolver';
+import { SellerOrderItemService } from './seller-order-item.service';
 
 @Module({
   imports: [TypeOrmModule.forFeature([OrderItemsRepository]), OrderItemsModule],
-  providers: [SellerOrderItemResolver],
+  providers: [SellerOrderItemResolver, SellerOrderItemService],
 })
 export class SellerOrderAdminModule {}

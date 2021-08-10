@@ -1,9 +1,6 @@
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual } from 'typeorm';
 import { GraphQLResolveInfo } from 'graphql';
-import dayjs from 'dayjs';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtSellerVerifyGuard } from '@auth/guards';
@@ -18,10 +15,11 @@ import {
 } from '@order/order-items/constants';
 import { OrderItemFilter } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
-import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 
 import { OrderItemsCountOutput } from './dtos';
+
+import { SellerOrderItemService } from './seller-order-item.service';
 
 @Injectable()
 export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType> {
@@ -30,8 +28,8 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   constructor(
     @Inject(OrderItemsService)
     private readonly orderItemsService: OrderItemsService,
-    @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository,
+    @Inject(SellerOrderItemService)
+    private readonly sellerOrderItemService: SellerOrderItemService,
     @Inject(CacheService) private cacheService: CacheService
   ) {
     super();
@@ -73,21 +71,12 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       }
     }
 
-    const orderItems = await this.orderItemsRepository.find({
-      select: ['status', 'claimStatus'],
-      where: {
-        sellerId,
-        createdAt: MoreThanOrEqual(dayjs().subtract(1, 'month').toDate()),
-      },
+    const count = await this.sellerOrderItemService.getCount(sellerId);
+
+    await this.cacheService.set<OrderItemsCountOutput>(count.cacheKey, count, {
+      ttl: 60 * 5,
     });
 
-    const result = OrderItemsCountOutput.create(sellerId, orderItems);
-    await this.cacheService.set<OrderItemsCountOutput>(
-      result.cacheKey,
-      result,
-      { ttl: 60 * 5 }
-    );
-
-    return result;
+    return count;
   }
 }
