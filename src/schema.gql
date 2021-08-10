@@ -1398,6 +1398,7 @@ type Query {
   meSeller: Seller!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
+  meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
@@ -1465,6 +1466,18 @@ type RefundRequest {
 enum RefundRequestFaultOf {
   Customer
   Seller
+}
+
+input RefundRequestFilter {
+  confirmedAtBetween: [DateTime!]
+  pickedAtBetween: [DateTime!]
+  requestedAtBetween: [DateTime!]
+
+  """주문번호, 운송장번호로 검색할 수 있습니다."""
+  search: String
+  sellerId: Int
+  status: RefundRequestStatus
+  statusIn: [RefundRequestStatus!]
 }
 
 """반품요청 상태입니다."""
