@@ -6,3 +6,5 @@ export * from './item-size-chart.input';
 export * from './item-url.input';
 export * from './item.filter';
 export * from './item.input';
+export * from './add-by-crawl-data.dto';
+export * from './update-by-crawl-data.dto';
