@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, MoreThanOrEqual } from 'typeorm';
 import dayjs from 'dayjs';
@@ -40,7 +44,7 @@ export class SellerOrderItemService {
 
     if (orderItems.some((oi) => oi.sellerId !== sellerId)) {
       const { merchantUid } = orderItems.find((oi) => oi.sellerId !== sellerId);
-      throw new BadRequestException(
+      throw new ForbiddenException(
         `입력된 주문상품 ${merchantUid}가 본인의 주문상품이 아닙니다.`
       );
     }

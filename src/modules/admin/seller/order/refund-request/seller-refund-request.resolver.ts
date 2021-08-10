@@ -1,5 +1,5 @@
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Query, Info, Args } from '@nestjs/graphql';
+import { Query, Info, Args, Mutation, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -82,5 +82,17 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
     );
 
     return count;
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtSellerVerifyGuard)
+  async bulkPickMeSellerRefundRequests(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('ids', { type: () => [Int] })
+    ids: number[]
+  ): Promise<boolean> {
+    await this.sellerRefundRequestService.bulkPick(sellerId, ids);
+
+    return true;
   }
 }
