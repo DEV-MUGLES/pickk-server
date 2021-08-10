@@ -27,7 +27,9 @@ export class SellerOrderItemService {
       select: ['status', 'claimStatus'],
       where: {
         sellerId,
-        createdAt: MoreThanOrEqual(dayjs().subtract(1, 'month').toDate()),
+        merchantUid: MoreThanOrEqual(
+          dayjs().subtract(1, 'month').format(`YYMMDD`) + '0000000000000'
+        ),
       },
     });
 
