@@ -29,6 +29,7 @@ export class SellerProducer {
     const { brandId } = mto;
 
     const splitedMtos = this.splitProcessSellerItemsScrapResultMto(mto);
+
     for (const mto of splitedMtos) {
       await this.sqsService.send<ProcessSellerItemsScrapResultMto>(
         PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
@@ -49,21 +50,21 @@ export class SellerProducer {
   splitProcessSellerItemsScrapResultMto(
     mto: ProcessSellerItemsScrapResultMto
   ): ProcessSellerItemsScrapResultMto[] {
-    const messageSize = JSON.stringify(mto).length;
+    const messageSize = JSON.stringify(mto).length * 2;
     const messageChunk = Math.ceil(messageSize / MAX_SQS_MESSAGE_SIZE);
 
     if (messageChunk <= 1) {
       return [mto];
     }
 
-    const { brandId, codeRegex, items } = mto;
+    const { brandId, items } = mto;
     const itemsChunkSize = Math.round(items.length / messageChunk);
     const splitedMtos = [];
 
     for (let i = 0; i < messageChunk + 1; i++) {
       splitedMtos.push({
         brandId,
-        codeRegex,
+
         items: items.slice(itemsChunkSize * i, itemsChunkSize * (i + 1)),
       });
     }
