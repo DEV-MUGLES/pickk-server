@@ -6,3 +6,4 @@ export * from './random.helpers';
 export * from './string.helpers';
 export * from './promise.helpers';
 export * from './set.helpers';
+export * from './object.helpers';

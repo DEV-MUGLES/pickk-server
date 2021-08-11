@@ -1,6 +1,4 @@
-export const isIterator = (obj) => {
-  return !!obj && !!obj[Symbol.iterator];
-};
+import { isIterator } from '.';
 
 export type FulfillResponse<T = unknown> = {
   status: 'fulfilled';
