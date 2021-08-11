@@ -5,3 +5,4 @@ export * from './parse-string.helper';
 export * from './random.helpers';
 export * from './string.helpers';
 export * from './promise.helpers';
+export * from './set.helpers';
