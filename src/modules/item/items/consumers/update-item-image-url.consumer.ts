@@ -26,11 +26,10 @@ export class UpdateItemImageUrlConsumer {
   @SqsMessageHandler()
   async update(message: AWS.SQS.Message): Promise<void> {
     const { Body } = message;
-    const messageData: UpdateItemImageUrlMto = JSON.parse(Body);
-    const { brandId, code, imageUrl, itemId } = messageData;
+    const mto: UpdateItemImageUrlMto = JSON.parse(Body);
+    this.validateMto(mto);
 
-    this.validateMessageData(messageData);
-
+    const { brandId, code, imageUrl, itemId } = mto;
     const { data } = await firstValueFrom(
       this.httpService.get<Buffer>(imageUrl, {
         responseType: 'arraybuffer',
@@ -57,8 +56,8 @@ export class UpdateItemImageUrlConsumer {
     });
   }
 
-  validateMessageData(messageData: UpdateItemImageUrlMto) {
-    const { itemId, brandId, code } = messageData;
+  validateMto(mto: UpdateItemImageUrlMto) {
+    const { itemId, brandId, code } = mto;
 
     if (itemId === undefined && brandId === undefined) {
       throw new Error(
