@@ -3,7 +3,7 @@ import { Module } from '@nestjs/common';
 
 import { CrawlerConfigModule } from '@config/providers/crawler/config.module';
 
-import { CrawlerProviderService } from '.';
+import { CrawlerProviderService } from './provider.service';
 
 @Module({
   imports: [CrawlerConfigModule, HttpModule],

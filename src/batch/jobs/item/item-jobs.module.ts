@@ -7,7 +7,8 @@ import { SellersModule } from '@item/sellers/sellers.module';
 import { UpdateSellerItemsJob } from './update-seller-items';
 import { ProduceScrapSellerItemsMessageStep } from './update-seller-items/steps';
 
-import { ItemJobsService, ItemJobsController } from '.';
+import { ItemJobsController } from './item-jobs.controller';
+import { ItemJobsService } from './item-jobs.service';
 
 @Module({
   imports: [JobsModule, SellersModule],

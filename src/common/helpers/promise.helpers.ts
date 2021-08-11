@@ -1,4 +1,4 @@
-import { isIterator } from '.';
+import { isIterator } from './object.helpers';
 
 export type FulfillResponse<T = unknown> = {
   status: 'fulfilled';
