@@ -237,8 +237,8 @@ export class ItemsService {
   }
 
   async addByCrawlDatas(dto: AddByCrawlDatasDto) {
-    const { datas } = dto;
-    const createItemInputs = datas.map((v) => {
+    const { crawlDatas } = dto;
+    const createItemInputs = crawlDatas.map((v) => {
       return {
         brandId: v.brandId,
         name: v.name,
@@ -261,21 +261,23 @@ export class ItemsService {
   }
 
   async updateByCrawlDatas(dto: UpdateByCrawlDatasDto) {
-    const { datas: updateItemDatas } = dto;
+    const { updateItemDatas } = dto;
     const updatedItems = [];
     for (const updateItemData of updateItemDatas) {
-      const { item, data } = updateItemData;
+      const {
+        item,
+        itemData: { originalPrice, salePrice, name, isSoldout },
+      } = updateItemData;
       item.prices.forEach((price) => {
         if (!price.isCrawlUpdating) {
           return;
         }
-        price.originalPrice = data.originalPrice;
-        price.sellPrice = data.salePrice;
-        price.finalPrice =
-          (data.salePrice * (100 - price.pickkDiscountRate)) / 100;
+        price.originalPrice = originalPrice;
+        price.sellPrice = salePrice;
+        price.finalPrice = (salePrice * (100 - price.pickkDiscountRate)) / 100;
       });
-      item.name = data.name;
-      item.isSoldout = data.isSoldout;
+      item.name = name;
+      item.isSoldout = isSoldout;
 
       updatedItems.push(item);
     }

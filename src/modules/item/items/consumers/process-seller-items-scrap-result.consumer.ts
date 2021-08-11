@@ -12,7 +12,12 @@ import {
   UpdateItemImageUrlMto,
 } from '@src/queue/mtos';
 
-import { ItemFilter, UpdateByCrawlDatasDto, AddByCrawlDatasDto } from '../dtos';
+import {
+  ItemFilter,
+  UpdateByCrawlDatasDto,
+  AddByCrawlDatasDto,
+  ItemCrawlData,
+} from '../dtos';
 import { ItemImageUrlProducer } from '../producers';
 
 import { ItemsService } from '../items.service';
@@ -40,12 +45,12 @@ export class ProcessSellerItemsScrapResultConsumer {
       const { code } = itemData;
       const existIndex = existItems.findIndex((v) => v.providedCode === code);
       if (existIndex === -1) {
-        addByCrawlDatasDto.datas.push({ brandId, code, ...itemData });
+        addByCrawlDatasDto.crawlDatas.push({ brandId, code, ...itemData });
         continue;
       }
-      updateByCrawlDatasDto.datas.push({
+      updateByCrawlDatasDto.updateItemDatas.push({
         item: existItems[existIndex],
-        data: itemData,
+        itemData,
       });
     }
 
@@ -60,16 +65,15 @@ export class ProcessSellerItemsScrapResultConsumer {
   }
 
   private async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
-    const { datas } = addByCrawlDatasDto;
-    if (datas.length > 0) {
+    const { crawlDatas } = addByCrawlDatasDto;
+    if (crawlDatas.length > 0) {
       await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
-      await this.updateItemImageUrl(addByCrawlDatasDto);
+      await this.updateItemImageUrl(crawlDatas);
     }
   }
 
-  private async updateItemImageUrl(addByCrawlDatasDto: AddByCrawlDatasDto) {
-    const { datas } = addByCrawlDatasDto;
-    const updateItemImageUrlMtos = datas.map(
+  private async updateItemImageUrl(crawlDatas: ItemCrawlData[]) {
+    const updateItemImageUrlMtos = crawlDatas.map(
       (v): UpdateItemImageUrlMto => ({
         brandId: v.brandId,
         code: v.code,
@@ -80,8 +84,8 @@ export class ProcessSellerItemsScrapResultConsumer {
   }
 
   private async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
-    const { datas } = updateByCrawlDatasDto;
-    if (datas.length > 0) {
+    const { updateItemDatas } = updateByCrawlDatasDto;
+    if (updateItemDatas.length > 0) {
       await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);
     }
   }

@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { CrawlerConfigService } from '@config/providers/crawler';
 
-import { InfoCrawlResultDto } from './dtos';
+import { ItemCrawlResultDto } from './dtos';
 
 @Injectable()
 export class CrawlerProviderService {
@@ -17,9 +17,9 @@ export class CrawlerProviderService {
     this.url = this.crawlerConfigService.url;
   }
 
-  async crawlInfo(url: string): Promise<InfoCrawlResultDto> {
+  async crawlInfo(url: string): Promise<ItemCrawlResultDto> {
     const { data } = await firstValueFrom(
-      this.httpService.get<InfoCrawlResultDto>(
+      this.httpService.get<ItemCrawlResultDto>(
         `${this.url}/info?url=${encodeURI(url)}`
       )
     );
