@@ -1,6 +1,6 @@
 {
   "name": "pickk-server",
-  "version": "0.1.2",
+  "version": "0.1.7",
   "description": "",
   "author": "",
   "private": true,
@@ -156,6 +156,7 @@
       "@templates/(.*)$": [
         "<rootDir>/templates/$1"
       ],
+      "@admin/(.*)$": "<rootDir>/modules/admin/$1",
       "@mcommon/(.*)$": "<rootDir>/modules/common/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",

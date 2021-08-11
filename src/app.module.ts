@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { Connection } from 'typeorm';
 import { GraphQLModule } from '@nestjs/graphql';
 
+import { AdminModule } from '@admin/admin.module';
 import { AuthModule } from '@auth/auth.module';
 import { BatchModule } from '@batch/batch.module';
 import { AppConfigModule } from '@config/app/config.module';
@@ -38,6 +39,7 @@ import { AppService } from './app.service';
     MysqlDatabaseProviderModule,
     SensProviderModule,
     AuthModule,
+    AdminModule,
     CommonModule,
     ItemModule,
     MyModule,

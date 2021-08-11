@@ -3,6 +3,7 @@ import {
   In,
   IsNull,
   LessThanOrEqual,
+  Like,
   MoreThanOrEqual,
   Not,
 } from 'typeorm';
@@ -174,6 +175,58 @@ describe('FilterHelpers', () => {
           brandKor: '수아레',
         },
       });
+    });
+
+    it('should parse search', () => {
+      const search = faker.lorem.text();
+
+      expect(
+        parseFilter({
+          search,
+          searchFields: ['name', 'title'],
+        })
+      ).toEqual([
+        {
+          name: Like(`%${search}%`),
+        },
+        {
+          title: Like(`%${search}%`),
+        },
+      ]);
+      expect(
+        parseFilter({
+          age: 25,
+          search,
+          searchFields: ['user.name', 'description'],
+        })
+      ).toEqual([
+        {
+          age: 25,
+          user: {
+            name: Like(`%${search}%`),
+          },
+        },
+        {
+          age: 25,
+          description: Like(`%${search}%`),
+        },
+      ]);
+      expect(
+        parseFilter({
+          age: 25,
+          search,
+          searchFields: ['user.profile.name'],
+        })
+      ).toEqual([
+        {
+          age: 25,
+          user: {
+            profile: {
+              name: Like(`%${search}%`),
+            },
+          },
+        },
+      ]);
     });
   });
 });

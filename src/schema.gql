@@ -117,6 +117,7 @@ type BaseOrderOutput {
   payMethod: PayMethod
   payingAt: DateTime
   refundAccount: OrderRefundAccount
+  refundRequests: [RefundRequest!]!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -141,6 +142,10 @@ type Brand {
   updatedAt: DateTime!
 }
 
+input BulkShipOrderItemInput {
+  shipOrderItemInputs: [ExtendedShipOrderItemInput!]!
+}
+
 input BulkUpdateItemInput {
   isMdRecommended: Boolean
   isSellable: Boolean
@@ -158,6 +163,41 @@ type Campaign {
   rate: Int!
   startAt: DateTime!
   updatedAt: DateTime!
+}
+
+input CancelMeSellerOrderItemInput {
+  """
+  취소로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  취소 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+
+  """취소 사유"""
+  reason: String!
+}
+
+input CancelOrderInput {
+  """
+  취소로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  취소 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+  orderItemMerchantUids: [String!]!
+
+  """취소 사유"""
+  reason: String!
 }
 
 enum CardCode {
@@ -362,6 +402,8 @@ input CreateSellerClaimPolicyInput {
   accountInput: CreateSellerClaimAccountInput
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
+  isExchangable: Boolean!
+  isRefundable: Boolean!
 
   """담당자 번호"""
   phoneNumber: String!
@@ -443,6 +485,11 @@ input CreateSellerShippingPolicyInput {
   minimumAmountForFree: Int!
 }
 
+input CreateShipmentInput {
+  courierId: Int
+  trackCode: String
+}
+
 input CreateShippingAddressInput {
   baseAddress: String!
   detailAddress: String!
@@ -470,6 +517,97 @@ input CreateUserInput {
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type ExchangeRequest {
+  confirmedAt: DateTime
+  faultOf: RefundRequestFaultOf!
+  id: Int!
+  itemName: String!
+  orderItem: OrderItem!
+  orderItemMerchantUid: String!
+  pickShipment: Shipment
+  pickShipmentId: Int
+
+  """수거 완료 시점"""
+  pickedAt: DateTime
+  product: Product
+  productId: Int
+  productVariantName: String!
+  quantity: Int!
+  reShipment: Shipment
+  reShipmentId: Int
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+
+  """255자 이내로 적어주세요"""
+  rejectReason: String
+  rejectedAt: DateTime
+  requestedAt: DateTime!
+  reshippedAt: DateTime
+  reshippingAt: DateTime
+  seller: Seller
+  sellerId: Int
+
+  """결제된 교환 배송비"""
+  shippingFee: Int!
+  status: ExchangeRequestStatus!
+  user: User
+  userId: Int
+}
+
+input ExchangeRequestFilter {
+  orderItem: ExchangeRequestOrderItemFilter
+  requestedAtBetween: [DateTime!]
+
+  """재배송 완료일 (기간). 교환 완료와 동일한 의미로 사용됩니다."""
+  reshippedAtBetween: [DateTime!]
+
+  """주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색할 수 있습니다."""
+  search: String
+  sellerId: Int
+}
+
+input ExchangeRequestOrderItemFilter {
+  paidAtBetween: [DateTime!]
+}
+
+"""교한신청 상태입니다."""
+enum ExchangeRequestStatus {
+  Picked
+  Rejected
+  Requested
+  Reshipped
+  Reshipping
+}
+
+"""생성일 기준 1달 이내의 건들만 count합니다."""
+type ExchangeRequestsCountOutput {
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """수거 완료"""
+  picked: Int!
+
+  """교환 거부"""
+  rejected: Int!
+
+  """교환 요청 (= 수거중)"""
+  requested: Int!
+
+  """교환 배송 완료"""
+  reshipped: Int!
+
+  """교환 배송 중"""
+  reshipping: Int!
+}
+
+input ExtendedShipOrderItemInput {
+  courierId: Int
+  merchantUid: String!
+  trackCode: String
+}
 
 input FindSaleStrategyInput {
   canUseCoupon: Boolean!
@@ -712,7 +850,13 @@ type Mutation {
   addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
+  bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!
+  bulkPickMeSellerRefundRequests(ids: [Int!]!): Boolean!
+  bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
+  bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  cancelMeSellerOrderItem(cancelMeSellerOrderItemInput: CancelMeSellerOrderItemInput!, merchantUid: String!): OrderItem!
+  cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
     """가상계좌 주문건인 경우에만 필요합니다."""
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
@@ -738,6 +882,9 @@ type Mutation {
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
+  requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
+  requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
+  shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
@@ -785,6 +932,7 @@ type Order {
   payingAt: DateTime
   receiver: OrderReceiver
   refundAccount: OrderRefundAccount
+  refundRequests: [RefundRequest!]!
   status: OrderStatus!
   totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
@@ -816,7 +964,6 @@ input OrderBuyerInput {
 }
 
 type OrderItem {
-  Order: Order!
   brandNameKor: String!
   cancelRequestedAt: DateTime
   cancelledAt: DateTime
@@ -826,6 +973,7 @@ type OrderItem {
   courier: Courier
   courierId: Int
   createdAt: DateTime!
+  exchangeRequest: ExchangeRequest!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime
@@ -842,8 +990,13 @@ type OrderItem {
 
   """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
   merchantUid: String!
+  name: String!
+  order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
+
+  """itemFinalPrice - usedPointAmount - couponDiscountAmount"""
+  payAmount: Float!
   product: Product
   productId: Int
   productVariantName: String!
@@ -852,6 +1005,7 @@ type OrderItem {
   recommendContentType: ContentType
   recommenderId: Int
   recommenderNickname: String
+  refundRequest: RefundRequest!
   refundRequestedAt: DateTime
   refundedAt: DateTime
   seller: Seller
@@ -861,9 +1015,14 @@ type OrderItem {
 
   """예약발송 예정일"""
   shipReservedAt: DateTime
+  shipment: Shipment
+  shipmentId: Int
   shippedAt: DateTime
   shippingAt: DateTime
   status: OrderItemStatus!
+
+  """프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다."""
+  statusDisplayName: String!
   trackCode: String
   updatedAt: DateTime!
   usedCoupon: Coupon
@@ -887,6 +1046,22 @@ enum OrderItemClaimStatus {
   Refunded
 }
 
+input OrderItemFilter {
+  claimStatus: OrderItemClaimStatus
+  claimStatusIn: [OrderItemClaimStatus!]
+  merchantUidIn: [String!]
+  paidAtBetween: [DateTime!]
+
+  """주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!"""
+  search: String
+  sellerId: Int
+  shipReadyAtBetween: [DateTime!]
+  shippedAtBetween: [DateTime!]
+  shippingAtBetween: [DateTime!]
+  status: OrderItemStatus
+  statusIn: [OrderItemStatus!]
+}
+
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
 enum OrderItemStatus {
   Failed
@@ -898,6 +1073,58 @@ enum OrderItemStatus {
   Shipping
   VbankDodged
   VbankReady
+}
+
+"""생성일 기준 1달 이내의 건들만 count합니다."""
+type OrderItemsCountOutput {
+  """취소 요청됨 (deprecated)"""
+  cancel_requested: Int! @deprecated(reason: "현재 취소는 신청 즉시 완료됩니다.")
+
+  """취소 완료"""
+  cancelled: Int!
+
+  """교환 요청됨"""
+  exchange_requested: Int!
+
+  """교환 완료"""
+  exchanged: Int!
+
+  """결제 실패"""
+  failed: Int!
+
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """결제 완료"""
+  paid: Int!
+
+  """결제대기 (입금대기와 다릅니다.)"""
+  pending: Int!
+
+  """반품 요청됨"""
+  refund_requested: Int!
+
+  """반품 완료"""
+  refunded: Int!
+
+  """배송 보류중(예약중)"""
+  ship_pending: Int!
+
+  """배송 준비중"""
+  ship_ready: Int!
+
+  """배송 완료"""
+  shipped: Int!
+
+  """배송 중"""
+  shipping: Int!
+
+  """입금 전 취소"""
+  vbank_dodged: Int!
+
+  """입금 대기"""
+  vbank_ready: Int!
 }
 
 type OrderReceiver {
@@ -1165,6 +1392,7 @@ type Product {
   """예약배송 적용 여부"""
   isShipReserving: Boolean!
   item: Item!
+  itemId: Int!
   itemOptionValues: [ItemOptionValue!]!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
@@ -1208,6 +1436,12 @@ type Query {
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   me: User!
   meSeller: Seller!
+  meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
+  meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
+  meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
+  meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
+  meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
+  meSellerRefundRequestsCount(forceUpdate: Boolean): RefundRequestsCountOutput!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
@@ -1243,6 +1477,84 @@ type RefundAccount {
   updatedAt: DateTime!
 }
 
+type RefundRequest {
+  amount: Int!
+  confirmedAt: DateTime
+  faultOf: RefundRequestFaultOf!
+  id: Int!
+  order: Order!
+  orderItems: [OrderItem!]!
+  orderMerchantUid: String!
+
+  """수거 완료 시점"""
+  pickedAt: DateTime
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+
+  """255자 이내로 적어주세요"""
+  rejectReason: String
+  rejectedAt: DateTime
+  requestedAt: DateTime!
+  seller: Seller
+  sellerId: Int
+  shipment: Shipment
+  shipmentId: Int
+  status: RefundRequestStatus!
+  user: User
+  userId: Int
+}
+
+"""교환/반품 책임자?입니다. (구매자 or 판매자)"""
+enum RefundRequestFaultOf {
+  Customer
+  Seller
+}
+
+input RefundRequestFilter {
+  confirmedAtBetween: [DateTime!]
+  order: RefundRequestOrderFilter
+  pickedAtBetween: [DateTime!]
+  requestedAtBetween: [DateTime!]
+
+  """주문번호, 운송장번호로 검색할 수 있습니다."""
+  search: String
+  sellerId: Int
+  status: RefundRequestStatus
+  statusIn: [RefundRequestStatus!]
+}
+
+input RefundRequestOrderFilter {
+  paidAtBetween: [DateTime!]
+}
+
+"""반품요청 상태입니다."""
+enum RefundRequestStatus {
+  Confirmed
+  Picked
+  Rejected
+  Requested
+}
+
+"""생성일 기준 1달 이내의 건들만 count합니다."""
+type RefundRequestsCountOutput {
+  """반품 승인"""
+  confirmed: Int!
+
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """수거 완료"""
+  picked: Int!
+
+  """반품 거부"""
+  rejected: Int!
+
+  """반품 요청 (= 수거중)"""
+  requested: Int!
+}
+
 input RegisterOrderInput {
   cartItemIds: [Int!]
   orderItemInputs: [RegisterOrderItemInput!]
@@ -1253,6 +1565,40 @@ input RegisterOrderItemInput {
   quantity: Int!
   recommendContentItemId: Int
   recommendContentType: ContentType
+}
+
+input RequestOrderItemExchangeInput {
+  faultOf: RefundRequestFaultOf!
+  productId: Int
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+  shipmentInput: CreateShipmentInput
+
+  """결제된 교환 배송비"""
+  shippingFee: Int!
+}
+
+input RequestOrderRefundInput {
+  """
+  반품로 인해 환불되어야할 액수를 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  amount: Int!
+
+  """
+  반품 후 남을 총 결제 금액을 프론트에서 계산해서 넘겨주세요.
+  서버에서 계산한 값과 입력된 값이 같은지 검증합니다.
+  """
+  checksum: Int!
+  faultOf: RefundRequestFaultOf!
+
+  """반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다."""
+  orderItemMerchantUids: [String!]!
+
+  """255자 이내로 적어주세요"""
+  reason: String!
+  shipmentInput: CreateShipmentInput
 }
 
 input RequestPinInput {
@@ -1314,6 +1660,8 @@ type SellerClaimPolicy {
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
   id: Int!
+  isExchangable: Boolean!
+  isRefundable: Boolean!
 
   """담당자 번호"""
   phoneNumber: String!
@@ -1384,6 +1732,38 @@ type SellerShippingPolicy {
   id: Int!
   minimumAmountForFree: Int!
   updatedAt: DateTime!
+}
+
+input ShipOrderItemInput {
+  courierId: Int
+  trackCode: String
+}
+
+type Shipment {
+  courier: Courier
+  courierId: Int
+  createdAt: DateTime!
+  id: Int!
+  lastTrackedAt: DateTime
+  ownerPk: String
+  ownerType: ShipmentOwnerType
+  status: ShipmentStatus!
+  trackCode: String
+}
+
+"""배송 연관 객체 분류입니다."""
+enum ShipmentOwnerType {
+  ExchangeRequestPick
+  ExchangeRequestReShip
+  OrderItem
+  RefundRequest
+}
+
+enum ShipmentStatus {
+  Cancelled
+  Failed
+  Shipped
+  Shipping
 }
 
 type ShippingAddress {
@@ -1521,6 +1901,8 @@ input UpdateSellerClaimPolicyInput {
   accountInput: UpdateSellerClaimAccountInput
   fee: Int
   feePayMethod: ClaimFeePayMethod
+  isExchangable: Boolean
+  isRefundable: Boolean
 
   """담당자 번호"""
   phoneNumber: String

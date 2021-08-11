@@ -3,7 +3,9 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinColumn,
   ManyToOne,
+  OneToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -15,10 +17,18 @@ import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
 import { Coupon } from '@order/coupons/models';
+import { IExchangeRequest } from '@order/exchange-requests/interfaces';
 import { IOrder } from '@order/orders/interfaces';
+import { IRefundRequest } from '@order/refund-requests/interfaces';
+import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
-import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
+import {
+  OrderItemStatus,
+  OrderItemClaimStatus,
+  getOrderItemClaimStatusDisplayName,
+  getOrderItemStatusDisplayName,
+} from '../constants';
 import { IOrderItem } from '../interfaces';
 
 @ObjectType()
@@ -46,6 +56,11 @@ export class OrderItemEntity implements IOrderItem {
 
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
+
+    this.shipment = attributes.shipment;
+    this.shipmentId = attributes.shipmentId;
+    this.refundRequest = attributes.refundRequest;
+    this.exchangeRequest = attributes.exchangeRequest;
 
     this.status = attributes.status;
     this.claimStatus = attributes.claimStatus;
@@ -174,12 +189,43 @@ export class OrderItemEntity implements IOrderItem {
   })
   usedCouponId?: number;
 
+  @Field(() => Shipment, { nullable: true })
+  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @JoinColumn()
+  shipment: Shipment;
+
+  @Field(() => Int, {
+    nullable: true,
+  })
+  @Column({
+    type: 'int',
+    nullable: true,
+  })
+  shipmentId: number;
+
   @ManyToOne('OrderEntity')
   order: IOrder;
 
   @Field()
   @Column({ type: 'char', length: 20 })
   orderMerchantUid: string;
+
+  @ManyToOne('RefundRequestEntity', 'orderItems')
+  refundRequest: IRefundRequest;
+
+  @OneToOne('ExchangeRequestEntity', 'orderItem', { cascade: true })
+  exchangeRequest: IExchangeRequest;
+
+  @Field(() => String, {
+    description:
+      '프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다.',
+  })
+  get statusDisplayName(): string {
+    return (
+      getOrderItemClaimStatusDisplayName(this.claimStatus) ??
+      getOrderItemStatusDisplayName(this.status)
+    );
+  }
 
   @Field(() => OrderItemStatus)
   @Column({

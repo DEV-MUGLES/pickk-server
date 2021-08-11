@@ -8,10 +8,11 @@ import { AppleProviderModule } from '@providers/apple';
 
 import { jwtConstants } from './constants';
 import {
-  JwtRefreshStrategy,
-  JwtStrategy,
-  JwtVerifyStrategy,
-  JwtSellerStrategy,
+  LocalStrategy,
+  RefreshStrategy,
+  VerifyStrategy,
+  SellerVerifyStrategy,
+  SellerStrategy,
 } from './strategies';
 
 import { AuthResolver } from './auth.resolver';
@@ -31,10 +32,11 @@ import { AuthService } from './auth.service';
   providers: [
     AuthResolver,
     AuthService,
-    JwtStrategy,
-    JwtVerifyStrategy,
-    JwtRefreshStrategy,
-    JwtSellerStrategy,
+    LocalStrategy,
+    RefreshStrategy,
+    VerifyStrategy,
+    SellerVerifyStrategy,
+    SellerStrategy,
   ],
   exports: [AuthService, JwtModule],
 })

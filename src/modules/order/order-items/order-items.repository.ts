@@ -21,7 +21,7 @@ export class OrderItemsRepository extends Repository<OrderItemEntity> {
   }
 
   async get(
-    merchantUid: number,
+    merchantUid: string,
     relations: string[] = []
   ): Promise<OrderItem | null> {
     return await this.findOne({

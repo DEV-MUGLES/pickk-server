@@ -24,5 +24,6 @@ import { OrdersService } from './orders.service';
     UsersModule,
   ],
   providers: [OrdersCreateResolver, OrdersProcessResolver, OrdersService],
+  exports: [OrdersService],
 })
 export class OrdersModule {}

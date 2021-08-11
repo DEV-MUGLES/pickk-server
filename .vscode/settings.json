@@ -1,15 +1,17 @@
 {
-    "conventionalCommits.scopes": [
-        "npm",
-        "infra",
-        "domain",
-        "application",
-        "provider",
-        "config",
-        "admin",
-        "common",
-        "job"
-    ],
-    "jestrunner.jestCommand": "npm run jest --",
-    "editor.formatOnSave": true,
+  "conventionalCommits.scopes": [
+    "npm",
+    "infra",
+    "domain",
+    "application",
+    "provider",
+    "config",
+    "admin",
+    "common",
+    "job",
+    "auth",
+    "templates"
+  ],
+  "jestrunner.jestCommand": "npm run jest --",
+  "editor.formatOnSave": true
 }

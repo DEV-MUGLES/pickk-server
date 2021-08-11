@@ -9,12 +9,14 @@ export const shuffleArray = <T = unknown>(arr: T[]): T[] =>
 export const getRandomEle = <T = unknown>(arr: T[]): T =>
   arr[Math.floor(Math.random() * arr.length)];
 
+export const getEnumValues = (input) =>
+  Object.values(input).filter((value) => typeof value === 'string');
+
 /** get random value of given enum. except given excludes array */
 export const getRandomEnumValue = (input, excludes = []) => {
-  const values = Object.values(input).filter(
-    (value) => typeof value === 'string'
+  const valuesExcept = getEnumValues(input).filter(
+    (value) => excludes.indexOf(value) === -1
   );
-  const valuesExcept = values.filter((value) => excludes.indexOf(value) === -1);
   return getRandomEle(valuesExcept);
 };
 

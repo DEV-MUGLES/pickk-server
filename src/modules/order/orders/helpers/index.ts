@@ -1,1 +1,1 @@
-export * from './shipping-fee.helper';
+export * from './calc-total-shipping-fee.helper';

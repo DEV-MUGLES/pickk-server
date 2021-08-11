@@ -25,13 +25,16 @@ export class CancelPaymentInput extends PickType(
 
   constructor(attributes: CancelPaymentInput) {
     super(attributes);
+    if (!attributes) {
+      return;
+    }
 
     this.checksum = attributes.checksum;
   }
 
   static of(
     order: Order,
-    cancelOrderInput: CancelOrderInput
+    cancelOrderInput: Omit<CancelOrderInput, 'orderItemMerchantUids'>
   ): CancelPaymentInput {
     const result = new CancelPaymentInput({ ...cancelOrderInput });
 
