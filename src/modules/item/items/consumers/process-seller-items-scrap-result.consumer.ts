@@ -7,7 +7,10 @@ import {
 } from '@pickk/nestjs-sqs';
 
 import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@src/queue/constants';
-import { ProcessSellerItemsScrapResultMto } from '@src/queue/mtos';
+import {
+  ProcessSellerItemsScrapResultMto,
+  UpdateItemImageUrlMto,
+} from '@src/queue/mtos';
 
 import { ItemFilter, UpdateByCrawlDatasDto, AddByCrawlDatasDto } from '../dtos';
 import { ItemImageUrlProducer } from '../producers';
@@ -56,18 +59,27 @@ export class ProcessSellerItemsScrapResultConsumer {
     return await this.itemsService.list(itemFilter, null, ['prices']);
   }
 
-  async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
+  private async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
     const { datas } = addByCrawlDatasDto;
     if (datas.length > 0) {
       await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
-      for (const crawlData of addByCrawlDatasDto.datas) {
-        const { brandId, code, imageUrl } = crawlData;
-        await this.itemImageUrlProducer.update({ brandId, code, imageUrl });
-      }
+      await this.updateItemImageUrl(addByCrawlDatasDto);
     }
   }
 
-  async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
+  private async updateItemImageUrl(addByCrawlDatasDto: AddByCrawlDatasDto) {
+    const { datas } = addByCrawlDatasDto;
+    const updateItemImageUrlMtos = datas.map(
+      (v): UpdateItemImageUrlMto => ({
+        brandId: v.brandId,
+        code: v.code,
+        imageUrl: v.imageUrl,
+      })
+    );
+    await this.itemImageUrlProducer.update(updateItemImageUrlMtos);
+  }
+
+  private async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
     const { datas } = updateByCrawlDatasDto;
     if (datas.length > 0) {
       await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);

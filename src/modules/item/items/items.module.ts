@@ -12,6 +12,7 @@ import { ProductsModule } from '@item/products/products.module';
 
 import { Consumers } from './consumers';
 import { Producers } from './producers';
+import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
 
 import {
   ItemsRepository,
@@ -40,6 +41,9 @@ import { ItemsService } from './items.service';
     SqsModule.registerQueue(
       {
         name: UPDATE_ITEM_IMAGE_URL_QUEUE,
+        producerOptions: {
+          batchSize: UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE,
+        },
       },
       {
         name: PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
