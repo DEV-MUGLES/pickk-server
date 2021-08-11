@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BatchWorker } from '@src/batch/batch.worker';
 
-import { UpdateSellerItemsJob } from './update-seller-items/job';
+import { UpdateSellerItemsJob } from './update-seller-items';
 
 @Injectable()
 export class ItemJobsService {
