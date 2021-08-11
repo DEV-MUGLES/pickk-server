@@ -20,7 +20,6 @@ describe('SellerProducer', () => {
     it('성공적으로 MAX_SQS_MESSAGE_SIZE보다 작은 사이즈의 mto들로 분할되어 반환되어야 합니다', () => {
       const mockScrapResultMto: ProcessSellerItemsScrapResultMto = {
         brandId: faker.datatype.number({ min: 1 }),
-        codeRegex: faker.datatype.string(10),
         items: Array.from(new Array(10000)).map(() => ({
           name: faker.commerce.productName(),
           brandKor: faker.company.companyName(),
@@ -34,6 +33,7 @@ describe('SellerProducer', () => {
           salePrice: faker.datatype.number({ min: 100, max: 1000 }),
           url: faker.internet.url(),
           isSoldout: faker.datatype.boolean(),
+          code: faker.datatype.string(10),
         })),
       };
 

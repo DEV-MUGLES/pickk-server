@@ -3,10 +3,12 @@ import faker from 'faker';
 
 import {
   JobExecutionRecordRepository,
+  JobRepository,
   StepExecutionRecordRepository,
 } from '@src/modules/common/jobs/jobs.repository';
 import { JobsService } from '@src/modules/common/jobs/jobs.service';
 import {
+  Job,
   JobExecutionRecord,
   StepExecutionRecord,
 } from '@src/modules/common/jobs/models';
@@ -40,6 +42,7 @@ describe('BatchWorker', () => {
       providers: [
         BatchWorker,
         JobsService,
+        JobRepository,
         JobExecutionRecordRepository,
         StepExecutionRecordRepository,
       ],
@@ -64,6 +67,9 @@ describe('BatchWorker', () => {
       jobsServiceUpdateStepExecutionRecordSpy = jest
         .spyOn(jobsService, 'updateStepExecutionRecord')
         .mockImplementationOnce(() => null);
+      jest
+        .spyOn(jobsService, 'getJob')
+        .mockImplementation(async (name) => new Job({ name }));
     });
     it('성공적으로 step을 실행한다', async () => {
       const jobExecutionContext = new JobExecutionContext();
@@ -118,7 +124,7 @@ describe('BatchWorker', () => {
     let jobsServiceUpdateJobExecutionRecordSpy: jest.SpyInstance;
 
     beforeEach(() => {
-      job = new TestJob();
+      job = new TestJob('testJob');
       jobExecutionRecord = new JobExecutionRecord({
         id: faker.datatype.number({
           min: 1,
@@ -133,6 +139,9 @@ describe('BatchWorker', () => {
       jobsServiceUpdateJobExecutionRecordSpy = jest
         .spyOn(jobsService, 'updateJobExecutionRecord')
         .mockImplementationOnce(() => null);
+      jest
+        .spyOn(jobsService, 'getJob')
+        .mockImplementation(async (name) => new Job({ name }));
     });
 
     it('성공적으로 job을 수행한다', async () => {
