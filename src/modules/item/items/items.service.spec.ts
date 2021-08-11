@@ -1,10 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { ISpiderItem } from '@providers/spider/interfaces/spider.interface';
+import { ItemCrawlResultDto } from '@providers/crawler/dtos';
 
-import { AddItemUrlInput } from './dtos';
+import { AddItemUrlInput, UpdateByCrawlDatasDto } from './dtos';
 import { ItemPrice, ItemUrl, Item } from './models';
+
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -82,16 +83,8 @@ describe('ItemsService', () => {
     });
   });
 
-  describe('updateByCrawlData', () => {
-    const spiderItem: ISpiderItem = {
-      name: faker.lorem.text(),
-      brandKor: faker.lorem.text(),
-      imageUrl: faker.image.imageUrl(),
-      originalPrice: faker.datatype.number(),
-      salePrice: faker.datatype.number(),
-      url: faker.internet.url(),
-    };
-    it('success', async () => {
+  describe('updateByCrawlDatas', () => {
+    it('successfully update one item', async () => {
       const item = new Item({
         prices: [
           new ItemPrice({
@@ -100,14 +93,35 @@ describe('ItemsService', () => {
           }),
         ],
       });
+      const itemData: ItemCrawlResultDto = {
+        name: faker.lorem.text(),
+        brandKor: faker.lorem.text(),
+        imageUrl: faker.image.imageUrl(),
+        originalPrice: faker.datatype.number(),
+        salePrice: faker.datatype.number(),
+        url: faker.internet.url(),
+        images: [faker.image.abstract()],
+        isSoldout: faker.datatype.boolean(),
+      };
+      const updateByCrawlDatasDto: UpdateByCrawlDatasDto = {
+        updateItemDatas: [
+          {
+            item,
+            itemData,
+          },
+        ],
+      };
+
       const itemsRepositorySaveSpy = jest
         .spyOn(itemsRepository, 'save')
         .mockImplementationOnce(async (v) => v as any);
 
-      const result = await itemsService.updateByCrawlData(item, spiderItem);
-      expect(result.name).toEqual(spiderItem.name);
-      expect(result.prices[0].originalPrice).toEqual(spiderItem.originalPrice);
-      expect(result.prices[0].sellPrice).toEqual(spiderItem.salePrice);
+      const result = await itemsService.updateByCrawlDatas(
+        updateByCrawlDatasDto
+      );
+      expect(result[0].name).toEqual(itemData.name);
+      expect(result[0].prices[0].originalPrice).toEqual(itemData.originalPrice);
+      expect(result[0].prices[0].sellPrice).toEqual(itemData.salePrice);
       expect(itemsRepositorySaveSpy).toHaveBeenCalledTimes(1);
     });
 
@@ -120,15 +134,35 @@ describe('ItemsService', () => {
           }),
         ],
       });
+      const itemData: ItemCrawlResultDto = {
+        name: faker.lorem.text(),
+        brandKor: faker.lorem.text(),
+        imageUrl: faker.image.imageUrl(),
+        originalPrice: faker.datatype.number(),
+        salePrice: faker.datatype.number(),
+        url: faker.internet.url(),
+        images: [faker.image.abstract()],
+        isSoldout: faker.datatype.boolean(),
+      };
+      const updateByCrawlDatasDto: UpdateByCrawlDatasDto = {
+        updateItemDatas: [
+          {
+            item,
+            itemData,
+          },
+        ],
+      };
 
       const itemsRepositorySaveSpy = jest
         .spyOn(itemsRepository, 'save')
         .mockImplementationOnce(async (v) => v as any);
 
-      const result = await itemsService.updateByCrawlData(item, spiderItem);
-      expect(result.name).toEqual(spiderItem.name);
-      expect(result.prices[0].originalPrice).toBeFalsy();
-      expect(result.prices[0].sellPrice).toBeFalsy();
+      const result = await itemsService.updateByCrawlDatas(
+        updateByCrawlDatasDto
+      );
+      expect(result[0].name).toEqual(itemData.name);
+      expect(result[0].prices[0].originalPrice).toBeFalsy();
+      expect(result[0].prices[0].sellPrice).toBeFalsy();
       expect(itemsRepositorySaveSpy).toHaveBeenCalledTimes(1);
     });
   });
