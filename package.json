@@ -59,6 +59,7 @@
     "bcryptjs": "^2.4.3",
     "cache-manager": "^3.4.4",
     "cache-manager-redis-store": "^2.0.0",
+    "cheerio": "^1.0.0-rc.10",
     "class-transformer": "^0.4.0",
     "class-validator": "^0.13.1",
     "dayjs": "^1.10.4",
@@ -137,6 +138,9 @@
       "@auth/(.*)$": [
         "<rootDir>/auth/$1"
       ],
+      "@batch/(.*)$": [
+        "<rootDir>/batch/$1"
+      ],
       "@config/(.*)$": [
         "<rootDir>/config/$1"
       ],
@@ -153,6 +157,7 @@
         "<rootDir>/templates/$1"
       ],
       "@admin/(.*)$": "<rootDir>/modules/admin/$1",
+      "@mcommon/(.*)$": "<rootDir>/modules/common/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
       "@order/(.*)$": "<rootDir>/modules/order/$1",

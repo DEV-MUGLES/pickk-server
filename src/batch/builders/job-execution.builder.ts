@@ -41,6 +41,12 @@ export class JobExecutionBuilder implements IJobExecution {
   }
 
   public build() {
+    if (this.jobName === undefined) {
+      throw new Error('jobName is undefined');
+    }
+    if (this.steps.length < 1) {
+      throw new Error('at least one step has to added');
+    }
     return new JobExecution(this);
   }
 }

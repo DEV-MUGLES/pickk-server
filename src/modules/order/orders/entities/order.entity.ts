@@ -24,12 +24,11 @@ import { OrderBuyer } from '../models/order-buyer.model';
 import { OrderReceiver } from '../models/order-receiver.model';
 import { OrderRefundAccount } from '../models/order-refund-account.model';
 import { OrderVbankReceipt } from '../models/order-vbank-receipt.model';
-import {
-  OrderVbankReceiptEntity,
-  OrderBuyerEntity,
-  OrderReceiverEntity,
-  OrderRefundAccountEntity,
-} from '.';
+
+import { OrderVbankReceiptEntity } from './order-vbank-receipt.entity';
+import { OrderBuyerEntity } from './order-buyer.entity';
+import { OrderReceiverEntity } from './order-receiver.entity';
+import { OrderRefundAccountEntity } from './order-refund-acocunt.entity';
 
 @ObjectType()
 @Entity({ name: 'order' })

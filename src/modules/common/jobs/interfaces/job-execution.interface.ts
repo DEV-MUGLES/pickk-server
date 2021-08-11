@@ -1,6 +1,7 @@
 import { Job } from '../models';
 
-import { IStepExecutionRecord, IJobExecutionContextRecord } from '.';
+import { IJobExecutionContextRecord } from './job-execution-context.interface';
+import { IStepExecutionRecord } from './step-execution.interface';
 
 export interface IJobExecutionRecord {
   id: number;

@@ -1,7 +1,7 @@
 import { IJobExecution } from '../interfaces';
 import { BaseStep } from '../jobs/base.step';
 
-import { JobExecutionContext } from '.';
+import { JobExecutionContext } from './job-execution-context.model';
 
 export class JobExecution implements IJobExecution {
   steps: BaseStep[];

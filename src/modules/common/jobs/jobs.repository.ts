@@ -1,11 +1,13 @@
 import { BaseRepository } from '@common/base.repository';
 import { plainToClass } from 'class-transformer';
-import { EntityRepository } from 'typeorm';
-import { StepExecutionRecordEntity } from './entities';
+import { EntityRepository, Repository } from 'typeorm';
 
-import { JobExecutionRecordEntity } from './entities/job-execution-record.entity';
-
-import { JobExecutionRecord, StepExecutionRecord } from './models';
+import {
+  JobEntity,
+  StepExecutionRecordEntity,
+  JobExecutionRecordEntity,
+} from './entities';
+import { Job, JobExecutionRecord, StepExecutionRecord } from './models';
 
 @EntityRepository(JobExecutionRecordEntity)
 export class JobExecutionRecordRepository extends BaseRepository<
@@ -53,6 +55,19 @@ export class StepExecutionRecordRepository extends BaseRepository<
     entities: StepExecutionRecordEntity[],
     transformOptions = {}
   ): StepExecutionRecord[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(JobEntity)
+export class JobRepository extends Repository<JobEntity> {
+  entityToModel(entity: JobEntity, transformOptions = {}): Job {
+    return plainToClass(Job, entity, transformOptions) as Job;
+  }
+
+  entityToModelMany(entities: JobEntity[], transformOptions = {}): Job[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );

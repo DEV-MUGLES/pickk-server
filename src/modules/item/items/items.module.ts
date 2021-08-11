@@ -1,15 +1,18 @@
 import { HttpModule } from '@nestjs/axios';
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import { ImagesModule } from '@src/modules/common/images/images.module';
-
+import {
+  PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
+  UPDATE_ITEM_IMAGE_URL_QUEUE,
+} from '@src/queue/constants';
 import { ProductsModule } from '@item/products/products.module';
 
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from './constants';
 import { Consumers } from './consumers';
 import { Producers } from './producers';
+import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
 
 import {
   ItemsRepository,
@@ -35,11 +38,23 @@ import { ItemsService } from './items.service';
     ProductsModule,
     HttpModule,
     ImagesModule,
-    SqsModule.registerQueue({
-      name: UPDATE_ITEM_IMAGE_URL_QUEUE,
-    }),
+    SqsModule.registerQueue(
+      {
+        name: UPDATE_ITEM_IMAGE_URL_QUEUE,
+        producerOptions: {
+          batchSize: UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE,
+        },
+      },
+      {
+        name: PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
+        type: SqsQueueType.Consumer,
+        consumerOptions: {
+          visibilityTimeout: 100,
+        },
+      }
+    ),
   ],
-  providers: [ItemsResolver, ItemsService, ...Producers, ...Consumers],
+  providers: [ItemsResolver, ItemsService, Logger, ...Producers, ...Consumers],
   exports: [ItemsService, ...Producers, ...Consumers],
 })
 export class ItemsModule {}

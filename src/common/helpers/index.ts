@@ -3,3 +3,7 @@ export * from './filter.helpers';
 export * from './parse-number.helper';
 export * from './parse-string.helper';
 export * from './random.helpers';
+export * from './regex.helpers';
+export * from './promise.helpers';
+export * from './set.helpers';
+export * from './object.helpers';
