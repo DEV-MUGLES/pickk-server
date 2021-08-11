@@ -10,9 +10,10 @@ describe('isEqualSet', () => {
 
     expect(isEqualSet(a, b)).toBeTruthy();
   });
+
   it('다른 set에 대하여 false를 반환한다', () => {
-    const a = new Set(faker.datatype.array(10));
-    const b = new Set(faker.datatype.array(10));
+    const a = new Set(['a']);
+    const b = new Set(['b']);
 
     expect(isEqualSet(a, b)).toBeFalsy();
   });
