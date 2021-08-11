@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddBatchJob1628656414295 implements MigrationInterface {
-  name = 'AddBatchJob1628656414295';
+export class AddBatchJob1627907471108 implements MigrationInterface {
+  name = 'AddBatchJob1627907471108';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
