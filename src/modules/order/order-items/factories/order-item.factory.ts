@@ -16,7 +16,6 @@ export class OrderItemFactory {
   ): OrderItem {
     const { item, itemOptionValues } = product;
     const { brand } = item;
-    const { seller } = brand;
 
     const brandNameKor = brand.nameKor;
     const itemName = item.name;
@@ -27,7 +26,7 @@ export class OrderItemFactory {
     const orderItem = new OrderItem({
       merchantUid,
       userId,
-      sellerId: seller.id,
+      sellerId: brand.seller.id,
       itemId: item.id,
       productId: product.id,
       status: OrderItemStatus.Pending,
@@ -36,7 +35,6 @@ export class OrderItemFactory {
       brandNameKor,
       itemName,
       productVariantName,
-      courierId: seller.courierId,
     });
 
     if (product.isShipReserving) {

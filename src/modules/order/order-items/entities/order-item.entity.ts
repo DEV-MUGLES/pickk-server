@@ -12,7 +12,6 @@ import {
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 import { ContentType } from '@common/constants';
-import { Courier } from '@item/couriers/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
@@ -82,10 +81,6 @@ export class OrderItemEntity implements IOrderItem {
     this.recommenderNickname = attributes.recommenderNickname;
     this.recommendContentType = attributes.recommendContentType;
     this.recommendContentItemId = attributes.recommendContentItemId;
-
-    this.courier = attributes.courier;
-    this.courierId = attributes.courierId;
-    this.trackCode = attributes.trackCode;
 
     this.failedAt = attributes.failedAt;
     this.vbankReadyAt = attributes.vbankReadyAt;
@@ -343,30 +338,6 @@ export class OrderItemEntity implements IOrderItem {
     nullable: true,
   })
   recommendContentItemId?: number;
-
-  @Field(() => Courier, { nullable: true })
-  @ManyToOne('CourierEntity', { nullable: true })
-  courier?: Courier;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
-  courierId?: number;
-
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    type: 'varchar',
-    nullable: true,
-    length: 30,
-  })
-  @MaxLength(30)
-  trackCode?: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

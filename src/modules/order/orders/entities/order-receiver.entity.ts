@@ -1,6 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import { IsNumberString, IsPhoneNumber, IsString } from 'class-validator';
+import {
+  IsNumberString,
+  IsOptional,
+  IsPhoneNumber,
+  IsString,
+} from 'class-validator';
 
 import { AbstractAddressEntity } from '@common/entities';
 
@@ -20,6 +25,7 @@ export class OrderReceiverEntity
 
     this.name = attributes.name;
     this.phoneNumber = attributes.phoneNumber;
+    this.message = attributes.message;
   }
 
   @Field()
@@ -35,4 +41,14 @@ export class OrderReceiverEntity
   @IsPhoneNumber('KR')
   @IsNumberString()
   phoneNumber: string;
+
+  @Field({ description: '베송 요청사항 (최대 50자)', nullable: true })
+  @Column({
+    type: 'varchar',
+    length: 50,
+    nullable: true,
+  })
+  @IsString()
+  @IsOptional()
+  message: string;
 }

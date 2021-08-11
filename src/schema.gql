@@ -884,6 +884,7 @@ type Mutation {
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
+  reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
@@ -970,8 +971,6 @@ type OrderItem {
   claimStatus: OrderItemClaimStatus
   confirmedAt: DateTime
   couponDiscountAmount: Int!
-  courier: Courier
-  courierId: Int
   createdAt: DateTime!
   exchangeRequest: ExchangeRequest!
   exchangeRequestedAt: DateTime
@@ -1023,7 +1022,6 @@ type OrderItem {
 
   """프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다."""
   statusDisplayName: String!
-  trackCode: String
   updatedAt: DateTime!
   usedCoupon: Coupon
   usedCouponId: Int
@@ -1132,6 +1130,9 @@ type OrderReceiver {
   createdAt: DateTime!
   detailAddress: String!
   id: Int!
+
+  """베송 요청사항 (최대 50자)"""
+  message: String
   name: String!
   phoneNumber: String!
   postalCode: String!
@@ -1141,6 +1142,9 @@ type OrderReceiver {
 input OrderReceiverInput {
   baseAddress: String!
   detailAddress: String!
+
+  """베송 요청사항 (최대 50자)"""
+  message: String
   name: String!
   phoneNumber: String!
   postalCode: String!
@@ -1603,6 +1607,11 @@ input RequestOrderRefundInput {
 
 input RequestPinInput {
   phoneNumber: String
+}
+
+input ReshipExchangeRequestInput {
+  courierId: Int
+  trackCode: String
 }
 
 type SaleStrategy {
