@@ -7,7 +7,7 @@ import { CreateShipmentInput } from '@order/shipments/dtos';
 @InputType()
 export class RequestOrderRefundInput extends PickType(
   RefundRequest,
-  ['reason', 'amount', 'faultOf'],
+  ['reason', 'amount', 'faultOf', 'shippingFee'],
   InputType
 ) {
   @Field(() => Int, {

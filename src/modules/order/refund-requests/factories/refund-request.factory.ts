@@ -11,7 +11,10 @@ export class RefundRequestFactory {
   static create(
     userId: number,
     orderItems: OrderItem[],
-    input: Pick<RefundRequest, 'amount' | 'faultOf' | 'reason'> & {
+    input: Pick<
+      RefundRequest,
+      'amount' | 'faultOf' | 'reason' | 'shippingFee'
+    > & {
       shipmentInput?: CreateShipmentInput;
     }
   ): RefundRequest {

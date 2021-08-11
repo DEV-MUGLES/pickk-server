@@ -141,7 +141,7 @@ export class Order extends OrderEntity {
   }
 
   requestRefund(input: RequestOrderRefundInput) {
-    const { orderItemMerchantUids, amount, checksum, faultOf } = input;
+    const { orderItemMerchantUids, faultOf } = input;
 
     const orderItems = this.getOrderItems(orderItemMerchantUids);
 
@@ -161,8 +161,14 @@ export class Order extends OrderEntity {
       0
     );
     const isFreeShipped = totalItemFinalPrice >= minimumAmountForFree;
+
     const refundShippingFee =
       faultOf === OrderClaimFaultOf.Seller ? 0 : isFreeShipped ? fee * 2 : fee;
+    if (input.shippingFee !== refundShippingFee) {
+      throw new BadRequestException(
+        `입력한 배송비가 계산된 금액과 일치하지 않습니다.\n입력: ${input.shippingFee}, 계산됨: ${refundShippingFee}`
+      );
+    }
 
     const totalPayAmount = orderItems.reduce(
       (sum, oi) => sum + oi.payAmount,
@@ -170,16 +176,16 @@ export class Order extends OrderEntity {
     );
     const refundAmount = totalPayAmount - refundShippingFee;
 
-    if (amount !== refundAmount) {
+    if (input.amount !== refundAmount) {
       throw new BadRequestException(
-        `입력한 환불금액이 계산된 금액과 일치하지 않습니다.\n입력: ${amount}, 계산됨: ${refundAmount}`
+        `입력한 환불금액이 계산된 금액과 일치하지 않습니다.\n입력: ${input.amount}, 계산됨: ${refundAmount}`
       );
     }
 
     const remainPayAmount = this.totalPayAmount - refundAmount;
-    if (checksum !== remainPayAmount) {
+    if (input.checksum !== remainPayAmount) {
       throw new BadRequestException(
-        `입력한 잔여금액이 계산된 금액과 일치하지 않습니다.\n입력: ${amount}, 계산됨: ${remainPayAmount}`
+        `입력한 잔여금액이 계산된 금액과 일치하지 않습니다.\n입력: ${input.checksum}, 계산됨: ${remainPayAmount}`
       );
     }
 

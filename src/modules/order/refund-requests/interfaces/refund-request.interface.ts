@@ -25,6 +25,9 @@ export interface IRefundRequest {
   reason: string;
   amount: number;
 
+  /** 부과된 반품 배송비 */
+  shippingFee: number;
+
   rejectReason: string;
 
   requestedAt: Date;

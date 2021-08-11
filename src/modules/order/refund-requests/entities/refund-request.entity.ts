@@ -46,6 +46,7 @@ export class RefundRequestEntity implements IRefundRequest {
     this.faultOf = attributes.faultOf;
     this.reason = attributes.reason;
     this.amount = attributes.amount;
+    this.shippingFee = attributes.shippingFee;
     this.rejectReason = attributes.rejectReason;
 
     this.requestedAt = attributes.requestedAt;
@@ -133,6 +134,11 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   amount: number;
+
+  @Field(() => Int, { description: '부과된 반품 배송비' })
+  @Column({ type: 'mediumint', unsigned: true })
+  @Min(1)
+  shippingFee: number;
 
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })

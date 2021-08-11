@@ -1504,6 +1504,9 @@ type RefundRequest {
   sellerId: Int
   shipment: Shipment
   shipmentId: Int
+
+  """부과된 반품 배송비"""
+  shippingFee: Int!
   status: RefundRequestStatus!
   user: User
   userId: Int
@@ -1603,6 +1606,9 @@ input RequestOrderRefundInput {
   """255자 이내로 적어주세요"""
   reason: String!
   shipmentInput: CreateShipmentInput
+
+  """부과된 반품 배송비"""
+  shippingFee: Int!
 }
 
 input RequestPinInput {
