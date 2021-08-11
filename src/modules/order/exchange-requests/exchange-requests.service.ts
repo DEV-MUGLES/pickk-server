@@ -1,8 +1,9 @@
-import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 
 import { ExchangeRequestRelationType } from './constants';
 import { ExchangeRequestFilter } from './dtos';
@@ -19,7 +20,7 @@ export class ExchangeRequestsService {
 
   async get(
     id: number,
-    relations: ExchangeRequestRelationType[]
+    relations: ExchangeRequestRelationType[] = []
   ): Promise<ExchangeRequest> {
     return await this.exchangeRequestsRepository.get(id, relations);
   }

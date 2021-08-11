@@ -1,10 +1,16 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
@@ -13,7 +19,10 @@ import {
   ExchangeRequestRelationType,
   EXCHANGE_REQUEST_RELATIONS,
 } from '@order/exchange-requests/constants';
-import { ExchangeRequestFilter } from '@order/exchange-requests/dtos';
+import {
+  ExchangeRequestFilter,
+  ReshipExchangeRequestInput,
+} from '@order/exchange-requests/dtos';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
 
@@ -94,5 +103,26 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
     await this.sellerExchangeRequestService.bulkPick(sellerId, ids);
 
     return true;
+  }
+
+  @Mutation(() => ExchangeRequest)
+  @UseGuards(JwtSellerVerifyGuard)
+  async reshipMeSellerExchangeRequest(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('reshipExchangeRequestInput') input: ReshipExchangeRequestInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<ExchangeRequest> {
+    const exchangeRequest = await this.exchangeRequestsService.get(id);
+    if (exchangeRequest.sellerId !== sellerId) {
+      throw new ForbiddenException('해당 교환 요청에 대한 권한이 없습니다.');
+    }
+
+    await this.sellerExchangeRequestService.reship(exchangeRequest, input);
+
+    return await this.exchangeRequestsService.get(
+      id,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

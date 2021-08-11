@@ -8,7 +8,9 @@ import { In, MoreThanOrEqual } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
+import { ReshipExchangeRequestInput } from '@order/exchange-requests/dtos';
 import { ExchangeRequestEntity } from '@order/exchange-requests/entities';
+import { ExchangeRequest } from '@order/exchange-requests/models';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 
 import { ExchangeRequestsCountOutput } from './dtos';
@@ -66,5 +68,13 @@ export class SellerExchangeRequestService {
       .set({ status: ExchangeRequestStatus.Picked, pickedAt: new Date() })
       .where({ id: In(ids) })
       .execute();
+  }
+
+  async reship(
+    exchangeRequest: ExchangeRequest,
+    input: ReshipExchangeRequestInput
+  ) {
+    exchangeRequest.reship(input);
+    await this.exchangeRequestsRepository.save(exchangeRequest);
   }
 }
