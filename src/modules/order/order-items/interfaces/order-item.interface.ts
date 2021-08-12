@@ -1,5 +1,4 @@
 import { ContentType } from '@common/constants';
-import { ICourier } from '@item/couriers/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
@@ -65,11 +64,6 @@ export interface IOrderItem {
   // 추천 컨텐츠 관련 정보
   recommendContentType?: ContentType;
   recommendContentItemId?: number;
-
-  // 배송 정보
-  courier?: ICourier;
-  courierId?: number;
-  trackCode?: string;
 
   // 상태 변경 시점 값들
   failedAt?: Date;
