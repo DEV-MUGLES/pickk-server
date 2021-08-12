@@ -1,18 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import minMax from 'dayjs/plugin/minMax';
-import { Connection } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
-import { OrderItemEntity } from '@order/order-items/entities';
 
 dayjs.extend(minMax);
 
 @Injectable()
 export class UpdateDelayedOrderItemsStep extends BaseStep {
-  constructor(private readonly connection: Connection) {
+  constructor(private readonly orderItemsRepository: OrderItemsRepository) {
     super();
   }
 
@@ -33,25 +31,17 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
       o.isProcessDelaying = true;
     });
 
-    await this.saveOrderItems(delayedOrderItems);
+    await this.orderItemsRepository.save(delayedOrderItems);
   }
 
   /** status가 paid, ship_ready, ship_pending인 orderItem 리스트를 반환합니다. */
   async getOrderItems() {
-    return await this.connection
-      .getCustomRepository(OrderItemsRepository)
-      .find({
-        where: [
-          { status: OrderItemStatus.Paid },
-          { status: OrderItemStatus.ShipReady },
-          { status: OrderItemStatus.ShipPending },
-        ],
-      });
-  }
-
-  async saveOrderItems(orderItems: OrderItemEntity[]) {
-    await this.connection
-      .getCustomRepository(OrderItemsRepository)
-      .save(orderItems);
+    return await this.orderItemsRepository.find({
+      where: [
+        { status: OrderItemStatus.Paid },
+        { status: OrderItemStatus.ShipReady },
+        { status: OrderItemStatus.ShipPending },
+      ],
+    });
   }
 }
