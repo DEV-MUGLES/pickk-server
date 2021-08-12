@@ -24,7 +24,7 @@ export class SellerOrderItemService {
 
   async getCount(sellerId: number): Promise<OrderItemsCountOutput> {
     const orderItems = await this.orderItemsRepository.find({
-      select: ['status', 'claimStatus'],
+      select: ['status', 'claimStatus', 'isProcessDelaying', 'isConfirmed'],
       where: {
         sellerId,
         merchantUid: MoreThanOrEqual(

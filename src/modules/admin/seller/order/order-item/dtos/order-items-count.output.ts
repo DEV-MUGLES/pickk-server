@@ -8,6 +8,18 @@ import {
 } from '@order/order-items/constants';
 import { OrderItemEntity } from '@order/order-items/entities';
 
+const processDelayStatuses = [
+  OrderItemStatus.Paid,
+  OrderItemStatus.ShipPending,
+  OrderItemStatus.ShipReady,
+] as const;
+export type ProcessDelayStatus = typeof processDelayStatuses[number];
+export type ProcessDelayedFieldName = `process_delayed_${ProcessDelayStatus}`;
+export const isProcessDelayStatus = (
+  status: OrderItemStatus
+): status is ProcessDelayStatus =>
+  status != null && processDelayStatuses.includes(status as ProcessDelayStatus);
+
 @ObjectType({ description: '생성일 기준 1달 이내의 건들만 count합니다.' })
 export class OrderItemsCountOutput {
   static getCacheKey(sellerId: number) {
@@ -23,19 +35,41 @@ export class OrderItemsCountOutput {
       lastUpdatedAt: new Date(),
     });
 
-    const countMap = new Map<OrderItemStatus | OrderItemClaimStatus, number>();
+    const countMap = new Map<
+      | OrderItemStatus
+      | OrderItemClaimStatus
+      | ProcessDelayedFieldName
+      | 'confirmed',
+      number
+    >();
 
     [
       ...(getEnumValues(OrderItemStatus) as OrderItemStatus[]),
       ...(getEnumValues(OrderItemClaimStatus) as OrderItemClaimStatus[]),
+      ...(processDelayStatuses.map(
+        (name) => `process_delayed_${name}`
+      ) as ProcessDelayedFieldName[]),
+      'confirmed' as const,
     ].forEach((value) => {
       countMap.set(value, 0);
     });
 
-    orderItems.forEach(({ status, claimStatus }) => {
-      countMap.set(status, (countMap.get(status) || 0) + 1);
-      countMap.set(claimStatus, (countMap.get(claimStatus) || 0) + 1);
-    });
+    orderItems.forEach(
+      ({ status, claimStatus, isProcessDelaying, isConfirmed }) => {
+        countMap.set(status, (countMap.get(status) || 0) + 1);
+        countMap.set(claimStatus, (countMap.get(claimStatus) || 0) + 1);
+
+        if (isProcessDelaying && isProcessDelayStatus(status)) {
+          const fieldName: ProcessDelayedFieldName = `process_delayed_${status}`;
+
+          countMap.set(fieldName, (countMap.get(fieldName) || 0) + 1);
+        }
+
+        if (isConfirmed) {
+          countMap.set('confirmed', (countMap.get('confirmed') || 0) + 1);
+        }
+      }
+    );
 
     countMap.forEach((value, key) => {
       count[key] = value;
@@ -80,6 +114,15 @@ export class OrderItemsCountOutput {
 
   @Field(() => Int, { description: '배송 준비중' })
   [OrderItemStatus.ShipReady]: number;
+
+  @Field(() => Int, { description: '결제 완료' })
+  process_delayed_paid: number;
+
+  @Field(() => Int, { description: '배송 보류중(예약중)' })
+  process_delayed_ship_pending: number;
+
+  @Field(() => Int, { description: '배송 준비중' })
+  process_delayed_ship_ready: number;
 
   @Field(() => Int, { description: '배송 중' })
   [OrderItemStatus.Shipping]: number;
