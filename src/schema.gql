@@ -522,6 +522,7 @@ type ExchangeRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
   id: Int!
+  isProcessDelaying: Boolean!
   itemName: String!
   orderItem: OrderItem!
   orderItemMerchantUid: String!
@@ -530,6 +531,7 @@ type ExchangeRequest {
 
   """수거 완료 시점"""
   pickedAt: DateTime
+  processDelayedAt: DateTime!
   product: Product
   productId: Int
   productVariantName: String!
@@ -972,6 +974,12 @@ type OrderItem {
   confirmedAt: DateTime
   couponDiscountAmount: Int!
   createdAt: DateTime!
+
+  """지연발송 전환 시점"""
+  delayedAt: DateTime
+
+  """지연발송 예정일"""
+  delayedShipExpectedAt: DateTime
   exchangeRequest: ExchangeRequest!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
@@ -980,6 +988,8 @@ type OrderItem {
   """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
   id: String!
   isConfirmed: Boolean!
+  isDelaying: Boolean!
+  isProcessDelaying: Boolean!
   isSettled: Boolean!
   isShipReserved: Boolean!
   item: Item
@@ -996,6 +1006,9 @@ type OrderItem {
 
   """itemFinalPrice - usedPointAmount - couponDiscountAmount"""
   payAmount: Float!
+
+  """처리지연 전환 시점"""
+  processDelayedAt: DateTime
   product: Product
   productId: Int
   productVariantName: String!
@@ -1047,6 +1060,8 @@ enum OrderItemClaimStatus {
 input OrderItemFilter {
   claimStatus: OrderItemClaimStatus
   claimStatusIn: [OrderItemClaimStatus!]
+  isConfirmed: Boolean
+  isProcessDelaying: Boolean
   merchantUidIn: [String!]
   paidAtBetween: [DateTime!]
 
@@ -1099,6 +1114,15 @@ type OrderItemsCountOutput {
 
   """결제대기 (입금대기와 다릅니다.)"""
   pending: Int!
+
+  """결제 완료"""
+  process_delayed_paid: Int!
+
+  """배송 보류중(예약중)"""
+  process_delayed_ship_pending: Int!
+
+  """배송 준비중"""
+  process_delayed_ship_ready: Int!
 
   """반품 요청됨"""
   refund_requested: Int!
@@ -1486,12 +1510,14 @@ type RefundRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
   id: Int!
+  isProcessDelaying: Boolean!
   order: Order!
   orderItems: [OrderItem!]!
   orderMerchantUid: String!
 
   """수거 완료 시점"""
   pickedAt: DateTime
+  processDelayedAt: DateTime!
 
   """255자 이내로 적어주세요"""
   reason: String!

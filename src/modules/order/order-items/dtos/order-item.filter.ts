@@ -84,4 +84,12 @@ export class OrderItemFilter implements Partial<IOrderItem> {
   @Field(() => [Date, Date], { nullable: true })
   @IsOptional()
   shippedAtBetween?: [Date, Date];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  isConfirmed?: boolean;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  isProcessDelaying?: boolean;
 }
