@@ -30,6 +30,10 @@ export interface IRefundRequest {
 
   rejectReason: string;
 
+  isProcessDelaying: boolean;
+
+  processDelayedAt: Date;
+
   requestedAt: Date;
   /** 수거완료 시점 */
   pickedAt: Date;

@@ -8,7 +8,7 @@ import {
   OneToOne,
   JoinColumn,
 } from 'typeorm';
-import { IsEnum, IsString, Min } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
@@ -55,6 +55,10 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.quantity = attributes.quantity;
     this.itemName = attributes.itemName;
     this.productVariantName = attributes.productVariantName;
+
+    this.isProcessDelaying = attributes.isProcessDelaying;
+
+    this.processDelayedAt = attributes.processDelayedAt;
 
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
@@ -186,6 +190,15 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Column()
   @IsString()
   productVariantName: string;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsOptional()
+  isProcessDelaying: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  processDelayedAt: Date;
 
   @Field()
   @CreateDateColumn()

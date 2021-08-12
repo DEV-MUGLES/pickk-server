@@ -68,6 +68,8 @@ export class OrderItemEntity implements IOrderItem {
     this.isShipReserved = attributes.isShipReserved;
     this.isConfirmed = attributes.isConfirmed;
     this.isSettled = attributes.isSettled;
+    this.isDelaying = attributes.isDelaying;
+    this.isProcessDelaying = attributes.isProcessDelaying;
 
     this.itemFinalPrice = attributes.itemFinalPrice;
     this.couponDiscountAmount = attributes.couponDiscountAmount;
@@ -98,6 +100,13 @@ export class OrderItemEntity implements IOrderItem {
     this.refundRequestedAt = attributes.refundRequestedAt;
     this.refundedAt = attributes.refundedAt;
 
+    this.delayedAt = attributes.delayedAt;
+    this.delayedShipExpectedAt = attributes.delayedShipExpectedAt;
+
+    this.processDelayedAt = attributes.processDelayedAt;
+
+    this.shipReservedAt = attributes.shipReservedAt;
+    this.confirmedAt = attributes.confirmedAt;
     this.shipReservedAt = attributes.shipReservedAt;
     this.confirmedAt = attributes.confirmedAt;
     this.settledAt = attributes.settledAt;
@@ -260,6 +269,16 @@ export class OrderItemEntity implements IOrderItem {
   @IsOptional()
   isSettled: boolean;
 
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsOptional()
+  isDelaying: boolean;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsOptional()
+  isProcessDelaying: boolean;
+
   @Field(() => Int)
   @Column({ unsigned: true })
   @Min(1)
@@ -394,6 +413,18 @@ export class OrderItemEntity implements IOrderItem {
   @Field({ nullable: true })
   @Column({ nullable: true })
   refundedAt?: Date;
+
+  @Field({ description: '지연발송 전환 시점', nullable: true })
+  @Column({ nullable: true })
+  delayedAt: Date;
+
+  @Field({ description: '지연발송 예정일', nullable: true })
+  @Column({ nullable: true })
+  delayedShipExpectedAt: Date;
+
+  @Field({ description: '처리지연 전환 시점', nullable: true })
+  @Column({ nullable: true })
+  processDelayedAt: Date;
 
   @Field({ description: '예약발송 예정일', nullable: true })
   @Column({ nullable: true })

@@ -9,7 +9,7 @@ import {
   JoinColumn,
   OneToOne,
 } from 'typeorm';
-import { IsEnum, IsString, Min } from 'class-validator';
+import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
 import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
@@ -48,6 +48,10 @@ export class RefundRequestEntity implements IRefundRequest {
     this.amount = attributes.amount;
     this.shippingFee = attributes.shippingFee;
     this.rejectReason = attributes.rejectReason;
+
+    this.isProcessDelaying = attributes.isProcessDelaying;
+
+    this.processDelayedAt = attributes.processDelayedAt;
 
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
@@ -144,6 +148,15 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ nullable: true })
   @IsString()
   rejectReason: string;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsOptional()
+  isProcessDelaying: boolean;
+
+  @Field()
+  @Column({ nullable: true })
+  processDelayedAt: Date;
 
   @Field()
   @CreateDateColumn()

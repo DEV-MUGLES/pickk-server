@@ -39,6 +39,11 @@ export interface IExchangeRequest {
    * product entity에 field로 존재하진 않습니다. */
   productVariantName: string;
 
+  isProcessDelaying: boolean;
+
+  /** createdAt과 같다. */
+  processDelayedAt: Date;
+
   /** createdAt과 같다. */
   requestedAt: Date;
   pickedAt: Date;

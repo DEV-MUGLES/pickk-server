@@ -42,6 +42,10 @@ export interface IOrderItem {
   isShipReserved: boolean;
   isConfirmed: boolean;
   isSettled: boolean;
+  /** 발송 지연. 스토어 어드민에서 담당자가 직접 설정하는 값. */
+  isDelaying: boolean;
+  /** 처리 지연. 오래된 주문상품건에 대해서 batch 작업으로 자동으로 설정하는 값. */
+  isProcessDelaying: boolean;
 
   itemFinalPrice: number;
   couponDiscountAmount: number;
@@ -82,6 +86,14 @@ export interface IOrderItem {
   exchangedAt?: Date;
   refundRequestedAt?: Date;
   refundedAt?: Date;
+
+  /** 지연 발송으로 전환된 시점 */
+  delayedAt: Date;
+  /** 지연 발송 예정일 */
+  delayedShipExpectedAt: Date;
+
+  /** 처리 지연으로 전환된 시점 */
+  processDelayedAt: Date;
 
   /** 예약발송 예정일 */
   shipReservedAt?: Date;
