@@ -5,14 +5,20 @@ import { JobExecutionBuilder } from '@batch/builders';
 import { JobExecution } from '@batch/models';
 
 import { PROCESS_DELAYED_ORDER_ITEMS_JOB } from '../constants';
+import { UpdateDelayedOrderItemsStep } from './steps';
 
 @Injectable()
 export class ProcessDelayedOrderItemsJob extends BaseJob {
-  constructor() {
+  constructor(
+    private readonly updateDelayedOrderItemsStep: UpdateDelayedOrderItemsStep
+  ) {
     super(PROCESS_DELAYED_ORDER_ITEMS_JOB);
   }
 
   createExecution(jobExecutionBuilder: JobExecutionBuilder): JobExecution {
-    return jobExecutionBuilder.get(this.name).build();
+    return jobExecutionBuilder
+      .get(this.name)
+      .start(this.updateDelayedOrderItemsStep)
+      .build();
   }
 }
