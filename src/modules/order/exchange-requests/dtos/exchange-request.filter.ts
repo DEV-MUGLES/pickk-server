@@ -49,4 +49,8 @@ export class ExchangeRequestFilter
   })
   @IsOptional()
   reshippedAtBetween?: [Date, Date];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  isProcessDelaying?: boolean;
 }

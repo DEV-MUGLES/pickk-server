@@ -61,4 +61,8 @@ export class RefundRequestFilter
 
   @Field(() => RefundRequestOrderFilter, { nullable: true })
   order?: RefundRequestOrderFilter;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  isProcessDelaying?: boolean;
 }
