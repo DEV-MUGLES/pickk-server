@@ -1,5 +1,6 @@
 import { Field, InputType, Int } from '@nestjs/graphql';
-import { IsOptional } from 'class-validator';
+import { IsEnum, IsOptional } from 'class-validator';
+import { ExchangeRequestStatus } from '../constants';
 
 import { IExchangeRequest } from '../interfaces';
 import { ExchangeRequest } from '../models';
@@ -49,6 +50,20 @@ export class ExchangeRequestFilter
   })
   @IsOptional()
   reshippedAtBetween?: [Date, Date];
+
+  @Field(() => ExchangeRequestStatus, {
+    nullable: true,
+  })
+  @IsEnum(ExchangeRequestStatus)
+  @IsOptional()
+  status?: ExchangeRequestStatus;
+
+  @Field(() => [ExchangeRequestStatus], {
+    nullable: true,
+  })
+  @IsEnum(ExchangeRequestStatus, { each: true })
+  @IsOptional()
+  statusIn?: ExchangeRequestStatus[];
 
   @Field({ nullable: true })
   @IsOptional()
