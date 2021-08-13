@@ -592,6 +592,9 @@ type ExchangeRequestsCountOutput {
   """수거 완료"""
   picked: Int!
 
+  """교환 처리 지연 (지연중인 requested + picked)"""
+  process_delayed: Int!
+
   """교환 거부"""
   rejected: Int!
 
@@ -1583,6 +1586,9 @@ type RefundRequestsCountOutput {
 
   """수거 완료"""
   picked: Int!
+
+  """반품 처리 지연 (지연중인 requested + picked)"""
+  process_delayed: Int!
 
   """반품 거부"""
   rejected: Int!

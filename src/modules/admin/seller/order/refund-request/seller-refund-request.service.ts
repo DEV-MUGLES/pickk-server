@@ -22,7 +22,7 @@ export class SellerRefundRequestService {
 
   async getCount(sellerId: number): Promise<RefundRequestsCountOutput> {
     const refundRequests = await this.refundRequestsRepository.find({
-      select: ['status'],
+      select: ['status', 'isProcessDelaying'],
       where: {
         sellerId,
         requestedAt: MoreThanOrEqual(dayjs().subtract(1, 'month').toDate()),

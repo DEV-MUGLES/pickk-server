@@ -24,7 +24,7 @@ export class SellerExchangeRequestService {
 
   async getCount(sellerId: number): Promise<ExchangeRequestsCountOutput> {
     const exchangeRequests = await this.exchangeRequestsRepository.find({
-      select: ['status'],
+      select: ['status', 'isProcessDelaying'],
       where: {
         sellerId,
         requestedAt: MoreThanOrEqual(dayjs().subtract(1, 'month').toDate()),

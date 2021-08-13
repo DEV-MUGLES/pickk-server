@@ -20,16 +20,29 @@ export class RefundRequestsCountOutput {
       lastUpdatedAt: new Date(),
     });
 
-    const countMap = new Map<RefundRequestStatus, number>();
+    const countMap = new Map<RefundRequestStatus | 'process_delayed', number>();
 
-    [...(getEnumValues(RefundRequestStatus) as RefundRequestStatus[])].forEach(
-      (value) => {
-        countMap.set(value, 0);
-      }
-    );
+    [
+      ...(getEnumValues(RefundRequestStatus) as RefundRequestStatus[]),
+      'process_delayed' as const,
+    ].forEach((value) => {
+      countMap.set(value, 0);
+    });
 
-    refundRequests.forEach(({ status }) => {
+    refundRequests.forEach(({ status, isProcessDelaying }) => {
       countMap.set(status, (countMap.get(status) || 0) + 1);
+
+      if (
+        isProcessDelaying &&
+        [RefundRequestStatus.Requested, RefundRequestStatus.Picked].includes(
+          status
+        )
+      ) {
+        countMap.set(
+          'process_delayed',
+          (countMap.get('process_delayed') || 0) + 1
+        );
+      }
     });
 
     countMap.forEach((value, key) => {
@@ -68,4 +81,9 @@ export class RefundRequestsCountOutput {
 
   @Field(() => Int, { description: '반품 승인' })
   [RefundRequestStatus.Confirmed]: number;
+
+  @Field(() => Int, {
+    description: '반품 처리 지연 (지연중인 requested + picked)',
+  })
+  process_delayed: number;
 }

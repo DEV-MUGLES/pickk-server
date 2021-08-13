@@ -20,16 +20,33 @@ export class ExchangeRequestsCountOutput {
       lastUpdatedAt: new Date(),
     });
 
-    const countMap = new Map<ExchangeRequestStatus, number>();
+    const countMap = new Map<
+      ExchangeRequestStatus | 'process_delayed',
+      number
+    >();
 
     [
       ...(getEnumValues(ExchangeRequestStatus) as ExchangeRequestStatus[]),
+      'process_delayed' as const,
     ].forEach((value) => {
       countMap.set(value, 0);
     });
 
-    exchangeRequests.forEach(({ status }) => {
+    exchangeRequests.forEach(({ status, isProcessDelaying }) => {
       countMap.set(status, (countMap.get(status) || 0) + 1);
+
+      if (
+        isProcessDelaying &&
+        [
+          ExchangeRequestStatus.Requested,
+          ExchangeRequestStatus.Picked,
+        ].includes(status)
+      ) {
+        countMap.set(
+          'process_delayed',
+          (countMap.get('process_delayed') || 0) + 1
+        );
+      }
     });
 
     countMap.forEach((value, key) => {
@@ -70,4 +87,9 @@ export class ExchangeRequestsCountOutput {
 
   @Field(() => Int, { description: '교환 배송 완료' })
   [ExchangeRequestStatus.Reshipped]: number;
+
+  @Field(() => Int, {
+    description: '교환 처리 지연 (지연중인 requested + picked)',
+  })
+  process_delayed: number;
 }
