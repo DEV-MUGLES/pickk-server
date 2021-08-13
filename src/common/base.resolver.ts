@@ -48,8 +48,9 @@ export class BaseResolver<RelationType extends string = string> {
     }
 
     const simplifiedInfo = this.getSimplifiedInfo(info);
+
     const relations = this.relations.filter((relation) =>
-      this.checkRelationInFields(relation, simplifiedInfo.fieldsByTypeName)
+      this.checkRelationInFields(relation, simplifiedInfo.fieldsByTypeName, '')
     );
 
     Object.entries(this.derivedFieldsInfo).forEach(([relationName, fields]) => {
@@ -63,7 +64,8 @@ export class BaseResolver<RelationType extends string = string> {
 
   private checkRelationInFields(
     relationName: string,
-    fieldsByTypeName: FieldsByTypeName
+    fieldsByTypeName: FieldsByTypeName,
+    parent: string
   ): boolean {
     if (fieldsByTypeName === {}) {
       return false;
@@ -71,14 +73,16 @@ export class BaseResolver<RelationType extends string = string> {
 
     return Object.values(fieldsByTypeName).some((fields) => {
       return Object.values(fields).some((resolveTree) => {
-        const fieldName = relationName.split('.').pop();
-        if (resolveTree.name === fieldName) {
+        const current = `${parent}.${resolveTree.name}`;
+
+        if (current === relationName) {
           return true;
         }
 
         return this.checkRelationInFields(
           relationName,
-          resolveTree.fieldsByTypeName
+          resolveTree.fieldsByTypeName,
+          current
         );
       });
     });
