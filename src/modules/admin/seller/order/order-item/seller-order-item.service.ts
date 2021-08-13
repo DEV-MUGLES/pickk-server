@@ -22,13 +22,13 @@ export class SellerOrderItemService {
     private readonly orderItemsRepository: OrderItemsRepository
   ) {}
 
-  async getCount(sellerId: number): Promise<OrderItemsCountOutput> {
+  async getCount(sellerId: number, month = 3): Promise<OrderItemsCountOutput> {
     const orderItems = await this.orderItemsRepository.find({
       select: ['status', 'claimStatus', 'isProcessDelaying', 'isConfirmed'],
       where: {
         sellerId,
         merchantUid: MoreThanOrEqual(
-          dayjs().subtract(1, 'month').format(`YYMMDD`) + '0000000000000'
+          dayjs().subtract(month, 'month').format(`YYMMDD`) + '0000000000000'
         ),
       },
     });

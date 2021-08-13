@@ -20,7 +20,7 @@ export const isProcessDelayStatus = (
 ): status is ProcessDelayStatus =>
   status != null && processDelayStatuses.includes(status as ProcessDelayStatus);
 
-@ObjectType({ description: '생성일 기준 1달 이내의 건들만 count합니다.' })
+@ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class OrderItemsCountOutput {
   static getCacheKey(sellerId: number) {
     return `oic:${sellerId}`;

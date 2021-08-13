@@ -5,7 +5,7 @@ import { getEnumValues } from '@common/helpers';
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
 import { ExchangeRequestEntity } from '@order/exchange-requests/entities';
 
-@ObjectType({ description: '생성일 기준 1달 이내의 건들만 count합니다.' })
+@ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class ExchangeRequestsCountOutput {
   static getCacheKey(sellerId: number) {
     return `erc:${sellerId}`;

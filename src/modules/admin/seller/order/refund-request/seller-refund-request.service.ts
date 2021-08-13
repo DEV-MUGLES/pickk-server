@@ -20,12 +20,15 @@ export class SellerRefundRequestService {
     private readonly refundRequestsRepository: RefundRequestsRepository
   ) {}
 
-  async getCount(sellerId: number): Promise<RefundRequestsCountOutput> {
+  async getCount(
+    sellerId: number,
+    month = 3
+  ): Promise<RefundRequestsCountOutput> {
     const refundRequests = await this.refundRequestsRepository.find({
       select: ['status', 'isProcessDelaying'],
       where: {
         sellerId,
-        requestedAt: MoreThanOrEqual(dayjs().subtract(1, 'month').toDate()),
+        requestedAt: MoreThanOrEqual(dayjs().subtract(month, 'month').toDate()),
       },
     });
 
