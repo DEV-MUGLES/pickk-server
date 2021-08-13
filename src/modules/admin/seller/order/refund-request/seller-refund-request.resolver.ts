@@ -66,8 +66,7 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
       );
 
       if (cached) {
-        cached.lastUpdatedAt = new Date(cached.lastUpdatedAt);
-        return cached;
+        return new RefundRequestsCountOutput(cached);
       }
     }
 

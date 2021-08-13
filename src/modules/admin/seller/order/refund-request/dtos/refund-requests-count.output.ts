@@ -45,6 +45,8 @@ export class RefundRequestsCountOutput {
 
   constructor(attributes: Partial<RefundRequestsCountOutput>) {
     Object.assign(this, attributes);
+
+    this.lastUpdatedAt = new Date(this.lastUpdatedAt);
   }
 
   @Field(() => Int, {

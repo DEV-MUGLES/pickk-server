@@ -75,8 +75,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
       );
 
       if (cached) {
-        cached.lastUpdatedAt = new Date(cached.lastUpdatedAt);
-        return cached;
+        return new ExchangeRequestsCountOutput(cached);
       }
     }
 

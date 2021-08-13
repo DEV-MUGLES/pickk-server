@@ -80,10 +80,9 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       const cached = await this.cacheService.get<OrderItemsCountOutput>(
         OrderItemsCountOutput.getCacheKey(sellerId)
       );
-      cached.lastUpdatedAt = new Date(cached.lastUpdatedAt);
 
       if (cached) {
-        return cached;
+        return new OrderItemsCountOutput(cached);
       }
     }
 

@@ -45,6 +45,7 @@ export class ExchangeRequestsCountOutput {
 
   constructor(attributes: Partial<ExchangeRequestsCountOutput>) {
     Object.assign(this, attributes);
+    this.lastUpdatedAt = new Date(this.lastUpdatedAt);
   }
 
   @Field(() => Int, {

@@ -84,6 +84,7 @@ export class OrderItemsCountOutput {
 
   constructor(attributes: Partial<OrderItemsCountOutput>) {
     Object.assign(this, attributes);
+    this.lastUpdatedAt = new Date(this.lastUpdatedAt);
   }
 
   @Field(() => Int, {
