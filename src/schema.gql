@@ -1096,6 +1096,9 @@ type OrderItemsCountOutput {
   """취소 완료"""
   cancelled: Int!
 
+  """구매 확정"""
+  confirmed: Int!
+
   """교환 요청됨"""
   exchange_requested: Int!
 

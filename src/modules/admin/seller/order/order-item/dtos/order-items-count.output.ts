@@ -124,6 +124,9 @@ export class OrderItemsCountOutput {
   @Field(() => Int, { description: '배송 준비중' })
   process_delayed_ship_ready: number;
 
+  @Field(() => Int, { description: '구매 확정' })
+  confirmed: number;
+
   @Field(() => Int, { description: '배송 중' })
   [OrderItemStatus.Shipping]: number;
 
