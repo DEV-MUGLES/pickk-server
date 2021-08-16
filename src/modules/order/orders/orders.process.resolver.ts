@@ -81,18 +81,12 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     input: RequestOrderRefundInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
-    const order = await this.ordersService.get(merchantUid, [
-      'user',
-      'orderItems',
-      'orderItems.seller',
-      'orderItems.seller.shippingPolicy',
-      'refundRequests',
-    ]);
-    if (order.userId !== userId) {
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    await this.ordersService.requestRefund(order, input);
+    await this.ordersService.requestRefund(merchantUid, input);
 
     return await this.ordersService.get(
       merchantUid,

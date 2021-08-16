@@ -7,7 +7,6 @@ import {
   OrderItemStatus,
 } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
-import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
 import { PayMethod } from '@payment/payments/constants';
@@ -147,61 +146,14 @@ export class Order extends OrderEntity {
     };
   }
 
-  requestRefund(input: RequestOrderRefundInput) {
-    const { orderItemMerchantUids, faultOf } = input;
-
-    const orderItems = this.getOrderItems(orderItemMerchantUids);
-
-    if (orderItems.length === 0) {
-      throw new BadRequestException('1개 이상의 주문 상품을 입력해주세요.');
-    }
-    if ([...new Set(orderItems.map((oi) => oi.sellerId))].length > 1) {
-      throw new BadRequestException(
-        '한번에 같은 브랜드의 상품만 반품할 수 있습니다.'
-      );
-    }
-
-    const { minimumAmountForFree, fee } = orderItems[0].seller.shippingPolicy;
-
-    const totalItemFinalPrice = orderItems.reduce(
-      (sum, oi) => sum + oi.itemFinalPrice,
-      0
-    );
-    const isFreeShipped = totalItemFinalPrice >= minimumAmountForFree;
-
-    const refundShippingFee =
-      faultOf === OrderClaimFaultOf.Seller ? 0 : isFreeShipped ? fee * 2 : fee;
-    if (input.shippingFee !== refundShippingFee) {
-      throw new BadRequestException(
-        `입력한 배송비가 계산된 금액과 일치하지 않습니다.\n입력: ${input.shippingFee}, 계산됨: ${refundShippingFee}`
-      );
-    }
-
-    const totalPayAmount = orderItems.reduce(
-      (sum, oi) => sum + oi.payAmount,
-      0
-    );
-    const refundAmount = totalPayAmount - refundShippingFee;
-
-    if (input.amount !== refundAmount) {
-      throw new BadRequestException(
-        `입력한 환불금액이 계산된 금액과 일치하지 않습니다.\n입력: ${input.amount}, 계산됨: ${refundAmount}`
-      );
-    }
-
-    const remainPayAmount = this.totalPayAmount - refundAmount;
-    if (input.checksum !== remainPayAmount) {
-      throw new BadRequestException(
-        `입력한 잔여금액이 계산된 금액과 일치하지 않습니다.\n입력: ${input.checksum}, 계산됨: ${remainPayAmount}`
-      );
-    }
-
+  requestRefund(input: RequestOrderRefundInput): RefundRequest {
+    const orderItems = this.getOrderItems(input.orderItemMerchantUids);
     for (const oi of orderItems) {
       oi.requestRefund();
     }
-
     this.orderItems = this.applyOrderItems(this.orderItems, orderItems);
-    this.refundRequests.push(
+
+    return this.addRefundRequest(
       RefundRequestFactory.create(this.userId, orderItems, input)
     );
   }
@@ -262,6 +214,12 @@ export class Order extends OrderEntity {
     orderItems[0].usedPointAmount +=
       usedPointAmount -
       orderItems.reduce((sum, orderItem) => sum + orderItem.usedPointAmount, 0);
+  }
+
+  private addRefundRequest(refundRequest: RefundRequest) {
+    this.refundRequests.push(refundRequest);
+
+    return refundRequest;
   }
 
   private markPaying() {

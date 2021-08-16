@@ -10,7 +10,7 @@ import { Coupon } from '@order/coupons/models';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
 
-import { CANCEL_ORDER_RELATIONS } from './constants';
+import { CANCEL_ORDER_RELATIONS, REFUND_ORDER_RELATIONS } from './constants';
 import {
   CancelOrderInput,
   CreateOrderVbankReceiptInput,
@@ -115,9 +115,11 @@ export class OrdersService {
   }
 
   async requestRefund(
-    order: Order,
+    merchantUid: string,
     input: RequestOrderRefundInput
   ): Promise<Order> {
+    const order = await this.get(merchantUid, REFUND_ORDER_RELATIONS);
+
     order.requestRefund(input);
 
     return await this.ordersRepository.save(order);

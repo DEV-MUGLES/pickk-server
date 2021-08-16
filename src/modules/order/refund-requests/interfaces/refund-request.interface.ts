@@ -23,6 +23,7 @@ export interface IRefundRequest {
   status: RefundRequestStatus;
   faultOf: OrderClaimFaultOf;
   reason: string;
+  /** 환불될 금액 */
   amount: number;
 
   /** 부과된 반품 배송비 */
