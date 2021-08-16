@@ -1,10 +1,9 @@
-import {
-  BadRequestException,
-  InternalServerErrorException,
-} from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { Product } from '@item/products/models';
 import { Coupon } from '@order/coupons/models';
+import { ExchangeRequestFactory } from '@order/exchange-requests/factories';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 import { Order } from '@order/orders/models';
 import { RefundRequest } from '@order/refund-requests/models';
@@ -12,7 +11,7 @@ import { ShipmentOwnerType } from '@order/shipments/constants';
 import { ShipmentFactory } from '@order/shipments/factories';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
-import { ShipOrderItemInput } from '../dtos';
+import { RequestOrderItemExchangeInput, ShipOrderItemInput } from '../dtos';
 import { OrderItemEntity } from '../entities/order-item.entity';
 
 @ObjectType()
@@ -83,26 +82,9 @@ export class OrderItem extends OrderItemEntity {
     this.markRefundRequested();
   }
 
-  requestExchange(exchangeRequest: ExchangeRequest) {
-    if (!exchangeRequest.product) {
-      throw new InternalServerErrorException(
-        'exchangeRequest의 product를 Join해야합니다.'
-      );
-    }
-    if (this.itemId !== exchangeRequest.product.itemId) {
-      throw new BadRequestException(
-        '같은 아이템의 Product로만 교환할 수 있습니다.'
-      );
-    }
-    if (this.quantity !== exchangeRequest.quantity) {
-      throw new InternalServerErrorException(
-        '요청된 교환신청의 상품 개수가 주문상품과 다릅니다.'
-      );
-    }
-    // @TODO: shippingFee validate
-
+  requestExchange(input: RequestOrderItemExchangeInput, product: Product) {
+    this.exchangeRequest = ExchangeRequestFactory.create(this, product, input);
     this.markExchangeRequested();
-    this.exchangeRequest = exchangeRequest;
   }
 
   private markCancelled() {

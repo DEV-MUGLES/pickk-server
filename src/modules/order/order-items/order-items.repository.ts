@@ -37,4 +37,13 @@ export class OrderItemsRepository extends Repository<OrderItemEntity> {
       })
       .catch((error) => Promise.reject(error));
   }
+
+  async checkBelongsTo(merchantUid: string, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('orderItem')
+      .select('1')
+      .where('orderItem.merchantUid = :merchantUid', { merchantUid })
+      .andWhere('orderItem.userId = :userId', { userId })
+      .execute();
+    return result?.length > 0;
+  }
 }

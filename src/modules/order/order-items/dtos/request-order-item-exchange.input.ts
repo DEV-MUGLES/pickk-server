@@ -1,14 +1,23 @@
-import { Field, InputType, PickType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
+import { IsEnum, IsNumber, IsString } from 'class-validator';
 
-import { ExchangeRequest } from '@order/exchange-requests/models';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { CreateShipmentInput } from '@order/shipments/dtos';
 
 @InputType()
-export class RequestOrderItemExchangeInput extends PickType(
-  ExchangeRequest,
-  ['reason', 'shippingFee', 'faultOf', 'productId'],
-  InputType
-) {
+export class RequestOrderItemExchangeInput {
+  @Field({ description: '255자 이내로 적어주세요' })
+  @IsString()
+  reason: string;
+
+  @Field(() => OrderClaimFaultOf)
+  @IsEnum(OrderClaimFaultOf)
+  faultOf: OrderClaimFaultOf;
+
+  @Field(() => Int, { description: '교환 대상 product' })
+  @IsNumber()
+  productId: number;
+
   @Field(() => CreateShipmentInput, { nullable: true })
   shipmentInput: CreateShipmentInput;
 }

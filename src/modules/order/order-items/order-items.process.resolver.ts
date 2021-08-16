@@ -11,7 +11,6 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
 import { BaseResolver } from '@common/base.resolver';
-import { ProductsService } from '@item/products/products.service';
 
 import { OrderItemRelationType, ORDER_ITEM_RELATIONS } from './constants';
 import { RequestOrderItemExchangeInput } from './dtos';
@@ -25,9 +24,7 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
 
   constructor(
     @Inject(OrderItemsService)
-    private readonly orderItemsService: OrderItemsService,
-    @Inject(ProductsService)
-    private readonly productsService: ProductsService
+    private readonly orderItemsService: OrderItemsService
   ) {
     super();
   }
@@ -42,16 +39,15 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     input: RequestOrderItemExchangeInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<OrderItem> {
-    const orderItem = await this.orderItemsService.get(merchantUid);
-    if (orderItem.userId !== userId) {
+    const isMine = await this.orderItemsService.checkBelongsTo(
+      merchantUid,
+      userId
+    );
+    if (!isMine) {
       throw new ForbiddenException('자신의 주문상품이 아닙니다.');
     }
-    const product = await this.productsService.get(input.productId, [
-      'item',
-      'itemOptionValues',
-    ]);
 
-    await this.orderItemsService.requestExchange(orderItem, product, input);
+    await this.orderItemsService.requestExchange(merchantUid, input);
 
     return await this.orderItemsService.get(
       merchantUid,

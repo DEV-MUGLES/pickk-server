@@ -24,3 +24,8 @@ export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'refundRequest',
   'exchangeRequest',
 ];
+
+export const EXCHANGE_ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
+  'seller',
+  'seller.shippingPolicy',
+];

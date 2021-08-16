@@ -1592,14 +1592,13 @@ input RegisterOrderItemInput {
 
 input RequestOrderItemExchangeInput {
   faultOf: RefundRequestFaultOf!
-  productId: Int
+
+  """교환 대상 product"""
+  productId: Int!
 
   """255자 이내로 적어주세요"""
   reason: String!
   shipmentInput: CreateShipmentInput
-
-  """결제된 교환 배송비"""
-  shippingFee: Int!
 }
 
 input RequestOrderRefundInput {
