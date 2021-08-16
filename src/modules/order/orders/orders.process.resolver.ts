@@ -10,8 +10,6 @@ import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { BaseResolver } from '@common/base.resolver';
-import { CancelPaymentInput } from '@payment/payments/dtos';
-import { PaymentsService } from '@payment/payments/payments.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
 import {
@@ -30,9 +28,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
 
   constructor(
     @Inject(OrdersService)
-    private readonly ordersService: OrdersService,
-    @Inject(PaymentsService)
-    private readonly paymentsService: PaymentsService
+    private readonly ordersService: OrdersService
   ) {
     super();
   }
@@ -59,37 +55,20 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string,
     @Args('cancelOrderInput')
-    input: CancelOrderInput
+    input: CancelOrderInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
-    const order = await this.ordersService.get(merchantUid, [
-      'orderItems',
-      'orderItems.product',
-      'orderItems.product.item',
-      'orderItems.product.item.brand',
-      'orderItems.product.item.brand.seller',
-      'orderItems.product.item.brand.seller.shippingPolicy',
-      'vbankInfo',
-    ]);
-    if (order.userId !== userId) {
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    const { orderItemMerchantUids, amount, checksum } = input;
+    await this.ordersService.cancel(merchantUid, input);
 
-    const cancelledOrder = await this.ordersService.cancel(
-      order,
-      orderItemMerchantUids,
-      amount,
-      checksum
+    return await this.ordersService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
     );
-
-    const payment = await this.paymentsService.get(merchantUid);
-    await this.paymentsService.cancel(
-      payment,
-      CancelPaymentInput.of(cancelledOrder, input)
-    );
-
-    return order;
   }
 
   // @TODO: 완료 알림톡 전송.

@@ -1,7 +1,6 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
 import { IsNumber } from 'class-validator';
 
-import { CancelOrderInput } from '@order/orders/dtos';
 import { Order } from '@order/orders/models';
 
 import { PaymentCancellation } from '../models';
@@ -29,14 +28,18 @@ export class CancelPaymentInput extends PickType(
       return;
     }
 
+    this.reason = attributes.reason;
+    this.amount = attributes.amount;
     this.checksum = attributes.checksum;
   }
 
   static of(
     order: Order,
-    cancelOrderInput: Omit<CancelOrderInput, 'orderItemMerchantUids'>
+    reason: string,
+    amount: number,
+    checksum: number
   ): CancelPaymentInput {
-    const result = new CancelPaymentInput({ ...cancelOrderInput });
+    const result = new CancelPaymentInput({ reason, amount, checksum });
 
     if (order.payMethod === PayMethod.Vbank) {
       result.refundVbankCode = order.vbankInfo.bankCode;

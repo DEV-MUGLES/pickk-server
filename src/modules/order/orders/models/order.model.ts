@@ -119,6 +119,8 @@ export class Order extends OrderEntity {
   }
 
   cancel(orderItemMerchantUids: string[]) {
+    const beforeAmount = this.totalPayAmount;
+
     if (orderItemMerchantUids.length === 0) {
       throw new BadRequestException('1개 이상의 주문 상품을 입력해주세요.');
     }
@@ -138,6 +140,11 @@ export class Order extends OrderEntity {
       this.totalShippingFee -
       this.totalUsedPointAmount -
       this.totalCouponDiscountAmount;
+
+    return {
+      amount: this.totalPayAmount,
+      checksum: beforeAmount - this.totalPayAmount,
+    };
   }
 
   requestRefund(input: RequestOrderRefundInput) {

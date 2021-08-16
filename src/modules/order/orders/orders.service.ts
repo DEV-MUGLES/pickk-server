@@ -7,16 +7,16 @@ import timezone from 'dayjs/plugin/timezone';
 import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
 import { Coupon } from '@order/coupons/models';
+import { CancelPaymentInput } from '@payment/payments/dtos';
+import { PaymentsService } from '@payment/payments/payments.service';
 
+import { CANCEL_ORDER_RELATIONS } from './constants';
 import {
+  CancelOrderInput,
   CreateOrderVbankReceiptInput,
   RequestOrderRefundInput,
   StartOrderInput,
 } from './dtos';
-import {
-  InvalidCancelAmountException,
-  InvalidCancelChecksumException,
-} from './exceptions';
 import { OrderFactory } from './factories';
 import { Order } from './models';
 
@@ -30,6 +30,8 @@ export class OrdersService {
   constructor(
     @Inject(ProductsService)
     private readonly productsService: ProductsService,
+    @Inject(PaymentsService)
+    private readonly paymentsService: PaymentsService,
     @InjectRepository(OrdersRepository)
     private readonly ordersRepository: OrdersRepository
   ) {}
@@ -46,6 +48,10 @@ export class OrdersService {
 
     const order = OrderFactory.create(userId, merchantUid, inputs);
     return this.ordersRepository.save(order);
+  }
+
+  async checkBelongsTo(merchantUid: string, userId: number): Promise<boolean> {
+    return await this.ordersRepository.checkBelongsTo(merchantUid, userId);
   }
 
   /** YYMMDDHHmmssSSS + NN 형식의 고유한 merchantUid를 생성합니다. */
@@ -92,26 +98,20 @@ export class OrdersService {
     return await this.ordersRepository.save(order);
   }
 
-  /** cancel orderItems of given Order matching orderItemMerchantUids */
   async cancel(
-    order: Order,
-    orderItemMerchantUids: string[],
-    amount: number,
-    checksum: number
-  ): Promise<Order> {
-    const { totalPayAmount: beforeAmount } = order;
-    order.cancel(orderItemMerchantUids);
-    const { totalPayAmount: afterAmount } = order;
+    merchantUid: string,
+    { reason, orderItemMerchantUids }: CancelOrderInput
+  ): Promise<void> {
+    const order = await this.get(merchantUid, CANCEL_ORDER_RELATIONS);
 
-    if (afterAmount !== checksum) {
-      throw new InvalidCancelChecksumException(afterAmount, checksum);
-    }
-    const cancelledAmount = beforeAmount - afterAmount;
-    if (cancelledAmount !== amount) {
-      throw new InvalidCancelAmountException(cancelledAmount, amount);
-    }
+    const { amount, checksum } = order.cancel(orderItemMerchantUids);
 
-    return await this.ordersRepository.save(order);
+    const payment = await this.paymentsService.get(merchantUid);
+    await this.paymentsService.cancel(
+      payment,
+      CancelPaymentInput.of(order, reason, amount, checksum)
+    );
+    await this.ordersRepository.save(order);
   }
 
   async requestRefund(
