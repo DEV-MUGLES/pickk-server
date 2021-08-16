@@ -73,7 +73,9 @@ export class BaseResolver<RelationType extends string = string> {
 
     return Object.values(fieldsByTypeName).some((fields) => {
       return Object.values(fields).some((resolveTree) => {
-        const current = `${parent}.${resolveTree.name}`;
+        const current = `${parent === '' ? parent : parent + '.'}${
+          resolveTree.name
+        }`;
 
         if (current === relationName) {
           return true;
