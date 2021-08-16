@@ -128,6 +128,29 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     );
   }
 
+  @Mutation(() => OrderItem, { description: '주문상품 단건 운송장 수정' })
+  @UseGuards(JwtSellerVerifyGuard)
+  async updateMeSellerOrderItemTrackCode(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('trackCode') trackCode: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<OrderItem> {
+    const orderItem = await this.orderItemsService.get(merchantUid, [
+      'shipment',
+    ]);
+    if (orderItem.sellerId !== sellerId) {
+      throw new ForbiddenException('자신의 주문 상품이 아닙니다.');
+    }
+
+    await this.sellerOrderItemService.updateTrackCode(orderItem, trackCode);
+
+    return await this.orderItemsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
   @Mutation(() => Boolean)
   @UseGuards(JwtSellerVerifyGuard)
   async bulkShipMeSellerOrderItems(

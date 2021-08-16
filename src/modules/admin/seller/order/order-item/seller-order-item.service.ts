@@ -2,6 +2,7 @@ import {
   BadRequestException,
   ForbiddenException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { In, MoreThanOrEqual } from 'typeorm';
@@ -70,6 +71,17 @@ export class SellerOrderItemService {
 
   async ship(orderItem: OrderItem, input: ShipOrderItemInput) {
     orderItem.ship(input);
+    await this.orderItemsRepository.save(orderItem);
+  }
+
+  async updateTrackCode(orderItem: OrderItem, trackCode: string) {
+    if (!orderItem.shipment) {
+      throw new NotFoundException(
+        '해당 주문상품의 배송 정보가 존재하지 않습니다.'
+      );
+    }
+
+    orderItem.shipment.trackCode = trackCode;
     await this.orderItemsRepository.save(orderItem);
   }
 

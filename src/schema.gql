@@ -904,6 +904,9 @@ type Mutation {
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
+
+  """주문상품 단건 운송장 수정"""
+  updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
   updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
