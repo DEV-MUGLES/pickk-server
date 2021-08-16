@@ -168,7 +168,9 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     return true;
   }
 
-  @Mutation(() => OrderItem)
+  @Mutation(() => OrderItem, {
+    description: '취소 사유는 "담당자 취소 처리"로 고정',
+  })
   @UseGuards(JwtSellerVerifyGuard)
   async cancelMeSellerOrderItem(
     @CurrentUser() { sellerId }: JwtPayload,
