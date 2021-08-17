@@ -1,4 +1,5 @@
 import { Post, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { SuperSecretGuard } from '@auth/guards';
 
@@ -6,6 +7,7 @@ import { JobsController } from '../decorators';
 
 import { OrderJobsService } from './order-jobs.service';
 
+@ApiTags('jobs')
 @JobsController('order')
 @UseGuards(SuperSecretGuard)
 export class OrderJobsController {
