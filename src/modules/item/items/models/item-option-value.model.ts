@@ -1,7 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-// @TODO:BARREL
-import { ItemOptionValueEntity } from '../entities/item-option-value.entity';
+import { ItemOptionValueEntity } from '../entities';
 
 @ObjectType()
 export class ItemOptionValue extends ItemOptionValueEntity {}

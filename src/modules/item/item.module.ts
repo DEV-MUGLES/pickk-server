@@ -5,6 +5,7 @@ import { CampaignsModule } from './campaigns/campaigns.module';
 import { CartsModule } from './carts/carts.module';
 import { CouriersModule } from './couriers/couriers.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
+import { ItemPropertiesModule } from './item-properties/item-properties.module';
 import { ItemsModule } from './items/items.module';
 import { ProductsModule } from './products/products.module';
 import { SellersModule } from './sellers/sellers.module';
@@ -16,6 +17,7 @@ import { SellersModule } from './sellers/sellers.module';
     CartsModule,
     CouriersModule,
     ItemCategoriesModule,
+    ItemPropertiesModule,
     ItemsModule,
     ProductsModule,
     SellersModule,

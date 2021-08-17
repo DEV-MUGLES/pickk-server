@@ -735,6 +735,16 @@ enum ItemPriceUnit {
   USD
 }
 
+type ItemPropertyValue {
+  createdAt: DateTime!
+  id: Int!
+  name: String!
+
+  """표시될 순서. 최소 0, 최대 255입니다."""
+  order: Float!
+  updatedAt: DateTime!
+}
+
 type ItemSalePolicy {
   createdAt: DateTime!
   id: Int!
