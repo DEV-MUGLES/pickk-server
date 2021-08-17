@@ -79,6 +79,7 @@ export class PaymentEntity implements IPayment {
     this.failedAt = attributes.failedAt;
     this.paidAt = attributes.paidAt;
     this.cancelledAt = attributes.cancelledAt;
+    this.vbankDodgedAt = attributes.vbankDodgedAt;
 
     this.cancellations = attributes.cancellations;
   }
@@ -277,6 +278,12 @@ export class PaymentEntity implements IPayment {
   @IsDateString()
   @IsOptional()
   cancelledAt?: Date;
+
+  @Field({ nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
+  @IsDateString()
+  @IsOptional()
+  vbankDodgedAt: Date;
 
   @OneToMany('PaymentCancellationEntity', 'payment', {
     cascade: true,

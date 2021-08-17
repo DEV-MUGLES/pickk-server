@@ -11,6 +11,8 @@ export enum PaymentStatus {
   Cancelled = 'cancelled',
   /** 부분취소 */
   PartialCancelled = 'partial_cancelled',
+  /** 가상계좌 입금 전 취소 */
+  VbankDodged = 'vbank_dodged',
   /** 결제실패 */
   Failed = 'failed',
 }
