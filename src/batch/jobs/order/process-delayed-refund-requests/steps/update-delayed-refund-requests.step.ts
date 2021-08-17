@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { Raw } from 'typeorm';
+import { LessThan } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
@@ -16,11 +16,7 @@ export class UpdateDelayedRefundRequestsStep extends BaseStep {
 
   async tasklet() {
     const delayedRefundRequests = await this.refundRequestsRepository.find({
-      where: {
-        requestedAt: Raw((requestedAt) => `${requestedAt} < :date`, {
-          date: dayjs().add(-5, 'day').toDate(),
-        }),
-      },
+      requestedAt: LessThan(dayjs().add(-5, 'day').toDate()),
     });
 
     delayedRefundRequests.forEach((d) => {
