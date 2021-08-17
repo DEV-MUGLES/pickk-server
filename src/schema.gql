@@ -735,6 +735,20 @@ enum ItemPriceUnit {
   USD
 }
 
+type ItemProperty {
+  createdAt: DateTime!
+  id: Int!
+  minorCategory: ItemCategory!
+  minorCategoryId: Int!
+  name: String!
+  updatedAt: DateTime!
+  values: [ItemPropertyValue!]!
+}
+
+input ItemPropertyFilter {
+  minorCategoryId: Int
+}
+
 type ItemPropertyValue {
   createdAt: DateTime!
   id: Int!
@@ -1455,6 +1469,7 @@ type Query {
   itemCategoryTree: [ItemCategory!]!
   itemMajorCategories: [ItemCategory!]!
   itemMinorCategories: [ItemCategory!]!
+  itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
