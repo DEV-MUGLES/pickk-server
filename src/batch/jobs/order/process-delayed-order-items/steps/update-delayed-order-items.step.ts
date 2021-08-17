@@ -7,6 +7,8 @@ import { BaseStep } from '@batch/jobs/base.step';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
 
+import { oldDay } from './constants';
+
 dayjs.extend(minMax);
 
 @Injectable()
@@ -17,15 +19,23 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
 
   async tasklet() {
     const unprocessedOrderItems = await this.orderItemsRepository.find({
-      status: In([
-        OrderItemStatus.Paid,
-        OrderItemStatus.ShipReady,
-        OrderItemStatus.ShipPending,
-      ]),
+      select: [
+        'paidAt',
+        'delayedShipExpectedAt',
+        'shipReservedAt',
+        'merchantUid',
+      ],
+      where: {
+        status: In([
+          OrderItemStatus.Paid,
+          OrderItemStatus.ShipReady,
+          OrderItemStatus.ShipPending,
+        ]),
+      },
     });
 
-    const delayedOrderItems = unprocessedOrderItems.filter((o) => {
-      const { paidAt, delayedShipExpectedAt, shipReservedAt } = o;
+    const delayedOrderItems = unprocessedOrderItems.filter((oi) => {
+      const { paidAt, delayedShipExpectedAt, shipReservedAt } = oi;
       return this.getLastDay(paidAt, delayedShipExpectedAt, shipReservedAt)
         .add(1, 'day')
         .isBefore(dayjs());
@@ -43,19 +53,10 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     delayedShipExpectedAt: Date,
     shipReservedAt: Date
   ): dayjs.Dayjs {
-    const paidDay = dayjs(paidAt).add(1, 'days');
-    const delayedShipExpectedDay = dayjs(delayedShipExpectedAt);
-    const shipReservedDay = dayjs(shipReservedAt);
-
-    if (delayedShipExpectedAt === null && shipReservedAt === null) {
-      return paidDay;
-    }
-    if (delayedShipExpectedAt === null) {
-      return dayjs.max(paidDay, shipReservedDay);
-    }
-    if (shipReservedAt === null) {
-      return dayjs.max(paidDay, delayedShipExpectedDay);
-    }
-    return dayjs.max(paidDay, delayedShipExpectedDay, shipReservedDay);
+    return dayjs.max(
+      dayjs(paidAt).add(1, 'day'),
+      delayedShipExpectedAt ? dayjs(delayedShipExpectedAt) : oldDay,
+      shipReservedAt ? dayjs(shipReservedAt) : oldDay
+    );
   }
 }
