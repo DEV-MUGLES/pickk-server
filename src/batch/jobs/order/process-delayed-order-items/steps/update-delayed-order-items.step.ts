@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import minMax from 'dayjs/plugin/minMax';
+import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
@@ -15,16 +16,21 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
   }
 
   async tasklet() {
-    const orderItems = await this.getOrderItems();
+    const unprocessedOrderItems = await this.orderItemsRepository.find({
+      status: In([
+        OrderItemStatus.Paid,
+        OrderItemStatus.ShipReady,
+        OrderItemStatus.ShipPending,
+      ]),
+    });
 
-    const delayedOrderItems = orderItems.filter((o) => {
+    const delayedOrderItems = unprocessedOrderItems.filter((o) => {
       const { paidAt, delayedShipExpectedAt, shipReservedAt } = o;
-      const lastDay = dayjs.max(
-        dayjs(paidAt),
-        dayjs(delayedShipExpectedAt),
-        dayjs(shipReservedAt)
-      );
-      return lastDay.isBefore(dayjs());
+      return this.getLastDay(
+        paidAt,
+        delayedShipExpectedAt,
+        shipReservedAt
+      ).isBefore(dayjs());
     });
 
     delayedOrderItems.forEach((o) => {
@@ -34,14 +40,18 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     await this.orderItemsRepository.save(delayedOrderItems);
   }
 
-  /** status가 paid, ship_ready, ship_pending인 orderItem 리스트를 반환합니다. */
-  async getOrderItems() {
-    return await this.orderItemsRepository.find({
-      where: [
-        { status: OrderItemStatus.Paid },
-        { status: OrderItemStatus.ShipReady },
-        { status: OrderItemStatus.ShipPending },
-      ],
-    });
+  private getLastDay(
+    paidAt: Date,
+    delayedShipExpectedAt: Date,
+    shipReservedAt: Date
+  ): dayjs.Dayjs {
+    if (delayedShipExpectedAt != null && shipReservedAt != null) {
+      return dayjs.max(
+        dayjs(paidAt),
+        dayjs(delayedShipExpectedAt),
+        dayjs(shipReservedAt)
+      );
+    }
+    return dayjs(paidAt);
   }
 }
