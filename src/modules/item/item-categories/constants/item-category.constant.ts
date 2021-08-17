@@ -1,241 +1,227 @@
+import { PredefinedCategoryCode } from './item-category.enum';
+
 export const ItemCategoryData: {
   name: string;
-  code: string;
-  minorCategories: { name: string; code: string }[];
+  code: PredefinedCategoryCode;
+  minorCategories: { name: string; code: PredefinedCategoryCode }[];
 }[] = [
   {
     name: '아우터',
-    code: 'OUTER',
+    code: PredefinedCategoryCode.Outer,
     minorCategories: [
       {
-        code: 'LEATHER_JACKET',
-        name: '레더자켓',
+        code: PredefinedCategoryCode.LeatherJacket,
+        name: '레더 재킷',
       },
       {
-        code: 'BLAZER',
+        code: PredefinedCategoryCode.Blazer,
         name: '블레이저',
       },
       {
-        code: 'TRENCH_COAT',
-        name: '트렌치코트',
+        code: PredefinedCategoryCode.TruckerJacket,
+        name: '트러커 재킷',
       },
       {
-        code: 'CARDIGAN',
+        code: PredefinedCategoryCode.CoachJacket,
+        name: '나일론, 코치 재킷',
+      },
+      {
+        code: PredefinedCategoryCode.LightCoat,
+        name: '환절기 코트',
+      },
+      {
+        code: PredefinedCategoryCode.HeavyCoat,
+        name: '겨울 코트',
+      },
+      {
+        code: PredefinedCategoryCode.Blouson,
+        name: '블루종, MA-1',
+      },
+      {
+        code: PredefinedCategoryCode.Fleece,
+        name: '플리스',
+      },
+      {
+        code: PredefinedCategoryCode.Cardigan,
         name: '가디건',
       },
       {
-        code: 'COAT',
-        name: '코트',
-      },
-      {
-        code: 'JACKET',
-        name: '자켓',
-      },
-      {
-        code: 'JUMPER',
-        name: '점퍼',
-      },
-      {
-        code: 'PADDING',
+        code: PredefinedCategoryCode.Padding,
         name: '패딩',
       },
       {
-        code: 'VEST',
+        code: PredefinedCategoryCode.Vest,
         name: '베스트',
+      },
+      {
+        code: PredefinedCategoryCode.EtcOuter,
+        name: '기타 아우터',
       },
     ],
   },
   {
     name: '상의',
-    code: 'TOP',
+    code: PredefinedCategoryCode.Top,
     minorCategories: [
       {
-        code: 'SHORT_TSHIRT',
+        code: PredefinedCategoryCode.ShortTshirt,
         name: '반팔 티셔츠',
       },
       {
-        code: 'LONG_TSHIRT',
+        code: PredefinedCategoryCode.LongTshirt,
         name: '긴팔 티셔츠',
       },
       {
-        code: 'SHIRT',
-        name: '셔츠/남방',
+        code: PredefinedCategoryCode.Shirt,
+        name: '셔츠',
       },
       {
-        code: 'KNIT',
+        code: PredefinedCategoryCode.Knit,
         name: '니트',
       },
       {
-        code: 'SWEATSHIRT',
+        code: PredefinedCategoryCode.Sweatshirt,
         name: '맨투맨',
       },
       {
-        code: 'HOOD',
-        name: '후드',
+        code: PredefinedCategoryCode.Hood,
+        name: '후드티, 집업',
       },
       {
-        code: 'SLEEVELESS',
-        name: '민소매',
+        code: PredefinedCategoryCode.Sleeveless,
+        name: '민소매 티셔츠',
       },
     ],
   },
   {
     name: '하의',
-    code: 'BOTTOM',
+    code: PredefinedCategoryCode.Bottom,
     minorCategories: [
       {
-        code: 'DENIM_PANTS',
-        name: '청바지',
+        code: PredefinedCategoryCode.DenimPants,
+        name: '데님 팬츠',
       },
       {
-        code: 'COTTON_PANTS',
-        name: '면바지',
+        code: PredefinedCategoryCode.CottonPants,
+        name: '코튼 팬츠',
       },
       {
-        code: 'TRAINING_PANTS',
-        name: '트레이닝',
+        code: PredefinedCategoryCode.TraningPants,
+        name: '트레이닝, 조거 팬츠',
       },
       {
-        code: 'SHORT_PANTS',
-        name: '반바지',
+        code: PredefinedCategoryCode.ShortPants,
+        name: '숏 팬츠',
       },
       {
-        code: 'OVERALLS',
-        name: '멜빵바지',
-      },
-      {
-        code: 'SLACKS',
+        code: PredefinedCategoryCode.Slacks,
         name: '슬랙스',
       },
     ],
   },
   {
     name: '신발',
-    code: 'SHOES',
+    code: PredefinedCategoryCode.Shoes,
     minorCategories: [
       {
-        code: 'SNEAKERS',
-        name: '스니커즈/캔버스',
+        code: PredefinedCategoryCode.Canvas,
+        name: '캔버스, 단화',
       },
       {
-        code: 'RUNNING_SHOES',
+        code: PredefinedCategoryCode.RunningShoes,
         name: '운동화',
       },
       {
-        code: 'DRESS_SHOES',
+        code: PredefinedCategoryCode.DressShoes,
         name: '구두',
       },
       {
-        code: 'BOOTS',
+        code: PredefinedCategoryCode.Boots,
         name: '부츠',
       },
       {
-        code: 'SANDAL',
-        name: '샌들',
-      },
-      {
-        code: 'SLIPPER',
-        name: '슬리퍼',
-      },
-      {
-        code: 'DERBY_DRESS_SHOES',
-        name: '더비',
-      },
-      {
-        code: 'LOAFER_DRESS_SHOES',
+        code: PredefinedCategoryCode.Loafer,
         name: '로퍼',
       },
       {
-        code: 'CHELSEA_BOOTS',
-        name: '첼시',
+        code: PredefinedCategoryCode.SandalSlipper,
+        name: '샌들, 슬리퍼',
       },
       {
-        code: 'WALKER_BOOTS',
-        name: '워커',
-      },
-      {
-        code: 'ETC_BOOTS',
-        name: '기타',
+        code: PredefinedCategoryCode.EtcShoes,
+        name: '기타 신발',
       },
     ],
   },
   {
     name: '가방',
-    code: 'BAG',
+    code: PredefinedCategoryCode.Bag,
     minorCategories: [
       {
-        code: 'BACKPACK',
+        code: PredefinedCategoryCode.Backpack,
         name: '백팩',
       },
       {
-        code: 'SHOULDER_BAG',
+        code: PredefinedCategoryCode.ShoulderBag,
         name: '숄더백',
       },
       {
-        code: 'CROSS_BAG',
+        code: PredefinedCategoryCode.CrossBag,
         name: '크로스백',
       },
       {
-        code: 'CARRIER',
-        name: '캐리어',
+        code: PredefinedCategoryCode.ClutchPouch,
+        name: '클러치, 파우치',
       },
       {
-        code: 'WAIST_BAG',
-        name: '웨이스트백',
-      },
-      {
-        code: 'CLUTCH_POUCH',
-        name: '클러치/파우치',
-      },
-      {
-        code: 'ETC_BAG',
-        name: '기타',
-      },
-      {
-        code: 'BOSTON_BAG',
-        name: '보스턴백',
+        code: PredefinedCategoryCode.EtcBag,
+        name: '기타 가방',
       },
     ],
   },
   {
     name: '악세서리',
-    code: 'ACCESSORY',
+    code: PredefinedCategoryCode.Acc,
     minorCategories: [
       {
-        code: 'HAT',
+        code: PredefinedCategoryCode.Hat,
         name: '모자',
       },
       {
-        code: 'WATCH',
-        name: '시계',
-      },
-      {
-        code: 'WALLET',
-        name: '지갑',
-      },
-      {
-        code: 'BELT',
+        code: PredefinedCategoryCode.Belt,
         name: '벨트',
       },
       {
-        code: 'GLASSES',
-        name: '안경',
-      },
-      {
-        code: 'SUNGLASSES',
-        name: '선글라스',
-      },
-      {
-        code: 'MUFFLER',
+        code: PredefinedCategoryCode.Muffler,
         name: '머플러',
       },
       {
-        code: 'JEWELRY',
-        name: '쥬얼리',
+        code: PredefinedCategoryCode.Watch,
+        name: '시계',
       },
       {
-        code: 'ETC_ACCESSORY',
-        name: '기타',
+        code: PredefinedCategoryCode.Sunglasses,
+        name: '선글라스',
+      },
+      {
+        code: PredefinedCategoryCode.Braclet,
+        name: '팔찌',
+      },
+      {
+        code: PredefinedCategoryCode.Ring,
+        name: '반지',
+      },
+      {
+        code: PredefinedCategoryCode.Necklace,
+        name: '목걸이',
+      },
+      {
+        code: PredefinedCategoryCode.Grooming,
+        name: '그루밍',
+      },
+      {
+        code: PredefinedCategoryCode.EtcAcc,
+        name: '기타 악세사리 ',
       },
     ],
   },
