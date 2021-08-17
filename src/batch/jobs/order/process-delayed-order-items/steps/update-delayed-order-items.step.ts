@@ -26,11 +26,9 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
 
     const delayedOrderItems = unprocessedOrderItems.filter((o) => {
       const { paidAt, delayedShipExpectedAt, shipReservedAt } = o;
-      return this.getLastDay(
-        paidAt,
-        delayedShipExpectedAt,
-        shipReservedAt
-      ).isBefore(dayjs());
+      return this.getLastDay(paidAt, delayedShipExpectedAt, shipReservedAt)
+        .add(1, 'day')
+        .isBefore(dayjs());
     });
 
     delayedOrderItems.forEach((o) => {
@@ -40,18 +38,24 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     await this.orderItemsRepository.save(delayedOrderItems);
   }
 
-  private getLastDay(
+  getLastDay(
     paidAt: Date,
     delayedShipExpectedAt: Date,
     shipReservedAt: Date
   ): dayjs.Dayjs {
-    if (delayedShipExpectedAt != null && shipReservedAt != null) {
-      return dayjs.max(
-        dayjs(paidAt),
-        dayjs(delayedShipExpectedAt),
-        dayjs(shipReservedAt)
-      );
+    const paidDay = dayjs(paidAt).add(1, 'days');
+    const delayedShipExpectedDay = dayjs(delayedShipExpectedAt);
+    const shipReservedDay = dayjs(shipReservedAt);
+
+    if (delayedShipExpectedAt === null && shipReservedAt === null) {
+      return paidDay;
     }
-    return dayjs(paidAt);
+    if (delayedShipExpectedAt === null) {
+      return dayjs.max(paidDay, shipReservedDay);
+    }
+    if (shipReservedAt === null) {
+      return dayjs.max(paidDay, delayedShipExpectedDay);
+    }
+    return dayjs.max(paidDay, delayedShipExpectedDay, shipReservedDay);
   }
 }
