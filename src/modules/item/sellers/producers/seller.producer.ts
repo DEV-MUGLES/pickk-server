@@ -64,7 +64,6 @@ export class SellerProducer {
     for (let i = 0; i < messageChunk + 1; i++) {
       splitedMtos.push({
         brandId,
-
         items: items.slice(itemsChunkSize * i, itemsChunkSize * (i + 1)),
       });
     }
