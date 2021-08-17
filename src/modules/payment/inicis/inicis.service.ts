@@ -22,6 +22,28 @@ import {
 export class InicisService {
   constructor(@Inject(HttpService) private readonly httpService: HttpService) {}
 
+  async dodgeVbank(payment: Payment) {
+    const params = new IniapiClient().getDodgeVbankParams(payment);
+
+    const { data: result } = await firstValueFrom(
+      this.httpService.post<IniapiRefundResult>(
+        INIAPI_CANCEL_URL,
+        qs.stringify(params),
+        {
+          headers: {
+            'Content-type': 'application/x-www-form-urlencoded',
+            charset: 'utf-8',
+          },
+        }
+      )
+    );
+
+    const { resultCode, resultMsg } = result;
+    if (resultCode !== '00') {
+      throw new InicisCancelFailedException(resultMsg);
+    }
+  }
+
   async cancel(dto: InicisCancelDto) {
     const params = new IniapiClient().getCancelParams(dto);
 
