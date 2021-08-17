@@ -45,8 +45,10 @@ export interface IPayment {
   vbankDate?: string;
   cancellations?: IPaymentCancellation[];
   failedReason?: string;
-  failedAt?: Date;
+
   vbankReadyAt?: Date;
   paidAt?: Date;
   cancelledAt?: Date;
+  vbankDodgedAt: Date;
+  failedAt?: Date;
 }

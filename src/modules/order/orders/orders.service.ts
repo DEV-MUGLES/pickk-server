@@ -93,8 +93,12 @@ export class OrdersService {
     return await this.ordersRepository.save(order);
   }
 
-  async dodgeVbank(order: Order): Promise<Order> {
+  async dodgeVbank(merchantUid: string): Promise<Order> {
+    const order = await this.get(merchantUid, ['orderItems']);
     order.dodgeVbank();
+
+    await this.paymentsService.dodgeVbank(merchantUid);
+
     return await this.ordersRepository.save(order);
   }
 

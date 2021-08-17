@@ -12,6 +12,7 @@ import {
   NotJoinedCancelException,
   StatusInvalidToCancelException,
   StatusInvalidToCompleteException,
+  StatusInvalidToDodgeException,
   StatusInvalidToFailException,
   StatusInvalidToVbankPayException,
 } from '../exceptions';
@@ -22,6 +23,13 @@ import { PaymentCancellation } from './payment-cancellation.model';
 export class Payment extends PaymentEntity {
   @Field(() => [PaymentCancellation])
   cancellations: PaymentCancellation[];
+
+  public dodgeVbank() {
+    if (this.status !== PaymentStatus.VbankReady) {
+      throw new StatusInvalidToDodgeException();
+    }
+    this.markVbankDodged();
+  }
 
   public cancel(input: CancelPaymentInput): PaymentCancellation {
     if (this.cancellations == null) {
@@ -67,6 +75,11 @@ export class Payment extends PaymentEntity {
     } else {
       this.markPaid();
     }
+  }
+
+  private markVbankDodged() {
+    this.vbankDodgedAt = new Date();
+    this.status = PaymentStatus.VbankDodged;
   }
 
   private markCancelled(type: PaymentCancellationType) {

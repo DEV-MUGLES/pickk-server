@@ -2,12 +2,12 @@ import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import { PaymentStatus } from '@pickk/pay';
 import dayjs from 'dayjs';
 
 import { parseFilter } from '@common/helpers';
 import { InicisService } from '@payment/inicis/inicis.service';
 
+import { PaymentStatus } from './constants';
 import {
   CancelPaymentInput,
   CreatePaymentDto,
@@ -100,6 +100,16 @@ export class PaymentsService {
         ...cancelPaymentInput,
         payment,
       });
+    });
+  }
+
+  async dodgeVbank(merchantUid: string) {
+    const payment = await this.get(merchantUid);
+    payment.dodgeVbank();
+
+    await getManager().transaction(async (manager) => {
+      await manager.save(payment);
+      await this.inicisService.dodgeVbank(payment);
     });
   }
 

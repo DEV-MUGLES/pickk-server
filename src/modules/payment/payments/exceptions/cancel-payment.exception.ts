@@ -3,7 +3,8 @@ import {
   ConflictException,
   InternalServerErrorException,
 } from '@nestjs/common';
-import { PaymentStatus } from '@pickk/pay';
+
+import { PaymentStatus } from '../constants';
 
 export class StatusInvalidToCancelException extends BadRequestException {
   constructor(status: PaymentStatus) {

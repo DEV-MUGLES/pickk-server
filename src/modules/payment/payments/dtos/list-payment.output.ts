@@ -1,6 +1,6 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Pg, PaymentStatus, PayMethod } from '@pickk/pay';
 
+import { Pg, PaymentStatus, PayMethod } from '../constants';
 import { Payment } from '../models';
 
 @ObjectType()

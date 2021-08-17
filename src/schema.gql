@@ -1284,6 +1284,7 @@ type Payment {
   updatedAt: DateTime!
   vbankCode: BankCode
   vbankDate: String
+  vbankDodgedAt: DateTime
   vbankHolder: String
   vbankNum: String
   vbankReadyAt: DateTime
@@ -1336,6 +1337,7 @@ enum PaymentStatus {
   Paid
   PartialCancelled
   Pending
+  VbankDodged
   VbankReady
 }
 

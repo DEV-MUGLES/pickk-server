@@ -40,12 +40,12 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string
   ): Promise<BaseOrderOutput> {
-    const order = await this.ordersService.get(merchantUid, ['orderItems']);
-    if (order.userId !== userId) {
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    return await this.ordersService.dodgeVbank(order);
+    return await this.ordersService.dodgeVbank(merchantUid);
   }
 
   // @TODO: SQS에서 1. 재고복구, 2. 완료 알림톡 전송
