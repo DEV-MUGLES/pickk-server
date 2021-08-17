@@ -7,7 +7,10 @@ import { OrderItemsRepository } from '@order/order-items/order-items.repository'
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 
-import { ProcessDelayedExchangeRequestsJob } from './process-delayed-exchange-requests/job';
+import {
+  ProcessDelayedExchangeRequestsJob,
+  UpdateDelayedExchangeRequestsStep,
+} from './process-delayed-exchange-requests';
 import {
   UpdateDelayedOrderItemsStep,
   ProcessDelayedOrderItemsJob,
@@ -16,11 +19,13 @@ import {
   ProcessDelayedRefundRequestsJob,
   UpdateDelayedRefundRequestsStep,
 } from './process-delayed-refund-requests';
+import {
+  SendDelayedOrderItemsAlimtalkJob,
+  SendDelayedOrderItemsAlimtalkStep,
+} from './send-delayed-order-items-alimtalk';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
-
-import { UpdateDelayedExchangeRequestsStep } from './process-delayed-exchange-requests';
 
 @Module({
   imports: [
@@ -38,9 +43,11 @@ import { UpdateDelayedExchangeRequestsStep } from './process-delayed-exchange-re
     ProcessDelayedOrderItemsJob,
     ProcessDelayedExchangeRequestsJob,
     ProcessDelayedRefundRequestsJob,
+    SendDelayedOrderItemsAlimtalkJob,
     UpdateDelayedOrderItemsStep,
     UpdateDelayedRefundRequestsStep,
     UpdateDelayedExchangeRequestsStep,
+    SendDelayedOrderItemsAlimtalkStep,
   ],
 })
 export class OrderJobsModule {}

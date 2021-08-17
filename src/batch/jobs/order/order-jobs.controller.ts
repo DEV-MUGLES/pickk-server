@@ -25,4 +25,9 @@ export class OrderJobsController {
   async processDelayedRefundRequests() {
     await this.orderJobsService.processDelayedRefundRequests();
   }
+
+  @Post('/send-delayed-order-items-alimtalk')
+  async sendDelayedOrderItemsAlimtalk() {
+    await this.orderJobsService.sendDelayedOrderItemsAlimtalk();
+  }
 }
