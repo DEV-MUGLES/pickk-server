@@ -158,6 +158,7 @@
       ],
       "@admin/(.*)$": "<rootDir>/modules/admin/$1",
       "@mcommon/(.*)$": "<rootDir>/modules/common/$1",
+      "@content/(.*)$": "<rootDir>/modules/content/$1",
       "@item/(.*)$": "<rootDir>/modules/item/$1",
       "@my/(.*)$": "<rootDir>/modules/my/$1",
       "@order/(.*)$": "<rootDir>/modules/order/$1",

@@ -21,6 +21,7 @@
       "@templates/*": ["src/templates/*"],
       "@admin/*": ["src/modules/admin/*"],
       "@mcommon/*": ["src/modules/common/*"],
+      "@content/*": ["src/modules/content/*"],
       "@item/*": ["src/modules/item/*"],
       "@my/*": ["src/modules/my/*"],
       "@order/*": ["src/modules/order/*"],

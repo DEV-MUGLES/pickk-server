@@ -7,6 +7,7 @@ import { AuthModule } from '@auth/auth.module';
 import { BatchModule } from '@batch/batch.module';
 import { AppConfigModule } from '@config/app/config.module';
 import { CommonModule } from '@mcommon/common.module';
+import { ContentModule } from '@content/content.module';
 import { ItemModule } from '@item/item.module';
 import { MyModule } from '@my/my.module';
 import { UserModule } from '@user/user.module';
@@ -41,6 +42,7 @@ import { AppService } from './app.service';
     AuthModule,
     AdminModule,
     CommonModule,
+    ContentModule,
     ItemModule,
     MyModule,
     OrderModule,
