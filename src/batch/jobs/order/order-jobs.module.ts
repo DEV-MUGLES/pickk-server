@@ -23,6 +23,10 @@ import {
   SendDelayedOrderItemsAlimtalkJob,
   SendDelayedOrderItemsAlimtalkStep,
 } from './send-delayed-order-items-alimtalk';
+import {
+  SendDelayedExchangeRequestsAlimtalkJob,
+  SendDelayedExchangeRequestsAlimtalkStep,
+} from './send-delayed-exchange-requests-alimtalk';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
@@ -44,10 +48,12 @@ import { OrderJobsService } from './order-jobs.service';
     ProcessDelayedExchangeRequestsJob,
     ProcessDelayedRefundRequestsJob,
     SendDelayedOrderItemsAlimtalkJob,
+    SendDelayedExchangeRequestsAlimtalkJob,
     UpdateDelayedOrderItemsStep,
     UpdateDelayedRefundRequestsStep,
     UpdateDelayedExchangeRequestsStep,
     SendDelayedOrderItemsAlimtalkStep,
+    SendDelayedExchangeRequestsAlimtalkStep,
   ],
 })
 export class OrderJobsModule {}

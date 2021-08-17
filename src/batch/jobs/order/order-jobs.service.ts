@@ -6,6 +6,7 @@ import { ProcessDelayedExchangeRequestsJob } from './process-delayed-exchange-re
 import { ProcessDelayedOrderItemsJob } from './process-delayed-order-items';
 import { ProcessDelayedRefundRequestsJob } from './process-delayed-refund-requests';
 import { SendDelayedOrderItemsAlimtalkJob } from './send-delayed-order-items-alimtalk';
+import { SendDelayedExchangeRequestsAlimtalkJob } from './send-delayed-exchange-requests-alimtalk';
 
 @Injectable()
 export class OrderJobsService {
@@ -14,7 +15,8 @@ export class OrderJobsService {
     private readonly processDelayedExchangeRequestsJob: ProcessDelayedExchangeRequestsJob,
     private readonly processDelayedOrderItemsJob: ProcessDelayedOrderItemsJob,
     private readonly processDelayedRefundRequestsJob: ProcessDelayedRefundRequestsJob,
-    private readonly sendDelayedOrderItemsAlimtalkJob: SendDelayedOrderItemsAlimtalkJob
+    private readonly sendDelayedOrderItemsAlimtalkJob: SendDelayedOrderItemsAlimtalkJob,
+    private readonly sendDelayedExchangeRequestsAlimtalkJob: SendDelayedExchangeRequestsAlimtalkJob
   ) {}
 
   async processDelayedExchangeRequests() {
@@ -31,5 +33,9 @@ export class OrderJobsService {
 
   async sendDelayedOrderItemsAlimtalk() {
     await this.bacthWorker.run(this.sendDelayedOrderItemsAlimtalkJob);
+  }
+
+  async sendDelayedExchangeRequestsAlimtalk() {
+    await this.bacthWorker.run(this.sendDelayedExchangeRequestsAlimtalkJob);
   }
 }
