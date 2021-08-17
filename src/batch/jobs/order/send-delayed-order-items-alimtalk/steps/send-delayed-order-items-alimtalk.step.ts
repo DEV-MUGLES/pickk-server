@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Brackets } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
@@ -20,30 +19,24 @@ export class SendDelayedOrderItemsAlimtalkStep extends BaseStep {
   async tasklet() {
     const delayedOrderItemsRawDatas = await this.orderItemsRepository
       .createQueryBuilder('orderItem')
-      .select('count(*), sellerId, brandNameKor')
+      .select('count(*), sellerId')
       .leftJoinAndSelect('orderItem.seller', 'seller')
+      .leftJoinAndSelect('seller.brand', 'brand')
       .where('orderItem.isProcessDelaying = true')
-      .andWhere(
-        new Brackets((qb) => {
-          qb.where('orderItem.status = :paid', {
-            paid: OrderItemStatus.Paid,
-          })
-            .orWhere('orderItem.status = :shipReady', {
-              shipReady: OrderItemStatus.ShipReady,
-            })
-            .orWhere('orderItem.status = :shipPending', {
-              shipPending: OrderItemStatus.ShipPending,
-            });
-        })
-      )
+      .andWhere('orderItem.status IN (:...status)', {
+        status: [
+          OrderItemStatus.Paid,
+          OrderItemStatus.ShipReady,
+          OrderItemStatus.ShipPending,
+        ],
+      })
       .groupBy('orderItem.sellerId')
-      .addGroupBy('orderItem.brandNameKor')
       .getRawMany();
 
     delayedOrderItemsRawDatas.forEach(async (r) => {
       const delayedCount = r['count(*)'];
       const phoneNumber = r.seller_phoneNumber;
-      const brandKor = r.brandNameKor;
+      const brandKor = r.brand_nameKor;
 
       await this.alimtalkService.sendDelayedOrderItems(
         { brandKor, phoneNumber },
