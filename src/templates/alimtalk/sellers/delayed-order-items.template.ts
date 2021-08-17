@@ -1,13 +1,15 @@
 import { AlimtalkMessageRequest } from 'nest-sens';
 
+import { ISellerInfo } from './intefaces';
+
 export class DelayedOrderItemsTemplate {
   static code = 'bdyoi';
 
   static toRequest(
-    seller: { brandKor: string; phoneNumber: string },
+    sellerInfo: ISellerInfo,
     delayedCount: number
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
-    const { phoneNumber, brandKor } = seller;
+    const { phoneNumber, brandKor } = sellerInfo;
     return {
       templateCode: this.code,
       messages: [
