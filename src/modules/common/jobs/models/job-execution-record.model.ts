@@ -39,7 +39,7 @@ export class JobExecutionRecord extends JobExecutionRecordEntity {
   public fail(err: Error) {
     this.markFailed();
     this.markEnd();
-    this.errorMessage = err.message;
+    this.errorMessage = err.message.slice(0, 99);
   }
 
   public saveContextRecord(contextRecord: JobExecutionContextRecord) {

@@ -34,6 +34,6 @@ export class StepExecutionRecord extends StepExecutionRecordEntity {
   public fail(err: Error) {
     this.markFailed();
     this.markEnd();
-    this.errorMessage = err.message;
+    this.errorMessage = err.message.slice(0, 100);
   }
 }
