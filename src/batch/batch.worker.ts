@@ -41,6 +41,7 @@ export class BatchWorker {
       }
       await this.jobsService.updateJobExecutionRecord(jobExecutionRecord);
     }
+    return context.getAll();
   }
 
   async runSteps(
