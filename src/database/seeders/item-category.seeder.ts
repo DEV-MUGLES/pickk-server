@@ -29,13 +29,13 @@ export class ItemCategorySeeder extends BaseSeeder {
         newMajorCategories.push(parentEntity);
       }
 
-      minorCategories.forEach(({ code, name }) => {
+      minorCategories.forEach(({ id, code, name }) => {
         const index = this.findSameCodeCategoryIndex(code);
         if (index > -1) {
           this.existCategories[index].name = name;
         } else {
           newMinorCategories.push(
-            new ItemCategoryEntity({ code, name, parent: parentEntity })
+            new ItemCategoryEntity({ id, code, name, parent: parentEntity })
           );
         }
       });
