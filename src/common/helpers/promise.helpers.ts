@@ -36,3 +36,10 @@ export const isFulfilled = (obj: unknown): obj is FulfillResponse => {
     (obj as FulfillResponse).value != null
   );
 };
+
+export const isRejected = (obj: unknown): obj is RejectResponse => {
+  return (
+    (obj as RejectResponse).status === 'rejected' &&
+    (obj as RejectResponse).reason != null
+  );
+};
