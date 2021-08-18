@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { SentryInterceptor } from '@ntegral/nestjs-sentry';
 
 import { AppConfigService } from './config/app/config.service';
 
@@ -21,6 +22,7 @@ async function bootstrap() {
   SwaggerModule.setup('docs', app, swaggerDocument);
   app.enableCors();
   app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalInterceptors(new SentryInterceptor());
 
   await app.listen(appConfig.port);
 }
