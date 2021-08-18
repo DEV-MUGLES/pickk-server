@@ -1882,6 +1882,16 @@ input StartOrderItemInput {
   usedCouponId: Int
 }
 
+type StyleTag {
+  createdAt: DateTime!
+  id: Int!
+
+  """최대 길이 30"""
+  name: String!
+  order: Int!
+  updatedAt: DateTime!
+}
+
 """
 Date type as integer. Type represents date and time as number of milliseconds from start of UNIX epoch.
 """
