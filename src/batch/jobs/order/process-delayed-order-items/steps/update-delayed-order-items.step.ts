@@ -8,8 +8,7 @@ import { JobExecutionContext } from '@batch/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
 
-import { oldDay } from './constants';
-
+const DEFAULT_OLD_DATE = dayjs(new Date(2000, 1, 1));
 dayjs.extend(minMax);
 
 @Injectable()
@@ -57,8 +56,8 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
   ): dayjs.Dayjs {
     return dayjs.max(
       dayjs(paidAt).add(1, 'day'),
-      delayedShipExpectedAt ? dayjs(delayedShipExpectedAt) : oldDay,
-      shipReservedAt ? dayjs(shipReservedAt) : oldDay
+      delayedShipExpectedAt ? dayjs(delayedShipExpectedAt) : DEFAULT_OLD_DATE,
+      shipReservedAt ? dayjs(shipReservedAt) : DEFAULT_OLD_DATE
     );
   }
 }
