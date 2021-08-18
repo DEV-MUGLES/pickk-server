@@ -515,6 +515,11 @@ type Digest {
   user: User
   userId: Int
 }
+
+input DigestFilter {
+  userId: Int
+}
+
 type DigestImage {
   angle: Int!
   createdAt: DateTime!
@@ -1496,6 +1501,7 @@ type Query {
   checkoutOrder(merchantUid: String!): OrderSheet!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   genRandomNickname: String!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
