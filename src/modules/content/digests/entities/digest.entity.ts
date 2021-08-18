@@ -10,6 +10,7 @@ import {
 
 import { BaseIdEntity } from '@common/entities';
 
+import { ILook } from '@content/looks/interfaces';
 import { IVideo } from '@content/videos/interfaces';
 import { ItemPropertyValueEntity } from '@item/item-properties/entities';
 import { ItemPropertyValue } from '@item/item-properties/models';
@@ -70,12 +71,13 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @Column({ type: 'int', nullable: true })
   userId: number;
 
-  // @TODO: video, look 추가
   @ManyToOne('VideoEntity')
   video: IVideo;
   @Column({ type: 'int', nullable: true })
   videoId: number;
-  look;
+  @ManyToOne('LookEntity')
+  look: ILook;
+  @Column({ type: 'int', nullable: true })
   lookId: number;
 
   @Field(() => [ItemPropertyValue])
