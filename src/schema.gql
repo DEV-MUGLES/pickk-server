@@ -503,6 +503,7 @@ type Digest {
   itemId: Int
   itemPropertyValues: [ItemPropertyValue!]!
   likeCount: Int!
+  look: Look
   rating: Rating
   score: Float!
   size: String!
@@ -897,6 +898,10 @@ type Look {
   title: String!
   updatedAt: DateTime!
   user: User
+  userId: Int
+}
+
+input LookFilter {
   userId: Int
 }
 
