@@ -1541,6 +1541,7 @@ type Query {
   requestPin(requestPinInput: RequestPinInput!): Boolean!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
+  styleTags: [StyleTag!]!
   user(id: Int!): User!
   users: [User!]!
   videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
