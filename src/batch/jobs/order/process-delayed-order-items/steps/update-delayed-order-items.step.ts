@@ -4,6 +4,7 @@ import minMax from 'dayjs/plugin/minMax';
 import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
+import { JobExecutionContext } from '@batch/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
 
@@ -17,7 +18,7 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     super();
   }
 
-  async tasklet() {
+  async tasklet(context: JobExecutionContext) {
     const unprocessedOrderItems = await this.orderItemsRepository.find({
       select: [
         'paidAt',
@@ -46,6 +47,7 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     });
 
     await this.orderItemsRepository.save(delayedOrderItems);
+    context.put('delayedOrderItemCount', delayedOrderItems.length);
   }
 
   getLastDay(
