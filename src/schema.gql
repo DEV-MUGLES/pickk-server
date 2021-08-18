@@ -549,6 +549,7 @@ type Digest {
 }
 
 input DigestFilter {
+  itemId: Int
   userId: Int
 }
 
@@ -1567,6 +1568,7 @@ type Query {
   ): [Comment!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   genRandomNickname: String!
   item(id: Int!): Item!
