@@ -93,7 +93,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
 
   // 여기부터 꿀템만 있는 값들
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'mediumint', nullable: true })
+  @Column({ type: 'tinyint', nullable: true })
   rating: number;
 
   @Field({ description: '최대 길이 127', nullable: true })
