@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -19,6 +20,14 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @Inject(DigestsService) private readonly digestsService: DigestsService
   ) {
     super();
+  }
+
+  @Query(() => Digest)
+  async digest(
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Digest> {
+    return await this.digestsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @Query(() => [Digest])
