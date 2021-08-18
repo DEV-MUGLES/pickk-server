@@ -2,7 +2,7 @@ import { BaseIdEntity } from '@common/entities';
 import { IsDate } from 'class-validator';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { ERROR_MESSAGE_SIZE, StepStatus } from '../constants';
+import { ERROR_MESSAGE_LENGTH, StepStatus } from '../constants';
 import { IStepExecutionRecord } from '../interfaces';
 
 import { JobExecutionRecordEntity } from './job-execution-record.entity';
@@ -35,7 +35,7 @@ export class StepExecutionRecordEntity
   })
   status: string;
 
-  @Column({ nullable: true, length: ERROR_MESSAGE_SIZE })
+  @Column({ nullable: true, length: ERROR_MESSAGE_LENGTH })
   errorMessage: string;
 
   @Column({ nullable: true })

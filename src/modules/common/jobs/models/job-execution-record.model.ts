@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { ERROR_MESSAGE_SIZE, JobStatus } from '../constants';
+import { ERROR_MESSAGE_LENGTH, JobStatus } from '../constants';
 import { JobExecutionRecordEntity } from '../entities';
 import { JobExecutionContextRecord } from './job-execution-context-record.model';
 
@@ -39,7 +39,7 @@ export class JobExecutionRecord extends JobExecutionRecordEntity {
   public fail(err: Error) {
     this.markFailed();
     this.markEnd();
-    this.errorMessage = err.message.slice(0, ERROR_MESSAGE_SIZE);
+    this.errorMessage = err.message.slice(0, ERROR_MESSAGE_LENGTH);
   }
 
   public saveContextRecord(contextRecord: JobExecutionContextRecord) {

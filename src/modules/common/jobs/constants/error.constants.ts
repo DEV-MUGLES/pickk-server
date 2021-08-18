@@ -1,1 +1,1 @@
-export const ERROR_MESSAGE_SIZE = 100;
+export const ERROR_MESSAGE_LENGTH = 100;
