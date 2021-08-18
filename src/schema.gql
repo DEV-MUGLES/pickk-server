@@ -490,6 +490,38 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Digest {
+  commentCount: Int!
+
+  """최대 길이 2047"""
+  content: String
+  createdAt: DateTime!
+  hitCount: Int!
+  id: Int!
+  images: [DigestImage!]!
+  item: Item
+  itemId: Int
+  itemPropertyValues: [ItemPropertyValue!]!
+  likeCount: Int!
+  rating: Int
+  score: Float!
+  size: String!
+  timestampEndSecond: Int
+  timestampStartSecond: Int
+
+  """최대 길이 127"""
+  title: String
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+type DigestImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
+}
+
 type ExchangeRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
