@@ -17,6 +17,7 @@ export interface ILook {
   images: IImage[];
   digests: IDigest[];
   comments: IComment[];
+
   title: string;
 
   likeCount: number;

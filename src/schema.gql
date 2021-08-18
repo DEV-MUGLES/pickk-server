@@ -882,6 +882,31 @@ input LoginWithAppleInput {
   code: String!
 }
 
+type Look {
+  commentCount: Int!
+  createdAt: DateTime!
+  digests: [Digest!]!
+  hitCount: Int!
+  id: Int!
+  images: [LookImage!]!
+  likeCount: Int!
+  score: Float!
+  styleTags: [StyleTag!]!
+
+  """최대 길이 127"""
+  title: String!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+type LookImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
+}
+
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
@@ -1514,6 +1539,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
+  looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
