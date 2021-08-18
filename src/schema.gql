@@ -514,6 +514,7 @@ type Digest {
   updatedAt: DateTime!
   user: User
   userId: Int
+  video: Video
 }
 
 input DigestFilter {
@@ -2119,4 +2120,23 @@ enum UserRole {
   Editor
   Seller
   User
+}
+
+type Video {
+  commentCount: Int!
+  createdAt: DateTime!
+  digests: [Digest!]!
+  hitCount: Int!
+  id: Int!
+  likeCount: Int!
+  score: Float!
+
+  """최대 길이 127"""
+  title: String!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+
+  """최대 길이 40"""
+  youtubeCode: String!
 }

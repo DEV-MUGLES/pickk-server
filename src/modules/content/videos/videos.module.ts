@@ -1,4 +1,9 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
-@Module({})
+import { VideosRepository } from './videos.repository';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([VideosRepository])],
+})
 export class VideosModule {}

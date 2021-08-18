@@ -17,6 +17,7 @@ import { User } from '@user/users/models';
 
 import { IDigest } from '../interfaces';
 import { DigestImage } from '../models';
+import { IVideo } from '@content/videos/interfaces';
 
 @ObjectType()
 @Entity({ name: 'digest' })
@@ -69,7 +70,9 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   userId: number;
 
   // @TODO: video, look 추가
-  video;
+  @ManyToOne('VideoEntity')
+  video: IVideo;
+  @Column({ type: 'int', nullable: true })
   videoId: number;
   look;
   lookId: number;
