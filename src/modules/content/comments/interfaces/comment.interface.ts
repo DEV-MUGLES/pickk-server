@@ -12,8 +12,10 @@ export interface IComment {
 
   ownerType: CommentOwnerType;
   ownerId: number;
+
   parent: IComment;
   parentId: number;
+
   mentionedUser: IUser;
   mentionedUserId: number;
 
