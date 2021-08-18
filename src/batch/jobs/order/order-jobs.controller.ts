@@ -15,31 +15,31 @@ export class OrderJobsController {
 
   @Post('/process-delayed-exchange-requests')
   async processDelayedExchangeRequests() {
-    await this.orderJobsService.processDelayedExchangeRequests();
+    return await this.orderJobsService.processDelayedExchangeRequests();
   }
 
   @Post('/process-delayed-order-items')
   async processDelayedOrderItems() {
-    await this.orderJobsService.processDelayedOrderItems();
+    return await this.orderJobsService.processDelayedOrderItems();
   }
 
   @Post('/process-delayed-refund-requests')
   async processDelayedRefundRequests() {
-    await this.orderJobsService.processDelayedRefundRequests();
+    return this.orderJobsService.processDelayedRefundRequests();
   }
 
   @Post('/send-delayed-order-items-alimtalk')
   async sendDelayedOrderItemsAlimtalk() {
-    await this.orderJobsService.sendDelayedOrderItemsAlimtalk();
+    return await this.orderJobsService.sendDelayedOrderItemsAlimtalk();
   }
 
   @Post('/send-delayed-exchange-requests-alimtalk')
   async sendDelayedExchangeRequestsAlimtalk() {
-    await this.orderJobsService.sendDelayedExchangeRequestsAlimtalk();
+    return await this.orderJobsService.sendDelayedExchangeRequestsAlimtalk();
   }
 
   @Post('/send-delayed-refund-requests-alimtalk')
   async sendDelayedRefundRequestsAlimtalk() {
-    await this.orderJobsService.sendDelayedRefundRequestsAlimtalk();
+    return await this.orderJobsService.sendDelayedRefundRequestsAlimtalk();
   }
 }

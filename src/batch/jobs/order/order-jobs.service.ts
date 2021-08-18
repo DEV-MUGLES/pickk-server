@@ -22,26 +22,30 @@ export class OrderJobsService {
   ) {}
 
   async processDelayedExchangeRequests() {
-    await this.bacthWorker.run(this.processDelayedExchangeRequestsJob);
+    return await this.bacthWorker.run(this.processDelayedExchangeRequestsJob);
   }
 
   async processDelayedOrderItems() {
-    await this.bacthWorker.run(this.processDelayedOrderItemsJob);
+    return await this.bacthWorker.run(this.processDelayedOrderItemsJob);
   }
 
   async processDelayedRefundRequests() {
-    await this.bacthWorker.run(this.processDelayedRefundRequestsJob);
+    return await this.bacthWorker.run(this.processDelayedRefundRequestsJob);
   }
 
   async sendDelayedOrderItemsAlimtalk() {
-    await this.bacthWorker.run(this.sendDelayedOrderItemsAlimtalkJob);
+    return await this.bacthWorker.run(this.sendDelayedOrderItemsAlimtalkJob);
   }
 
   async sendDelayedExchangeRequestsAlimtalk() {
-    await this.bacthWorker.run(this.sendDelayedExchangeRequestsAlimtalkJob);
+    return await this.bacthWorker.run(
+      this.sendDelayedExchangeRequestsAlimtalkJob
+    );
   }
 
   async sendDelayedRefundRequestsAlimtalk() {
-    await this.bacthWorker.run(this.sendDelayedRefundRequestsAlimtalkJob);
+    return await this.bacthWorker.run(
+      this.sendDelayedRefundRequestsAlimtalkJob
+    );
   }
 }
