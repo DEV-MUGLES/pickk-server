@@ -232,6 +232,36 @@ enum ClaimFeePayMethod {
   Trans
 }
 
+type Comment {
+  content: String!
+  createdAt: DateTime!
+  id: Int!
+  likeCount: Int!
+  mentionedUser: User
+  mentionedUserId: Int
+  ownerId: Int!
+  ownerType: CommentOwnerType!
+  parent: Comment
+  parentId: Int!
+  replies: [Comment!]!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+input CommentFilter {
+  ownerId: Int
+  ownerType: CommentOwnerType
+  parentIdIsNull: Boolean
+}
+
+"""댓글 연관 객체 분류입니다."""
+enum CommentOwnerType {
+  Digest
+  Look
+  Video
+}
+
 """컨텐츠 타입입니다."""
 enum ContentType {
   Look
@@ -1530,6 +1560,11 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   checkPin(checkPinInput: CheckPinInput!): Boolean!
   checkoutOrder(merchantUid: String!): OrderSheet!
+  comments(
+    """기본적으로 parentIdIsNull:true가 적용되어있습니다."""
+    filter: CommentFilter
+    pageInput: PageInput
+  ): [Comment!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
