@@ -1,8 +1,10 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { AppModule } from './app.module';
+
 import { AppConfigService } from './config/app/config.service';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -11,7 +13,7 @@ async function bootstrap() {
     .setTitle('pickk-server')
     .setDescription('The pickk-server API description')
     .setVersion('1.0')
-    .addTag('spider')
+    .addTag('jobs')
     .addTag('coupons')
     .build();
   const swaggerDocument = SwaggerModule.createDocument(app, swaggerConfig);

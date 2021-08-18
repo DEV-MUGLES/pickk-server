@@ -11,6 +11,12 @@ import { JobExecution, JobExecutionContext } from './models';
 export class BatchWorker {
   constructor(private readonly jobsService: JobsService) {}
 
+  /**
+   * job을 입력받아 jobExecution과 jobExecutionRecord를 생성합니다.
+   *
+   * @param job BaseJob을 상속하여 만든 클래스
+   * @returns jobExecutionContext를 반환합니다.
+   */
   async run(job: BaseJob) {
     const execution: JobExecution = job.createExecution(
       new JobExecutionBuilder()
@@ -41,6 +47,7 @@ export class BatchWorker {
       }
       await this.jobsService.updateJobExecutionRecord(jobExecutionRecord);
     }
+    return context.getAll();
   }
 
   async runSteps(
