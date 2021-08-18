@@ -1543,6 +1543,7 @@ type Query {
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   user(id: Int!): User!
   users: [User!]!
+  videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
 }
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
@@ -2139,4 +2140,8 @@ type Video {
 
   """최대 길이 40"""
   youtubeCode: String!
+}
+
+input VideoFilter {
+  userId: Int
 }
