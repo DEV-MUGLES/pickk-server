@@ -10,6 +10,7 @@ import {
 
 import { BaseIdEntity } from '@common/entities';
 
+import { IVideo } from '@content/videos/interfaces';
 import { ItemPropertyValueEntity } from '@item/item-properties/entities';
 import { ItemPropertyValue } from '@item/item-properties/models';
 import { Item } from '@item/items/models';
@@ -17,7 +18,7 @@ import { User } from '@user/users/models';
 
 import { IDigest } from '../interfaces';
 import { DigestImage } from '../models';
-import { IVideo } from '@content/videos/interfaces';
+import { Rating } from '../scalars';
 
 @ObjectType()
 @Entity({ name: 'digest' })
@@ -92,7 +93,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   size: string;
 
   // 여기부터 꿀템만 있는 값들
-  @Field(() => Int, { nullable: true })
+  @Field(() => Rating, { nullable: true })
   @Column({ type: 'tinyint', nullable: true })
   rating: number;
 

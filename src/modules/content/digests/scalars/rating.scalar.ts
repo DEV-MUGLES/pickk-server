@@ -8,7 +8,7 @@ export const Rating = new GraphQLScalarType({
     return Math.round(value * 2); // value from the client
   },
   serialize(value: number): number {
-    return Math.round(value * 2); // value sent to the client
+    return Math.round(value / 2); // value sent to the client
   },
   parseLiteral(ast: ValueNode): number {
     // 내부적으로 value parsing할 때

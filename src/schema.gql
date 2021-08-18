@@ -503,7 +503,7 @@ type Digest {
   itemId: Int
   itemPropertyValues: [ItemPropertyValue!]!
   likeCount: Int!
-  rating: Int
+  rating: Rating
   score: Float!
   size: String!
   timestampEndSecond: Int
@@ -1545,6 +1545,9 @@ type Query {
   users: [User!]!
   videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
 }
+
+"""별점을 나타냅니다. 클라이언트로부터 입력 받은 0~5 실수를 0~10 정수로 변환합니다."""
+scalar Rating
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
 type RefundAccount {
