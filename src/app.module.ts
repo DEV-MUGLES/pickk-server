@@ -16,10 +16,11 @@ import { PaymentModule } from '@payment/payment.module';
 
 import { AwsS3ProviderModule } from '@providers/aws/s3/provider.module';
 import { AwsSqsProviderModule } from '@providers/aws/sqs/provider.module';
+import { CrawlerProviderModule } from '@providers/crawler/provider.module';
 import { RedisCacheProviderModule } from '@providers/cache/redis';
 import { MysqlDatabaseProviderModule } from '@providers/database/mysql/provider.module';
 import { SensProviderModule } from '@providers/sens/provider.module';
-import { CrawlerProviderModule } from '@providers/crawler/provider.module';
+import { SentryProviderModule } from '@providers/sentry/provider.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -50,6 +51,7 @@ import { AppService } from './app.service';
     UserModule,
     BatchModule,
     CrawlerProviderModule,
+    SentryProviderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
