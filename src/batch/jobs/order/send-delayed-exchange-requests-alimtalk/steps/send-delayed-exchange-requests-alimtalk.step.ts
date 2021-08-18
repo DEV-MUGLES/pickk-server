@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
+import { JobExecutionContext } from '@batch/models';
+import { allSettled, RejectResponse, isRejected } from '@common/helpers';
 import { AlimtalkService } from '@providers/sens';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
@@ -16,7 +18,7 @@ export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
     super();
   }
 
-  async tasklet() {
+  async tasklet(context: JobExecutionContext) {
     const delayedExchangeRequestsRawDatas =
       await this.exchangeRequestsRepository
         .createQueryBuilder('exchangeRequest')
@@ -33,15 +35,36 @@ export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
         .groupBy('exchangeRequest.sellerId')
         .getRawMany();
 
-    delayedExchangeRequestsRawDatas.forEach(async (r) => {
-      const brandKor = r.brand_nameKor;
-      const delayedCount = r['count(*)'];
-      const phoneNumber = r.seller_phoneNumber;
+    const settledSendDatas = await allSettled(
+      delayedExchangeRequestsRawDatas.map(
+        (r) =>
+          new Promise(async (resolve, reject) => {
+            const brandKor = r.brand_nameKor;
+            const delayedCount = r['count(*)'];
+            const phoneNumber = r.seller_phoneNumber;
+            try {
+              await this.alimtalkService.sendDelayedExchangeRequests(
+                { brandKor, phoneNumber },
+                delayedCount
+              );
+              resolve({ brandKor, delayedCount });
+            } catch (err) {
+              reject(brandKor);
+            }
+          })
+      )
+    );
 
-      await this.alimtalkService.sendDelayedExchangeRequests(
-        { brandKor, phoneNumber },
-        delayedCount
-      );
-    });
+    const rejectedSendDatas = [].concat(
+      ...settledSendDatas
+        .filter((data) => isRejected(data))
+        .map((data) => (data as RejectResponse).reason)
+    );
+
+    if (rejectedSendDatas.length > 0) {
+      context.put('failedBrands', rejectedSendDatas);
+    } else {
+      context.put('successBrandCounts', settledSendDatas.length);
+    }
   }
 }
