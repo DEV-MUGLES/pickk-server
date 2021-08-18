@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { StepStatus } from '../constants';
+import { ERROR_MESSAGE_SIZE, StepStatus } from '../constants';
 import { StepExecutionRecordEntity } from '../entities';
 
 @ObjectType()
@@ -34,6 +34,6 @@ export class StepExecutionRecord extends StepExecutionRecordEntity {
   public fail(err: Error) {
     this.markFailed();
     this.markEnd();
-    this.errorMessage = err.message.slice(0, 100);
+    this.errorMessage = err.message.slice(0, ERROR_MESSAGE_SIZE);
   }
 }

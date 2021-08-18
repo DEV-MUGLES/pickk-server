@@ -9,7 +9,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-import { JobStatus } from '../constants';
+import { ERROR_MESSAGE_SIZE, JobStatus } from '../constants';
 import { IJobExecutionRecord } from '../interfaces';
 import { StepExecutionRecord } from '../models';
 
@@ -45,7 +45,7 @@ export class JobExecutionRecordEntity
   })
   status: string;
 
-  @Column({ nullable: true, length: 100 })
+  @Column({ nullable: true, length: ERROR_MESSAGE_SIZE })
   errorMessage: string;
 
   @Column({ nullable: true, length: 50 })
