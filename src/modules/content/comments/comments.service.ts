@@ -68,4 +68,11 @@ export class CommentsService {
       })
     );
   }
+
+  async updateLikeCount(id: number, diff: number): Promise<Comment> {
+    const comment = await this.get(id);
+    comment.updateLikeCount(diff);
+
+    return await this.commentsRepository.save(comment);
+  }
 }
