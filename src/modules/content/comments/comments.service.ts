@@ -22,6 +22,13 @@ export class CommentsService {
     return await this.commentsRepository.checkBelongsTo(id, userId);
   }
 
+  async get(
+    id: number,
+    relations: CommentRelationType[] = []
+  ): Promise<Comment> {
+    return await this.commentsRepository.get(id, relations);
+  }
+
   async list(
     filter?: CommentFilter,
     pageInput?: PageInput,
