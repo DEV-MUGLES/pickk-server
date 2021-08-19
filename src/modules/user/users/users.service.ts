@@ -10,13 +10,7 @@ import {
   UpdateRefundAccountInput,
 } from './dtos';
 import { UserEntity } from './entities';
-import {
-  User,
-  UserPassword,
-  ShippingAddress,
-  UserAvatarImage,
-  RefundAccount,
-} from './models';
+import { User, UserPassword, ShippingAddress, RefundAccount } from './models';
 
 import { UsersRepository } from './users.repository';
 
@@ -58,21 +52,6 @@ export class UsersService {
     relations: string[] = []
   ): Promise<User | null> {
     return await this.usersRepository.findOneEntity(param, relations);
-  }
-
-  async updateAvatarImage(user: User, key: string): Promise<UserAvatarImage> {
-    if (user.avatarImage) {
-      user.avatarImage.remove();
-    }
-    user.setAvatarImage(key);
-    return (await this.usersRepository.save(user)).avatarImage;
-  }
-
-  async removeAvatarImage(user: User): Promise<UserAvatarImage> {
-    const avatarImage = user.removeAvatarImage();
-    await this.usersRepository.save(user);
-    avatarImage.remove();
-    return avatarImage;
   }
 
   async updatePassword(

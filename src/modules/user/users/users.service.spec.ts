@@ -6,7 +6,7 @@ import {
   UpdateShippingAddressInput,
   CreateUserInput,
 } from './dtos';
-import { ShippingAddress, UserAvatarImage, UserPassword, User } from './models';
+import { ShippingAddress, UserPassword, User } from './models';
 
 import { UsersRepository } from './users.repository';
 import { UsersService } from './users.service';
@@ -33,6 +33,7 @@ describe('UsersService', () => {
         nickname: faker.lorem.sentence(),
         password: USER_PASSWORD_1,
         email: faker.internet.email(),
+        avatarUrl: null,
       };
 
       const newUser = new User({
@@ -80,84 +81,6 @@ describe('UsersService', () => {
 
       expect(result).toEqual(user);
       expect(usersRepositoryFindSpy).toHaveBeenCalledWith(findOneDto, []);
-    });
-  });
-
-  describe('updateAvatarImage', () => {
-    it('should success when avatarImage not exist', async () => {
-      const key = faker.lorem.text(50);
-      const avatarImage = new UserAvatarImage({ key });
-
-      const user = new User();
-
-      const userSetAvatarImageSpy = jest
-        .spyOn(user, 'setAvatarImage')
-        .mockImplementationOnce(() => {
-          user.avatarImage = avatarImage;
-          return user.avatarImage;
-        });
-      const usersRepositorySaveSpy = jest
-        .spyOn(usersRepository, 'save')
-        .mockResolvedValueOnce(new User({ ...user, avatarImage }));
-
-      const result = await usersService.updateAvatarImage(user, key);
-      expect(result).toEqual(avatarImage);
-      expect(userSetAvatarImageSpy).toHaveBeenCalledWith(key);
-      expect(usersRepositorySaveSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should success when avatarImage already exist', async () => {
-      const key = faker.lorem.text(50);
-      const avatarImage = new UserAvatarImage({ key });
-
-      const existingAvatarImage = new UserAvatarImage();
-      const user = new User({ avatarImage: existingAvatarImage });
-
-      const userAvatarImageRemoveSpy = jest
-        .spyOn(existingAvatarImage, 'remove')
-        .mockImplementationOnce(() => null);
-      const userSetAvatarImageSpy = jest
-        .spyOn(user, 'setAvatarImage')
-        .mockImplementationOnce(() => {
-          user.avatarImage = avatarImage;
-          return user.avatarImage;
-        });
-      const usersRepositorySaveSpy = jest
-        .spyOn(usersRepository, 'save')
-        .mockResolvedValueOnce(new User({ ...user, avatarImage }));
-
-      const result = await usersService.updateAvatarImage(user, key);
-      expect(result).toEqual(avatarImage);
-      expect(userAvatarImageRemoveSpy).toHaveBeenCalledWith();
-      expect(userSetAvatarImageSpy).toHaveBeenCalledWith(key);
-      expect(usersRepositorySaveSpy).toHaveBeenCalledTimes(1);
-    });
-  });
-
-  describe('removeAvatarImage', () => {
-    it('should return avatarImage when success', async () => {
-      const avatarImage = new UserAvatarImage();
-
-      const user = new User({ avatarImage });
-
-      const userAvatarImageRemoveSpy = jest
-        .spyOn(avatarImage, 'remove')
-        .mockImplementationOnce(() => null);
-      const userRemoveAvatarImageSpy = jest
-        .spyOn(user, 'removeAvatarImage')
-        .mockImplementationOnce(() => {
-          user.avatarImage = null;
-          return avatarImage;
-        });
-      const usersRepositorySaveSpy = jest
-        .spyOn(usersRepository, 'save')
-        .mockImplementationOnce(jest.fn());
-
-      const result = await usersService.removeAvatarImage(user);
-      expect(result).toEqual(avatarImage);
-      expect(userAvatarImageRemoveSpy).toHaveBeenCalledWith();
-      expect(userRemoveAvatarImageSpy).toHaveBeenCalledWith();
-      expect(usersRepositorySaveSpy).toHaveBeenCalledTimes(1);
     });
   });
 

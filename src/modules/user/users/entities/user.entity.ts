@@ -29,12 +29,10 @@ import { StyleTag } from '@content/style-tags/models';
 import { UserOauthProvider, UserRole } from '../constants';
 import { IUser } from '../interfaces';
 
-import { UserAvatarImageEntity } from './user-avatar-image.entity';
 import { RefundAccountEntity } from './refund-account.entity';
 
 import { UserPassword } from '../models/user-password.model';
 import { ShippingAddress } from '../models/shipping-address.model';
-import { UserAvatarImage } from '../models/user-avatar-image.model';
 import { RefundAccount } from '../models/refund-account.model';
 
 @ObjectType()
@@ -54,6 +52,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.phoneNumber = attributes.phoneNumber;
     this.code = attributes.code;
     this.nickname = attributes.nickname;
+    this.avatarUrl = attributes.avatarUrl;
 
     this.name = attributes.name;
     this.weight = attributes.weight;
@@ -66,7 +65,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
 
     this.styleTags = attributes.styleTags;
     this.shippingAddresses = attributes.shippingAddresses;
-    this.avatarImage = attributes.avatarImage;
     this.refundAccount = attributes.refundAccount;
   }
 
@@ -139,6 +137,12 @@ export class UserEntity extends BaseIdEntity implements IUser {
   nickname: string;
 
   @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  @IsOptional()
+  avatarUrl: string;
+
+  @Field({ nullable: true })
   @Column({
     type: 'varchar',
     length: 15,
@@ -181,13 +185,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
     cascade: true,
   })
   shippingAddresses: ShippingAddress[];
-  @Field(() => UserAvatarImage, { nullable: true })
-  @OneToOne(() => UserAvatarImageEntity, {
-    nullable: true,
-    cascade: true,
-  })
-  @JoinColumn()
-  avatarImage: UserAvatarImageEntity;
   @Field(() => RefundAccount, { nullable: true })
   @OneToOne(() => RefundAccountEntity, {
     nullable: true,

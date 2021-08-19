@@ -19,7 +19,9 @@ export interface IUser {
   email: string;
   phoneNumber?: string;
   nickname: string;
+  avatarUrl: string;
 
+  /** 개인정보 */
   name?: string | null;
   weight?: number;
   height?: number;

@@ -512,6 +512,7 @@ input CreateShippingAddressInput {
 }
 
 input CreateUserInput {
+  avatarUrl: String
   code: String
   email: String
   height: Int
@@ -1001,7 +1002,6 @@ type Mutation {
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
-  removeMyAvatarImage: UserAvatarImage!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
@@ -1026,7 +1026,6 @@ type Mutation {
 
   """주문상품 단건 운송장 수정"""
   updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
-  updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
@@ -2166,6 +2165,7 @@ input UpdateShippingAddressInput {
 }
 
 input UpdateUserInput {
+  avatarUrl: String
   code: String
   email: String
   height: Int
@@ -2181,14 +2181,10 @@ input UploadMultipleImageInput {
   files: [Upload!]!
 }
 
-input UploadSingleImageInput {
-  file: Upload!
-}
-
 type User {
   """[ResolveField] 사용가능 포인트 잔고"""
   availablePoint: Int!
-  avatarImage: UserAvatarImage
+  avatarUrl: String
   code: String
   createdAt: DateTime!
   email: String
@@ -2208,13 +2204,6 @@ type User {
   styleTags: [StyleTag!]!
   updatedAt: DateTime!
   weight: Int
-}
-
-type UserAvatarImage {
-  angle: Int!
-  createdAt: DateTime!
-  key: String!
-  url: String!
 }
 
 """Oauth 제공 서비스입니다."""
