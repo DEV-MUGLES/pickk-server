@@ -3,22 +3,18 @@ import {
   Column,
   CreateDateColumn,
   Entity,
-  Index,
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { IsEnum } from 'class-validator';
 
 import { User } from '@user/users/models';
 
-import { LikeOwnerType } from '../constants';
-import { ILike } from '../interfaces';
+import { IFollow } from '../interfaces';
 
 @ObjectType()
-@Entity({ name: 'like' })
-@Index('idx_ownerId-id', ['ownerId', 'id'])
-export class LikeEntity implements ILike {
-  constructor(attributes?: Partial<LikeEntity>) {
+@Entity({ name: 'follow' })
+export class FollowEntity implements IFollow {
+  constructor(attributes?: Partial<FollowEntity>) {
     if (!attributes) {
       return;
     }
@@ -29,8 +25,8 @@ export class LikeEntity implements ILike {
     this.user = attributes.user;
     this.userId = attributes.userId;
 
-    this.ownerType = attributes.ownerType;
-    this.ownerId = attributes.ownerId;
+    this.target = attributes.target;
+    this.targetId = attributes.targetId;
   }
 
   @Field(() => Int)
@@ -47,11 +43,10 @@ export class LikeEntity implements ILike {
   @Column({ type: 'int', nullable: true })
   userId: number;
 
-  @Field(() => LikeOwnerType)
-  @Column({ type: 'enum', enum: LikeOwnerType })
-  @IsEnum(LikeOwnerType)
-  ownerType: LikeOwnerType;
-  @Field(() => Int)
-  @Column({ type: 'int', unsigned: true })
-  ownerId: number;
+  @Field(() => User, { nullable: true })
+  @ManyToOne('UserEntity', { nullable: true })
+  target: User;
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
+  targetId: number;
 }
