@@ -1,4 +1,4 @@
 export class UpdateLikeCountMto {
   id: number;
-  likeCount: number;
+  diff: 1 | -1;
 }
