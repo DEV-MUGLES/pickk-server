@@ -996,6 +996,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
+  follow(targetId: Int!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
@@ -1012,6 +1013,9 @@ type Mutation {
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
+
+  """여러번 구독된 상태였다면 모두 삭제됩니다."""
+  unfollow(targetId: Int!): Boolean!
 
   """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
