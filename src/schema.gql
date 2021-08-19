@@ -1002,6 +1002,7 @@ type Mutation {
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
+  updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
@@ -1984,6 +1985,10 @@ input UpdateBrandInput {
 
 input UpdateCartItemInput {
   quantity: Int!
+}
+
+input UpdateCommentInput {
+  content: String!
 }
 
 input UpdateCourierInput {

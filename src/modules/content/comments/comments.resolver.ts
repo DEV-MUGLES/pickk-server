@@ -1,15 +1,21 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
 import { CommentRelationType, COMMENT_RELATIONS } from './constants';
-import { CommentFilter, CreateCommentInput } from './dtos';
+import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
 import { Comment } from './models';
 
 import { CommentsService } from './comments.service';
@@ -51,5 +57,22 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
     @Args('input') input: CreateCommentInput
   ): Promise<Comment> {
     return await this.commentsService.create(userId, input);
+  }
+
+  @Mutation(() => Comment)
+  @UseGuards(JwtVerifyGuard)
+  async updateComment(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('input') input: UpdateCommentInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Comment> {
+    const isMine = await this.commentsService.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 댓글이 아닙니다.');
+    }
+
+    await this.commentsService.update(id, input);
+    return await this.commentsService.get(id, this.getRelationsFromInfo(info));
   }
 }
