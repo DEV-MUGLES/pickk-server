@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import { ItemCreationTemplate, ItemInfo, UserInfo } from '@templates/slack';
-import { Channel } from './constants';
+import { SlackChannelName } from './constants';
 
 @Injectable()
 export class SlackWebhookService {
@@ -16,7 +16,7 @@ export class SlackWebhookService {
   ): Promise<IncomingWebhookResult> {
     return await this.webhook.send({
       ...ItemCreationTemplate.toMessage(itemInfo, userInfo),
-      channel: Channel.ProductManagement,
+      channel: SlackChannelName.ProductManagement,
     });
   }
 }
