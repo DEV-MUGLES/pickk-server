@@ -45,4 +45,8 @@ export class LikesService {
 
     await this.likesRepository.remove(likes);
   }
+
+  async count(ownerType: LikeOwnerType, ownerId: number): Promise<number> {
+    return await this.likesRepository.count({ where: { ownerType, ownerId } });
+  }
 }
