@@ -34,4 +34,20 @@ export class LikesRepository extends Repository<LikeEntity> {
       })
       .catch((error) => Promise.reject(error));
   }
+
+  async checkExist(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerId: number
+  ): Promise<boolean> {
+    const result = await this.createQueryBuilder('like')
+      .select('1')
+      .where('like.userId = :userId', { userId })
+      .andWhere('like.ownerType = :ownerType', { ownerType })
+      .andWhere('like.ownerId = :ownerId', { ownerId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }

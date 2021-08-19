@@ -902,6 +902,14 @@ type JwtToken {
   refresh: String!
 }
 
+"""좋아요 대상 객체 분류입니다."""
+enum LikeOwnerType {
+  Comment
+  Digest
+  Look
+  Video
+}
+
 input LoginByCodeInput {
   code: String
 
@@ -985,6 +993,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
+  like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
@@ -1001,6 +1010,9 @@ type Mutation {
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
+
+  """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
+  unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
