@@ -27,32 +27,6 @@ export class User extends UserEntity {
   @Field(() => [ShippingAddress], { nullable: true })
   shippingAddresses: ShippingAddress[];
 
-  constructor(attributes?: Partial<User>) {
-    super();
-    if (!attributes) {
-      return;
-    }
-    this.id = attributes.id;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
-
-    this.email = attributes.email;
-    this.phoneNumber = attributes.phoneNumber;
-    this.code = attributes.code;
-    this.nickname = attributes.nickname;
-
-    this.name = attributes.name;
-    this.weight = attributes.weight;
-    this.height = attributes.height;
-    this.password = attributes.password;
-    this.shippingAddresses = attributes.shippingAddresses;
-    this.avatarImage = attributes.avatarImage;
-
-    this.role = attributes.role;
-    this.oauthProvider = attributes.oauthProvider;
-    this.oauthCode = attributes.oauthCode;
-  }
-
   public setAvatarImage = (key: string): UserAvatarImage => {
     this.avatarImage = new UserAvatarImage({ key });
     return this.avatarImage;

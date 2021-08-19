@@ -2205,6 +2205,7 @@ type User {
   refundAccount: RefundAccount
   role: UserRole
   shippingAddresses: [ShippingAddress!]
+  styleTags: [StyleTag!]!
   updatedAt: DateTime!
   weight: Int
 }

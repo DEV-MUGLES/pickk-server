@@ -4,6 +4,8 @@ import {
   Entity,
   Index,
   JoinColumn,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   OneToOne,
 } from 'typeorm';
@@ -21,6 +23,8 @@ import {
 } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
+import { StyleTagEntity } from '@content/style-tags/entities';
+import { StyleTag } from '@content/style-tags/models';
 
 import { UserOauthProvider, UserRole } from '../constants';
 import { IUser } from '../interfaces';
@@ -40,6 +44,32 @@ import { RefundAccount } from '../models/refund-account.model';
 @Index('idx_code', ['code'], { unique: true })
 @Index('idx_oauth_code', ['oauthCode'])
 export class UserEntity extends BaseIdEntity implements IUser {
+  constructor(attributes?: Partial<UserEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.email = attributes.email;
+    this.phoneNumber = attributes.phoneNumber;
+    this.code = attributes.code;
+    this.nickname = attributes.nickname;
+
+    this.name = attributes.name;
+    this.weight = attributes.weight;
+    this.height = attributes.height;
+    this.password = attributes.password;
+
+    this.role = attributes.role;
+    this.oauthProvider = attributes.oauthProvider;
+    this.oauthCode = attributes.oauthCode;
+
+    this.styleTags = attributes.styleTags;
+    this.shippingAddresses = attributes.shippingAddresses;
+    this.avatarImage = attributes.avatarImage;
+    this.refundAccount = attributes.refundAccount;
+  }
+
   @Field(() => UserRole, { nullable: true })
   @Column({
     type: 'enum',
@@ -143,11 +173,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Column(() => UserPassword)
   password: UserPassword;
 
+  @Field(() => [StyleTag])
+  @ManyToMany(() => StyleTagEntity)
+  @JoinTable()
+  styleTags: StyleTag[];
   @OneToMany('ShippingAddressEntity', 'user', {
     cascade: true,
   })
   shippingAddresses: ShippingAddress[];
-
   @Field(() => UserAvatarImage, { nullable: true })
   @OneToOne(() => UserAvatarImageEntity, {
     nullable: true,
@@ -155,7 +188,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
   })
   @JoinColumn()
   avatarImage: UserAvatarImageEntity;
-
   @Field(() => RefundAccount, { nullable: true })
   @OneToOne(() => RefundAccountEntity, {
     nullable: true,
