@@ -20,4 +20,13 @@ export class CommentsRepository extends BaseRepository<CommentEntity, Comment> {
       this.entityToModel(entity, transformOptions)
     );
   }
+
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('comment')
+      .select('1')
+      .where('comment.id = :id', { id })
+      .andWhere('comment.userId = :userId', { userId })
+      .execute();
+    return result?.length > 0;
+  }
 }

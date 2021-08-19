@@ -18,6 +18,10 @@ export class CommentsService {
     private readonly commentsRepository: CommentsRepository
   ) {}
 
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    return await this.commentsRepository.checkBelongsTo(id, userId);
+  }
+
   async list(
     filter?: CommentFilter,
     pageInput?: PageInput,
