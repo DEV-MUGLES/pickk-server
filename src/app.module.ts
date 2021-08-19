@@ -21,6 +21,7 @@ import { RedisCacheProviderModule } from '@providers/cache/redis';
 import { MysqlDatabaseProviderModule } from '@providers/database/mysql/provider.module';
 import { SensProviderModule } from '@providers/sens/provider.module';
 import { SentryProviderModule } from '@providers/sentry/provider.module';
+import { SlackProviderModule } from '@providers/slack/provider.module';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -37,9 +38,12 @@ import { AppService } from './app.service';
     AppConfigModule,
     AwsS3ProviderModule,
     AwsSqsProviderModule,
+    CrawlerProviderModule,
     RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
     SensProviderModule,
+    SentryProviderModule,
+    SlackProviderModule,
     AuthModule,
     AdminModule,
     CommonModule,
@@ -50,8 +54,6 @@ import { AppService } from './app.service';
     PaymentModule,
     UserModule,
     BatchModule,
-    CrawlerProviderModule,
-    SentryProviderModule,
   ],
   controllers: [AppController],
   providers: [AppService],
