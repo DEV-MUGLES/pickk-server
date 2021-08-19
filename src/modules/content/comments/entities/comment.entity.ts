@@ -54,7 +54,7 @@ export class CommentEntity extends BaseIdEntity implements IComment {
 
   @ManyToOne('CommentEntity', { nullable: true })
   parent: CommentEntity;
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   parentId: number;
 

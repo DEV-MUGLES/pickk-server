@@ -242,7 +242,7 @@ type Comment {
   ownerId: Int!
   ownerType: CommentOwnerType!
   parent: Comment
-  parentId: Int!
+  parentId: Int
   replies: [Comment!]!
   updatedAt: DateTime!
   user: User
@@ -332,6 +332,14 @@ type CourierIssue {
 input CreateCartItemInput {
   productId: Float!
   quantity: Int!
+}
+
+input CreateCommentInput {
+  content: String!
+  mentionedUserId: Int
+  ownerId: Int!
+  ownerType: CommentOwnerType!
+  parentId: Int
 }
 
 input CreateCouponInput {
@@ -967,6 +975,7 @@ type Mutation {
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
+  createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
