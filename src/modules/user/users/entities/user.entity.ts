@@ -66,6 +66,8 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.styleTags = attributes.styleTags;
     this.shippingAddresses = attributes.shippingAddresses;
     this.refundAccount = attributes.refundAccount;
+
+    this.followCount = attributes.followCount;
   }
 
   @Field(() => UserRole, { nullable: true })
@@ -87,22 +89,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsEnum(UserOauthProvider)
   @IsOptional()
   oauthProvider?: UserOauthProvider;
-
   @Field({ nullable: true })
-  @Column({
-    nullable: true,
-  })
+  @Column({ nullable: true })
   @IsString()
   @IsOptional()
   oauthCode?: string;
 
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    unique: true,
-    nullable: true,
-  })
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
   @IsEmail()
   @IsOptional()
   email: string;
@@ -116,23 +110,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   phoneNumber?: string;
 
   @Field({ nullable: true })
-  @Column({
-    type: 'varchar',
-    length: 15,
-    nullable: true,
-    unique: true,
-  })
+  @Column({ length: 15, nullable: true, unique: true })
   @IsString()
   @IsOptional()
   @MaxLength(15)
   code?: string;
 
-  @Field()
-  @Column({
-    type: 'varchar',
-    unique: true,
-    length: 11,
-  })
+  @Field({ description: '최대 11자' })
+  @Column({ unique: true, length: 11 })
   @IsString()
   nickname: string;
 
@@ -143,20 +128,13 @@ export class UserEntity extends BaseIdEntity implements IUser {
   avatarUrl: string;
 
   @Field({ nullable: true })
-  @Column({
-    type: 'varchar',
-    length: 15,
-    nullable: true,
-  })
+  @Column({ length: 15, nullable: true })
   @IsString()
   @IsOptional()
   name?: string;
 
   @Field(() => Int, { nullable: true })
-  @Column({
-    type: 'smallint',
-    nullable: true,
-  })
+  @Column({ type: 'smallint', nullable: true })
   @IsInt()
   @Min(10)
   @Max(300)
@@ -164,10 +142,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
   weight?: number;
 
   @Field(() => Int, { nullable: true })
-  @Column({
-    type: 'smallint',
-    nullable: true,
-  })
+  @Column({ type: 'smallint', nullable: true })
   @IsInt()
   @Min(10)
   @Max(300)
@@ -181,15 +156,15 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @ManyToMany(() => StyleTagEntity)
   @JoinTable()
   styleTags: StyleTag[];
-  @OneToMany('ShippingAddressEntity', 'user', {
-    cascade: true,
-  })
+  @OneToMany('ShippingAddressEntity', 'user', { cascade: true })
   shippingAddresses: ShippingAddress[];
   @Field(() => RefundAccount, { nullable: true })
-  @OneToOne(() => RefundAccountEntity, {
-    nullable: true,
-    cascade: true,
-  })
+  @OneToOne(() => RefundAccountEntity, { nullable: true, cascade: true })
   @JoinColumn()
   refundAccount: RefundAccountEntity;
+
+  // queue에서 계산해서 update하는 값들
+  @Field(() => Int, { defaultValue: 0 })
+  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  followCount: number;
 }

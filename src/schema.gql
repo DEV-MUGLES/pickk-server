@@ -517,6 +517,8 @@ input CreateUserInput {
   email: String
   height: Int
   name: String
+
+  """최대 11자"""
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
@@ -2170,6 +2172,8 @@ input UpdateUserInput {
   email: String
   height: Int
   name: String
+
+  """최대 11자"""
   nickname: String
   weight: Int
 }
@@ -2191,9 +2195,12 @@ type User {
 
   """[ResolveField] 적립예정 포인트 잔고"""
   expectedPoint: Int!
+  followCount: Int!
   height: Int
   id: Int!
   name: String
+
+  """최대 11자"""
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType

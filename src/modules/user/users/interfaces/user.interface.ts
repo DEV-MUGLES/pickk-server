@@ -29,4 +29,6 @@ export interface IUser {
   styleTags: IStyleTag[];
   shippingAddresses: IShippingAddress[];
   refundAccount: IAccount;
+
+  followCount: number;
 }
