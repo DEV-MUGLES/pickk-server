@@ -1,33 +1,36 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 import dayjs from 'dayjs';
 
-export type ItemInfo = {
+type ItemCreationMessageParam = {
   name: string;
-  brand: string;
+  brandNameKor: string;
   originalPrice: number;
   salePrice: number;
   itemUrl: string;
-  adminUrl: string;
   createdAt: Date;
+  user: {
+    nickname: string;
+    email: string;
+  };
 };
 
-export type UserInfo = { nickname: string; email: string };
-
+/**
+ * 예시용 slack template입니다.
+ * TODO: builder pattern 고민해보기
+ */
 export class ItemCreationTemplate {
   static toMessage(
-    itemInfo: ItemInfo,
-    userInfo: UserInfo
+    itemCreationMessageParam: ItemCreationMessageParam
   ): IncomingWebhookSendArguments {
     const {
       name,
-      brand,
+      brandNameKor,
       originalPrice,
       salePrice,
-      adminUrl,
       itemUrl,
       createdAt,
-    } = itemInfo;
-    const { nickname, email } = userInfo;
+      user: { nickname, email },
+    } = itemCreationMessageParam;
 
     return {
       blocks: [
@@ -40,7 +43,7 @@ export class ItemCreationTemplate {
             },
             {
               type: 'mrkdwn',
-              text: `*brand* :\n${brand}`,
+              text: `*brand* :\n${brandNameKor}`,
             },
           ],
         },
@@ -79,7 +82,7 @@ export class ItemCreationTemplate {
                 type: 'plain_text',
                 text: '아이템 보러가기',
               },
-              url: adminUrl,
+              url: itemUrl,
               style: 'primary',
             },
           ],
