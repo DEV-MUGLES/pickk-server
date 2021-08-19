@@ -6,7 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { CommentRelationType } from './constants';
-import { CommentFilter } from './dtos';
+import { CommentFilter, CreateCommentInput } from './dtos';
 import { Comment } from './models';
 
 import { CommentsRepository } from './comments.repository';
@@ -34,6 +34,15 @@ export class CommentsService {
         order: {
           id: 'DESC',
         },
+      })
+    );
+  }
+
+  async create(userId: number, input: CreateCommentInput): Promise<Comment> {
+    return await this.commentsRepository.save(
+      new Comment({
+        userId,
+        ...input,
       })
     );
   }
