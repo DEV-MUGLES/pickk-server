@@ -18,6 +18,10 @@ export class DigestsService {
     private readonly digestsRepository: DigestsRepository
   ) {}
 
+  async get(id: number, relations: DigestRelationType[] = []): Promise<Digest> {
+    return await this.digestsRepository.get(id, relations);
+  }
+
   async list(
     filter?: DigestFilter,
     pageInput?: PageInput,

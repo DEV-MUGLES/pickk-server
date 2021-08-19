@@ -8,7 +8,6 @@ import {
   UpdateShippingAddressInput,
 } from '../dtos';
 import {
-  UserAvatarImageNotFoundException,
   UserPasswordDuplicatedException,
   UserPasswordNotFoundException,
 } from '../exceptions';
@@ -16,37 +15,8 @@ import {
 import { User } from './user.model';
 import { UserPassword } from './user-password.model';
 import { ShippingAddress } from './shipping-address.model';
-import { UserAvatarImage } from './user-avatar-image.model';
 
 describe('UserModel', () => {
-  describe('setAvatarImage', () => {
-    it('should return avatarImage when success', () => {
-      const imageKey = faker.lorem.text();
-      const user = new User();
-
-      const result = user.setAvatarImage(imageKey);
-      expect(result.key).toEqual(imageKey);
-    });
-  });
-
-  describe('removeAvatarImage', () => {
-    it('should return removed avatarImage when success', () => {
-      const avatarImage = new UserAvatarImage();
-      const user = new User({ avatarImage });
-
-      const result = user.removeAvatarImage();
-      expect(result).toEqual(avatarImage);
-    });
-
-    it('should throw UserAvatarImageNotFoundException when not exist', () => {
-      const user = new User();
-
-      expect(() => user.removeAvatarImage()).toThrow(
-        UserAvatarImageNotFoundException
-      );
-    });
-  });
-
   describe('updatePassword', () => {
     const OLD_PASSWORD = 'OLD_PASSWORD1!';
     const NEW_PASSWORD = 'NEW_PASSWORD1!';

@@ -15,15 +15,13 @@ import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
-import { UploadSingleImageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { PointsService } from '@order/points/points.service';
-import { AwsS3ProviderService } from '@providers/aws/s3';
 
 import { USER_RELATIONS } from './constants';
 import { CreateUserInput, UpdateUserInput } from './dtos';
 import { UserEntity } from './entities';
-import { User, UserAvatarImage } from './models';
+import { User } from './models';
 
 import { UsersService } from './users.service';
 
@@ -33,8 +31,7 @@ export class UsersResolver extends BaseResolver {
 
   constructor(
     @Inject(UsersService) private usersService: UsersService,
-    @Inject(PointsService) private pointsService: PointsService,
-    @Inject(AwsS3ProviderService) private awsS3Service: AwsS3ProviderService
+    @Inject(PointsService) private pointsService: PointsService
   ) {
     super();
   }
@@ -92,29 +89,6 @@ export class UsersResolver extends BaseResolver {
     @Args('updateUserInput') updateUserInput: UpdateUserInput
   ): Promise<User> {
     return await this.usersService.update(payload.sub, { ...updateUserInput });
-  }
-
-  @Mutation(() => UserAvatarImage)
-  @UseGuards(JwtAuthGuard)
-  async updateMyAvatarImage(
-    @CurrentUser() user: User,
-    @Args('uploadSingleImageInput') { file }: UploadSingleImageInput
-  ): Promise<UserAvatarImage> {
-    const { filename, mimetype, createReadStream } = await file;
-    const { key } = await this.awsS3Service.uploadStream(
-      createReadStream(),
-      filename,
-      mimetype
-    );
-    return await this.usersService.updateAvatarImage(user, key);
-  }
-
-  @Mutation(() => UserAvatarImage)
-  @UseGuards(JwtAuthGuard)
-  async removeMyAvatarImage(
-    @CurrentUser() user: User
-  ): Promise<UserAvatarImage> {
-    return await this.usersService.removeAvatarImage(user);
   }
 
   @Mutation(() => User, {

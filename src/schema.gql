@@ -232,6 +232,36 @@ enum ClaimFeePayMethod {
   Trans
 }
 
+type Comment {
+  content: String!
+  createdAt: DateTime!
+  id: Int!
+  likeCount: Int!
+  mentionedUser: User
+  mentionedUserId: Int
+  ownerId: Int!
+  ownerType: CommentOwnerType!
+  parent: Comment
+  parentId: Int
+  replies: [Comment!]!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+input CommentFilter {
+  ownerId: Int
+  ownerType: CommentOwnerType
+  parentIdIsNull: Boolean
+}
+
+"""댓글 연관 객체 분류입니다."""
+enum CommentOwnerType {
+  Digest
+  Look
+  Video
+}
+
 """컨텐츠 타입입니다."""
 enum ContentType {
   Look
@@ -302,6 +332,14 @@ type CourierIssue {
 input CreateCartItemInput {
   productId: Float!
   quantity: Int!
+}
+
+input CreateCommentInput {
+  content: String!
+  mentionedUserId: Int
+  ownerId: Int!
+  ownerType: CommentOwnerType!
+  parentId: Int
 }
 
 input CreateCouponInput {
@@ -474,10 +512,13 @@ input CreateShippingAddressInput {
 }
 
 input CreateUserInput {
+  avatarUrl: String
   code: String
   email: String
   height: Int
   name: String
+
+  """최대 11자"""
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
@@ -503,6 +544,7 @@ type Digest {
   itemId: Int
   itemPropertyValues: [ItemPropertyValue!]!
   likeCount: Int!
+  look: Look
   rating: Rating
   score: Float!
   size: String!
@@ -518,6 +560,7 @@ type Digest {
 }
 
 input DigestFilter {
+  itemId: Int
   userId: Int
 }
 
@@ -862,6 +905,14 @@ type JwtToken {
   refresh: String!
 }
 
+"""좋아요 대상 객체 분류입니다."""
+enum LikeOwnerType {
+  Comment
+  Digest
+  Look
+  Video
+}
+
 input LoginByCodeInput {
   code: String
 
@@ -880,6 +931,35 @@ input LoginByOauthInput {
 input LoginWithAppleInput {
   clientType: AppleClientType!
   code: String!
+}
+
+type Look {
+  commentCount: Int!
+  createdAt: DateTime!
+  digests: [Digest!]!
+  hitCount: Int!
+  id: Int!
+  images: [LookImage!]!
+  likeCount: Int!
+  score: Float!
+  styleTags: [StyleTag!]!
+
+  """최대 길이 127"""
+  title: String!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+input LookFilter {
+  userId: Int
+}
+
+type LookImage {
+  angle: Int!
+  createdAt: DateTime!
+  key: String!
+  url: String!
 }
 
 type Mutation {
@@ -906,6 +986,7 @@ type Mutation {
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
+  createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
@@ -915,6 +996,7 @@ type Mutation {
   createUser(createUserInput: CreateUserInput!): User!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
+  like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
@@ -922,7 +1004,6 @@ type Mutation {
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
-  removeMyAvatarImage: UserAvatarImage!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeMyRefundAccount: User!
   removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
@@ -931,7 +1012,11 @@ type Mutation {
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
+
+  """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
+  unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
+  updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
@@ -943,7 +1028,6 @@ type Mutation {
 
   """주문상품 단건 운송장 수정"""
   updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
-  updateMyAvatarImage(uploadSingleImageInput: UploadSingleImageInput!): UserAvatarImage!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
@@ -1500,8 +1584,14 @@ type Query {
   checkNicknameDuplicate(nickname: String!): Boolean!
   checkPin(checkPinInput: CheckPinInput!): Boolean!
   checkoutOrder(merchantUid: String!): OrderSheet!
+  comments(
+    """기본적으로 parentIdIsNull:true가 적용되어있습니다."""
+    filter: CommentFilter
+    pageInput: PageInput
+  ): [Comment!]!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
+  digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   genRandomNickname: String!
   item(id: Int!): Item!
@@ -1514,6 +1604,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
+  looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
@@ -1909,6 +2000,10 @@ input UpdateCartItemInput {
   quantity: Int!
 }
 
+input UpdateCommentInput {
+  content: String!
+}
+
 input UpdateCourierInput {
   code: String
   name: String
@@ -2072,10 +2167,13 @@ input UpdateShippingAddressInput {
 }
 
 input UpdateUserInput {
+  avatarUrl: String
   code: String
   email: String
   height: Int
   name: String
+
+  """최대 11자"""
   nickname: String
   weight: Int
 }
@@ -2087,23 +2185,22 @@ input UploadMultipleImageInput {
   files: [Upload!]!
 }
 
-input UploadSingleImageInput {
-  file: Upload!
-}
-
 type User {
   """[ResolveField] 사용가능 포인트 잔고"""
   availablePoint: Int!
-  avatarImage: UserAvatarImage
+  avatarUrl: String
   code: String
   createdAt: DateTime!
   email: String
 
   """[ResolveField] 적립예정 포인트 잔고"""
   expectedPoint: Int!
+  followCount: Int!
   height: Int
   id: Int!
   name: String
+
+  """최대 11자"""
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
@@ -2111,15 +2208,9 @@ type User {
   refundAccount: RefundAccount
   role: UserRole
   shippingAddresses: [ShippingAddress!]
+  styleTags: [StyleTag!]!
   updatedAt: DateTime!
   weight: Int
-}
-
-type UserAvatarImage {
-  angle: Int!
-  createdAt: DateTime!
-  key: String!
-  url: String!
 }
 
 """Oauth 제공 서비스입니다."""

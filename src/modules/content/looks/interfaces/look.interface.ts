@@ -2,9 +2,8 @@ import { IImage } from '@common/interfaces';
 
 import { IComment } from '@content/comments/interfaces';
 import { IDigest } from '@content/digests/interfaces';
+import { IStyleTag } from '@content/style-tags/interfaces';
 import { IUser } from '@user/users/interfaces';
-
-import { ILookStyleTag } from './look-style-tag.interface';
 
 export interface ILook {
   id: number;
@@ -14,10 +13,11 @@ export interface ILook {
   user: IUser;
   userId: number;
 
-  styleTags: ILookStyleTag[];
+  styleTags: IStyleTag[];
   images: IImage[];
   digests: IDigest[];
   comments: IComment[];
+
   title: string;
 
   likeCount: number;

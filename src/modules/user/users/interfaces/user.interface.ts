@@ -1,6 +1,8 @@
 import { IAccount } from '@common/interfaces';
+import { IStyleTag } from '@content/style-tags/interfaces';
 
-import { UserOauthProvider, UserRole } from '../constants/user.enum';
+import { UserOauthProvider, UserRole } from '../constants';
+
 import { IShippingAddress } from './shipping-address.interface';
 
 /**
@@ -17,11 +19,16 @@ export interface IUser {
   email: string;
   phoneNumber?: string;
   nickname: string;
+  avatarUrl: string;
 
+  /** 개인정보 */
   name?: string | null;
   weight?: number;
   height?: number;
 
+  styleTags: IStyleTag[];
   shippingAddresses: IShippingAddress[];
   refundAccount: IAccount;
+
+  followCount: number;
 }
