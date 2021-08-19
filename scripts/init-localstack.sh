@@ -7,7 +7,7 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name P2P-REMOV
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name S2S-SCRAP_SELLER_ITEMS
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name S2I-PROCESS_SELLER_ITEMS_SCRAP_RESULT
 
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2C-UPDATE_COMMENT_LIKE_COUNT
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name D2D-UPDATE_DIGEST_LIKE_COUNT
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2C-UPDATE_COMMENT_LIKE_COUNT
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2D-UPDATE_DIGEST_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2L-UPDATE_LOOK_LIKE_COUNT
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name V2V-UPDATE_VIDEO_LIKE_COUNT
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2V-UPDATE_VIDEO_LIKE_COUNT
