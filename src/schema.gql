@@ -675,6 +675,15 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+"""조회수 누적 대상 객체 분류입니다."""
+enum HitOwnerType {
+  Digest
+  Item
+  Keyword
+  Look
+  Video
+}
+
 type Item {
   brand: Brand!
   brandId: Int!
@@ -997,6 +1006,7 @@ type Mutation {
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
+  hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
