@@ -10,7 +10,7 @@ import {
 import { UpdateLikeCountMto } from '@src/queue/mtos';
 
 @Injectable()
-export class ContentProducer {
+export class LikeProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
   async updateCommentLikeCount(mto: UpdateLikeCountMto) {
