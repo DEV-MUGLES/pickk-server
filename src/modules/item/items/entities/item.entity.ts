@@ -48,33 +48,48 @@ export class ItemEntity extends BaseIdEntity implements IItem {
       return;
     }
 
+    this.brand = attributes.brand;
+    this.brandId = attributes.brandId;
+
+    this.options = attributes.options;
+    this.products = attributes.products;
+    this.campaigns = attributes.campaigns;
+
+    this.majorCategory = attributes.majorCategory;
+    this.minorCategory = attributes.minorCategory;
+    this.majorCategoryId = attributes.majorCategoryId;
+    this.minorCategoryId = attributes.minorCategoryId;
+
+    this.notice = attributes.notice;
+    this.salePolicy = attributes.salePolicy;
+    this.prices = attributes.prices;
+    this.urls = attributes.urls;
+    this.detailImages = attributes.detailImages;
+    this.sizeCharts = attributes.sizeCharts;
+
     this.name = attributes.name;
     this.description = attributes.description;
     this.providedCode = attributes.providedCode;
     this.imageUrl = attributes.imageUrl;
 
-    this.isInfiniteStock = attributes.isInfiniteStock;
-    this.isSoldout = attributes.isSoldout;
     this.isMdRecommended = attributes.isMdRecommended;
     this.isSellable = attributes.isSellable;
     this.isPurchasable = attributes.isPurchasable;
+    this.isInfiniteStock = attributes.isInfiniteStock;
+    this.isSoldout = attributes.isSoldout;
 
-    this.brand = attributes.brand;
-    this.brandId = attributes.brandId;
-    this.notice = attributes.notice;
-
-    this.prices = attributes.prices;
-    this.urls = attributes.urls;
-    this.detailImages = attributes.detailImages;
-    this.options = attributes.options;
-    this.products = attributes.products;
-    this.majorCategory = attributes.majorCategory;
-    this.minorCategory = attributes.minorCategory;
-    this.majorCategoryId = attributes.majorCategoryId;
-    this.minorCategoryId = attributes.minorCategoryId;
-    this.sizeCharts = attributes.sizeCharts;
     this.sellableAt = attributes.sellableAt;
+
+    this.digestCount = attributes.digestCount;
   }
+
+  @Field(() => Brand)
+  @ManyToOne(() => BrandEntity, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  brand: Brand;
+  @Field(() => Int)
+  @Column()
+  brandId: number;
 
   @Field()
   @Column()
@@ -82,21 +97,13 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   name: string;
 
   @Field({ nullable: true })
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
+  @Column({ length: 100, nullable: true })
   @IsString()
   @IsOptional()
   providedCode?: string;
 
   @Field({ nullable: true })
-  @Column({
-    type: 'varchar',
-    length: 100,
-    nullable: true,
-  })
+  @Column({ length: 100, nullable: true })
   @IsString()
   @IsOptional()
   description?: string;
@@ -107,75 +114,45 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   imageUrl: string;
 
   @Field({ defaultValue: true })
-  @Column({
-    default: true,
-  })
+  @Column({ default: true })
   @IsBoolean()
   @Optional()
   isInfiniteStock: boolean;
 
   @Field({ defaultValue: false })
-  @Column({
-    default: false,
-  })
+  @Column({ default: false })
   @IsBoolean()
   @Optional()
   isSoldout: boolean;
 
   @Field({ defaultValue: true })
-  @Column({
-    default: true,
-  })
+  @Column({ default: true })
   @IsBoolean()
   @Optional()
   isMdRecommended: boolean;
 
   @Field({ defaultValue: false })
-  @Column({
-    default: false,
-  })
+  @Column({ default: false })
   @IsBoolean()
   @Optional()
   isSellable: boolean;
 
   @Field({ defaultValue: false })
-  @Column({
-    default: false,
-  })
+  @Column({ default: false })
   @IsBoolean()
   @Optional()
   isPurchasable: boolean;
 
-  @Field(() => Brand)
-  @ManyToOne(() => BrandEntity, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  brand: Brand;
-
-  @Field(() => Int)
-  @Column()
-  brandId: number;
-
-  @OneToMany('ItemPriceEntity', 'item', {
-    cascade: true,
-    eager: true,
-  })
+  @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })
   prices: ItemPrice[];
 
-  @OneToMany('ItemUrlEntity', 'item', {
-    cascade: true,
-  })
+  @OneToMany('ItemUrlEntity', 'item', { cascade: true })
   urls: ItemUrl[];
 
-  @OneToMany('ItemDetailImageEntity', 'item', {
-    cascade: true,
-  })
+  @OneToMany('ItemDetailImageEntity', 'item', { cascade: true })
   detailImages: ItemDetailImage[];
 
-  @OneToMany('ItemOptionEntity', 'item', {
-    cascade: true,
-  })
+  @OneToMany('ItemOptionEntity', 'item', { cascade: true })
   options: IItemOption[];
 
   @Field(() => ItemSalePolicy, {
@@ -185,9 +162,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @JoinColumn()
   salePolicy: ItemSalePolicy;
 
-  @OneToMany('ProductEntity', 'item', {
-    cascade: true,
-  })
+  @OneToMany('ProductEntity', 'item', { cascade: true })
   products: IProduct[];
 
   @ManyToMany('CampaignEntity', 'items')
@@ -197,50 +172,29 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Field({
     nullable: true,
   })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Column({ type: 'int', nullable: true })
   majorCategoryId?: number;
 
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
   minorCategoryId?: number;
 
-  @Field(() => ItemCategory, {
-    nullable: true,
-  })
-  @ManyToOne(() => ItemCategoryEntity, {
-    nullable: true,
-  })
+  @Field(() => ItemCategory, { nullable: true })
+  @ManyToOne(() => ItemCategoryEntity, { nullable: true })
   @JoinColumn()
   majorCategory?: ItemCategory;
 
-  @Field(() => ItemCategory, {
-    nullable: true,
-  })
-  @ManyToOne(() => ItemCategoryEntity, {
-    nullable: true,
-  })
+  @Field(() => ItemCategory, { nullable: true })
+  @ManyToOne(() => ItemCategoryEntity, { nullable: true })
   @JoinColumn()
   minorCategory?: ItemCategory;
 
-  @Field(() => ItemNotice, {
-    nullable: true,
-    description: '상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다.',
-  })
+  @Field(() => ItemNotice, { nullable: true })
   @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
   @JoinColumn()
   notice: ItemNotice;
 
-  @OneToMany('ItemSizeChartEntity', 'item', {
-    cascade: true,
-  })
+  @OneToMany('ItemSizeChartEntity', 'item', { cascade: true })
   sizeCharts: ItemSizeChart[];
 
   @Field({ nullable: true, description: '판매가능시점(=활성전환일)' })
@@ -255,16 +209,18 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     }
   }
 
+  @Field(() => Int)
+  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  digestCount: number;
+
   @Field()
   get originalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).originalPrice;
   }
-
   @Field()
   get sellPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).sellPrice;
   }
-
   @Field()
   get finalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).finalPrice;

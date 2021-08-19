@@ -691,6 +691,7 @@ type Item {
   createdAt: DateTime!
   description: String
   detailImages: [ItemDetailImage!]
+  digestCount: Int!
   finalPrice: Float!
   id: Int!
   imageUrl: String!
@@ -704,8 +705,6 @@ type Item {
   minorCategory: ItemCategory
   minorCategoryId: Float
   name: String!
-
-  """상품 안내 메세지입니다. 파트너어드민에서 입력할 수 있습니다."""
   notice: ItemNotice
   options: [ItemOption!]
   originalPrice: Float!
