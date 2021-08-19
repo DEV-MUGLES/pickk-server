@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import Joi from 'joi';
 
 import configuration from './configuration';
-import { SlackWebhookConfigService } from './config.service';
+import { SlackConfigService } from './config.service';
 
 /**
  * Import and provide crawler configuration related classes.
@@ -21,7 +21,7 @@ import { SlackWebhookConfigService } from './config.service';
       }),
     }),
   ],
-  providers: [ConfigService, SlackWebhookConfigService],
-  exports: [ConfigService, SlackWebhookConfigService],
+  providers: [ConfigService, SlackConfigService],
+  exports: [ConfigService, SlackConfigService],
 })
-export class SlackWebhookConfigModule {}
+export class SlackConfigModule {}

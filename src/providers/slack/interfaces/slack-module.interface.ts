@@ -1,15 +1,15 @@
 import { ModuleMetadata } from '@nestjs/common';
 import { IncomingWebhookDefaultArguments } from '@slack/webhook';
 
-export interface SlackWebhookModuleAsyncOptions
+export interface SlackModuleAsyncOptions
   extends Pick<ModuleMetadata, 'imports'> {
   useFactory?: (
     ...args: any[]
-  ) => SlackWebhookModuleOptions | Promise<SlackWebhookModuleOptions>;
+  ) => SlackModuleOptions | Promise<SlackModuleOptions>;
   inject?: any[];
 }
 
-export type SlackWebhookModuleOptions = {
+export type SlackModuleOptions = {
   url: string;
   defaults?: IncomingWebhookDefaultArguments;
 };

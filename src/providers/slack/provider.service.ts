@@ -9,7 +9,7 @@ import { User } from '@user/users/models';
 import { SlackChannelName } from './constants';
 
 @Injectable()
-export class SlackWebhookService {
+export class SlackService {
   constructor(
     @Inject(IncomingWebhook) private readonly webhook: IncomingWebhook
   ) {}
@@ -43,7 +43,7 @@ export class SlackWebhookService {
           email,
         },
       }),
-      channel: SlackChannelName.ProductManagement,
+      channel: SlackChannelName.ItemManagement,
     });
   }
 }

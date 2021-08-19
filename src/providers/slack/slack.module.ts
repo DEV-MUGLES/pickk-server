@@ -1,13 +1,10 @@
 import { DynamicModule, Provider } from '@nestjs/common';
 import { IncomingWebhook } from '@slack/webhook';
 
-import {
-  SlackWebhookModuleAsyncOptions,
-  SlackWebhookModuleOptions,
-} from './interfaces';
+import { SlackModuleAsyncOptions, SlackModuleOptions } from './interfaces';
 
-export class SlackWebhookModule {
-  public static forRoot(options: SlackWebhookModuleOptions): DynamicModule {
+export class SlackModule {
+  public static forRoot(options: SlackModuleOptions): DynamicModule {
     const webhookProvider: Provider = {
       provide: IncomingWebhook,
       useValue: new IncomingWebhook(options.url, options.defaults),
@@ -15,13 +12,13 @@ export class SlackWebhookModule {
 
     return {
       exports: [webhookProvider],
-      module: SlackWebhookModule,
+      module: SlackModule,
       providers: [webhookProvider],
     };
   }
 
   public static forRootAsync(
-    asyncOptions: SlackWebhookModuleAsyncOptions
+    asyncOptions: SlackModuleAsyncOptions
   ): DynamicModule {
     const webhookProvider: Provider = {
       provide: IncomingWebhook,
@@ -35,7 +32,7 @@ export class SlackWebhookModule {
     return {
       imports: asyncOptions.imports,
       exports: [webhookProvider],
-      module: SlackWebhookModule,
+      module: SlackModule,
       providers: [webhookProvider],
     };
   }

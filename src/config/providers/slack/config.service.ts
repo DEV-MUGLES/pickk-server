@@ -7,10 +7,10 @@ import { ConfigService } from '@nestjs/config';
  * @class
  */
 @Injectable()
-export class SlackWebhookConfigService {
+export class SlackConfigService {
   constructor(private configService: ConfigService) {}
 
-  get url(): string {
-    return this.configService.get<string>('slackWebhook.url');
+  get webhookUrl(): string {
+    return this.configService.get<string>('slack.webhookUrl');
   }
 }
