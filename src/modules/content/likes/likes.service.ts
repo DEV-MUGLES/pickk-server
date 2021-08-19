@@ -9,12 +9,14 @@ import { LikeOwnerType } from './constants';
 import { Like } from './models';
 
 import { LikesRepository } from './likes.repository';
+import { LikeProducer } from './producers';
 
 @Injectable()
 export class LikesService {
   constructor(
     @InjectRepository(LikesRepository)
-    private readonly likesRepository: LikesRepository
+    private readonly likesRepository: LikesRepository,
+    private readonly likeProducer: LikeProducer
   ) {}
 
   // @TODO: count 업데이트 태스크
@@ -28,6 +30,7 @@ export class LikesService {
     }
 
     await this.likesRepository.save(new Like({ userId, ownerType, ownerId }));
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId, 1);
   }
 
   // @TODO: count 업데이트 태스크
@@ -44,9 +47,38 @@ export class LikesService {
     }
 
     await this.likesRepository.remove(likes);
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId, -1);
   }
 
   async count(ownerType: LikeOwnerType, ownerId: number): Promise<number> {
     return await this.likesRepository.count({ where: { ownerType, ownerId } });
+  }
+
+  async produceUpdateOwnerLikeCount(
+    ownerType: LikeOwnerType,
+    ownerId: number,
+    diff: 1 | -1
+  ) {
+    if (ownerType === LikeOwnerType.Comment) {
+      await this.likeProducer.updateCommentLikeCount({
+        id: ownerId,
+        diff,
+      });
+    } else if (ownerType === LikeOwnerType.Digest) {
+      await this.likeProducer.updateDigestLikeCount({
+        id: ownerId,
+        diff,
+      });
+    } else if (ownerType === LikeOwnerType.Look) {
+      await this.likeProducer.updateLookLikeCount({
+        id: ownerId,
+        diff,
+      });
+    } else if (ownerType === LikeOwnerType.Video) {
+      await this.likeProducer.updateVideoLikeCount({
+        id: ownerId,
+        diff,
+      });
+    }
   }
 }
