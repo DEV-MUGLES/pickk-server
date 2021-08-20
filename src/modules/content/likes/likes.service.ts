@@ -17,13 +17,21 @@ export class LikesService {
     private readonly likesRepository: LikesRepository
   ) {}
 
+  async check(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerId: number
+  ): Promise<boolean> {
+    return await this.likesRepository.checkExist(userId, ownerType, ownerId);
+  }
+
   // @TODO: count 업데이트 태스크
   async add(
     userId: number,
     ownerType: LikeOwnerType,
     ownerId: number
   ): Promise<void> {
-    if (await this.likesRepository.checkExist(userId, ownerType, ownerId)) {
+    if (await this.check(userId, ownerType, ownerId)) {
       throw new ConflictException('이미 좋아요했습니다.');
     }
 
