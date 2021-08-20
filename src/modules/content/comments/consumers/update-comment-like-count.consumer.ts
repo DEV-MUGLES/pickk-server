@@ -19,11 +19,11 @@ export class UpdateCommentLikeCountConsumer {
 
   @SqsMessageHandler(true)
   async updateLikeCount(messages: AWS.SQS.Message[]) {
-    const mtos: UpdateLikeCountMto[] = messages.map((message) =>
-      JSON.parse(message.Body)
+    const mtos: UpdateLikeCountMto[] = messages.map(({ Body }) =>
+      JSON.parse(Body)
     );
 
-    const uniqueIds = [...new Set(mtos.map((mto) => mto.id))];
+    const uniqueIds = [...new Set(mtos.map(({ id }) => id))];
     await allSettled(
       uniqueIds.map(
         (id) =>
