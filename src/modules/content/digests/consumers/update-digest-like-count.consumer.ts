@@ -1,3 +1,4 @@
+import { InjectRepository } from '@nestjs/typeorm';
 import { allSettled } from '@common/helpers';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
@@ -6,12 +7,13 @@ import { LikesService } from '@content/likes/likes.service';
 import { UPDATE_DIGEST_LIKE_COUNT_QUEUE } from '@queue/constants';
 import { UpdateLikeCountMto } from '@queue/mtos';
 
-import { DigestsService } from '../digests.service';
+import { DigestsRepository } from '../digests.repository';
 
 @SqsProcess(UPDATE_DIGEST_LIKE_COUNT_QUEUE)
 export class UpdateDigestLikeCountConsumer {
   constructor(
-    private readonly digestsService: DigestsService,
+    @InjectRepository(DigestsRepository)
+    private readonly digestsRepository: DigestsRepository,
     private readonly likesService: LikesService
   ) {}
 
@@ -29,7 +31,7 @@ export class UpdateDigestLikeCountConsumer {
                 LikeOwnerType.Digest,
                 id
               );
-              resolve(this.digestsService.updateLikeCount(id, { likeCount }));
+              resolve(this.digestsRepository.update(id, { likeCount }));
             } catch (err) {
               reject({ id, reason: err });
             }
