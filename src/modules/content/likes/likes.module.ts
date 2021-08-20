@@ -38,6 +38,6 @@ import { LikesService } from './likes.service';
     ),
   ],
   providers: [LikesResolver, LikesService, LikeProducer],
-  exports: [LikeProducer],
+  exports: [LikeProducer, LikesService],
 })
 export class LikesModule {}

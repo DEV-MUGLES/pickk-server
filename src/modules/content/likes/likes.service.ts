@@ -5,8 +5,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { UpdateLikeCountDiff } from '@queue/mtos';
-
 import { LikeOwnerType } from './constants';
 import { Like } from './models';
 import { LikeProducer } from './producers';
@@ -31,7 +29,7 @@ export class LikesService {
     }
 
     await this.likesRepository.save(new Like({ userId, ownerType, ownerId }));
-    await this.produceUpdateOwnerLikeCount(ownerType, ownerId, 1);
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId);
   }
 
   async remove(
@@ -47,21 +45,16 @@ export class LikesService {
     }
 
     await this.likesRepository.remove(likes);
-    await this.produceUpdateOwnerLikeCount(ownerType, ownerId, -1);
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId);
   }
 
   async count(ownerType: LikeOwnerType, ownerId: number): Promise<number> {
     return await this.likesRepository.count({ where: { ownerType, ownerId } });
   }
 
-  async produceUpdateOwnerLikeCount(
-    ownerType: LikeOwnerType,
-    ownerId: number,
-    diff: UpdateLikeCountDiff
-  ) {
+  async produceUpdateOwnerLikeCount(ownerType: LikeOwnerType, ownerId: number) {
     await this.likeProducer.updateOwnerLikeCount(ownerType, {
       id: ownerId,
-      diff,
     });
   }
 }
