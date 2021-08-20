@@ -30,7 +30,6 @@ export class FollowsService {
     return await this.followsRepository.bulkCheckExist(userId, targetIds);
   }
 
-  // @TODO: count 업데이트 태스크
   async add(userId: number, targetId: number): Promise<void> {
     if (userId === targetId) {
       throw new ForbiddenException('자신을 팔로우할 수 없습니다!');
@@ -40,10 +39,9 @@ export class FollowsService {
     }
 
     await this.followsRepository.save(new Follow({ userId, targetId }));
-    await this.producerUpdateUserFollowCount(targetId);
+    await this.produceUpdateUserFollowCount(targetId);
   }
 
-  // @TODO: count 업데이트 태스크
   async remove(userId: number, targetId: number): Promise<void> {
     const likes = await this.followsRepository.find({
       where: { userId, targetId },
@@ -53,7 +51,7 @@ export class FollowsService {
     }
 
     await this.followsRepository.remove(likes);
-    await this.producerUpdateUserFollowCount(targetId);
+    await this.produceUpdateUserFollowCount(targetId);
   }
 
   async count(targetId: number): Promise<number> {
@@ -62,7 +60,7 @@ export class FollowsService {
     });
   }
 
-  async producerUpdateUserFollowCount(targetId: number) {
+  async produceUpdateUserFollowCount(targetId: number) {
     await this.followProducer.updateUserFollowCount({ id: targetId });
   }
 }
