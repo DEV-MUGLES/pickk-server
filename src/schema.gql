@@ -905,7 +905,11 @@ type ItemUrl {
 type JwtPayload {
   """Seller 로그인인 경우에만 발급된다."""
   brandId: Float
+
+  """만료 시점 timestamp"""
   exp: Timestamp!
+
+  """발급 시점 timestamp"""
   iat: Timestamp!
   nickname: String!
 

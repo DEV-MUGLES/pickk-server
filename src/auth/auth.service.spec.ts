@@ -140,9 +140,10 @@ describe('AuthService', () => {
 
       expect(result).toEqual(expectedResult);
       expect(jwtServiceSignSpy).toHaveBeenCalledWith({
-        username: validatedUser.name,
+        nickname: validatedUser.name,
         code: validatedUser.code,
         sub: validatedUser.id,
+        isExpired: null,
       });
     });
   });

@@ -28,8 +28,16 @@ export class JwtPayload implements IJwtPayload {
 
   @Field(() => Int)
   sub: number;
-  @Field(() => Timestamp, { description: '발급 시점' })
+  @Field(() => Timestamp, { description: '발급 시점 timestamp' })
   iat: number;
-  @Field(() => Timestamp, { description: '만료 시점' })
+  @Field(() => Timestamp, { description: '만료 시점 timestamp' })
   exp: number;
+
+  get isExpired() {
+    if (!this.exp) {
+      return false;
+    }
+
+    return Date.now() > this.exp * 1000;
+  }
 }

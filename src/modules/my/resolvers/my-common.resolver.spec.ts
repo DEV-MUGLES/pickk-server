@@ -43,6 +43,7 @@ describe('MyCommonResolver', () => {
     sub: faker.datatype.number(),
     iat: new Date().getTime(),
     exp: new Date().getTime(),
+    isExpired: null,
   };
 
   describe('myJwtPayload', () => {

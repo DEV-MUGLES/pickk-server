@@ -86,6 +86,7 @@ export class AuthService {
     const payload: CreateJwtPayloadInput = {
       nickname: user.nickname,
       sub: user.id,
+      isExpired: null,
     };
     return {
       access: this.jwtService.sign(payload),
@@ -125,6 +126,7 @@ export class AuthService {
       brandId: brand.id,
       nickname: user.nickname,
       sub: user.id,
+      isExpired: null,
     };
     return {
       access: this.jwtService.sign(payload),

@@ -1,4 +1,8 @@
-import { ExecutionContext, Injectable } from '@nestjs/common';
+import {
+  ExecutionContext,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 
 import { extractJwtPayload } from '../helpers';
 
@@ -10,8 +14,13 @@ export class JwtOrNotGuard extends GqlAuthGuard('verify') {
     const req = this.getRequest(context);
 
     try {
-      req.user = extractJwtPayload(req.headers.authorization);
-    } catch {
+      const payload = extractJwtPayload(req.headers.authorization);
+      if (payload.isExpired) {
+        throw new UnauthorizedException('만료된 토큰입니다');
+      }
+
+      req.user = payload;
+    } catch (err) {
       req.user = null;
     }
 
