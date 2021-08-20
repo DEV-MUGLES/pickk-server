@@ -6,12 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { CommentRelationType } from './constants';
-import {
-  CommentFilter,
-  CreateCommentInput,
-  UpdateCommentInput,
-  UpdateCommentLikeCountDto,
-} from './dtos';
+import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
 import { Comment } from './models';
 
 import { CommentsRepository } from './comments.repository';
@@ -63,16 +58,13 @@ export class CommentsService {
     );
   }
 
-  async update(
-    id: number,
-    inputOrDto: UpdateCommentInput | UpdateCommentLikeCountDto
-  ): Promise<Comment> {
+  async update(id: number, input: UpdateCommentInput): Promise<Comment> {
     const comment = await this.get(id);
 
     return await this.commentsRepository.save(
       new Comment({
         ...comment,
-        ...inputOrDto,
+        ...input,
       })
     );
   }
