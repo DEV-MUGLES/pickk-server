@@ -56,6 +56,8 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
     this.hitCount = attributes.hitCount;
     this.commentCount = attributes.commentCount;
     this.score = attributes.score;
+
+    this.isLiking = attributes.isLiking;
   }
 
   @Field(() => Item, { nullable: true })
@@ -125,4 +127,11 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @Field({ defaultValue: 0 })
   @Column({ type: 'float', default: 0 })
   score: number;
+
+  @Field({
+    description:
+      'read, list 호출 시 userId가 제공되면 liking 여부를 검사해 attach합니다.\n(true: 팔로잉, false: 팔로잉x, null: 유저정보 제공x)',
+    nullable: true,
+  })
+  isLiking: boolean;
 }

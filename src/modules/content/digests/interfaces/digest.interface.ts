@@ -40,4 +40,7 @@ export interface IDigest {
   hitCount: number;
   commentCount: number;
   score: number;
+
+  // model only fields
+  isLiking: boolean;
 }
