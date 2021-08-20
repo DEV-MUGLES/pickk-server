@@ -1,7 +1,7 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { allSettled } from '@common/helpers';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
+import { allSettled } from '@common/helpers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { UPDATE_DIGEST_LIKE_COUNT_QUEUE } from '@queue/constants';
