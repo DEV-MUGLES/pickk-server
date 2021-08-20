@@ -1,9 +1,8 @@
 import { ExecutionContext, Injectable } from '@nestjs/common';
 
-import { GqlAuthGuard } from './gql-auth.guard';
+import { extractJwtPayload } from '../helpers';
 
-const parse = (input: string): string =>
-  Buffer.from(input, 'base64').toString();
+import { GqlAuthGuard } from './gql-auth.guard';
 
 @Injectable()
 export class JwtOrNotGuard extends GqlAuthGuard('verify') {
@@ -11,15 +10,7 @@ export class JwtOrNotGuard extends GqlAuthGuard('verify') {
     const req = this.getRequest(context);
 
     try {
-      const token = req.headers.authorization.split(' ')[1];
-      if (!token) {
-        throw new Error();
-      }
-
-      const payload = JSON.parse(
-        parse(req.headers.authorization.split('.')[1])
-      );
-      req.user = payload;
+      req.user = extractJwtPayload(req.headers.authorization);
     } catch {
       req.user = null;
     }
