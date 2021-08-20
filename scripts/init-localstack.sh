@@ -12,3 +12,5 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2D-UPDAT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2K-UPDATE_KEYWORD_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2L-UPDATE_LOOK_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2V-UPDATE_VIDEO_LIKE_COUNT
+
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name F2U-UPDATE_USER_FOLLOW_COUNT
