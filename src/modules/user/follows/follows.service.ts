@@ -21,6 +21,13 @@ export class FollowsService {
     return await this.followsRepository.checkExist(userId, targetId);
   }
 
+  async bulkCheck(
+    userId: number,
+    targetIds: number[]
+  ): Promise<Map<number, boolean>> {
+    return await this.followsRepository.bulkCheckExist(userId, targetIds);
+  }
+
   // @TODO: count 업데이트 태스크
   async add(userId: number, targetId: number): Promise<void> {
     if (userId === targetId) {

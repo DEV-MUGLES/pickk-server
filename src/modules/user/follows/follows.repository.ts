@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, In, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { FollowEntity } from './entities';
@@ -39,5 +39,24 @@ export class FollowsRepository extends Repository<FollowEntity> {
       .limit(1)
       .execute();
     return result?.length > 0;
+  }
+
+  async bulkCheckExist(userId: number, targetIds: number[]) {
+    const follows = await this.find({
+      select: ['targetId'],
+      where: {
+        userId,
+        targetId: In(targetIds),
+      },
+    });
+
+    const result = new Map<number, boolean>();
+    targetIds.forEach((targetId) => {
+      result.set(
+        targetId,
+        follows.findIndex((follow) => follow.targetId === targetId) >= 0
+      );
+    });
+    return result;
   }
 }
