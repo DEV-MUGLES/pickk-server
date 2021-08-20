@@ -9,5 +9,6 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name S2I-PROCE
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2C-UPDATE_COMMENT_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2D-UPDATE_DIGEST_LIKE_COUNT
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2K-UPDATE_KEYWORD_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2L-UPDATE_LOOK_LIKE_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name L2V-UPDATE_VIDEO_LIKE_COUNT
