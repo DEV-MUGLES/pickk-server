@@ -6,7 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { DigestRelationType } from './constants';
-import { DigestFilter } from './dtos';
+import { DigestFilter, UpdateDigestLikeCountDto } from './dtos';
 import { Digest } from './models';
 
 import { DigestsRepository } from './digests.repository';
@@ -37,5 +37,11 @@ export class DigestsService {
         ...(_pageInput?.pageFilter ?? {}),
       })
     );
+  }
+
+  async updateLikeCount(id: number, dto: UpdateDigestLikeCountDto) {
+    const digest = await this.get(id);
+
+    return await this.digestsRepository.save(new Digest({ ...digest, ...dto }));
   }
 }
