@@ -23,7 +23,7 @@ export const isProcessDelayStatus = (
 @ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class OrderItemsCountOutput {
   static getCacheKey(sellerId: number) {
-    return `oic:${sellerId}`;
+    return `order-items-count:${sellerId}`;
   }
 
   static create(

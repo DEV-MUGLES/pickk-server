@@ -4,7 +4,7 @@ export const getEarlyHitCacheKey = (
   ownerType: HitOwnerType,
   ownerId: number,
   ipOrId: string
-) => `h-${ownerType}:${ownerId}:${ipOrId}`;
+) => `hit:${ownerType}-${ownerId}-${ipOrId}`;
 
 export const getCountMapCacheKey = (ownerType: HitOwnerType) =>
-  `hcm-${ownerType}`;
+  `hit-count-map:${ownerType}`;

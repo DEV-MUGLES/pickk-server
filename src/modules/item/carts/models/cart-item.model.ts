@@ -21,6 +21,6 @@ export class CartItem extends CartItemEntity {
   }
 
   public static getCountCacheKey(userId: number): string {
-    return `ciC:${userId}`;
+    return `cart-items-count:${userId}`;
   }
 }

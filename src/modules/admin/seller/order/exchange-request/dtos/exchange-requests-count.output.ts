@@ -8,7 +8,7 @@ import { ExchangeRequestEntity } from '@order/exchange-requests/entities';
 @ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class ExchangeRequestsCountOutput {
   static getCacheKey(sellerId: number) {
-    return `erc:${sellerId}`;
+    return `exchange-requests-count:${sellerId}`;
   }
 
   static create(

@@ -12,7 +12,7 @@ import {
 @ObjectType()
 export class PointEvent extends PointEventEntity {
   public static getAmountCacheKey(userId: number): string {
-    return `peA:${userId}`;
+    return `point-amount:${userId}`;
   }
 
   public static of(

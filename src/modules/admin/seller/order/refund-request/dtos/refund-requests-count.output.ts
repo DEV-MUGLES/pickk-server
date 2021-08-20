@@ -8,7 +8,7 @@ import { RefundRequestEntity } from '@order/refund-requests/entities';
 @ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class RefundRequestsCountOutput {
   static getCacheKey(sellerId: number) {
-    return `rrc:${sellerId}`;
+    return `refund-requests-count:${sellerId}`;
   }
 
   static create(
