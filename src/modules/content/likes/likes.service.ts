@@ -7,6 +7,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { LikeOwnerType } from './constants';
 import { Like } from './models';
+import { LikeProducer } from './producers';
 
 import { LikesRepository } from './likes.repository';
 
@@ -14,7 +15,8 @@ import { LikesRepository } from './likes.repository';
 export class LikesService {
   constructor(
     @InjectRepository(LikesRepository)
-    private readonly likesRepository: LikesRepository
+    private readonly likesRepository: LikesRepository,
+    private readonly likeProducer: LikeProducer
   ) {}
 
   async check(
@@ -36,8 +38,6 @@ export class LikesService {
       ownerIds
     );
   }
-
-  // @TODO: count 업데이트 태스크
   async add(
     userId: number,
     ownerType: LikeOwnerType,
@@ -48,9 +48,9 @@ export class LikesService {
     }
 
     await this.likesRepository.save(new Like({ userId, ownerType, ownerId }));
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId);
   }
 
-  // @TODO: count 업데이트 태스크
   async remove(
     userId: number,
     ownerType: LikeOwnerType,
@@ -64,9 +64,16 @@ export class LikesService {
     }
 
     await this.likesRepository.remove(likes);
+    await this.produceUpdateOwnerLikeCount(ownerType, ownerId);
   }
 
   async count(ownerType: LikeOwnerType, ownerId: number): Promise<number> {
     return await this.likesRepository.count({ where: { ownerType, ownerId } });
+  }
+
+  async produceUpdateOwnerLikeCount(ownerType: LikeOwnerType, ownerId: number) {
+    await this.likeProducer.updateOwnerLikeCount(ownerType, {
+      id: ownerId,
+    });
   }
 }

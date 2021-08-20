@@ -5,8 +5,8 @@ import {
   SqsProcess,
 } from '@pickk/nestjs-sqs';
 
-import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@src/queue/constants';
-import { RemoveExpectedPointEventMto } from '@src/queue/mtos';
+import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';
+import { RemoveExpectedPointEventMto } from '@queue/mtos';
 
 import { PointsService } from '../points.service';
 

@@ -13,8 +13,8 @@ import {
   RejectResponse,
   splitRegexString,
 } from '@common/helpers';
-import { SCRAP_SELLER_ITEMS_QUEUE } from '@src/queue/constants';
-import { ScrapSellerItemsMto, SellerItemsScrapResult } from '@src/queue/mtos';
+import { SCRAP_SELLER_ITEMS_QUEUE } from '@queue/constants';
+import { ScrapSellerItemsMto, SellerItemsScrapResult } from '@queue/mtos';
 import { CrawlerProviderService } from '@providers/crawler';
 import { ItemCrawlResultDto } from '@providers/crawler/dtos';
 

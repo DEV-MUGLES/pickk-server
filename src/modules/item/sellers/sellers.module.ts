@@ -7,7 +7,7 @@ import { SaleStrategyRepository } from '@common/repositories';
 import {
   SCRAP_SELLER_ITEMS_QUEUE,
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
-} from '@src/queue/constants';
+} from '@queue/constants';
 import { CrawlerProviderModule } from '@providers/crawler/provider.module';
 import { ItemsModule } from '@item/items/items.module';
 

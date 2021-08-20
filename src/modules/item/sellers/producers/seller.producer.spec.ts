@@ -3,9 +3,9 @@ import { SqsModule } from '@pickk/nestjs-sqs';
 import * as faker from 'faker';
 
 import { AwsSqsProviderModule } from '@providers/aws/sqs';
-import { ProcessSellerItemsScrapResultMto } from '@src/queue/mtos';
+import { ProcessSellerItemsScrapResultMto } from '@queue/mtos';
 import { SellerProducer } from './seller.producer';
-import { MAX_SQS_MESSAGE_SIZE } from '@src/queue/constants';
+import { MAX_SQS_MESSAGE_SIZE } from '@queue/constants';
 
 describe('SellerProducer', () => {
   let sellerProducer: SellerProducer;

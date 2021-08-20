@@ -156,6 +156,9 @@
       "@providers/(.*)$": [
         "<rootDir>/providers/$1"
       ],
+      "@queue/(.*)$": [
+        "<rootDir>/queue/$1"
+      ],
       "@templates/(.*)$": [
         "<rootDir>/templates/$1"
       ],

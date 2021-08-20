@@ -10,8 +10,8 @@ import { firstValueFrom } from 'rxjs';
 
 import { getMimeType } from '@src/modules/common/images/helpers';
 import { ImagesService } from '@src/modules/common/images/images.service';
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@src/queue/constants';
-import { UpdateItemImageUrlMto } from '@src/queue/mtos';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
+import { UpdateItemImageUrlMto } from '@queue/mtos';
 import { ItemsService } from '@item/items/items.service';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)

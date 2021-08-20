@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
-import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@src/queue/constants';
+import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';
 
 import { Consumers } from './consumers';
 import { Producers } from './producers';

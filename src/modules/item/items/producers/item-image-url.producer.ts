@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@src/queue/constants';
-import { UpdateItemImageUrlMto } from '@src/queue/mtos';
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
+import { UpdateItemImageUrlMto } from '@queue/mtos';
 
 import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from '../constants';
 

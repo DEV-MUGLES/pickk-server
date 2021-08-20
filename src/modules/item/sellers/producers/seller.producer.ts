@@ -5,11 +5,11 @@ import {
   SCRAP_SELLER_ITEMS_QUEUE,
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
   MAX_SQS_MESSAGE_SIZE,
-} from '@src/queue/constants';
+} from '@queue/constants';
 import {
   ProcessSellerItemsScrapResultMto,
   ScrapSellerItemsMto,
-} from '@src/queue/mtos';
+} from '@queue/mtos';
 
 @Injectable()
 export class SellerProducer {
