@@ -25,6 +25,18 @@ export class LikesService {
     return await this.likesRepository.checkExist(userId, ownerType, ownerId);
   }
 
+  async bulkCheck(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerIds: number[]
+  ): Promise<Map<number, boolean>> {
+    return await this.likesRepository.bulkCheckExist(
+      userId,
+      ownerType,
+      ownerIds
+    );
+  }
+
   // @TODO: count 업데이트 태스크
   async add(
     userId: number,

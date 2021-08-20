@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, In, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { LikeOwnerType } from './constants';
@@ -49,5 +49,29 @@ export class LikesRepository extends Repository<LikeEntity> {
       .limit(1)
       .execute();
     return result?.length > 0;
+  }
+
+  async bulkCheckExist(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerIds: number[]
+  ) {
+    const likes = await this.find({
+      select: ['ownerId'],
+      where: {
+        userId,
+        ownerType,
+        ownerId: In(ownerIds),
+      },
+    });
+
+    const result = new Map<number, boolean>();
+    ownerIds.forEach((ownerId) => {
+      result.set(
+        ownerId,
+        likes.findIndex((like) => like.ownerId === ownerId) >= 0
+      );
+    });
+    return result;
   }
 }
