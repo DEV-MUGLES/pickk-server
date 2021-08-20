@@ -540,6 +540,12 @@ type Digest {
   hitCount: Int!
   id: Int!
   images: [DigestImage!]!
+
+  """
+  read, list 호출 시 userId가 제공되면 liking 여부를 검사해 attach합니다.
+  (true: 팔로잉, false: 팔로잉x, null: 유저정보 제공x)
+  """
+  isLiking: Boolean
   item: Item
   itemId: Int
   itemPropertyValues: [ItemPropertyValue!]!

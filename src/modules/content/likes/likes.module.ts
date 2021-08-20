@@ -8,5 +8,6 @@ import { LikesService } from './likes.service';
 @Module({
   imports: [TypeOrmModule.forFeature([LikesRepository])],
   providers: [LikesResolver, LikesService],
+  exports: [LikesService],
 })
 export class LikesModule {}
