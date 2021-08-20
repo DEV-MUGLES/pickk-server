@@ -6,11 +6,11 @@ import {
   SqsProcess,
 } from '@pickk/nestjs-sqs';
 
-import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@src/queue/constants';
+import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@queue/constants';
 import {
   ProcessSellerItemsScrapResultMto,
   UpdateItemImageUrlMto,
-} from '@src/queue/mtos';
+} from '@queue/mtos';
 
 import {
   ItemFilter,

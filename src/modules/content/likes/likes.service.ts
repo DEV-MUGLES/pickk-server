@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { UpdateLikeCountDiff } from '@src/queue/mtos';
+import { UpdateLikeCountDiff } from '@queue/mtos';
 
 import { LikeOwnerType } from './constants';
 import { Like } from './models';

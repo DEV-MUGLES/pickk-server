@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
-import { UPDATE_COMMENT_LIKE_COUNT_QUEUE } from '@src/queue/constants';
+import { UPDATE_COMMENT_LIKE_COUNT_QUEUE } from '@queue/constants';
 
 import { UpdateCommentLikeCountConsumer } from './consumers';
 

@@ -18,6 +18,7 @@
       "@common/*": ["src/common/*"],
       "@jobs/*": ["src/jobs/*"],
       "@providers/*": ["src/providers/*"],
+      "@queue/*": ["src/queue/*"],
       "@templates/*": ["src/templates/*"],
       "@admin/*": ["src/modules/admin/*"],
       "@mcommon/*": ["src/modules/common/*"],

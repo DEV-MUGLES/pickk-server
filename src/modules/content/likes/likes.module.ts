@@ -7,7 +7,7 @@ import {
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
-} from '@src/queue/constants';
+} from '@queue/constants';
 
 import { LikeProducer } from './producers';
 

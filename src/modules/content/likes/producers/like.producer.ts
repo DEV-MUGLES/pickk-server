@@ -6,8 +6,8 @@ import {
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
-} from '@src/queue/constants';
-import { UpdateLikeCountMto } from '@src/queue/mtos';
+} from '@queue/constants';
+import { UpdateLikeCountMto } from '@queue/mtos';
 
 import { LikeOwnerType } from '../constants';
 

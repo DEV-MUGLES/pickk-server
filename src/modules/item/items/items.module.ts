@@ -7,7 +7,7 @@ import { ImagesModule } from '@src/modules/common/images/images.module';
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
-} from '@src/queue/constants';
+} from '@queue/constants';
 import { ProductsModule } from '@item/products/products.module';
 
 import { Consumers } from './consumers';

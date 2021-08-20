@@ -1,7 +1,7 @@
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { UPDATE_COMMENT_LIKE_COUNT_QUEUE } from '@src/queue/constants';
-import { UpdateLikeCountMto } from '@src/queue/mtos';
+import { UPDATE_COMMENT_LIKE_COUNT_QUEUE } from '@queue/constants';
+import { UpdateLikeCountMto } from '@queue/mtos';
 
 import { CommentsService } from '../comments.service';
 
