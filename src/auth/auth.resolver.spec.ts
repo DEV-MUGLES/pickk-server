@@ -74,6 +74,7 @@ describe('AuthResolver', () => {
         sub: faker.datatype.number(),
         iat: new Date().getTime(),
         exp: new Date().getTime(),
+        isExpired: null,
       };
       const user = new User({
         id: payload.sub,
