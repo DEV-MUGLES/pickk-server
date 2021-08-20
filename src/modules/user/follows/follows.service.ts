@@ -17,12 +17,16 @@ export class FollowsService {
     private readonly followsRepository: FollowsRepository
   ) {}
 
+  async check(userId: number, targetId: number): Promise<boolean> {
+    return await this.followsRepository.checkExist(userId, targetId);
+  }
+
   // @TODO: count 업데이트 태스크
   async add(userId: number, targetId: number): Promise<void> {
     if (userId === targetId) {
       throw new ForbiddenException('자신을 팔로우할 수 없습니다!');
     }
-    if (await this.followsRepository.checkExist(userId, targetId)) {
+    if (await this.check(userId, targetId)) {
       throw new ConflictException('이미 팔로우 했습니다.');
     }
 

@@ -1,5 +1,5 @@
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Mutation } from '@nestjs/graphql';
+import { Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
@@ -13,6 +13,15 @@ export class FollowsResolver {
   constructor(
     @Inject(FollowsService) private readonly followsService: FollowsService
   ) {}
+
+  @Query(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async checkFollowing(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('targetId') targetId: number
+  ) {
+    return await this.followsService.check(userId, targetId);
+  }
 
   @Mutation(() => Boolean)
   @UseGuards(JwtVerifyGuard)
