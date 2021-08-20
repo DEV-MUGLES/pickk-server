@@ -2218,6 +2218,9 @@ type User {
   followCount: Int!
   height: Int
   id: Int!
+
+  """[MODEL ONLY]"""
+  isFollowing: Boolean
   name: String
 
   """최대 11자"""

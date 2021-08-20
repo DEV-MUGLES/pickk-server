@@ -30,5 +30,9 @@ export interface IUser {
   shippingAddresses: IShippingAddress[];
   refundAccount: IAccount;
 
+  // 계산되는 field들
   followCount: number;
+
+  // model-only field들
+  isFollowing: boolean;
 }

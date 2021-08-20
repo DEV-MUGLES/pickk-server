@@ -68,6 +68,8 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.refundAccount = attributes.refundAccount;
 
     this.followCount = attributes.followCount;
+
+    this.isFollowing = attributes.isFollowing;
   }
 
   @Field(() => UserRole, { nullable: true })
@@ -167,4 +169,8 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Field(() => Int, { defaultValue: 0 })
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   followCount: number;
+
+  // model only fields
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isFollowing: boolean;
 }
