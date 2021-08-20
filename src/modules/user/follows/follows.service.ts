@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { Follow } from './models';
+import { FollowProducer } from './producers';
 
 import { FollowsRepository } from './follows.repository';
 
@@ -14,7 +15,8 @@ import { FollowsRepository } from './follows.repository';
 export class FollowsService {
   constructor(
     @InjectRepository(FollowsRepository)
-    private readonly followsRepository: FollowsRepository
+    private readonly followsRepository: FollowsRepository,
+    private readonly followProducer: FollowProducer
   ) {}
 
   async check(userId: number, targetId: number): Promise<boolean> {
@@ -38,6 +40,7 @@ export class FollowsService {
     }
 
     await this.followsRepository.save(new Follow({ userId, targetId }));
+    await this.producerUpdateUserFollowCount(targetId);
   }
 
   // @TODO: count 업데이트 태스크
@@ -50,11 +53,16 @@ export class FollowsService {
     }
 
     await this.followsRepository.remove(likes);
+    await this.producerUpdateUserFollowCount(targetId);
   }
 
   async count(targetId: number): Promise<number> {
     return await this.followsRepository.count({
       where: { targetId },
     });
+  }
+
+  async producerUpdateUserFollowCount(targetId: number) {
+    await this.followProducer.updateUserFollowCount({ id: targetId });
   }
 }
