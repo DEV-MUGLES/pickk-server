@@ -1,12 +1,26 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+
+import { LikesModule } from '@content/likes/likes.module';
+import { UPDATE_LOOK_LIKE_COUNT_QUEUE } from '@queue/constants';
+
+import { UpdateLookLikeCountConsumer } from './consumers';
 
 import { LooksRepository } from './looks.repository';
 import { LooksResolver } from './looks.resolver';
 import { LooksService } from './looks.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([LooksRepository])],
-  providers: [LooksResolver, LooksService],
+  imports: [
+    TypeOrmModule.forFeature([LooksRepository]),
+    SqsModule.registerQueue({
+      name: UPDATE_LOOK_LIKE_COUNT_QUEUE,
+      type: SqsQueueType.Consumer,
+      consumerOptions: { batchSize: 10 },
+    }),
+    LikesModule,
+  ],
+  providers: [LooksResolver, LooksService, UpdateLookLikeCountConsumer],
 })
 export class LooksModule {}
