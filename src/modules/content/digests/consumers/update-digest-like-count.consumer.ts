@@ -12,7 +12,7 @@ import { DigestsService } from '../digests.service';
 export class UpdateDigestLikeCountConsumer {
   constructor(
     private readonly digestsService: DigestsService,
-    private readonly likesSerivce: LikesService
+    private readonly likesService: LikesService
   ) {}
 
   @SqsMessageHandler(true)
@@ -25,7 +25,7 @@ export class UpdateDigestLikeCountConsumer {
         (id) =>
           new Promise(async (resolve, reject) => {
             try {
-              const likeCount = await this.likesSerivce.count(
+              const likeCount = await this.likesService.count(
                 LikeOwnerType.Digest,
                 id
               );

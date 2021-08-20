@@ -12,7 +12,7 @@ import { CommentsService } from '../comments.service';
 export class UpdateCommentLikeCountConsumer {
   constructor(
     private readonly commentsService: CommentsService,
-    private readonly likesSerivce: LikesService
+    private readonly likesService: LikesService
   ) {}
 
   @SqsMessageHandler(true)
@@ -25,7 +25,7 @@ export class UpdateCommentLikeCountConsumer {
         (id) =>
           new Promise(async (resolve, reject) => {
             try {
-              const likeCount = await this.likesSerivce.count(
+              const likeCount = await this.likesService.count(
                 LikeOwnerType.Comment,
                 id
               );
