@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
+import { LikesModule } from '@content/likes/likes.module';
 import { UPDATE_COMMENT_LIKE_COUNT_QUEUE } from '@queue/constants';
 
 import { UpdateCommentLikeCountConsumer } from './consumers';
@@ -18,6 +19,7 @@ import { CommentsService } from './comments.service';
       type: SqsQueueType.Consumer,
       consumerOptions: { batchSize: 10 },
     }),
+    LikesModule,
   ],
   providers: [
     CommentsResolver,

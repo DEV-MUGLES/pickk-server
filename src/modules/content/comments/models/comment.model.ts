@@ -8,9 +8,4 @@ export class Comment extends CommentEntity {
   replies: Comment[];
   @Field(() => Comment, { nullable: true })
   parent: Comment;
-
-  updateLikeCount(diff: number) {
-    const result = this.likeCount + diff;
-    this.likeCount = result < 0 ? 0 : result;
-  }
 }
