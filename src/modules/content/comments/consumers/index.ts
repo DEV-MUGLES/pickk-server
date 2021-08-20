@@ -1,1 +1,1 @@
-export * from './update-commnet-like-count.consumer';
+export * from './update-comment-like-count.consumer';
