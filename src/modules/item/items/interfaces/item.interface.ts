@@ -10,13 +10,32 @@ import { IItemNotice } from './item-notice.interface';
 import { IItemOption } from './item-option.interface';
 import { IItemPrice } from './item-price.interface';
 import { IItemUrl } from './item-url.interface';
+import { IItemSalePolicy } from './item-sale-policy.interface';
 
 export interface IItem {
+  brand: IBrand;
+  brandId: number;
+
+  options: IItemOption[];
+  products: IProduct[];
+  campaigns: ICampaign[];
+
+  majorCategory?: IItemCategory;
+  majorCategoryId?: number;
+  minorCategory?: IItemCategory;
+  minorCategoryId?: number;
+
+  notice: IItemNotice;
+  salePolicy: IItemSalePolicy;
+  prices: IItemPrice[];
+  urls: IItemUrl[];
+  detailImages: IImage[];
+  sizeCharts?: IItemSizeChart[];
+
   name: string;
   /** (제휴아이템만) 공식홈페이지에서 사용된 식별자입니다. */
   providedCode?: string;
   description?: string;
-
   /** Item 정보는 크롤링 과정에서 Bulk로 다룰 일이 많아 이미지를 필드로 처리합니다. */
   imageUrl: string;
 
@@ -30,24 +49,9 @@ export interface IItem {
   /** 품절 여부 (모든 Product의 stock이 0인 경우) */
   isSoldout: boolean;
 
-  brand: IBrand;
-  brandId: number;
-  notice: IItemNotice;
-
-  prices: IItemPrice[];
-  urls: IItemUrl[];
-  detailImages: IImage[];
-  options: IItemOption[];
-  products: IProduct[];
-
-  campaigns: ICampaign[];
-
-  majorCategory?: IItemCategory;
-  majorCategoryId?: number;
-  minorCategory?: IItemCategory;
-  minorCategoryId?: number;
-
-  sizeCharts?: IItemSizeChart[];
   /** 판매가능시점(=활성전환일) */
   sellableAt?: Date;
+
+  // 여기서부터 계산되는 fields
+  digestCount: number;
 }

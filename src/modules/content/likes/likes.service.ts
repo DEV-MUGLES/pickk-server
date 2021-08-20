@@ -19,12 +19,31 @@ export class LikesService {
     private readonly likeProducer: LikeProducer
   ) {}
 
+  async check(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerId: number
+  ): Promise<boolean> {
+    return await this.likesRepository.checkExist(userId, ownerType, ownerId);
+  }
+
+  async bulkCheck(
+    userId: number,
+    ownerType: LikeOwnerType,
+    ownerIds: number[]
+  ): Promise<Map<number, boolean>> {
+    return await this.likesRepository.bulkCheckExist(
+      userId,
+      ownerType,
+      ownerIds
+    );
+  }
   async add(
     userId: number,
     ownerType: LikeOwnerType,
     ownerId: number
   ): Promise<void> {
-    if (await this.likesRepository.checkExist(userId, ownerType, ownerId)) {
+    if (await this.check(userId, ownerType, ownerId)) {
       throw new ConflictException('이미 좋아요했습니다.');
     }
 
