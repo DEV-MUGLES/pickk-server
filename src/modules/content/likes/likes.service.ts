@@ -5,11 +5,13 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { UpdateLikeCountDiff } from '@src/queue/mtos';
+
 import { LikeOwnerType } from './constants';
 import { Like } from './models';
+import { LikeProducer } from './producers';
 
 import { LikesRepository } from './likes.repository';
-import { LikeProducer } from './producers';
 
 @Injectable()
 export class LikesService {
@@ -19,7 +21,6 @@ export class LikesService {
     private readonly likeProducer: LikeProducer
   ) {}
 
-  // @TODO: count 업데이트 태스크
   async add(
     userId: number,
     ownerType: LikeOwnerType,
@@ -33,7 +34,6 @@ export class LikesService {
     await this.produceUpdateOwnerLikeCount(ownerType, ownerId, 1);
   }
 
-  // @TODO: count 업데이트 태스크
   async remove(
     userId: number,
     ownerType: LikeOwnerType,
@@ -57,28 +57,11 @@ export class LikesService {
   async produceUpdateOwnerLikeCount(
     ownerType: LikeOwnerType,
     ownerId: number,
-    diff: 1 | -1
+    diff: UpdateLikeCountDiff
   ) {
-    if (ownerType === LikeOwnerType.Comment) {
-      await this.likeProducer.updateCommentLikeCount({
-        id: ownerId,
-        diff,
-      });
-    } else if (ownerType === LikeOwnerType.Digest) {
-      await this.likeProducer.updateDigestLikeCount({
-        id: ownerId,
-        diff,
-      });
-    } else if (ownerType === LikeOwnerType.Look) {
-      await this.likeProducer.updateLookLikeCount({
-        id: ownerId,
-        diff,
-      });
-    } else if (ownerType === LikeOwnerType.Video) {
-      await this.likeProducer.updateVideoLikeCount({
-        id: ownerId,
-        diff,
-      });
-    }
+    await this.likeProducer.updateOwnerLikeCount(ownerType, {
+      id: ownerId,
+      diff,
+    });
   }
 }

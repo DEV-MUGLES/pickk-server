@@ -1,4 +1,6 @@
+export type UpdateLikeCountDiff = 1 | -1;
+
 export class UpdateLikeCountMto {
   id: number;
-  diff: 1 | -1;
+  diff: UpdateLikeCountDiff;
 }
