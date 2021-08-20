@@ -19,9 +19,11 @@ export class UpdateDigestLikeCountConsumer {
 
   @SqsMessageHandler(true)
   async updateLikeCount(messages: AWS.SQS.Message[]) {
-    const mtos: UpdateLikeCountMto[] = messages.map((m) => JSON.parse(m.Body));
+    const mtos: UpdateLikeCountMto[] = messages.map((message) =>
+      JSON.parse(message.Body)
+    );
 
-    const uniqueIds = [...new Set(mtos.map((m) => m.id))];
+    const uniqueIds = [...new Set(mtos.map((mto) => mto.id))];
     await allSettled(
       uniqueIds.map(
         (id) =>
