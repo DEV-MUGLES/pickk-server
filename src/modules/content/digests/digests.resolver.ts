@@ -28,10 +28,15 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
   @Query(() => Digest)
   @UseGuards(JwtOrNotGuard)
   async digest(
+    @CurrentUser() payload: JwtPayload,
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Digest> {
-    return await this.digestsService.get(id, this.getRelationsFromInfo(info));
+    return await this.digestsService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 
   @Query(() => [Digest])

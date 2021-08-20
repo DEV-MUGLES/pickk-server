@@ -1598,6 +1598,7 @@ type ProductShippingReservePolicy {
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
+  checkFollowing(targetId: Int!): Boolean!
   checkLiking(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
 
   """중복이면 true, 아니면 false를 반환한다."""

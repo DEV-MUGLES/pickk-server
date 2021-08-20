@@ -7,6 +7,7 @@ import { parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { DigestRelationType } from './constants';
 import { DigestFilter } from './dtos';
@@ -18,19 +19,41 @@ import { DigestsRepository } from './digests.repository';
 export class DigestsService {
   constructor(
     @Inject(LikesService) private readonly likesService: LikesService,
+    @Inject(FollowsService) private readonly followsService: FollowsService,
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository
   ) {}
 
-  async get(id: number, relations: DigestRelationType[] = []): Promise<Digest> {
-    return await this.digestsRepository.get(id, relations);
+  async get(
+    id: number,
+    relations: DigestRelationType[] = [],
+    requestUserId?: number
+  ): Promise<Digest> {
+    const digest = await this.digestsRepository.get(id, relations);
+
+    if (requestUserId) {
+      digest.isLiking = await this.likesService.check(
+        requestUserId,
+        LikeOwnerType.Digest,
+        id
+      );
+
+      if (relations.includes('user')) {
+        digest.user.isFollowing = await this.followsService.check(
+          requestUserId,
+          digest.userId
+        );
+      }
+    }
+
+    return digest;
   }
 
   async list(
     filter?: DigestFilter,
     pageInput?: PageInput,
     relations: DigestRelationType[] = [],
-    userId?: number
+    requestUserId?: number
   ): Promise<Digest[]> {
     const _filter = plainToClass(DigestFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
@@ -44,15 +67,28 @@ export class DigestsService {
     );
 
     //@TODO: 리팩토링
-    if (userId) {
-      const existMap = await this.likesService.bulkCheck(
-        userId,
+    if (requestUserId) {
+      const likeExistMap = await this.likesService.bulkCheck(
+        requestUserId,
         LikeOwnerType.Digest,
         digests.map((digest) => digest.id)
       );
 
       for (const digest of digests) {
-        digest.isLiking = existMap.get(digest.id);
+        digest.isLiking = likeExistMap.get(digest.id);
+      }
+
+      if (relations.includes('user')) {
+        const followExistMap = await this.followsService.bulkCheck(
+          requestUserId,
+          digests.map((digest) => digest.userId)
+        );
+
+        for (const digest of digests) {
+          if (digest.user) {
+            digest.user.isFollowing = followExistMap.get(digest.userId);
+          }
+        }
       }
     }
 
