@@ -23,7 +23,8 @@ export class ItemPropertySeeder extends BaseSeeder {
                 minorCategoryId: data.minorCategoryId,
                 name: prop.name,
                 values: prop.values.map(
-                  (v, i) => new ItemPropertyValue({ name: v, order: i })
+                  (valueName, i) =>
+                    new ItemPropertyValue({ name: valueName, order: i })
                 ),
               })
           )
