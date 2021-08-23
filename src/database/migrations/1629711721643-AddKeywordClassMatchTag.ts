@@ -70,9 +70,20 @@ export class AddKeywordClassMatchTag1629711721643
     await queryRunner.query(
       'ALTER TABLE `keyword_essential_classes_keyword_class` ADD CONSTRAINT `FK_e6aa1896e90b8b07ca6855d2da3` FOREIGN KEY (`keywordClassId`) REFERENCES `keyword_class`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
     );
+
+    // 좋아요 대상에 Keyword를 추가한다.
+    await queryRunner.query(
+      "ALTER TABLE `like` CHANGE `ownerType` `ownerType` enum ('digest', 'look', 'video', 'comment', 'keyword') NOT NULL"
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    // 먼저 Keyword에 대한 좋아요를 모두 삭제한다.
+    await queryRunner.query("DELETE FROM `like` WHERE `ownerType`='keyword'");
+    await queryRunner.query(
+      "ALTER TABLE `like` CHANGE `ownerType` `ownerType` enum ('digest', 'look', 'video', 'comment') NOT NULL"
+    );
+
     await queryRunner.query(
       'ALTER TABLE `keyword_essential_classes_keyword_class` DROP FOREIGN KEY `FK_e6aa1896e90b8b07ca6855d2da3`'
     );
