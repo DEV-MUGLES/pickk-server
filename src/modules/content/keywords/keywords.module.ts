@@ -6,6 +6,8 @@ import {
   KeywordClasssRepository,
   KeywordMatchTagsRepository,
 } from './keywords.repository';
+import { KeywordsResolver } from './keywords.resolver';
+import { KeywordsService } from './keywords.service';
 
 @Module({
   imports: [
@@ -15,5 +17,6 @@ import {
       KeywordMatchTagsRepository,
     ]),
   ],
+  providers: [KeywordsResolver, KeywordsService],
 })
 export class KeywordsModule {}
