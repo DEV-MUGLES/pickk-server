@@ -21,6 +21,7 @@ export class ItemPropertyEntity extends BaseIdEntity implements IItemProperty {
     this.name = attributes.name;
     this.minorCategory = attributes.minorCategory;
     this.minorCategoryId = attributes.minorCategoryId;
+    this.values = attributes.values;
   }
 
   @Field()
