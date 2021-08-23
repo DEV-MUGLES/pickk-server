@@ -1,4 +1,4 @@
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, getConnection } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
@@ -23,6 +23,20 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+
+  async countByClass(keywordClassId: number): Promise<number> {
+    const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
+
+    const result = await getConnection()
+      .createQueryRunner()
+      .query(
+        `SELECT count(*) as count 
+          FROM ${KEYWORD_CLASSES_TABLE} 
+          WHERE keywordClassId=${keywordClassId}`
+      );
+
+    return result[0].count;
   }
 }
 
