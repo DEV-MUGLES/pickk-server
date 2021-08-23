@@ -27,11 +27,23 @@ export class HitsService {
 
   async add(ownerType: HitOwnerType, ownerId: number): Promise<void> {
     const cacheKey = getCountMapCacheKey(ownerType);
-    const countMap = (await this.cacheService.get<HitCountMap>(cacheKey)) || {};
+    const countMap = await this.getOwnerCountMap(ownerType);
 
     await this.cacheService.set(cacheKey, {
       ...countMap,
       [ownerId]: (countMap[ownerId] || 0) + 1,
     });
+  }
+
+  async clearOwnerCountMap(ownerType: HitOwnerType): Promise<void> {
+    const cacheKey = getCountMapCacheKey(ownerType);
+
+    await this.cacheService.set(cacheKey, {});
+  }
+
+  async getOwnerCountMap(ownerType: HitOwnerType): Promise<HitCountMap> {
+    const cacheKey = getCountMapCacheKey(ownerType);
+
+    return (await this.cacheService.get<HitCountMap>(cacheKey)) || {};
   }
 }
