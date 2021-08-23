@@ -31,4 +31,15 @@ export class OwnsResolver {
     await this.ownsService.add(userId, keywordId, keywordClassId);
     return true;
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async unown(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('keywordId') keywordId: number,
+    @IntArgs('keywordClassId') keywordClassId: number
+  ) {
+    await this.ownsService.remove(userId, keywordId, keywordClassId);
+    return true;
+  }
 }
