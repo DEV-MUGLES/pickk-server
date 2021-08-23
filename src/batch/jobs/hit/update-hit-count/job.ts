@@ -8,6 +8,7 @@ import { UPDATE_HIT_COUNT_JOB } from '../constants';
 
 import {
   UpdateDigestHitCountStep,
+  UpdateItemHitCountStep,
   UpdateLookHitCountStep,
   UpdateVideoHitCountStep,
 } from './steps';
@@ -16,6 +17,7 @@ import {
 export class UpdateHitCountJob extends BaseJob {
   constructor(
     private readonly updateDigestHitCountStep: UpdateDigestHitCountStep,
+    private readonly updateItemHitCountStep: UpdateItemHitCountStep,
     private readonly updateLookHitCountStep: UpdateLookHitCountStep,
     private readonly updateVideoHitCountStep: UpdateVideoHitCountStep
   ) {
@@ -25,6 +27,7 @@ export class UpdateHitCountJob extends BaseJob {
     return jobExecutionBuilder
       .get(this.name)
       .start(this.updateDigestHitCountStep)
+      .next(this.updateItemHitCountStep)
       .next(this.updateLookHitCountStep)
       .next(this.updateVideoHitCountStep)
       .build();
