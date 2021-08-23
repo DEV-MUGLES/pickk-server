@@ -57,7 +57,7 @@ export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
 
     const rejectedSendDatas = [].concat(
       ...settledSendDatas
-        .filter((data) => isRejected(data))
+        .filter(isRejected)
         .map((data) => (data as RejectResponse).reason)
     );
 

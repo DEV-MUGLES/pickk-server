@@ -5,5 +5,6 @@ import { HitsService } from './hits.service';
 
 @Module({
   providers: [HitsResolver, HitsService],
+  exports: [HitsService],
 })
 export class HitsModule {}

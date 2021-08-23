@@ -1,0 +1,1 @@
+export const UPDATE_HIT_COUNT_JOB = 'UPDATE_HIT_COUNT_JOB';

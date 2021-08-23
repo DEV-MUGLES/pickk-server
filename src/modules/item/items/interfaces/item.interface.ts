@@ -54,4 +54,5 @@ export interface IItem {
 
   // 여기서부터 계산되는 fields
   digestCount: number;
+  hitCount: number;
 }

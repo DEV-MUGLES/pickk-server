@@ -81,6 +81,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.sellableAt = attributes.sellableAt;
 
     this.digestCount = attributes.digestCount;
+    this.hitCount = attributes.hitCount;
   }
 
   @Field(() => Brand)
@@ -212,6 +213,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   digestCount: number;
+  @Field(() => Int, { defaultValue: 0 })
+  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  hitCount: number;
 
   @Field()
   get originalPrice(): number {
