@@ -3,6 +3,7 @@ import {
   ConflictException,
   Inject,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
@@ -40,6 +41,23 @@ export class OwnsService {
 
     await this.ownsRepository.save(new Own({ userId, keywordId }));
     // @TODO: increase count task를 produce
+  }
+
+  async remove(
+    userId: number,
+    keywordId: number,
+    // @TODO: decrease count task에서 사용 예정
+    keywordClassId: number
+  ): Promise<void> {
+    const owns = await this.ownsRepository.find({
+      where: { userId, keywordId },
+    });
+    if (owns.length === 0) {
+      throw new NotFoundException('보유중이지 않습니다.');
+    }
+
+    await this.ownsRepository.remove(owns);
+    // @TODO: decrease count task를 produce. 이때 1만 감소시켜도 상관 없다.
   }
 
   async getCount(userId: number, keywordClassId: number): Promise<number> {
