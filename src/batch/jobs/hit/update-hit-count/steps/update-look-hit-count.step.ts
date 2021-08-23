@@ -18,11 +18,11 @@ export class UpdateLookHitCountStep extends BaseStep {
 
   async tasklet(): Promise<void> {
     const countMap = await this.hitsService.getOwnerCountMap(HitOwnerType.Look);
-    const lookIds = Object.keys(countMap).map((id) => Number(id));
+    const lookIds = Object.keys(countMap);
 
     const looks = await this.looksRepository.findByIds(lookIds);
     looks.forEach((look) => {
-      look.hitCount += Number(countMap[look.id]);
+      look.hitCount += countMap[look.id];
     });
 
     await this.looksRepository.save(looks);

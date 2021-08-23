@@ -20,11 +20,11 @@ export class UpdateDigestHitCountStep extends BaseStep {
     const countMap = await this.hitsService.getOwnerCountMap(
       HitOwnerType.Digest
     );
-    const digestIds = Object.keys(countMap).map((id) => Number(id));
+    const digestIds = Object.keys(countMap);
 
     const digests = await this.digestsRepository.findByIds(digestIds);
     digests.forEach((digest) => {
-      digest.hitCount += Number(countMap[digest.id]);
+      digest.hitCount += countMap[digest.id];
     });
 
     await this.digestsRepository.save(digests);

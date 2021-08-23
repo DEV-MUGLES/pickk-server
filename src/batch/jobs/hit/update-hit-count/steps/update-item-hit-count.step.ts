@@ -18,12 +18,13 @@ export class UpdateItemHitCountStep extends BaseStep {
 
   async tasklet(): Promise<void> {
     const countMap = await this.hitsService.getOwnerCountMap(HitOwnerType.Item);
-    const itemIds = Object.keys(countMap).map((id) => Number(id));
+    const itemIds = Object.keys(countMap);
 
     const items = await this.itemsRepository.findByIds(itemIds);
     items.forEach((item) => {
-      item.hitCount += Number(countMap[item.id]);
+      item.hitCount += countMap[item.id];
     });
+
     await this.itemsRepository.save(items);
     await this.hitsService.clearOwnerCountMap(HitOwnerType.Item);
   }

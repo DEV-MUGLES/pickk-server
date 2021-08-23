@@ -20,11 +20,11 @@ export class UpdateVideoHitCountStep extends BaseStep {
     const countMap = await this.hitsService.getOwnerCountMap(
       HitOwnerType.Video
     );
-    const videoIds = Object.keys(countMap).map((id) => Number(id));
+    const videoIds = Object.keys(countMap);
 
     const videos = await this.videosRepository.findByIds(videoIds);
     videos.forEach((video) => {
-      video.hitCount += Number(countMap[video.id]);
+      video.hitCount += countMap[video.id];
     });
 
     await this.videosRepository.save(videos);
