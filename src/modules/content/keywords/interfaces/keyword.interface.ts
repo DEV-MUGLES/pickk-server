@@ -21,8 +21,7 @@ export interface IKeyword {
   digests: IDigest[];
 
   matchTags: IKeywordMatchTag[];
-  trendClasses: IKeywordClass[];
-  essentialClasses: IKeywordClass[];
+  classes: IKeywordClass[];
 
   likeCount: number;
   hitCount: number;

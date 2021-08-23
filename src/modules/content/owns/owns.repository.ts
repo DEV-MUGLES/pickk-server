@@ -61,13 +61,12 @@ export class OwnsRepository extends Repository<OwnEntity> {
   }
 
   async countByClass(userId: number, keywordClassId: number) {
-    const KEYWORD_ESSENTIAL_CLASSES_TABLE =
-      'keyword_essential_classes_keyword_class';
+    const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 
     const result = await this.createQueryBuilder('own')
       .select('count(*)', 'count')
       .leftJoin(
-        KEYWORD_ESSENTIAL_CLASSES_TABLE,
+        KEYWORD_CLASSES_TABLE,
         'keyword_table',
         'keyword_table.keywordClassId = :keywordClassId',
         {

@@ -28,10 +28,7 @@ export class AddKeywordClassMatchTag1629711721643
       'CREATE TABLE `keyword_match_tags_keyword_match_tag` (`keywordId` int NOT NULL, `keywordMatchTagId` int NOT NULL, INDEX `IDX_7ab8ffdb544a1fdc1506a53759` (`keywordId`), INDEX `IDX_35e4bd3742fa9e8d8f1d500897` (`keywordMatchTagId`), PRIMARY KEY (`keywordId`, `keywordMatchTagId`)) ENGINE=InnoDB'
     );
     await queryRunner.query(
-      'CREATE TABLE `keyword_trend_classes_keyword_class` (`keywordId` int NOT NULL, `keywordClassId` int NOT NULL, INDEX `IDX_6ac62bb7cf7a4849a1a542256d` (`keywordId`), INDEX `IDX_d2fc243e213f548157a7a0e4df` (`keywordClassId`), PRIMARY KEY (`keywordId`, `keywordClassId`)) ENGINE=InnoDB'
-    );
-    await queryRunner.query(
-      'CREATE TABLE `keyword_essential_classes_keyword_class` (`keywordId` int NOT NULL, `keywordClassId` int NOT NULL, INDEX `IDX_3936d0a6866d04fafd070a8c49` (`keywordId`), INDEX `IDX_e6aa1896e90b8b07ca6855d2da` (`keywordClassId`), PRIMARY KEY (`keywordId`, `keywordClassId`)) ENGINE=InnoDB'
+      'CREATE TABLE `keyword_classes_keyword_class` (`keywordId` int NOT NULL, `keywordClassId` int NOT NULL, INDEX `IDX_93d5b989400c088dcaba985fb0` (`keywordId`), INDEX `IDX_bb91164deadfeef7c94b63bb07` (`keywordClassId`), PRIMARY KEY (`keywordId`, `keywordClassId`)) ENGINE=InnoDB'
     );
 
     await queryRunner.query(
@@ -59,16 +56,10 @@ export class AddKeywordClassMatchTag1629711721643
       'ALTER TABLE `keyword_match_tags_keyword_match_tag` ADD CONSTRAINT `FK_35e4bd3742fa9e8d8f1d5008977` FOREIGN KEY (`keywordMatchTagId`) REFERENCES `keyword_match_tag`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
     );
     await queryRunner.query(
-      'ALTER TABLE `keyword_trend_classes_keyword_class` ADD CONSTRAINT `FK_6ac62bb7cf7a4849a1a542256dd` FOREIGN KEY (`keywordId`) REFERENCES `keyword`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
+      'ALTER TABLE `keyword_classes_keyword_class` ADD CONSTRAINT `FK_93d5b989400c088dcaba985fb0a` FOREIGN KEY (`keywordId`) REFERENCES `keyword`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
     );
     await queryRunner.query(
-      'ALTER TABLE `keyword_trend_classes_keyword_class` ADD CONSTRAINT `FK_d2fc243e213f548157a7a0e4dfb` FOREIGN KEY (`keywordClassId`) REFERENCES `keyword_class`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `keyword_essential_classes_keyword_class` ADD CONSTRAINT `FK_3936d0a6866d04fafd070a8c490` FOREIGN KEY (`keywordId`) REFERENCES `keyword`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `keyword_essential_classes_keyword_class` ADD CONSTRAINT `FK_e6aa1896e90b8b07ca6855d2da3` FOREIGN KEY (`keywordClassId`) REFERENCES `keyword_class`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
+      'ALTER TABLE `keyword_classes_keyword_class` ADD CONSTRAINT `FK_bb91164deadfeef7c94b63bb073` FOREIGN KEY (`keywordClassId`) REFERENCES `keyword_class`(`id`) ON DELETE CASCADE ON UPDATE CASCADE'
     );
 
     // 좋아요 대상에 Keyword를 추가한다.
@@ -85,16 +76,10 @@ export class AddKeywordClassMatchTag1629711721643
     );
 
     await queryRunner.query(
-      'ALTER TABLE `keyword_essential_classes_keyword_class` DROP FOREIGN KEY `FK_e6aa1896e90b8b07ca6855d2da3`'
+      'ALTER TABLE `keyword_classes_keyword_class` DROP FOREIGN KEY `FK_bb91164deadfeef7c94b63bb073`'
     );
     await queryRunner.query(
-      'ALTER TABLE `keyword_essential_classes_keyword_class` DROP FOREIGN KEY `FK_3936d0a6866d04fafd070a8c490`'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `keyword_trend_classes_keyword_class` DROP FOREIGN KEY `FK_d2fc243e213f548157a7a0e4dfb`'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `keyword_trend_classes_keyword_class` DROP FOREIGN KEY `FK_6ac62bb7cf7a4849a1a542256dd`'
+      'ALTER TABLE `keyword_classes_keyword_class` DROP FOREIGN KEY `FK_93d5b989400c088dcaba985fb0a`'
     );
     await queryRunner.query(
       'ALTER TABLE `keyword_match_tags_keyword_match_tag` DROP FOREIGN KEY `FK_35e4bd3742fa9e8d8f1d5008977`'
@@ -122,21 +107,12 @@ export class AddKeywordClassMatchTag1629711721643
     );
 
     await queryRunner.query(
-      'DROP INDEX `IDX_e6aa1896e90b8b07ca6855d2da` ON `keyword_essential_classes_keyword_class`'
+      'DROP INDEX `IDX_bb91164deadfeef7c94b63bb07` ON `keyword_classes_keyword_class`'
     );
     await queryRunner.query(
-      'DROP INDEX `IDX_3936d0a6866d04fafd070a8c49` ON `keyword_essential_classes_keyword_class`'
+      'DROP INDEX `IDX_93d5b989400c088dcaba985fb0` ON `keyword_classes_keyword_class`'
     );
-    await queryRunner.query(
-      'DROP TABLE `keyword_essential_classes_keyword_class`'
-    );
-    await queryRunner.query(
-      'DROP INDEX `IDX_d2fc243e213f548157a7a0e4df` ON `keyword_trend_classes_keyword_class`'
-    );
-    await queryRunner.query(
-      'DROP INDEX `IDX_6ac62bb7cf7a4849a1a542256d` ON `keyword_trend_classes_keyword_class`'
-    );
-    await queryRunner.query('DROP TABLE `keyword_trend_classes_keyword_class`');
+    await queryRunner.query('DROP TABLE `keyword_classes_keyword_class`');
     await queryRunner.query(
       'DROP INDEX `IDX_35e4bd3742fa9e8d8f1d500897` ON `keyword_match_tags_keyword_match_tag`'
     );
