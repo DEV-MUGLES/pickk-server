@@ -924,6 +924,59 @@ type JwtToken {
   refresh: String!
 }
 
+type Keyword {
+  content: String!
+  createdAt: DateTime!
+  digests: [Digest!]!
+  essentialClasses: [KeywordClass!]!
+  hitCount: Int!
+  id: Int!
+  imageUrl: String!
+  isVisible: Boolean!
+  likeCount: Int!
+  looks: [Look!]!
+  matchTags: [KeywordMatchTag!]!
+  name: String!
+  score: Float!
+  styleTags: [StyleTag!]!
+
+  """스타일팁 줄글"""
+  stylingTip: String!
+  trendClasses: [KeywordClass!]!
+  updatedAt: DateTime!
+
+  """0~100 정수. 필수템에 표시될 녀석들한테만 존재"""
+  usablityRate: Int!
+}
+
+type KeywordClass {
+  createdAt: DateTime!
+  id: Int!
+  isVisible: Boolean!
+  name: String!
+
+  """0~255 정수"""
+  order: Int!
+  type: KeywordClassType!
+  updatedAt: DateTime!
+}
+
+enum KeywordClassType {
+  Essential
+  Trending
+}
+
+type KeywordMatchTag {
+  createdAt: DateTime!
+  id: Int!
+  isVisible: Boolean!
+  name: String!
+
+  """0~255 정수"""
+  order: Int!
+  updatedAt: DateTime!
+}
+
 """좋아요 대상 객체 분류입니다."""
 enum LikeOwnerType {
   Comment

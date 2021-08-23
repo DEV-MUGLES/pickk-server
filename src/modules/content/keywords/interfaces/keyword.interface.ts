@@ -13,7 +13,7 @@ export interface IKeyword {
   imageUrl: string;
   content: string;
   stylingTip: string;
-  essentialCoverage: number;
+  usablityRate: number;
   isVisible: boolean;
 
   styleTags: IStyleTag[];
