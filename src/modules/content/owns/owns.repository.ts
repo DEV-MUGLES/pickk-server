@@ -59,4 +59,25 @@ export class OwnsRepository extends Repository<OwnEntity> {
     });
     return result;
   }
+
+  async countByClass(userId: number, keywordClassId: number) {
+    const KEYWORD_ESSENTIAL_CLASSES_TABLE =
+      'keyword_essential_classes_keyword_class';
+
+    const result = await this.createQueryBuilder('own')
+      .select('count(*)', 'count')
+      .leftJoin(
+        KEYWORD_ESSENTIAL_CLASSES_TABLE,
+        'keyword_table',
+        'keyword_table.keywordClassId = :keywordClassId',
+        {
+          keywordClassId,
+        }
+      )
+      .where('own.userId = :userId', { userId })
+      .andWhere('own.keywordId = keyword_table.keywordId')
+      .execute();
+
+    return result[0].count;
+  }
 }
