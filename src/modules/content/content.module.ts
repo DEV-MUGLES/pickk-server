@@ -5,6 +5,7 @@ import { DigestsModule } from './digests/digests.module';
 import { KeywordsModule } from './keywords/keywords.module';
 import { LikesModule } from './likes/likes.module';
 import { LooksModule } from './looks/looks.module';
+import { OwnsModule } from './owns/owns.module';
 import { StyleTagsModule } from './style-tags/style-tags.module';
 import { VideosModule } from './videos/videos.module';
 
@@ -15,6 +16,7 @@ import { VideosModule } from './videos/videos.module';
     KeywordsModule,
     LikesModule,
     LooksModule,
+    OwnsModule,
     StyleTagsModule,
     VideosModule,
   ],
