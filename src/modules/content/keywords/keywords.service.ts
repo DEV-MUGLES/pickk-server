@@ -1,14 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { LookFilter } from '@content/looks/dtos';
+import { CacheService } from '@providers/cache/redis';
 
 import { KeywordRelationType } from './constants';
 import { KeywordFilter } from './dtos';
-import { Keyword } from './models';
+import { Keyword, KeywordClass } from './models';
 
 import { KeywordsRepository } from './keywords.repository';
 
@@ -16,7 +17,8 @@ import { KeywordsRepository } from './keywords.repository';
 export class KeywordsService {
   constructor(
     @InjectRepository(KeywordsRepository)
-    private readonly keywordsRepository: KeywordsRepository
+    private readonly keywordsRepository: KeywordsRepository,
+    @Inject(CacheService) private cacheService: CacheService
   ) {}
 
   async list(
@@ -34,5 +36,15 @@ export class KeywordsService {
         ...(_pageInput?.pageFilter ?? {}),
       })
     );
+  }
+
+  async countByClass(classId: number) {
+    const cacheKey = KeywordClass.keywordCountCacheKey(classId);
+    const cached = await this.cacheService.get<number>(cacheKey);
+    if (cached) {
+      return cached;
+    }
+
+    return await this.keywordsRepository.countByClass(classId);
   }
 }
