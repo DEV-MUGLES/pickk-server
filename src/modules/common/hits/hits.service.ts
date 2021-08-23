@@ -44,6 +44,6 @@ export class HitsService {
   async getOwnerCountMap(ownerType: HitOwnerType): Promise<HitCountMap> {
     const cacheKey = getCountMapCacheKey(ownerType);
 
-    return (await this.cacheService.get<HitCountMap>(cacheKey)) || {};
+    return (await this.cacheService.get<HitCountMap>(cacheKey)) ?? {};
   }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { JobExecutionContext } from '@batch/models';
 import { DigestsRepository } from '@content/digests/digests.repository';
 import { HitOwnerType } from '@mcommon/hits/constants';
 import { HitsService } from '@mcommon/hits/hits.service';
@@ -17,20 +16,18 @@ export class UpdateDigestHitCountStep extends BaseStep {
     super();
   }
 
-  async tasklet(context: JobExecutionContext): Promise<void> {
+  async tasklet(): Promise<void> {
     const countMap = await this.hitsService.getOwnerCountMap(
       HitOwnerType.Digest
     );
     const digestIds = Object.keys(countMap).map((id) => Number(id));
 
     const digests = await this.digestsRepository.findByIds(digestIds);
-    const hitCountUpdatedDigests = digests.map(({ id, hitCount }) => ({
-      id,
-      hitCount: hitCount + Number(countMap[id]),
-    }));
+    digests.forEach((digest) => {
+      digest.hitCount += Number(countMap[digest.id]);
+    });
 
-    await this.digestsRepository.save(hitCountUpdatedDigests);
+    await this.digestsRepository.save(digests);
     await this.hitsService.clearOwnerCountMap(HitOwnerType.Digest);
-    context.put('digest', hitCountUpdatedDigests);
   }
 }
