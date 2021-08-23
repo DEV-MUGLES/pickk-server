@@ -14,27 +14,28 @@ export class ItemPropertySeeder extends BaseSeeder {
   }
 
   async seed(): Promise<void> {
-    const itemProperties = [];
-
-    ITEM_PROPERTY_SEED_DATA.forEach((data) => {
+    const itemProperties = ITEM_PROPERTY_SEED_DATA.map((data) => {
       const { minorCategoryId, props } = data;
-      props.forEach((p) => {
+      return props.map((p) => {
         const { name, values } = p;
         const itemPropertyValues = values.map(
           (v, i) => new ItemPropertyValue({ name: v, order: i })
         );
 
-        itemProperties.push(
-          new ItemProperty({
-            minorCategoryId,
-            name,
-            values: itemPropertyValues,
-          })
-        );
+        return new ItemProperty({
+          minorCategoryId,
+          name,
+          values: itemPropertyValues,
+        });
       });
     });
 
-    await this.itemPropertiesRepository.save(itemProperties);
+    await this.itemPropertiesRepository.save(
+      itemProperties.reduce(
+        (flatItemProperties, value) => flatItemProperties.concat(...value),
+        []
+      )
+    );
   }
 }
 
