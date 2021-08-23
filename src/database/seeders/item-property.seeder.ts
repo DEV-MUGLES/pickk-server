@@ -17,7 +17,7 @@ export class ItemPropertySeeder extends BaseSeeder {
     const itemProperties = ITEM_PROPERTY_SEED_DATA.reduce(
       (acc: ItemProperty[], data) =>
         acc.concat(
-          ...data.props.map(
+          data.props.map(
             (prop) =>
               new ItemProperty({
                 minorCategoryId: data.minorCategoryId,
