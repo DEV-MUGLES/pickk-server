@@ -1,3 +1,4 @@
+import { KeywordsService } from '@content/keywords/keywords.service';
 import {
   BadRequestException,
   ConflictException,
@@ -9,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { CacheService } from '@providers/cache/redis';
 
+import { OwnsCountOutput } from './dtos';
 import { Own } from './models';
 
 import { OwnsRepository } from './owns.repository';
@@ -18,12 +20,9 @@ export class OwnsService {
   constructor(
     @InjectRepository(OwnsRepository)
     private readonly ownsRepository: OwnsRepository,
-    @Inject(CacheService) private cacheService: CacheService
+    @Inject(KeywordsService) private readonly keywordsService: KeywordsService,
+    @Inject(CacheService) private readonly cacheService: CacheService
   ) {}
-
-  private getCountCacheKey(userId: number, keywordClassId: number): string {
-    return Own.countCacheKey(userId, keywordClassId);
-  }
 
   async check(userId: number, keywordId: number): Promise<boolean> {
     return await this.ownsRepository.checkExist(userId, keywordId);
@@ -60,33 +59,68 @@ export class OwnsService {
     // @TODO: decrease count task를 produce. 이때 1만 감소시켜도 상관 없다.
   }
 
-  async getCount(userId: number, keywordClassId: number): Promise<number> {
-    const cached = await this.cacheService.get<number>(
-      this.getCountCacheKey(userId, keywordClassId)
-    );
+  async getCount(
+    userId: number,
+    keywordClassId: number
+  ): Promise<OwnsCountOutput> {
+    const total = await this.keywordsService.countByClass(keywordClassId);
+    const owning = await this.getOwningCount(userId, keywordClassId);
+
+    return OwnsCountOutput.create(userId, keywordClassId, total, owning);
+  }
+
+  private getOwningCountCacheKey(
+    userId: number,
+    keywordClassId: number
+  ): string {
+    return Own.owningCountCacheKey(userId, keywordClassId);
+  }
+
+  private async getOwningCount(
+    userId: number,
+    keywordClassId: number,
+    isUpdatingCache = true
+  ): Promise<number> {
+    const cacheKey = this.getOwningCountCacheKey(userId, keywordClassId);
+    const cached = await this.cacheService.get<number>(cacheKey);
     if (cached) {
       return cached;
     }
 
-    return await this.ownsRepository.countByClass(userId, keywordClassId);
+    const count = await this.ownsRepository.countByClass(
+      userId,
+      keywordClassId
+    );
+
+    if (isUpdatingCache) {
+      await this.cacheService.set<number>(cacheKey, count);
+    }
+
+    return count;
   }
 
-  async increaseCount(userId: number, keywordClassId: number): Promise<void> {
-    const count = await this.getCount(userId, keywordClassId);
+  async increaseOwningCount(
+    userId: number,
+    keywordClassId: number
+  ): Promise<void> {
+    const count = await this.getOwningCount(userId, keywordClassId, false);
     await this.cacheService.set<number>(
-      this.getCountCacheKey(userId, keywordClassId),
+      this.getOwningCountCacheKey(userId, keywordClassId),
       count + 1
     );
   }
 
-  async decreaseCount(userId: number, keywordClassId: number): Promise<void> {
-    const count = await this.getCount(userId, keywordClassId);
+  async decreaseOwningCount(
+    userId: number,
+    keywordClassId: number
+  ): Promise<void> {
+    const count = await this.getOwningCount(userId, keywordClassId, false);
     if (count <= 0) {
       throw new BadRequestException('이미 0개를 보유중입니다.');
     }
 
     await this.cacheService.set<number>(
-      this.getCountCacheKey(userId, keywordClassId),
+      this.getOwningCountCacheKey(userId, keywordClassId),
       (count ?? 0) - 1
     );
   }
