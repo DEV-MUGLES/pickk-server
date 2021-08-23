@@ -981,10 +981,11 @@ type KeywordMatchTag {
   updatedAt: DateTime!
 }
 
-"""좋아요 대상 객체 분류입니다."""
+"""좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""
 enum LikeOwnerType {
   Comment
   Digest
+  Keyword
   Look
   Video
 }
@@ -1665,6 +1666,7 @@ type Query {
 
   """중복이면 true, 아니면 false를 반환한다."""
   checkNicknameDuplicate(nickname: String!): Boolean!
+  checkOwning(keywordId: Int!): Boolean!
   checkPin(checkPinInput: CheckPinInput!): Boolean!
   checkoutOrder(merchantUid: String!): OrderSheet!
   comments(
