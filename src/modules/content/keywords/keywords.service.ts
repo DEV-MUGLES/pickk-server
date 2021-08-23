@@ -4,30 +4,31 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
+import { LookFilter } from '@content/looks/dtos';
 
-import { LookRelationType } from './constants';
-import { LookFilter } from './dtos';
-import { Look } from './models';
+import { KeywordRelationType } from './constants';
+import { KeywordFilter } from './dtos';
+import { Keyword } from './models';
 
-import { LooksRepository } from './looks.repository';
+import { KeywordsRepository } from './keywords.repository';
 
 @Injectable()
-export class LooksService {
+export class KeywordsService {
   constructor(
-    @InjectRepository(LooksRepository)
-    private readonly looksRepository: LooksRepository
+    @InjectRepository(KeywordsRepository)
+    private readonly keywordsRepository: KeywordsRepository
   ) {}
 
   async list(
-    filter?: LookFilter,
+    filter?: KeywordFilter,
     pageInput?: PageInput,
-    relations: LookRelationType[] = []
-  ): Promise<Look[]> {
+    relations: KeywordRelationType[] = []
+  ): Promise<Keyword[]> {
     const _filter = plainToClass(LookFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    return this.looksRepository.entityToModelMany(
-      await this.looksRepository.find({
+    return this.keywordsRepository.entityToModelMany(
+      await this.keywordsRepository.find({
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
