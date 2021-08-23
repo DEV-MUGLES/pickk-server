@@ -58,7 +58,7 @@ export class DigestsService {
     const _filter = plainToClass(DigestFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    const digests = await this.digestsRepository.entityToModelMany(
+    const digests = this.digestsRepository.entityToModelMany(
       await this.digestsRepository.find({
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
