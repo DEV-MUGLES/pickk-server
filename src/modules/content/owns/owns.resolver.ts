@@ -6,6 +6,8 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
+import { OwnsCountOutput } from './dtos';
+
 import { OwnsService } from './owns.service';
 
 @Injectable()
@@ -27,7 +29,7 @@ export class OwnsResolver {
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('keywordId') keywordId: number,
     @IntArgs('keywordClassId') keywordClassId: number
-  ) {
+  ): Promise<boolean> {
     await this.ownsService.add(userId, keywordId, keywordClassId);
     return true;
   }
@@ -38,8 +40,17 @@ export class OwnsResolver {
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('keywordId') keywordId: number,
     @IntArgs('keywordClassId') keywordClassId: number
-  ) {
+  ): Promise<boolean> {
     await this.ownsService.remove(userId, keywordId, keywordClassId);
     return true;
+  }
+
+  @Query(() => OwnsCountOutput)
+  @UseGuards(JwtVerifyGuard)
+  async meOwnsCount(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('keywordClassId') keywordClassId: number
+  ): Promise<OwnsCountOutput> {
+    return await this.ownsService.getCount(userId, keywordClassId);
   }
 }

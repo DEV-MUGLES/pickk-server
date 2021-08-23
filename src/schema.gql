@@ -1450,6 +1450,18 @@ type OrderVbankReceipt {
   updatedAt: DateTime!
 }
 
+"""키워드 보유중 여부와 관련된 개수들입니다."""
+type OwnsCountOutput {
+  """'`user:<userId>:keywordClassId:<keywordClassId>`와 동일"""
+  id: String!
+
+  """해당 클래스의 키워드 중 내가 보유한 수"""
+  owning: Int!
+
+  """해당 클래스의 키워드 수"""
+  total: Int!
+}
+
 input PageInput {
   limit: Int = 20
   offset: Int
@@ -1693,6 +1705,7 @@ type Query {
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
+  meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!

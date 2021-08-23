@@ -45,6 +45,8 @@ export class KeywordsService {
       return cached;
     }
 
-    return await this.keywordsRepository.countByClass(classId);
+    const count = await this.keywordsRepository.countByClass(classId);
+    await this.cacheService.set<number>(cacheKey, count, { ttl: 600 });
+    return count;
   }
 }

@@ -18,5 +18,6 @@ import { KeywordsService } from './keywords.service';
     ]),
   ],
   providers: [KeywordsResolver, KeywordsService],
+  exports: [KeywordsService],
 })
 export class KeywordsModule {}
