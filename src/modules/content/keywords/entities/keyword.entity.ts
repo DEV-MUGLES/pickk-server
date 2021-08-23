@@ -34,6 +34,24 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
     if (!attributes) {
       return;
     }
+
+    this.name = attributes.name;
+    this.imageUrl = attributes.imageUrl;
+    this.content = attributes.content;
+    this.stylingTip = attributes.stylingTip;
+    this.usablityRate = attributes.usablityRate;
+    this.isVisible = attributes.isVisible;
+
+    this.styleTags = attributes.styleTags;
+    this.looks = attributes.looks;
+    this.digests = attributes.digests;
+
+    this.matchTags = attributes.matchTags;
+    this.classes = attributes.classes;
+
+    this.likeCount = attributes.likeCount;
+    this.hitCount = attributes.hitCount;
+    this.score = attributes.score;
   }
 
   @Field()
@@ -90,11 +108,7 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @Field(() => [KeywordClass])
   @ManyToMany(() => KeywordClassEntity)
   @JoinTable()
-  trendClasses: KeywordClass[];
-  @Field(() => [KeywordClass])
-  @ManyToMany(() => KeywordClassEntity)
-  @JoinTable()
-  essentialClasses: KeywordClass[];
+  classes: KeywordClass[];
 
   // queue에서 계산해서 update하는 값들
   @Field(() => Int, { defaultValue: 0 })

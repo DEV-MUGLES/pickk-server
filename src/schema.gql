@@ -925,10 +925,10 @@ type JwtToken {
 }
 
 type Keyword {
+  classes: [KeywordClass!]!
   content: String!
   createdAt: DateTime!
   digests: [Digest!]!
-  essentialClasses: [KeywordClass!]!
   hitCount: Int!
   id: Int!
   imageUrl: String!
@@ -942,7 +942,6 @@ type Keyword {
 
   """스타일팁 줄글"""
   stylingTip: String!
-  trendClasses: [KeywordClass!]!
   updatedAt: DateTime!
 
   """0~100 정수. 필수템에 표시될 녀석들한테만 존재"""

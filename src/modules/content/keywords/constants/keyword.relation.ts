@@ -16,6 +16,5 @@ export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'digests.item',
   'digests.item.brand',
   'matchTags',
-  'trendClasses',
-  'essentialClasses',
+  'classes',
 ];
