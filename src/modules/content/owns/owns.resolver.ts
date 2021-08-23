@@ -1,5 +1,5 @@
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Query } from '@nestjs/graphql';
+import { Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
@@ -19,5 +19,16 @@ export class OwnsResolver {
     @IntArgs('keywordId') keywordId: number
   ) {
     return await this.ownsService.check(userId, keywordId);
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async own(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('keywordId') keywordId: number,
+    @IntArgs('keywordClassId') keywordClassId: number
+  ) {
+    await this.ownsService.add(userId, keywordId, keywordClassId);
+    return true;
   }
 }

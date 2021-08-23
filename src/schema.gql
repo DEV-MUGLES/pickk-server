@@ -1077,6 +1077,7 @@ type Mutation {
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
+  own(keywordClassId: Int!, keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
