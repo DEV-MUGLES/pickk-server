@@ -1043,6 +1043,7 @@ type Look {
 }
 
 input LookFilter {
+  styleTagIdIn: [Int!]
   userId: Int
 }
 
