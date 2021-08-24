@@ -17,4 +17,4 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name F2U-UPDAT
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-UPDATE_KEYWORD_CLASS_OWNING_COUNT_CACHE
 
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-RESTORE_DEDUCTED_PRODUCT_STOCK
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2P-RESTORE_DEDUCTED_PRODUCT_STOCK
