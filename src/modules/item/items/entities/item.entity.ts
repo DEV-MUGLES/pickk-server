@@ -80,6 +80,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
 
     this.sellableAt = attributes.sellableAt;
 
+    this.digestAverageRating = attributes.digestAverageRating;
     this.digestCount = attributes.digestCount;
     this.hitCount = attributes.hitCount;
   }
@@ -210,6 +211,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     }
   }
 
+  @Field()
+  @Column({ type: 'float', default: 0 })
+  digestAverageRating: number;
   @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   digestCount: number;

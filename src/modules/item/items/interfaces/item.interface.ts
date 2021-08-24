@@ -53,6 +53,7 @@ export interface IItem {
   sellableAt?: Date;
 
   // 여기서부터 계산되는 fields
+  digestAverageRating: number;
   digestCount: number;
   hitCount: number;
 }

@@ -697,6 +697,7 @@ type Item {
   createdAt: DateTime!
   description: String
   detailImages: [ItemDetailImage!]
+  digestAverageRating: Float!
   digestCount: Int!
   finalPrice: Float!
   hitCount: Int!
