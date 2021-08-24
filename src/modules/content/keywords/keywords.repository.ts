@@ -72,6 +72,7 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
       pageInput
     )
       .select('keyword.id', 'id')
+      .orderBy('keyword.score', 'DESC')
       .execute();
 
     return raws.map((raw) => raw.id);
