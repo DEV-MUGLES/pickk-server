@@ -1,9 +1,14 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Query } from '@nestjs/graphql';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtOrNotGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
@@ -53,5 +58,20 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
       this.getRelationsFromInfo(info),
       payload?.sub
     );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeDigest(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number
+  ): Promise<boolean> {
+    const isMine = await this.digestsService.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 Digest가 아닙니다.');
+    }
+
+    await this.digestsService.remove(id);
+    return true;
   }
 }

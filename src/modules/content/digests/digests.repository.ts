@@ -17,4 +17,15 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
       this.entityToModel(entity, transformOptions)
     );
   }
+
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('digest')
+      .select('1')
+      .where('digest.id = :id', { id })
+      .andWhere('digest.userId = :userId', { userId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }

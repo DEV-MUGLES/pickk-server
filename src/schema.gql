@@ -1079,6 +1079,7 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
+  removeDigest(id: Int!): Boolean!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!

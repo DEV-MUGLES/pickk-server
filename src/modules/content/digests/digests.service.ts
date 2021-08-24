@@ -24,6 +24,10 @@ export class DigestsService {
     private readonly digestsRepository: DigestsRepository
   ) {}
 
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    return await this.digestsRepository.checkBelongsTo(id, userId);
+  }
+
   async get(
     id: number,
     relations: DigestRelationType[] = [],
@@ -93,5 +97,10 @@ export class DigestsService {
     }
 
     return digests;
+  }
+
+  async remove(id: number): Promise<void> {
+    const digest = await this.get(id);
+    await this.digestsRepository.remove(digest);
   }
 }
