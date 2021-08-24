@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In } from 'typeorm';
+import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
@@ -9,6 +9,7 @@ import { CacheService } from '@providers/cache/redis';
 
 import { KeywordRelationType } from './constants';
 import { KeywordFilter } from './dtos';
+import { KeywordEntity } from './entities';
 import { Keyword, KeywordClass } from './models';
 
 import { KeywordsRepository } from './keywords.repository';
@@ -22,23 +23,38 @@ export class KeywordsService {
   ) {}
 
   async list(
-    filter?: KeywordFilter,
+    filter: KeywordFilter,
     pageInput?: PageInput,
-    relations: KeywordRelationType[] = []
+    relations: KeywordRelationType[] = [],
+    userId?: number
   ): Promise<Keyword[]> {
-    const _filter = plainToClass(KeywordFilter, filter);
-    const _pageInput = plainToClass(PageInput, pageInput);
-
     return this.keywordsRepository.entityToModelMany(
       await this.keywordsRepository.find({
         relations,
-        where: parseFilter(_filter, _pageInput?.idFilter),
-        ...(_pageInput?.pageFilter ?? {}),
+        where: await this.getFindWhere(filter, pageInput, userId),
         order: {
           id: 'DESC',
         },
       })
     );
+  }
+
+  private async getFindWhere(
+    filter: KeywordFilter,
+    pageInput?: PageInput,
+    userId?: number
+  ): Promise<FindManyOptions<KeywordEntity>['where']> {
+    const _filter = plainToClass(KeywordFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    const ids = await this.keywordsRepository.findIdsByClass(
+      filter.keywordClassId,
+      userId,
+      filter.isOwning,
+      pageInput
+    );
+
+    return { ...parseFilter(_filter, _pageInput?.idFilter), id: In(ids) };
   }
 
   async listByClass(
