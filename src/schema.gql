@@ -973,15 +973,15 @@ enum KeywordClassType {
 }
 
 input KeywordFilter {
-  """제공시 추가 연산을 수행합니다."""
+  """제공시 추가 연산을 수행합니다. (비로그인시 무시)"""
   isLiking: Boolean
 
-  """제공시 추가 연산을 수행합니다."""
+  """제공시 추가 연산을 수행합니다. (비로그인시 무시)"""
   isOwning: Boolean
   isVisible: Boolean
 
   """제공시 추가 연산을 수행합니다."""
-  keywordClassId: Int
+  keywordClassId: Int!
 }
 
 type KeywordMatchTag {
