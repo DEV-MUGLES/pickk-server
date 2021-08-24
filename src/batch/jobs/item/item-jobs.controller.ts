@@ -17,4 +17,9 @@ export class ItemJobsController {
   async updateSellerItems() {
     await this.itemJobsService.updateSellerItems();
   }
+
+  @Post('/update-item-is-soldout')
+  async updateItemIsSoldout() {
+    await this.itemJobsService.updateItemIsSoldout();
+  }
 }
