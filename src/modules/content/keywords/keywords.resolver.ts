@@ -1,7 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
+import { CurrentUser } from '@auth/decorators';
+import { JwtOrNotGuard } from '@auth/guards';
+import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -22,15 +25,18 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
   }
 
   @Query(() => [Keyword])
+  @UseGuards(JwtOrNotGuard)
   async keywords(
-    @Args('filter', { nullable: true }) filter?: KeywordFilter,
+    @CurrentUser() payload: JwtPayload,
+    @Args('filter') filter: KeywordFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Keyword[]> {
     return await this.keywordsService.list(
       filter,
       pageInput,
-      this.getRelationsFromInfo(info)
+      this.getRelationsFromInfo(info),
+      payload?.sub
     );
   }
 }
