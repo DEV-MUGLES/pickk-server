@@ -14,7 +14,7 @@ export class ItemJobsController {
   constructor(private readonly itemJobsService: ItemJobsService) {}
 
   @Post('/update-seller-items')
-  async updateBrandItems() {
+  async updateSellerItems() {
     await this.itemJobsService.updateSellerItems();
   }
 }

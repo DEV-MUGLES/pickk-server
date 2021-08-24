@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { BaseJob } from '@src/batch/jobs/base.job';
-import { JobExecutionBuilder } from '@src/batch/builders';
 import { JobExecution } from '@src/batch/models';
 
 import { UPDATE_SELLER_ITEMS_JOB } from '../constants';
@@ -16,9 +15,8 @@ export class UpdateSellerItemsJob extends BaseJob {
     super(UPDATE_SELLER_ITEMS_JOB);
   }
 
-  createExecution(jobExecutionBuilder: JobExecutionBuilder): JobExecution {
-    return jobExecutionBuilder
-      .get(this.name)
+  createExecution(): JobExecution {
+    return this.getExecutionBuilder()
       .start(this.produceScrapSellerItemsMessageStep)
       .build();
   }

@@ -13,7 +13,14 @@ export abstract class BaseJob {
   constructor(name: string) {
     this.name = name;
   }
-  abstract createExecution(
-    jobExecutionBuilder: JobExecutionBuilder
-  ): JobExecution;
+  abstract createExecution(): JobExecution;
+
+  /**
+   * createExecution메소드 구현 시 사용되는 메소드입니다.
+   *
+   * @returns jobExecutionBuilder를 반환합니다.
+   */
+  protected getExecutionBuilder(): JobExecutionBuilder {
+    return new JobExecutionBuilder().get(this.name);
+  }
 }
