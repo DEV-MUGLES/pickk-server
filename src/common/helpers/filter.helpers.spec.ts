@@ -228,5 +228,16 @@ describe('FilterHelpers', () => {
         },
       ]);
     });
+
+    it('should exclude excludeFields', () => {
+      const name = faker.lorem.text();
+
+      expect(
+        parseFilter({
+          name,
+          excludeFields: ['name'],
+        })
+      ).toEqual({});
+    });
   });
 });
