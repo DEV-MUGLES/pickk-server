@@ -1,12 +1,25 @@
-import { Field, InputType } from '@nestjs/graphql';
-import { IsBoolean, IsOptional } from 'class-validator';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { IKeyword } from '../interfaces';
 
 @InputType()
 export class KeywordFilter implements Partial<IKeyword> {
+  excludeFields: Array<keyof IKeyword | 'keywordClassId'> = [
+    'keywordClassId',
+    'isOwning',
+    'isLiking',
+  ];
+
   @Field({ nullable: true })
-  @IsBoolean()
-  @IsOptional()
   isVisible: boolean;
+
+  @Field(() => Int, {
+    description: '제공시 추가 연산을 수행합니다.',
+    nullable: true,
+  })
+  keywordClassId: number;
+  @Field({ description: '제공시 추가 연산을 수행합니다.', nullable: true })
+  isOwning: boolean;
+  @Field({ description: '제공시 추가 연산을 수행합니다.', nullable: true })
+  isLiking: boolean;
 }
