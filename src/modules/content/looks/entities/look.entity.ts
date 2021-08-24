@@ -53,7 +53,7 @@ export class LookEntity extends BaseIdEntity implements ILook {
   @ManyToMany(() => StyleTagEntity)
   @JoinTable()
   styleTags: StyleTag[];
-  @OneToMany('LookImageEntity', 'item', { cascade: true })
+  @OneToMany('LookImageEntity', 'look', { cascade: true })
   images: LookImage[];
   @OneToMany('DigestEntity', 'look', { cascade: true, onDelete: 'CASCADE' })
   digests: IDigest[];
