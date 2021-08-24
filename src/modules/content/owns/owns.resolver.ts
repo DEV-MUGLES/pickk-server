@@ -27,10 +27,9 @@ export class OwnsResolver {
   @UseGuards(JwtVerifyGuard)
   async own(
     @CurrentUser() { sub: userId }: JwtPayload,
-    @IntArgs('keywordId') keywordId: number,
-    @IntArgs('keywordClassId') keywordClassId: number
+    @IntArgs('keywordId') keywordId: number
   ): Promise<boolean> {
-    await this.ownsService.add(userId, keywordId, keywordClassId);
+    await this.ownsService.add(userId, keywordId);
     return true;
   }
 
@@ -38,10 +37,9 @@ export class OwnsResolver {
   @UseGuards(JwtVerifyGuard)
   async unown(
     @CurrentUser() { sub: userId }: JwtPayload,
-    @IntArgs('keywordId') keywordId: number,
-    @IntArgs('keywordClassId') keywordClassId: number
+    @IntArgs('keywordId') keywordId: number
   ): Promise<boolean> {
-    await this.ownsService.remove(userId, keywordId, keywordClassId);
+    await this.ownsService.remove(userId, keywordId);
     return true;
   }
 
