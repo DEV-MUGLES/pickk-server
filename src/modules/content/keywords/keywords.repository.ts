@@ -1,6 +1,8 @@
 import { EntityRepository, getConnection } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
+import { PageInput } from '@common/dtos';
+import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
 import {
@@ -8,6 +10,7 @@ import {
   KeywordClassEntity,
   KeywordMatchTagEntity,
 } from './entities';
+import { keywordClassQuery, keywordOwningQuery } from './helpers';
 import { Keyword, KeywordClass, KeywordMatchTag } from './models';
 
 @EntityRepository(KeywordEntity)
@@ -51,6 +54,27 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
         WHERE keywordId=${id}`
         )
     ).map(({ keywordClassId }) => keywordClassId);
+  }
+
+  async findIdsByClass(
+    classId: number,
+    userId: number,
+    isOwning: boolean,
+    pageInput?: PageInput
+  ): Promise<number[]> {
+    const raws = await pageQuery(
+      keywordOwningQuery(
+        keywordClassQuery(this.createQueryBuilder('keyword'), classId),
+        userId,
+        isOwning
+      ),
+      'keyword',
+      pageInput
+    )
+      .select('keyword.id', 'id')
+      .execute();
+
+    return raws.map((raw) => raw.id);
   }
 }
 
