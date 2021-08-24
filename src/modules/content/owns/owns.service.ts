@@ -86,8 +86,9 @@ export class OwnsService {
       return cached;
     }
 
-    const count = Number(
-      await this.ownsRepository.countByClass(userId, keywordClassId)
+    const count = await this.ownsRepository.countByClass(
+      userId,
+      keywordClassId
     );
 
     if (isUpdatingCache) {

@@ -60,7 +60,7 @@ export class OwnsRepository extends Repository<OwnEntity> {
     return result;
   }
 
-  async countByClass(userId: number, keywordClassId: number) {
+  async countByClass(userId: number, keywordClassId: number): Promise<number> {
     const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 
     const result = await this.createQueryBuilder('own')
@@ -77,6 +77,6 @@ export class OwnsRepository extends Repository<OwnEntity> {
       .andWhere('own.keywordId = keyword_table.keywordId')
       .execute();
 
-    return result[0].count;
+    return Number(result[0].count);
   }
 }
