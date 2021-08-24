@@ -1,4 +1,3 @@
-import { IComment } from '@content/comments/interfaces';
 import { IDigest } from '@content/digests/interfaces';
 import { IUser } from '@user/users/interfaces';
 
@@ -11,7 +10,6 @@ export interface IVideo {
   userId: number;
 
   digests: IDigest[];
-  comments: IComment[];
 
   youtubeCode: string;
   title: string;

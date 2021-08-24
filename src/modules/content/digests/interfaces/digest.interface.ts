@@ -1,6 +1,5 @@
 import { IImage } from '@common/interfaces';
 
-import { IComment } from '@content/comments/interfaces';
 import { ILook } from '@content/looks/interfaces';
 import { IVideo } from '@content/videos/interfaces';
 import { IItemPropertyValue } from '@item/item-properties/interfaces';
@@ -24,7 +23,6 @@ export interface IDigest {
 
   itemPropertyValues: IItemPropertyValue[];
   images: IImage[];
-  comments: IComment[];
 
   /** 착용 사이즈 */
   size: string;

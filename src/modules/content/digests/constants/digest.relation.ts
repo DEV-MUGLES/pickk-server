@@ -8,5 +8,4 @@ export const DIGEST_RELATIONS: DigestRelationType[] = [
   'video',
   'look',
   'itemPropertyValues',
-  'comments',
 ];

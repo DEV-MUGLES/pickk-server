@@ -3,10 +3,10 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
+import { IDigest } from '@content/digests/interfaces';
 import { User } from '@user/users/models';
 
 import { IVideo } from '../interfaces';
-import { IDigest } from '@content/digests/interfaces';
 
 @ObjectType()
 @Entity({ name: 'video' })
@@ -21,7 +21,6 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
     this.userId = attributes.userId;
 
     this.digests = attributes.digests;
-    this.comments = attributes.comments;
 
     this.youtubeCode = attributes.youtubeCode;
     this.title = attributes.title;
@@ -41,8 +40,6 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
 
   @OneToMany('DigestEntity', 'video', { cascade: true, onDelete: 'CASCADE' })
   digests: IDigest[];
-  // @TODO: comment 추가
-  comments;
 
   // 여기부터 정보 fields
   @Field({ description: '최대 길이 40' })

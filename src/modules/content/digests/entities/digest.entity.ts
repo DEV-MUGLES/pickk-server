@@ -42,7 +42,6 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
 
     this.itemPropertyValues = attributes.itemPropertyValues;
     this.images = attributes.images;
-    this.comments = attributes.comments;
 
     this.size = attributes.size;
 
@@ -88,8 +87,6 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   itemPropertyValues: ItemPropertyValue[];
   @OneToMany('DigestImageEntity', 'item', { cascade: true })
   images: DigestImage[];
-  // @TODO: comment 추가
-  comments;
 
   // 여기부터 정보 fields
   @Field()

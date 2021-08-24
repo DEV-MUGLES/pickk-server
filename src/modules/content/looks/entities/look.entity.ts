@@ -32,7 +32,6 @@ export class LookEntity extends BaseIdEntity implements ILook {
 
     this.styleTags = attributes.styleTags;
     this.digests = attributes.digests;
-    this.comments = attributes.comments;
 
     this.title = attributes.title;
 
@@ -57,8 +56,6 @@ export class LookEntity extends BaseIdEntity implements ILook {
   images: LookImage[];
   @OneToMany('DigestEntity', 'look', { cascade: true, onDelete: 'CASCADE' })
   digests: IDigest[];
-  // @TODO: comment 추가
-  comments;
 
   // 여기부터 정보 fields
   @Field({ description: '최대 길이 127' })
