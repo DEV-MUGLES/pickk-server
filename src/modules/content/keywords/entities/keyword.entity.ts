@@ -52,6 +52,9 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
     this.likeCount = attributes.likeCount;
     this.hitCount = attributes.hitCount;
     this.score = attributes.score;
+
+    this.isOwning = attributes.isOwning;
+    this.isLiking = attributes.isLiking;
   }
 
   @Field()
@@ -120,4 +123,9 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @Field({ defaultValue: 0 })
   @Column({ type: 'float', default: 0 })
   score: number;
+
+  @Field({ description: '보유중 여부', nullable: true })
+  isOwning: boolean;
+  @Field({ description: '좋아요 중 여부', nullable: true })
+  isLiking: boolean;
 }

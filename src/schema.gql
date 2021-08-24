@@ -933,6 +933,12 @@ type Keyword {
   hitCount: Int!
   id: Int!
   imageUrl: String!
+
+  """좋아요 중 여부"""
+  isLiking: Boolean
+
+  """보유중 여부"""
+  isOwning: Boolean
   isVisible: Boolean!
   likeCount: Int!
   looks: [Look!]!
