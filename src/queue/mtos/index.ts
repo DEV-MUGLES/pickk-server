@@ -4,3 +4,4 @@ export * from './update-item-image-url.mto';
 export * from './remove-expected-event-point.mto';
 export * from './update-like-count.mto';
 export * from './update-user-follow-count.mto';
+export * from './update-keyword-class-owning-count-cache.mto';
