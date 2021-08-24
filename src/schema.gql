@@ -1076,7 +1076,7 @@ type Mutation {
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
-  own(keywordClassId: Int!, keywordId: Int!): Boolean!
+  own(keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeCourierIssue(courierId: Int!): Courier!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
@@ -1097,7 +1097,7 @@ type Mutation {
 
   """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
-  unown(keywordClassId: Int!, keywordId: Int!): Boolean!
+  unown(keywordId: Int!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!

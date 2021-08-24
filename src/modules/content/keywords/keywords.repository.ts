@@ -38,6 +38,20 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
 
     return result[0].count;
   }
+
+  async getClassIds(id: number): Promise<number[]> {
+    const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
+
+    return (
+      await getConnection()
+        .createQueryRunner()
+        .query(
+          `SELECT keywordClassId
+        FROM ${KEYWORD_CLASSES_TABLE} 
+        WHERE keywordId=${id}`
+        )
+    ).map(({ keywordClassId }) => keywordClassId);
+  }
 }
 
 @EntityRepository(KeywordClassEntity)

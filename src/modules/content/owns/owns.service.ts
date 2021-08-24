@@ -12,6 +12,7 @@ import { CacheService } from '@providers/cache/redis';
 
 import { OwnsCountOutput } from './dtos';
 import { Own } from './models';
+import { OwningCountCacheProducer } from './producers';
 
 import { OwnsRepository } from './owns.repository';
 
@@ -21,33 +22,27 @@ export class OwnsService {
     @InjectRepository(OwnsRepository)
     private readonly ownsRepository: OwnsRepository,
     @Inject(KeywordsService) private readonly keywordsService: KeywordsService,
-    @Inject(CacheService) private readonly cacheService: CacheService
+    @Inject(CacheService) private readonly cacheService: CacheService,
+    private readonly owningCountCacheProducer: OwningCountCacheProducer
   ) {}
 
   async check(userId: number, keywordId: number): Promise<boolean> {
     return await this.ownsRepository.checkExist(userId, keywordId);
   }
 
-  async add(
-    userId: number,
-    keywordId: number,
-    // @TODO: increase count task에서 사용 예정
-    keywordClassId: number
-  ): Promise<void> {
+  async add(userId: number, keywordId: number): Promise<void> {
     if (await this.check(userId, keywordId)) {
       throw new ConflictException('이미 보유중입니다.');
     }
 
     await this.ownsRepository.save(new Own({ userId, keywordId }));
-    // @TODO: increase count task를 produce
+    await this.owningCountCacheProducer.increaseKeywordClassOwningCountCache({
+      userId,
+      keywordId,
+    });
   }
 
-  async remove(
-    userId: number,
-    keywordId: number,
-    // @TODO: decrease count task에서 사용 예정
-    keywordClassId: number
-  ): Promise<void> {
+  async remove(userId: number, keywordId: number): Promise<void> {
     const owns = await this.ownsRepository.find({
       where: { userId, keywordId },
     });
@@ -56,7 +51,10 @@ export class OwnsService {
     }
 
     await this.ownsRepository.remove(owns);
-    // @TODO: decrease count task를 produce. 이때 1만 감소시켜도 상관 없다.
+    await this.owningCountCacheProducer.decreaseKeywordClassOwingCountCache({
+      userId,
+      keywordId,
+    });
   }
 
   async getCount(
@@ -82,7 +80,8 @@ export class OwnsService {
     isUpdatingCache = true
   ): Promise<number> {
     const cacheKey = this.getOwningCountCacheKey(userId, keywordClassId);
-    const cached = await this.cacheService.get<number>(cacheKey);
+    const cached = Number(await this.cacheService.get<number>(cacheKey));
+
     if (cached) {
       return cached;
     }
