@@ -7,6 +7,7 @@ import {
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
+  UPDATE_KEYWORD_LIKE_COUNT_QUEUE,
 } from '@queue/constants';
 
 import { LikeProducer } from './producers';
@@ -33,6 +34,10 @@ import { LikesService } from './likes.service';
       },
       {
         name: UPDATE_VIDEO_LIKE_COUNT_QUEUE,
+        type: SqsQueueType.Producer,
+      },
+      {
+        name: UPDATE_KEYWORD_LIKE_COUNT_QUEUE,
         type: SqsQueueType.Producer,
       }
     ),
