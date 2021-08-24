@@ -1701,6 +1701,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   keywords(filter: KeywordFilter, pageInput: PageInput): [Keyword!]!
+  keywordsByClass(isOwning: Boolean, keywordClassId: Int!, pageInput: PageInput): [Keyword!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
