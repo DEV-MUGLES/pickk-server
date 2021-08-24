@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { JobsService } from '@src/modules/common/jobs/jobs.service';
 import { JobExecutionRecord } from '@src/modules/common/jobs/models';
 
-import { JobExecutionBuilder } from './builders';
 import { BaseJob } from './jobs/base.job';
 import { BaseStep } from './jobs/base.step';
 import { JobExecution, JobExecutionContext } from './models';
@@ -18,9 +17,7 @@ export class BatchWorker {
    * @returns jobExecutionContext를 반환합니다.
    */
   async run(job: BaseJob) {
-    const execution: JobExecution = job.createExecution(
-      new JobExecutionBuilder()
-    );
+    const execution: JobExecution = job.createExecution();
     const { steps, context, jobName, isSavingContext } = execution;
 
     if (!(await this.jobsService.getJob(jobName))) {

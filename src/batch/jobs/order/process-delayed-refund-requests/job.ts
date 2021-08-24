@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 
 import { BaseJob } from '@batch/jobs/base.job';
-import { JobExecutionBuilder } from '@batch/builders';
 import { JobExecution } from '@batch/models';
 
 import { PROCESS_DELAYED_REFUND_REQUESTS_JOB } from '../constants';
@@ -15,9 +14,8 @@ export class ProcessDelayedRefundRequestsJob extends BaseJob {
     super(PROCESS_DELAYED_REFUND_REQUESTS_JOB);
   }
 
-  createExecution(jobExecutionBuilder: JobExecutionBuilder): JobExecution {
-    return jobExecutionBuilder
-      .get(this.name)
+  createExecution(): JobExecution {
+    return this.getExecutionBuilder()
       .start(this.updateDelayedRefundRequestsStep)
       .build();
   }

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-import { JobExecutionBuilder } from '@batch/builders';
 import { BaseJob } from '@batch/jobs/base.job';
 import { JobExecution } from '@batch/models';
 
@@ -23,9 +22,8 @@ export class UpdateHitCountJob extends BaseJob {
   ) {
     super(UPDATE_HIT_COUNT_JOB);
   }
-  createExecution(jobExecutionBuilder: JobExecutionBuilder): JobExecution {
-    return jobExecutionBuilder
-      .get(this.name)
+  createExecution(): JobExecution {
+    return this.getExecutionBuilder()
       .start(this.updateDigestHitCountStep)
       .next(this.updateItemHitCountStep)
       .next(this.updateLookHitCountStep)

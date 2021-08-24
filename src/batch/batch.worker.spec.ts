@@ -13,7 +13,6 @@ import {
   StepExecutionRecord,
 } from '@src/modules/common/jobs/models';
 
-import { JobExecutionBuilder } from './builders';
 import { JobExecutionCreator } from './creators';
 import { BaseStep } from './jobs/base.step';
 import { BaseJob } from './jobs/base.job';
@@ -28,8 +27,11 @@ class TestStep extends BaseStep {
 }
 
 class TestJob extends BaseJob {
-  createExecution(jobExecutionBuilder: JobExecutionBuilder) {
-    return jobExecutionBuilder.build();
+  constructor(name: string) {
+    super(name);
+  }
+  createExecution() {
+    return this.getExecutionBuilder().build();
   }
 }
 
