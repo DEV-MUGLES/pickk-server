@@ -26,4 +26,8 @@ export interface IKeyword {
   likeCount: number;
   hitCount: number;
   score: number;
+
+  // model-only field
+  isOwning: boolean;
+  isLiking: boolean;
 }
