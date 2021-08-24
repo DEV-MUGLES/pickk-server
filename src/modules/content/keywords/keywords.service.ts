@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
@@ -33,6 +34,36 @@ export class KeywordsService {
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
+        order: {
+          id: 'DESC',
+        },
+      })
+    );
+  }
+
+  async listByClass(
+    classId: number,
+    userId: number,
+    isOwning: boolean,
+    relations: KeywordRelationType[] = [],
+    pageInput?: PageInput
+  ): Promise<Keyword[]> {
+    const ids = await this.keywordsRepository.findIdsByClass(
+      classId,
+      userId,
+      isOwning,
+      pageInput
+    );
+
+    return this.keywordsRepository.entityToModelMany(
+      await this.keywordsRepository.find({
+        relations,
+        where: {
+          id: In(ids),
+        },
+        order: {
+          id: 'DESC',
+        },
       })
     );
   }
