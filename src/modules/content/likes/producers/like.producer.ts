@@ -4,6 +4,7 @@ import { SqsService } from '@pickk/nestjs-sqs';
 import {
   UPDATE_COMMENT_LIKE_COUNT_QUEUE,
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
+  UPDATE_KEYWORD_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
 } from '@queue/constants';
@@ -40,6 +41,9 @@ export class LikeProducer {
     }
     if (ownerType === LikeOwnerType.Video) {
       return UPDATE_VIDEO_LIKE_COUNT_QUEUE;
+    }
+    if (ownerType === LikeOwnerType.Keyword) {
+      return UPDATE_KEYWORD_LIKE_COUNT_QUEUE;
     }
   }
 }

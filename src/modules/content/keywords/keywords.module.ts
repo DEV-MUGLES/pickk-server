@@ -1,5 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+
+import { LikesModule } from '@content/likes/likes.module';
+import { UPDATE_KEYWORD_LIKE_COUNT_QUEUE } from '@queue/constants';
+
+import { UpdateKeywordLikeCountConsumer } from './consumers';
 
 import {
   KeywordsRepository,
@@ -16,8 +22,18 @@ import { KeywordsService } from './keywords.service';
       KeywordClasssRepository,
       KeywordMatchTagsRepository,
     ]),
+    SqsModule.registerQueue({
+      name: UPDATE_KEYWORD_LIKE_COUNT_QUEUE,
+      type: SqsQueueType.Consumer,
+      consumerOptions: { batchSize: 10 },
+    }),
+    LikesModule,
   ],
-  providers: [KeywordsResolver, KeywordsService],
+  providers: [
+    KeywordsResolver,
+    KeywordsService,
+    UpdateKeywordLikeCountConsumer,
+  ],
   exports: [KeywordsService],
 })
 export class KeywordsModule {}
