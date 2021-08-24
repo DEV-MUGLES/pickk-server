@@ -1,4 +1,3 @@
-import { getConnection } from 'typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
 import { allSettled } from '@common/helpers';
@@ -8,28 +7,24 @@ import {
   UpdateKeywordClassOwningCountCacheType,
 } from '@queue/mtos';
 
+import { KeywordsService } from '@content/keywords/keywords.service';
+
 import { OwnsService } from '../owns.service';
 
 @SqsProcess(UPDATE_KEYWORD_CLASS_OWNING_COUNT_CACHE_QUEUE)
 export class UpdateKeywordClassOwningCountCacheConsumer {
-  constructor(private readonly ownsService: OwnsService) {}
+  constructor(
+    private readonly ownsService: OwnsService,
+    private readonly keywordsService: KeywordsService
+  ) {}
 
   @SqsMessageHandler()
   async updateCache(message: AWS.SQS.Message) {
-    const mto: UpdateKeywordClassOwningCountCacheMto = JSON.parse(message.Body);
-    const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
+    const { type, userId, keywordId }: UpdateKeywordClassOwningCountCacheMto =
+      JSON.parse(message.Body);
 
-    const keywordClassIds: number[] = (
-      await getConnection()
-        .createQueryRunner()
-        .query(
-          `SELECT keywordClassId
-          FROM ${KEYWORD_CLASSES_TABLE} 
-          WHERE keywordId=${mto.keywordId}`
-        )
-    ).map(({ keywordClassId }) => keywordClassId);
+    const keywordClassIds = await this.keywordsService.getClassIds(keywordId);
 
-    const { type, userId } = mto;
     await allSettled(
       keywordClassIds.map(
         (keywordClassId) =>

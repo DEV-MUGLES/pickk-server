@@ -4,7 +4,6 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
-import { LookFilter } from '@content/looks/dtos';
 import { CacheService } from '@providers/cache/redis';
 
 import { KeywordRelationType } from './constants';
@@ -26,7 +25,7 @@ export class KeywordsService {
     pageInput?: PageInput,
     relations: KeywordRelationType[] = []
   ): Promise<Keyword[]> {
-    const _filter = plainToClass(LookFilter, filter);
+    const _filter = plainToClass(KeywordFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
     return this.keywordsRepository.entityToModelMany(
@@ -48,5 +47,10 @@ export class KeywordsService {
     const count = await this.keywordsRepository.countByClass(classId);
     await this.cacheService.set<number>(cacheKey, count, { ttl: 600 });
     return count;
+  }
+
+  /** 입력된 id의 키워드가 연관된 키워드 클래스들의 id를 반환합니다. */
+  async getClassIds(id: number): Promise<number[]> {
+    return await this.keywordsRepository.getClassIds(id);
   }
 }
