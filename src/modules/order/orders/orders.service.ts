@@ -105,7 +105,7 @@ export class OrdersService {
   async cancel(
     merchantUid: string,
     { reason, orderItemMerchantUids }: CancelOrderInput
-  ): Promise<void> {
+  ): Promise<Order> {
     const order = await this.get(merchantUid, CANCEL_ORDER_RELATIONS);
 
     const { amount, checksum } = order.cancel(orderItemMerchantUids);
@@ -115,7 +115,7 @@ export class OrdersService {
       payment,
       CancelPaymentInput.of(order, reason, amount, checksum)
     );
-    await this.ordersRepository.save(order);
+    return await this.ordersRepository.save(order);
   }
 
   async requestRefund(
