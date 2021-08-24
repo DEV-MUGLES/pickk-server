@@ -7,7 +7,12 @@ import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
 import { Item } from '@item/items/models';
 
-import { DestockProductInput, ProductFilter, UpdateProductInput } from './dtos';
+import {
+  DestockProductInput,
+  ProductFilter,
+  RestockProductDto,
+  UpdateProductInput,
+} from './dtos';
 import { Product } from './models';
 
 import { ProductsRepository } from './products.repository';
@@ -85,6 +90,20 @@ export class ProductsService {
         return product.id === productId;
       });
       product.destock(quantity);
+    });
+
+    await this.productsRepository.save(products);
+  }
+
+  async bulkRestock(restockProductDtos: RestockProductDto[]) {
+    const productIds = restockProductDtos.map(({ productId }) => productId);
+    const products = await this.productsRepository.findByIds(productIds);
+
+    products.forEach((product) => {
+      const { quantity, isShipReserved } = restockProductDtos.find(
+        ({ productId }) => productId === product.id
+      );
+      product.restock(quantity, isShipReserved);
     });
 
     await this.productsRepository.save(products);
