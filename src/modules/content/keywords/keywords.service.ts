@@ -45,7 +45,6 @@ export class KeywordsService {
     userId?: number
   ): Promise<FindManyOptions<KeywordEntity>['where']> {
     const _filter = plainToClass(KeywordFilter, filter);
-    const _pageInput = plainToClass(PageInput, pageInput);
 
     const ids = await this.keywordsRepository.findIdsByClass(
       filter.keywordClassId,
@@ -54,7 +53,7 @@ export class KeywordsService {
       pageInput
     );
 
-    return { ...parseFilter(_filter, _pageInput?.idFilter), id: In(ids) };
+    return { ...parseFilter(_filter), id: In(ids) };
   }
 
   async listByClass(
