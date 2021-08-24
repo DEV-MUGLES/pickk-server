@@ -10,7 +10,8 @@
     "common",
     "job",
     "auth",
-    "templates"
+    "templates",
+    "queue"
   ],
   "jestrunner.jestCommand": "npm run jest --",
   "editor.formatOnSave": true
