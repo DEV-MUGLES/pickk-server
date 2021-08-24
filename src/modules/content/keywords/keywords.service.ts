@@ -33,7 +33,7 @@ export class KeywordsService {
         relations,
         where: await this.getFindWhere(filter, pageInput, userId),
         order: {
-          id: 'DESC',
+          score: 'DESC',
         },
       })
     );

@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinTable, ManyToMany } from 'typeorm';
+import { Column, Entity, Index, JoinTable, ManyToMany } from 'typeorm';
 import {
   IsBoolean,
   IsInt,
@@ -28,6 +28,7 @@ import { KeywordMatchTagEntity } from './keyword-match-tag.entity';
 
 @ObjectType()
 @Entity({ name: 'keyword' })
+@Index('idx_score', ['score'])
 export class KeywordEntity extends BaseIdEntity implements IKeyword {
   constructor(attributes?: Partial<KeywordEntity>) {
     super(attributes);
