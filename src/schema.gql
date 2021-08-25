@@ -691,6 +691,19 @@ enum HitOwnerType {
   Video
 }
 
+"""생성일 기준 3달 이내의 건들만 count합니다."""
+type InquiriesCountOutput {
+  """답변 지연 (생성일 5일 경과)"""
+  delayed: Int!
+
+  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  id: Int!
+  lastUpdatedAt: DateTime!
+
+  """미답변"""
+  not_answered: Int!
+}
+
 type Inquiry {
   answers: [InquiryAnswer!]!
 
@@ -1801,6 +1814,7 @@ type Query {
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
+  meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
