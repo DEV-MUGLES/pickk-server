@@ -5,16 +5,16 @@ import { IInquiry } from '@item/inquiries/interfaces';
 
 @ObjectType({ description: '생성일 기준 3달 이내의 건들만 count합니다.' })
 export class InquiriesCountOutput {
-  static getCacheKey(brandId: number) {
-    return `inquiries-count:${brandId}`;
+  static getCacheKey(sellerId: number) {
+    return `inquiries-count:${sellerId}`;
   }
 
   static create(
-    brandId: number,
+    sellerId: number,
     inquiries: Pick<IInquiry, 'createdAt'>[]
   ): InquiriesCountOutput {
     const count = new InquiriesCountOutput({
-      id: brandId,
+      id: sellerId,
       lastUpdatedAt: new Date(),
     });
 

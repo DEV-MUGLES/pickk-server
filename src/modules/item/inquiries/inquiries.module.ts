@@ -8,5 +8,6 @@ import { InquiriesService } from './inquiries.service';
 @Module({
   imports: [TypeOrmModule.forFeature([InquiriesRepository])],
   providers: [InquiriesResolver, InquiriesService],
+  exports: [InquiriesService],
 })
 export class InquiriesModule {}

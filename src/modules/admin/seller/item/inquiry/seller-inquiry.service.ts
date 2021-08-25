@@ -14,18 +14,16 @@ export class SellerInquiryService {
     private readonly inquiriesRepository: InquiriesRepository
   ) {}
 
-  async getCount(brandId: number, month = 3): Promise<InquiriesCountOutput> {
+  async getCount(sellerId: number, month = 3): Promise<InquiriesCountOutput> {
     const inquiries = await this.inquiriesRepository.find({
       select: ['createdAt'],
       where: {
-        item: {
-          brandId,
-        },
+        sellerId,
         isAnswered: false,
         createdAt: MoreThanOrEqual(dayjs().subtract(month, 'month').toDate()),
       },
     });
 
-    return InquiriesCountOutput.create(brandId, inquiries);
+    return InquiriesCountOutput.create(sellerId, inquiries);
   }
 }
