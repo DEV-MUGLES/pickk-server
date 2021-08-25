@@ -14,14 +14,15 @@ import { UserModule } from '@user/user.module';
 import { OrderModule } from '@order/order.module';
 import { PaymentModule } from '@payment/payment.module';
 
-import { AwsS3ProviderModule } from '@providers/aws/s3/provider.module';
-import { AwsSqsProviderModule } from '@providers/aws/sqs/provider.module';
-import { CrawlerProviderModule } from '@providers/crawler/provider.module';
+import { AwsS3ProviderModule } from '@providers/aws/s3';
+import { AwsSqsProviderModule } from '@providers/aws/sqs';
+import { CrawlerProviderModule } from '@providers/crawler';
 import { RedisCacheProviderModule } from '@providers/cache/redis';
-import { MysqlDatabaseProviderModule } from '@providers/database/mysql/provider.module';
-import { SensProviderModule } from '@providers/sens/provider.module';
-import { SentryProviderModule } from '@providers/sentry/provider.module';
-import { SlackProviderModule } from '@providers/slack/provider.module';
+import { MysqlDatabaseProviderModule } from '@providers/database/mysql';
+import { SearchModule } from '@providers/elasticsearch';
+import { SensProviderModule } from '@providers/sens';
+import { SentryProviderModule } from '@providers/sentry';
+import { SlackProviderModule } from '@providers/slack';
 
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -41,6 +42,7 @@ import { AppService } from './app.service';
     CrawlerProviderModule,
     RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
+    SearchModule,
     SensProviderModule,
     SentryProviderModule,
     SlackProviderModule,
