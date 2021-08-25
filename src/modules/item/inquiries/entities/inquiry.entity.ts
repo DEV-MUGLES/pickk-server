@@ -12,6 +12,7 @@ import { InquiryType } from '../constants';
 import { IInquiry, IInquiryAnswer } from '../interfaces';
 
 import { InquiryAnswer } from '../models/inquiry-answer.model';
+import { Seller } from '@item/sellers/models';
 
 @ObjectType()
 @Entity({ name: 'inquiry' })
@@ -26,6 +27,8 @@ export class InquiryEntity extends BaseIdEntity implements IInquiry {
     this.userId = attributes.userId;
     this.item = attributes.item;
     this.itemId = attributes.itemId;
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
     this.orderItem = attributes.orderItem;
     this.orderItemMerchantUid = attributes.orderItemMerchantUid;
 
@@ -52,6 +55,12 @@ export class InquiryEntity extends BaseIdEntity implements IInquiry {
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   itemId: number;
+  @Field(() => Seller, { nullable: true })
+  @ManyToOne('SellerEntity', { nullable: true })
+  seller: Seller;
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
+  sellerId: number;
   @Field(() => OrderItem, { nullable: true })
   @ManyToOne('OrderItemEntity', { nullable: true })
   orderItem: OrderItem;
