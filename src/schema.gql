@@ -1783,6 +1783,7 @@ type Query {
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   genRandomNickname: String!
   inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
+  inquiry(id: Int!): Inquiry!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
   itemMajorCategories: [ItemCategory!]!
