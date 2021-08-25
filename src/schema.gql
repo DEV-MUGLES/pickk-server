@@ -691,6 +691,63 @@ enum HitOwnerType {
   Video
 }
 
+type Inquiry {
+  answers: [InquiryAnswer!]!
+
+  """알림톡 받을 전화번호 (11글자)"""
+  contactPhoneNumber: String!
+
+  """최대 길이 255"""
+  content: String!
+  createdAt: DateTime!
+  id: Int!
+  isAnswered: Boolean!
+  isSecret: Boolean!
+  item: Item
+  itemId: Int
+  orderItem: OrderItem
+  orderItemMerchantUid: String
+
+  """최대 길이 100"""
+  title: String!
+  type: InquiryType!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+type InquiryAnswer {
+  """최대 길이 255"""
+  content: String!
+  createdAt: DateTime!
+
+  """표시될 답변작성자 이름. 최대 길이 30"""
+  displayAuthor: String!
+  from: InquiryAnswerFrom!
+  id: Int!
+  updatedAt: DateTime!
+  user: User
+  userId: Int
+}
+
+"""답변 작성 출처입니다. (super or seller)"""
+enum InquiryAnswerFrom {
+  Seller
+  Super
+}
+
+input InquiryFilter {
+  itemId: Float
+}
+
+"""배송/사이즈/재입고/기타"""
+enum InquiryType {
+  Etc
+  Restock
+  Ship
+  Size
+}
+
 type Item {
   brand: Brand!
   brandId: Int!
