@@ -6,7 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { InquiryRelationType } from './constants';
-import { InquiryFilter } from './dtos';
+import { CreateInquiryInput, InquiryFilter } from './dtos';
 import { Inquiry } from './models';
 
 import { InquiriesRepository } from './inquiries.repository';
@@ -40,5 +40,9 @@ export class InquiriesService {
         ...(_pageInput?.pageFilter ?? {}),
       })
     );
+  }
+
+  async create(input: CreateInquiryInput): Promise<Inquiry> {
+    return await this.inquiriesRepository.save(new Inquiry(input));
   }
 }
