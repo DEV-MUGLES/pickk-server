@@ -47,6 +47,7 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
     this.looks = attributes.looks;
     this.digests = attributes.digests;
 
+    this.relatedKeywords = attributes.relatedKeywords;
     this.matchTags = attributes.matchTags;
     this.classes = attributes.classes;
 
@@ -105,6 +106,9 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @JoinTable()
   digests: Digest[];
 
+  @ManyToMany(() => KeywordEntity)
+  @JoinTable()
+  relatedKeywords: KeywordEntity[];
   @Field(() => [KeywordMatchTag])
   @ManyToMany(() => KeywordMatchTagEntity)
   @JoinTable()

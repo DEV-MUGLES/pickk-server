@@ -1045,6 +1045,7 @@ type Keyword {
   looks: [Look!]!
   matchTags: [KeywordMatchTag!]!
   name: String!
+  relatedKeywords: [Keyword!]!
   score: Float!
   styleTags: [StyleTag!]!
 

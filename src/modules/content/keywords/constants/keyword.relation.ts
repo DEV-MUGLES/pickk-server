@@ -5,7 +5,10 @@ export type KeywordRelationType =
   | 'looks.images'
   | 'digests.images'
   | 'digests.item'
-  | 'digests.item.brand';
+  | 'digests.item.brand'
+  | 'relatedKeywords.digests'
+  | 'relatedKeywords.digests.item'
+  | 'relatedKeywords.digests.item.brand';
 
 export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'styleTags',
@@ -17,4 +20,8 @@ export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'digests.item.brand',
   'matchTags',
   'classes',
+  'relatedKeywords',
+  'relatedKeywords.digests',
+  'relatedKeywords.digests.item',
+  'relatedKeywords.digests.item.brand',
 ];

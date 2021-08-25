@@ -1,6 +1,9 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 
 import { KeywordEntity } from '../entities';
 
 @ObjectType()
-export class Keyword extends KeywordEntity {}
+export class Keyword extends KeywordEntity {
+  @Field(() => [Keyword])
+  relatedKeywords: Keyword[];
+}

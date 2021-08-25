@@ -20,6 +20,7 @@ export interface IKeyword {
   looks: ILook[];
   digests: IDigest[];
 
+  relatedKeywords: IKeyword[];
   matchTags: IKeywordMatchTag[];
   classes: IKeywordClass[];
 
