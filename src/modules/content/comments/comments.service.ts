@@ -8,6 +8,7 @@ import { parseFilter } from '@common/helpers';
 import { CommentRelationType } from './constants';
 import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
 import { Comment } from './models';
+import { CommentsProducer } from './producers';
 
 import { CommentsRepository } from './comments.repository';
 
@@ -15,7 +16,8 @@ import { CommentsRepository } from './comments.repository';
 export class CommentsService {
   constructor(
     @InjectRepository(CommentsRepository)
-    private readonly commentsRepository: CommentsRepository
+    private readonly commentsRepository: CommentsRepository,
+    private readonly commentsProducer: CommentsProducer
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<boolean> {
@@ -50,12 +52,18 @@ export class CommentsService {
   }
 
   async create(userId: number, input: CreateCommentInput): Promise<Comment> {
-    return await this.commentsRepository.save(
+    const comment = await this.commentsRepository.save(
       new Comment({
         userId,
         ...input,
       })
     );
+    await this.commentsProducer.updateOwnerCommentCount(
+      comment.ownerId,
+      comment.ownerType
+    );
+
+    return comment;
   }
 
   async update(id: number, input: UpdateCommentInput): Promise<Comment> {
@@ -76,7 +84,7 @@ export class CommentsService {
   async processDelete(id: number): Promise<Comment> {
     const comment = await this.get(id);
 
-    return await this.commentsRepository.save(
+    const deletedComment = await this.commentsRepository.save(
       new Comment({
         ...comment,
         userId: null,
@@ -86,5 +94,11 @@ export class CommentsService {
         isDeleted: true,
       })
     );
+    await this.commentsProducer.updateOwnerCommentCount(
+      deletedComment.ownerId,
+      deletedComment.ownerType
+    );
+
+    return deletedComment;
   }
 }
