@@ -4,6 +4,7 @@ import { BrandsModule } from './brands/brands.module';
 import { CampaignsModule } from './campaigns/campaigns.module';
 import { CartsModule } from './carts/carts.module';
 import { CouriersModule } from './couriers/couriers.module';
+import { InquiriesModule } from './inquiries/inquiries.module';
 import { ItemCategoriesModule } from './item-categories/item-categories.module';
 import { ItemPropertiesModule } from './item-properties/item-properties.module';
 import { ItemsModule } from './items/items.module';
@@ -16,6 +17,7 @@ import { SellersModule } from './sellers/sellers.module';
     CampaignsModule,
     CartsModule,
     CouriersModule,
+    InquiriesModule,
     ItemCategoriesModule,
     ItemPropertiesModule,
     ItemsModule,

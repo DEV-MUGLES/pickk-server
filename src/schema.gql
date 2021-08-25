@@ -909,6 +909,9 @@ type JwtPayload {
   """Seller 로그인인 경우에만 발급된다."""
   brandId: Float
 
+  """Seller 로그인인 경우에만 발급된다."""
+  brandNameKor: String
+
   """만료 시점 timestamp"""
   exp: Timestamp!
 
