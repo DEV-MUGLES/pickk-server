@@ -1,5 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
+
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 
 import {
   CreateUserInput,
@@ -8,6 +12,7 @@ import {
   UpdateShippingAddressInput,
   CreateRefundAccountInput,
   UpdateRefundAccountInput,
+  UserFilter,
 } from './dtos';
 import { UserEntity } from './entities';
 import { User, UserPassword, ShippingAddress, RefundAccount } from './models';
@@ -21,9 +26,24 @@ export class UsersService {
     private readonly usersRepository: UsersRepository
   ) {}
 
-  async list(relations: string[] = []): Promise<User[]> {
-    const users = await this.usersRepository.find({ relations });
-    return this.usersRepository.entityToModelMany(users);
+  async list(
+    filter?: UserFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<User[]> {
+    const _filter = plainToClass(UserFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.usersRepository.entityToModelMany(
+      await this.usersRepository.find({
+        relations,
+        where: parseFilter(_filter, _pageInput?.idFilter),
+        ...(_pageInput?.pageFilter ?? {}),
+        order: {
+          [filter.orderBy ?? 'id']: 'DESC',
+        },
+      })
+    );
   }
 
   async get(id: number, relations: string[] = []): Promise<User> {

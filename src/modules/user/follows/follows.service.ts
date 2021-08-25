@@ -82,4 +82,13 @@ export class FollowsService {
   async produceUpdateUserFollowCount(targetId: number) {
     await this.followProducer.updateUserFollowCount({ id: targetId });
   }
+
+  async getFollowingUserIds(userId: number) {
+    const follows = await this.followsRepository.find({
+      select: ['targetId'],
+      where: { userId },
+    });
+
+    return follows.map((follow) => follow.targetId);
+  }
 }

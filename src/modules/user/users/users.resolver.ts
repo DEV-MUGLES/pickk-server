@@ -17,6 +17,7 @@ import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 import { PointsService } from '@order/points/points.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { USER_RELATIONS } from './constants';
 import { CreateUserInput, UpdateUserInput } from './dtos';
@@ -31,7 +32,8 @@ export class UsersResolver extends BaseResolver {
 
   constructor(
     @Inject(UsersService) private usersService: UsersService,
-    @Inject(PointsService) private pointsService: PointsService
+    @Inject(PointsService) private pointsService: PointsService,
+    private readonly followsService: FollowsService
   ) {
     super();
   }
@@ -56,11 +58,6 @@ export class UsersResolver extends BaseResolver {
     @Info() info?: GraphQLResolveInfo
   ): Promise<UserEntity> {
     return await this.usersService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @Query(() => [User])
-  async users(@Info() info?: GraphQLResolveInfo): Promise<UserEntity[]> {
-    return await this.usersService.list(this.getRelationsFromInfo(info));
   }
 
   @Mutation(() => User)
@@ -104,6 +101,21 @@ export class UsersResolver extends BaseResolver {
       user,
       oldPassword,
       newPassword
+    );
+  }
+
+  @Query(() => [User])
+  @UseGuards(JwtVerifyGuard)
+  async meFollowingUsers(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<User[]> {
+    const idIn = await this.followsService.getFollowingUserIds(userId);
+
+    return await this.usersService.list(
+      { idIn, orderBy: 'followCount' },
+      null,
+      this.getRelationsFromInfo(info)
     );
   }
 }

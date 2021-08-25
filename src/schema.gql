@@ -1847,6 +1847,7 @@ type Query {
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
+  meFollowingUsers: [User!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
@@ -1878,7 +1879,6 @@ type Query {
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   styleTags: [StyleTag!]!
   user(id: Int!): User!
-  users: [User!]!
   videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
 }
 
