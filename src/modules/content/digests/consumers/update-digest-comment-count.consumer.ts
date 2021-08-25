@@ -31,7 +31,11 @@ export class UpdateDigestCommentCountConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const commentCount = await this.commentsRepository.count({
-                where: { ownerId: id, ownerType: CommentOwnerType.Digest },
+                where: {
+                  ownerId: id,
+                  ownerType: CommentOwnerType.Digest,
+                  isDeleted: false,
+                },
               });
               resolve(this.digestsRepository.update(id, { commentCount }));
             } catch (err) {
