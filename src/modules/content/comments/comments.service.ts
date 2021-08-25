@@ -3,7 +3,10 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { bulkEnrichIsMine, parseFilter } from '@common/helpers';
+
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
 
 import { CommentRelationType } from './constants';
 import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
@@ -17,7 +20,8 @@ export class CommentsService {
   constructor(
     @InjectRepository(CommentsRepository)
     private readonly commentsRepository: CommentsRepository,
-    private readonly commentsProducer: CommentsProducer
+    private readonly commentsProducer: CommentsProducer,
+    private readonly likesService: LikesService
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<boolean> {
@@ -34,12 +38,13 @@ export class CommentsService {
   async list(
     filter?: CommentFilter,
     pageInput?: PageInput,
-    relations: CommentRelationType[] = []
+    relations: CommentRelationType[] = [],
+    userId?: number
   ): Promise<Comment[]> {
     const _filter = plainToClass(CommentFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    return this.commentsRepository.entityToModelMany(
+    const comments = this.commentsRepository.entityToModelMany(
       await this.commentsRepository.find({
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
@@ -49,6 +54,15 @@ export class CommentsService {
         },
       })
     );
+
+    await this.likesService.bulkEnrichLiking(
+      userId,
+      LikeOwnerType.Comment,
+      comments
+    );
+    bulkEnrichIsMine(userId, comments);
+
+    return comments;
   }
 
   async create(userId: number, input: CreateCommentInput): Promise<Comment> {

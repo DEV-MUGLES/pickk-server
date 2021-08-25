@@ -24,4 +24,8 @@ export interface IComment {
   likeCount: number;
 
   isDeleted: boolean;
+
+  // model-only fields
+  isLiking: boolean;
+  isMine: boolean;
 }

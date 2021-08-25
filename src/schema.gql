@@ -246,6 +246,12 @@ type Comment {
   createdAt: DateTime!
   id: Int!
   isDeleted: Boolean!
+
+  """[MODEL ONLY]"""
+  isLiking: Boolean
+
+  """[MODEL ONLY]"""
+  isMine: Boolean
   likeCount: Int!
   mentionedUser: User
   mentionedUserId: Int

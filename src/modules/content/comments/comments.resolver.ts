@@ -8,7 +8,7 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
@@ -31,7 +31,9 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
   }
 
   @Query(() => [Comment])
+  @UseGuards(JwtOrNotGuard)
   async comments(
+    @CurrentUser() payload: JwtPayload,
     @Args('filter', {
       description: '기본적으로 parentIdIsNull:true가 적용되어있습니다.',
       nullable: true,
@@ -46,7 +48,8 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
         ...filter,
       },
       pageInput,
-      this.getRelationsFromInfo(info)
+      this.getRelationsFromInfo(info),
+      payload?.sub
     );
   }
 

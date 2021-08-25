@@ -34,6 +34,9 @@ export class CommentEntity extends BaseIdEntity implements IComment {
     this.likeCount = attributes.likeCount;
 
     this.isDeleted = attributes.isDeleted;
+
+    this.isLiking = attributes.isLiking;
+    this.isMine = attributes.isMine;
   }
 
   @Field(() => User, { nullable: true })
@@ -80,4 +83,9 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Column({ default: false })
   @IsBoolean()
   isDeleted: boolean;
+
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isLiking: boolean;
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isMine: boolean;
 }
