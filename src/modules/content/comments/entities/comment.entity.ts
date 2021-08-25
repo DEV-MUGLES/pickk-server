@@ -76,7 +76,7 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   likeCount: number;
 
-  @Field({ defaultValue: false })
+  @Field()
   @Column({ default: false })
   @IsBoolean()
   isDeleted: boolean;
