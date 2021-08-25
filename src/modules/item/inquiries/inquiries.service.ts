@@ -45,4 +45,8 @@ export class InquiriesService {
   async create(input: CreateInquiryInput): Promise<Inquiry> {
     return await this.inquiriesRepository.save(new Inquiry(input));
   }
+
+  async remove(inquiry: Inquiry): Promise<void> {
+    await this.inquiriesRepository.remove(inquiry);
+  }
 }
