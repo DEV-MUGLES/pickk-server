@@ -17,17 +17,22 @@ export class UpdateItemIsSoldoutStep extends BaseStep {
   }
 
   async tasklet(): Promise<void> {
-    const products = await this.productsRepository
-      .createQueryBuilder('product')
-      .select('sum(stock) as stocks, itemId')
-      .addGroupBy('itemId')
-      .execute();
+    const productStockDatas = (
+      await this.productsRepository
+        .createQueryBuilder('product')
+        .select('sum(stock) as stocks, itemId')
+        .addGroupBy('itemId')
+        .execute()
+    ).map(({ itemId, stocks }) => ({
+      itemId: Number(itemId),
+      stocks: Number(stocks),
+    }));
 
-    const soldOutItemIds = products
+    const soldOutItemIds = productStockDatas
       .filter(({ stocks }) => stocks === 0)
       .map(({ itemId }) => itemId);
 
-    const notSoldOutItemIds = products
+    const notSoldOutItemIds = productStockDatas
       .filter(({ stocks }) => stocks > 0)
       .map(({ itemId }) => itemId);
 
