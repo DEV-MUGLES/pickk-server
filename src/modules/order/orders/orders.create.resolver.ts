@@ -18,6 +18,8 @@ import { ProductsService } from '@item/products/products.service';
 import { CouponStatus } from '@order/coupons/constants';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { PointsService } from '@order/points/points.service';
+import { PaymentsService } from '@payment/payments/payments.service';
+import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { UsersService } from '@user/users/users.service';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
@@ -28,10 +30,9 @@ import {
   CreateOrderVbankReceiptInput,
 } from './dtos';
 import { OrderSheet } from './models';
+import { OrdersProducer } from './producers';
 
 import { OrdersService } from './orders.service';
-import { PaymentsService } from '@payment/payments/payments.service';
-import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 
 @Injectable()
 export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
@@ -51,7 +52,9 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @Inject(PaymentsService)
     private readonly paymentsService: PaymentsService,
     @Inject(UsersService)
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    @Inject(OrdersProducer)
+    private readonly ordersProducer: OrdersProducer
   ) {
     super();
   }
@@ -153,7 +156,6 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     return await this.ordersService.start(order, startOrderInput, coupons);
   }
 
-  // @TODO: Queue에서 재고 되돌리기
   @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async failOrder(
@@ -165,7 +167,10 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
       throw new ForbiddenException('자신의 주문건만 실패처리할 수 있습니다.');
     }
 
-    return await this.ordersService.fail(order);
+    const failedOrder = await this.ordersService.fail(order);
+    await this.ordersProducer.restoreDeductedProductStock(failedOrder);
+
+    return failedOrder;
   }
 
   // @TODO: Queue에서 주문완료 카톡 알림 보내기

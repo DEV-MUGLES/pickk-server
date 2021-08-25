@@ -7,7 +7,12 @@ import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
 import { Item } from '@item/items/models';
 
-import { DestockProductInput, ProductFilter, UpdateProductInput } from './dtos';
+import {
+  DestockProductInput,
+  ProductFilter,
+  RestockProductDto,
+  UpdateProductInput,
+} from './dtos';
 import { Product } from './models';
 
 import { ProductsRepository } from './products.repository';
@@ -68,23 +73,28 @@ export class ProductsService {
   }
 
   async bulkDestock(destockProductInputs: DestockProductInput[]) {
-    const isProductsGiven = destockProductInputs.every(
-      ({ product }) => !!product
-    );
-
-    let products: Product[];
-    if (isProductsGiven) {
-      const productIds = destockProductInputs.map(({ productId }) => productId);
-      products = await this.productsRepository.findByIds(productIds);
-    } else {
-      products = destockProductInputs.map(({ product }) => product);
-    }
+    const productIds = destockProductInputs.map(({ productId }) => productId);
+    const products = await this.productsRepository.findByIds(productIds);
 
     products.forEach((product) => {
-      const { quantity } = destockProductInputs.find(({ productId }) => {
-        return product.id === productId;
-      });
+      const { quantity } = destockProductInputs.find(
+        ({ productId }) => product.id === productId
+      );
       product.destock(quantity);
+    });
+
+    await this.productsRepository.save(products);
+  }
+
+  async bulkRestock(restockProductDtos: RestockProductDto[]) {
+    const productIds = restockProductDtos.map(({ productId }) => productId);
+    const products = await this.productsRepository.findByIds(productIds);
+
+    products.forEach((product) => {
+      const { quantity, isShipReserved } = restockProductDtos.find(
+        ({ productId }) => productId === product.id
+      );
+      product.restock(quantity, isShipReserved);
     });
 
     await this.productsRepository.save(products);

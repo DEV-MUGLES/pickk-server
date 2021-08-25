@@ -5,3 +5,4 @@ export * from './remove-expected-event-point.mto';
 export * from './update-like-count.mto';
 export * from './update-user-follow-count.mto';
 export * from './update-keyword-class-owning-count-cache.mto';
+export * from './restore-deducted-product-stock.mto';

@@ -21,4 +21,12 @@ export class Product extends ProductEntity {
       this.shippingReservePolicy.stock -= quantity;
     }
   }
+
+  public restock(quantity: number, isShipReserved: boolean): void {
+    if (isShipReserved) {
+      this.shippingReservePolicy.stock += quantity;
+    } else {
+      this.stock += quantity;
+    }
+  }
 }

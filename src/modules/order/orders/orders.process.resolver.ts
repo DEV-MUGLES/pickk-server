@@ -1,3 +1,4 @@
+import { GraphQLResolveInfo } from 'graphql';
 import {
   ForbiddenException,
   Inject,
@@ -18,9 +19,9 @@ import {
   RequestOrderRefundInput,
 } from './dtos';
 import { Order } from './models';
+import { OrdersProducer } from './producers';
 
 import { OrdersService } from './orders.service';
-import { GraphQLResolveInfo } from 'graphql';
 
 @Injectable()
 export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
@@ -28,12 +29,13 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
 
   constructor(
     @Inject(OrdersService)
-    private readonly ordersService: OrdersService
+    private readonly ordersService: OrdersService,
+    private readonly ordersProducer: OrdersProducer
   ) {
     super();
   }
 
-  // @TODO: SQS에서 1. 재고복구, 2. Payment 채번취소 처리, 3. 완료 알림톡 전송
+  // @TODO: SQS에서 1. Payment 채번취소 처리, 3. 완료 알림톡 전송
   @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async dodgeVbankOrder(
@@ -45,10 +47,13 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    return await this.ordersService.dodgeVbank(merchantUid);
+    const dodgedOrder = await this.ordersService.dodgeVbank(merchantUid);
+    await this.ordersProducer.restoreDeductedProductStock(dodgedOrder);
+
+    return dodgedOrder;
   }
 
-  // @TODO: SQS에서 1. 재고복구, 2. 완료 알림톡 전송
+  // @TODO: SQS에서 완료 알림톡 전송
   @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async cancelOrder(
@@ -63,7 +68,8 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    await this.ordersService.cancel(merchantUid, input);
+    const canceledOrder = await this.ordersService.cancel(merchantUid, input);
+    await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
 
     return await this.ordersService.get(
       merchantUid,
