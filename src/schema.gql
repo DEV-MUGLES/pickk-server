@@ -139,6 +139,7 @@ type Brand {
   nameEng: String
   nameKor: String!
   seller: Seller
+  sellerId: Int
   updatedAt: DateTime!
 }
 

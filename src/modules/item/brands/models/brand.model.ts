@@ -20,10 +20,11 @@ export class Brand extends BrandEntity {
     this.nameEng = attributes.nameEng;
     this.description = attributes.description;
     this.imageUrl = attributes.imageUrl;
+
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
   }
 
-  @Field(() => Seller, {
-    nullable: true,
-  })
+  @Field(() => Seller, { nullable: true })
   seller?: Seller;
 }

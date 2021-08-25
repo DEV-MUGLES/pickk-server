@@ -7,4 +7,5 @@ export interface IBrand {
   imageUrl?: string;
 
   seller?: ISeller;
+  sellerId?: number;
 }
