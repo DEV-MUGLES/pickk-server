@@ -1,7 +1,6 @@
 import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 import { IsBoolean, IsEnum } from 'class-validator';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Optional } from '@nestjs/common';
 
 import { BaseIdEntity } from '@common/entities';
 import { User } from '@user/users/models';
@@ -80,6 +79,5 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Field({ defaultValue: false })
   @Column({ default: false })
   @IsBoolean()
-  @Optional()
   isDeleted: boolean;
 }
