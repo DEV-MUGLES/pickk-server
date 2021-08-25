@@ -45,6 +45,14 @@ input AddItemUrlInput {
   url: String!
 }
 
+input AnswerInquiryInput {
+  """최대 길이 255"""
+  content: String!
+
+  """표시될 답변작성자 이름. 최대 길이 30"""
+  displayAuthor: String!
+}
+
 """애플 로그인시 사용됩니다. [App, Web]"""
 enum AppleClientType {
   App
@@ -1167,6 +1175,7 @@ type Mutation {
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!
   bulkPickMeSellerRefundRequests(ids: [Int!]!): Boolean!

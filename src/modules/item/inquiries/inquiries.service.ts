@@ -6,7 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { InquiryRelationType } from './constants';
-import { CreateInquiryInput, InquiryFilter } from './dtos';
+import { AnswerInquiryInput, CreateInquiryInput, InquiryFilter } from './dtos';
 import { Inquiry } from './models';
 
 import { InquiriesRepository } from './inquiries.repository';
@@ -48,5 +48,12 @@ export class InquiriesService {
 
   async remove(inquiry: Inquiry): Promise<void> {
     await this.inquiriesRepository.remove(inquiry);
+  }
+
+  async answer(id: number, input: AnswerInquiryInput): Promise<Inquiry> {
+    const inquiry = await this.get(id, ['answers']);
+    inquiry.answer(input);
+
+    return await this.inquiriesRepository.save(inquiry);
   }
 }

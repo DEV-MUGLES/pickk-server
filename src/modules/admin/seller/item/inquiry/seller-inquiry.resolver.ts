@@ -1,19 +1,26 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Query } from '@nestjs/graphql';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
+import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
 
-import { PageInput } from '@common/dtos';
 import {
+  InquiryAnswerFrom,
   InquiryRelationType,
   INQUIRY_RELATIONS,
 } from '@item/inquiries/constants';
-import { InquiryFilter } from '@item/inquiries/dtos';
+import { AnswerInquiryInput, InquiryFilter } from '@item/inquiries/dtos';
 import { Inquiry } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 
@@ -75,5 +82,27 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     });
 
     return count;
+  }
+
+  @Mutation(() => Inquiry)
+  @UseGuards(JwtSellerVerifyGuard)
+  async answerMeSellerInquiry(
+    @CurrentUser() { sellerId, sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('answerInquiryInput') input: AnswerInquiryInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Inquiry> {
+    const inquiry = await this.inquiriesService.get(id);
+    if (inquiry.sellerId !== sellerId) {
+      throw new ForbiddenException('답변 권한이 없습니다.');
+    }
+
+    await this.inquiriesService.answer(id, {
+      ...input,
+      userId,
+      from: InquiryAnswerFrom.Seller,
+    });
+
+    return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
   }
 }

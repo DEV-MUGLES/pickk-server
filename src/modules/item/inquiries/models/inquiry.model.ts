@@ -4,7 +4,9 @@ import { partialEncrypt } from '@common/helpers';
 
 import { User } from '@user/users/models';
 
+import { AnswerInquiryInput } from '../dtos';
 import { InquiryEntity } from '../entities';
+import { InquiryAnswer } from './inquiry-answer.model';
 
 const SECRET_TITLE = '비공개 문의입니다';
 
@@ -27,5 +29,9 @@ export class Inquiry extends InquiryEntity {
       isSecret: this.isSecret,
       isAnswered: this.isAnswered,
     });
+  }
+
+  answer(input: AnswerInquiryInput) {
+    this.answers.push(new InquiryAnswer(input));
   }
 }
