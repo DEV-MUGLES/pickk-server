@@ -1044,7 +1044,9 @@ type Look {
 }
 
 input LookFilter {
+  orderBy: LookOrderBy = Id
   styleTagIdIn: [Int!]
+  user: LookUserFilter
   userId: Int
 }
 
@@ -1053,6 +1055,15 @@ type LookImage {
   createdAt: DateTime!
   key: String!
   url: String!
+}
+
+enum LookOrderBy {
+  Id
+  Score
+}
+
+input LookUserFilter {
+  heightBetween: [Int!]
 }
 
 type Mutation {
