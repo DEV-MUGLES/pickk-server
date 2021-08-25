@@ -1,6 +1,7 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
-import { IsEnum } from 'class-validator';
+import { IsBoolean, IsEnum } from 'class-validator';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Optional } from '@nestjs/common';
 
 import { BaseIdEntity } from '@common/entities';
 import { User } from '@user/users/models';
@@ -32,6 +33,8 @@ export class CommentEntity extends BaseIdEntity implements IComment {
     this.content = attributes.content;
 
     this.likeCount = attributes.likeCount;
+
+    this.isDeleted = attributes.isDeleted;
   }
 
   @Field(() => User, { nullable: true })
@@ -73,4 +76,10 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Field(() => Int, { defaultValue: 0 })
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   likeCount: number;
+
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  @IsBoolean()
+  @Optional()
+  isDeleted: boolean;
 }
