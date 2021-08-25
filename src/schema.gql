@@ -753,6 +753,7 @@ enum InquiryAnswerFrom {
 
 input InquiryFilter {
   itemId: Float
+  sellerId: Float
 }
 
 """배송/사이즈/재입고/기타"""
@@ -1816,6 +1817,7 @@ type Query {
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
+  meSellerInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!

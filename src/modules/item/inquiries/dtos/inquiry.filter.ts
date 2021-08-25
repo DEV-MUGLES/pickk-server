@@ -6,4 +6,7 @@ import { IInquiry } from '../interfaces';
 export class InquiryFilter implements Partial<IInquiry> {
   @Field({ nullable: true })
   itemId: number;
+
+  @Field({ nullable: true })
+  sellerId: number;
 }
