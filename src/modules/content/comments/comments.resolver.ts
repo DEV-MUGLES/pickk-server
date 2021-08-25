@@ -80,13 +80,15 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
   @UseGuards(JwtVerifyGuard)
   async deleteComment(
     @CurrentUser() { sub: userId }: JwtPayload,
-    @IntArgs('id') id: number
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Comment> {
     const isMine = await this.commentsService.checkBelongsTo(id, userId);
     if (!isMine) {
       throw new ForbiddenException('자신의 댓글이 아닙니다.');
     }
 
-    return await this.commentsService.processDelete(id);
+    await this.commentsService.processDelete(id);
+    return await this.commentsService.get(id, this.getRelationsFromInfo(info));
   }
 }

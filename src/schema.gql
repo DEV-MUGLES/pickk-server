@@ -233,7 +233,7 @@ enum ClaimFeePayMethod {
 }
 
 type Comment {
-  content: String!
+  content: String
   createdAt: DateTime!
   id: Int!
   isDeleted: Boolean!
@@ -336,7 +336,7 @@ input CreateCartItemInput {
 }
 
 input CreateCommentInput {
-  content: String!
+  content: String
   mentionedUserId: Int
   ownerId: Int!
   ownerType: CommentOwnerType!
@@ -2120,7 +2120,7 @@ input UpdateCartItemInput {
 }
 
 input UpdateCommentInput {
-  content: String!
+  content: String
 }
 
 input UpdateCourierInput {
