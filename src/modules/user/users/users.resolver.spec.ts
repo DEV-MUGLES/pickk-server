@@ -9,6 +9,7 @@ import { User } from './models';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 describe('UsersResolver', () => {
   let usersResolver: UsersResolver;
@@ -25,6 +26,10 @@ describe('UsersResolver', () => {
         {
           provide: PointsService,
           useValue: new PointsService(null, null, null, null),
+        },
+        {
+          provide: FollowsService,
+          useValue: new FollowsService(null, null),
         },
       ],
     }).compile();
