@@ -29,9 +29,6 @@ export class LooksService {
       await this.looksRepository.find({
         relations,
         ...(await this.getFindOptions(filter, pageInput)),
-        order: {
-          id: 'DESC',
-        },
       })
     );
   }
@@ -45,15 +42,24 @@ export class LooksService {
 
     if (_filter?.styleTagIdIn?.length > 0) {
       const ids = await this.looksRepository.findIdsByStyleTags(
-        _filter.styleTagIdIn
+        _filter,
+        _pageInput
       );
 
-      return { where: { ...parseFilter(_filter), id: In(ids) } };
+      return {
+        where: { id: In(ids) },
+        order: {
+          [filter.orderBy]: 'DESC',
+        },
+      };
     }
 
     return {
       where: parseFilter(_filter, _pageInput?.idFilter),
       ...(_pageInput?.pageFilter ?? {}),
+      order: {
+        [filter.orderBy]: 'DESC',
+      },
     };
   }
 }

@@ -6,8 +6,9 @@ import { BaseRepository } from '@common/base.repository';
 import { PageInput } from '@common/dtos';
 import { pageQuery } from '@common/helpers';
 
+import { LookFilter } from './dtos';
 import { LookEntity } from './entities';
-import { lookStyleTagsQuery } from './helpers';
+import { lookStyleTagsQuery, lookUserHeightQuery } from './helpers';
 import { Look } from './models';
 
 @EntityRepository(LookEntity)
@@ -23,17 +24,22 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
   }
 
   async findIdsByStyleTags(
-    styleTagIds: number[],
+    filter: LookFilter,
     pageInput?: PageInput
   ): Promise<number[]> {
-    const raws = await pageQuery(
-      lookStyleTagsQuery(this.createQueryBuilder('look'), styleTagIds),
+    let qb = pageQuery(
+      lookStyleTagsQuery(this.createQueryBuilder('look'), filter.styleTagIdIn),
       'look',
       pageInput
     )
       .select('look.id', 'id')
-      .orderBy('look.id', 'DESC')
-      .execute();
+      .orderBy(`look.${filter.orderBy}`, 'DESC');
+
+    if (filter.user?.heightBetween) {
+      qb = lookUserHeightQuery(qb, filter.user.heightBetween);
+    }
+
+    const raws = await qb.execute();
 
     return raws.map((raw) => raw.id);
   }
