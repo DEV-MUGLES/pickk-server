@@ -22,4 +22,6 @@ export interface IComment {
   content: string;
 
   likeCount: number;
+
+  isDeleted: boolean;
 }

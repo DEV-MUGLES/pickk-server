@@ -75,4 +75,20 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
     await this.commentsService.update(id, input);
     return await this.commentsService.get(id, this.getRelationsFromInfo(info));
   }
+
+  @Mutation(() => Comment)
+  @UseGuards(JwtVerifyGuard)
+  async deleteComment(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Comment> {
+    const isMine = await this.commentsService.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 댓글이 아닙니다.');
+    }
+
+    await this.commentsService.processDelete(id);
+    return await this.commentsService.get(id, this.getRelationsFromInfo(info));
+  }
 }

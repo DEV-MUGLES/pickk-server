@@ -68,4 +68,23 @@ export class CommentsService {
       })
     );
   }
+
+  /**
+   * comment 레코드를 삭제하는 것이 아니라, 삭제처리하는 함수입니다.
+   * 삭제처리는 isDeleted를 참으로 설정하고, user와 content정보를 null로 업데이트하는 것을 의미합니다.
+   */
+  async processDelete(id: number): Promise<Comment> {
+    const comment = await this.get(id);
+
+    return await this.commentsRepository.save(
+      new Comment({
+        ...comment,
+        userId: null,
+        mentionedUserId: null,
+        content: null,
+        likeCount: 0,
+        isDeleted: true,
+      })
+    );
+  }
 }
