@@ -87,4 +87,19 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
       userId,
     });
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeInquiry(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number
+  ): Promise<boolean> {
+    const inquiry = await this.inquiriesService.get(id);
+    if (inquiry.userId !== userId) {
+      throw new ForbiddenException('자신의 문의가 아닙니다.');
+    }
+
+    await this.inquiriesService.remove(inquiry);
+    return true;
+  }
 }
