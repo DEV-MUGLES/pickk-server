@@ -49,7 +49,72 @@ services:
       - '${PWD}/scripts/init-localstack.sh:/docker-entrypoint-initaws.d/init-localstack.sh'
     networks:
       - webnet
+  es01:
+    container_name: es01
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    ports:
+      - '${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}'
+    environment:
+      - node.name=es01
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es02,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      - ELASTIC_PASSWORD=${ELASTICSEARCH_PASSWORD}
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data01:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  es02:
+    container_name: es02
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - node.name=es02
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es03
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data02:/usr/share/elasticsearch/data
+    networks:
+      - elastic
+  es03:
+    container_name: es03
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.14.0
+    environment:
+      - node.name=es03
+      - cluster.name=es-docker-cluster
+      - discovery.seed_hosts=es01,es02
+      - cluster.initial_master_nodes=es01,es02,es03
+      - bootstrap.memory_lock=true
+      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    volumes:
+      - data03:/usr/share/elasticsearch/data
+    networks:
+      - elastic
 networks:
   webnet:
+  elastic:
+    driver: bridge
 volumes:
   mysql-data:
+  data01:
+    driver: local
+  data02:
+    driver: local
+  data03:
+    driver: local
