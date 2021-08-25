@@ -598,7 +598,9 @@ type Digest {
 
 input DigestFilter {
   itemId: Int
+  orderBy: String = "id"
   userId: Int
+  userIdIn: [Int!]
 }
 
 type DigestImage {
@@ -1151,10 +1153,11 @@ type Look {
 }
 
 input LookFilter {
-  orderBy: LookOrderBy = Id
+  orderBy: String = "id"
   styleTagIdIn: [Int!]
   user: LookUserFilter
   userId: Int
+  userIdIn: [Int!]
 }
 
 type LookImage {
@@ -1162,11 +1165,6 @@ type LookImage {
   createdAt: DateTime!
   key: String!
   url: String!
-}
-
-enum LookOrderBy {
-  Id
-  Score
 }
 
 input LookUserFilter {
@@ -2495,5 +2493,7 @@ type Video {
 }
 
 input VideoFilter {
+  orderBy: String = "id"
   userId: Int
+  userIdIn: [Int!]
 }

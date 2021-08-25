@@ -8,4 +8,10 @@ export class DigestFilter implements Partial<IDigest> {
   itemId: number;
   @Field(() => Int, { nullable: true })
   userId: number;
+
+  @Field(() => [Int], { nullable: true })
+  userIdIn: number[];
+
+  @Field(() => String, { defaultValue: 'id' })
+  orderBy?: keyof IDigest;
 }

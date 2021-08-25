@@ -1,4 +1,4 @@
-import { Field, InputType, Int, registerEnumType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { ILook } from '../interfaces';
 
@@ -8,27 +8,20 @@ export class LookUserFilter {
   heightBetween: [number, number];
 }
 
-export enum LookOrderBy {
-  Id = 'id',
-  Score = 'score',
-}
-
-registerEnumType(LookOrderBy, {
-  name: 'LookOrderBy',
-});
-
 @InputType()
 export class LookFilter implements Partial<Omit<ILook, 'user'>> {
   excludeFields: Array<keyof LookFilter> = ['styleTagIdIn'];
 
   @Field(() => Int, { nullable: true })
   userId: number;
+  @Field(() => [Int], { nullable: true })
+  userIdIn: number[];
   @Field(() => LookUserFilter, { nullable: true })
   user: LookUserFilter;
 
   @Field(() => [Int], { nullable: true })
   styleTagIdIn: number[];
 
-  @Field(() => LookOrderBy, { defaultValue: LookOrderBy.Id })
-  orderBy: LookOrderBy;
+  @Field(() => String, { defaultValue: 'id' })
+  orderBy: keyof ILook;
 }
