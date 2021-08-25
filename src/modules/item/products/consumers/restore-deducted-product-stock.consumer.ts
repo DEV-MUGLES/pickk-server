@@ -1,5 +1,9 @@
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
+import {
+  OrderItemClaimStatus,
+  OrderItemStatus,
+} from '@order/order-items/constants';
 import { ProductsService } from '@item/products/products.service';
 import { RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE } from '@queue/constants';
 import { RestoreDeductedProductStockMto } from '@queue/mtos';
@@ -14,6 +18,13 @@ export class RestoreDeductedProductStockConsumer {
       order: { orderItems },
     }: RestoreDeductedProductStockMto = JSON.parse(message.Body);
 
-    await this.productsService.bulkRestock(orderItems);
+    const canceledOrFailedOrderItems = orderItems.filter(
+      (orderItem) =>
+        orderItem.status === OrderItemStatus.Failed ||
+        orderItem.status === OrderItemStatus.VbankDodged ||
+        orderItem.claimStatus === OrderItemClaimStatus.Cancelled
+    );
+
+    await this.productsService.bulkRestock(canceledOrFailedOrderItems);
   }
 }
