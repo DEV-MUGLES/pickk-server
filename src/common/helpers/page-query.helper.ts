@@ -13,11 +13,13 @@ export const pageQuery = <T extends { id: number }>(
   }
 
   if (!pageInput.startId) {
-    return queryBuilder.skip(pageInput.offset ?? 0).take(pageInput.limit ?? 20);
+    return queryBuilder
+      .offset(pageInput.offset ?? 0)
+      .limit(pageInput.limit ?? 20);
   }
 
   return queryBuilder
-    .skip(pageInput.offset ?? 0)
-    .take(pageInput.limit ?? 20)
+    .offset(pageInput.offset ?? 0)
+    .limit(pageInput.limit ?? 20)
     .where(`${alias}.id < ${pageInput.startId}`);
 };
