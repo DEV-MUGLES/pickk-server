@@ -18,6 +18,13 @@ export class InquiriesService {
     private readonly inquiriesRepository: InquiriesRepository
   ) {}
 
+  async get(
+    id: number,
+    relations: InquiryRelationType[] = []
+  ): Promise<Inquiry> {
+    return await this.inquiriesRepository.get(id, relations);
+  }
+
   async list(
     filter?: InquiryFilter,
     pageInput?: PageInput,

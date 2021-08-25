@@ -1,9 +1,14 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Inject,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtOrNotGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
@@ -13,6 +18,7 @@ import { InquiryFilter } from './dtos';
 import { Inquiry } from './models';
 
 import { InquiriesService } from './inquiries.service';
+import { IntArgs } from '@common/decorators';
 
 @Injectable()
 export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
@@ -23,6 +29,25 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     private readonly inquiriesService: InquiriesService
   ) {
     super();
+  }
+
+  @Query(() => Inquiry)
+  @UseGuards(JwtVerifyGuard)
+  async inquiry(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Inquiry> {
+    const inquiry = await this.inquiriesService.get(
+      id,
+      this.getRelationsFromInfo(info)
+    );
+
+    if (inquiry.userId !== userId) {
+      throw new ForbiddenException('자신의 문의가 아닙니다.');
+    }
+
+    return inquiry;
   }
 
   @Query(() => [Inquiry])
