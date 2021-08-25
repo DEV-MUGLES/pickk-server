@@ -30,6 +30,25 @@ export class FollowsService {
     return await this.followsRepository.bulkCheckExist(userId, targetIds);
   }
 
+  async bulkEnrichFollowing<
+    T extends { id: number; userId: number; user?: { isFollowing: boolean } }
+  >(userId: number, owners: T[]): Promise<void> {
+    if (!userId || !owners.some((owner) => !!owner.user)) {
+      return;
+    }
+
+    const followExistMap = await this.bulkCheck(
+      userId,
+      owners.map((owner) => owner.userId)
+    );
+
+    for (const owner of owners) {
+      if (owner.user) {
+        owner.user.isFollowing = followExistMap.get(owner.userId);
+      }
+    }
+  }
+
   async add(userId: number, targetId: number): Promise<void> {
     if (userId === targetId) {
       throw new ForbiddenException('자신을 팔로우할 수 없습니다!');

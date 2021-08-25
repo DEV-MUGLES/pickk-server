@@ -38,6 +38,27 @@ export class LikesService {
       ownerIds
     );
   }
+
+  async bulkEnrichLiking<T extends { id: number; isLiking: boolean }>(
+    userId: number,
+    ownerType: LikeOwnerType,
+    owners: T[]
+  ): Promise<void> {
+    if (!userId) {
+      return;
+    }
+
+    const existMap = await this.bulkCheck(
+      userId,
+      ownerType,
+      owners.map(({ id }) => id)
+    );
+
+    for (const owner of owners) {
+      owner.isLiking = existMap.get(owner.id);
+    }
+  }
+
   async add(
     userId: number,
     ownerType: LikeOwnerType,

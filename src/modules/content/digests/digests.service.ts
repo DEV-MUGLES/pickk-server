@@ -57,7 +57,7 @@ export class DigestsService {
     filter?: DigestFilter,
     pageInput?: PageInput,
     relations: DigestRelationType[] = [],
-    requestUserId?: number
+    userId?: number
   ): Promise<Digest[]> {
     const _filter = plainToClass(DigestFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
@@ -70,31 +70,12 @@ export class DigestsService {
       })
     );
 
-    //@TODO: 리팩토링
-    if (requestUserId) {
-      const likeExistMap = await this.likesService.bulkCheck(
-        requestUserId,
-        LikeOwnerType.Digest,
-        digests.map((digest) => digest.id)
-      );
-
-      for (const digest of digests) {
-        digest.isLiking = likeExistMap.get(digest.id);
-      }
-
-      if (relations.includes('user')) {
-        const followExistMap = await this.followsService.bulkCheck(
-          requestUserId,
-          digests.map((digest) => digest.userId)
-        );
-
-        for (const digest of digests) {
-          if (digest.user) {
-            digest.user.isFollowing = followExistMap.get(digest.userId);
-          }
-        }
-      }
-    }
+    await this.likesService.bulkEnrichLiking(
+      userId,
+      LikeOwnerType.Digest,
+      digests
+    );
+    await this.followsService.bulkEnrichFollowing(userId, digests);
 
     return digests;
   }
