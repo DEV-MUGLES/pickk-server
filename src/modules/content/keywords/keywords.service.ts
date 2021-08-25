@@ -1,10 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In } from 'typeorm';
-import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { KeywordRelationType } from './constants';
@@ -44,8 +42,6 @@ export class KeywordsService {
     pageInput?: PageInput,
     userId?: number
   ): Promise<FindManyOptions<KeywordEntity>['where']> {
-    const _filter = plainToClass(KeywordFilter, filter);
-
     const ids = await this.keywordsRepository.findIdsByClass(
       filter.keywordClassId,
       userId,
@@ -53,7 +49,7 @@ export class KeywordsService {
       pageInput
     );
 
-    return { ...parseFilter(_filter), id: In(ids) };
+    return { id: In(ids) };
   }
 
   async listByClass(
