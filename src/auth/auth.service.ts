@@ -124,6 +124,7 @@ export class AuthService {
     const payload: CreateJwtPayloadInput = {
       sellerId: seller.id,
       brandId: brand.id,
+      brandNameKor: brand.nameKor,
       nickname: user.nickname,
       sub: user.id,
       isExpired: null,

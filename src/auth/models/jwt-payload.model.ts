@@ -12,6 +12,7 @@ export class JwtPayload implements IJwtPayload {
 
     this.sellerId = attributes.sellerId;
     this.brandId = attributes.brandId;
+    this.brandNameKor = attributes.brandNameKor;
     this.nickname = attributes.nickname;
 
     this.sub = attributes.sub;
@@ -23,6 +24,8 @@ export class JwtPayload implements IJwtPayload {
   sellerId?: number;
   @Field({ nullable: true, description: 'Seller 로그인인 경우에만 발급된다.' })
   brandId?: number;
+  @Field({ nullable: true, description: 'Seller 로그인인 경우에만 발급된다.' })
+  brandNameKor?: string;
   @Field()
   nickname: string;
 
