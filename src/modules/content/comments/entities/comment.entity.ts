@@ -68,8 +68,8 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Column({ type: 'int', nullable: true })
   mentionedUserId: number;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   content: string;
 
   // queue에서 계산해서 update하는 값들
