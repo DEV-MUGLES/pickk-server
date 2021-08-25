@@ -38,7 +38,7 @@ export class OrderItem extends OrderItemEntity {
     return `[${this.brandNameKor}] ${this.itemName} (${this.productVariantName}) ${this.quantity}개`;
   }
 
-  @Field()
+  @Field(() => Order)
   order: Order;
 
   @Field(() => RefundRequest)
