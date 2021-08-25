@@ -78,7 +78,7 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
     if ((filter['excludeFields'] as string[])?.includes(key)) {
       return acc;
     }
-    if (['search', 'searchFields', 'excludeFields'].includes(key)) {
+    if (['search', 'searchFields', 'excludeFields', 'orderBy'].includes(key)) {
       return acc;
     }
     if (/In$/.test(key) && isArray(value)) {

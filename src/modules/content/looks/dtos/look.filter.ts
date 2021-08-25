@@ -19,7 +19,7 @@ registerEnumType(LookOrderBy, {
 
 @InputType()
 export class LookFilter implements Partial<Omit<ILook, 'user'>> {
-  excludeFields: Array<keyof LookFilter> = ['styleTagIdIn', 'orderBy'];
+  excludeFields: Array<keyof LookFilter> = ['styleTagIdIn'];
 
   @Field(() => Int, { nullable: true })
   userId: number;
