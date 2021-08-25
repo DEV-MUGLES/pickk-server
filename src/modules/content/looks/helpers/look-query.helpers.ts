@@ -20,3 +20,24 @@ export const lookStyleTagsQuery = (
     )
     .where(`tags_table.styleTagId IS NOT NULL`);
 };
+
+export const lookUserHeightQuery = (
+  queryBuilder: SelectQueryBuilder<LookEntity>,
+  range: [number, number]
+) => {
+  if (!range) {
+    return queryBuilder;
+  }
+
+  const [min, max] = range;
+
+  return queryBuilder
+    .leftJoinAndSelect(
+      'user',
+      'user',
+      `user.id = look.userId AND 
+      user.height >= ${min} AND
+      user.height <= ${max}`
+    )
+    .where(`user.height IS NOT NULL`);
+};
