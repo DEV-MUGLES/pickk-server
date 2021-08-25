@@ -48,9 +48,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     }
 
     const dodgedOrder = await this.ordersService.dodgeVbank(merchantUid);
-    await this.ordersProducer.restoreDeductedProductStock({
-      order: dodgedOrder,
-    });
+    await this.ordersProducer.restoreDeductedProductStock(dodgedOrder);
 
     return dodgedOrder;
   }
@@ -71,9 +69,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     }
 
     const canceledOrder = await this.ordersService.cancel(merchantUid, input);
-    await this.ordersProducer.restoreDeductedProductStock({
-      order: canceledOrder,
-    });
+    await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
 
     return await this.ordersService.get(
       merchantUid,

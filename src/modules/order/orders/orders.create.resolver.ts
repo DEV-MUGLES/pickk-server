@@ -168,9 +168,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     }
 
     const failedOrder = await this.ordersService.fail(order);
-    await this.ordersProducer.restoreDeductedProductStock({
-      order: failedOrder,
-    });
+    await this.ordersProducer.restoreDeductedProductStock(failedOrder);
 
     return failedOrder;
   }
