@@ -236,6 +236,7 @@ type Comment {
   content: String!
   createdAt: DateTime!
   id: Int!
+  isDeleted: Boolean!
   likeCount: Int!
   mentionedUser: User
   mentionedUserId: Int
@@ -1086,6 +1087,7 @@ type Mutation {
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
+  deleteComment(id: Int!): Comment!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
