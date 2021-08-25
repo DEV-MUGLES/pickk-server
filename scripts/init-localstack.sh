@@ -20,5 +20,5 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-UPDAT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2P-RESTORE_DEDUCTED_PRODUCT_STOCK
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2D-UPDATE_DIGEST_COMMENT_COUNT
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2K-UPDATE_KEYWORD_COMMENT_COUNT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2L-UPDATE_LOOK_COMMENT_COUNT
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2V-UPDATE_VIDEO_COMMENT_COUNT
