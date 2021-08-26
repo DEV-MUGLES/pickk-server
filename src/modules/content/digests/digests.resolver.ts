@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -19,13 +14,15 @@ import { DigestFilter } from './dtos';
 import { Digest } from './models';
 
 import { DigestsService } from './digests.service';
+import { DigestsSearchService } from './digests.search.service';
 
 @Injectable()
 export class DigestsResolver extends BaseResolver<DigestRelationType> {
   relations = DIGEST_RELATIONS;
 
   constructor(
-    @Inject(DigestsService) private readonly digestsService: DigestsService
+    private readonly digestsService: DigestsService,
+    private readonly digestsSearchService: DigestsSearchService
   ) {
     super();
   }
@@ -73,5 +70,20 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
 
     await this.digestsService.remove(id);
     return true;
+  }
+
+  @Query(() => [Digest])
+  async searchDigest(
+    @Args('query') query: string,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Digest[]> {
+    const ids = await this.digestsSearchService.search(query, pageInput);
+
+    return await this.digestsService.list(
+      { idIn: ids },
+      null,
+      this.getRelationsFromInfo(info)
+    );
   }
 }
