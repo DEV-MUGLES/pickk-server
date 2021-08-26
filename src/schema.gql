@@ -597,6 +597,7 @@ type Digest {
 }
 
 input DigestFilter {
+  idIn: [Int!]
   itemId: Int
   orderBy: String = "id"
   userId: Int
@@ -1083,6 +1084,8 @@ enum KeywordClassType {
 }
 
 input KeywordFilter {
+  idIn: [Int!]
+
   """제공시 추가 연산을 수행합니다. (비로그인시 무시)"""
   isLiking: Boolean
 
@@ -1153,6 +1156,7 @@ type Look {
 }
 
 input LookFilter {
+  idIn: [Int!]
   orderBy: String = "id"
   styleTagIdIn: [Int!]
   user: LookUserFilter
@@ -1873,6 +1877,7 @@ type Query {
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
+  searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   styleTags: [StyleTag!]!
@@ -2503,6 +2508,7 @@ type Video {
 }
 
 input VideoFilter {
+  idIn: [Int!]
   orderBy: String = "id"
   userId: Int
   userIdIn: [Int!]
