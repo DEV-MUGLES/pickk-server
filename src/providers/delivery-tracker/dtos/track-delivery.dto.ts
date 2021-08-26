@@ -1,4 +1,4 @@
-export class DeliveryTrackInfoDto {
+export class TrackDeliveryDto {
   carrier: {
     id: string;
     name: string;

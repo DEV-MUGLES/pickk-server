@@ -1,1 +1,1 @@
-export * from './delivery-track-info.dto';
+export * from './track-delivery.dto';

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
-import { DeliveryTrackInfoDto } from './dtos';
+import { TrackDeliveryDto } from './dtos';
 
 @Injectable()
 export class DeliveryTrackerService {
@@ -13,9 +13,9 @@ export class DeliveryTrackerService {
   async getTrackInfo(
     courierCode: string,
     trackCode: string
-  ): Promise<DeliveryTrackInfoDto> {
+  ): Promise<TrackDeliveryDto> {
     const { data } = await firstValueFrom(
-      this.httpService.get<DeliveryTrackInfoDto>(
+      this.httpService.get<TrackDeliveryDto>(
         `${this.url}/${courierCode}/tracks/${trackCode}`
       )
     );
