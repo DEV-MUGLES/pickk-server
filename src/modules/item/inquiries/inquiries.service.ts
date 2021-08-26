@@ -18,6 +18,10 @@ export class InquiriesService {
     private readonly inquiriesRepository: InquiriesRepository
   ) {}
 
+  async count(itemId: number): Promise<number> {
+    return await this.inquiriesRepository.count({ where: { itemId } });
+  }
+
   async get(
     id: number,
     relations: InquiryRelationType[] = []

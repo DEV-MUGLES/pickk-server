@@ -4,7 +4,7 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -33,6 +33,11 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     private readonly itemsService: ItemsService
   ) {
     super();
+  }
+
+  @Query(() => Int)
+  async inquiriesCount(@IntArgs('itemId') itemId: number): Promise<number> {
+    return await this.inquiriesService.count(itemId);
   }
 
   @Query(() => Inquiry)
