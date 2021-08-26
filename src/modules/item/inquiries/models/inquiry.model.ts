@@ -13,7 +13,7 @@ const SECRET_TITLE = '비공개 문의입니다';
 @ObjectType()
 export class Inquiry extends InquiryEntity {
   securitify(userId: number): Inquiry {
-    if (this.isSecret && userId === this.userId) {
+    if (!this.isSecret || userId === this.userId) {
       return this;
     }
 
