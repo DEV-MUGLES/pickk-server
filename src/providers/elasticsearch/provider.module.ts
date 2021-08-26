@@ -10,6 +10,8 @@ import {
   ElasticsearchConfigService,
 } from '@config/providers/elasticsearch';
 
+import { SearchService } from './provider.service';
+
 @Module({
   imports: [
     ElasticsearchModule.registerAsync({
@@ -25,5 +27,7 @@ import {
       inject: [ElasticsearchConfigService],
     } as ElasticsearchModuleAsyncOptions),
   ],
+  providers: [SearchService],
+  exports: [SearchService],
 })
 export class SearchModule {}
