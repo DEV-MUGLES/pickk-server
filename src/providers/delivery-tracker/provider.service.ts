@@ -10,7 +10,7 @@ export class DeliveryTrackerService {
 
   constructor(private readonly httpService: HttpService) {}
 
-  async track(
+  async getTrackInfo(
     courierCode: string,
     trackCode: string
   ): Promise<DeliveryTrackInfoDto> {
