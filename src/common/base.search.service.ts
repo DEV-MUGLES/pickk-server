@@ -8,8 +8,6 @@ export abstract class BaseSearchService<
   }
 > {
   abstract indexName: string;
-  abstract queryFields: Array<keyof SearchBody>;
-
   abstract searchService: SearchService;
 
   abstract toBody(data: { id: number }): SearchBody;
@@ -20,7 +18,6 @@ export abstract class BaseSearchService<
     const sources = await this.searchService.search<SearchBody>(
       this.indexName,
       query,
-      this.queryFields,
       {
         from: pageInput?.offset ?? 0,
         size: pageInput?.limit ?? 20,
