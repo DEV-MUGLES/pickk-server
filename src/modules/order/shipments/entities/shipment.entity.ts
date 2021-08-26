@@ -5,6 +5,7 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEnum, IsOptional, MaxLength } from 'class-validator';
@@ -13,6 +14,8 @@ import { Courier } from '@item/couriers/models';
 
 import { ShipmentOwnerType, ShipmentStatus } from '../constants';
 import { IShipment } from '../interfaces';
+import { ShipmentHistoryEntity } from './shipment-history.entity';
+import { ShipmentHistory } from '../models';
 
 @ObjectType()
 @Entity('shipment')
@@ -98,6 +101,13 @@ export class ShipmentEntity implements IShipment {
   })
   @MaxLength(30)
   trackCode: string;
+
+  @OneToMany(
+    () => ShipmentHistoryEntity,
+    (shipmentHistoryEntity) => shipmentHistoryEntity.shipment,
+    { cascade: true }
+  )
+  shipmentHistories: ShipmentHistory[];
 
   // Dates
 
