@@ -1849,6 +1849,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
+  likingKeywords(pageInput: PageInput!): [Keyword!]!
   likingLooks(pageInput: PageInput!): [Look!]!
   likingVideos(pageInput: PageInput!): [Video!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!

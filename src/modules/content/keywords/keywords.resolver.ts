@@ -3,12 +3,14 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtOrNotGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
 import { KeywordSearchService } from '@mcommon/search/keyword.search.service';
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
 
 import { KeywordRelationType, KEYWORD_RELATIONS } from './constants';
 import { KeywordFilter } from './dtos';
@@ -22,7 +24,8 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
 
   constructor(
     private readonly keywordsService: KeywordsService,
-    private readonly keywordsSearchService: KeywordSearchService
+    private readonly keywordsSearchService: KeywordSearchService,
+    private readonly likesService: LikesService
   ) {
     super();
   }
@@ -58,8 +61,29 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     );
   }
 
+  // @TODO: 제거
   @Mutation(() => Boolean)
   async indexKeyword() {
     await this.keywordsSearchService.index(1);
+  }
+
+  @Query(() => [Keyword])
+  @UseGuards(JwtVerifyGuard)
+  async likingKeywords(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('pageInput') pageInput: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Keyword[]> {
+    const ids = await this.likesService.findOwnerIds(
+      userId,
+      LikeOwnerType.Keyword,
+      pageInput
+    );
+
+    return await this.keywordsService.list(
+      { idIn: ids, hasCustom: null },
+      null,
+      this.getRelationsFromInfo(info)
+    );
   }
 }
