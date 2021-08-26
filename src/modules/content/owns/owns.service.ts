@@ -2,7 +2,6 @@ import { KeywordsService } from '@content/keywords/keywords.service';
 import {
   BadRequestException,
   ConflictException,
-  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -21,8 +20,8 @@ export class OwnsService {
   constructor(
     @InjectRepository(OwnsRepository)
     private readonly ownsRepository: OwnsRepository,
-    @Inject(KeywordsService) private readonly keywordsService: KeywordsService,
-    @Inject(CacheService) private readonly cacheService: CacheService,
+    private readonly keywordsService: KeywordsService,
+    private readonly cacheService: CacheService,
     private readonly owningCountCacheProducer: OwningCountCacheProducer
   ) {}
 

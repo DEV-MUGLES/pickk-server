@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -13,13 +13,15 @@ import { KeywordFilter } from './dtos';
 import { Keyword } from './models';
 
 import { KeywordsService } from './keywords.service';
+import { KeywordsSearchService } from './keywords.search.service';
 
 @Injectable()
 export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
   relations = KEYWORD_RELATIONS;
 
   constructor(
-    @Inject(KeywordsService) private readonly keywordsService: KeywordsService
+    private readonly keywordsService: KeywordsService,
+    private readonly keywordsSearchService: KeywordsSearchService
   ) {
     super();
   }
@@ -39,4 +41,20 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       payload?.sub
     );
   }
+
+  // @FIXME: keyword service inject 버그 때문에 비활성화 시킴
+  // @Query(() => [Keyword])
+  // async searchKeyword(
+  //   @Args('query') query: string,
+  //   @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+  //   @Info() info?: GraphQLResolveInfo
+  // ): Promise<Keyword[]> {
+  //   const ids = await this.keywordsSearchService.search(query, pageInput);
+
+  //   return await this.keywordsService.list(
+  //     { idIn: ids, hasCustom: null },
+  //     null,
+  //     this.getRelationsFromInfo(info)
+  //   );
+  // }
 }
