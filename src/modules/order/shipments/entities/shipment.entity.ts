@@ -38,15 +38,13 @@ export class ShipmentEntity implements IShipment {
 
     this.lastTrackedAt = attributes.lastTrackedAt;
   }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
-
   @Field()
   @CreateDateColumn()
   createdAt: Date;
-
-  //
 
   @Field(() => ShipmentStatus)
   @Column({

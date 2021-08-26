@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { IsString, MaxLength, IsDate } from 'class-validator';
+import { MaxLength } from 'class-validator';
 import {
   Column,
   CreateDateColumn,
@@ -28,27 +28,23 @@ export class ShipmentHistoryEntity implements IShipmentHistory {
     this.shipment = attributes.shipment;
     this.shipmentId = attributes.shipmentId;
   }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
-
   @Field()
-  @IsDate()
   @CreateDateColumn()
   createdAt: Date;
 
   @Field()
-  @IsString()
+  @Column({ length: 20 })
   @MaxLength(20)
-  @Column({ type: 'varchar', length: 20 })
   statusText: string;
   @Field()
-  @IsString()
+  @Column({ length: 20 })
   @MaxLength(20)
-  @Column({ type: 'varchar', length: 20 })
   locationName: string;
   @Field()
-  @IsDate()
   @Column()
   time: Date;
 
