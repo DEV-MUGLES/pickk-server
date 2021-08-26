@@ -9,12 +9,15 @@ import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
+import { DigestsSearchService } from '@mcommon/search/digest.search.service';
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
+
 import { DigestRelationType, DIGEST_RELATIONS } from './constants';
 import { DigestFilter } from './dtos';
 import { Digest } from './models';
 
 import { DigestsService } from './digests.service';
-import { DigestsSearchService } from '../../common/search/digest.search.service';
 
 @Injectable()
 export class DigestsResolver extends BaseResolver<DigestRelationType> {
@@ -22,7 +25,8 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
 
   constructor(
     private readonly digestsService: DigestsService,
-    private readonly digestsSearchService: DigestsSearchService
+    private readonly digestsSearchService: DigestsSearchService,
+    private readonly likesService: LikesService
   ) {
     super();
   }
@@ -79,6 +83,26 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Digest[]> {
     const ids = await this.digestsSearchService.search(query, pageInput);
+
+    return await this.digestsService.list(
+      { idIn: ids },
+      null,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Query(() => [Digest])
+  @UseGuards(JwtVerifyGuard)
+  async likingDigests(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('pageInput') pageInput: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Digest[]> {
+    const ids = await this.likesService.findOwnerIds(
+      userId,
+      LikeOwnerType.Digest,
+      pageInput
+    );
 
     return await this.digestsService.list(
       { idIn: ids },
