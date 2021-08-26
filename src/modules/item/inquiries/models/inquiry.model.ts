@@ -21,7 +21,7 @@ export class Inquiry extends InquiryEntity {
       id: this.id,
       user: new User({
         id: 0,
-        name: partialEncrypt(this.user.name),
+        nickname: partialEncrypt(this.user.nickname),
       }),
       answers: [],
       type: this.type,
