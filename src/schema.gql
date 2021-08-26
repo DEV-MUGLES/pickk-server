@@ -243,8 +243,10 @@ enum ClaimFeePayMethod {
 
 type Comment {
   content: String
+  contentUpdatedAt: DateTime
   createdAt: DateTime!
   id: Int!
+  isContentUpdated: Boolean!
   isDeleted: Boolean!
 
   """[MODEL ONLY]"""

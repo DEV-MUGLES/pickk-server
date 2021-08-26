@@ -83,6 +83,11 @@ export class CommentsService {
   async update(id: number, input: UpdateCommentInput): Promise<Comment> {
     const comment = await this.get(id);
 
+    if (input.content && input.content != comment.content) {
+      comment.isContentUpdated = true;
+      comment.contentUpdatedAt = new Date();
+    }
+
     return await this.commentsRepository.save(
       new Comment({
         ...comment,

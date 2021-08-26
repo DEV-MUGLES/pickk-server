@@ -30,10 +30,12 @@ export class CommentEntity extends BaseIdEntity implements IComment {
     this.mentionedUserId = attributes.mentionedUserId;
 
     this.content = attributes.content;
+    this.isContentUpdated = attributes.isContentUpdated;
+    this.isDeleted = attributes.isDeleted;
+
+    this.contentUpdatedAt = attributes.contentUpdatedAt;
 
     this.likeCount = attributes.likeCount;
-
-    this.isDeleted = attributes.isDeleted;
 
     this.isLiking = attributes.isLiking;
     this.isMine = attributes.isMine;
@@ -73,16 +75,23 @@ export class CommentEntity extends BaseIdEntity implements IComment {
   @Field({ nullable: true })
   @Column({ nullable: true })
   content: string;
+  @Field()
+  @Column({ default: false })
+  @IsBoolean()
+  isContentUpdated: boolean;
+  @Field()
+  @Column({ default: false })
+  @IsBoolean()
+  isDeleted: boolean;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  contentUpdatedAt: Date;
 
   // queue에서 계산해서 update하는 값들
   @Field(() => Int, { defaultValue: 0 })
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   likeCount: number;
-
-  @Field()
-  @Column({ default: false })
-  @IsBoolean()
-  isDeleted: boolean;
 
   @Field({ description: '[MODEL ONLY]', nullable: true })
   isLiking: boolean;

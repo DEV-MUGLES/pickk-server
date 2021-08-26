@@ -20,10 +20,12 @@ export interface IComment {
   mentionedUserId: number;
 
   content: string;
+  isContentUpdated: boolean;
+  isDeleted: boolean;
+
+  contentUpdatedAt: Date;
 
   likeCount: number;
-
-  isDeleted: boolean;
 
   // model-only fields
   isLiking: boolean;
