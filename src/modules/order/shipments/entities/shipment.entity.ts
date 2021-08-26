@@ -14,7 +14,6 @@ import { Courier } from '@item/couriers/models';
 
 import { ShipmentOwnerType, ShipmentStatus } from '../constants';
 import { IShipment } from '../interfaces';
-import { ShipmentHistoryEntity } from './shipment-history.entity';
 import { ShipmentHistory } from '../models';
 
 @ObjectType()
@@ -102,12 +101,8 @@ export class ShipmentEntity implements IShipment {
   @MaxLength(30)
   trackCode: string;
 
-  @OneToMany(
-    () => ShipmentHistoryEntity,
-    (shipmentHistoryEntity) => shipmentHistoryEntity.shipment,
-    { cascade: true }
-  )
-  shipmentHistories: ShipmentHistory[];
+  @OneToMany('ShipmentHistoryEntity', 'shipment', { cascade: true })
+  histories: ShipmentHistory[];
 
   // Dates
 

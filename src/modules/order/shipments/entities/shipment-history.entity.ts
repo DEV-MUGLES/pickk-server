@@ -10,7 +10,6 @@ import {
 
 import { IShipmentHistory } from '../interfaces';
 import { Shipment } from '../models';
-import { ShipmentEntity } from './shipment.entity';
 
 @ObjectType()
 @Entity('shipment_history')
@@ -53,10 +52,7 @@ export class ShipmentHistoryEntity implements IShipmentHistory {
   @Column()
   time: Date;
 
-  @ManyToOne(
-    () => ShipmentEntity,
-    (shipmentEntity) => shipmentEntity.shipmentHistories
-  )
+  @ManyToOne('ShipmentEntity', 'histories')
   shipment: Shipment;
 
   @Field(() => Int)

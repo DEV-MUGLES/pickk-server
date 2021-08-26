@@ -16,7 +16,7 @@ export interface IShipment {
   courierId: number;
   trackCode: string;
 
-  shipmentHistories: IShipmentHistory[];
+  histories: IShipmentHistory[];
 
   lastTrackedAt: Date;
 }
