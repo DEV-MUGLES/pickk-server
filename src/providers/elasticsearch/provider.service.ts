@@ -36,8 +36,8 @@ export class SearchService {
       SearchResult<SearchBody>
     >({
       index,
-      body: {
         ...params,
+      body: {
         query: {
           multi_match: {
             query,
