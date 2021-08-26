@@ -3,6 +3,9 @@ import { SearchService } from '@providers/elasticsearch/provider.service';
 import { PageInput } from './dtos';
 
 export abstract class BaseSearchService<
+  Model extends {
+    id: number;
+  },
   SearchBody extends {
     id: number;
   }
@@ -10,9 +13,23 @@ export abstract class BaseSearchService<
   abstract indexName: string;
   abstract searchService: SearchService;
 
-  abstract toBody(data: { id: number }): SearchBody;
+  abstract getModel(id: number): Promise<Model>;
 
-  abstract index(id: number): Promise<void>;
+  abstract toBody(model: Model): SearchBody;
+
+  async index(id: number): Promise<void> {
+    const model = await this.getModel(id);
+    await this.searchService.index(this.indexName, this.toBody(model));
+  }
+
+  async update(id: number): Promise<void> {
+    const model = await this.getModel(id);
+    await this.searchService.update(this.indexName, this.toBody(model));
+  }
+
+  async remove(id: number): Promise<void> {
+    await this.searchService.remove(this.indexName, id);
+  }
 
   async search(query: string, pageInput: PageInput): Promise<number[]> {
     const sources = await this.searchService.search<SearchBody>(
@@ -26,8 +43,4 @@ export abstract class BaseSearchService<
 
     return sources.map((source) => source.id);
   }
-
-  abstract update(id: number): Promise<void>;
-
-  abstract remove(id: number): Promise<void>;
 }
