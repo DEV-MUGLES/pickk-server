@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In } from 'typeorm';
 
@@ -17,8 +17,12 @@ export class KeywordsService {
   constructor(
     @InjectRepository(KeywordsRepository)
     private readonly keywordsRepository: KeywordsRepository,
-    @Inject(CacheService) private cacheService: CacheService
+    private cacheService: CacheService
   ) {}
+
+  async get(id: number, relations: KeywordRelationType[] = []) {
+    return await this.keywordsRepository.get(id, relations);
+  }
 
   async list(
     filter: KeywordFilter,

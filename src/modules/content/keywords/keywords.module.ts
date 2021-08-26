@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import { LikesModule } from '@content/likes/likes.module';
+import { SearchModule } from '@providers/elasticsearch';
 import { UPDATE_KEYWORD_LIKE_COUNT_QUEUE } from '@queue/constants';
 
 import { UpdateKeywordLikeCountConsumer } from './consumers';
@@ -13,6 +14,7 @@ import {
   KeywordMatchTagsRepository,
 } from './keywords.repository';
 import { KeywordsResolver } from './keywords.resolver';
+import { KeywordsSearchService } from './keywords.search.service';
 import { KeywordsService } from './keywords.service';
 
 @Module({
@@ -28,9 +30,11 @@ import { KeywordsService } from './keywords.service';
       consumerOptions: { batchSize: 10 },
     }),
     LikesModule,
+    SearchModule,
   ],
   providers: [
     KeywordsResolver,
+    KeywordsSearchService,
     KeywordsService,
     UpdateKeywordLikeCountConsumer,
   ],

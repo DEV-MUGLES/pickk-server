@@ -4,7 +4,7 @@ import { IKeyword } from '../interfaces';
 
 @InputType()
 export class KeywordFilter implements Partial<IKeyword> {
-  excludeFields: Array<keyof KeywordFilter> = [
+  excludeFields?: Array<keyof KeywordFilter> = [
     'keywordClassId',
     'isOwning',
     'isLiking',
