@@ -415,12 +415,12 @@ input CreateItemOptionSetInput {
 }
 
 input CreateOrderVbankReceiptInput {
-  bankCode: BankCode!
-  due: DateTime!
+  bankCode: BankCode
+  due: DateTime
 
   """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
-  number: String!
-  ownerName: String!
+  number: String
+  ownerName: String
 }
 
 input CreateRefundAccountInput {
@@ -2167,8 +2167,18 @@ type Shipment {
   lastTrackedAt: DateTime
   ownerPk: String
   ownerType: ShipmentOwnerType
+  shipmentHistories: [ShipmentHistory!]!
   status: ShipmentStatus!
   trackCode: String
+}
+
+type ShipmentHistory {
+  createdAt: DateTime!
+  id: Int!
+  locationName: String!
+  shipmentId: Int!
+  statusText: String!
+  time: DateTime!
 }
 
 """배송 연관 객체 분류입니다."""

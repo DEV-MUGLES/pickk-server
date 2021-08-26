@@ -5,6 +5,7 @@ import {
   Entity,
   Index,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { IsEnum, IsOptional, MaxLength } from 'class-validator';
@@ -13,6 +14,7 @@ import { Courier } from '@item/couriers/models';
 
 import { ShipmentOwnerType, ShipmentStatus } from '../constants';
 import { IShipment } from '../interfaces';
+import { ShipmentHistory } from '../models';
 
 @ObjectType()
 @Entity('shipment')
@@ -36,15 +38,13 @@ export class ShipmentEntity implements IShipment {
 
     this.lastTrackedAt = attributes.lastTrackedAt;
   }
+
   @Field(() => Int)
   @PrimaryGeneratedColumn()
   id: number;
-
   @Field()
   @CreateDateColumn()
   createdAt: Date;
-
-  //
 
   @Field(() => ShipmentStatus)
   @Column({
@@ -98,6 +98,9 @@ export class ShipmentEntity implements IShipment {
   })
   @MaxLength(30)
   trackCode: string;
+
+  @OneToMany('ShipmentHistoryEntity', 'shipment', { cascade: true })
+  histories: ShipmentHistory[];
 
   // Dates
 
