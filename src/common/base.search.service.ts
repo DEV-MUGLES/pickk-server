@@ -17,6 +17,10 @@ export abstract class BaseSearchService<
 
   abstract toBody(model: Model): SearchBody;
 
+  async refresh(): Promise<void> {
+    await this.searchService.refresh(this.indexName);
+  }
+
   async index(id: number): Promise<void> {
     const model = await this.getModel(id);
     await this.searchService.index(this.indexName, this.toBody(model));

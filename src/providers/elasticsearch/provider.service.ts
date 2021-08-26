@@ -12,6 +12,12 @@ type BaseSearchBody = {
 export class SearchService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
+  async refresh(index: string) {
+    await this.elasticsearchService.indices.refresh({
+      index,
+    });
+  }
+
   async index<SearchBody extends BaseSearchBody>(
     index: string,
     body: SearchBody
@@ -35,7 +41,7 @@ export class SearchService {
       SearchResult<SearchBody>
     >({
       index,
-        ...params,
+      ...params,
       body: {
         query: {
           multi_match: {
