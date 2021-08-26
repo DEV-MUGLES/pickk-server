@@ -11,20 +11,22 @@ export class KeywordFilter implements Partial<IKeyword> {
   ];
 
   @Field({ nullable: true })
-  isVisible: boolean;
+  isVisible?: boolean;
+  @Field(() => [Int], { nullable: true })
+  idIn?: number[];
 
   @Field(() => Int, { description: '제공시 추가 연산을 수행합니다.' })
-  keywordClassId: number;
+  keywordClassId?: number;
   @Field({
     description: '제공시 추가 연산을 수행합니다. (비로그인시 무시)',
     nullable: true,
   })
-  isOwning: boolean;
+  isOwning?: boolean;
   @Field({
     description: '제공시 추가 연산을 수행합니다. (비로그인시 무시)',
     nullable: true,
   })
-  isLiking: boolean;
+  isLiking?: boolean;
 
   get hasCustom() {
     return this.excludeFields.some((field) => this[field]);
