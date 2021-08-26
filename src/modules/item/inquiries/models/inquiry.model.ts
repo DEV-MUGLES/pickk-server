@@ -19,15 +19,17 @@ export class Inquiry extends InquiryEntity {
 
     return new Inquiry({
       id: this.id,
+      type: this.type,
+      title: SECRET_TITLE,
+      content: '',
+      isSecret: this.isSecret,
+      isAnswered: this.isAnswered,
+      createdAt: this.createdAt,
       user: new User({
         id: 0,
         nickname: partialEncrypt(this.user.nickname),
       }),
       answers: [],
-      type: this.type,
-      title: SECRET_TITLE,
-      isSecret: this.isSecret,
-      isAnswered: this.isAnswered,
     });
   }
 
