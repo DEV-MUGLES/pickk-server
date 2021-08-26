@@ -4,6 +4,9 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
+
+import { PageInput } from '@common/dtos';
 
 import { LikeOwnerType } from './constants';
 import { Like } from './models';
@@ -18,6 +21,28 @@ export class LikesService {
     private readonly likesRepository: LikesRepository,
     private readonly likeProducer: LikeProducer
   ) {}
+
+  async findOwnerIds(
+    userId: number,
+    ownerType: LikeOwnerType,
+    pageInput: PageInput
+  ): Promise<number[]> {
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    const likes = await this.likesRepository.find({
+      select: ['ownerId'],
+      where: {
+        userId,
+        ownerType,
+      },
+      ..._pageInput?.pageFilter,
+      order: {
+        id: 'DESC',
+      },
+    });
+
+    return likes.map((v) => v.ownerId);
+  }
 
   async check(
     userId: number,
