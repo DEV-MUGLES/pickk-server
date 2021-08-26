@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { FollowsModule } from '@user/follows/follows.module';
 import { LikesModule } from '@content/likes/likes.module';
+import { SearchModule } from '@providers/elasticsearch';
 import {
   UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
@@ -17,6 +18,7 @@ import {
 
 import { DigestsRepository } from './digests.repository';
 import { DigestsResolver } from './digests.resolver';
+import { DigestsSearchService } from './digests.search.service';
 import { DigestsService } from './digests.service';
 
 @Module({
@@ -36,12 +38,14 @@ import { DigestsService } from './digests.service';
     ),
     LikesModule,
     FollowsModule,
+    SearchModule,
   ],
   providers: [
     DigestsResolver,
     DigestsService,
     UpdateDigestLikeCountConsumer,
     UpdateDigestCommentCountConsumer,
+    DigestsSearchService,
   ],
 })
 export class DigestsModule {}
