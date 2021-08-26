@@ -1886,6 +1886,7 @@ type Query {
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchItem(pageInput: PageInput, query: String!): [Item!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
+  searchLook(pageInput: PageInput, query: String!): [Look!]!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
