@@ -19,7 +19,7 @@ import { AwsSqsProviderModule } from '@providers/aws/sqs';
 import { CrawlerProviderModule } from '@providers/crawler';
 import { RedisCacheProviderModule } from '@providers/cache/redis';
 import { MysqlDatabaseProviderModule } from '@providers/database/mysql';
-import { SearchModule } from '@providers/elasticsearch';
+import { ElasticsearchProviderModule } from '@providers/elasticsearch';
 import { SensProviderModule } from '@providers/sens';
 import { SentryProviderModule } from '@providers/sentry';
 import { SlackProviderModule } from '@providers/slack';
@@ -42,7 +42,7 @@ import { AppService } from './app.service';
     CrawlerProviderModule,
     RedisCacheProviderModule,
     MysqlDatabaseProviderModule,
-    SearchModule,
+    ElasticsearchProviderModule,
     SensProviderModule,
     SentryProviderModule,
     SlackProviderModule,

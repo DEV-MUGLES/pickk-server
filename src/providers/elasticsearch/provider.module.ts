@@ -30,4 +30,4 @@ import { SearchService } from './provider.service';
   providers: [SearchService],
   exports: [SearchService],
 })
-export class SearchModule {}
+export class ElasticsearchProviderModule {}
