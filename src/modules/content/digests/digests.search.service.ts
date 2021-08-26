@@ -16,15 +16,11 @@ export type DigestSearchBody = Pick<IDigest, 'id' | 'title'> & {
 };
 
 @Injectable()
-export class DigestsSearchService extends BaseSearchService<DigestSearchBody> {
-  indexName: 'digests';
-  queryFields: [
-    'title',
-    'userNickname',
-    'itemName',
-    'brandNameKor',
-    'minorCategoryName'
-  ];
+export class DigestsSearchService extends BaseSearchService<
+  Digest,
+  DigestSearchBody
+> {
+  indexName = 'digests';
 
   constructor(
     readonly searchService: SearchService,
@@ -33,7 +29,7 @@ export class DigestsSearchService extends BaseSearchService<DigestSearchBody> {
     super();
   }
 
-  async getDigest(id: number): Promise<Digest> {
+  async getModel(id: number): Promise<Digest> {
     return await this.digestsService.get(id, [
       'item',
       'item.brand',
@@ -51,21 +47,5 @@ export class DigestsSearchService extends BaseSearchService<DigestSearchBody> {
       brandNameKor: digest.item.brand.nameKor,
       minorCategoryName: digest.item.minorCategory?.name ?? '',
     };
-  }
-
-  async index(id: number): Promise<void> {
-    const digest = await this.getDigest(id);
-
-    await this.searchService.index(this.indexName, this.toBody(digest));
-  }
-
-  async update(id: number): Promise<void> {
-    const digest = await this.getDigest(id);
-
-    await this.searchService.update(this.indexName, this.toBody(digest));
-  }
-
-  async remove(id: number): Promise<void> {
-    await this.searchService.remove(this.indexName, id);
   }
 }

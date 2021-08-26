@@ -29,7 +29,6 @@ export class SearchService {
   async search<SearchBody extends BaseSearchBody>(
     index: string,
     query: string,
-    fields: Array<keyof SearchBody>,
     params?: SearchParams
   ): Promise<SearchBody[]> {
     const { body } = await this.elasticsearchService.search<
@@ -41,7 +40,6 @@ export class SearchService {
         query: {
           multi_match: {
             query,
-            fields,
           },
         },
       },
