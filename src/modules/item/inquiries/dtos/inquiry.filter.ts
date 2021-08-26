@@ -1,12 +1,12 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, InputType, Int } from '@nestjs/graphql';
 
 import { IInquiry } from '../interfaces';
 
 @InputType()
 export class InquiryFilter implements Partial<IInquiry> {
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   itemId: number;
 
-  @Field({ nullable: true })
+  @Field(() => Int, { nullable: true })
   sellerId: number;
 }
