@@ -4,7 +4,8 @@ export type VideoRelationType =
   | keyof Video
   | 'digests.item'
   | 'digests.item.brand'
-  | 'digests.item.prices';
+  | 'digests.item.prices'
+  | 'digests.item.minorCategory';
 
 export const VIDEO_RELATIONS: VideoRelationType[] = [
   'user',
@@ -12,4 +13,5 @@ export const VIDEO_RELATIONS: VideoRelationType[] = [
   'digests.item',
   'digests.item.brand',
   'digests.item.prices',
+  'digests.item.minorCategory',
 ];

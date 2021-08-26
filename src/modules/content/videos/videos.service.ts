@@ -18,6 +18,10 @@ export class VideosService {
     private readonly videosRepository: VideosRepository
   ) {}
 
+  async get(id: number, relations: VideoRelationType[] = []) {
+    return await this.videosRepository.get(id, relations);
+  }
+
   async list(
     filter?: VideoFilter,
     pageInput?: PageInput,

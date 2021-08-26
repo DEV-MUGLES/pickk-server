@@ -3,10 +3,9 @@ import { Injectable } from '@nestjs/common';
 import { BaseSearchService } from '@common/base.search.service';
 import { SearchService } from '@providers/elasticsearch/provider.service';
 
-import { IDigest } from './interfaces';
-import { Digest } from './models';
-
-import { DigestsService } from './digests.service';
+import { IDigest } from '@content/digests/interfaces';
+import { Digest } from '@content/digests/models';
+import { DigestsService } from '@content/digests/digests.service';
 
 export type DigestSearchBody = Pick<IDigest, 'id' | 'title'> & {
   userNickname: string;

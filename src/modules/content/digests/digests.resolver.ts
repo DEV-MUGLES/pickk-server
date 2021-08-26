@@ -14,7 +14,7 @@ import { DigestFilter } from './dtos';
 import { Digest } from './models';
 
 import { DigestsService } from './digests.service';
-import { DigestsSearchService } from './digests.search.service';
+import { DigestsSearchService } from '../../common/search/digest.search.service';
 
 @Injectable()
 export class DigestsResolver extends BaseResolver<DigestRelationType> {

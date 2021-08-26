@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import {
   Resolver,
   Query,
@@ -16,6 +16,8 @@ import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
+
+import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
@@ -54,10 +56,9 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   };
 
   constructor(
-    @Inject(ItemsService)
     private readonly itemsService: ItemsService,
-    @Inject(ProductsService)
-    private readonly productsService: ProductsService
+    private readonly productsService: ProductsService,
+    private readonly itemSearchService: ItemSearchService
   ) {
     super();
   }
@@ -351,5 +352,30 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     }
 
     return await this.itemsService.updateSizeCharts(item, updateInputs);
+  }
+
+  @Query(() => [Item])
+  async searchItem(
+    @Args('query') query: string,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    const ids = await this.itemSearchService.search(query, pageInput);
+
+    return await this.itemsService.list(
+      { idIn: ids },
+      null,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Mutation(() => Boolean)
+  async indexItem() {
+    await this.itemSearchService.index(1);
+    await this.itemSearchService.index(2);
+    await this.itemSearchService.index(3);
+    await this.itemSearchService.index(4);
+    await this.itemSearchService.index(5);
+    await this.itemSearchService.refresh();
   }
 }

@@ -13,6 +13,8 @@ import { IItemUrl } from './item-url.interface';
 import { IItemSalePolicy } from './item-sale-policy.interface';
 
 export interface IItem {
+  id: number;
+
   brand: IBrand;
   brandId: number;
 

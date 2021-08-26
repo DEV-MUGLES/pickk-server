@@ -4,7 +4,8 @@ export type LookRelationType =
   | keyof Look
   | 'digests.item'
   | 'digests.item.brand'
-  | 'digests.item.prices';
+  | 'digests.item.prices'
+  | 'digests.item.minorCategory';
 
 export const LOOK_RELATIONS: LookRelationType[] = [
   'user',
@@ -14,4 +15,5 @@ export const LOOK_RELATIONS: LookRelationType[] = [
   'digests.item',
   'digests.item.brand',
   'digests.item.prices',
+  'digests.item.minorCategory',
 ];

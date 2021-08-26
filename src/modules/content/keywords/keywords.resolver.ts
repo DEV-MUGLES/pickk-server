@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -8,12 +8,13 @@ import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
+import { KeywordSearchService } from '@mcommon/search/keyword.search.service';
+
 import { KeywordRelationType, KEYWORD_RELATIONS } from './constants';
 import { KeywordFilter } from './dtos';
 import { Keyword } from './models';
 
 import { KeywordsService } from './keywords.service';
-import { KeywordsSearchService } from './keywords.search.service';
 
 @Injectable()
 export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
@@ -21,7 +22,7 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
 
   constructor(
     private readonly keywordsService: KeywordsService,
-    private readonly keywordsSearchService: KeywordsSearchService
+    private readonly keywordsSearchService: KeywordSearchService
   ) {
     super();
   }
@@ -42,19 +43,23 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     );
   }
 
-  // @FIXME: keyword service inject 버그 때문에 비활성화 시킴
-  // @Query(() => [Keyword])
-  // async searchKeyword(
-  //   @Args('query') query: string,
-  //   @Args('pageInput', { nullable: true }) pageInput?: PageInput,
-  //   @Info() info?: GraphQLResolveInfo
-  // ): Promise<Keyword[]> {
-  //   const ids = await this.keywordsSearchService.search(query, pageInput);
+  @Query(() => [Keyword])
+  async searchKeyword(
+    @Args('query') query: string,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Keyword[]> {
+    const ids = await this.keywordsSearchService.search(query, pageInput);
 
-  //   return await this.keywordsService.list(
-  //     { idIn: ids, hasCustom: null },
-  //     null,
-  //     this.getRelationsFromInfo(info)
-  //   );
-  // }
+    return await this.keywordsService.list(
+      { idIn: ids, hasCustom: null },
+      null,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Mutation(() => Boolean)
+  async indexKeyword() {
+    await this.keywordsSearchService.index(1);
+  }
 }

@@ -858,6 +858,7 @@ input ItemFilter {
   brandId: Int
   createdAtLte: DateTime
   createdAtMte: DateTime
+  idIn: [Int!]
   isMdRecommended: Boolean
   isPurchasable: Boolean
   isSellable: Boolean
@@ -1214,6 +1215,9 @@ type Mutation {
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
+  indexItem: Boolean!
+  indexKeyword: Boolean!
+  indexVideo: Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   own(keywordId: Int!): Boolean!
@@ -1878,6 +1882,9 @@ type Query {
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
+  searchItem(pageInput: PageInput, query: String!): [Item!]!
+  searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
+  searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   styleTags: [StyleTag!]!

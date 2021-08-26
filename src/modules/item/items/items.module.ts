@@ -1,18 +1,20 @@
 import { HttpModule } from '@nestjs/axios';
-import { Logger, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
-import { ImagesModule } from '@src/modules/common/images/images.module';
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
+
+import { ImagesModule } from '@mcommon/images/images.module';
+import { SearchModule } from '@mcommon/search/search.module';
 import { ProductsModule } from '@item/products/products.module';
 
+import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
 import { Consumers } from './consumers';
 import { Producers } from './producers';
-import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
 
 import {
   ItemsRepository,
@@ -38,6 +40,7 @@ import { ItemsService } from './items.service';
     ProductsModule,
     HttpModule,
     ImagesModule,
+    forwardRef(() => SearchModule),
     SqsModule.registerQueue(
       {
         name: UPDATE_ITEM_IMAGE_URL_QUEUE,

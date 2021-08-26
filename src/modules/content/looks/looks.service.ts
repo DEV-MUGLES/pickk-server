@@ -20,6 +20,10 @@ export class LooksService {
     private readonly looksRepository: LooksRepository
   ) {}
 
+  async get(id: number, relations: LookRelationType[] = []): Promise<Look> {
+    return await this.looksRepository.get(id, relations);
+  }
+
   async list(
     filter?: LookFilter,
     pageInput?: PageInput,

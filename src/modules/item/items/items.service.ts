@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
+import { ItemRelationType } from './constants';
 import {
   CreateItemInput,
   UpdateItemInput,
@@ -31,6 +32,7 @@ import {
   ItemOption,
   ItemDetailImage,
 } from './models';
+
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -74,7 +76,7 @@ export class ItemsService {
     );
   }
 
-  async get(id: number, relations: string[] = []): Promise<Item> {
+  async get(id: number, relations: ItemRelationType[] = []): Promise<Item> {
     return await this.itemsRepository.get(id, relations);
   }
 
@@ -98,7 +100,7 @@ export class ItemsService {
 
   async create(
     createItemInput: CreateItemInput,
-    relations: string[] = []
+    relations: ItemRelationType[] = []
   ): Promise<Item> {
     const { priceInput, urlInput, ...itemAttributes } = createItemInput;
 

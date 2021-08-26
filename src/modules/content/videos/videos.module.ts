@@ -1,13 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
-import { LikesModule } from '@content/likes/likes.module';
-import { CommentsRepository } from '@content/comments/comments.repository';
 import {
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_COMMENT_COUNT_QUEUE,
 } from '@queue/constants';
+
+import { SearchModule } from '@mcommon/search/search.module';
+import { LikesModule } from '@content/likes/likes.module';
+import { CommentsRepository } from '@content/comments/comments.repository';
 
 import {
   UpdateVideoLikeCountConsumer,
@@ -34,6 +36,7 @@ import { VideosService } from './videos.service';
       }
     ),
     LikesModule,
+    forwardRef(() => SearchModule),
   ],
   providers: [
     VideosResolver,
@@ -41,5 +44,6 @@ import { VideosService } from './videos.service';
     UpdateVideoLikeCountConsumer,
     UpdateVideoCommentCountConsumer,
   ],
+  exports: [VideosService],
 })
 export class VideosModule {}
