@@ -19,6 +19,7 @@ export interface IUser {
   email: string;
   phoneNumber?: string;
   nickname: string;
+  description: string;
   _avatarUrl: string;
 
   instagramCode: string;

@@ -105,6 +105,9 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Field({ description: '최대 11자' })
   @Column({ unique: true, length: 11 })
   nickname: string;
+  @Field({ description: '최대 255자', nullable: true })
+  @Column({ nullable: true })
+  description: string;
   @Column({ name: 'avatarUrl', nullable: true })
   _avatarUrl: string;
   @Field(() => String, { nullable: true })

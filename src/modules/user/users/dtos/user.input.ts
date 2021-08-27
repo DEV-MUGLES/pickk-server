@@ -33,6 +33,7 @@ export class UpdateUserInput extends PartialType(
       'weight',
       'height',
       'nickname',
+      'description',
       'avatarUrl',
       'instagramCode',
       'youtubeUrl',

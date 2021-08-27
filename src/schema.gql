@@ -2441,6 +2441,9 @@ input UpdateShippingAddressInput {
 input UpdateUserInput {
   avatarUrl: String
   code: String
+
+  """최대 255자"""
+  description: String
   email: String
   height: Int
   instagramCode: String
@@ -2465,6 +2468,9 @@ type User {
   avatarUrl: String
   code: String
   createdAt: DateTime!
+
+  """최대 255자"""
+  description: String
   email: String
 
   """[ResolveField] 적립예정 포인트 잔고"""
