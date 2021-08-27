@@ -70,7 +70,7 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     const inquiries = await this.inquiriesService.list(
       filter,
       pageInput,
-      payload?.sub ? this.getRelationsFromInfo(info, ['user']) : ['user']
+      this.getRelationsFromInfo(info, ['user'])
     );
 
     return inquiries.map((inquiry) => inquiry.securitify(payload?.sub));

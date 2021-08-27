@@ -787,8 +787,8 @@ enum InquiryAnswerFrom {
 }
 
 input InquiryFilter {
-  itemId: Float
-  sellerId: Float
+  itemId: Int
+  sellerId: Int
 }
 
 """배송/사이즈/재입고/기타"""
