@@ -15,7 +15,7 @@ import { BaseIdEntity } from '@common/entities';
 import { StyleTagEntity } from '@content/style-tags/entities';
 import { StyleTag } from '@content/style-tags/models';
 
-import { UserOauthProvider, UserRole } from '../constants';
+import { DEFAULT_AVATAR_URL, UserOauthProvider, UserRole } from '../constants';
 import { IUser } from '../interfaces';
 
 import { RefundAccountEntity } from './refund-account.entity';
@@ -45,7 +45,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.email = attributes.email;
     this.phoneNumber = attributes.phoneNumber;
     this.nickname = attributes.nickname;
-    this.avatarUrl = attributes.avatarUrl;
+    this._avatarUrl = attributes._avatarUrl;
 
     this.instagramCode = attributes.instagramCode;
     this.youtubeUrl = attributes.youtubeUrl;
@@ -105,9 +105,15 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Field({ description: '최대 11자' })
   @Column({ unique: true, length: 11 })
   nickname: string;
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  avatarUrl: string;
+  @Column({ name: 'avatarUrl', nullable: true })
+  _avatarUrl: string;
+  @Field(() => String, { nullable: true })
+  get avatarUrl(): string {
+    return this._avatarUrl ?? DEFAULT_AVATAR_URL;
+  }
+  set avatarUrl(input: string) {
+    this._avatarUrl = input;
+  }
 
   @Field({ nullable: true })
   @Column({ length: 15, nullable: true })

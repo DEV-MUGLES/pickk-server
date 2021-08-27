@@ -19,7 +19,7 @@ export interface IUser {
   email: string;
   phoneNumber?: string;
   nickname: string;
-  avatarUrl: string;
+  _avatarUrl: string;
 
   instagramCode: string;
   youtubeUrl: string;

@@ -2443,11 +2443,13 @@ input UpdateUserInput {
   code: String
   email: String
   height: Int
+  instagramCode: String
   name: String
 
   """최대 11자"""
   nickname: String
   weight: Int
+  youtubeUrl: String
 }
 
 """The `Upload` scalar type represents a file upload."""
