@@ -9,18 +9,7 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import {
-  IsEmail,
-  IsEnum,
-  IsInt,
-  IsNumberString,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-} from 'class-validator';
+import { IsEnum, IsOptional, IsPhoneNumber, MaxLength } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 import { StyleTagEntity } from '@content/style-tags/entities';
@@ -48,20 +37,24 @@ export class UserEntity extends BaseIdEntity implements IUser {
       return;
     }
 
+    this.role = attributes.role;
+    this.oauthProvider = attributes.oauthProvider;
+    this.oauthCode = attributes.oauthCode;
+
+    this.code = attributes.code;
     this.email = attributes.email;
     this.phoneNumber = attributes.phoneNumber;
-    this.code = attributes.code;
     this.nickname = attributes.nickname;
     this.avatarUrl = attributes.avatarUrl;
+
+    this.instagramCode = attributes.instagramCode;
+    this.youtubeUrl = attributes.youtubeUrl;
 
     this.name = attributes.name;
     this.weight = attributes.weight;
     this.height = attributes.height;
-    this.password = attributes.password;
 
-    this.role = attributes.role;
-    this.oauthProvider = attributes.oauthProvider;
-    this.oauthCode = attributes.oauthCode;
+    this.password = attributes.password;
 
     this.styleTags = attributes.styleTags;
     this.shippingAddresses = attributes.shippingAddresses;
@@ -81,7 +74,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsEnum(UserRole)
   @IsOptional()
   role?: UserRole;
-
   @Field(() => UserOauthProvider, { nullable: true })
   @Column({
     type: 'enum',
@@ -93,63 +85,45 @@ export class UserEntity extends BaseIdEntity implements IUser {
   oauthProvider?: UserOauthProvider;
   @Field({ nullable: true })
   @Column({ nullable: true })
-  @IsString()
-  @IsOptional()
   oauthCode?: string;
 
   @Field({ nullable: true })
-  @Column({ unique: true, nullable: true })
-  @IsEmail()
+  @Column({ length: 15, nullable: true, unique: true })
+  @MaxLength(15)
   @IsOptional()
+  code?: string;
+  @Field({ nullable: true })
+  @Column({ unique: true, nullable: true })
   email: string;
-
   @Field({ nullable: true })
   @Column({ type: 'char', length: 11, nullable: true })
   @IsPhoneNumber('KR')
-  @IsNumberString()
   @MaxLength(11)
   @IsOptional()
   phoneNumber?: string;
-
-  @Field({ nullable: true })
-  @Column({ length: 15, nullable: true, unique: true })
-  @IsString()
-  @IsOptional()
-  @MaxLength(15)
-  code?: string;
-
   @Field({ description: '최대 11자' })
   @Column({ unique: true, length: 11 })
-  @IsString()
   nickname: string;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
-  @IsString()
-  @IsOptional()
   avatarUrl: string;
 
   @Field({ nullable: true })
   @Column({ length: 15, nullable: true })
-  @IsString()
-  @IsOptional()
   name?: string;
-
   @Field(() => Int, { nullable: true })
   @Column({ type: 'smallint', nullable: true })
-  @IsInt()
-  @Min(10)
-  @Max(300)
-  @IsOptional()
   weight?: number;
-
   @Field(() => Int, { nullable: true })
   @Column({ type: 'smallint', nullable: true })
-  @IsInt()
-  @Min(10)
-  @Max(300)
-  @IsOptional()
   height?: number;
+
+  @Field({ nullable: true })
+  @Column({ length: 30, nullable: true })
+  instagramCode: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  youtubeUrl: string;
 
   @Column(() => UserPassword)
   password: UserPassword;

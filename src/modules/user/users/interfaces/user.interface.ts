@@ -21,6 +21,9 @@ export interface IUser {
   nickname: string;
   avatarUrl: string;
 
+  instagramCode: string;
+  youtubeUrl: string;
+
   /** 개인정보 */
   name?: string | null;
   weight?: number;

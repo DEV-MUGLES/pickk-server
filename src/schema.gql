@@ -2470,6 +2470,7 @@ type User {
   followCount: Int!
   height: Int
   id: Int!
+  instagramCode: String
 
   """[MODEL ONLY]"""
   isFollowing: Boolean
@@ -2486,6 +2487,7 @@ type User {
   styleTags: [StyleTag!]!
   updatedAt: DateTime!
   weight: Int
+  youtubeUrl: String
 }
 
 """Oauth 제공 서비스입니다."""
