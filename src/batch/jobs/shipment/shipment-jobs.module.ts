@@ -3,11 +3,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
-import { ShipmentsRepository } from '@order/shipments/shipments.repository';
+import {
+  ShipmentHistoriesRepository,
+  ShipmentsRepository,
+} from '@order/shipments/shipments.repository';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { DeliveryTrackerProviderModule } from '@providers/delivery-tracker';
 
 import { TrackShipmentsJob, TrackShipmentsStep } from './track-shipments';
+import {
+  RemoveNotReferedShipmentHistoriesStep,
+  RemoveNotReferedShipmentHistoriesJob,
+} from './remove-not-refered-shipment-histories';
 
 import { ShipmentJobsService } from './shipment-jobs.service';
 import { ShipmentJobsController } from './shipment-jobs.controller';
@@ -16,7 +23,11 @@ import { ShipmentJobsController } from './shipment-jobs.controller';
   imports: [
     JobsModule,
     DeliveryTrackerProviderModule,
-    TypeOrmModule.forFeature([ShipmentsRepository, OrderItemsRepository]),
+    TypeOrmModule.forFeature([
+      ShipmentsRepository,
+      OrderItemsRepository,
+      ShipmentHistoriesRepository,
+    ]),
   ],
   controllers: [ShipmentJobsController],
   providers: [
@@ -24,6 +35,8 @@ import { ShipmentJobsController } from './shipment-jobs.controller';
     ShipmentJobsService,
     TrackShipmentsJob,
     TrackShipmentsStep,
+    RemoveNotReferedShipmentHistoriesStep,
+    RemoveNotReferedShipmentHistoriesJob,
   ],
 })
 export class ShipmentJobsModule {}

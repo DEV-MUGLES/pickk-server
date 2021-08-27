@@ -1,4 +1,4 @@
-import { Post, UseGuards } from '@nestjs/common';
+import { Delete, Post, UseGuards } from '@nestjs/common';
 
 import { SuperSecretGuard } from '@auth/guards';
 
@@ -14,5 +14,10 @@ export class ShipmentJobsController {
   @Post('/track-shipments')
   async trackShipments() {
     return await this.shipmentJobsService.trackShipments();
+  }
+
+  @Delete('/remove-not-refered-shipment-histories')
+  async removeNotReferedShipmentHistories() {
+    return await this.shipmentJobsService.removeNotReferedShipmentHistories();
   }
 }
