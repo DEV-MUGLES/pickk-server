@@ -1,8 +1,8 @@
 import { plainToClass } from 'class-transformer';
 import { EntityRepository, Repository } from 'typeorm';
 
-import { ShipmentEntity } from './entities';
-import { Shipment } from './models';
+import { ShipmentEntity, ShipmentHistoryEntity } from './entities';
+import { Shipment, ShipmentHistory } from './models';
 
 @EntityRepository(ShipmentEntity)
 export class ShipmentsRepository extends Repository<ShipmentEntity> {
@@ -14,6 +14,29 @@ export class ShipmentsRepository extends Repository<ShipmentEntity> {
     entities: ShipmentEntity[],
     transformOptions = {}
   ): Shipment[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ShipmentHistoryEntity)
+export class ShipmentHistoriesRepository extends Repository<ShipmentHistoryEntity> {
+  entityToModel(
+    entity: ShipmentHistoryEntity,
+    transformOptions = {}
+  ): ShipmentHistory {
+    return plainToClass(
+      ShipmentHistory,
+      entity,
+      transformOptions
+    ) as ShipmentHistory;
+  }
+
+  entityToModelMany(
+    entities: ShipmentHistoryEntity[],
+    transformOptions = {}
+  ): ShipmentHistory[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
