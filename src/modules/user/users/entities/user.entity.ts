@@ -63,6 +63,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.followCount = attributes.followCount;
 
     this.isFollowing = attributes.isFollowing;
+    this.isMe = attributes.isMe;
   }
 
   @Field(() => UserRole, { nullable: true })
@@ -147,4 +148,6 @@ export class UserEntity extends BaseIdEntity implements IUser {
   // model only fields
   @Field({ description: '[MODEL ONLY]', nullable: true })
   isFollowing: boolean;
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isMe: boolean;
 }

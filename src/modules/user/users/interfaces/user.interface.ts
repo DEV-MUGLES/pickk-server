@@ -38,4 +38,5 @@ export interface IUser {
 
   // model-only field들
   isFollowing: boolean;
+  isMe: boolean;
 }
