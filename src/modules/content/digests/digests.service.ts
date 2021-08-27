@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { bulkEnrichUserIsMe, parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -79,6 +79,7 @@ export class DigestsService {
       digests
     );
     await this.followsService.bulkEnrichFollowing(userId, digests);
+    bulkEnrichUserIsMe(userId, digests);
 
     return digests;
   }

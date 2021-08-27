@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { bulkEnrichIsMine, parseFilter } from '@common/helpers';
+import {
+  bulkEnrichIsMine,
+  bulkEnrichUserIsMe,
+  parseFilter,
+} from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -61,6 +65,7 @@ export class CommentsService {
       comments
     );
     bulkEnrichIsMine(userId, comments);
+    bulkEnrichUserIsMe(userId, comments);
 
     return comments;
   }

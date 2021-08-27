@@ -1,5 +1,5 @@
 export * from './array.helpers';
-export * from './bulk-enrich-is-mine.helper';
+export * from './bulk-enrich.helpers';
 export * from './filter.helpers';
 export * from './object.helpers';
 export * from './page-query.helper';
