@@ -26,7 +26,17 @@ export class CreateUserInput extends PickType(
 export class UpdateUserInput extends PartialType(
   PickType(
     User,
-    ['code', 'email', 'name', 'weight', 'height', 'nickname', 'avatarUrl'],
+    [
+      'code',
+      'email',
+      'name',
+      'weight',
+      'height',
+      'nickname',
+      'avatarUrl',
+      'instagramCode',
+      'youtubeUrl',
+    ],
     InputType
   )
 ) {}
