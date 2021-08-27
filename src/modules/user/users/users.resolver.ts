@@ -13,7 +13,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
-import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
+import { JwtAuthGuard, JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 import { PointsService } from '@order/points/points.service';
@@ -53,11 +53,17 @@ export class UsersResolver extends BaseResolver {
   }
 
   @Query(() => User)
+  @UseGuards(JwtOrNotGuard)
   async user(
+    @CurrentUser() payload: JwtPayload,
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<UserEntity> {
-    return await this.usersService.get(id, this.getRelationsFromInfo(info));
+    return await this.usersService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 
   @Mutation(() => User)

@@ -5,6 +5,8 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
+import { FollowsService } from '@user/follows/follows.service';
+
 import {
   CreateUserInput,
   UpdateUserInput,
@@ -23,8 +25,24 @@ import { UsersRepository } from './users.repository';
 export class UsersService {
   constructor(
     @InjectRepository(UsersRepository)
-    private readonly usersRepository: UsersRepository
+    private readonly usersRepository: UsersRepository,
+    private readonly followsService: FollowsService
   ) {}
+
+  async get(
+    id: number,
+    relations: string[] = [],
+    userId?: number
+  ): Promise<User> {
+    const user = await this.usersRepository.get(id, relations);
+
+    if (userId) {
+      user.isMe = userId === user.id;
+      user.isFollowing = await this.followsService.check(userId, user.id);
+    }
+
+    return user;
+  }
 
   async list(
     filter?: UserFilter,
@@ -44,10 +62,6 @@ export class UsersService {
         },
       })
     );
-  }
-
-  async get(id: number, relations: string[] = []): Promise<User> {
-    return await this.usersRepository.get(id, relations);
   }
 
   async getNicknameOnly(id: number): Promise<Pick<User, 'id' | 'nickname'>> {
