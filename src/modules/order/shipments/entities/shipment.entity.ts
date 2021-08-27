@@ -35,6 +35,7 @@ export class ShipmentEntity implements IShipment {
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
     this.trackCode = attributes.trackCode;
+    this.histories = attributes.histories;
 
     this.lastTrackedAt = attributes.lastTrackedAt;
   }
