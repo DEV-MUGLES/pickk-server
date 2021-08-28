@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { enrichIsMine, parseFilter } from '@common/helpers';
+import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -39,12 +39,13 @@ export class VideosService {
   async list(
     filter?: VideoFilter,
     pageInput?: PageInput,
-    relations: VideoRelationType[] = []
+    relations: VideoRelationType[] = [],
+    userId?: number
   ): Promise<Video[]> {
     const _filter = plainToClass(VideoFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    return this.videosRepository.entityToModelMany(
+    const videos = this.videosRepository.entityToModelMany(
       await this.videosRepository.find({
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
@@ -54,5 +55,15 @@ export class VideosService {
         },
       })
     );
+
+    await this.likesService.bulkEnrichLiking(
+      userId,
+      LikeOwnerType.Video,
+      videos
+    );
+    await this.followsService.bulkEnrichAuthorFollowing(userId, videos);
+    bulkEnrichUserIsMe(userId, videos);
+
+    return videos;
   }
 }
