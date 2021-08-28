@@ -1,3 +1,14 @@
+export const enrichIsMine = <Owner extends { userId: number; isMine: boolean }>(
+  userId: number,
+  owner: Owner
+) => {
+  if (!userId) {
+    return;
+  }
+
+  owner.isMine = owner.userId === userId;
+};
+
 export const bulkEnrichIsMine = <T extends { userId: number; isMine: boolean }>(
   userId: number,
   owners: T[]
