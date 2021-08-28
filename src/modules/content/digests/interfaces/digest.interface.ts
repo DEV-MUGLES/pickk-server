@@ -41,4 +41,5 @@ export interface IDigest {
 
   // model only fields
   isLiking: boolean;
+  isMine: boolean;
 }

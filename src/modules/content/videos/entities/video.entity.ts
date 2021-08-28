@@ -29,6 +29,9 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
     this.hitCount = attributes.hitCount;
     this.commentCount = attributes.commentCount;
     this.score = attributes.score;
+
+    this.isLiking = attributes.isLiking;
+    this.isMine = attributes.isMine;
   }
 
   @Field(() => User, { nullable: true })
@@ -62,4 +65,9 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
   @Field({ defaultValue: 0 })
   @Column({ type: 'float', default: 0 })
   score: number;
+
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isLiking: boolean;
+  @Field({ description: '[MODEL ONLY]', nullable: true })
+  isMine: boolean;
 }

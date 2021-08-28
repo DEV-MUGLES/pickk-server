@@ -22,4 +22,7 @@ export interface ILook {
   hitCount: number;
   commentCount: number;
   score: number;
+
+  isLiking: boolean;
+  isMine: boolean;
 }

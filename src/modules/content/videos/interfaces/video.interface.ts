@@ -18,4 +18,8 @@ export interface IVideo {
   hitCount: number;
   commentCount: number;
   score: number;
+
+  // model only fields
+  isLiking: boolean;
+  isMine: boolean;
 }

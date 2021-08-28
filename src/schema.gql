@@ -574,11 +574,11 @@ type Digest {
   id: Int!
   images: [DigestImage!]!
 
-  """
-  read, list 호출 시 userId가 제공되면 liking 여부를 검사해 attach합니다.
-  (true: 팔로잉, false: 팔로잉x, null: 유저정보 제공x)
-  """
+  """[MODEL ONLY]"""
   isLiking: Boolean
+
+  """[MODEL ONLY]"""
+  isMine: Boolean
   item: Item
   itemId: Int
   itemPropertyValues: [ItemPropertyValue!]!
@@ -1148,6 +1148,12 @@ type Look {
   hitCount: Int!
   id: Int!
   images: [LookImage!]!
+
+  """[MODEL ONLY]"""
+  isLiking: Boolean
+
+  """[MODEL ONLY]"""
+  isMine: Boolean
   likeCount: Int!
   score: Float!
   styleTags: [StyleTag!]!
@@ -2523,6 +2529,12 @@ type Video {
   digests: [Digest!]!
   hitCount: Int!
   id: Int!
+
+  """[MODEL ONLY]"""
+  isLiking: Boolean
+
+  """[MODEL ONLY]"""
+  isMine: Boolean
   likeCount: Int!
   score: Float!
 
