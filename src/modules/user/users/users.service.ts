@@ -36,10 +36,8 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.usersRepository.get(id, relations);
 
-    if (userId) {
-      user.isMe = userId === user.id;
-      user.isFollowing = await this.followsService.check(userId, user.id);
-    }
+    user.isMe = userId === user.id;
+    await this.followsService.enrichFollowing(userId, user);
 
     return user;
   }
