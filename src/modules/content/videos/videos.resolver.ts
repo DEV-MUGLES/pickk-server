@@ -46,7 +46,9 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
   }
 
   @Query(() => [Video])
+  @UseGuards(JwtOrNotGuard)
   async videos(
+    @CurrentUser() payload: JwtPayload,
     @Args('filter', { nullable: true }) filter?: VideoFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
@@ -54,12 +56,15 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     return await this.videosService.list(
       filter,
       pageInput,
-      this.getRelationsFromInfo(info)
+      this.getRelationsFromInfo(info),
+      payload?.sub
     );
   }
 
   @Query(() => [Video])
+  @UseGuards(JwtOrNotGuard)
   async searchVideo(
+    @CurrentUser() payload: JwtPayload,
     @Args('query') query: string,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
@@ -69,7 +74,8 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     return await this.videosService.list(
       { idIn: ids },
       null,
-      this.getRelationsFromInfo(info)
+      this.getRelationsFromInfo(info),
+      payload?.sub
     );
   }
 
