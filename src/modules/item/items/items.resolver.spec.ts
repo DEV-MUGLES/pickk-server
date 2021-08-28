@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import faker from 'faker';
 
+import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsRepository } from '@item/products/products.repository';
 import { ProductsService } from '@item/products/products.service';
 
@@ -18,7 +19,6 @@ import { ItemsService } from './items.service';
 
 describe('itemsResolver', () => {
   let itemsService: ItemsService;
-  let productsService: ProductsService;
   let itemsResolver: ItemsResolver;
   const itemId = 1;
   const item = new Item({ id: itemId });
@@ -47,6 +47,7 @@ describe('itemsResolver', () => {
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
       providers: [
+        ItemsResolver,
         ItemsService,
         ProductsService,
         ItemsRepository,
@@ -56,12 +57,19 @@ describe('itemsResolver', () => {
         ItemPricesRepository,
         ItemDetailImagesRepository,
         ProductsRepository,
+        {
+          provide: ProductsService,
+          useValue: new ProductsService(null),
+        },
+        {
+          provide: ItemSearchService,
+          useValue: new ItemSearchService(null, null),
+        },
       ],
     }).compile();
 
     itemsService = moduleRef.get<ItemsService>(ItemsService);
-    productsService = moduleRef.get<ProductsService>(ProductsService);
-    itemsResolver = new ItemsResolver(itemsService, productsService);
+    itemsResolver = moduleRef.get<ItemsResolver>(ItemsResolver);
 
     jest.spyOn(itemsService, 'get').mockResolvedValue(item);
     jest.spyOn(itemsService, 'updateSizeCharts').mockResolvedValue(item);

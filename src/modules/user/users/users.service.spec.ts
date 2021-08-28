@@ -1,6 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
+import { FollowsService } from '@user/follows/follows.service';
+
 import {
   CreateShippingAddressInput,
   UpdateShippingAddressInput,
@@ -20,7 +22,14 @@ describe('UsersService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [UsersService, UsersRepository],
+      providers: [
+        UsersService,
+        UsersRepository,
+        {
+          provide: FollowsService,
+          useValue: new FollowsService(null, null),
+        },
+      ],
     }).compile();
 
     usersService = module.get<UsersService>(UsersService);

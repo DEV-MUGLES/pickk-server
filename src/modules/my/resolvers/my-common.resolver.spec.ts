@@ -5,6 +5,7 @@ import * as faker from 'faker';
 import { JwtPayload } from '@auth/models';
 import { AwsS3ProviderModule } from '@providers/aws/s3';
 
+import { FollowsService } from '@user/follows/follows.service';
 import { UsersRepository } from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 
@@ -27,6 +28,10 @@ describe('MyCommonResolver', () => {
           useValue: {
             sign: jest.fn(() => JWT_TOKEN),
           },
+        },
+        {
+          provide: FollowsService,
+          useValue: new FollowsService(null, null),
         },
       ],
     }).compile();

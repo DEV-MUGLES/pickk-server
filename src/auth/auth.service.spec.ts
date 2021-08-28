@@ -15,6 +15,7 @@ import { IJwtToken } from './interfaces';
 
 import { AuthService } from './auth.service';
 import { CacheService } from '@providers/cache/redis';
+import { FollowsService } from '@user/follows/follows.service';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthService', () => {
@@ -41,6 +42,10 @@ describe('AuthService', () => {
             get: jest.fn(),
             set: jest.fn(),
           },
+        },
+        {
+          provide: FollowsService,
+          useValue: null,
         },
       ],
     }).compile();

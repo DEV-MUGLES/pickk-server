@@ -2,12 +2,15 @@ import { JwtService } from '@nestjs/jwt';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
+import { AppleProviderService } from '@providers/apple';
+import { SmsService } from '@providers/sens';
+
 import { SellersService } from '@item/sellers/sellers.service';
+import { FollowsService } from '@user/follows/follows.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 import { UsersRepository } from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
-import { AppleProviderService } from '@providers/apple';
 
 import { LoginByCodeInput } from './dtos';
 import * as authHelper from './helpers/auth.helper';
@@ -15,7 +18,6 @@ import { JwtPayload, JwtToken } from './models';
 
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
-import { SmsService } from '@providers/sens';
 
 const JWT_TOKEN = 'JWT_TOKEN';
 describe('AuthResolver', () => {
@@ -54,6 +56,10 @@ describe('AuthResolver', () => {
           useValue: {
             sendPin: jest.fn(),
           },
+        },
+        {
+          provide: FollowsService,
+          useValue: null,
         },
       ],
     }).compile();
