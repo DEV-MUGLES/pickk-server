@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { bulkEnrichUserIsMe, parseFilter } from '@common/helpers';
+import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -18,10 +18,10 @@ import { DigestsRepository } from './digests.repository';
 @Injectable()
 export class DigestsService {
   constructor(
-    @Inject(LikesService) private readonly likesService: LikesService,
-    @Inject(FollowsService) private readonly followsService: FollowsService,
     @InjectRepository(DigestsRepository)
-    private readonly digestsRepository: DigestsRepository
+    private readonly digestsRepository: DigestsRepository,
+    private readonly likesService: LikesService,
+    private readonly followsService: FollowsService
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<boolean> {
@@ -31,23 +31,18 @@ export class DigestsService {
   async get(
     id: number,
     relations: DigestRelationType[] = [],
-    requestUserId?: number
+    userId?: number
   ): Promise<Digest> {
     const digest = await this.digestsRepository.get(id, relations);
 
-    if (requestUserId) {
-      digest.isLiking = await this.likesService.check(
-        requestUserId,
+    if (userId) {
+      enrichIsMine(userId, digest);
+      await this.likesService.enrichLiking(
+        userId,
         LikeOwnerType.Digest,
-        id
+        digest
       );
-
-      if (relations.includes('user')) {
-        digest.user.isFollowing = await this.followsService.check(
-          requestUserId,
-          digest.userId
-        );
-      }
+      await this.followsService.enrichAuthorFollowing(userId, digest);
     }
 
     return digest;

@@ -4,7 +4,11 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { enrichIsMine, parseFilter } from '@common/helpers';
+
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { LookRelationType } from './constants';
 import { LookFilter } from './dtos';
@@ -17,11 +21,25 @@ import { LooksRepository } from './looks.repository';
 export class LooksService {
   constructor(
     @InjectRepository(LooksRepository)
-    private readonly looksRepository: LooksRepository
+    private readonly looksRepository: LooksRepository,
+    private readonly likesService: LikesService,
+    private readonly followsService: FollowsService
   ) {}
 
-  async get(id: number, relations: LookRelationType[] = []): Promise<Look> {
-    return await this.looksRepository.get(id, relations);
+  async get(
+    id: number,
+    relations: LookRelationType[] = [],
+    userId?: number
+  ): Promise<Look> {
+    const look = await this.looksRepository.get(id, relations);
+
+    if (userId) {
+      enrichIsMine(userId, look);
+      await this.likesService.enrichLiking(userId, LikeOwnerType.Look, look);
+      await this.followsService.enrichAuthorFollowing(userId, look);
+    }
+
+    return look;
   }
 
   async list(

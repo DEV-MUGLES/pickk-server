@@ -10,6 +10,7 @@ import {
 import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
 import { CommentsRepository } from '@content/comments/comments.repository';
+import { FollowsModule } from '@user/follows/follows.module';
 
 import {
   UpdateVideoLikeCountConsumer,
@@ -36,6 +37,7 @@ import { VideosService } from './videos.service';
       }
     ),
     LikesModule,
+    FollowsModule,
     forwardRef(() => SearchModule),
   ],
   providers: [

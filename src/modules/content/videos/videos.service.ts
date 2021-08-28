@@ -3,7 +3,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { enrichIsMine, parseFilter } from '@common/helpers';
+
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { VideoRelationType } from './constants';
 import { VideoFilter } from './dtos';
@@ -15,11 +19,21 @@ import { VideosRepository } from './videos.repository';
 export class VideosService {
   constructor(
     @InjectRepository(VideosRepository)
-    private readonly videosRepository: VideosRepository
+    private readonly videosRepository: VideosRepository,
+    private readonly likesService: LikesService,
+    private readonly followsService: FollowsService
   ) {}
 
-  async get(id: number, relations: VideoRelationType[] = []) {
-    return await this.videosRepository.get(id, relations);
+  async get(id: number, relations: VideoRelationType[] = [], userId?: number) {
+    const video = await this.videosRepository.get(id, relations);
+
+    if (userId) {
+      enrichIsMine(userId, video);
+      await this.likesService.enrichLiking(userId, LikeOwnerType.Video, video);
+      await this.followsService.enrichAuthorFollowing(userId, video);
+    }
+
+    return video;
   }
 
   async list(
