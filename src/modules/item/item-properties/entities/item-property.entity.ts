@@ -38,7 +38,7 @@ export class ItemPropertyEntity extends BaseIdEntity implements IItemProperty {
   @IsNumber()
   minorCategoryId: number;
 
-  @OneToMany('ItemPropertyValueEntity', 'itemProperty', {
+  @OneToMany('ItemPropertyValueEntity', 'property', {
     cascade: true,
   })
   values: ItemPropertyValue[];

@@ -23,7 +23,7 @@ export class ItemPropertyValueEntity
     this.name = attributes.name;
     this.order = attributes.order;
 
-    this.itemProperty = attributes.itemProperty;
+    this.property = attributes.property;
   }
 
   @Field()
@@ -47,5 +47,5 @@ export class ItemPropertyValueEntity
   @ManyToOne('ItemPropertyEntity', 'values', {
     onDelete: 'CASCADE',
   })
-  itemProperty: ItemPropertyEntity;
+  property: ItemPropertyEntity;
 }
