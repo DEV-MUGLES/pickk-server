@@ -963,6 +963,7 @@ type ItemPropertyValue {
 
   """표시될 순서. 최소 0, 최대 255입니다."""
   order: Float!
+  property: ItemProperty!
   updatedAt: DateTime!
 }
 
