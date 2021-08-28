@@ -64,6 +64,18 @@ export class LikesService {
     );
   }
 
+  async enrichLiking<T extends { id: number; isLiking: boolean }>(
+    userId: number,
+    ownerType: LikeOwnerType,
+    owner: T
+  ): Promise<void> {
+    if (!userId) {
+      return;
+    }
+
+    owner.isLiking = await this.check(userId, ownerType, owner.id);
+  }
+
   async bulkEnrichLiking<T extends { id: number; isLiking: boolean }>(
     userId: number,
     ownerType: LikeOwnerType,
