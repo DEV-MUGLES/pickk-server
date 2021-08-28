@@ -30,7 +30,7 @@ export class FollowsService {
     return await this.followsRepository.bulkCheckExist(userId, targetIds);
   }
 
-  async bulkEnrichFollowing<
+  async bulkEnrichAuthorFollowing<
     T extends { id: number; userId: number; user?: { isFollowing: boolean } }
   >(userId: number, owners: T[]): Promise<void> {
     if (!userId || !owners.some((owner) => !!owner.user)) {

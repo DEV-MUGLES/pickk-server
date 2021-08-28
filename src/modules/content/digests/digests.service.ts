@@ -78,7 +78,7 @@ export class DigestsService {
       LikeOwnerType.Digest,
       digests
     );
-    await this.followsService.bulkEnrichFollowing(userId, digests);
+    await this.followsService.bulkEnrichAuthorFollowing(userId, digests);
     bulkEnrichUserIsMe(userId, digests);
 
     return digests;
