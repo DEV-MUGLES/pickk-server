@@ -1865,6 +1865,7 @@ type Query {
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
+  look(id: Int!): Look!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meFollowingUsers: [User!]!
@@ -1904,6 +1905,7 @@ type Query {
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
   styleTags: [StyleTag!]!
   user(id: Int!): User!
+  video(id: Int!): Video!
   videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
 }
 

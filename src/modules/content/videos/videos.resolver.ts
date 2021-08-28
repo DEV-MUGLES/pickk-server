@@ -3,8 +3,9 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -28,6 +29,20 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     private readonly likesService: LikesService
   ) {
     super();
+  }
+
+  @Query(() => Video)
+  @UseGuards(JwtOrNotGuard)
+  async video(
+    @CurrentUser() payload: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Video> {
+    return await this.videosService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 
   @Query(() => [Video])
