@@ -76,22 +76,22 @@ export class UsersResolver extends BaseResolver {
   @Query(() => User)
   @UseGuards(JwtVerifyGuard)
   async me(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Info() info?: GraphQLResolveInfo
   ) {
-    return await this.usersService.get(
-      payload.sub,
-      this.getRelationsFromInfo(info)
-    );
+    return await this.usersService.get(userId, this.getRelationsFromInfo(info));
   }
 
   @Mutation(() => User)
   @UseGuards(JwtVerifyGuard)
   async updateMe(
-    @CurrentUser() payload: JwtPayload,
-    @Args('updateUserInput') updateUserInput: UpdateUserInput
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('updateUserInput') updateUserInput: UpdateUserInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<User> {
-    return await this.usersService.update(payload.sub, { ...updateUserInput });
+    await this.usersService.update(userId, { ...updateUserInput });
+
+    return await this.usersService.get(userId, this.getRelationsFromInfo(info));
   }
 
   @Mutation(() => User, {

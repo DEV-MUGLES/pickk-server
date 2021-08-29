@@ -2460,6 +2460,7 @@ input UpdateUserInput {
 
   """최대 11자"""
   nickname: String
+  styleTagIds: [Int!]
   weight: Int
   youtubeUrl: String
 }

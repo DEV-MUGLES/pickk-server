@@ -74,9 +74,13 @@ export class UsersService {
     return await this.usersRepository.save(user);
   }
 
-  async update(id: number, input: UpdateUserInput): Promise<User> {
-    await this.usersRepository.update(id, input);
-    return await this.get(id);
+  async update(id: number, input: UpdateUserInput): Promise<void> {
+    if (input.styleTagIds != null) {
+      await this.usersRepository.updateStyleTagRelations(id, input.styleTagIds);
+    }
+
+    const user = await this.get(id);
+    await this.usersRepository.save(new User({ ...user, ...input }));
   }
 
   async findOne(

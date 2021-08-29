@@ -1,11 +1,12 @@
 import { NotFoundException } from '@nestjs/common';
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, getConnection } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
 import { UserEntity } from './entities';
 import { User } from './models';
+import { diffArr } from '@common/helpers';
 
 @EntityRepository(UserEntity)
 export class UsersRepository extends BaseRepository<UserEntity, User> {
@@ -40,5 +41,52 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
 
       return Promise.resolve(this.entityToModel(entity));
     });
+  }
+
+  async updateStyleTagRelations(
+    userId: number,
+    newIds: number[]
+  ): Promise<void> {
+    const USER_STYLETAGS_TABLE = 'user_style_tags_style_tag';
+
+    const records = await getConnection()
+      .createQueryRunner()
+      .query(`SELECT * FROM ${USER_STYLETAGS_TABLE} WHERE userId=${userId}`);
+
+    const existingIds = records.map((r) => r.styleTagId);
+
+    const removedIds = diffArr(existingIds, newIds);
+    await this.removeStyleTagRelations(userId, removedIds);
+
+    const addingIds = diffArr(newIds, existingIds);
+    await this.addStyleTagRelations(userId, addingIds);
+  }
+
+  async removeStyleTagRelations(userId: number, styleTagIds: number[]) {
+    if (styleTagIds?.length === 0) {
+      return;
+    }
+
+    const USER_STYLETAGS_TABLE = 'user_style_tags_style_tag';
+
+    await getConnection().createQueryRunner().query(`
+        DELETE FROM ${USER_STYLETAGS_TABLE}
+        WHERE
+          userId = ${userId} AND
+          styleTagId in (${styleTagIds.join(', ')})
+      `);
+  }
+
+  async addStyleTagRelations(userId: number, styleTagIds: number[]) {
+    if (styleTagIds?.length === 0) {
+      return;
+    }
+
+    const USER_STYLETAGS_TABLE = 'user_style_tags_style_tag';
+
+    await getConnection().createQueryRunner().query(`
+        INSERT INTO ${USER_STYLETAGS_TABLE} (userId, styleTagId)
+        VALUES ${styleTagIds.map((sId) => `(${userId}, ${sId})`).join(', ')}
+      `);
   }
 }

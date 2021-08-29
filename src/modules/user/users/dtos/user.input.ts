@@ -1,4 +1,4 @@
-import { InputType, PartialType, PickType, Field } from '@nestjs/graphql';
+import { InputType, PartialType, PickType, Field, Int } from '@nestjs/graphql';
 
 import { User } from '../models';
 
@@ -40,4 +40,7 @@ export class UpdateUserInput extends PartialType(
     ],
     InputType
   )
-) {}
+) {
+  @Field(() => [Int], { nullable: true })
+  styleTagIds?: number[];
+}
