@@ -74,6 +74,9 @@ describe('UsersResolver', () => {
       };
       const usersServiceUpdateSpy = jest
         .spyOn(usersService, 'update')
+        .mockImplementationOnce(() => null);
+      const usersServiceGetSpy = jest
+        .spyOn(usersService, 'get')
         .mockResolvedValueOnce(new User({ ...user, ...updateUserInput }));
 
       const result = await usersResolver.updateMe(payload, updateUserInput);
@@ -83,6 +86,7 @@ describe('UsersResolver', () => {
         payload.sub,
         updateUserInput
       );
+      expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);
     });
   });
 
