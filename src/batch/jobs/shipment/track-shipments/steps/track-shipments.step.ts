@@ -43,7 +43,7 @@ export class TrackShipmentsStep extends BaseStep {
             try {
               shipment.histories = await this.getNewHistories(shipment);
               shipment.lastTrackedAt = new Date();
-              if (this.isShippedShipment(shipment)) {
+              if (this.isShippedShipment(shipment.histories)) {
                 shipment.status = ShipmentStatus.Shipped;
                 await this.processShippedShipment(shipment);
               }
@@ -89,8 +89,7 @@ export class TrackShipmentsStep extends BaseStep {
     }
   }
 
-  private async isShippedShipment(shipment: Shipment) {
-    const { histories } = shipment;
+  private isShippedShipment(histories: ShipmentHistory[]) {
     return histories[histories.length - 1].statusText === SHIPPED_STATUS_TEXT;
   }
 }
