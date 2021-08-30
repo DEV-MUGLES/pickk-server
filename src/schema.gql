@@ -1577,6 +1577,7 @@ type OrderSheet {
 
   """ApolloClient 최적화를 위한 필드입니다. order의 merchantUid와 같습니다."""
   id: String!
+  me: User!
   order: Order!
   refundAccount: RefundAccount
   shippingAddresses: [ShippingAddress!]!

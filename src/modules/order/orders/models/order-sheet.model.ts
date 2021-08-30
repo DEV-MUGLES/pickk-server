@@ -67,6 +67,9 @@ export class OrderSheet {
     return [...brandItemsMap.values()];
   }
 
+  @Field(() => User)
+  me: User;
+
   @Field(() => Order)
   order: Order;
 
@@ -100,6 +103,7 @@ export class OrderSheet {
     }
 
     return new OrderSheet({
+      me: user,
       order,
       availablePointAmount,
       coupons,
