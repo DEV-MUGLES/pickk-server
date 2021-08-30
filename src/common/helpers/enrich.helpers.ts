@@ -1,3 +1,13 @@
+import { User } from '@user/users/models';
+
+export const enrichIsMe = (userId: number, target: User) => {
+  if (!userId) {
+    return;
+  }
+
+  target.isMe = target.id === userId;
+};
+
 export const enrichIsMine = <Owner extends { userId: number; isMine: boolean }>(
   userId: number,
   owner: Owner

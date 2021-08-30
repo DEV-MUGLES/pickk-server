@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { enrichIsMe, parseFilter } from '@common/helpers';
 
 import { FollowsService } from '@user/follows/follows.service';
 
@@ -36,7 +36,7 @@ export class UsersService {
   ): Promise<User> {
     const user = await this.usersRepository.get(id, relations);
 
-    user.isMe = userId === user.id;
+    enrichIsMe(userId, user);
     await this.followsService.enrichFollowing(userId, user);
 
     return user;
