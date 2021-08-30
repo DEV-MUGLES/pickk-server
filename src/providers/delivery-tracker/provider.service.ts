@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
+import dayjs from 'dayjs';
 import { firstValueFrom } from 'rxjs';
 
-import { TrackDeliveryDto } from './dtos';
-
 import { IShipmentHistory } from '@order/shipments/interfaces';
+
+import { TrackDeliveryDto } from './dtos';
 
 @Injectable()
 export class DeliveryTrackerService {
@@ -23,10 +24,13 @@ export class DeliveryTrackerService {
         `${this.url}/${courierCode}/tracks/${trackCode}`
       )
     );
-    return progresses.map(({ time, status, location }) => ({
-      time,
-      statusText: status.text,
-      locationName: location.name,
-    }));
+
+    return progresses
+      .map(({ time, status, location }) => ({
+        time,
+        statusText: status.text,
+        locationName: location.name,
+      }))
+      .sort((a, b) => (dayjs(a.time).isAfter(dayjs(b.time)) ? 1 : -1));
   }
 }

@@ -51,6 +51,6 @@ export class ShipmentHistoryEntity implements IShipmentHistory {
   @ManyToOne('ShipmentEntity', 'histories')
   shipment: Shipment;
   @Field(() => Int)
-  @Column()
+  @Column({ nullable: true })
   shipmentId: number;
 }
