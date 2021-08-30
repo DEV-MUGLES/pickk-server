@@ -32,10 +32,7 @@ export class ItemOptionValueEntity
   })
   name: string;
   @Field(() => Int)
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-  })
+  @Column({ type: 'mediumint', unsigned: true })
   priceVariant: number;
   @Field()
   @Column({

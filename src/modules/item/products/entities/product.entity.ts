@@ -46,10 +46,7 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
   })
   stock: number;
   @Field(() => Int)
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-  })
+  @Column({ type: 'mediumint', unsigned: true })
   priceVariant: number;
 
   @ManyToOne('ItemEntity', 'products', {
