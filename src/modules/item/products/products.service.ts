@@ -66,9 +66,17 @@ export class ProductsService {
       throw new ConflictException('프로덕트가 이미 존재합니다.');
     }
 
-    const products = getOptionValueCombinations(item.options).map(
-      (values) => new Product({ item, itemOptionValues: values })
-    );
+    const products = getOptionValueCombinations(item.options).map((values) => {
+      const totalPriceVariant = values.reduce(
+        (total, { priceVariant }) => total + priceVariant,
+        0
+      );
+      return new Product({
+        item,
+        priceVariant: totalPriceVariant,
+        itemOptionValues: values,
+      });
+    });
     await this.productsRepository.save(products);
   }
 
