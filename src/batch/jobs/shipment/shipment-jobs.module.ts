@@ -8,6 +8,7 @@ import {
   ShipmentsRepository,
 } from '@order/shipments/shipments.repository';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
+import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { DeliveryTrackerProviderModule } from '@providers/delivery-tracker';
 
 import { TrackShipmentsJob, TrackShipmentsStep } from './track-shipments';
@@ -27,6 +28,7 @@ import { ShipmentJobsController } from './shipment-jobs.controller';
       ShipmentsRepository,
       OrderItemsRepository,
       ShipmentHistoriesRepository,
+      ExchangeRequestsRepository,
     ]),
   ],
   controllers: [ShipmentJobsController],

@@ -8,6 +8,8 @@ import { ShipmentOwnerType, ShipmentStatus } from '@order/shipments/constants';
 import { ShipmentsRepository } from '@order/shipments/shipments.repository';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
+import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
 import { DeliveryTrackerService } from '@providers/delivery-tracker';
 
 const SHIPPED_STATUS_TEXT = '배송완료';
@@ -19,7 +21,9 @@ export class TrackShipmentsStep extends BaseStep {
     @InjectRepository(ShipmentsRepository)
     private readonly shipmentsRepository: ShipmentsRepository,
     @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository
+    private readonly orderItemsRepository: OrderItemsRepository,
+    @InjectRepository(ExchangeRequestsRepository)
+    private readonly exchangeRequestsRepository: ExchangeRequestsRepository
   ) {
     super();
   }
@@ -63,7 +67,6 @@ export class TrackShipmentsStep extends BaseStep {
           shipmentId,
         })
     );
-
     return newHistories.map((newHistory) => {
       const existingHistory = histories.filter((history) =>
         newHistory.isEqual(history)
@@ -77,6 +80,11 @@ export class TrackShipmentsStep extends BaseStep {
     if (ownerType === ShipmentOwnerType.OrderItem) {
       await this.orderItemsRepository.update(ownerPk, {
         status: OrderItemStatus.Shipped,
+      });
+    }
+    if (ownerType === ShipmentOwnerType.ExchangeRequestReShip) {
+      await this.exchangeRequestsRepository.update(ownerPk, {
+        status: ExchangeRequestStatus.Reshipped,
       });
     }
   }
