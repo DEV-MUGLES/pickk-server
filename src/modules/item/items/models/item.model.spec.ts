@@ -250,7 +250,20 @@ describe('Item', () => {
     [...Array(optionsCount)].forEach(() => {
       createItemOptionSetInput.options.push({
         name: faker.lorem.text(),
-        values: [faker.lorem.text(), faker.lorem.text(), faker.lorem.text()],
+        values: [
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+        ],
       });
     });
 
