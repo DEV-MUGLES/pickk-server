@@ -273,10 +273,12 @@ describe('Item', () => {
 
       const result = item.createOptionSet(options);
       expect(options.length).toEqual(result.length);
+
       options.forEach((option, i) => {
         expect(result[i].name).toEqual(option.name);
         option.values.forEach((value, j) => {
-          expect(result[i].values[j].name).toEqual(value);
+          expect(result[i].values[j].name).toEqual(value.name);
+          expect(result[i].values[j].priceVariant).toEqual(value.priceVariant);
         });
       });
     });
