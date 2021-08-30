@@ -1,7 +1,6 @@
 import {
   BadRequestException,
   ForbiddenException,
-  Inject,
   Injectable,
   UseGuards,
 } from '@nestjs/common';
@@ -39,21 +38,13 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
 
   constructor(
-    @Inject(CouponsService)
     private readonly couponsService: CouponsService,
-    @Inject(CartsService)
     private readonly cartsService: CartsService,
-    @Inject(ProductsService)
     private readonly productsService: ProductsService,
-    @Inject(PointsService)
     private readonly pointsService: PointsService,
-    @Inject(OrdersService)
     private readonly ordersService: OrdersService,
-    @Inject(PaymentsService)
     private readonly paymentsService: PaymentsService,
-    @Inject(UsersService)
     private readonly usersService: UsersService,
-    @Inject(OrdersProducer)
     private readonly ordersProducer: OrdersProducer
   ) {
     super();
