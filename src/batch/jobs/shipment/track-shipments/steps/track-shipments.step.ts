@@ -65,10 +65,10 @@ export class TrackShipmentsStep extends BaseStep {
     );
 
     return newHistories.map((newHistory) => {
-      const existHistory = histories.filter((history) =>
+      const existingHistory = histories.filter((history) =>
         newHistory.isEqual(history)
       )[0];
-      return existHistory ?? newHistory;
+      return existingHistory ?? newHistory;
     });
   }
 
