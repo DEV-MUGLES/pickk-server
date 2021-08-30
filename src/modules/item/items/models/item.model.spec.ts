@@ -250,7 +250,20 @@ describe('Item', () => {
     [...Array(optionsCount)].forEach(() => {
       createItemOptionSetInput.options.push({
         name: faker.lorem.text(),
-        values: [faker.lorem.text(), faker.lorem.text(), faker.lorem.text()],
+        values: [
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+          {
+            name: faker.lorem.text(),
+            priceVariant: faker.datatype.number({ min: 0 }),
+          },
+        ],
       });
     });
 
@@ -260,10 +273,12 @@ describe('Item', () => {
 
       const result = item.createOptionSet(options);
       expect(options.length).toEqual(result.length);
+
       options.forEach((option, i) => {
         expect(result[i].name).toEqual(option.name);
         option.values.forEach((value, j) => {
-          expect(result[i].values[j].name).toEqual(value);
+          expect(result[i].values[j].name).toEqual(value.name);
+          expect(result[i].values[j].priceVariant).toEqual(value.priceVariant);
         });
       });
     });

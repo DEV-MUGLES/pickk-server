@@ -205,9 +205,7 @@ export class Item extends ItemEntity {
       (input) =>
         new ItemOption({
           name: input.name,
-          values: input.values.map(
-            (value) => new ItemOptionValue({ name: value })
-          ),
+          values: input.values.map((value) => new ItemOptionValue(value)),
         })
     ));
   };

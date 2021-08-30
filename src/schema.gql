@@ -407,9 +407,14 @@ input CreateItemDetailImageInput {
   urls: [String!]!
 }
 
+input CreateItemOpionValueInput {
+  name: String!
+  priceVariant: Int!
+}
+
 input CreateItemOptionInput {
   name: String!
-  values: [String!]!
+  values: [CreateItemOpionValueInput!]!
 }
 
 input CreateItemOptionSetInput {
@@ -906,6 +911,7 @@ type ItemOptionValue {
   id: Int!
   name: String!
   order: Float!
+  priceVariant: Int!
   updatedAt: DateTime!
 }
 
@@ -1806,6 +1812,7 @@ type Product {
   item: Item!
   itemId: Int!
   itemOptionValues: [ItemOptionValue!]!
+  priceVariant: Int!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
 

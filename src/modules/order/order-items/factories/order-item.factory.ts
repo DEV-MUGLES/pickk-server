@@ -14,7 +14,7 @@ export class OrderItemFactory {
     merchantUid: string,
     { product, quantity }: OrderItemFactoryProductInfo
   ): OrderItem {
-    const { item, itemOptionValues } = product;
+    const { item, itemOptionValues, priceVariant } = product;
     const { brand } = item;
 
     const brandNameKor = brand.nameKor;
@@ -31,7 +31,7 @@ export class OrderItemFactory {
       productId: product.id,
       status: OrderItemStatus.Pending,
       quantity,
-      itemFinalPrice: item.finalPrice,
+      itemFinalPrice: item.finalPrice + priceVariant,
       brandNameKor,
       itemName,
       productVariantName,

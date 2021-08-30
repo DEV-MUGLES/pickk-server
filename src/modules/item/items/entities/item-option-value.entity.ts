@@ -1,4 +1,4 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 import { IsOptional, Max, Min } from 'class-validator';
 
@@ -20,6 +20,7 @@ export class ItemOptionValueEntity
     }
 
     this.name = attributes.name;
+    this.priceVariant = attributes.priceVariant;
     this.order = attributes.order;
     this.itemOption = attributes.itemOption;
   }
@@ -30,7 +31,9 @@ export class ItemOptionValueEntity
     length: 20,
   })
   name: string;
-
+  @Field(() => Int)
+  @Column({ type: 'mediumint', unsigned: true })
+  priceVariant: number;
   @Field()
   @Column({
     type: 'tinyint',
