@@ -8,11 +8,11 @@ import {
 } from '@pickk/nestjs-sqs';
 import { firstValueFrom } from 'rxjs';
 
-import { getMimeType } from '@src/modules/common/images/helpers';
-import { ImagesService } from '@src/modules/common/images/images.service';
+import { getMimeType } from '@mcommon/images/helpers';
+import { ImagesService } from '@mcommon/images/images.service';
+import { ItemsService } from '@item/items/items.service';
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
 import { UpdateItemImageUrlMto } from '@queue/mtos';
-import { ItemsService } from '@item/items/items.service';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class UpdateItemImageUrlConsumer {
@@ -25,38 +25,19 @@ export class UpdateItemImageUrlConsumer {
 
   @SqsMessageHandler()
   async update(message: AWS.SQS.Message): Promise<void> {
-    const { Body } = message;
-    const mto: UpdateItemImageUrlMto = JSON.parse(Body);
+    const mto: UpdateItemImageUrlMto = JSON.parse(message.Body);
     this.validateMto(mto);
-
     const { brandId, code, imageUrl, itemId } = mto;
-    const { data } = await firstValueFrom(
-      this.httpService.get<Buffer>(imageUrl, {
-        responseType: 'arraybuffer',
-      })
-    );
-    const findOption = itemId
-      ? { id: itemId }
-      : { brandId, providedCode: code };
 
-    const item = await this.itemsService.findOne(findOption);
-
-    const mimetype = getMimeType(imageUrl);
-    const [result] = await this.imagesService.uploadBufferDatas([
-      {
-        buffer: data,
-        filename: `THUMBNAIL.${mimetype}`,
-        mimetype: mimetype,
-        prefix: `item/${item.id}`,
-      },
-    ]);
+    const item = await this.getItem(itemId, brandId, code);
+    const uploadedImageUrl = await this.uploadImageUrl(imageUrl, item.id);
 
     await this.itemsService.update(item, {
-      imageUrl: result.url,
+      imageUrl: uploadedImageUrl,
     });
   }
 
-  validateMto(mto: UpdateItemImageUrlMto) {
+  private validateMto(mto: UpdateItemImageUrlMto) {
     const { itemId, brandId, code } = mto;
 
     if (itemId === undefined && brandId === undefined) {
@@ -67,6 +48,31 @@ export class UpdateItemImageUrlConsumer {
     if (brandId === undefined || code === undefined) {
       throw new Error('brandId와 code 둘 다 입력받아야 합니다.');
     }
+  }
+
+  private async getItem(itemId: number, brandId: number, providedCode: string) {
+    const findOption = itemId ? { id: itemId } : { brandId, providedCode };
+
+    return await this.itemsService.findOne(findOption);
+  }
+
+  private async uploadImageUrl(imageUrl: string, itemId: number) {
+    const { data: buffer } = await firstValueFrom(
+      this.httpService.get<Buffer>(imageUrl, {
+        responseType: 'arraybuffer',
+      })
+    );
+    const mimetype = getMimeType(imageUrl);
+    return (
+      await this.imagesService.uploadBufferDatas([
+        {
+          buffer,
+          filename: `THUMBNAIL.${mimetype}`,
+          mimetype,
+          prefix: `item/${itemId}`,
+        },
+      ])
+    )[0].url;
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)
