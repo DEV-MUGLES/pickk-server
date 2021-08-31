@@ -1,9 +1,9 @@
 export const jwtConstants = {
   secret: 'pickkSuminJwtSecretKey',
-  expiresIn: '1h',
+  expiresIn: '6h',
 };
 
 export const jwtRefreshConstants = {
   secret: 'pickkSuminJwtRefreshSecretKey',
-  expiresIn: '6h',
+  expiresIn: '24h',
 };
