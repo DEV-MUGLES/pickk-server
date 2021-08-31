@@ -12,7 +12,7 @@ import { ImagesModule } from '@mcommon/images/images.module';
 import { SearchModule } from '@mcommon/search/search.module';
 import { ProductsModule } from '@item/products/products.module';
 
-import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
+import { UPDATE_ITEM_IMAGE_URL_BATCH_SIZE } from './constants';
 import { Consumers } from './consumers';
 import { ItemsProducer } from './producers';
 
@@ -45,7 +45,7 @@ import { ItemsService } from './items.service';
       {
         name: UPDATE_ITEM_IMAGE_URL_QUEUE,
         producerOptions: {
-          batchSize: UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE,
+          batchSize: UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
         },
       },
       {

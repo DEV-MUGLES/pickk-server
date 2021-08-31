@@ -1,0 +1,1 @@
+export const UPDATE_ITEM_IMAGE_URL_BATCH_SIZE = 10;

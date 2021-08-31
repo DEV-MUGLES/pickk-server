@@ -4,7 +4,7 @@ import { SqsService } from '@pickk/nestjs-sqs';
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
 import { UpdateItemImageUrlMto } from '@queue/mtos';
 
-import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from '../constants';
+import { UPDATE_ITEM_IMAGE_URL_BATCH_SIZE } from '../constants';
 
 @Injectable()
 export class ItemsProducer {
@@ -15,7 +15,7 @@ export class ItemsProducer {
       id: mto.itemId ? mto.itemId.toString() : mto.brandId + mto.code,
       body: mto,
     }));
-    const batchSize = UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE;
+    const batchSize = UPDATE_ITEM_IMAGE_URL_BATCH_SIZE;
     const chunk = Math.ceil(messages.length / batchSize);
 
     for (let i = 0; i < chunk; i++) {
