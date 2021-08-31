@@ -79,11 +79,11 @@ export class UpdateItemDetailImagesConsumer {
   private async uploadDetailImages(imageUrls: string[], itemId: number) {
     const bufferDatas = await this.getImageBufferDatas(imageUrls);
     const uploadBufferDtos: UploadBufferDto[] = bufferDatas.map(
-      ({ imageUrl, buffer }) => {
+      ({ imageUrl, buffer }, index) => {
         const mimetype = getMimeType(imageUrl);
         return {
-          buffer: buffer,
-          filename: `DETAIL.${mimetype}`,
+          buffer,
+          filename: `detail${index}.${mimetype}`,
           mimetype,
           prefix: `item/${itemId}`,
         };

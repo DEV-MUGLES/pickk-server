@@ -67,7 +67,7 @@ export class UpdateItemImageUrlConsumer {
       await this.imagesService.uploadBufferDatas([
         {
           buffer,
-          filename: `THUMBNAIL.${mimetype}`,
+          filename: `thumbnail.${mimetype}`,
           mimetype,
           prefix: `item/${itemId}`,
         },
