@@ -155,7 +155,7 @@ describe('UserModel', () => {
       baseAddress: faker.lorem.text(),
       detailAddress: faker.lorem.text(),
       postalCode: faker.address.zipCode('#####'),
-      phoneNumber1: faker.phone.phoneNumber('###-####-####'),
+      phoneNumber: faker.phone.phoneNumber('###-####-####'),
       isPrimary: faker.datatype.boolean(),
     };
 

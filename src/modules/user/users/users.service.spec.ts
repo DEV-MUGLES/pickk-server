@@ -130,46 +130,6 @@ describe('UsersService', () => {
     });
   });
 
-  describe('getShippingAddresses', () => {
-    it('should return existing shippingAddresses', async () => {
-      const shippingAddresses = [
-        new ShippingAddress(),
-        new ShippingAddress(),
-        new ShippingAddress(),
-      ];
-      const user = new User({ shippingAddresses });
-
-      const result = await usersService.getShippingAddresses(user);
-      expect(result).toEqual(shippingAddresses);
-    });
-
-    it('should get shippingAddresses relation when not initialized', async () => {
-      const user = new User({
-        id: faker.datatype.number(),
-      });
-      const shippingAddresses = [
-        new ShippingAddress(),
-        new ShippingAddress(),
-        new ShippingAddress(),
-      ];
-
-      const usersRepositoryGetSpy = jest
-        .spyOn(usersRepository, 'get')
-        .mockResolvedValue(
-          new User({
-            ...user,
-            shippingAddresses,
-          })
-        );
-
-      const result = await usersService.getShippingAddresses(user);
-      expect(result).toEqual(shippingAddresses);
-      expect(usersRepositoryGetSpy).toHaveBeenCalledWith(user.id, [
-        'shippingAddresses',
-      ]);
-    });
-  });
-
   describe('addShippingAddress', () => {
     const createShippingAddressInput: CreateShippingAddressInput = {
       name: faker.lorem.text(),
@@ -182,13 +142,14 @@ describe('UsersService', () => {
     };
 
     it('should return list when success', async () => {
-      const user = new User();
+      const user = new User({ id: faker.datatype.number() });
       const shippingAddress = new ShippingAddress(createShippingAddressInput);
       const addedUser = new User({
         ...user,
         shippingAddresses: [shippingAddress],
       });
 
+      jest.spyOn(usersService, 'get').mockResolvedValue(user);
       const userModelAddShippingAddressSpy = jest.spyOn(
         user,
         'addShippingAddress'
@@ -196,7 +157,7 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'save').mockResolvedValue(addedUser);
 
       const result = await usersService.addShippingAddress(
-        user,
+        user.id,
         createShippingAddressInput
       );
       expect(result).toEqual([shippingAddress]);
@@ -212,8 +173,10 @@ describe('UsersService', () => {
     };
 
     it('should return updated address when success', async () => {
+      const userId = faker.datatype.number();
       const shippingAddress = new ShippingAddress({
         id: faker.datatype.number(),
+        userId,
       });
       const user = new User({
         shippingAddresses: [shippingAddress],
@@ -228,6 +191,7 @@ describe('UsersService', () => {
         shippingAddresses: [updatedShippingAddress],
       });
 
+      jest.spyOn(usersService, 'get').mockResolvedValue(user);
       const userModelUpdateShippingAddressSpy = jest.spyOn(
         user,
         'updateShippingAddress'
@@ -235,7 +199,7 @@ describe('UsersService', () => {
       jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
 
       const result = await usersService.updateShippingAddress(
-        user,
+        user.id,
         shippingAddress.id,
         updateShippingAddressInput
       );

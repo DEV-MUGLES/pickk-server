@@ -1197,8 +1197,8 @@ type Mutation {
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
-  addMyRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
-  addMyShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
+  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!
@@ -1243,9 +1243,9 @@ type Mutation {
   removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
+  removeMeRefundAccount: User!
+  removeMeShippingAddress(addressId: Int!): [ShippingAddress!]!
   removeMyCartItems(ids: [Int!]!): Boolean!
-  removeMyRefundAccount: User!
-  removeMyShippingAddress(addressId: Int!): [ShippingAddress!]!
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
@@ -1267,15 +1267,16 @@ type Mutation {
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateMe(updateUserInput: UpdateUserInput!): User!
+  updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
 
   """주문상품 단건 운송장 수정"""
   updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
+  updateMeShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
   """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
-  updateMyRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
   updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
   updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
@@ -1283,7 +1284,6 @@ type Mutation {
   """추가도 이거로 해주시면 됩니다!"""
   updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
-  updateMyShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
 
   """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
@@ -1883,6 +1883,7 @@ type Query {
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
   meSellerRefundRequestsCount(forceUpdate: Boolean): RefundRequestsCountOutput!
+  meShippingAddresses: [ShippingAddress!]!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
@@ -1891,8 +1892,6 @@ type Query {
   """Bearer token을 받아 JwtPayload를 반환합니다."""
   myJwtPayload: JwtPayload!
   myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
-  myShippingAddress(id: Int!): ShippingAddress!
-  myShippingAddresses: [ShippingAddress!]!
 
   """[Admin] 결제 목록을 조회합니다."""
   payments(paymentFilter: PaymentFilter!): PaymentListOutput!

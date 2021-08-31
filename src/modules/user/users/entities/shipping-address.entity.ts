@@ -16,7 +16,7 @@ export class ShippingAddressEntity
   implements IShippingAddress
 {
   constructor(attributes?: Partial<ShippingAddressEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }

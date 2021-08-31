@@ -1,4 +1,4 @@
-import { Inject, NotFoundException, UseGuards } from '@nestjs/common';
+import { Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -34,64 +34,37 @@ export class MyCommonResolver extends BaseResolver {
     return payload;
   }
 
-  @Query(() => ShippingAddress)
-  @UseGuards(JwtVerifyGuard)
-  async myShippingAddress(
-    @CurrentUser() payload: JwtPayload,
-    @IntArgs('id') id: number
-  ): Promise<ShippingAddress> {
-    const user = await this.usersService.get(payload.sub, [
-      'shippingAddresses',
-    ]);
-    const shippingAddress = (
-      await this.usersService.getShippingAddresses(user)
-    ).find((address) => address.id === id);
-
-    if (!shippingAddress) {
-      throw new NotFoundException('배송지 정보가 존재하지 않습니다.');
-    }
-
-    return shippingAddress;
-  }
-
   @Query(() => [ShippingAddress])
   @UseGuards(JwtVerifyGuard)
-  async myShippingAddresses(
-    @CurrentUser() payload: JwtPayload
+  async meShippingAddresses(
+    @CurrentUser() { sub: userId }: JwtPayload
   ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [
-      'shippingAddresses',
-    ]);
-    return await this.usersService.getShippingAddresses(user);
+    return await this.usersService.listShippingAddress(userId);
   }
 
   @Mutation(() => [ShippingAddress])
   @UseGuards(JwtVerifyGuard)
-  async addMyShippingAddress(
-    @CurrentUser() payload: JwtPayload,
+  async addMeShippingAddress(
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('createShippingAddressInput')
     createShippingAddressInput: CreateShippingAddressInput
   ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [
-      'shippingAddresses',
-    ]);
     return await this.usersService.addShippingAddress(
-      user,
+      userId,
       createShippingAddressInput
     );
   }
 
   @Mutation(() => ShippingAddress)
   @UseGuards(JwtVerifyGuard)
-  async updateMyShippingAddress(
-    @CurrentUser() payload: JwtPayload,
+  async updateMeShippingAddress(
+    @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('addressId') addressId: number,
     @Args('updateShippingAddressInput')
     updateShippingAddressInput: UpdateShippingAddressInput
   ): Promise<ShippingAddress> {
-    const user = await this.usersService.get(payload.sub, []);
     return await this.usersService.updateShippingAddress(
-      user,
+      userId,
       addressId,
       updateShippingAddressInput
     );
@@ -99,7 +72,7 @@ export class MyCommonResolver extends BaseResolver {
 
   @Mutation(() => [ShippingAddress])
   @UseGuards(JwtVerifyGuard)
-  async removeMyShippingAddress(
+  async removeMeShippingAddress(
     @CurrentUser() payload: JwtPayload,
     @IntArgs('addressId') addressId: number
   ): Promise<ShippingAddress[]> {
@@ -111,7 +84,7 @@ export class MyCommonResolver extends BaseResolver {
 
   @Mutation(() => RefundAccount)
   @UseGuards(JwtVerifyGuard)
-  async addMyRefundAccount(
+  async addMeRefundAccount(
     @CurrentUser() payload: JwtPayload,
     @Args('createRefundAccountInput')
     createRefundAccountInput: CreateRefundAccountInput
@@ -125,7 +98,7 @@ export class MyCommonResolver extends BaseResolver {
 
   @Mutation(() => RefundAccount)
   @UseGuards(JwtVerifyGuard)
-  async updateMyRefundAccount(
+  async updateMeRefundAccount(
     @CurrentUser() payload: JwtPayload,
     @Args('updateRefundAccountInput')
     updateRefundAccountInput: UpdateRefundAccountInput
@@ -139,7 +112,7 @@ export class MyCommonResolver extends BaseResolver {
 
   @Mutation(() => User)
   @UseGuards(JwtVerifyGuard)
-  async removeMyRefundAccount(
+  async removeMeRefundAccount(
     @CurrentUser() payload: JwtPayload,
     @Info() info?: GraphQLResolveInfo
   ): Promise<User> {

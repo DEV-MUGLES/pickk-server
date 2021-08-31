@@ -4,7 +4,10 @@ import * as faker from 'faker';
 
 import { SellersService } from '@item/sellers/sellers.service';
 import { User, UserPassword } from '@user/users/models';
-import { UsersRepository } from '@user/users/users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 
 import {
@@ -29,6 +32,10 @@ describe('AuthService', () => {
         AuthService,
         UsersService,
         UsersRepository,
+        {
+          provide: ShippingAddressesRepository,
+          useValue: null,
+        },
         { provide: SellersService, useValue: { findOne: jest.fn() } },
         {
           provide: JwtService,

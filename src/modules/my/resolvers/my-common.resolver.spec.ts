@@ -6,7 +6,10 @@ import { JwtPayload } from '@auth/models';
 import { AwsS3ProviderModule } from '@providers/aws/s3';
 
 import { FollowsService } from '@user/follows/follows.service';
-import { UsersRepository } from '@user/users/users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 
 import { MyCommonResolver } from './my-common.resolver';
@@ -23,6 +26,7 @@ describe('MyCommonResolver', () => {
         MyCommonResolver,
         UsersService,
         UsersRepository,
+        ShippingAddressesRepository,
         {
           provide: JwtService,
           useValue: {

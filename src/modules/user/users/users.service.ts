@@ -109,29 +109,29 @@ export class UsersService {
     );
   }
 
-  async getShippingAddresses(user: User): Promise<ShippingAddress[]> {
-    const shippingAddresses =
-      user.getShippingAddresses() ??
-      (
-        await this.usersRepository.get(user.id, ['shippingAddresses'])
-      ).getShippingAddresses();
-    return shippingAddresses;
+  async listShippingAddress(userId: number): Promise<ShippingAddress[]> {
+    return await this.shippingAddressesRepository.find({
+      where: { userId },
+    });
   }
 
   async addShippingAddress(
-    user: User,
+    userId: number,
     createShippingAddressInput: CreateShippingAddressInput
   ): Promise<ShippingAddress[]> {
+    const user = await this.get(userId, ['shippingAddresses']);
     user.addShippingAddress(createShippingAddressInput);
     return (await this.usersRepository.save(user)).shippingAddresses;
   }
 
   async updateShippingAddress(
-    user: User,
+    userId: number,
     addressId: number,
-    updateShippingAddressInput: UpdateShippingAddressInput
+    input: UpdateShippingAddressInput
   ): Promise<ShippingAddress> {
-    user.updateShippingAddress(addressId, updateShippingAddressInput);
+    const user = await this.get(userId, ['shippingAddresses']);
+    user.updateShippingAddress(addressId, input);
+
     return (await this.usersRepository.save(user)).shippingAddresses.find(
       (address) => address.id === addressId
     );

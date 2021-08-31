@@ -9,7 +9,10 @@ import { SellersService } from '@item/sellers/sellers.service';
 import { FollowsService } from '@user/follows/follows.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
-import { UsersRepository } from '@user/users/users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from '@user/users/users.repository';
 import { UsersService } from '@user/users/users.service';
 
 import { LoginByCodeInput } from './dtos';
@@ -38,6 +41,7 @@ describe('AuthResolver', () => {
         },
         UsersService,
         UsersRepository,
+        { provide: ShippingAddressesRepository, useValue: {} },
         { provide: SellersService, useValue: {} },
         {
           provide: JwtService,
