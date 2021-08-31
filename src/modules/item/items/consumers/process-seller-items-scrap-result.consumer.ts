@@ -9,6 +9,7 @@ import {
 import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@queue/constants';
 import {
   ProcessSellerItemsScrapResultMto,
+  UpdateItemDetailImagesMto,
   UpdateItemImageUrlMto,
 } from '@queue/mtos';
 
@@ -18,7 +19,7 @@ import {
   AddByCrawlDatasDto,
   ItemCrawlData,
 } from '../dtos';
-import { ItemImageUrlProducer } from '../producers';
+import { ItemsProducer } from '../producers';
 
 import { ItemsService } from '../items.service';
 
@@ -26,19 +27,18 @@ import { ItemsService } from '../items.service';
 export class ProcessSellerItemsScrapResultConsumer {
   constructor(
     private readonly itemsService: ItemsService,
-    private readonly itemImageUrlProducer: ItemImageUrlProducer,
+    private readonly itemsProducer: ItemsProducer,
     private readonly logger: Logger
   ) {}
 
   @SqsMessageHandler()
   async processSellerResult(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { brandId, items }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { brandId, items }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
-    const addByCrawlDatasDto: AddByCrawlDatasDto = new AddByCrawlDatasDto();
-    const updateByCrawlDatasDto: UpdateByCrawlDatasDto =
-      new UpdateByCrawlDatasDto();
+    const addByCrawlDatasDto = new AddByCrawlDatasDto();
+    const updateByCrawlDatasDto = new UpdateByCrawlDatasDto();
 
     const existItems = await this.getExistItems(brandId);
     for (const itemData of items) {
@@ -66,10 +66,24 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   private async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
     const { crawlDatas } = addByCrawlDatasDto;
-    if (crawlDatas.length > 0) {
-      await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
-      await this.updateItemImageUrl(crawlDatas);
+    if (crawlDatas.length === 0) {
+      return;
     }
+
+    await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
+    await this.updateItemDetailImages(crawlDatas);
+    await this.updateItemImageUrl(crawlDatas);
+  }
+
+  private async updateItemDetailImages(crawlDatas: ItemCrawlData[]) {
+    const updateItemDetailImagesMtos = crawlDatas.map(
+      (v): UpdateItemDetailImagesMto => ({
+        brandId: v.brandId,
+        code: v.code,
+        images: v.images,
+      })
+    );
+    await this.itemsProducer.updateDetailImages(updateItemDetailImagesMtos);
   }
 
   private async updateItemImageUrl(crawlDatas: ItemCrawlData[]) {
@@ -80,21 +94,23 @@ export class ProcessSellerItemsScrapResultConsumer {
         imageUrl: v.imageUrl,
       })
     );
-    await this.itemImageUrlProducer.update(updateItemImageUrlMtos);
+    await this.itemsProducer.updateImageUrl(updateItemImageUrlMtos);
   }
 
   private async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
     const { updateItemDatas } = updateByCrawlDatasDto;
-    if (updateItemDatas.length > 0) {
-      await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);
+    if (updateItemDatas.length === 0) {
+      return;
     }
+
+    await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.MESSAGE_RECEIVED)
   messageReceived(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { items, brandId }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { items, brandId }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
     this.logger.log(
       `processSellerResult received message items:${items.length} brandId:${brandId}`
@@ -103,9 +119,9 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   @SqsConsumerEventHandler(SqsConsumerEvent.MESSAGE_PROCESSED)
   messageProcessed(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { items, brandId }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { items, brandId }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
     this.logger.log(
       `processSellerResult processed message item:${items.length} brandId:${brandId}`

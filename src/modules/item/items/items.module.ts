@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
+  UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
 
@@ -12,9 +13,12 @@ import { ImagesModule } from '@mcommon/images/images.module';
 import { SearchModule } from '@mcommon/search/search.module';
 import { ProductsModule } from '@item/products/products.module';
 
-import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
+import {
+  UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
+  UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
+} from './constants';
 import { Consumers } from './consumers';
-import { Producers } from './producers';
+import { ItemsProducer } from './producers';
 
 import {
   ItemsRepository,
@@ -45,7 +49,13 @@ import { ItemsService } from './items.service';
       {
         name: UPDATE_ITEM_IMAGE_URL_QUEUE,
         producerOptions: {
-          batchSize: UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE,
+          batchSize: UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
+        },
+      },
+      {
+        name: UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
+        producerOptions: {
+          batchSize: UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
         },
       },
       {
@@ -57,7 +67,7 @@ import { ItemsService } from './items.service';
       }
     ),
   ],
-  providers: [ItemsResolver, ItemsService, Logger, ...Producers, ...Consumers],
-  exports: [ItemsService, ...Producers, ...Consumers],
+  providers: [ItemsResolver, ItemsService, Logger, ItemsProducer, ...Consumers],
+  exports: [ItemsService],
 })
 export class ItemsModule {}
