@@ -9,6 +9,7 @@ import {
 import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@queue/constants';
 import {
   ProcessSellerItemsScrapResultMto,
+  UpdateItemDetailImagesMto,
   UpdateItemImageUrlMto,
 } from '@queue/mtos';
 
@@ -36,9 +37,8 @@ export class ProcessSellerItemsScrapResultConsumer {
       message.Body
     );
 
-    const addByCrawlDatasDto: AddByCrawlDatasDto = new AddByCrawlDatasDto();
-    const updateByCrawlDatasDto: UpdateByCrawlDatasDto =
-      new UpdateByCrawlDatasDto();
+    const addByCrawlDatasDto = new AddByCrawlDatasDto();
+    const updateByCrawlDatasDto = new UpdateByCrawlDatasDto();
 
     const existItems = await this.getExistItems(brandId);
     for (const itemData of items) {
@@ -66,10 +66,24 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   private async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
     const { crawlDatas } = addByCrawlDatasDto;
-    if (crawlDatas.length > 0) {
-      await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
-      await this.updateItemImageUrl(crawlDatas);
+    if (crawlDatas.length === 0) {
+      return;
     }
+
+    await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
+    await this.updateItemDetailImages(crawlDatas);
+    await this.updateItemImageUrl(crawlDatas);
+  }
+
+  private async updateItemDetailImages(crawlDatas: ItemCrawlData[]) {
+    const updateItemDetailImagesMtos = crawlDatas.map(
+      (v): UpdateItemDetailImagesMto => ({
+        brandId: v.brandId,
+        code: v.code,
+        images: v.images,
+      })
+    );
+    await this.itemsProducer.updateDetailImages(updateItemDetailImagesMtos);
   }
 
   private async updateItemImageUrl(crawlDatas: ItemCrawlData[]) {
@@ -85,9 +99,11 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   private async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
     const { updateItemDatas } = updateByCrawlDatasDto;
-    if (updateItemDatas.length > 0) {
-      await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);
+    if (updateItemDatas.length === 0) {
+      return;
     }
+
+    await this.itemsService.updateByCrawlDatas(updateByCrawlDatasDto);
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.MESSAGE_RECEIVED)
