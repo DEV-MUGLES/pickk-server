@@ -1,6 +1,6 @@
-import { ItemCrawlResultDto } from '@providers/crawler/dtos';
+import { ItemInfoCrawlResult } from '@providers/crawler/dtos';
 
-export class ItemCrawlData extends ItemCrawlResultDto {
+export class ItemCrawlData extends ItemInfoCrawlResult {
   brandId: number;
   code: string;
 }
