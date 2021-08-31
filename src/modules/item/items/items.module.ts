@@ -14,7 +14,7 @@ import { ProductsModule } from '@item/products/products.module';
 
 import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from './constants';
 import { Consumers } from './consumers';
-import { Producers } from './producers';
+import { ItemsProducer } from './producers';
 
 import {
   ItemsRepository,
@@ -57,7 +57,7 @@ import { ItemsService } from './items.service';
       }
     ),
   ],
-  providers: [ItemsResolver, ItemsService, Logger, ...Producers, ...Consumers],
-  exports: [ItemsService, ...Producers, ...Consumers],
+  providers: [ItemsResolver, ItemsService, Logger, ItemsProducer, ...Consumers],
+  exports: [ItemsService],
 })
 export class ItemsModule {}

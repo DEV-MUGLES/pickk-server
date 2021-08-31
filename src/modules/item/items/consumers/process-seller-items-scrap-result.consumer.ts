@@ -18,7 +18,7 @@ import {
   AddByCrawlDatasDto,
   ItemCrawlData,
 } from '../dtos';
-import { ItemImageUrlProducer } from '../producers';
+import { ItemsProducer } from '../producers';
 
 import { ItemsService } from '../items.service';
 
@@ -26,15 +26,15 @@ import { ItemsService } from '../items.service';
 export class ProcessSellerItemsScrapResultConsumer {
   constructor(
     private readonly itemsService: ItemsService,
-    private readonly itemImageUrlProducer: ItemImageUrlProducer,
+    private readonly itemsProducer: ItemsProducer,
     private readonly logger: Logger
   ) {}
 
   @SqsMessageHandler()
   async processSellerResult(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { brandId, items }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { brandId, items }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
     const addByCrawlDatasDto: AddByCrawlDatasDto = new AddByCrawlDatasDto();
     const updateByCrawlDatasDto: UpdateByCrawlDatasDto =
@@ -80,7 +80,7 @@ export class ProcessSellerItemsScrapResultConsumer {
         imageUrl: v.imageUrl,
       })
     );
-    await this.itemImageUrlProducer.update(updateItemImageUrlMtos);
+    await this.itemsProducer.updateImageUrl(updateItemImageUrlMtos);
   }
 
   private async updateItems(updateByCrawlDatasDto: UpdateByCrawlDatasDto) {
@@ -92,9 +92,9 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   @SqsConsumerEventHandler(SqsConsumerEvent.MESSAGE_RECEIVED)
   messageReceived(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { items, brandId }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { items, brandId }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
     this.logger.log(
       `processSellerResult received message items:${items.length} brandId:${brandId}`
@@ -103,9 +103,9 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   @SqsConsumerEventHandler(SqsConsumerEvent.MESSAGE_PROCESSED)
   messageProcessed(message: AWS.SQS.Message) {
-    const { Body } = message;
-    const { items, brandId }: ProcessSellerItemsScrapResultMto =
-      JSON.parse(Body);
+    const { items, brandId }: ProcessSellerItemsScrapResultMto = JSON.parse(
+      message.Body
+    );
 
     this.logger.log(
       `processSellerResult processed message item:${items.length} brandId:${brandId}`

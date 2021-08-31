@@ -7,10 +7,10 @@ import { UpdateItemImageUrlMto } from '@queue/mtos';
 import { UPDATE_ITEM_IMAGE_URL_PRODUCER_BATCH_SIZE } from '../constants';
 
 @Injectable()
-export class ItemImageUrlProducer {
+export class ItemsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async update(mtos: UpdateItemImageUrlMto[]) {
+  async updateImageUrl(mtos: UpdateItemImageUrlMto[]) {
     const messages = mtos.map((mto) => ({
       id: mto.itemId ? mto.itemId.toString() : mto.brandId + mto.code,
       body: mto,
