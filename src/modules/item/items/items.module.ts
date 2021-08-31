@@ -5,7 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
-  UPDATE_ITEM_IMAGES_QUEUE,
+  UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
 
@@ -14,7 +14,7 @@ import { SearchModule } from '@mcommon/search/search.module';
 import { ProductsModule } from '@item/products/products.module';
 
 import {
-  UPDATE_ITEM_IMAGES_BATCH_SIZE,
+  UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
   UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
 } from './constants';
 import { Consumers } from './consumers';
@@ -53,9 +53,9 @@ import { ItemsService } from './items.service';
         },
       },
       {
-        name: UPDATE_ITEM_IMAGES_QUEUE,
+        name: UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
         producerOptions: {
-          batchSize: UPDATE_ITEM_IMAGES_BATCH_SIZE,
+          batchSize: UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
         },
       },
       {

@@ -1,4 +1,4 @@
-export class UpdateItemImagesMto {
+export class UpdateItemDetailImagesMto {
   itemId?: number;
   brandId?: number;
   code?: string;
