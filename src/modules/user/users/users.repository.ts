@@ -2,11 +2,11 @@ import { NotFoundException } from '@nestjs/common';
 import { EntityRepository, getConnection } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
+import { diffArr } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
-import { UserEntity } from './entities';
-import { User } from './models';
-import { diffArr } from '@common/helpers';
+import { ShippingAddressEntity, UserEntity } from './entities';
+import { ShippingAddress, User } from './models';
 
 @EntityRepository(UserEntity)
 export class UsersRepository extends BaseRepository<UserEntity, User> {
@@ -88,5 +88,31 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
         INSERT INTO ${USER_STYLETAGS_TABLE} (userId, styleTagId)
         VALUES ${styleTagIds.map((sId) => `(${userId}, ${sId})`).join(', ')}
       `);
+  }
+}
+
+@EntityRepository(ShippingAddressEntity)
+export class ShippingAddressesRepository extends BaseRepository<
+  ShippingAddressEntity,
+  ShippingAddress
+> {
+  entityToModel(
+    entity: ShippingAddressEntity,
+    transformOptions = {}
+  ): ShippingAddress {
+    return plainToClass(
+      ShippingAddress,
+      entity,
+      transformOptions
+    ) as ShippingAddress;
+  }
+
+  entityToModelMany(
+    entities: ShippingAddressEntity[],
+    transformOptions = {}
+  ): ShippingAddress[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
   }
 }

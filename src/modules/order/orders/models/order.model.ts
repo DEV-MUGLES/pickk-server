@@ -1,5 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { plainToClass } from 'class-transformer';
 
 import { Coupon } from '@order/coupons/models';
 import {
@@ -10,7 +11,7 @@ import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
 import { PayMethod } from '@payment/payments/constants';
-import { plainToClass } from 'class-transformer';
+import { ShippingAddress } from '@user/users/models';
 
 import { OrderStatus } from '../constants';
 import {
@@ -42,12 +43,19 @@ export class Order extends OrderEntity {
   @Field(() => [RefundRequest])
   refundRequests: RefundRequest[];
 
-  start(input: StartOrderInput, coupons: Coupon[]) {
+  start(
+    input: StartOrderInput,
+    shippingAddress: ShippingAddress,
+    coupons: Coupon[]
+  ) {
     this.payMethod = input.payMethod;
     this.totalUsedPointAmount = input.usedPointAmount;
     this.spreadUsedPoint(input.usedPointAmount);
     this.buyer = new OrderBuyer({ ...input.buyerInput });
-    this.receiver = new OrderReceiver({ ...input.receiverInput });
+    this.receiver = OrderReceiver.from(
+      shippingAddress,
+      input.receiverInput.message
+    );
     this.markPaying();
 
     if (input.refundAccountInput) {

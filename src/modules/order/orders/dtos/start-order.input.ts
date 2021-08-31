@@ -16,11 +16,14 @@ export class OrderBuyerInput extends OmitType(
 ) {}
 
 @InputType()
-export class OrderReceiverInput extends OmitType(
+export class OrderReceiverInput extends PickType(
   OrderReceiver,
-  ['id', 'createdAt', 'updatedAt'],
+  ['message'],
   InputType
-) {}
+) {
+  @Field(() => Int)
+  shippingAddressId: number;
+}
 
 @InputType()
 export class OrderRefundAccountInput extends OmitType(

@@ -10,7 +10,10 @@ import {
 } from './dtos';
 import { ShippingAddress, UserPassword, User } from './models';
 
-import { UsersRepository } from './users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from './users.repository';
 import { UsersService } from './users.service';
 
 const USER_PASSWORD_1 = 'abcd1234!';
@@ -25,6 +28,7 @@ describe('UsersService', () => {
       providers: [
         UsersService,
         UsersRepository,
+        ShippingAddressesRepository,
         {
           provide: FollowsService,
           useValue: new FollowsService(null, null),
@@ -173,7 +177,7 @@ describe('UsersService', () => {
       baseAddress: faker.lorem.text(),
       detailAddress: faker.lorem.text(),
       postalCode: faker.address.zipCode('#####'),
-      phoneNumber1: faker.phone.phoneNumber('###-####-####'),
+      phoneNumber: faker.phone.phoneNumber('###-####-####'),
       isPrimary: faker.datatype.boolean(),
     };
 

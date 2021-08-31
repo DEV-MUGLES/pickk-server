@@ -10,12 +10,15 @@ import { FollowsModule } from '@user/follows/follows.module';
 import { UpdateUserFollowCountConsumer } from './consumers';
 
 import { UsersService } from './users.service';
-import { UsersRepository } from './users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from './users.repository';
 import { UsersResolver } from './users.resolver';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersRepository]),
+    TypeOrmModule.forFeature([UsersRepository, ShippingAddressesRepository]),
     SqsModule.registerQueue({
       name: UPDATE_USER_FOLLOW_COUNT_QUEUE,
       type: SqsQueueType.Consumer,

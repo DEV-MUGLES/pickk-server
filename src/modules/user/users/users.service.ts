@@ -19,13 +19,18 @@ import {
 import { UserEntity } from './entities';
 import { User, UserPassword, ShippingAddress, RefundAccount } from './models';
 
-import { UsersRepository } from './users.repository';
+import {
+  ShippingAddressesRepository,
+  UsersRepository,
+} from './users.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectRepository(UsersRepository)
     private readonly usersRepository: UsersRepository,
+    @InjectRepository(ShippingAddressesRepository)
+    private readonly shippingAddressesRepository: ShippingAddressesRepository,
     private readonly followsService: FollowsService
   ) {}
 
@@ -40,6 +45,10 @@ export class UsersService {
     await this.followsService.enrichFollowing(userId, user);
 
     return user;
+  }
+
+  async getShippingAddress(id: number): Promise<ShippingAddress> {
+    return await this.shippingAddressesRepository.get(id);
   }
 
   async list(

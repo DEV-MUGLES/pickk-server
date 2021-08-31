@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -9,6 +9,7 @@ import { ProductsService } from '@item/products/products.service';
 import { Coupon } from '@order/coupons/models';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
+import { UsersService } from '@user/users/users.service';
 
 import { CANCEL_ORDER_RELATIONS, REFUND_ORDER_RELATIONS } from './constants';
 import {
@@ -28,12 +29,11 @@ dayjs.extend(timezone);
 @Injectable()
 export class OrdersService {
   constructor(
-    @Inject(ProductsService)
-    private readonly productsService: ProductsService,
-    @Inject(PaymentsService)
-    private readonly paymentsService: PaymentsService,
     @InjectRepository(OrdersRepository)
-    private readonly ordersRepository: OrdersRepository
+    private readonly ordersRepository: OrdersRepository,
+    private readonly productsService: ProductsService,
+    private readonly paymentsService: PaymentsService,
+    private readonly usersService: UsersService
   ) {}
 
   async get(merchantUid: string, relations: string[] = []): Promise<Order> {
@@ -74,7 +74,11 @@ export class OrdersService {
     startOrderInput: StartOrderInput,
     usedCoupons: Coupon[]
   ): Promise<Order> {
-    order.start(startOrderInput, usedCoupons);
+    const shippingAddress = await this.usersService.getShippingAddress(
+      startOrderInput.receiverInput.shippingAddressId
+    );
+
+    order.start(startOrderInput, shippingAddress, usedCoupons);
     await this.productsService.bulkDestock(order.orderItems);
 
     return await this.ordersRepository.save(order);

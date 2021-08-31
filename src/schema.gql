@@ -543,8 +543,7 @@ input CreateShippingAddressInput {
   detailAddress: String!
   isPrimary: Boolean!
   name: String!
-  phoneNumber1: String!
-  phoneNumber2: String
+  phoneNumber: String!
   postalCode: String!
   receiverName: String!
 }
@@ -1536,18 +1535,14 @@ type OrderReceiver {
   name: String!
   phoneNumber: String!
   postalCode: String!
+  receiverName: String!
   updatedAt: DateTime!
 }
 
 input OrderReceiverInput {
-  baseAddress: String!
-  detailAddress: String!
-
   """베송 요청사항 (최대 50자)"""
   message: String
-  name: String!
-  phoneNumber: String!
-  postalCode: String!
+  shippingAddressId: Int!
 }
 
 """가상계좌 결제시 환불 받을 계좌 정보"""
@@ -2162,7 +2157,10 @@ type SellerReturnAddress {
   createdAt: DateTime!
   detailAddress: String!
   id: Int!
+  name: String!
+  phoneNumber: String!
   postalCode: String!
+  receiverName: String!
   updatedAt: DateTime!
 }
 
@@ -2241,8 +2239,7 @@ type ShippingAddress {
   id: Int!
   isPrimary: Boolean!
   name: String!
-  phoneNumber1: String!
-  phoneNumber2: String
+  phoneNumber: String!
   postalCode: String!
   receiverName: String!
   updatedAt: DateTime!
@@ -2449,8 +2446,7 @@ input UpdateShippingAddressInput {
   detailAddress: String
   isPrimary: Boolean
   name: String
-  phoneNumber1: String
-  phoneNumber2: String
+  phoneNumber: String
   postalCode: String
   receiverName: String
   userId: Int
