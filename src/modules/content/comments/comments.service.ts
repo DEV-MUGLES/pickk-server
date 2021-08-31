@@ -67,6 +67,13 @@ export class CommentsService {
     bulkEnrichIsMine(userId, comments);
     bulkEnrichUserIsMe(userId, comments);
 
+    if (relations.includes('replies')) {
+      for (const { replies } of comments) {
+        bulkEnrichIsMine(userId, replies);
+        bulkEnrichUserIsMe(userId, replies);
+      }
+    }
+
     return comments;
   }
 
