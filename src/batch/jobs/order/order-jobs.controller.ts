@@ -42,4 +42,9 @@ export class OrderJobsController {
   async sendDelayedRefundRequestsAlimtalk() {
     return await this.orderJobsService.sendDelayedRefundRequestsAlimtalk();
   }
+
+  @Post('/confirm-order-items')
+  async confirmOrderItems() {
+    return await this.orderJobsService.confirmOrderItems();
+  }
 }

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import { BatchWorker } from '@batch/batch.worker';
 
+import { ConfirmOrderItemsJob } from './confirm-order-items';
 import { ProcessDelayedExchangeRequestsJob } from './process-delayed-exchange-requests';
 import { ProcessDelayedOrderItemsJob } from './process-delayed-order-items';
 import { ProcessDelayedRefundRequestsJob } from './process-delayed-refund-requests';
@@ -13,6 +14,7 @@ import { SendDelayedRefundRequestsAlimtalkJob } from './send-delayed-refund-requ
 export class OrderJobsService {
   constructor(
     private readonly bacthWorker: BatchWorker,
+    private readonly confirmOrderItemsJob: ConfirmOrderItemsJob,
     private readonly processDelayedExchangeRequestsJob: ProcessDelayedExchangeRequestsJob,
     private readonly processDelayedOrderItemsJob: ProcessDelayedOrderItemsJob,
     private readonly processDelayedRefundRequestsJob: ProcessDelayedRefundRequestsJob,
@@ -47,5 +49,9 @@ export class OrderJobsService {
     return await this.bacthWorker.run(
       this.sendDelayedRefundRequestsAlimtalkJob
     );
+  }
+
+  async confirmOrderItems() {
+    return await this.bacthWorker.run(this.confirmOrderItemsJob);
   }
 }

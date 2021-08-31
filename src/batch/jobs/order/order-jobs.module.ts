@@ -31,6 +31,11 @@ import {
   SendDelayedRefundRequestsAlimtalkJob,
   SendDelayedRefundRequestsAlimtalkStep,
 } from './send-delayed-refund-requests-alimtalk';
+import {
+  ConfirmExchangedOrderItemsStep,
+  ConfirmOrderItemsJob,
+  ConfirmOrderItemsStep,
+} from './confirm-order-items';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
@@ -60,6 +65,9 @@ import { OrderJobsService } from './order-jobs.service';
     SendDelayedOrderItemsAlimtalkStep,
     SendDelayedExchangeRequestsAlimtalkStep,
     SendDelayedRefundRequestsAlimtalkStep,
+    ConfirmOrderItemsJob,
+    ConfirmOrderItemsStep,
+    ConfirmExchangedOrderItemsStep,
   ],
 })
 export class OrderJobsModule {}
