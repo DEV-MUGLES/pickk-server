@@ -8,11 +8,10 @@ export class CreateShippingAddressInput extends PickType(
   [
     'name',
     'receiverName',
+    'phoneNumber',
     'baseAddress',
     'detailAddress',
     'postalCode',
-    'phoneNumber1',
-    'phoneNumber2',
     'isPrimary',
   ],
   InputType

@@ -1,9 +1,10 @@
 import { IAddress } from '@common/interfaces';
 
-export interface IShippingAddress extends IAddress {
-  name: string;
-  receiverName: string;
+import { IUser } from './user.interface';
 
-  phoneNumber1: string;
-  phoneNumber2?: string;
+export interface IShippingAddress extends IAddress {
+  isPrimary: boolean;
+
+  user: IUser;
+  userId: number;
 }
