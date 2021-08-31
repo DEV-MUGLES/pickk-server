@@ -53,9 +53,6 @@ export class CommentsService {
         relations,
         where: parseFilter(_filter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
-        order: {
-          id: 'DESC',
-        },
       })
     );
 
