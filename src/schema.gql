@@ -1225,7 +1225,6 @@ type Mutation {
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
-  deleteComment(id: Int!): Comment!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
@@ -1237,6 +1236,7 @@ type Mutation {
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   own(keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
+  removeComment(id: Int!): Comment!
   removeCourierIssue(courierId: Int!): Courier!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!

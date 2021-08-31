@@ -93,7 +93,7 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
 
   @Mutation(() => Comment)
   @UseGuards(JwtVerifyGuard)
-  async deleteComment(
+  async removeComment(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo

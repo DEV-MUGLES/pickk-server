@@ -9,7 +9,7 @@ import {
 
 import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
-import { CommentsRepository } from '@content/comments/comments.repository';
+import { CommentsModule } from '@content/comments/comments.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
 import {
@@ -23,7 +23,7 @@ import { VideosService } from './videos.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([VideosRepository, CommentsRepository]),
+    TypeOrmModule.forFeature([VideosRepository]),
     SqsModule.registerQueue(
       {
         name: UPDATE_VIDEO_LIKE_COUNT_QUEUE,
@@ -39,6 +39,7 @@ import { VideosService } from './videos.service';
     LikesModule,
     FollowsModule,
     forwardRef(() => SearchModule),
+    CommentsModule,
   ],
   providers: [
     VideosResolver,

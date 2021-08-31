@@ -9,6 +9,7 @@ import {
 
 import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
+import { CommentsModule } from '@content/comments/comments.module';
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { FollowsModule } from '@user/follows/follows.module';
 
@@ -39,6 +40,7 @@ import { LooksService } from './looks.service';
     LikesModule,
     FollowsModule,
     forwardRef(() => SearchModule),
+    CommentsModule,
   ],
   providers: [
     LooksResolver,

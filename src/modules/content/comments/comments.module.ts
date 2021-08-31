@@ -47,5 +47,6 @@ import { CommentsService } from './comments.service';
     UpdateCommentLikeCountConsumer,
     CommentsProducer,
   ],
+  exports: [CommentsService],
 })
 export class CommentsModule {}

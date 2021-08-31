@@ -8,7 +8,7 @@ import {
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
-import { CommentsRepository } from '@content/comments/comments.repository';
+import { CommentsModule } from '@content/comments/comments.module';
 import { FollowsModule } from '@user/follows/follows.module';
 import { LikesModule } from '@content/likes/likes.module';
 
@@ -23,7 +23,7 @@ import { DigestsService } from './digests.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([DigestsRepository, CommentsRepository]),
+    TypeOrmModule.forFeature([DigestsRepository]),
     SqsModule.registerQueue(
       {
         name: UPDATE_DIGEST_LIKE_COUNT_QUEUE,
@@ -39,6 +39,7 @@ import { DigestsService } from './digests.service';
     LikesModule,
     FollowsModule,
     forwardRef(() => SearchModule),
+    CommentsModule,
   ],
   providers: [
     DigestsResolver,
