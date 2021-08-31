@@ -42,6 +42,14 @@ export class CommentsService {
       return parseInt(cached);
     }
 
+    return await this.reloadCount(ownerType, ownerId);
+  }
+
+  async reloadCount(
+    ownerType: CommentOwnerType,
+    ownerId: number
+  ): Promise<number> {
+    const cacheKey = getCommentCountCacheKey(ownerType, ownerId);
     const count = await this.commentsRepository.count({
       where: { ownerType, ownerId, isDeleted: false },
     });

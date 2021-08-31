@@ -2,10 +2,11 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
 import { allSettled } from '@common/helpers';
-import { CommentsRepository } from '@content/comments/comments.repository';
-import { CommentOwnerType } from '@content/comments/constants';
 import { UPDATE_LOOK_COMMENT_COUNT_QUEUE } from '@queue/constants';
 import { UpdateCommentCountMto } from '@queue/mtos';
+
+import { CommentOwnerType } from '@content/comments/constants';
+import { CommentsService } from '@content/comments/comments.service';
 
 import { LooksRepository } from '../looks.repository';
 
@@ -14,8 +15,7 @@ export class UpdateLookCommentCountConsumer {
   constructor(
     @InjectRepository(LooksRepository)
     private readonly looksRepository: LooksRepository,
-    @InjectRepository(CommentsRepository)
-    private readonly commentsRepository: CommentsRepository
+    private readonly commentsService: CommentsService
   ) {}
 
   @SqsMessageHandler(true)
@@ -30,13 +30,10 @@ export class UpdateLookCommentCountConsumer {
         (id) =>
           new Promise(async (resolve, reject) => {
             try {
-              const commentCount = await this.commentsRepository.count({
-                where: {
-                  ownerId: id,
-                  ownerType: CommentOwnerType.Look,
-                  isDeleted: false,
-                },
-              });
+              const commentCount = await this.commentsService.reloadCount(
+                CommentOwnerType.Look,
+                id
+              );
               resolve(this.looksRepository.update(id, { commentCount }));
             } catch (err) {
               reject({ id, reason: err });
