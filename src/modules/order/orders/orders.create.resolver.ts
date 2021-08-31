@@ -111,7 +111,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
         'orderItems.seller',
         'orderItems.seller.shippingPolicy',
       ]),
-      this.usersService.get(userId, ['shippingAddresses', 'refundAccount']),
+      this.usersService.get(userId),
       this.pointsService.getAvailableAmount(userId),
       this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [
         'spec',

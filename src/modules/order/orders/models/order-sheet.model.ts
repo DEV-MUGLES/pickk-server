@@ -107,8 +107,6 @@ export class OrderSheet {
       order,
       availablePointAmount,
       coupons,
-      shippingAddresses: user.shippingAddresses,
-      refundAccount: user.refundAccount,
     });
   }
 }
