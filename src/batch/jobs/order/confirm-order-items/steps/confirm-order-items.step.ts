@@ -27,7 +27,7 @@ export class ConfirmOrderItemsStep extends BaseStep {
         },
       })
     ).map(({ merchantUid }) => merchantUid);
-
+    //@TODO: reviewer에게 reward지급하기
     await this.orderItemsRepository.update(notConfirmedOrderItemMerchantUids, {
       isConfirmed: true,
     });
