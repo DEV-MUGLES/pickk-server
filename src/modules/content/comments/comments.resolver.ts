@@ -4,7 +4,7 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -14,7 +14,11 @@ import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
-import { CommentRelationType, COMMENT_RELATIONS } from './constants';
+import {
+  CommentOwnerType,
+  CommentRelationType,
+  COMMENT_RELATIONS,
+} from './constants';
 import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
 import { Comment } from './models';
 
@@ -28,6 +32,14 @@ export class CommentsResolver extends BaseResolver<CommentRelationType> {
     @Inject(CommentsService) private readonly commentsService: CommentsService
   ) {
     super();
+  }
+
+  @Query(() => Int)
+  async commentsCount(
+    @Args('ownerType') ownerType: CommentOwnerType,
+    @IntArgs('ownerId') ownerId: number
+  ): Promise<number> {
+    return await this.commentsService.count(ownerType, ownerId);
   }
 
   @Query(() => [Comment])

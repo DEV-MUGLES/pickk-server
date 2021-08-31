@@ -1850,6 +1850,7 @@ type Query {
     filter: CommentFilter
     pageInput: PageInput
   ): [Comment!]!
+  commentsCount(ownerId: Int!, ownerType: String!): Int!
   courier(id: Int!): Courier!
   couriers: [Courier!]!
   digest(id: Int!): Digest!

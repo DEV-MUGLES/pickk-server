@@ -8,12 +8,14 @@ import {
   bulkEnrichUserIsMe,
   parseFilter,
 } from '@common/helpers';
+import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
-import { CommentRelationType } from './constants';
+import { CommentOwnerType, CommentRelationType } from './constants';
 import { CommentFilter, CreateCommentInput, UpdateCommentInput } from './dtos';
+import { getCommentCountCacheKey } from './helpers';
 import { Comment } from './models';
 import { CommentsProducer } from './producers';
 
@@ -25,11 +27,26 @@ export class CommentsService {
     @InjectRepository(CommentsRepository)
     private readonly commentsRepository: CommentsRepository,
     private readonly commentsProducer: CommentsProducer,
-    private readonly likesService: LikesService
+    private readonly likesService: LikesService,
+    private readonly cacheService: CacheService
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<boolean> {
     return await this.commentsRepository.checkBelongsTo(id, userId);
+  }
+
+  async count(ownerType: CommentOwnerType, ownerId: number): Promise<number> {
+    const cacheKey = getCommentCountCacheKey(ownerType, ownerId);
+    const cached = await this.cacheService.get<string>(cacheKey);
+    if (cached) {
+      return parseInt(cached);
+    }
+
+    const count = await this.commentsRepository.count({
+      where: { ownerType, ownerId, isDeleted: false },
+    });
+    await this.cacheService.set(cacheKey, count);
+    return count;
   }
 
   async get(
