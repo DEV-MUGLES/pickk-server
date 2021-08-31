@@ -6,9 +6,11 @@ export type OrderRelationType =
   | 'refundRequests.shipment.courier'
   | 'orderItems.product'
   | 'orderItems.product.item'
+  | 'orderItems.product.item.prices'
   | 'orderItems.product.item.brand'
   | 'orderItems.product.item.brand.seller'
   | 'orderItems.product.item.brand.seller.shippingPolicy'
+  | 'orderItems.product.shippingReservePolicy'
   | 'orderItems.seller'
   | 'orderItems.seller.shippingPolicy';
 
@@ -21,6 +23,14 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'refundRequests',
   'refundRequests.shipment',
   'refundRequests.shipment.courier',
+];
+
+export const START_ORDER_RELATIONS: Array<OrderRelationType> = [
+  'orderItems',
+  'orderItems.product',
+  'orderItems.product.item',
+  'orderItems.product.item.prices',
+  'orderItems.product.shippingReservePolicy',
 ];
 
 export const CANCEL_ORDER_RELATIONS: Array<OrderRelationType> = [

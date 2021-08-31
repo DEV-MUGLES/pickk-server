@@ -102,11 +102,9 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   @Query(() => OrderSheet)
   @UseGuards(JwtVerifyGuard)
   async checkoutOrder(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string
   ): Promise<OrderSheet> {
-    const userId = payload.sub;
-
     const [order, user, availablePointAmount, coupons] = await Promise.all([
       this.ordersService.get(merchantUid, [
         'orderItems',
@@ -129,22 +127,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @Args('merchantUid') merchantUid: string,
     @Args('startOrderInput') startOrderInput: StartOrderInput
   ): Promise<BaseOrderOutput> {
-    const order = await this.ordersService.get(merchantUid, [
-      'orderItems',
-      'orderItems.product',
-      'orderItems.product.item',
-      'orderItems.product.item.prices',
-      'orderItems.product.shippingReservePolicy',
-    ]);
-
-    const couponIds =
-      startOrderInput.orderItemInputs?.map((v) => v.usedCouponId) || [];
-    const coupons =
-      couponIds.length > 0
-        ? await this.couponsService.list({ idIn: couponIds }, null, ['spec'])
-        : [];
-
-    return await this.ordersService.start(order, startOrderInput, coupons);
+    return await this.ordersService.start(merchantUid, startOrderInput);
   }
 
   @Mutation(() => BaseOrderOutput)

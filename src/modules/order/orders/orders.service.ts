@@ -6,12 +6,16 @@ import timezone from 'dayjs/plugin/timezone';
 
 import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
-import { Coupon } from '@order/coupons/models';
+import { CouponsService } from '@order/coupons/coupons.service';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
 import { UsersService } from '@user/users/users.service';
 
-import { CANCEL_ORDER_RELATIONS, REFUND_ORDER_RELATIONS } from './constants';
+import {
+  CANCEL_ORDER_RELATIONS,
+  REFUND_ORDER_RELATIONS,
+  START_ORDER_RELATIONS,
+} from './constants';
 import {
   CancelOrderInput,
   CreateOrderVbankReceiptInput,
@@ -31,6 +35,7 @@ export class OrdersService {
   constructor(
     @InjectRepository(OrdersRepository)
     private readonly ordersRepository: OrdersRepository,
+    private readonly couponsService: CouponsService,
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
     private readonly usersService: UsersService
@@ -70,14 +75,22 @@ export class OrdersService {
   }
 
   async start(
-    order: Order,
-    startOrderInput: StartOrderInput,
-    usedCoupons: Coupon[]
+    merchantUid: string,
+    startOrderInput: StartOrderInput
   ): Promise<Order> {
+    const { orderItemInputs, receiverInput } = startOrderInput;
+
+    const couponIds = orderItemInputs?.map((v) => v.usedCouponId) || [];
+    const usedCoupons =
+      couponIds.length > 0
+        ? await this.couponsService.list({ idIn: couponIds }, null, ['spec'])
+        : [];
+
     const shippingAddress = await this.usersService.getShippingAddress(
-      startOrderInput.receiverInput.shippingAddressId
+      receiverInput.shippingAddressId
     );
 
+    const order = await this.get(merchantUid, START_ORDER_RELATIONS);
     order.start(startOrderInput, shippingAddress, usedCoupons);
     await this.productsService.bulkDestock(order.orderItems);
 
