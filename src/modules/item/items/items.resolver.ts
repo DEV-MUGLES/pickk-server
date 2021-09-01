@@ -279,7 +279,6 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     { options }: CreateItemOptionSetInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    await this.productsService.removeByItemId(id);
     await this.itemsService.clearOptionSet(id);
     const item = await this.itemsService.createOptionSet(id, options);
     await this.productsService.createByOptionSet(item);
@@ -294,7 +293,6 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @IntArgs('itemId') id: number,
     @Info() info?: GraphQLResolveInfo
   ) {
-    await this.productsService.removeByItemId(id);
     const item = await this.itemsService.crawlOptionSet(id);
     await this.productsService.createByOptionSet(item);
 

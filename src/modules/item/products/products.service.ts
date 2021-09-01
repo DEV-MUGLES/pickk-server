@@ -58,16 +58,18 @@ export class ProductsService {
     );
   }
 
-  async removeByItemId(itemId: number) {
-    const products = await this.productsRepository.find({ where: { itemId } });
-    await this.productsRepository.remove(products);
+  async processDeleted(itemId: number) {
+    const productIds = (
+      await this.productsRepository.find({
+        select: ['id'],
+        where: { itemId, isDeleted: false },
+      })
+    ).map(({ id }) => id);
+    await this.productsRepository.update(productIds, { isDeleted: true });
   }
 
   async createByOptionSet(item: Item) {
-    if (item.products?.length > 0) {
-      throw new ConflictException('프로덕트가 이미 존재합니다.');
-    }
-
+    await this.processDeleted(item.id);
     const products = getOptionValueCombinations(item.options).map((values) => {
       const totalPriceVariant = values.reduce(
         (total, { priceVariant }) => total + priceVariant,
