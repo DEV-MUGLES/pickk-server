@@ -279,17 +279,24 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     { options }: CreateItemOptionSetInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const item = await this.itemsService.get(
-      id,
-      this.getRelationsFromInfo(info, ['products', 'options', 'options.values'])
-    );
-    const newItem = await this.productsService
-      .bulkRemove(item.products)
-      .then(async () => await this.itemsService.clearOptionSet(item))
-      .then(
-        async (_item) => await this.itemsService.createOptionSet(_item, options)
-      );
-    await this.productsService.createByOptionSet(newItem);
+    await this.productsService.removeByItemId(id);
+    await this.itemsService.clearOptionSet(id);
+    const item = await this.itemsService.createOptionSet(id, options);
+    await this.productsService.createByOptionSet(item);
+
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  @Mutation(() => Item)
+  async crawlItemOptionSet(
+    @IntArgs('itemId') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.productsService.removeByItemId(id);
+    const item = await this.itemsService.crawlOptionSet(id);
+    await this.productsService.createByOptionSet(item);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
