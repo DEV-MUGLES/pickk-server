@@ -55,6 +55,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
     this.hitCount = attributes.hitCount;
     this.commentCount = attributes.commentCount;
     this.score = attributes.score;
+    this.likeCommentOrderScore = attributes.likeCommentOrderScore;
 
     this.isLiking = attributes.isLiking;
     this.isMine = attributes.isMine;
@@ -125,6 +126,8 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @Field({ defaultValue: 0 })
   @Column({ type: 'float', default: 0 })
   score: number;
+  @Column({ type: 'float', default: 0 })
+  likeCommentOrderScore: number;
 
   @Field({ description: '[MODEL ONLY]', nullable: true })
   isLiking: boolean;
