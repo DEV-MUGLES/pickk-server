@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
+
 import { Item } from '@item/items/models';
 
 import {
@@ -57,7 +58,8 @@ export class ProductsService {
     );
   }
 
-  async bulkRemove(products: Product[]) {
+  async removeByItemId(itemId: number) {
+    const products = await this.productsRepository.find({ where: { itemId } });
     await this.productsRepository.remove(products);
   }
 
