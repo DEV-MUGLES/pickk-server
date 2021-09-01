@@ -1215,6 +1215,7 @@ type Mutation {
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
+  crawlItemOptionSet(itemId: Int!): Item!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
@@ -1802,6 +1803,7 @@ enum PointType {
 type Product {
   createdAt: DateTime!
   id: Int!
+  isDeleted: Boolean!
 
   """예약배송 적용 여부"""
   isShipReserving: Boolean!

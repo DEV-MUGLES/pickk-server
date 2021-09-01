@@ -15,8 +15,10 @@ import {
 } from '@common/helpers';
 import { SCRAP_SELLER_ITEMS_QUEUE } from '@queue/constants';
 import { ScrapSellerItemsMto, SellerItemsScrapResult } from '@queue/mtos';
-import { CrawlerProviderService } from '@providers/crawler';
-import { ItemCrawlResultDto } from '@providers/crawler/dtos';
+import {
+  CrawlerProviderService,
+  ItemInfoCrawlResult,
+} from '@providers/crawler';
 
 import { SellerProducer } from '../producers';
 
@@ -62,13 +64,13 @@ export class ScrapSellerItemsConsumer {
     });
   }
 
-  async crawlItems(itemUrls: string[]): Promise<ItemCrawlResultDto[]> {
+  async crawlItems(itemUrls: string[]): Promise<ItemInfoCrawlResult[]> {
     const MAX_CRAWL_COUNT = 70;
     const CRAWL_TERM = 1500;
-    const items: (RejectResponse | FulfillResponse<ItemCrawlResultDto>)[] = [];
+    const items: (RejectResponse | FulfillResponse<ItemInfoCrawlResult>)[] = [];
 
     for (let i = 0; i < itemUrls.length; i += MAX_CRAWL_COUNT) {
-      const result = await allSettled<ItemCrawlResultDto>(
+      const result = await allSettled<ItemInfoCrawlResult>(
         itemUrls.slice(i, i + MAX_CRAWL_COUNT).map(
           (url) =>
             new Promise(async (resolve, reject) => {
@@ -86,7 +88,7 @@ export class ScrapSellerItemsConsumer {
 
     const fulfilledItems = items
       .filter(isFulfilled)
-      .map((item: FulfillResponse<ItemCrawlResultDto>) => item.value);
+      .map((item: FulfillResponse<ItemInfoCrawlResult>) => item.value);
     return fulfilledItems;
   }
 

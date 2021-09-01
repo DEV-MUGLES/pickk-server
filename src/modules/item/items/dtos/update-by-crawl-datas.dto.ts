@@ -1,10 +1,10 @@
 import { Item } from '../models';
 
-import { ItemCrawlResultDto } from '@providers/crawler/dtos';
+import { ItemInfoCrawlResult } from '@providers/crawler/dtos';
 
 export class UpdateItemData {
   item: Item;
-  itemData: Partial<ItemCrawlResultDto>;
+  itemData: Partial<ItemInfoCrawlResult>;
 }
 
 export class UpdateByCrawlDatasDto {

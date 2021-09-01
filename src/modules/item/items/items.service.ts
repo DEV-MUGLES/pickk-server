@@ -4,6 +4,7 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
+import { CrawlerProviderService } from '@providers/crawler';
 
 import { ItemRelationType } from './constants';
 import {
@@ -56,7 +57,8 @@ export class ItemsService {
     @InjectRepository(ItemPricesRepository)
     private readonly itemPricesRepository: ItemPricesRepository,
     @InjectRepository(ItemDetailImagesRepository)
-    private readonly itemDetailImagesRepository: ItemDetailImagesRepository
+    private readonly itemDetailImagesRepository: ItemDetailImagesRepository,
+    private readonly crawlerService: CrawlerProviderService
   ) {}
 
   async list(
@@ -287,23 +289,31 @@ export class ItemsService {
   }
 
   /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */
-  async clearOptionSet(item: Item): Promise<Item> {
+  async clearOptionSet(id: number) {
+    const item = await this.get(id, ['options', 'options.values']);
     const optionValues = item.options.reduce(
       (acc, curr) => acc.concat(curr.values),
       []
     );
     await this.itemOptionValuesRepository.remove(optionValues);
     await this.itemOptionsRepository.remove(item.options);
-    return this.get(item.id, ['options', 'options.values', 'products']);
   }
 
   async createOptionSet(
-    item: Item,
+    id: number,
     options: CreateItemOptionInput[]
   ): Promise<Item> {
+    const item = await this.get(id, ['options', 'options.values']);
     item.createOptionSet(options);
     await this.itemsRepository.save(item);
-    return this.get(item.id, ['options', 'options.values', 'products']);
+    return await this.get(id, ['options', 'options.values', 'products']);
+  }
+
+  async crawlOptionSet(id: number): Promise<Item> {
+    const item = await this.get(id, ['urls', 'options', 'options.values']);
+    const { options } = await this.crawlerService.crawlOption(item.urls[0].url);
+    await this.clearOptionSet(id);
+    return await this.createOptionSet(id, options);
   }
 
   async addSizeCharts(

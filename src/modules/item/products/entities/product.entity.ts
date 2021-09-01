@@ -33,6 +33,7 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
 
     this.stock = attributes.stock;
     this.priceVariant = attributes.priceVariant;
+    this.isDeleted = attributes.isDeleted;
     this.item = attributes.item;
     this.itemOptionValues = attributes.itemOptionValues;
     this.shippingReservePolicy = attributes.shippingReservePolicy;
@@ -48,6 +49,9 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
   @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true })
   priceVariant: number;
+  @Field()
+  @Column({ default: false })
+  isDeleted: boolean;
 
   @ManyToOne('ItemEntity', 'products', {
     onDelete: 'CASCADE',

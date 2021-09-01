@@ -1,4 +1,4 @@
-export class ItemCrawlResultDto {
+export class ItemInfoCrawlResult {
   name: string;
   imageUrl: string;
   brandKor: string;

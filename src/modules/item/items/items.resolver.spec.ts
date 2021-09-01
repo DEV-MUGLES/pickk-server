@@ -4,6 +4,7 @@ import faker from 'faker';
 import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsRepository } from '@item/products/products.repository';
 import { ProductsService } from '@item/products/products.service';
+import { CrawlerProviderModule } from '@providers/crawler';
 
 import { Item } from './models';
 import {
@@ -46,6 +47,7 @@ describe('itemsResolver', () => {
 
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
+      imports: [CrawlerProviderModule],
       providers: [
         ItemsResolver,
         ItemsService,

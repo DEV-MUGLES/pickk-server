@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { ItemCrawlResultDto } from '@providers/crawler/dtos';
+import { CrawlerProviderModule, ItemInfoCrawlResult } from '@providers/crawler';
 
 import { AddItemUrlInput, UpdateByCrawlDatasDto } from './dtos';
 import { ItemPrice, ItemUrl, Item } from './models';
@@ -22,6 +22,7 @@ describe('ItemsService', () => {
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [CrawlerProviderModule],
       providers: [
         ItemsService,
         ItemsRepository,
@@ -93,7 +94,7 @@ describe('ItemsService', () => {
           }),
         ],
       });
-      const itemData: ItemCrawlResultDto = {
+      const itemData: ItemInfoCrawlResult = {
         name: faker.lorem.text(),
         brandKor: faker.lorem.text(),
         imageUrl: faker.image.imageUrl(),
@@ -134,7 +135,7 @@ describe('ItemsService', () => {
           }),
         ],
       });
-      const itemData: ItemCrawlResultDto = {
+      const itemData: ItemInfoCrawlResult = {
         name: faker.lorem.text(),
         brandKor: faker.lorem.text(),
         imageUrl: faker.image.imageUrl(),

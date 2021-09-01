@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
+
 import { Item } from '@item/items/models';
 
 import {
@@ -57,15 +58,18 @@ export class ProductsService {
     );
   }
 
-  async bulkRemove(products: Product[]) {
-    await this.productsRepository.remove(products);
+  async processDeleted(itemId: number) {
+    const productIds = (
+      await this.productsRepository.find({
+        select: ['id'],
+        where: { itemId, isDeleted: false },
+      })
+    ).map(({ id }) => id);
+    await this.productsRepository.update(productIds, { isDeleted: true });
   }
 
   async createByOptionSet(item: Item) {
-    if (item.products?.length > 0) {
-      throw new ConflictException('프로덕트가 이미 존재합니다.');
-    }
-
+    await this.processDeleted(item.id);
     const products = getOptionValueCombinations(item.options).map((values) => {
       const totalPriceVariant = values.reduce(
         (total, { priceVariant }) => total + priceVariant,
