@@ -1198,7 +1198,7 @@ type Mutation {
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
-  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!

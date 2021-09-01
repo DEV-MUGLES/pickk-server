@@ -118,10 +118,13 @@ export class UsersService {
   async addShippingAddress(
     userId: number,
     createShippingAddressInput: CreateShippingAddressInput
-  ): Promise<ShippingAddress[]> {
+  ): Promise<ShippingAddress> {
     const user = await this.get(userId, ['shippingAddresses']);
     user.addShippingAddress(createShippingAddressInput);
-    return (await this.usersRepository.save(user)).shippingAddresses;
+
+    const { shippingAddresses } = await this.usersRepository.save(user);
+
+    return shippingAddresses[shippingAddresses.length - 1];
   }
 
   async updateShippingAddress(
