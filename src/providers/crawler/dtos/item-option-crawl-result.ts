@@ -1,9 +1,13 @@
 export class ItemOptionCrawlResult {
-  options: {
-    name: string;
-    values: {
-      name: string;
-      priceVariant: number;
-    }[];
-  }[];
+  options: OptionData[];
+}
+
+export class OptionData {
+  name: string;
+  values: OptionValueData[];
+}
+
+export class OptionValueData {
+  name: string;
+  priceVariant: number;
 }

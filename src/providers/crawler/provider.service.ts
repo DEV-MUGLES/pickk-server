@@ -4,7 +4,13 @@ import { firstValueFrom } from 'rxjs';
 
 import { CrawlerConfigService } from '@config/providers/crawler';
 
-import { ItemInfoCrawlResult } from './dtos';
+import {
+  CrawlItemOptionResponseDto,
+  OptionData,
+  ItemInfoCrawlResult,
+  ItemOptionCrawlResult,
+  OptionValueData,
+} from './dtos';
 
 @Injectable()
 export class CrawlerProviderService {
@@ -24,5 +30,37 @@ export class CrawlerProviderService {
       )
     );
     return data;
+  }
+
+  async crawlOption(url: string): Promise<ItemOptionCrawlResult> {
+    const {
+      data: { values: options, optionPriceVariants },
+    } = await firstValueFrom(
+      this.httpService.get<CrawlItemOptionResponseDto>(
+        `${this.url}/option?url=${encodeURI(url)}`
+      )
+    );
+
+    const optionDatas: OptionData[] = Object.keys(options).map((optionName) => {
+      const optionValueDatas: OptionValueData[] = options[optionName].map(
+        (valueName) => ({
+          name: valueName,
+          priceVariant: 0,
+        })
+      );
+
+      return {
+        name: optionName,
+        values: optionValueDatas,
+      };
+    });
+
+    optionPriceVariants.forEach(
+      ({ option: [optionIndex, valueIndex], price }) => {
+        optionDatas[optionIndex].values[valueIndex].priceVariant = price;
+      }
+    );
+
+    return { options: optionDatas };
   }
 }
