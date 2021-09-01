@@ -50,7 +50,7 @@ export function calculateHitScore(
 export function calculateLikeCommentOrderScore(
   likeCount: number,
   commentCount: number,
-  orderCount: number,
+  orderItemCount: number,
   currentScore: number
 ) {
   const LIKE_WEIGHT = 0.1;
@@ -61,7 +61,7 @@ export function calculateLikeCommentOrderScore(
     currentScore / 3 +
     (likeCount * LIKE_WEIGHT +
       commentCount * COMMENT_WEIGHT +
-      orderCount * ORDER_WEIGHT) /
+      orderItemCount * ORDER_WEIGHT) /
       2
   );
 }
