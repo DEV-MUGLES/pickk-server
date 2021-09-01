@@ -71,7 +71,7 @@ export class LooksService {
       return {
         where: { id: In(ids) },
         order: {
-          [filter.orderBy ?? 'id']: 'DESC',
+          [filter?.orderBy ?? 'id']: 'DESC',
         },
       };
     }
@@ -80,7 +80,7 @@ export class LooksService {
       where: parseFilter(_filter, _pageInput?.idFilter),
       ...(_pageInput?.pageFilter ?? {}),
       order: {
-        [filter.orderBy ?? 'id']: 'DESC',
+        [filter?.orderBy ?? 'id']: 'DESC',
       },
     };
   }
