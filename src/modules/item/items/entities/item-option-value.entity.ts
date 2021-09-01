@@ -26,10 +26,7 @@ export class ItemOptionValueEntity
   }
 
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
+  @Column()
   name: string;
   @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true })
