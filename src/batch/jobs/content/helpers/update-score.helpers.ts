@@ -2,19 +2,19 @@ import dayjs from 'dayjs';
 
 import {
   digestHitScoreVariable,
-  ScoreUpdateType,
+  UpdateContentScoreType,
   videoHitScoreVariable,
   lookHitScoreVariable,
 } from '../constants';
 
-function getHitScoreVariableByType(type: ScoreUpdateType) {
-  if (type === ScoreUpdateType.Digest) {
+function getHitScoreVariableByType(type: UpdateContentScoreType) {
+  if (type === UpdateContentScoreType.Digest) {
     return digestHitScoreVariable;
   }
-  if (type === ScoreUpdateType.Look) {
+  if (type === UpdateContentScoreType.Look) {
     return lookHitScoreVariable;
   }
-  if (type === ScoreUpdateType.Video) {
+  if (type === UpdateContentScoreType.Video) {
     return videoHitScoreVariable;
   }
 }
@@ -25,7 +25,7 @@ const ADDITIONAL_TIME = 48;
 export function calculateHitScore(
   hitCount: number,
   createdAt: Date,
-  type: ScoreUpdateType
+  type: UpdateContentScoreType
 ) {
   const {
     firstCliffTime,

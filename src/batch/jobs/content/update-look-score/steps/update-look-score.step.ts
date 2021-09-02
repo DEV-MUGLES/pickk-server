@@ -13,7 +13,7 @@ import { CommentsRepository } from '@content/comments/comments.repository';
 import { CommentOwnerType } from '@content/comments/constants';
 
 import { calculateHitScore, calculateLikeCommentScore } from '../../helpers';
-import { ScoreUpdateType } from '../../constants';
+import { UpdateContentScoreType } from '../../constants';
 
 @Injectable()
 export class UpdateLookScoreStep extends BaseStep {
@@ -43,7 +43,7 @@ export class UpdateLookScoreStep extends BaseStep {
               const hitScore = calculateHitScore(
                 hitCount,
                 createdAt,
-                ScoreUpdateType.Look
+                UpdateContentScoreType.Look
               );
               const newLikeCommentScore =
                 await this.getNewLikeCommentOrderScore(id, likeCommentScore);

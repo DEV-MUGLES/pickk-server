@@ -17,7 +17,7 @@ import {
   calculateHitScore,
   calculateLikeCommentOrderScore,
 } from '../../helpers';
-import { ScoreUpdateType } from '../../constants';
+import { UpdateContentScoreType } from '../../constants';
 
 @Injectable()
 export class UpdateDigestScoreStep extends BaseStep {
@@ -63,7 +63,7 @@ export class UpdateDigestScoreStep extends BaseStep {
               const hitScore = calculateHitScore(
                 hitCount,
                 createdAt,
-                ScoreUpdateType.Digest
+                UpdateContentScoreType.Digest
               );
               const newLikeCommentOrderScore =
                 await this.getNewLikeCommentOrderScore(

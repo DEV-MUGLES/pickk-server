@@ -13,7 +13,7 @@ import { CommentOwnerType } from '@content/comments/constants';
 import { VideosRepository } from '@content/videos/videos.repository';
 
 import { calculateHitScore, calculateLikeCommentScore } from '../../helpers';
-import { ScoreUpdateType } from '../../constants';
+import { UpdateContentScoreType } from '../../constants';
 
 @Injectable()
 export class UpdateVideoScoreStep extends BaseStep {
@@ -43,7 +43,7 @@ export class UpdateVideoScoreStep extends BaseStep {
               const hitScore = calculateHitScore(
                 hitCount,
                 createdAt,
-                ScoreUpdateType.Video
+                UpdateContentScoreType.Video
               );
               const newLikeCommentScore =
                 await this.getNewLikeCommentOrderScore(id, likeCommentScore);
