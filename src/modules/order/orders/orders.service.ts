@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -8,6 +8,7 @@ import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { CancelPaymentInput } from '@payment/payments/dtos';
+import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
 import { UsersService } from '@user/users/users.service';
 
@@ -97,15 +98,28 @@ export class OrdersService {
     return await this.ordersRepository.save(order);
   }
 
-  async fail(order: Order): Promise<Order> {
+  async fail(merchantUid: string): Promise<Order> {
+    const order = await this.get(merchantUid, ['orderItems']);
+
     order.fail();
     return await this.ordersRepository.save(order);
   }
 
   async complete(
-    order: Order,
+    merchantUid: string,
     createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput
   ): Promise<Order> {
+    const order = await this.get(merchantUid, ['orderItems', 'vbankInfo']);
+
+    const { status } = await this.paymentsService.get(merchantUid);
+    const paymentStatusMustBe =
+      order.payMethod === PayMethod.Vbank
+        ? PaymentStatus.VbankReady
+        : PaymentStatus.Paid;
+    if (status !== paymentStatusMustBe) {
+      throw new BadRequestException('결제가 정상적으로 처리되지 않았습니다.');
+    }
+
     order.complete(createOrderVbankReceiptInput);
     return await this.ordersRepository.save(order);
   }
