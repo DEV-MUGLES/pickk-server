@@ -141,7 +141,7 @@ describe('UsersService', () => {
       isPrimary: faker.datatype.boolean(),
     };
 
-    it('should return list when success', async () => {
+    it('should return added when success', async () => {
       const user = new User({ id: faker.datatype.number() });
       const shippingAddress = new ShippingAddress(createShippingAddressInput);
       const addedUser = new User({
@@ -160,7 +160,7 @@ describe('UsersService', () => {
         user.id,
         createShippingAddressInput
       );
-      expect(result).toEqual([shippingAddress]);
+      expect(result).toEqual(shippingAddress);
       expect(userModelAddShippingAddressSpy).toHaveBeenCalledWith(
         createShippingAddressInput
       );
