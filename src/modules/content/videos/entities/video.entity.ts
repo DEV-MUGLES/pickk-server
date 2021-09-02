@@ -29,7 +29,6 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
     this.hitCount = attributes.hitCount;
     this.commentCount = attributes.commentCount;
     this.score = attributes.score;
-    this.likeCommentScore = attributes.likeCommentScore;
 
     this.isLiking = attributes.isLiking;
     this.isMine = attributes.isMine;
@@ -66,8 +65,6 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
   @Field({ defaultValue: 0 })
   @Column({ type: 'float', default: 0 })
   score: number;
-  @Column({ type: 'float', default: 0 })
-  likeCommentScore: number;
 
   @Field({ description: '[MODEL ONLY]', nullable: true })
   isLiking: boolean;
