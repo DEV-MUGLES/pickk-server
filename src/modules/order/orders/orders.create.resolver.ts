@@ -4,7 +4,7 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
@@ -32,10 +32,11 @@ import {
   StartOrderInput,
   CreateOrderVbankReceiptInput,
 } from './dtos';
-import { OrderSheet } from './models';
+import { Order, OrderSheet } from './models';
 import { OrdersProducer } from './producers';
 
 import { OrdersService } from './orders.service';
+import { GraphQLResolveInfo } from 'graphql';
 
 @Injectable()
 export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
@@ -121,13 +122,18 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     return OrderSheet.from(order, user, availablePointAmount, coupons);
   }
 
-  @Mutation(() => BaseOrderOutput)
+  @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async startOrder(
     @Args('merchantUid') merchantUid: string,
-    @Args('startOrderInput') startOrderInput: StartOrderInput
-  ): Promise<BaseOrderOutput> {
-    return await this.ordersService.start(merchantUid, startOrderInput);
+    @Args('startOrderInput') startOrderInput: StartOrderInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Order> {
+    await this.ordersService.start(merchantUid, startOrderInput);
+    return await this.ordersService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => BaseOrderOutput)
