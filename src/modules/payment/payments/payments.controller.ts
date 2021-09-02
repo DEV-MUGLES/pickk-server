@@ -2,7 +2,6 @@ import {
   Body,
   Controller,
   Delete,
-  Inject,
   Param,
   Patch,
   Post,
@@ -21,9 +20,7 @@ import { PaymentsService } from './payments.service';
 @Controller('/payments')
 @UseGuards(SuperSecretGuard)
 export class PaymentsController {
-  constructor(
-    @Inject(PaymentsService) private readonly paymentsService: PaymentsService
-  ) {}
+  constructor(private readonly paymentsService: PaymentsService) {}
 
   @ApiOperation({ description: '[SuperSecret] 결제건을 수정합니다.' })
   @Patch('/:merchantUid')
@@ -40,8 +37,7 @@ export class PaymentsController {
   @ApiOperation({ description: '[SuperSecret] 지정한 결제건을 삭제합니다.' })
   @Delete('/:merchantUid')
   async remove(@Param('merchantUid') merchantUid: string) {
-    const payment = await this.paymentsService.get(merchantUid);
-    await this.paymentsService.remove(payment);
+    await this.paymentsService.remove(merchantUid);
   }
 
   @ApiOperation({
