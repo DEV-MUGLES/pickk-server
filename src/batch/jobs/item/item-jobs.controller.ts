@@ -15,11 +15,16 @@ export class ItemJobsController {
 
   @Post('/update-seller-items')
   async updateSellerItems() {
-    await this.itemJobsService.updateSellerItems();
+    return await this.itemJobsService.updateSellerItems();
   }
 
   @Post('/update-item-is-soldout')
   async updateItemIsSoldout() {
-    await this.itemJobsService.updateItemIsSoldout();
+    return await this.itemJobsService.updateItemIsSoldout();
+  }
+
+  @Post('/update-item-score')
+  async updateItemScore() {
+    return await this.itemJobsService.updateItemScore();
   }
 }

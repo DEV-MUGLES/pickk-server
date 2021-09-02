@@ -833,6 +833,7 @@ type Item {
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
+  score: Float!
   sellPrice: Float!
 
   """판매가능시점(=활성전환일)"""
