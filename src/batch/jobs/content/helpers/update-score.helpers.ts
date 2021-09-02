@@ -18,32 +18,41 @@ function getHitScoreVariableByType(type: ScoreUpdateType) {
     return videoHitScoreVariable;
   }
 }
-
-const ADDITIONAL_HOUR = 48;
+/**
+ * 계산시 사용되는 time의 단위는 시간(hour)입니다.
+ */
+const ADDITIONAL_TIME = 48;
 export function calculateHitScore(
   hitCount: number,
   createdAt: Date,
   type: ScoreUpdateType
 ) {
-  const { primaryCliffHour, secondaryCliffHour, n1, n2, n3 } =
-    getHitScoreVariableByType(type);
-  const passedHour = dayjs().diff(createdAt, 'hour');
+  const {
+    firstCliffTime,
+    secondCliffTime,
+    firstIntervalPower,
+    secondIntervalPower,
+    thirdIntervalPower,
+  } = getHitScoreVariableByType(type);
+  const passedTime = dayjs().diff(createdAt, 'hour');
 
-  if (passedHour < primaryCliffHour) {
-    return hitCount / Math.pow(passedHour + ADDITIONAL_HOUR, n1);
+  if (passedTime < firstCliffTime) {
+    return (
+      hitCount / Math.pow(passedTime + ADDITIONAL_TIME, firstIntervalPower)
+    );
   }
-  if (passedHour < secondaryCliffHour) {
+  if (passedTime < secondCliffTime) {
     return (
       hitCount /
-      (Math.pow(primaryCliffHour + ADDITIONAL_HOUR, n1) +
-        Math.pow(passedHour - primaryCliffHour, n2))
+      (Math.pow(firstCliffTime + ADDITIONAL_TIME, firstIntervalPower) +
+        Math.pow(passedTime - firstCliffTime, secondIntervalPower))
     );
   }
   return (
     hitCount /
-    (Math.pow(primaryCliffHour + ADDITIONAL_HOUR, n1) +
-      Math.pow(secondaryCliffHour - primaryCliffHour, n2) +
-      Math.pow(passedHour - secondaryCliffHour, n3))
+    (Math.pow(firstCliffTime + ADDITIONAL_TIME, firstIntervalPower) +
+      Math.pow(secondCliffTime - firstCliffTime, secondIntervalPower) +
+      Math.pow(passedTime - secondCliffTime, thirdIntervalPower))
   );
 }
 
