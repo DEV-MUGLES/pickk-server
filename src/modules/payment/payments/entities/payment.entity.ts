@@ -19,7 +19,6 @@ import {
   IsPhoneNumber,
   IsPostalCode,
   IsString,
-  IsUrl,
   MaxLength,
   Min,
 } from 'class-validator';
@@ -118,7 +117,6 @@ export class PaymentEntity implements IPayment {
 
   @Field()
   @Column()
-  @IsUrl()
   origin: string;
 
   @Field(() => Pg)
