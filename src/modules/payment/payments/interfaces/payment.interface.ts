@@ -42,7 +42,7 @@ export interface IPayment {
   vbankName?: string;
   vbankNum?: string;
   vbankHolder?: string;
-  vbankDate?: string;
+  vbankDate?: Date;
   cancellations?: IPaymentCancellation[];
   failedReason?: string;
 

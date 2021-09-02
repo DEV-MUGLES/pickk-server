@@ -222,7 +222,7 @@ export class PaymentEntity implements IPayment {
 
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  vbankDate?: string;
+  vbankDate?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
