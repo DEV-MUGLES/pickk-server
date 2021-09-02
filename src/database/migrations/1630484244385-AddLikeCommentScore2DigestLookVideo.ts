@@ -15,9 +15,13 @@ export class AddLikeCommentScore2DigestLookVideo1630484244385
     await queryRunner.query(
       "ALTER TABLE `video` ADD `likeCommentScore` float NOT NULL DEFAULT '0'"
     );
+    await queryRunner.query(
+      "ALTER TABLE `item` ADD `score` float NOT NULL DEFAULT '0'"
+    );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query('ALTER TABLE `item` DROP COLUMN `score`');
     await queryRunner.query(
       'ALTER TABLE `video` DROP COLUMN `likeCommentScore`'
     );
