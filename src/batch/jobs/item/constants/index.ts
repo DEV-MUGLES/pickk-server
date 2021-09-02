@@ -1,1 +1,1 @@
-export * from './job-name.constant';
+export * from './job-name.constants';
