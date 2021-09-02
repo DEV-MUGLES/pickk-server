@@ -11,6 +11,7 @@ export type OrderRelationType =
   | 'orderItems.product.item.brand.seller'
   | 'orderItems.product.item.brand.seller.shippingPolicy'
   | 'orderItems.product.shippingReservePolicy'
+  | 'orderItems.item'
   | 'orderItems.seller'
   | 'orderItems.seller.brand'
   | 'orderItems.seller.shippingPolicy';
@@ -28,6 +29,7 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
 
 export const CHECKOUT_ORDER_RELATIONS: Array<OrderRelationType> = [
   'orderItems',
+  'orderItems.item',
   'orderItems.seller',
   'orderItems.seller.brand',
   'orderItems.seller.shippingPolicy',
