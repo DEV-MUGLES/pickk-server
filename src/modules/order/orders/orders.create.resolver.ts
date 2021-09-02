@@ -21,7 +21,11 @@ import { PaymentsService } from '@payment/payments/payments.service';
 import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { UsersService } from '@user/users/users.service';
 
-import { OrderRelationType, ORDER_RELATIONS } from './constants';
+import {
+  CHECKOUT_ORDER_RELATIONS,
+  OrderRelationType,
+  ORDER_RELATIONS,
+} from './constants';
 import {
   RegisterOrderInput,
   BaseOrderOutput,
@@ -106,12 +110,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @Args('merchantUid') merchantUid: string
   ): Promise<OrderSheet> {
     const [order, user, availablePointAmount, coupons] = await Promise.all([
-      this.ordersService.get(merchantUid, [
-        'orderItems',
-        'orderItems.seller',
-        'orderItems.seller.brand',
-        'orderItems.seller.shippingPolicy',
-      ]),
+      this.ordersService.get(merchantUid, CHECKOUT_ORDER_RELATIONS),
       this.usersService.get(userId),
       this.pointsService.getAvailableAmount(userId),
       this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [

@@ -12,6 +12,7 @@ export type OrderRelationType =
   | 'orderItems.product.item.brand.seller.shippingPolicy'
   | 'orderItems.product.shippingReservePolicy'
   | 'orderItems.seller'
+  | 'orderItems.seller.brand'
   | 'orderItems.seller.shippingPolicy';
 
 export const ORDER_RELATIONS: Array<OrderRelationType> = [
@@ -23,6 +24,17 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'refundRequests',
   'refundRequests.shipment',
   'refundRequests.shipment.courier',
+];
+
+export const CHECKOUT_ORDER_RELATIONS: Array<OrderRelationType> = [
+  'orderItems',
+  'orderItems.product',
+  'orderItems.product.item',
+  'orderItems.product.item.prices',
+  'orderItems.product.shippingReservePolicy',
+  'orderItems.seller',
+  'orderItems.seller.brand',
+  'orderItems.seller.shippingPolicy',
 ];
 
 export const START_ORDER_RELATIONS: Array<OrderRelationType> = [
