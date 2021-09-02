@@ -109,6 +109,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
       this.ordersService.get(merchantUid, [
         'orderItems',
         'orderItems.seller',
+        'orderItems.seller.brand',
         'orderItems.seller.shippingPolicy',
       ]),
       this.usersService.get(userId),

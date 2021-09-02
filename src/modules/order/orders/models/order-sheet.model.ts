@@ -14,6 +14,9 @@ export class OrderSheetBrand {
   @Field()
   nameKor: string;
 
+  @Field()
+  imageUrl: string;
+
   @Field(() => Int)
   shippingFee: number;
 
@@ -43,12 +46,13 @@ export class OrderSheet {
     const brandItemsMap = new Map<number, OrderSheetBrand>();
 
     this.order.orderItems.forEach((orderItem) => {
-      const { seller, brandNameKor } = orderItem;
+      const { seller } = orderItem;
       const { minimumAmountForFree, fee } = seller.shippingPolicy;
 
       if (!brandItemsMap.has(seller.id)) {
         brandItemsMap.set(seller.id, {
-          nameKor: brandNameKor,
+          nameKor: seller.brand.nameKor,
+          imageUrl: seller.brand.imageUrl,
           shippingFee: fee,
           totalItemFinalPrice: 0,
           items: [],
