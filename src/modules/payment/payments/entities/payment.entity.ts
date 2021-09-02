@@ -90,11 +90,9 @@ export class PaymentEntity implements IPayment {
   @PrimaryColumn({ type: 'char', length: 20 })
   @IsString()
   merchantUid: string;
-
   @Field()
   @CreateDateColumn()
   createdAt: Date;
-
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
@@ -106,7 +104,6 @@ export class PaymentEntity implements IPayment {
   })
   @IsEnum(PaymentStatus)
   status: PaymentStatus;
-
   @Field(() => PayEnviroment)
   @Column({
     type: 'enum',
@@ -114,11 +111,9 @@ export class PaymentEntity implements IPayment {
   })
   @IsEnum(PayEnviroment)
   env: PayEnviroment;
-
   @Field()
   @Column()
   origin: string;
-
   @Field(() => Pg)
   @Column({
     type: 'enum',
@@ -156,48 +151,38 @@ export class PaymentEntity implements IPayment {
   amount: number;
 
   // 주문자 정보
-
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
+  @Column({ length: 20 })
   @IsString()
   @MaxLength(20)
   buyerName: string;
-
   @Field()
   @Column({ type: 'char', length: 11 })
   @IsPhoneNumber('KR')
   @IsNumberString()
   @MaxLength(11)
   buyerTel: string;
-
   @Field()
   @Column()
   @IsEmail()
   buyerEmail: string;
-
   @Field()
   @Column({ type: 'char', length: 6 })
   // @TODO: https://github.com/validatorjs/validator.js/pull/1628 가 머지 및 release 완료되면 국가코드 'KR'로 변경하기!
   @IsPostalCode('DE')
   @MaxLength(6)
   buyerPostalcode: string;
-
   @Field()
   @Column()
   @IsString()
   buyerAddr: string;
 
   // 신용 카드 관련 정보
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
   applyNum?: string;
-
   @Field(() => CardCode, { nullable: true })
   @Column({
     type: 'enum',
@@ -207,7 +192,6 @@ export class PaymentEntity implements IPayment {
   @IsEnum(CardCode)
   @IsOptional()
   cardCode?: CardCode;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsString()
@@ -215,7 +199,6 @@ export class PaymentEntity implements IPayment {
   cardNum?: string;
 
   // 가상계좌 관련 정보
-
   @Field(() => BankCode, { nullable: true })
   @Column({
     type: 'enum',
@@ -225,13 +208,11 @@ export class PaymentEntity implements IPayment {
   @IsEnum(BankCode)
   @IsOptional()
   vbankCode?: BankCode;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
   vbankNum?: string;
-
   @Field({ nullable: true })
   @Column({ length: 15, nullable: true })
   @IsString()
@@ -241,8 +222,6 @@ export class PaymentEntity implements IPayment {
 
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   vbankDate?: string;
 
   @Field({ nullable: true })
