@@ -8,6 +8,19 @@ export const enrichIsMe = (userId: number, target: User) => {
   target.isMe = target.id === userId;
 };
 
+export const enrichUserIsMe = <
+  T extends { user?: { id: number; isMe: boolean } }
+>(
+  userId: number,
+  owner: T
+) => {
+  if (!userId || !owner.user) {
+    return;
+  }
+
+  owner.user.isMe = owner.user.id === userId;
+};
+
 export const enrichIsMine = <Owner extends { userId: number; isMine: boolean }>(
   userId: number,
   owner: Owner
