@@ -27,16 +27,15 @@ export class ItemFilter implements Partial<IItem> {
 
   @Field(() => [Int], { nullable: true })
   idIn?: number[];
+  @Field({ nullable: true })
+  scoreMt?: Date;
 
   @Field({ nullable: true })
   sellableAtMte?: Date;
-
   @Field({ nullable: true })
   sellableAtLte?: Date;
-
   @Field({ nullable: true })
   createdAtMte?: Date;
-
   @Field({ nullable: true })
   createdAtLte?: Date;
 
@@ -44,4 +43,7 @@ export class ItemFilter implements Partial<IItem> {
     nullable: true,
   })
   brandId?: number;
+
+  @Field(() => String)
+  orderBy?: keyof IItem;
 }

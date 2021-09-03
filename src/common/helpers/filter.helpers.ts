@@ -5,6 +5,7 @@ import {
   IsNull,
   LessThanOrEqual,
   Like,
+  MoreThan,
   MoreThanOrEqual,
   Not,
 } from 'typeorm';
@@ -96,6 +97,12 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
       return {
         ...acc,
         [key.replace(/Between$/, '')]: Between(from, to),
+      };
+    }
+    if (/Mt$/.test(key)) {
+      return {
+        ...acc,
+        [key.replace(/Mt$/, '')]: MoreThan(value),
       };
     }
     if (/Mte$/.test(key)) {

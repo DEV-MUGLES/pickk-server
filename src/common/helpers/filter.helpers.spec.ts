@@ -4,6 +4,7 @@ import {
   IsNull,
   LessThanOrEqual,
   Like,
+  MoreThan,
   MoreThanOrEqual,
   Not,
 } from 'typeorm';
@@ -119,6 +120,14 @@ describe('FilterHelpers', () => {
           name: Between(input[0], input[1]),
         });
       }
+    });
+
+    it('should parse Mt', () => {
+      const num = faker.datatype.number();
+
+      expect(parseFilter({ ageMt: num })).toEqual({
+        age: MoreThan(num),
+      });
     });
 
     it('should parse Mte', () => {
