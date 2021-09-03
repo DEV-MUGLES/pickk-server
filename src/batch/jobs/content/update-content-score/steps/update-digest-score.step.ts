@@ -55,7 +55,10 @@ export class UpdateDigestScoreStep extends BaseStep {
               );
               const soldOutScore = isSoldout ? -0.5 : 0;
 
-              digest.score = hitScore + reactionScore + soldOutScore;
+              digest.score = Math.max(
+                hitScore + reactionScore + soldOutScore,
+                0
+              );
 
               resolve(digest);
             } catch (err) {
