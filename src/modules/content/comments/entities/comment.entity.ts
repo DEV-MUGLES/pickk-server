@@ -11,6 +11,7 @@ import { CommentOwnerType } from '../constants';
 @ObjectType()
 @Entity({ name: 'comment' })
 @Index('idx_ownerId-id', ['ownerId', 'id'])
+@Index('idx_ownerId-ownerType-createdAt', ['ownerId', 'ownerType', 'createdAt'])
 export class CommentEntity extends BaseIdEntity implements IComment {
   constructor(attributes?: Partial<CommentEntity>) {
     super(attributes);
