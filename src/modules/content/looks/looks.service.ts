@@ -4,7 +4,7 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { enrichIsMine, parseFilter } from '@common/helpers';
+import { enrichIsMine, enrichUserIsMe, parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -35,6 +35,7 @@ export class LooksService {
 
     if (userId) {
       enrichIsMine(userId, look);
+      enrichUserIsMe(userId, look);
       await this.likesService.enrichLiking(userId, LikeOwnerType.Look, look);
       await this.followsService.enrichAuthorFollowing(userId, look);
     }
@@ -71,7 +72,7 @@ export class LooksService {
       return {
         where: { id: In(ids) },
         order: {
-          [filter.orderBy ?? 'id']: 'DESC',
+          [filter?.orderBy ?? 'id']: 'DESC',
         },
       };
     }
@@ -80,7 +81,7 @@ export class LooksService {
       where: parseFilter(_filter, _pageInput?.idFilter),
       ...(_pageInput?.pageFilter ?? {}),
       order: {
-        [filter.orderBy ?? 'id']: 'DESC',
+        [filter?.orderBy ?? 'id']: 'DESC',
       },
     };
   }

@@ -4,12 +4,14 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
+
 import { CART_ITEM_RELATIONS } from '@item/carts/constants';
 import { CartsService } from '@item/carts/carts.service';
 import { PRODUCT_RELATIONS } from '@item/products/constants';
@@ -17,18 +19,20 @@ import { ProductsService } from '@item/products/products.service';
 import { CouponStatus } from '@order/coupons/constants';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { PointsService } from '@order/points/points.service';
-import { PaymentsService } from '@payment/payments/payments.service';
-import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { UsersService } from '@user/users/users.service';
 
-import { OrderRelationType, ORDER_RELATIONS } from './constants';
+import {
+  CHECKOUT_ORDER_RELATIONS,
+  OrderRelationType,
+  ORDER_RELATIONS,
+} from './constants';
 import {
   RegisterOrderInput,
   BaseOrderOutput,
   StartOrderInput,
   CreateOrderVbankReceiptInput,
 } from './dtos';
-import { OrderSheet } from './models';
+import { Order, OrderSheet } from './models';
 import { OrdersProducer } from './producers';
 
 import { OrdersService } from './orders.service';
@@ -43,7 +47,6 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     private readonly productsService: ProductsService,
     private readonly pointsService: PointsService,
     private readonly ordersService: OrdersService,
-    private readonly paymentsService: PaymentsService,
     private readonly usersService: UsersService,
     private readonly ordersProducer: OrdersProducer
   ) {
@@ -106,11 +109,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @Args('merchantUid') merchantUid: string
   ): Promise<OrderSheet> {
     const [order, user, availablePointAmount, coupons] = await Promise.all([
-      this.ordersService.get(merchantUid, [
-        'orderItems',
-        'orderItems.seller',
-        'orderItems.seller.shippingPolicy',
-      ]),
+      this.ordersService.get(merchantUid, CHECKOUT_ORDER_RELATIONS),
       this.usersService.get(userId),
       this.pointsService.getAvailableAmount(userId),
       this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [
@@ -121,13 +120,24 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     return OrderSheet.from(order, user, availablePointAmount, coupons);
   }
 
-  @Mutation(() => BaseOrderOutput)
+  @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async startOrder(
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string,
-    @Args('startOrderInput') startOrderInput: StartOrderInput
-  ): Promise<BaseOrderOutput> {
-    return await this.ordersService.start(merchantUid, startOrderInput);
+    @Args('startOrderInput') startOrderInput: StartOrderInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Order> {
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
+    }
+
+    await this.ordersService.start(merchantUid, startOrderInput);
+    return await this.ordersService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => BaseOrderOutput)
@@ -136,12 +146,12 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string
   ): Promise<BaseOrderOutput> {
-    const order = await this.ordersService.get(merchantUid, ['orderItems']);
-    if (order.userId !== userId) {
-      throw new ForbiddenException('자신의 주문건만 실패처리할 수 있습니다.');
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    const failedOrder = await this.ordersService.fail(order);
+    const failedOrder = await this.ordersService.fail(merchantUid);
     await this.ordersProducer.restoreDeductedProductStock(failedOrder);
 
     return failedOrder;
@@ -159,25 +169,13 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     })
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
   ): Promise<BaseOrderOutput> {
-    const order = await this.ordersService.get(merchantUid, [
-      'orderItems',
-      'vbankInfo',
-    ]);
-    if (order.userId !== userId) {
+    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
+    if (!isMine) {
       throw new ForbiddenException('자신의 주문이 아닙니다.');
     }
 
-    const { status } = await this.paymentsService.get(merchantUid);
-    const paymentStatusMustBe =
-      order.payMethod === PayMethod.Vbank
-        ? PaymentStatus.VbankReady
-        : PaymentStatus.Paid;
-    if (status !== paymentStatusMustBe) {
-      throw new BadRequestException('결제가 정상적으로 처리되지 않았습니다.');
-    }
-
     return await this.ordersService.complete(
-      order,
+      merchantUid,
       createOrderVbankReceiptInput
     );
   }

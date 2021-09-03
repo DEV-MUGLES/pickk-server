@@ -40,7 +40,9 @@ import { ItemSizeChart } from '../models/item-size-chart.model';
 @Entity({
   name: 'item',
 })
-@Index(['providedCode'])
+@Index('idx_providedCode', ['providedCode'])
+@Index('idx_majorCategoryId-code', ['majorCategoryId', 'score'])
+@Index('idx_minorCategoryId-code', ['minorCategoryId', 'score'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
     super();
@@ -221,7 +223,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Field(() => Int, { defaultValue: 0 })
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   hitCount: number;
-  @Field({ defaultValue: 0 })
+  @Field()
   @Column({ type: 'float', default: 0 })
   score: number;
 

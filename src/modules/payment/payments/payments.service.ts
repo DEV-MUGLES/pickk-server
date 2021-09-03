@@ -1,8 +1,7 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
-import dayjs from 'dayjs';
 
 import { parseFilter } from '@common/helpers';
 import { InicisService } from '@payment/inicis/inicis.service';
@@ -24,7 +23,6 @@ export class PaymentsService {
   constructor(
     @InjectRepository(PaymentsRepository)
     private readonly paymentsRepository: PaymentsRepository,
-    @Inject(InicisService)
     private readonly inicisService: InicisService
   ) {}
 
@@ -118,18 +116,14 @@ export class PaymentsService {
     return await this.paymentsRepository.save(payment);
   }
 
-  async remove(payment: Payment): Promise<void> {
+  async remove(merchantUid: string): Promise<void> {
+    const payment = await this.get(merchantUid);
+
     if (
       ![PaymentStatus.Pending, PaymentStatus.Failed].includes(payment.status)
     ) {
       throw new BadRequestException(
         '미결제 상태인 결제건만 삭제할 수 있습니다.'
-      );
-    }
-    // check if payment is created before one day
-    if (dayjs(payment.createdAt).diff(dayjs(), 'days') < 1) {
-      throw new BadRequestException(
-        '1일 이내에 생성된 결제건은 삭제할 수 없습니다.'
       );
     }
 

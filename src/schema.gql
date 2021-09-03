@@ -1199,7 +1199,7 @@ type Mutation {
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
-  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): [ShippingAddress!]!
+  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!
@@ -1252,7 +1252,7 @@ type Mutation {
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
-  startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): BaseOrderOutput!
+  startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
 
   """여러번 구독된 상태였다면 모두 삭제됩니다."""
   unfollow(targetId: Int!): Boolean!
@@ -1581,6 +1581,7 @@ type OrderSheet {
 }
 
 type OrderSheetBrand {
+  imageUrl: String!
   items: [OrderItem!]!
   nameKor: String!
   shippingFee: Int!
@@ -1683,7 +1684,7 @@ type Payment {
   status: PaymentStatus!
   updatedAt: DateTime!
   vbankCode: BankCode
-  vbankDate: String
+  vbankDate: DateTime
   vbankDodgedAt: DateTime
   vbankHolder: String
   vbankNum: String

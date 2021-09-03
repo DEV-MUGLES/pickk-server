@@ -11,18 +11,39 @@ export type OrderRelationType =
   | 'orderItems.product.item.brand.seller'
   | 'orderItems.product.item.brand.seller.shippingPolicy'
   | 'orderItems.product.shippingReservePolicy'
+  | 'orderItems.item'
   | 'orderItems.seller'
+  | 'orderItems.seller.brand'
   | 'orderItems.seller.shippingPolicy';
 
 export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'user',
   'orderItems',
+  'orderItems.product',
+  'orderItems.product.item',
+  'orderItems.product.item.prices',
+  'orderItems.product.item.brand',
+  'orderItems.product.item.brand.seller',
+  'orderItems.product.item.brand.seller.shippingPolicy',
+  'orderItems.product.shippingReservePolicy',
+  'orderItems.item',
+  'orderItems.seller',
+  'orderItems.seller.brand',
+  'orderItems.seller.shippingPolicy',
   'buyer',
   'receiver',
   'vbankInfo',
   'refundRequests',
   'refundRequests.shipment',
   'refundRequests.shipment.courier',
+];
+
+export const CHECKOUT_ORDER_RELATIONS: Array<OrderRelationType> = [
+  'orderItems',
+  'orderItems.item',
+  'orderItems.seller',
+  'orderItems.seller.brand',
+  'orderItems.seller.shippingPolicy',
 ];
 
 export const START_ORDER_RELATIONS: Array<OrderRelationType> = [

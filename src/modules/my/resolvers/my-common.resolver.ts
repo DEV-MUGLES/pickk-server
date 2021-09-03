@@ -42,13 +42,13 @@ export class MyCommonResolver extends BaseResolver {
     return await this.usersService.listShippingAddress(userId);
   }
 
-  @Mutation(() => [ShippingAddress])
+  @Mutation(() => ShippingAddress)
   @UseGuards(JwtVerifyGuard)
   async addMeShippingAddress(
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('createShippingAddressInput')
     createShippingAddressInput: CreateShippingAddressInput
-  ): Promise<ShippingAddress[]> {
+  ): Promise<ShippingAddress> {
     return await this.usersService.addShippingAddress(
       userId,
       createShippingAddressInput
