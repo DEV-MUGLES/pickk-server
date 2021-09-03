@@ -12,14 +12,14 @@ import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
 import {
-  UpdateDigestScoreJob,
+  UpdateContentScoreJob,
   UpdateDigestScoreStep,
-} from './update-digest-score';
-import { UpdateLookScoreJob, UpdateLookScoreStep } from './update-look-score';
-import {
-  UpdateVideoScoreJob,
+  UpdateLookScoreStep,
   UpdateVideoScoreStep,
-} from './update-video-score';
+} from './update-content-score';
+import { CommentReactionScoreCalculator } from './update-content-score/reaction-score-calculator/comment.reaction-score-calculator';
+import { LikeReactionScoreCalculator } from './update-content-score/reaction-score-calculator/like.reaction-score-calculator';
+import { OrderReactionScoreCalculator } from './update-content-score/reaction-score-calculator/order.reaction-score-calculator';
 
 import { ContentJobsService } from './content-jobs.service';
 import { ContentJobsController } from './content-jobs.controller';
@@ -40,11 +40,12 @@ import { ContentJobsController } from './content-jobs.controller';
   providers: [
     BatchWorker,
     ContentJobsService,
-    UpdateDigestScoreJob,
+    CommentReactionScoreCalculator,
+    LikeReactionScoreCalculator,
+    OrderReactionScoreCalculator,
+    UpdateContentScoreJob,
     UpdateDigestScoreStep,
-    UpdateLookScoreJob,
     UpdateLookScoreStep,
-    UpdateVideoScoreJob,
     UpdateVideoScoreStep,
   ],
 })
