@@ -7,6 +7,7 @@ import { DigestsRepository } from '@content/digests/digests.repository';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { SellersModule } from '@item/sellers/sellers.module';
 import { ProductsRepository } from '@item/products/products.repository';
+import { SellersRepository } from '@item/sellers/sellers.repository';
 import { ItemsRepository } from '@item/items/items.repository';
 
 import {
@@ -30,6 +31,7 @@ import { ItemJobsService } from './item-jobs.service';
       ProductsRepository,
       ItemsRepository,
       DigestsRepository,
+      SellersRepository,
     ]),
   ],
   controllers: [ItemJobsController],
