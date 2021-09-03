@@ -58,4 +58,5 @@ export interface IItem {
   digestAverageRating: number;
   digestCount: number;
   hitCount: number;
+  score: number;
 }
