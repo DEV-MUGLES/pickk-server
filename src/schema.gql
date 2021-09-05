@@ -802,6 +802,7 @@ enum InquiryAnswerFrom {
 input InquiryFilter {
   itemId: Int
   sellerId: Int
+  userId: Int
 }
 
 """배송/사이즈/재입고/기타"""
@@ -1884,6 +1885,7 @@ type Query {
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   digestsExhibitions: [DigestsExhibition!]!
   genRandomNickname: String!
+  inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   inquiriesCount(itemId: Int!): Int!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
@@ -1905,7 +1907,7 @@ type Query {
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meFollowingUsers: [User!]!
-  meInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
+  meInquiries(pageInput: PageInput): [Inquiry!]!
   meInquiry(id: Int!): Inquiry!
   meOrder(merchantUid: String!): Order!
   meOrders(pageInput: PageInput): [Order!]!

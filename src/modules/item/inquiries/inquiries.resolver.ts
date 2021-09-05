@@ -40,6 +40,23 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     return await this.inquiriesService.count(itemId);
   }
 
+  @Query(() => [Inquiry])
+  @UseGuards(JwtOrNotGuard)
+  async inquiries(
+    @CurrentUser() payload: JwtPayload,
+    @Args('filter', { nullable: true }) filter: InquiryFilter,
+    @Args('pageInput', { nullable: true }) pageInput: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Inquiry[]> {
+    const inquiries = await this.inquiriesService.list(
+      filter,
+      pageInput,
+      this.getRelationsFromInfo(info, ['user'])
+    );
+
+    return inquiries.map((inquiry) => inquiry.securitify(payload?.sub));
+  }
+
   @Query(() => Inquiry)
   @UseGuards(JwtVerifyGuard)
   async meInquiry(
