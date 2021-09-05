@@ -4,9 +4,13 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { plainToClass } from 'class-transformer';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
+
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
 
 import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
@@ -24,6 +28,7 @@ import {
 import {
   CancelOrderInput,
   CreateOrderVbankReceiptInput,
+  OrderFilter,
   RequestOrderRefundInput,
   StartOrderInput,
 } from './dtos';
@@ -46,8 +51,38 @@ export class OrdersService {
     private readonly usersService: UsersService
   ) {}
 
+  async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
+    const isMine = await this.ordersRepository.checkBelongsTo(
+      merchantUid,
+      userId
+    );
+    if (!isMine) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
+    }
+  }
+
   async get(merchantUid: string, relations: string[] = []): Promise<Order> {
     return await this.ordersRepository.get(merchantUid, relations);
+  }
+
+  async list(
+    filter?: OrderFilter,
+    pageInput?: PageInput,
+    relations: string[] = []
+  ): Promise<Order[]> {
+    const _filter = plainToClass(OrderFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.ordersRepository.entityToModelMany(
+      await this.ordersRepository.find({
+        relations,
+        where: parseFilter(_filter, _pageInput?.idFilter),
+        order: {
+          merchantUid: 'DESC',
+        },
+        ...(_pageInput?.pageFilter ?? {}),
+      })
+    );
   }
 
   async register(
@@ -58,16 +93,6 @@ export class OrdersService {
 
     const order = OrderFactory.create(userId, merchantUid, inputs);
     return this.ordersRepository.save(order);
-  }
-
-  async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
-    const isMine = await this.ordersRepository.checkBelongsTo(
-      merchantUid,
-      userId
-    );
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
   }
 
   /** YYMMDDHHmmssSSS + NN 형식의 고유한 merchantUid를 생성합니다. */

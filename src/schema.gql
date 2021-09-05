@@ -1879,6 +1879,8 @@ type Query {
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meFollowingUsers: [User!]!
+  meOrder(merchantUid: String!): Order!
+  meOrders(pageInput: PageInput): [Order!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!
   meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!

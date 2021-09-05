@@ -15,6 +15,7 @@ import { OrdersProducer } from './producers';
 
 import { OrdersCreateResolver } from './orders.create.resolver';
 import { OrdersProcessResolver } from './orders.process.resolver';
+import { OrdersResolver } from './orders.resolver';
 import { OrdersRepository } from './orders.repository';
 import { OrdersService } from './orders.service';
 
@@ -35,6 +36,7 @@ import { OrdersService } from './orders.service';
   providers: [
     OrdersCreateResolver,
     OrdersProcessResolver,
+    OrdersResolver,
     OrdersService,
     OrdersProducer,
   ],
