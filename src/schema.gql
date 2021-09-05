@@ -1177,6 +1177,9 @@ type Look {
 
 input LookFilter {
   idIn: [Int!]
+
+  """사용시 다른 필터는 무시합니다. (정렬: "score")"""
+  itemId: Int
   orderBy: String = "id"
   styleTagIdIn: [Int!]
   user: LookUserFilter

@@ -1,14 +1,17 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { BaseRepository } from '@common/base.repository';
-
 import { PageInput } from '@common/dtos';
 import { pageQuery } from '@common/helpers';
+import { BaseRepository } from '@common/base.repository';
 
 import { LookFilter } from './dtos';
 import { LookEntity } from './entities';
-import { lookStyleTagsQuery, lookUserHeightQuery } from './helpers';
+import {
+  lookItemIdQuery,
+  lookStyleTagsQuery,
+  lookUserHeightQuery,
+} from './helpers';
 import { Look } from './models';
 
 @EntityRepository(LookEntity)
@@ -21,6 +24,22 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+
+  async findIdsByItemId(
+    itemId: number,
+    pageInput?: PageInput
+  ): Promise<number[]> {
+    const raws = await pageQuery(
+      lookItemIdQuery(this.createQueryBuilder('look'), itemId),
+      'look',
+      pageInput
+    )
+      .select('look.id', 'id')
+      .orderBy(`look.score`, 'DESC')
+      .execute();
+
+    return raws.map((raw) => raw.id);
   }
 
   async findIdsByStyleTags(

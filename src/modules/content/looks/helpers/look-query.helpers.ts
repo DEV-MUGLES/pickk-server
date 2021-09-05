@@ -3,6 +3,19 @@ import { SelectQueryBuilder } from 'typeorm';
 import { LookEntity } from '../entities';
 
 // @TODO: 테스트 작성
+export const lookItemIdQuery = (
+  queryBuilder: SelectQueryBuilder<LookEntity>,
+  itemId: number
+) => {
+  return queryBuilder.innerJoin(
+    'digest',
+    'digest',
+    `digest.lookId = look.id AND 
+      digest.itemId = ${itemId}`
+  );
+};
+
+// @TODO: 테스트 작성
 export const lookStyleTagsQuery = (
   queryBuilder: SelectQueryBuilder<LookEntity>,
   styleTagIds: number[]

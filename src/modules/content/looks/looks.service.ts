@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { enrichIsMine, enrichUserIsMe, parseFilter } from '@common/helpers';
+import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -23,7 +24,8 @@ export class LooksService {
     @InjectRepository(LooksRepository)
     private readonly looksRepository: LooksRepository,
     private readonly likesService: LikesService,
-    private readonly followsService: FollowsService
+    private readonly followsService: FollowsService,
+    private readonly cacheService: CacheService
   ) {}
 
   async get(
@@ -63,6 +65,31 @@ export class LooksService {
     const _filter = plainToClass(LookFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
+    if (_filter.itemId) {
+      const ids = await this.findIdsByItemId(_filter.itemId, pageInput);
+
+      return {
+        where: { id: In(ids) },
+        order: {
+          [filter?.orderBy ?? 'id']: 'DESC',
+        },
+      };
+    }
+
+    if (_filter?.styleTagIdIn?.length > 0) {
+      const ids = await this.looksRepository.findIdsByStyleTags(
+        _filter,
+        _pageInput
+      );
+
+      return {
+        where: { id: In(ids) },
+        order: {
+          [filter?.orderBy ?? 'id']: 'DESC',
+        },
+      };
+    }
+
     if (_filter?.styleTagIdIn?.length > 0) {
       const ids = await this.looksRepository.findIdsByStyleTags(
         _filter,
@@ -84,5 +111,25 @@ export class LooksService {
         [filter?.orderBy ?? 'id']: 'DESC',
       },
     };
+  }
+
+  private async findIdsByItemId(
+    itemId: number,
+    pageInput: PageInput
+  ): Promise<number[]> {
+    const cacheKey = `look-ids:${itemId}`;
+    const cached = await this.cacheService.get<number[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const result = await this.looksRepository.findIdsByItemId(
+      itemId,
+      pageInput
+    );
+
+    await this.cacheService.set<number[]>(cacheKey, result, { ttl: 60 * 5 });
+    return result;
   }
 }
