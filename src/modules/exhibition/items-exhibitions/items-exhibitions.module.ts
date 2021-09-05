@@ -5,6 +5,8 @@ import {
   ItemsExhibitionsRepository,
   ItemsExhibitionItemsRepository,
 } from './items-exhibitions.repository';
+import { ItemsExhibitionsResolver } from './items-exhibitions.resolver';
+import { ItemsExhibitionsService } from './items-exhibitions.service';
 
 @Module({
   imports: [
@@ -13,5 +15,6 @@ import {
       ItemsExhibitionItemsRepository,
     ]),
   ],
+  providers: [ItemsExhibitionsResolver, ItemsExhibitionsService],
 })
 export class ItemsExhibitionsModule {}

@@ -1032,6 +1032,13 @@ type ItemUrl {
   url: String!
 }
 
+type ItemsExhibition {
+  createdAt: DateTime!
+  id: Int!
+  items: [Item!]!
+  updatedAt: DateTime!
+}
+
 type JwtPayload {
   """Seller 로그인인 경우에만 발급된다."""
   brandId: Float
@@ -1283,6 +1290,7 @@ type Mutation {
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
+  updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
@@ -1880,6 +1888,7 @@ type Query {
   itemMinorCategories: [ItemCategory!]!
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
+  itemsExhibitions: [ItemsExhibition!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
   likingDigests(pageInput: PageInput!): [Digest!]!
   likingKeywords(pageInput: PageInput!): [Keyword!]!
