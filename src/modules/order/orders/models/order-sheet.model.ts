@@ -2,34 +2,13 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { Coupon } from '@order/coupons/models';
-import { OrderItem } from '@order/order-items/models';
 import { RefundAccount, ShippingAddress, User } from '@user/users/models';
 
 import { OrderStatus } from '../constants';
+import { getOrderBrands } from '../helpers';
 
+import { OrderBrand } from './order-brand.model';
 import { Order } from './order.model';
-
-@ObjectType()
-export class OrderSheetBrand {
-  @Field()
-  nameKor: string;
-
-  @Field()
-  imageUrl: string;
-
-  @Field(() => Int)
-  shippingFee: number;
-
-  @Field(() => Int)
-  totalItemFinalPrice: number;
-
-  @Field(() => [OrderItem])
-  items: OrderItem[];
-
-  constructor(attributes?: Partial<OrderSheet>) {
-    Object.assign(this, attributes);
-  }
-}
 
 @ObjectType()
 export class OrderSheet {
@@ -41,34 +20,9 @@ export class OrderSheet {
     return this.order.merchantUid;
   }
 
-  @Field(() => [OrderSheetBrand])
-  get brands(): OrderSheetBrand[] {
-    const brandItemsMap = new Map<number, OrderSheetBrand>();
-
-    this.order.orderItems.forEach((orderItem) => {
-      const { seller } = orderItem;
-      const { minimumAmountForFree, fee } = seller.shippingPolicy;
-
-      if (!brandItemsMap.has(seller.id)) {
-        brandItemsMap.set(seller.id, {
-          nameKor: seller.brand.nameKor,
-          imageUrl: seller.brand.imageUrl,
-          shippingFee: fee,
-          totalItemFinalPrice: 0,
-          items: [],
-        });
-      }
-
-      const orderSheetBrand = brandItemsMap.get(seller.id);
-      orderSheetBrand.items.push(orderItem);
-      orderSheetBrand.totalItemFinalPrice += orderItem.itemFinalPrice;
-
-      if (orderSheetBrand.totalItemFinalPrice >= minimumAmountForFree) {
-        orderSheetBrand.shippingFee = 0;
-      }
-    });
-
-    return [...brandItemsMap.values()];
+  @Field(() => [OrderBrand])
+  get brands(): OrderBrand[] {
+    return getOrderBrands(this.order.orderItems);
   }
 
   @Field(() => User)

@@ -1,3 +1,4 @@
+export * from './order-brand.model';
 export * from './order-buyer.model';
 export * from './order-receiver.model';
 export * from './order-refund-account.model';
