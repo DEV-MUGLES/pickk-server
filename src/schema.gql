@@ -619,6 +619,13 @@ type DigestImage {
   url: String!
 }
 
+type DigestsExhibition {
+  createdAt: DateTime!
+  digests: [Digest!]!
+  id: Int!
+  updatedAt: DateTime!
+}
+
 type ExchangeRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
@@ -1863,6 +1870,7 @@ type Query {
   couriers: [Courier!]!
   digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
+  digestsExhibitions: [DigestsExhibition!]!
   genRandomNickname: String!
   inquiriesCount(itemId: Int!): Int!
   item(id: Int!): Item!
