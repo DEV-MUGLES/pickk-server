@@ -5,7 +5,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
-import { BaseResolver } from '@common/base.resolver';
+import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
 import { CART_ITEM_RELATIONS } from '@item/carts/constants';
 import { CartsService } from '@item/carts/carts.service';
@@ -35,6 +35,12 @@ import { OrdersService } from './orders.service';
 @Injectable()
 export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
+  derivedFieldsInfo: DerivedFieldsInfoType = {
+    orderItems: ['brands'],
+    'orderItems.seller': ['brands'],
+    'orderItems.seller.brand': ['brands'],
+    'orderItems.seller.shippingPolicy': ['brands'],
+  };
 
   constructor(
     private readonly couponsService: CouponsService,

@@ -12,6 +12,10 @@ import {
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
 export interface ISeller {
+  id: number;
+  createdAt: Date;
+  updatedAt: Date;
+
   /** 상호 */
   businessName: string;
   /** 사업자번호 */

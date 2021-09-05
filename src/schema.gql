@@ -113,6 +113,8 @@ enum BankCode {
 }
 
 type BaseOrderOutput {
+  """[MODEL ONLY]"""
+  brands: [OrderBrand!]!
   createdAt: DateTime!
   failedAt: DateTime
 
@@ -1296,6 +1298,8 @@ type Mutation {
 }
 
 type Order {
+  """[MODEL ONLY]"""
+  brands: [OrderBrand!]!
   buyer: OrderBuyer
   createdAt: DateTime!
   failedAt: DateTime

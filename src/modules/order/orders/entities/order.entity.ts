@@ -76,11 +76,9 @@ export class OrderEntity implements IOrder {
   @PrimaryColumn({ type: 'char', length: 20 })
   @IsString()
   merchantUid: string;
-
   @Field()
   @CreateDateColumn()
   createdAt: Date;
-
   @Field()
   @UpdateDateColumn()
   updatedAt: Date;
@@ -88,19 +86,12 @@ export class OrderEntity implements IOrder {
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   userId?: number;
 
   @OneToMany('OrderItemEntity', 'order', { cascade: true, onDelete: 'CASCADE' })
   orderItems: IOrderItem[];
-
   @OneToMany('RefundRequestEntity', 'order', {
     cascade: true,
     onDelete: 'CASCADE',
@@ -108,19 +99,11 @@ export class OrderEntity implements IOrder {
   refundRequests: IRefundRequest[];
 
   @Field(() => OrderStatus)
-  @Column({
-    type: 'enum',
-    enum: OrderStatus,
-  })
+  @Column({ type: 'enum', enum: OrderStatus })
   @IsEnum(OrderStatus)
   status: OrderStatus;
-
   @Field(() => PayMethod, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: PayMethod,
-    nullable: true,
-  })
+  @Column({ type: 'enum', enum: PayMethod, nullable: true })
   @IsEnum(PayMethod)
   payMethod?: PayMethod;
 
@@ -128,81 +111,56 @@ export class OrderEntity implements IOrder {
   @Column({ unsigned: true })
   @Min(1)
   totalItemFinalPrice: number;
-
   @Field(() => Int)
   @Column({ unsigned: true })
   @Min(0)
   totalShippingFee: number;
-
   @Field(() => Int)
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   totalCouponDiscountAmount: number;
-
   @Field(() => Int)
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   totalUsedPointAmount: number;
-
   @Field(() => Int)
   @Column({ unsigned: true, default: 0 })
   @Min(1)
   totalPayAmount: number;
 
-  @Field(() => OrderVbankReceipt, {
-    nullable: true,
-  })
-  @OneToOne(() => OrderVbankReceiptEntity, {
-    cascade: true,
-    nullable: true,
-  })
+  @Field(() => OrderVbankReceipt, { nullable: true })
+  @OneToOne(() => OrderVbankReceiptEntity, { cascade: true, nullable: true })
   @JoinColumn()
   vbankInfo?: OrderVbankReceipt;
 
   @Field(() => OrderBuyer, { nullable: true })
-  @OneToOne(() => OrderBuyerEntity, {
-    cascade: true,
-    nullable: true,
-  })
+  @OneToOne(() => OrderBuyerEntity, { cascade: true, nullable: true })
   @JoinColumn()
   buyer: OrderBuyer;
-
   @Field(() => OrderReceiver, { nullable: true })
-  @OneToOne(() => OrderReceiverEntity, {
-    cascade: true,
-    nullable: true,
-  })
+  @OneToOne(() => OrderReceiverEntity, { cascade: true, nullable: true })
   @JoinColumn()
   receiver: OrderReceiver;
-
   @Field(() => OrderRefundAccount, { nullable: true })
-  @OneToOne(() => OrderRefundAccountEntity, {
-    cascade: true,
-    nullable: true,
-  })
+  @OneToOne(() => OrderRefundAccountEntity, { cascade: true, nullable: true })
   @JoinColumn()
   refundAccount: OrderRefundAccount;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
   payingAt?: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   failedAt?: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   vbankReadyAt?: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   vbankDodgedAt?: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   paidAt?: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   withdrawnAt?: Date;

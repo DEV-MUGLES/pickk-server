@@ -5,7 +5,7 @@ import { Args, Info, Mutation } from '@nestjs/graphql';
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
-import { BaseResolver } from '@common/base.resolver';
+import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
 import {
@@ -21,6 +21,12 @@ import { OrdersService } from './orders.service';
 @Injectable()
 export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
+  derivedFieldsInfo: DerivedFieldsInfoType = {
+    orderItems: ['brands'],
+    'orderItems.seller': ['brands'],
+    'orderItems.seller.brand': ['brands'],
+    'orderItems.seller.shippingPolicy': ['brands'],
+  };
 
   constructor(
     @Inject(OrdersService)

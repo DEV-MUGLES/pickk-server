@@ -20,8 +20,9 @@ import {
   StartOrderInput,
 } from '../dtos';
 import { OrderEntity } from '../entities';
-import { calcTotalShippingFee } from '../helpers';
+import { calcTotalShippingFee, getOrderBrands } from '../helpers';
 
+import { OrderBrand } from './order-brand.model';
 import { OrderBuyer } from './order-buyer.model';
 import { OrderReceiver } from './order-receiver.model';
 import { OrderRefundAccount } from './order-refund-account.model';
@@ -35,6 +36,11 @@ export class Order extends OrderEntity {
   })
   get id(): string {
     return this.merchantUid;
+  }
+
+  @Field(() => [OrderBrand], { description: '[MODEL ONLY]' })
+  get brands(): OrderBrand[] {
+    return getOrderBrands(this.orderItems ?? []);
   }
 
   @Field(() => [OrderItem])
