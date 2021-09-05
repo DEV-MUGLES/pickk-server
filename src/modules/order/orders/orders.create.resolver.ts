@@ -1,9 +1,4 @@
-import {
-  BadRequestException,
-  ForbiddenException,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -128,10 +123,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @Args('startOrderInput') startOrderInput: StartOrderInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     await this.ordersService.start(merchantUid, startOrderInput);
     return await this.ordersService.get(
@@ -146,10 +138,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string
   ): Promise<BaseOrderOutput> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     const failedOrder = await this.ordersService.fail(merchantUid);
     await this.ordersProducer.restoreDeductedProductStock(failedOrder);
@@ -169,10 +158,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     })
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
   ): Promise<BaseOrderOutput> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     return await this.ordersService.complete(
       merchantUid,

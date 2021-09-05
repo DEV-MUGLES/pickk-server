@@ -1,4 +1,8 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
@@ -56,8 +60,14 @@ export class OrdersService {
     return this.ordersRepository.save(order);
   }
 
-  async checkBelongsTo(merchantUid: string, userId: number): Promise<boolean> {
-    return await this.ordersRepository.checkBelongsTo(merchantUid, userId);
+  async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
+    const isMine = await this.ordersRepository.checkBelongsTo(
+      merchantUid,
+      userId
+    );
+    if (!isMine) {
+      throw new ForbiddenException('자신의 주문이 아닙니다.');
+    }
   }
 
   /** YYMMDDHHmmssSSS + NN 형식의 고유한 merchantUid를 생성합니다. */

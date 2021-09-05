@@ -1,10 +1,5 @@
 import { GraphQLResolveInfo } from 'graphql';
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -42,10 +37,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('merchantUid') merchantUid: string
   ): Promise<BaseOrderOutput> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     const dodgedOrder = await this.ordersService.dodgeVbank(merchantUid);
     await this.ordersProducer.restoreDeductedProductStock(dodgedOrder);
@@ -63,10 +55,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     input: CancelOrderInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     const canceledOrder = await this.ordersService.cancel(merchantUid, input);
     await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
@@ -87,10 +76,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     input: RequestOrderRefundInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order> {
-    const isMine = await this.ordersService.checkBelongsTo(merchantUid, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문이 아닙니다.');
-    }
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     await this.ordersService.requestRefund(merchantUid, input);
 
