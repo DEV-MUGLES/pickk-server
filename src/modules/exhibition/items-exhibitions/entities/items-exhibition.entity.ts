@@ -1,5 +1,5 @@
-import { ObjectType } from '@nestjs/graphql';
-import { Entity, OneToMany } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -17,8 +17,14 @@ export class ItemsExhibitionEntity
       return;
     }
 
+    this.title = attributes.title;
+
     this.exhibitionItems = attributes.exhibitionItems;
   }
+
+  @Field({ description: '최대 50자' })
+  @Column({ length: 50 })
+  title: string;
 
   @OneToMany('ItemsExhibitionItemEntity', 'exhibition', {
     cascade: true,

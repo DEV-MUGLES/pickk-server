@@ -5,5 +5,7 @@ export interface IItemsExhibition {
   createdAt: Date;
   updatedAt: Date;
 
+  title: string;
+
   exhibitionItems: IItemsExhibitionItem[];
 }

@@ -1036,6 +1036,9 @@ type ItemsExhibition {
   createdAt: DateTime!
   id: Int!
   items: [Item!]!
+
+  """최대 50자"""
+  title: String!
   updatedAt: DateTime!
 }
 
