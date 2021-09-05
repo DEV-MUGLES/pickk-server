@@ -1861,9 +1861,7 @@ type Query {
   digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   genRandomNickname: String!
-  inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   inquiriesCount(itemId: Int!): Int!
-  inquiry(id: Int!): Inquiry!
   item(id: Int!): Item!
   itemCategoryTree: [ItemCategory!]!
   itemMajorCategories: [ItemCategory!]!
@@ -1883,6 +1881,8 @@ type Query {
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!
   meFollowingUsers: [User!]!
+  meInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
+  meInquiry(id: Int!): Inquiry!
   meOrder(merchantUid: String!): Order!
   meOrders(pageInput: PageInput): [Order!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!

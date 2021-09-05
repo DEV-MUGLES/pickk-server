@@ -42,7 +42,7 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
 
   @Query(() => Inquiry)
   @UseGuards(JwtVerifyGuard)
-  async inquiry(
+  async meInquiry(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
@@ -61,7 +61,7 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
 
   @Query(() => [Inquiry])
   @UseGuards(JwtOrNotGuard)
-  async inquiries(
+  async meInquiries(
     @CurrentUser() payload: JwtPayload,
     @Args('filter', { nullable: true }) filter: InquiryFilter,
     @Args('pageInput', { nullable: true }) pageInput: PageInput,
