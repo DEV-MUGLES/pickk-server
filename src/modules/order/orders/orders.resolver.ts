@@ -18,6 +18,7 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
   relations = ORDER_RELATIONS;
   derivedFieldsInfo: DerivedFieldsInfoType = {
     orderItems: ['brands'],
+    'orderItems.item': ['brands'],
     'orderItems.seller': ['brands'],
     'orderItems.seller.brand': ['brands'],
     'orderItems.seller.shippingPolicy': ['brands'],
