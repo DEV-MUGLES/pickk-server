@@ -3,8 +3,11 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { DigestsExhibitionEntity } from './entities';
-import { DigestsExhibition } from './models';
+import {
+  DigestsExhibitionEntity,
+  DigestsExhibitionDigestEntity,
+} from './entities';
+import { DigestsExhibition, DigestsExhibitionDigest } from './models';
 
 @EntityRepository(DigestsExhibitionEntity)
 export class DigestsExhibitionsRepository extends BaseRepository<
@@ -26,6 +29,32 @@ export class DigestsExhibitionsRepository extends BaseRepository<
     entities: DigestsExhibitionEntity[],
     transformOptions = {}
   ): DigestsExhibition[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(DigestsExhibitionDigestEntity)
+export class DigestsExhibitionDigestsRepository extends BaseRepository<
+  DigestsExhibitionDigestEntity,
+  DigestsExhibitionDigest
+> {
+  entityToModel(
+    entity: DigestsExhibitionDigestEntity,
+    transformOptions = {}
+  ): DigestsExhibitionDigest {
+    return plainToClass(
+      DigestsExhibitionDigest,
+      entity,
+      transformOptions
+    ) as DigestsExhibitionDigest;
+  }
+
+  entityToModelMany(
+    entities: DigestsExhibitionDigestEntity[],
+    transformOptions = {}
+  ): DigestsExhibitionDigest[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );

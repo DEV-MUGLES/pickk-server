@@ -1278,6 +1278,7 @@ type Mutation {
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
+  updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!

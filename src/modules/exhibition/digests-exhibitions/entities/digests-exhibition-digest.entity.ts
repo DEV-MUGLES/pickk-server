@@ -18,6 +18,14 @@ export class DigestsExhibitionDigestEntity
     if (!attributes) {
       return;
     }
+
+    this.exhibition = attributes.exhibition;
+    this.exhibitionId = attributes.exhibitionId;
+
+    this.digest = attributes.digest;
+    this.digestId = attributes.digestId;
+
+    this.order = attributes.order;
   }
 
   @ManyToOne('DigestsExhibitionEntity')
