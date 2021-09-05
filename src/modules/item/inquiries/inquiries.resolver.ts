@@ -60,20 +60,17 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Query(() => [Inquiry])
-  @UseGuards(JwtOrNotGuard)
+  @UseGuards(JwtVerifyGuard)
   async meInquiries(
-    @CurrentUser() payload: JwtPayload,
-    @Args('filter', { nullable: true }) filter: InquiryFilter,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('pageInput', { nullable: true }) pageInput: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Inquiry[]> {
-    const inquiries = await this.inquiriesService.list(
-      filter,
+    return await this.inquiriesService.list(
+      { userId },
       pageInput,
       this.getRelationsFromInfo(info, ['user'])
     );
-
-    return inquiries.map((inquiry) => inquiry.securitify(payload?.sub));
   }
 
   @Mutation(() => Inquiry)

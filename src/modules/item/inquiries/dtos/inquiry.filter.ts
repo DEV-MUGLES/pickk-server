@@ -5,8 +5,11 @@ import { IInquiry } from '../interfaces';
 @InputType()
 export class InquiryFilter implements Partial<IInquiry> {
   @Field(() => Int, { nullable: true })
-  itemId: number;
+  userId?: number;
 
   @Field(() => Int, { nullable: true })
-  sellerId: number;
+  itemId?: number;
+
+  @Field(() => Int, { nullable: true })
+  sellerId?: number;
 }
