@@ -35,22 +35,24 @@ export class Digest extends DigestEntity {
   }
   // TODO: QUEUE 삭제된 이미지 S3에서 제거하는 작업
   public updateDigestImages(urls: string[]) {
-    const updatedImages = urls.filter(isPickkImageUrl).map((url, index) => {
-      const existImage = this.images.find(
-        ({ key }) => key === parseToImageKey(url)
-      );
-      if (existImage) {
-        existImage.order = index;
-        return existImage;
-      }
-      return DigestImageFactory.from(url, index);
-    });
+    const newImages = urls
+      .filter(isPickkImageUrl)
+      .map((url, index) => DigestImageFactory.from(url, index));
 
     //update된 이미지들과 order가 중복되는 image들을 제거한다.
-    const deletedImages = this.images.filter(({ order }) =>
-      updatedImages.findIndex((updatedImage) => updatedImage.order === order)
+    const deletedImages = this.images.filter(
+      ({ key }) => !this.getImage(key, newImages)
     );
 
-    this.images = updatedImages;
+    this.images = newImages;
+
+    return deletedImages;
+  }
+
+  public getImage(
+    key: string,
+    images: DigestImage[] = this.images
+  ): DigestImage {
+    return images.find((image) => image.key === key);
   }
 }
