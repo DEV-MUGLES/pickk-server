@@ -11,6 +11,7 @@ import { SearchModule } from '@mcommon/search/search.module';
 import { CommentsModule } from '@content/comments/comments.module';
 import { FollowsModule } from '@user/follows/follows.module';
 import { LikesModule } from '@content/likes/likes.module';
+import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
 
 import {
   UpdateDigestCommentCountConsumer,
@@ -40,6 +41,7 @@ import { DigestsService } from './digests.service';
     FollowsModule,
     forwardRef(() => SearchModule),
     CommentsModule,
+    ItemPropertiesModule,
   ],
   providers: [
     DigestsResolver,

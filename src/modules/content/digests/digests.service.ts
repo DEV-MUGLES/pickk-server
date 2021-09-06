@@ -8,9 +8,10 @@ import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { FollowsService } from '@user/follows/follows.service';
+import { ItemPropertiesService } from '@item/item-properties/item-properties.service';
 
 import { DigestRelationType } from './constants';
-import { DigestFilter } from './dtos';
+import { CreateDigestInput, DigestFilter } from './dtos';
 import { Digest } from './models';
 
 import { DigestsRepository } from './digests.repository';
@@ -21,7 +22,8 @@ export class DigestsService {
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
     private readonly likesService: LikesService,
-    private readonly followsService: FollowsService
+    private readonly followsService: FollowsService,
+    private readonly itemPropertiesService: ItemPropertiesService
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<boolean> {
@@ -82,5 +84,17 @@ export class DigestsService {
   async remove(id: number): Promise<void> {
     const digest = await this.get(id);
     await this.digestsRepository.remove(digest);
+  }
+
+  async create(input: CreateDigestInput): Promise<Digest> {
+    const { itemPropertyValueIds, imageInput, ...digestInput } = input;
+    const digest = new Digest(digestInput);
+    digest.createDigestImages(imageInput);
+    digest.setItemPropertyValues(
+      await this.itemPropertiesService.getItemPropertyValues(
+        itemPropertyValueIds
+      )
+    );
+    return await this.digestsRepository.save(digest);
   }
 }
