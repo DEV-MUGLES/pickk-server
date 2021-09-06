@@ -1,7 +1,4 @@
 import dayjs from 'dayjs';
-import isSameOrAfter from 'dayjs/plugin/isSameOrAfter';
-
-dayjs.extend(isSameOrAfter);
 
 const ADDITIONAL_HOUR = 48;
 export abstract class HitScore {
@@ -23,23 +20,32 @@ export abstract class HitScore {
     return this.hitCount / this.divisor;
   }
 
+  get passedHour() {
+    return dayjs().diff(this.createdAt, 'hour');
+  }
+
   get divisor() {
-    const passedHour = dayjs().diff(this.createdAt, 'hour');
     if (this.isFirstInterval()) {
-      return Math.pow(passedHour + ADDITIONAL_HOUR, this.firstIntervalPower);
+      return Math.pow(
+        this.passedHour + ADDITIONAL_HOUR,
+        this.firstIntervalPower
+      );
     }
     if (this.isSecondInterval()) {
       return (
         this.getSecondIntervalAdditionalDivisor() +
         Math.pow(
-          passedHour - this.firstIntervalEndHour,
+          this.passedHour - this.firstIntervalEndHour,
           this.secondIntervalPower
         )
       );
     }
     return (
       this.getThirdIntervalAdditionalDivisor() +
-      Math.pow(passedHour - this.secondIntervalEndHour, this.thirdIntervalPower)
+      Math.pow(
+        this.passedHour - this.secondIntervalEndHour,
+        this.thirdIntervalPower
+      )
     );
   }
 
@@ -64,16 +70,13 @@ export abstract class HitScore {
   }
 
   private isFirstInterval() {
-    const end = dayjs(this.createdAt).add(this.firstIntervalEndHour, 'hour');
-    return dayjs(this.createdAt).isBefore(end);
+    return this.passedHour < this.firstIntervalEndHour;
   }
 
   private isSecondInterval() {
-    const start = dayjs(this.createdAt).add(this.firstIntervalEndHour, 'hour');
-    const end = dayjs(this.createdAt).add(this.secondIntervalEndHour, 'hour');
     return (
-      dayjs(this.createdAt).isSameOrAfter(start) &&
-      dayjs(this.createdAt).isBefore(end)
+      this.firstIntervalEndHour <= this.passedHour &&
+      this.passedHour > this.secondIntervalEndHour
     );
   }
 }
