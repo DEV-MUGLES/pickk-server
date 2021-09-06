@@ -17,9 +17,6 @@ import {
   UpdateLookScoreStep,
   UpdateVideoScoreStep,
 } from './update-content-score';
-import { CommentReactionScoreCalculator } from './update-content-score/reaction-score-calculator/comment.reaction-score-calculator';
-import { LikeReactionScoreCalculator } from './update-content-score/reaction-score-calculator/like.reaction-score-calculator';
-import { OrderReactionScoreCalculator } from './update-content-score/reaction-score-calculator/order.reaction-score-calculator';
 
 import { ContentJobsService } from './content-jobs.service';
 import { ContentJobsController } from './content-jobs.controller';
@@ -40,9 +37,6 @@ import { ContentJobsController } from './content-jobs.controller';
   providers: [
     BatchWorker,
     ContentJobsService,
-    CommentReactionScoreCalculator,
-    LikeReactionScoreCalculator,
-    OrderReactionScoreCalculator,
     UpdateContentScoreJob,
     UpdateDigestScoreStep,
     UpdateLookScoreStep,
