@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { allSettled } from '@common/helpers';
-
 import { CommentOwnerType } from '@content/comments/constants';
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { DigestsRepository } from '@content/digests/digests.repository';
@@ -44,33 +42,27 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
     await this.setCommentDiffMaps();
     await this.setOrderItemDiffMaps();
 
-    await allSettled(
+    await Promise.all(
       digests.map(
         (digest) =>
-          new Promise(async (resolve, reject) => {
-            try {
-              const {
-                id,
-                item: { isSoldout, id: itemId },
-                hitCount,
-                createdAt,
-              } = digest;
+          new Promise((resolve) => {
+            const {
+              id,
+              item: { isSoldout, id: itemId },
+              hitCount,
+              createdAt,
+            } = digest;
 
-              const reactionScore = this.calculateReactionScore(id, itemId);
-              const hitScore = new DigestHitScore(hitCount, createdAt).value;
-              const soldOutScore = isSoldout ? -0.5 : 0;
+            const reactionScore = this.calculateReactionScore(id, itemId);
+            const hitScore = new DigestHitScore(hitCount, createdAt).value;
+            const soldOutScore = isSoldout ? -0.5 : 0;
 
-              digest.score = Math.max(
-                hitScore + reactionScore + soldOutScore,
-                0
-              );
-              resolve(digest);
-            } catch (err) {
-              reject(err);
-            }
+            digest.score = Math.max(hitScore + reactionScore + soldOutScore, 0);
+            resolve(digest);
           })
       )
     );
+
     await this.digestsRepository.save(digests);
   }
 
@@ -119,7 +111,7 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
         orderItemsQueryBuilder,
         this.firstInterval
       );
-    this.firstIntervalOrderItemCountDiffMap =
+    this.secondIntervalOrderItemCountDiffMap =
       await OrderItemCountDiffMap.create(
         orderItemsQueryBuilder,
         this.secondInterval

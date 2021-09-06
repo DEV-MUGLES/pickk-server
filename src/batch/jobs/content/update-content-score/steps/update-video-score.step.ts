@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { allSettled } from '@common/helpers';
-
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { CommentOwnerType } from '@content/comments/constants';
 import { LikeOwnerType } from '@content/likes/constants';
@@ -34,20 +32,16 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
     await this.setLikeDiffMaps();
     await this.setCommentDiffMaps();
 
-    await allSettled(
+    await Promise.all(
       videos.map(
         (video) =>
-          new Promise(async (resolve, reject) => {
-            try {
-              const { id, hitCount, createdAt } = video;
-              const reactionScore = this.calculateReactionScore(id);
-              const hitScore = new VideoHitScore(hitCount, createdAt).value;
+          new Promise((resolve) => {
+            const { id, hitCount, createdAt } = video;
+            const reactionScore = this.calculateReactionScore(id);
+            const hitScore = new VideoHitScore(hitCount, createdAt).value;
 
-              video.score = hitScore + reactionScore;
-              resolve(video);
-            } catch (err) {
-              reject(err);
-            }
+            video.score = hitScore + reactionScore;
+            resolve(video);
           })
       )
     );

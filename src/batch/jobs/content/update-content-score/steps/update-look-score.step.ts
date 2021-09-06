@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { allSettled } from '@common/helpers';
-
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { CommentOwnerType } from '@content/comments/constants';
 import { LikesRepository } from '@content/likes/likes.repository';
@@ -34,20 +32,16 @@ export class UpdateLookScoreStep extends BaseUpdateScoreStep {
     await this.setLikeDiffMaps();
     await this.setCommentDiffMaps();
 
-    await allSettled(
+    await Promise.all(
       looks.map(
         (look) =>
-          new Promise(async (resolve, reject) => {
-            try {
-              const { id, hitCount, createdAt } = look;
-              const reactionScore = this.calculateReactionScore(id);
-              const hitScore = new LookHitScore(hitCount, createdAt).value;
+          new Promise((resolve) => {
+            const { id, hitCount, createdAt } = look;
+            const reactionScore = this.calculateReactionScore(id);
+            const hitScore = new LookHitScore(hitCount, createdAt).value;
 
-              look.score = hitScore + reactionScore;
-              resolve(look);
-            } catch (err) {
-              reject(err);
-            }
+            look.score = hitScore + reactionScore;
+            resolve(look);
           })
       )
     );
