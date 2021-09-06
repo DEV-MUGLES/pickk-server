@@ -1,25 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { BaseStep } from '@batch/jobs/base.step';
 import { allSettled } from '@common/helpers';
 
-import { LikeOwnerType } from '@content/likes/constants';
+import { CommentsRepository } from '@content/comments/comments.repository';
 import { CommentOwnerType } from '@content/comments/constants';
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesRepository } from '@content/likes/likes.repository';
 import { VideosRepository } from '@content/videos/videos.repository';
 
-import { calculateHitScore } from '../../helpers';
-import { UpdateContentScoreType } from '../../constants';
-import { CommentReactionScoreCalculator } from '../reaction-score-calculator/comment.reaction-score-calculator';
-import { LikeReactionScoreCalculator } from '../reaction-score-calculator/like.reaction-score-calculator';
+import { VideoHitScore } from '../hit-score';
+
+import { BaseUpdateScoreStep } from './base-update-score.step';
 
 @Injectable()
-export class UpdateVideoScoreStep extends BaseStep {
+export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
   constructor(
     @InjectRepository(VideosRepository)
     private readonly videosRepository: VideosRepository,
-    private readonly likeReactionScoreCalculator: LikeReactionScoreCalculator,
-    private readonly commentReactionScoreCalculator: CommentReactionScoreCalculator
+    @InjectRepository(LikesRepository)
+    private readonly likesRepository: LikesRepository,
+    @InjectRepository(CommentsRepository)
+    private readonly commentsRepository: CommentsRepository
   ) {
     super();
   }
@@ -29,20 +31,17 @@ export class UpdateVideoScoreStep extends BaseStep {
       select: ['id', 'createdAt', 'score', 'hitCount'],
     });
 
+    await this.setLikeDiffMaps();
+    await this.setCommentDiffMaps();
+
     await allSettled(
       videos.map(
         (video) =>
           new Promise(async (resolve, reject) => {
             try {
               const { id, hitCount, createdAt } = video;
-
-              const hitScore = calculateHitScore(
-                hitCount,
-                createdAt,
-                UpdateContentScoreType.Video
-              );
-
-              const reactionScore = await this.calculateReactionScore(id);
+              const reactionScore = this.calculateReactionScore(id);
+              const hitScore = new VideoHitScore(hitCount, createdAt).value;
 
               video.score = hitScore + reactionScore;
               resolve(video);
@@ -55,16 +54,34 @@ export class UpdateVideoScoreStep extends BaseStep {
     await this.videosRepository.save(videos);
   }
 
-  async calculateReactionScore(id: number) {
+  calculateReactionScore(id: number) {
     return (
-      (await this.likeReactionScoreCalculator.calculateScore(
-        id,
-        LikeOwnerType.Video
-      )) +
-      (await this.commentReactionScoreCalculator.calculateScore(
-        id,
-        CommentOwnerType.Video
-      ))
+      this.calculateLikeReactionScore(id) +
+      this.calculateCommentReactionScore(id)
+    );
+  }
+
+  async setLikeDiffMaps() {
+    const likesQueryBuilder = this.likesRepository.createQueryBuilder();
+    await this.setFirstIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Video
+    );
+    await this.setSecondIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Video
+    );
+  }
+
+  async setCommentDiffMaps() {
+    const commentsQueryBuilder = this.commentsRepository.createQueryBuilder();
+    await this.setFirstIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Video
+    );
+    await this.setSecondIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Video
     );
   }
 }

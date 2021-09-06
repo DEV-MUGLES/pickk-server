@@ -1,27 +1,36 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { BaseStep } from '@batch/jobs/base.step';
 import { allSettled } from '@common/helpers';
 
+import { CommentOwnerType } from '@content/comments/constants';
+import { CommentsRepository } from '@content/comments/comments.repository';
 import { DigestsRepository } from '@content/digests/digests.repository';
 import { LikeOwnerType } from '@content/likes/constants';
-import { CommentOwnerType } from '@content/comments/constants';
+import { LikesRepository } from '@content/likes/likes.repository';
+import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
-import { calculateHitScore } from '../../helpers';
-import { UpdateContentScoreType } from '../../constants';
-import { CommentReactionScoreCalculator } from '../reaction-score-calculator/comment.reaction-score-calculator';
-import { LikeReactionScoreCalculator } from '../reaction-score-calculator/like.reaction-score-calculator';
-import { OrderReactionScoreCalculator } from '../reaction-score-calculator/order.reaction-score-calculator';
+import { OrderItemCountDiffMap } from '../count-diff-map';
+import { DigestHitScore } from '../hit-score';
+import { OrderReactionScoreCalculator } from '../reaction-score-calculator';
+
+import { BaseUpdateScoreStep } from './base-update-score.step';
 
 @Injectable()
-export class UpdateDigestScoreStep extends BaseStep {
+export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
+  private orderReactionScoreCaclculator = new OrderReactionScoreCalculator();
+  private firstIntervalOrderItemCountDiffMap: OrderItemCountDiffMap;
+  private secondIntervalOrderItemCountDiffMap: OrderItemCountDiffMap;
+
   constructor(
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
-    private readonly likeReactionScoreCalculator: LikeReactionScoreCalculator,
-    private readonly commentReactionScoreCalculator: CommentReactionScoreCalculator,
-    private readonly orderReactionScoreCalculator: OrderReactionScoreCalculator
+    @InjectRepository(LikesRepository)
+    private readonly likesRepository: LikesRepository,
+    @InjectRepository(CommentsRepository)
+    private readonly commentsRepository: CommentsRepository,
+    @InjectRepository(OrderItemsRepository)
+    private readonly orderItemsRepository: OrderItemsRepository
   ) {
     super();
   }
@@ -31,6 +40,9 @@ export class UpdateDigestScoreStep extends BaseStep {
       select: ['id', 'createdAt', 'item', 'score', 'hitCount'],
       relations: ['item'],
     });
+    await this.setLikeDiffMaps();
+    await this.setCommentDiffMaps();
+    await this.setOrderItemDiffMaps();
 
     await allSettled(
       digests.map(
@@ -44,22 +56,14 @@ export class UpdateDigestScoreStep extends BaseStep {
                 createdAt,
               } = digest;
 
-              const hitScore = calculateHitScore(
-                hitCount,
-                createdAt,
-                UpdateContentScoreType.Digest
-              );
-              const reactionScore = await this.calculateReactionScore(
-                id,
-                itemId
-              );
+              const reactionScore = this.calculateReactionScore(id, itemId);
+              const hitScore = new DigestHitScore(hitCount, createdAt).value;
               const soldOutScore = isSoldout ? -0.5 : 0;
 
               digest.score = Math.max(
                 hitScore + reactionScore + soldOutScore,
                 0
               );
-
               resolve(digest);
             } catch (err) {
               reject(err);
@@ -70,17 +74,55 @@ export class UpdateDigestScoreStep extends BaseStep {
     await this.digestsRepository.save(digests);
   }
 
-  async calculateReactionScore(id: number, itemId: number) {
+  calculateReactionScore(id: number, itemId: number) {
+    const orderItemDiffs = [
+      this.firstIntervalOrderItemCountDiffMap.get(itemId),
+      this.secondIntervalOrderItemCountDiffMap.get(itemId),
+    ];
+
     return (
-      (await this.likeReactionScoreCalculator.calculateScore(
-        id,
-        LikeOwnerType.Digest
-      )) +
-      (await this.commentReactionScoreCalculator.calculateScore(
-        id,
-        CommentOwnerType.Digest
-      )) +
-      (await this.orderReactionScoreCalculator.calculateScore(itemId))
+      this.orderReactionScoreCaclculator.calculateScore(orderItemDiffs) +
+      this.calculateCommentReactionScore(id) +
+      this.calculateLikeReactionScore(id)
     );
+  }
+
+  async setLikeDiffMaps() {
+    const likesQueryBuilder = this.likesRepository.createQueryBuilder();
+    await this.setFirstIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Digest
+    );
+    await this.setSecondIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Digest
+    );
+  }
+
+  async setCommentDiffMaps() {
+    const commentsQueryBuilder = this.commentsRepository.createQueryBuilder();
+    await this.setFirstIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Digest
+    );
+    await this.setSecondIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Digest
+    );
+  }
+
+  async setOrderItemDiffMaps() {
+    const orderItemsQueryBuilder =
+      this.orderItemsRepository.createQueryBuilder();
+    this.firstIntervalOrderItemCountDiffMap =
+      await OrderItemCountDiffMap.create(
+        orderItemsQueryBuilder,
+        this.firstInterval
+      );
+    this.firstIntervalOrderItemCountDiffMap =
+      await OrderItemCountDiffMap.create(
+        orderItemsQueryBuilder,
+        this.secondInterval
+      );
   }
 }

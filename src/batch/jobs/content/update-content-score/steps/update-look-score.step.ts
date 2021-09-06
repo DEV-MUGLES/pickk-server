@@ -1,25 +1,27 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { BaseStep } from '@batch/jobs/base.step';
 import { allSettled } from '@common/helpers';
 
+import { CommentsRepository } from '@content/comments/comments.repository';
+import { CommentOwnerType } from '@content/comments/constants';
+import { LikesRepository } from '@content/likes/likes.repository';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LooksRepository } from '@content/looks/looks.repository';
-import { CommentOwnerType } from '@content/comments/constants';
 
-import { calculateHitScore } from '../../helpers';
-import { UpdateContentScoreType } from '../../constants';
-import { CommentReactionScoreCalculator } from '../reaction-score-calculator/comment.reaction-score-calculator';
-import { LikeReactionScoreCalculator } from '../reaction-score-calculator/like.reaction-score-calculator';
+import { LookHitScore } from '../hit-score';
+
+import { BaseUpdateScoreStep } from './base-update-score.step';
 
 @Injectable()
-export class UpdateLookScoreStep extends BaseStep {
+export class UpdateLookScoreStep extends BaseUpdateScoreStep {
   constructor(
     @InjectRepository(LooksRepository)
     private readonly looksRepository: LooksRepository,
-    private readonly likeReactionScoreCalculator: LikeReactionScoreCalculator,
-    private readonly commentReactionScoreCalculator: CommentReactionScoreCalculator
+    @InjectRepository(LikesRepository)
+    private readonly likesRepository: LikesRepository,
+    @InjectRepository(CommentsRepository)
+    private readonly commentsRepository: CommentsRepository
   ) {
     super();
   }
@@ -29,23 +31,19 @@ export class UpdateLookScoreStep extends BaseStep {
       select: ['id', 'createdAt', 'score', 'hitCount'],
     });
 
+    await this.setLikeDiffMaps();
+    await this.setCommentDiffMaps();
+
     await allSettled(
       looks.map(
         (look) =>
           new Promise(async (resolve, reject) => {
             try {
               const { id, hitCount, createdAt } = look;
-
-              const hitScore = calculateHitScore(
-                hitCount,
-                createdAt,
-                UpdateContentScoreType.Look
-              );
-
-              const reactionScore = await this.calculateReactionScore(id);
+              const reactionScore = this.calculateReactionScore(id);
+              const hitScore = new LookHitScore(hitCount, createdAt).value;
 
               look.score = hitScore + reactionScore;
-
               resolve(look);
             } catch (err) {
               reject(err);
@@ -56,16 +54,34 @@ export class UpdateLookScoreStep extends BaseStep {
     await this.looksRepository.save(looks);
   }
 
-  async calculateReactionScore(id: number) {
+  calculateReactionScore(id: number) {
     return (
-      (await this.likeReactionScoreCalculator.calculateScore(
-        id,
-        LikeOwnerType.Look
-      )) +
-      (await this.commentReactionScoreCalculator.calculateScore(
-        id,
-        CommentOwnerType.Look
-      ))
+      this.calculateLikeReactionScore(id) +
+      this.calculateCommentReactionScore(id)
+    );
+  }
+
+  async setLikeDiffMaps() {
+    const likesQueryBuilder = this.likesRepository.createQueryBuilder();
+    await this.setFirstIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Look
+    );
+    await this.setSecondIntervalLikeCountDiffMap(
+      likesQueryBuilder,
+      LikeOwnerType.Look
+    );
+  }
+
+  async setCommentDiffMaps() {
+    const commentsQueryBuilder = this.commentsRepository.createQueryBuilder();
+    await this.setFirstIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Look
+    );
+    await this.setSecondIntervalCommentCountDiffMap(
+      commentsQueryBuilder,
+      CommentOwnerType.Look
     );
   }
 }
