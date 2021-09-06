@@ -8,13 +8,18 @@ import { parseFilter } from '@common/helpers';
 import { ItemPropertyFilter } from './dtos';
 import { ItemProperty } from './models';
 
-import { ItemPropertiesRepository } from './item-properties.repository';
+import {
+  ItemPropertiesRepository,
+  ItemPropertyValuesRepository,
+} from './item-properties.repository';
 
 @Injectable()
 export class ItemPropertiesService {
   constructor(
     @InjectRepository(ItemPropertiesRepository)
-    private readonly itemPropertiesRepository: ItemPropertiesRepository
+    private readonly itemPropertiesRepository: ItemPropertiesRepository,
+    @InjectRepository(ItemPropertyValuesRepository)
+    private readonly itemPropertyValuesRepository: ItemPropertyValuesRepository
   ) {}
 
   async list(
@@ -31,6 +36,12 @@ export class ItemPropertiesService {
         where: parseFilter(_filter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
       })
+    );
+  }
+
+  async getItemPropertyValues(ids: number[]) {
+    return this.itemPropertyValuesRepository.entityToModelMany(
+      await this.itemPropertyValuesRepository.findByIds(ids)
     );
   }
 }
