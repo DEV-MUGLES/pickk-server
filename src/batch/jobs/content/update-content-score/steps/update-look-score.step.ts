@@ -37,7 +37,7 @@ export class UpdateLookScoreStep extends BaseUpdateScoreStep {
         (look) =>
           new Promise((resolve) => {
             const { id, hitCount, createdAt } = look;
-            const reactionScore = this.calculateReactionScore(id);
+            const reactionScore = this.calculateTotalReactionScore(id);
             const hitScore = new LookHitScore(hitCount, createdAt).value;
 
             look.score = hitScore + reactionScore;
@@ -48,7 +48,7 @@ export class UpdateLookScoreStep extends BaseUpdateScoreStep {
     await this.looksRepository.save(looks);
   }
 
-  calculateReactionScore(id: number) {
+  calculateTotalReactionScore(id: number) {
     return (
       this.calculateLikeReactionScore(id) +
       this.calculateCommentReactionScore(id)

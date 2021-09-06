@@ -9,10 +9,7 @@ import { CommentOwnerType } from '@content/comments/constants';
 import { CommentEntity } from '@content/comments/entities';
 
 import { LikeCountDiffMap, CommentCountDiffMap } from '../count-diff-map';
-import {
-  LikeReactionScoreCalculator,
-  CommentReactionScoreCalculator,
-} from '../reaction-score-calculator';
+import { calculateReactionScore, ReactionScoreWeight } from '../../helpers';
 
 const FIRST_INTERVAL_START_HOUR = 168;
 const FIRST_INTERVAL_END_HOUR = 0;
@@ -20,9 +17,6 @@ const SECOND_INTERVAL_START_HOUR = 600;
 const SECOND_INTERVAL_END_HOUR = 169;
 
 export abstract class BaseUpdateScoreStep extends BaseStep {
-  private likeReactionScoreCalculator = new LikeReactionScoreCalculator();
-  private commentReactionScoreCalculator = new CommentReactionScoreCalculator();
-
   private firstIntervalLikeCountDiffMap: LikeCountDiffMap;
   private secondIntervalLikeCountDiffMap: LikeCountDiffMap;
   private firstIntervalCommentCountDiffMap: CommentCountDiffMap;
@@ -47,7 +41,7 @@ export abstract class BaseUpdateScoreStep extends BaseStep {
       this.firstIntervalLikeCountDiffMap.get(id),
       this.secondIntervalLikeCountDiffMap.get(id),
     ];
-    return this.likeReactionScoreCalculator.calculateScore(likeDiffs);
+    return calculateReactionScore(likeDiffs, ReactionScoreWeight.Like);
   }
 
   protected calculateCommentReactionScore(id: number) {
@@ -55,7 +49,7 @@ export abstract class BaseUpdateScoreStep extends BaseStep {
       this.firstIntervalCommentCountDiffMap.get(id),
       this.secondIntervalCommentCountDiffMap.get(id),
     ];
-    return this.commentReactionScoreCalculator.calculateScore(commentDiffs);
+    return calculateReactionScore(commentDiffs, ReactionScoreWeight.Comment);
   }
 
   protected async setFirstIntervalLikeCountDiffMap(

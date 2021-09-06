@@ -10,13 +10,12 @@ import { OrderItemsRepository } from '@order/order-items/order-items.repository'
 
 import { OrderItemCountDiffMap } from '../count-diff-map';
 import { DigestHitScore } from '../hit-score';
-import { OrderReactionScoreCalculator } from '../reaction-score-calculator';
 
 import { BaseUpdateScoreStep } from './base-update-score.step';
+import { calculateReactionScore, ReactionScoreWeight } from '../../helpers';
 
 @Injectable()
 export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
-  private orderReactionScoreCaclculator = new OrderReactionScoreCalculator();
   private firstIntervalOrderItemCountDiffMap: OrderItemCountDiffMap;
   private secondIntervalOrderItemCountDiffMap: OrderItemCountDiffMap;
 
@@ -53,7 +52,7 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
               createdAt,
             } = digest;
 
-            const reactionScore = this.calculateReactionScore(id, itemId);
+            const reactionScore = this.calculateTotalReactionScore(id, itemId);
             const hitScore = new DigestHitScore(hitCount, createdAt).value;
             const soldOutScore = isSoldout ? -0.5 : 0;
 
@@ -66,14 +65,14 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
     await this.digestsRepository.save(digests);
   }
 
-  calculateReactionScore(id: number, itemId: number) {
+  calculateTotalReactionScore(id: number, itemId: number) {
     const orderItemDiffs = [
       this.firstIntervalOrderItemCountDiffMap.get(itemId),
       this.secondIntervalOrderItemCountDiffMap.get(itemId),
     ];
 
     return (
-      this.orderReactionScoreCaclculator.calculateScore(orderItemDiffs) +
+      calculateReactionScore(orderItemDiffs, ReactionScoreWeight.Order) +
       this.calculateCommentReactionScore(id) +
       this.calculateLikeReactionScore(id)
     );

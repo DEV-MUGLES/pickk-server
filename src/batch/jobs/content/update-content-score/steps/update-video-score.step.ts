@@ -37,7 +37,7 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
         (video) =>
           new Promise((resolve) => {
             const { id, hitCount, createdAt } = video;
-            const reactionScore = this.calculateReactionScore(id);
+            const reactionScore = this.calculateTotalReactionScore(id);
             const hitScore = new VideoHitScore(hitCount, createdAt).value;
 
             video.score = hitScore + reactionScore;
@@ -48,7 +48,7 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
     await this.videosRepository.save(videos);
   }
 
-  calculateReactionScore(id: number) {
+  calculateTotalReactionScore(id: number) {
     return (
       this.calculateLikeReactionScore(id) +
       this.calculateCommentReactionScore(id)
