@@ -2,14 +2,16 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
 import { JwtPayload } from '@auth/models';
+
+import { OrderItemsService } from '@order/order-items/order-items.service';
 import { PointsService } from '@order/points/points.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { UpdateUserInput } from './dtos';
 import { User } from './models';
 
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
-import { FollowsService } from '@user/follows/follows.service';
 
 describe('UsersResolver', () => {
   let usersResolver: UsersResolver;
@@ -30,6 +32,10 @@ describe('UsersResolver', () => {
         {
           provide: FollowsService,
           useValue: new FollowsService(null, null),
+        },
+        {
+          provide: OrderItemsService,
+          useValue: new OrderItemsService(null, null, null),
         },
       ],
     }).compile();
