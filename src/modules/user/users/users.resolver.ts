@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import {
   Args,
   Info,
@@ -16,6 +16,8 @@ import { JwtPayload } from '@auth/models';
 import { JwtAuthGuard, JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
+
+import { OrderItemsService } from '@order/order-items/order-items.service';
 import { PointsService } from '@order/points/points.service';
 import { FollowsService } from '@user/follows/follows.service';
 
@@ -31,11 +33,19 @@ export class UsersResolver extends BaseResolver {
   relations = USER_RELATIONS;
 
   constructor(
-    @Inject(UsersService) private usersService: UsersService,
-    @Inject(PointsService) private pointsService: PointsService,
+    private readonly usersService: UsersService,
+    private readonly pointsService: PointsService,
+    private readonly orderItemsService: OrderItemsService,
     private readonly followsService: FollowsService
   ) {
     super();
+  }
+
+  @ResolveField(() => Int, {
+    description: '[ResolveField] 활성화된 주문건들 개수',
+  })
+  async activeOrderItemsCount(@Parent() user: User) {
+    return await this.orderItemsService.getActivesCount(user.id);
   }
 
   @ResolveField(() => Int, {
