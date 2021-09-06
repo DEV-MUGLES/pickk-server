@@ -22,7 +22,7 @@ export class LikeCountDiffMap extends CountDiffMap {
   static async create(
     queryBuilder: SelectQueryBuilder<LikeEntity>,
     ownerType: LikeOwnerType,
-    [from, to]: Date[]
+    [from, to]: [Date, Date]
   ) {
     return (
       await likeDiffByIntervalQuery(queryBuilder, ownerType, [
@@ -40,7 +40,7 @@ export class CommentCountDiffMap extends CountDiffMap {
   static async create(
     queryBuilder: SelectQueryBuilder<CommentEntity>,
     ownerType: CommentOwnerType,
-    [from, to]: Date[]
+    [from, to]: [Date, Date]
   ) {
     return (
       await commentDiffByIntervalQuery(queryBuilder, ownerType, [
@@ -57,7 +57,7 @@ export class CommentCountDiffMap extends CountDiffMap {
 export class OrderItemCountDiffMap extends CountDiffMap {
   static async create(
     queryBuilder: SelectQueryBuilder<OrderItemEntity>,
-    [from, to]: Date[]
+    [from, to]: [Date, Date]
   ) {
     return (
       await orderItemDiffByIntervalQuery(queryBuilder, [from, to]).getRawMany()

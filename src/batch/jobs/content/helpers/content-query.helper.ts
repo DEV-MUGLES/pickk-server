@@ -9,7 +9,7 @@ import { OrderItemEntity } from '@order/order-items/entities';
 export function likeDiffByIntervalQuery(
   queryBuilder: SelectQueryBuilder<LikeEntity>,
   ownerType: LikeOwnerType,
-  [from, to]: Date[]
+  [from, to]: [Date, Date]
 ) {
   return queryBuilder
     .select('count(ownerId)', 'diff')
@@ -25,7 +25,7 @@ export function likeDiffByIntervalQuery(
 export function commentDiffByIntervalQuery(
   queryBuilder: SelectQueryBuilder<CommentEntity>,
   ownerType: CommentOwnerType,
-  [from, to]: Date[]
+  [from, to]: [Date, Date]
 ) {
   return queryBuilder
     .select('count(ownerId)', 'diff')
@@ -40,7 +40,7 @@ export function commentDiffByIntervalQuery(
 
 export function orderItemDiffByIntervalQuery(
   queryBuilder: SelectQueryBuilder<OrderItemEntity>,
-  [from, to]: Date[]
+  [from, to]: [Date, Date]
 ) {
   return queryBuilder
     .select('count(itemId)', 'diff')
