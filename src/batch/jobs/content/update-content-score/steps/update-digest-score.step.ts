@@ -10,9 +10,9 @@ import { OrderItemsRepository } from '@order/order-items/order-items.repository'
 
 import { OrderItemCountDiffMap } from '../count-diff-map';
 import { DigestHitScore } from '../hit-score';
+import { calculateReactionScore, ReactionScoreWeight } from '../../helpers';
 
 import { BaseUpdateScoreStep } from './base-update-score.step';
-import { calculateReactionScore, ReactionScoreWeight } from '../../helpers';
 
 @Injectable()
 export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
