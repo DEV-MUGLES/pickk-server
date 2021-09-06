@@ -3,8 +3,8 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { ItemPropertyEntity } from './entities';
-import { ItemProperty } from './models';
+import { ItemPropertyEntity, ItemPropertyValueEntity } from './entities';
+import { ItemProperty, ItemPropertyValue } from './models';
 
 @EntityRepository(ItemPropertyEntity)
 export class ItemPropertiesRepository extends BaseRepository<
@@ -22,6 +22,32 @@ export class ItemPropertiesRepository extends BaseRepository<
     entities: ItemPropertyEntity[],
     transformOptions = {}
   ): ItemProperty[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(ItemPropertyValueEntity)
+export class ItemPropertyValuesRepository extends BaseRepository<
+  ItemPropertyValueEntity,
+  ItemPropertyValue
+> {
+  entityToModel(
+    entity: ItemPropertyValueEntity,
+    transformOptions = {}
+  ): ItemPropertyValue {
+    return plainToClass(
+      ItemPropertyValue,
+      entity,
+      transformOptions
+    ) as ItemPropertyValue;
+  }
+
+  entityToModelMany(
+    entities: ItemPropertyValueEntity[],
+    transformOptions = {}
+  ): ItemPropertyValue[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
