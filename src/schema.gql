@@ -390,6 +390,23 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
+input CreateDigestImageInput {
+  urls: [String!]!
+}
+
+input CreateDigestInput {
+  """최대 길이 2047"""
+  content: String
+  imageInput: CreateDigestImageInput!
+  itemId: Int
+  itemPropertyValueIds: [Int!]!
+  rating: Rating
+  size: String!
+
+  """최대 길이 127"""
+  title: String
+}
+
 input CreateInquiryInput {
   """알림톡 받을 전화번호 (11글자)"""
   contactPhoneNumber: String!
@@ -1246,6 +1263,7 @@ type Mutation {
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
+  createDigest(createDigestInput: CreateDigestInput!): Digest!
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
