@@ -1,6 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+
+import { CacheService } from '@providers/cache/redis';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
@@ -15,10 +17,10 @@ import { OrderItemsRepository } from './order-items.repository';
 @Injectable()
 export class OrderItemsService {
   constructor(
-    @Inject(ProductsService)
-    private readonly productsService: ProductsService,
     @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository
+    private readonly orderItemsRepository: OrderItemsRepository,
+    private readonly productsService: ProductsService,
+    private readonly cacheService: CacheService
   ) {}
 
   async get(merchantUid: string, relations: string[] = []): Promise<OrderItem> {
@@ -64,5 +66,28 @@ export class OrderItemsService {
 
     orderItem.requestExchange(input, product);
     return await this.orderItemsRepository.save(orderItem);
+  }
+
+  getActivesCountCacheKey(userId: number): string {
+    return `user:${userId}:active-order-items-count`;
+  }
+
+  async getActivesCount(userId: number): Promise<number> {
+    const cacheKey = this.getActivesCountCacheKey(userId);
+    const cached = await this.cacheService.get<number>(cacheKey);
+    if (cached) {
+      return Number(cached);
+    }
+
+    return this.reloadActivesCount(userId);
+  }
+
+  async reloadActivesCount(userId: number): Promise<number> {
+    const count = await this.orderItemsRepository.countActive(userId);
+
+    const cacheKey = this.getActivesCountCacheKey(userId);
+    this.cacheService.set(cacheKey, count, { ttl: 600 });
+
+    return count;
   }
 }
