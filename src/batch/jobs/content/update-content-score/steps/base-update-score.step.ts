@@ -22,14 +22,14 @@ export abstract class BaseUpdateScoreStep extends BaseStep {
   private firstIntervalCommentCountDiffMap: CommentCountDiffMap;
   private secondIntervalCommentCountDiffMap: CommentCountDiffMap;
 
-  get firstInterval() {
+  get firstInterval(): [Date, Date] {
     return [
       dayjs().subtract(FIRST_INTERVAL_START_HOUR, 'hour').toDate(),
       dayjs().subtract(FIRST_INTERVAL_END_HOUR, 'hour').toDate(),
     ];
   }
 
-  get secondInterval() {
+  get secondInterval(): [Date, Date] {
     return [
       dayjs().subtract(SECOND_INTERVAL_START_HOUR, 'hour').toDate(),
       dayjs().subtract(SECOND_INTERVAL_END_HOUR, 'hour').toDate(),
