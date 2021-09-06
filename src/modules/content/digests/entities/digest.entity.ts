@@ -86,7 +86,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @ManyToMany(() => ItemPropertyValueEntity)
   @JoinTable()
   itemPropertyValues: ItemPropertyValue[];
-  @OneToMany('DigestImageEntity', 'item', { cascade: true })
+  @OneToMany('DigestImageEntity', 'digest', { cascade: true })
   images: DigestImage[];
 
   // 여기부터 정보 fields
