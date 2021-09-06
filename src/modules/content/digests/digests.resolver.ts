@@ -14,7 +14,7 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { DigestRelationType, DIGEST_RELATIONS } from './constants';
-import { DigestFilter, CreateDigestInput } from './dtos';
+import { DigestFilter, CreateDigestInput, UpdateDigestInput } from './dtos';
 import { Digest } from './models';
 
 import { DigestsService } from './digests.service';
@@ -119,6 +119,21 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @Info() info?: GraphQLResolveInfo
   ) {
     const { id } = await this.digestsService.create({ ...input, userId });
+    return await this.digestsService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      userId
+    );
+  }
+
+  @Mutation(() => Digest)
+  @UseGuards(JwtVerifyGuard)
+  async updateDigest(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('updateDigestInput') input: UpdateDigestInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    const { id } = await this.digestsService.update({ ...input, userId });
     return await this.digestsService.get(
       id,
       this.getRelationsFromInfo(info),

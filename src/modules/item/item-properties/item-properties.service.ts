@@ -39,7 +39,7 @@ export class ItemPropertiesService {
     );
   }
 
-  async getItemPropertyValues(ids: number[]) {
+  async findValuesByIds(ids: number[]) {
     return this.itemPropertyValuesRepository.entityToModelMany(
       await this.itemPropertyValuesRepository.findByIds(ids)
     );

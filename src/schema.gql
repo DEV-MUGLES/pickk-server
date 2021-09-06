@@ -633,6 +633,7 @@ type DigestImage {
   angle: Int!
   createdAt: DateTime!
   key: String!
+  order: Float!
   url: String!
 }
 
@@ -1307,6 +1308,7 @@ type Mutation {
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
+  updateDigest(updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
@@ -2356,6 +2358,24 @@ input UpdateCourierInput {
 input UpdateCourierIssueInput {
   endAt: DateTime!
   message: String!
+}
+
+input UpdateDigestImageInput {
+  urls: [String!]!
+}
+
+input UpdateDigestInput {
+  """최대 길이 2047"""
+  content: String
+  id: Int!
+  imageInput: UpdateDigestImageInput!
+  itemId: Int
+  itemPropertyValueIds: [Int!]
+  rating: Rating
+  size: String
+
+  """최대 길이 127"""
+  title: String
 }
 
 input UpdateItemInput {

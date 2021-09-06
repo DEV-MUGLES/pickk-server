@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -11,8 +11,9 @@ import { FollowsService } from '@user/follows/follows.service';
 import { ItemPropertiesService } from '@item/item-properties/item-properties.service';
 
 import { DigestRelationType } from './constants';
-import { CreateDigestInput, DigestFilter } from './dtos';
+import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
 import { Digest } from './models';
+import { DigestFactory } from './factories';
 
 import { DigestsRepository } from './digests.repository';
 
@@ -87,14 +88,27 @@ export class DigestsService {
   }
 
   async create(input: CreateDigestInput): Promise<Digest> {
-    const { itemPropertyValueIds, imageInput, ...digestInput } = input;
-    const digest = new Digest(digestInput);
-    digest.createDigestImages(imageInput);
-    digest.setItemPropertyValues(
-      await this.itemPropertiesService.getItemPropertyValues(
-        itemPropertyValueIds
-      )
+    const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
+      input.itemPropertyValueIds
     );
+    const digest = DigestFactory.from(
+      { ...input, itemPropertyValues },
+      input.imageInput.urls
+    );
+    return await this.digestsRepository.save(digest);
+  }
+
+  async update(input: UpdateDigestInput): Promise<Digest> {
+    const { id, userId, itemPropertyValueIds } = input;
+    const digest = await this.get(id, null, userId);
+    if (!digest.isMine) {
+      throw new ForbiddenException('자신의 리뷰가 아닙니다.');
+    }
+
+    const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
+      itemPropertyValueIds
+    );
+    digest.update({ ...input, itemPropertyValues });
     return await this.digestsRepository.save(digest);
   }
 }
