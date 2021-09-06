@@ -3,8 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { JobExecutionContext } from '@batch/models';
-import { allSettled, isRejected, RejectResponse } from '@common/helpers';
 
 import { DigestsRepository } from '@content/digests/digests.repository';
 import { ItemsRepository } from '@item/items/items.repository';
@@ -23,7 +21,7 @@ export class UpdateItemScoreStep extends BaseStep {
     super();
   }
 
-  async tasklet(context: JobExecutionContext) {
+  async tasklet() {
     const sellerBrandIds = (
       await this.sellersRepository.find({ select: ['brandId'] })
     ).map(({ brandId }) => brandId);
@@ -45,27 +43,10 @@ export class UpdateItemScoreStep extends BaseStep {
       .groupBy('digest.itemId')
       .getRawMany();
 
-    const settledItemData = await allSettled(
-      itemScoreDatas.map(
-        ({ itemId, itemScore }) =>
-          new Promise(async (resolve, reject) => {
-            try {
-              resolve(
-                await this.itemsRepository.update(itemId, { score: itemScore })
-              );
-            } catch (err) {
-              reject({ itemId, itemScore });
-            }
-          })
+    await Promise.all(
+      itemScoreDatas.map(({ itemId, itemScore }) =>
+        this.itemsRepository.update(itemId, { score: itemScore })
       )
     );
-
-    const rejectedItems = [].concat(
-      ...settledItemData
-        .filter(isRejected)
-        .map((v) => (v as RejectResponse).reason)
-    );
-
-    context.put('rejectedItems', rejectedItems);
   }
 }
