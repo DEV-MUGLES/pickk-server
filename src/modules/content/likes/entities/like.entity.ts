@@ -17,7 +17,6 @@ import { ILike } from '../interfaces';
 @ObjectType()
 @Entity({ name: 'like' })
 @Index('idx_ownerId-userId', ['ownerId', 'userId'])
-@Index('idx_ownerId-ownerType-createdAt', ['ownerId', 'ownerType', 'createdAt'])
 export class LikeEntity implements ILike {
   constructor(attributes?: Partial<LikeEntity>) {
     if (!attributes) {
