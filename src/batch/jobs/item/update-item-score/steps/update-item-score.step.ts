@@ -43,10 +43,8 @@ export class UpdateItemScoreStep extends BaseStep {
       .groupBy('digest.itemId')
       .getRawMany();
 
-    await Promise.all(
-      itemScoreDatas.map(({ itemId, itemScore }) =>
-        this.itemsRepository.update(itemId, { score: itemScore })
-      )
-    );
+    for (const { itemId, itemScore } of itemScoreDatas) {
+      await this.itemsRepository.update(itemId, { score: itemScore });
+    }
   }
 }
