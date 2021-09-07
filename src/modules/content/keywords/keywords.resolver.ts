@@ -5,6 +5,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser } from '@auth/decorators';
 import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -28,6 +29,20 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     private readonly likesService: LikesService
   ) {
     super();
+  }
+
+  @Query(() => Keyword)
+  @UseGuards(JwtOrNotGuard)
+  async keyword(
+    @CurrentUser() payload: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Keyword> {
+    return await this.keywordsService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 
   @Query(() => [Keyword])
