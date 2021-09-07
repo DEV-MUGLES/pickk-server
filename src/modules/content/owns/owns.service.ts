@@ -61,9 +61,11 @@ export class OwnsService {
     keywordClassId: number
   ): Promise<OwnsCountOutput> {
     const total = await this.keywordsService.countByClass(keywordClassId);
-    const owning = await this.getOwningCount(userId, keywordClassId);
+    const owning = userId
+      ? await this.getOwningCount(userId, keywordClassId)
+      : 0;
 
-    return OwnsCountOutput.create(userId, keywordClassId, total, owning);
+    return OwnsCountOutput.create(keywordClassId, total, owning);
   }
 
   private getOwningCountCacheKey(
