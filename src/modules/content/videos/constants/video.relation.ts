@@ -5,7 +5,10 @@ export type VideoRelationType =
   | 'digests.item'
   | 'digests.item.brand'
   | 'digests.item.prices'
-  | 'digests.item.minorCategory';
+  | 'digests.item.minorCategory'
+  | 'digests.item.urls'
+  | 'digests.itemPropertyValues'
+  | 'digests.itemPropertyValues.property';
 
 export const VIDEO_RELATIONS: VideoRelationType[] = [
   'user',
@@ -14,4 +17,7 @@ export const VIDEO_RELATIONS: VideoRelationType[] = [
   'digests.item.brand',
   'digests.item.prices',
   'digests.item.minorCategory',
+  'digests.item.urls',
+  'digests.itemPropertyValues',
+  'digests.itemPropertyValues.property',
 ];
