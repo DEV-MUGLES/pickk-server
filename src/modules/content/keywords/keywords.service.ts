@@ -55,6 +55,10 @@ export class KeywordsService {
     relations: KeywordRelationType[] = [],
     userId?: number
   ): Promise<Keyword[]> {
+    if (filter.isOwning === true && !userId) {
+      return [];
+    }
+
     const keywords = this.keywordsRepository.entityToModelMany(
       await this.keywordsRepository.find({
         relations,
