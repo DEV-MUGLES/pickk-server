@@ -65,12 +65,6 @@ export class KeywordsService {
       })
     );
 
-    await this.likesService.bulkEnrichLiking(
-      userId,
-      LikeOwnerType.Keyword,
-      keywords
-    );
-
     return keywords;
   }
 
