@@ -80,6 +80,7 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   stylingTip: string;
   @Field(() => Int, {
     description: '0~100 정수. 필수템에 표시될 녀석들한테만 존재',
+    nullable: true,
   })
   @Column({ type: 'tinyint', unsigned: true, nullable: true })
   @IsInt()
