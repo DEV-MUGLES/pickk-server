@@ -1095,7 +1095,7 @@ type Keyword {
   updatedAt: DateTime!
 
   """0~100 정수. 필수템에 표시될 녀석들한테만 존재"""
-  usablityRate: Int!
+  usablityRate: Int
 }
 
 type KeywordClass {
@@ -1635,8 +1635,8 @@ type OrderVbankReceipt {
 
 """키워드 보유중 여부와 관련된 개수들입니다."""
 type OwnsCountOutput {
-  """'`user:<userId>:keywordClassId:<keywordClassId>`와 동일"""
-  id: String!
+  """keywordClassId와 동일"""
+  id: Int!
 
   """해당 클래스의 키워드 중 내가 보유한 수"""
   owning: Int!

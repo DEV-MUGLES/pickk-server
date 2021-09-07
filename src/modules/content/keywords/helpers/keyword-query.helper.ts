@@ -3,12 +3,16 @@ import { SelectQueryBuilder } from 'typeorm';
 import { KeywordEntity } from '../entities';
 
 // @TODO: 테스트 작성
+// @FIXME: isOwing === true && !userId인 경우 전체 쿼리를 빈 배열로 반환해야한다.
 export const keywordOwningQuery = (
   queryBuilder: SelectQueryBuilder<KeywordEntity>,
   userId: number,
   isOwning: boolean
 ) => {
-  if (isOwning == null || !userId) {
+  if (isOwning == null) {
+    return queryBuilder;
+  }
+  if (isOwning === false && !userId) {
     return queryBuilder;
   }
 
