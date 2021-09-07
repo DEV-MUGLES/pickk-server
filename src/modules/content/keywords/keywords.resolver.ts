@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -108,5 +108,12 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       null,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => Int)
+  async keywordsCountByClass(
+    @IntArgs('keywordClassId') keywordClassId: number
+  ): Promise<number> {
+    return await this.keywordsService.countByClass(keywordClassId);
   }
 }

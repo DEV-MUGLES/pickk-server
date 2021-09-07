@@ -1891,6 +1891,7 @@ type Query {
   keyword(id: Int!): Keyword!
   keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
+  keywordsCountByClass(keywordClassId: Int!): Int!
   likingDigests(pageInput: PageInput!): [Digest!]!
   likingKeywords(pageInput: PageInput!): [Keyword!]!
   likingLooks(pageInput: PageInput!): [Look!]!
