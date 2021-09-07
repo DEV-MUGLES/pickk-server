@@ -69,6 +69,12 @@ export class KeywordsService {
       })
     );
 
+    if (filter.isOwning != null && userId) {
+      for (const keyword of keywords) {
+        keyword.isOwning = filter.isOwning;
+      }
+    }
+
     return keywords;
   }
 
