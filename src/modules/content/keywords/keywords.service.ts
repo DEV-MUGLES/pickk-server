@@ -8,17 +8,22 @@ import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { KeywordRelationType } from './constants';
-import { KeywordFilter } from './dtos';
+import { KeywordClassFilter, KeywordFilter } from './dtos';
 import { KeywordEntity } from './entities';
 import { Keyword, KeywordClass } from './models';
 
-import { KeywordsRepository } from './keywords.repository';
+import {
+  KeywordClassesRepository,
+  KeywordsRepository,
+} from './keywords.repository';
 
 @Injectable()
 export class KeywordsService {
   constructor(
     @InjectRepository(KeywordsRepository)
     private readonly keywordsRepository: KeywordsRepository,
+    @InjectRepository(KeywordClassesRepository)
+    private readonly keywordClassesRepository: KeywordClassesRepository,
     private cacheService: CacheService
   ) {}
 
@@ -38,6 +43,23 @@ export class KeywordsService {
         where: await this.getFindWhere(filter, pageInput, userId),
         order: {
           score: 'DESC',
+        },
+      })
+    );
+  }
+
+  async listClasses(
+    filter: KeywordClassFilter,
+    pageInput?: PageInput
+  ): Promise<KeywordClass[]> {
+    const _filter = plainToClass(KeywordClassFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.keywordClassesRepository.entityToModelMany(
+      await this.keywordClassesRepository.find({
+        where: parseFilter(_filter, _pageInput?.idFilter),
+        order: {
+          order: 'ASC',
         },
       })
     );

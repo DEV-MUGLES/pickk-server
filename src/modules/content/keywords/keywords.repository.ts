@@ -80,7 +80,7 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
 }
 
 @EntityRepository(KeywordClassEntity)
-export class KeywordClasssRepository extends BaseRepository<
+export class KeywordClassesRepository extends BaseRepository<
   KeywordClassEntity,
   KeywordClass
 > {

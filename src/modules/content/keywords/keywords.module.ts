@@ -11,7 +11,7 @@ import { UpdateKeywordLikeCountConsumer } from './consumers';
 
 import {
   KeywordsRepository,
-  KeywordClasssRepository,
+  KeywordClassesRepository,
   KeywordMatchTagsRepository,
 } from './keywords.repository';
 import { KeywordsResolver } from './keywords.resolver';
@@ -21,7 +21,7 @@ import { KeywordsService } from './keywords.service';
   imports: [
     TypeOrmModule.forFeature([
       KeywordsRepository,
-      KeywordClasssRepository,
+      KeywordClassesRepository,
       KeywordMatchTagsRepository,
     ]),
     SqsModule.registerQueue({

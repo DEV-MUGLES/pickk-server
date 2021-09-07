@@ -13,8 +13,8 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { KeywordRelationType, KEYWORD_RELATIONS } from './constants';
-import { KeywordFilter } from './dtos';
-import { Keyword } from './models';
+import { KeywordClassFilter, KeywordFilter } from './dtos';
+import { Keyword, KeywordClass } from './models';
 
 import { KeywordsService } from './keywords.service';
 
@@ -44,6 +44,14 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       this.getRelationsFromInfo(info),
       payload?.sub
     );
+  }
+
+  @Query(() => [KeywordClass])
+  async keywordClasses(
+    @Args('filter') filter: KeywordClassFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<KeywordClass[]> {
+    return await this.keywordsService.listClasses(filter, pageInput);
   }
 
   @Query(() => [Keyword])

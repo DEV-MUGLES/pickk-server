@@ -1110,6 +1110,11 @@ type KeywordClass {
   updatedAt: DateTime!
 }
 
+input KeywordClassFilter {
+  isVisible: Boolean
+  type: KeywordClassType
+}
+
 enum KeywordClassType {
   Essential
   Trending
@@ -1894,6 +1899,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
+  keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
   likingDigests(pageInput: PageInput!): [Digest!]!
   likingKeywords(pageInput: PageInput!): [Keyword!]!
@@ -2515,6 +2521,9 @@ input UploadMultipleImageInput {
 }
 
 type User {
+  """[ResolveField] 활성화된 주문건들 개수"""
+  activeOrderItemsCount: Int!
+
   """[ResolveField] 사용가능 포인트 잔고"""
   availablePoint: Int!
   avatarUrl: String
