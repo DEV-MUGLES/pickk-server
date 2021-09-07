@@ -1084,7 +1084,7 @@ type Keyword {
   isVisible: Boolean!
   likeCount: Int!
   looks: [Look!]!
-  matchTags: [KeywordMatchTag!]!
+  matchTagNames: [String!]!
   name: String!
   relatedKeywords: [Keyword!]!
   score: Float!
@@ -1132,17 +1132,6 @@ input KeywordFilter {
 
   """제공시 추가 연산을 수행합니다."""
   keywordClassId: Int!
-}
-
-type KeywordMatchTag {
-  createdAt: DateTime!
-  id: Int!
-  isVisible: Boolean!
-  name: String!
-
-  """0~255 정수"""
-  order: Int!
-  updatedAt: DateTime!
 }
 
 """좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""

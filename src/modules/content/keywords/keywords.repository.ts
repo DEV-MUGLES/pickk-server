@@ -5,13 +5,9 @@ import { PageInput } from '@common/dtos';
 import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
-import {
-  KeywordEntity,
-  KeywordClassEntity,
-  KeywordMatchTagEntity,
-} from './entities';
+import { KeywordEntity, KeywordClassEntity } from './entities';
 import { keywordClassQuery, keywordOwningQuery } from './helpers';
-import { Keyword, KeywordClass, KeywordMatchTag } from './models';
+import { Keyword, KeywordClass } from './models';
 
 @EntityRepository(KeywordEntity)
 export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
@@ -95,32 +91,6 @@ export class KeywordClassesRepository extends BaseRepository<
     entities: KeywordClassEntity[],
     transformOptions = {}
   ): KeywordClass[] {
-    return entities.map((entity) =>
-      this.entityToModel(entity, transformOptions)
-    );
-  }
-}
-
-@EntityRepository(KeywordMatchTagEntity)
-export class KeywordMatchTagsRepository extends BaseRepository<
-  KeywordMatchTagEntity,
-  KeywordMatchTag
-> {
-  entityToModel(
-    entity: KeywordMatchTagEntity,
-    transformOptions = {}
-  ): KeywordMatchTag {
-    return plainToClass(
-      KeywordMatchTag,
-      entity,
-      transformOptions
-    ) as KeywordMatchTag;
-  }
-
-  entityToModelMany(
-    entities: KeywordMatchTagEntity[],
-    transformOptions = {}
-  ): KeywordMatchTag[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );

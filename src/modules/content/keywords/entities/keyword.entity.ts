@@ -21,10 +21,8 @@ import { StyleTag } from '@content/style-tags/models';
 
 import { IKeyword } from '../interfaces';
 import { KeywordClass } from '../models/keyword-class.model';
-import { KeywordMatchTag } from '../models/keyword-match-tag.model';
 
 import { KeywordClassEntity } from './keyword-class.entity';
-import { KeywordMatchTagEntity } from './keyword-match-tag.entity';
 
 @ObjectType()
 @Entity({ name: 'keyword' })
@@ -43,12 +41,13 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
     this.usablityRate = attributes.usablityRate;
     this.isVisible = attributes.isVisible;
 
+    this._matchTagNames = attributes._matchTagNames;
+
     this.styleTags = attributes.styleTags;
     this.looks = attributes.looks;
     this.digests = attributes.digests;
 
     this.relatedKeywords = attributes.relatedKeywords;
-    this.matchTags = attributes.matchTags;
     this.classes = attributes.classes;
 
     this.likeCount = attributes.likeCount;
@@ -109,10 +108,16 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @ManyToMany(() => KeywordEntity)
   @JoinTable()
   relatedKeywords: KeywordEntity[];
-  @Field(() => [KeywordMatchTag])
-  @ManyToMany(() => KeywordMatchTagEntity)
-  @JoinTable()
-  matchTags: KeywordMatchTag[];
+  @Column({ name: 'matchTagNames', length: 100 })
+  _matchTagNames: string;
+  @Field(() => [String])
+  get matchTagNames(): string[] {
+    return this._matchTagNames.split(',').map((v) => v.trim());
+  }
+  set matchTagNames(input: string[]) {
+    this._matchTagNames = input.join(',');
+  }
+
   @Field(() => [KeywordClass])
   @ManyToMany(() => KeywordClassEntity)
   @JoinTable()
