@@ -7,6 +7,9 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
+import { LikeOwnerType } from '@content/likes/constants';
+import { LikesService } from '@content/likes/likes.service';
+
 import { KeywordRelationType } from './constants';
 import { KeywordClassFilter, KeywordFilter } from './dtos';
 import { KeywordEntity } from './entities';
@@ -24,11 +27,26 @@ export class KeywordsService {
     private readonly keywordsRepository: KeywordsRepository,
     @InjectRepository(KeywordClassesRepository)
     private readonly keywordClassesRepository: KeywordClassesRepository,
+    private readonly likesService: LikesService,
     private cacheService: CacheService
   ) {}
 
-  async get(id: number, relations: KeywordRelationType[] = []) {
-    return await this.keywordsRepository.get(id, relations);
+  async get(
+    id: number,
+    relations: KeywordRelationType[] = [],
+    userId?: number
+  ) {
+    const keyword = await this.keywordsRepository.get(id, relations);
+
+    if (userId) {
+      await this.likesService.enrichLiking(
+        userId,
+        LikeOwnerType.Keyword,
+        keyword
+      );
+    }
+
+    return keyword;
   }
 
   async list(
@@ -37,7 +55,7 @@ export class KeywordsService {
     relations: KeywordRelationType[] = [],
     userId?: number
   ): Promise<Keyword[]> {
-    return this.keywordsRepository.entityToModelMany(
+    const keywords = this.keywordsRepository.entityToModelMany(
       await this.keywordsRepository.find({
         relations,
         where: await this.getFindWhere(filter, pageInput, userId),
@@ -46,6 +64,14 @@ export class KeywordsService {
         },
       })
     );
+
+    await this.likesService.bulkEnrichLiking(
+      userId,
+      LikeOwnerType.Keyword,
+      keywords
+    );
+
+    return keywords;
   }
 
   async listClasses(
@@ -85,33 +111,6 @@ export class KeywordsService {
     );
 
     return { id: In(ids) };
-  }
-
-  async listByClass(
-    classId: number,
-    userId: number,
-    isOwning: boolean,
-    relations: KeywordRelationType[] = [],
-    pageInput?: PageInput
-  ): Promise<Keyword[]> {
-    const ids = await this.keywordsRepository.findIdsByClass(
-      classId,
-      userId,
-      isOwning,
-      pageInput
-    );
-
-    return this.keywordsRepository.entityToModelMany(
-      await this.keywordsRepository.find({
-        relations,
-        where: {
-          id: In(ids),
-        },
-        order: {
-          id: 'DESC',
-        },
-      })
-    );
   }
 
   async countByClass(classId: number) {
