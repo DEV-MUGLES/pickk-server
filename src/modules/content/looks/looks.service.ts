@@ -65,7 +65,7 @@ export class LooksService {
     const _filter = plainToClass(LookFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    if (_filter.itemId) {
+    if (_filter?.itemId) {
       const ids = await this.findIdsByItemId(_filter.itemId, pageInput);
 
       return {
