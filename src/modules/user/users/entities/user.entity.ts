@@ -45,6 +45,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.email = attributes.email;
     this.phoneNumber = attributes.phoneNumber;
     this.nickname = attributes.nickname;
+    this.description = attributes.description;
     this._avatarUrl = attributes._avatarUrl;
 
     this.instagramCode = attributes.instagramCode;

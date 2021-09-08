@@ -2,7 +2,7 @@ import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
@@ -44,11 +44,11 @@ export class OwnsResolver {
   }
 
   @Query(() => OwnsCountOutput)
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtOrNotGuard)
   async meOwnsCount(
-    @CurrentUser() { sub: userId }: JwtPayload,
+    @CurrentUser() payload: JwtPayload,
     @IntArgs('keywordClassId') keywordClassId: number
   ): Promise<OwnsCountOutput> {
-    return await this.ownsService.getCount(userId, keywordClassId);
+    return await this.ownsService.getCount(payload?.sub, keywordClassId);
   }
 }

@@ -5,7 +5,10 @@ export type LookRelationType =
   | 'digests.item'
   | 'digests.item.brand'
   | 'digests.item.prices'
-  | 'digests.item.minorCategory';
+  | 'digests.item.minorCategory'
+  | 'digests.item.urls'
+  | 'digests.itemPropertyValues'
+  | 'digests.itemPropertyValues.property';
 
 export const LOOK_RELATIONS: LookRelationType[] = [
   'user',
@@ -16,4 +19,7 @@ export const LOOK_RELATIONS: LookRelationType[] = [
   'digests.item.brand',
   'digests.item.prices',
   'digests.item.minorCategory',
+  'digests.item.urls',
+  'digests.itemPropertyValues',
+  'digests.itemPropertyValues.property',
 ];

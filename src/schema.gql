@@ -1098,7 +1098,7 @@ type Keyword {
   isVisible: Boolean!
   likeCount: Int!
   looks: [Look!]!
-  matchTags: [KeywordMatchTag!]!
+  matchTagNames: [String!]!
   name: String!
   relatedKeywords: [Keyword!]!
   score: Float!
@@ -1109,7 +1109,7 @@ type Keyword {
   updatedAt: DateTime!
 
   """0~100 정수. 필수템에 표시될 녀석들한테만 존재"""
-  usablityRate: Int!
+  usablityRate: Int
 }
 
 type KeywordClass {
@@ -1122,6 +1122,11 @@ type KeywordClass {
   order: Int!
   type: KeywordClassType!
   updatedAt: DateTime!
+}
+
+input KeywordClassFilter {
+  isVisible: Boolean
+  type: KeywordClassType
 }
 
 enum KeywordClassType {
@@ -1141,17 +1146,6 @@ input KeywordFilter {
 
   """제공시 추가 연산을 수행합니다."""
   keywordClassId: Int!
-}
-
-type KeywordMatchTag {
-  createdAt: DateTime!
-  id: Int!
-  isVisible: Boolean!
-  name: String!
-
-  """0~255 정수"""
-  order: Int!
-  updatedAt: DateTime!
 }
 
 """좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""
@@ -1657,8 +1651,8 @@ type OrderVbankReceipt {
 
 """키워드 보유중 여부와 관련된 개수들입니다."""
 type OwnsCountOutput {
-  """'`user:<userId>:keywordClassId:<keywordClassId>`와 동일"""
-  id: String!
+  """keywordClassId와 동일"""
+  id: Int!
 
   """해당 클래스의 키워드 중 내가 보유한 수"""
   owning: Int!
@@ -1910,7 +1904,10 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
+  keyword(id: Int!): Keyword!
+  keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
+  keywordsCountByClass(keywordClassId: Int!): Int!
   likingDigests(pageInput: PageInput!): [Digest!]!
   likingKeywords(pageInput: PageInput!): [Keyword!]!
   likingLooks(pageInput: PageInput!): [Look!]!
@@ -2544,6 +2541,9 @@ input UploadMultipleImageInput {
 }
 
 type User {
+  """[ResolveField] 활성화된 주문건들 개수"""
+  activeOrderItemsCount: Int!
+
   """[ResolveField] 사용가능 포인트 잔고"""
   availablePoint: Int!
   avatarUrl: String

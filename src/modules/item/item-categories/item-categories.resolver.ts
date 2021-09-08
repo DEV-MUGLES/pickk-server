@@ -20,19 +20,19 @@ export class ItemCategoriesResolver extends BaseResolver {
 
   @Query(() => [ItemCategory])
   async itemCategoryTree(): Promise<ItemCategory[]> {
-    return await this.itemCategoriesService.trees();
+    return await this.itemCategoriesService.tree();
   }
 
   @Query(() => [ItemCategory])
   async itemMajorCategories(): Promise<ItemCategory[]> {
-    const trees = await this.itemCategoriesService.trees();
-    return trees[0].children;
+    const tree = await this.itemCategoriesService.tree();
+    return tree[0].children;
   }
 
   @Query(() => [ItemCategory])
   async itemMinorCategories(): Promise<ItemCategory[]> {
-    const trees = await this.itemCategoriesService.trees();
-    return (trees[0].children as ItemCategory[]).reduce(
+    const tree = await this.itemCategoriesService.tree();
+    return (tree[0].children as ItemCategory[]).reduce(
       (acc, curr) => acc.concat(curr.children),
       []
     );

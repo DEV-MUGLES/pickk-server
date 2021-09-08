@@ -1,10 +1,11 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -13,8 +14,8 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { KeywordRelationType, KEYWORD_RELATIONS } from './constants';
-import { KeywordFilter } from './dtos';
-import { Keyword } from './models';
+import { KeywordClassFilter, KeywordFilter } from './dtos';
+import { Keyword, KeywordClass } from './models';
 
 import { KeywordsService } from './keywords.service';
 
@@ -28,6 +29,20 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     private readonly likesService: LikesService
   ) {
     super();
+  }
+
+  @Query(() => Keyword)
+  @UseGuards(JwtOrNotGuard)
+  async keyword(
+    @CurrentUser() payload: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Keyword> {
+    return await this.keywordsService.get(
+      id,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 
   @Query(() => [Keyword])
@@ -44,6 +59,14 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       this.getRelationsFromInfo(info),
       payload?.sub
     );
+  }
+
+  @Query(() => [KeywordClass])
+  async keywordClasses(
+    @Args('filter') filter: KeywordClassFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<KeywordClass[]> {
+    return await this.keywordsService.listClasses(filter, pageInput);
   }
 
   @Query(() => [Keyword])
@@ -85,5 +108,12 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       null,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => Int)
+  async keywordsCountByClass(
+    @IntArgs('keywordClassId') keywordClassId: number
+  ): Promise<number> {
+    return await this.keywordsService.countByClass(keywordClassId);
   }
 }

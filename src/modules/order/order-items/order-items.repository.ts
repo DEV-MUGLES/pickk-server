@@ -1,7 +1,8 @@
 import { NotFoundException } from '@nestjs/common';
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, In, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
+import { OrderItemClaimStatus, OrderItemStatus } from './constants';
 import { OrderItemEntity } from './entities';
 import { OrderItem } from './models';
 
@@ -45,5 +46,35 @@ export class OrderItemsRepository extends Repository<OrderItemEntity> {
       .andWhere('orderItem.userId = :userId', { userId })
       .execute();
     return result?.length > 0;
+  }
+
+  async countActive(userId: number): Promise<number> {
+    const { VbankReady, Paid, ShipPending, ShipReady, Shipping } =
+      OrderItemStatus;
+    const activeStatuses = [VbankReady, Paid, ShipPending, ShipReady, Shipping];
+
+    const { CancelRequested, ExchangeRequested, RefundRequested } =
+      OrderItemClaimStatus;
+    const activeClaimStatuses = [
+      CancelRequested,
+      ExchangeRequested,
+      RefundRequested,
+    ];
+
+    return await this.count({
+      where: [
+        {
+          userId,
+          status: In(activeStatuses),
+          claimStatus: null,
+          isConfirmed: false,
+        },
+        {
+          userId,
+          claimStatus: In(activeClaimStatuses),
+          isConfirmed: false,
+        },
+      ],
+    });
   }
 }

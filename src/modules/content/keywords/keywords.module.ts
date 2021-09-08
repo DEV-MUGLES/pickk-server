@@ -11,19 +11,14 @@ import { UpdateKeywordLikeCountConsumer } from './consumers';
 
 import {
   KeywordsRepository,
-  KeywordClasssRepository,
-  KeywordMatchTagsRepository,
+  KeywordClassesRepository,
 } from './keywords.repository';
 import { KeywordsResolver } from './keywords.resolver';
 import { KeywordsService } from './keywords.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      KeywordsRepository,
-      KeywordClasssRepository,
-      KeywordMatchTagsRepository,
-    ]),
+    TypeOrmModule.forFeature([KeywordsRepository, KeywordClassesRepository]),
     SqsModule.registerQueue({
       name: UPDATE_KEYWORD_LIKE_COUNT_QUEUE,
       type: SqsQueueType.Consumer,

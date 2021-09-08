@@ -96,13 +96,14 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('createInquiryInput') input: CreateInquiryInput
   ): Promise<Inquiry> {
-    const {
-      brand: { sellerId },
-    } = await this.itemsService.get(input.itemId, ['brand']);
+    const item = await this.itemsService.get(input.itemId, [
+      'brand',
+      'brand.seller',
+    ]);
 
     return await this.inquiriesService.create({
       ...input,
-      sellerId,
+      sellerId: item.brand.seller.id,
       userId,
     });
   }
