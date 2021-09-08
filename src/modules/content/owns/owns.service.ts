@@ -35,7 +35,7 @@ export class OwnsService {
     }
 
     await this.ownsRepository.save(new Own({ userId, keywordId }));
-    await this.owningCountCacheProducer.increaseKeywordClassOwningCountCache({
+    await this.owningCountCacheProducer.updateKeywordClassOwningCountCache({
       userId,
       keywordId,
     });
@@ -50,7 +50,7 @@ export class OwnsService {
     }
 
     await this.ownsRepository.remove(owns);
-    await this.owningCountCacheProducer.decreaseKeywordClassOwingCountCache({
+    await this.owningCountCacheProducer.updateKeywordClassOwningCountCache({
       userId,
       keywordId,
     });
@@ -99,29 +99,14 @@ export class OwnsService {
     return count;
   }
 
-  async increaseOwningCount(
-    userId: number,
-    keywordClassId: number
-  ): Promise<void> {
-    const count = await this.getOwningCount(userId, keywordClassId, false);
-    await this.cacheService.set<number>(
-      this.getOwningCountCacheKey(userId, keywordClassId),
-      count + 1
+  async updateOwningCountCache(userId: number, keywordClassId: number) {
+    const count = await this.ownsRepository.countByClass(
+      userId,
+      keywordClassId
     );
-  }
-
-  async decreaseOwningCount(
-    userId: number,
-    keywordClassId: number
-  ): Promise<void> {
-    const count = await this.getOwningCount(userId, keywordClassId, false);
-    if (count <= 0) {
-      throw new BadRequestException('이미 0개를 보유중입니다.');
-    }
-
     await this.cacheService.set<number>(
       this.getOwningCountCacheKey(userId, keywordClassId),
-      (count ?? 0) - 1
+      count
     );
   }
 }
