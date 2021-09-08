@@ -49,9 +49,11 @@ export class UsersRepository extends BaseRepository<UserEntity, User> {
   ): Promise<void> {
     const USER_STYLETAGS_TABLE = 'user_style_tags_style_tag';
 
-    const records = await getConnection()
-      .createQueryRunner()
-      .query(`SELECT * FROM ${USER_STYLETAGS_TABLE} WHERE userId=${userId}`);
+    const runner = getConnection().createQueryRunner();
+    const records = await runner.query(
+      `SELECT * FROM ${USER_STYLETAGS_TABLE} WHERE userId=${userId}`
+    );
+    runner.release();
 
     const existingIds = records.map((r) => r.styleTagId);
 

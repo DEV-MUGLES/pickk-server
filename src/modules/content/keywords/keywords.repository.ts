@@ -27,13 +27,13 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
   async countByClass(keywordClassId: number): Promise<number> {
     const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 
-    const result = await getConnection()
-      .createQueryRunner()
-      .query(
-        `SELECT count(*) as count 
+    const runner = getConnection().createQueryRunner();
+    const result = await runner.query(
+      `SELECT count(*) as count 
           FROM ${KEYWORD_CLASSES_TABLE} 
           WHERE keywordClassId=${keywordClassId}`
-      );
+    );
+    runner.release();
 
     return result[0].count;
   }
@@ -41,15 +41,15 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
   async getClassIds(id: number): Promise<number[]> {
     const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 
-    return (
-      await getConnection()
-        .createQueryRunner()
-        .query(
-          `SELECT keywordClassId
-        FROM ${KEYWORD_CLASSES_TABLE} 
-        WHERE keywordId=${id}`
-        )
-    ).map(({ keywordClassId }) => keywordClassId);
+    const runner = getConnection().createQueryRunner();
+    const result = await runner.query(
+      `SELECT keywordClassId
+    FROM ${KEYWORD_CLASSES_TABLE} 
+    WHERE keywordId=${id}`
+    );
+    runner.release();
+
+    return result.map(({ keywordClassId }) => keywordClassId);
   }
 
   async findIdsByClass(
