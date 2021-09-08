@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddOrder2DigestImage1630929944612 implements MigrationInterface {
-  name = 'AddOrder2DigestImage1630929944612';
+export class AddOrder2DigestImage1631077688139 implements MigrationInterface {
+  name = 'AddOrder2DigestImage1631077688139';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
