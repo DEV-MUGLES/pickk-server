@@ -390,14 +390,10 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
-input CreateDigestImageInput {
-  urls: [String!]!
-}
-
 input CreateDigestInput {
   """최대 길이 2047"""
   content: String
-  imageInput: CreateDigestImageInput!
+  imageUrls: [String!]!
   itemId: Int
   itemPropertyValueIds: [Int!]!
   rating: Rating
@@ -1308,7 +1304,7 @@ type Mutation {
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
-  updateDigest(updateDigestInput: UpdateDigestInput!): Digest!
+  updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
@@ -2360,15 +2356,10 @@ input UpdateCourierIssueInput {
   message: String!
 }
 
-input UpdateDigestImageInput {
-  urls: [String!]!
-}
-
 input UpdateDigestInput {
   """최대 길이 2047"""
   content: String
-  id: Int!
-  imageInput: UpdateDigestImageInput!
+  imageUrls: [String!]
   itemId: Int
   itemPropertyValueIds: [Int!]
   rating: Rating

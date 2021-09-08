@@ -3,7 +3,12 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
+import {
+  bulkEnrichUserIsMe,
+  enrichIsMine,
+  parseFilter,
+  url2key,
+} from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -12,7 +17,7 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
-import { Digest } from './models';
+import { Digest, DigestImage } from './models';
 import { DigestFactory } from './factories';
 
 import { DigestsRepository } from './digests.repository';
@@ -27,8 +32,11 @@ export class DigestsService {
     private readonly itemPropertiesService: ItemPropertiesService
   ) {}
 
-  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
-    return await this.digestsRepository.checkBelongsTo(id, userId);
+  async checkBelongsTo(id: number, userId: number): Promise<void> {
+    const isMine = await this.digestsRepository.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 Digest가 아닙니다.');
+    }
   }
 
   async get(
@@ -87,28 +95,32 @@ export class DigestsService {
     await this.digestsRepository.remove(digest);
   }
 
-  async create(input: CreateDigestInput): Promise<Digest> {
+  async create(userId: number, input: CreateDigestInput): Promise<Digest> {
     const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
       input.itemPropertyValueIds
     );
     const digest = DigestFactory.from(
-      { ...input, itemPropertyValues },
-      input.imageInput.urls
+      { ...input, itemPropertyValues, userId },
+      input.imageUrls
     );
     return await this.digestsRepository.save(digest);
   }
 
-  async update(input: UpdateDigestInput): Promise<Digest> {
-    const { id, userId, itemPropertyValueIds } = input;
-    const digest = await this.get(id, null, userId);
-    if (!digest.isMine) {
-      throw new ForbiddenException('자신의 리뷰가 아닙니다.');
-    }
-
+  // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
+  async update(id: number, input: UpdateDigestInput): Promise<DigestImage[]> {
+    const digest = await this.get(id, ['images']);
     const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
-      itemPropertyValueIds
+      input.itemPropertyValueIds
     );
-    digest.update({ ...input, itemPropertyValues });
-    return await this.digestsRepository.save(digest);
+    const updatedDigest = DigestFactory.from(
+      { ...digest, ...input, itemPropertyValues },
+      input.imageUrls
+    );
+    const deletedImages = digest.images.filter(
+      ({ key }) => input.imageUrls.findIndex((url) => url2key(url) === key) < 0
+    );
+
+    await this.digestsRepository.save(updatedDigest);
+    return deletedImages;
   }
 }

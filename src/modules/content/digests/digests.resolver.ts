@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -67,11 +67,7 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number
   ): Promise<boolean> {
-    const isMine = await this.digestsService.checkBelongsTo(id, userId);
-    if (!isMine) {
-      throw new ForbiddenException('자신의 Digest가 아닙니다.');
-    }
-
+    await this.digestsService.checkBelongsTo(id, userId);
     await this.digestsService.remove(id);
     return true;
   }
@@ -115,25 +111,22 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
   @UseGuards(JwtVerifyGuard)
   async createDigest(
     @CurrentUser() { sub: userId }: JwtPayload,
-    @Args('createDigestInput') input: CreateDigestInput,
-    @Info() info?: GraphQLResolveInfo
+    @Args('createDigestInput') input: CreateDigestInput
   ) {
-    const { id } = await this.digestsService.create({ ...input, userId });
-    return await this.digestsService.get(
-      id,
-      this.getRelationsFromInfo(info),
-      userId
-    );
+    return await this.digestsService.create(userId, input);
   }
 
   @Mutation(() => Digest)
   @UseGuards(JwtVerifyGuard)
   async updateDigest(
     @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
     @Args('updateDigestInput') input: UpdateDigestInput,
     @Info() info?: GraphQLResolveInfo
   ) {
-    const { id } = await this.digestsService.update({ ...input, userId });
+    await this.digestsService.checkBelongsTo(id, userId);
+
+    await this.digestsService.update(id, input);
     return await this.digestsService.get(
       id,
       this.getRelationsFromInfo(info),
