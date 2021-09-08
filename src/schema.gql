@@ -390,6 +390,19 @@ input CreateCourierInput {
   returnReserveUrl: String!
 }
 
+input CreateDigestInput {
+  """최대 길이 2047"""
+  content: String
+  imageUrls: [String!]!
+  itemId: Int
+  itemPropertyValueIds: [Int!]!
+  rating: Rating
+  size: String!
+
+  """최대 길이 127"""
+  title: String
+}
+
 input CreateInquiryInput {
   """알림톡 받을 전화번호 (11글자)"""
   contactPhoneNumber: String!
@@ -616,6 +629,7 @@ type DigestImage {
   angle: Int!
   createdAt: DateTime!
   key: String!
+  order: Float!
   url: String!
 }
 
@@ -1240,6 +1254,7 @@ type Mutation {
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
+  createDigest(createDigestInput: CreateDigestInput!): Digest!
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
@@ -1283,6 +1298,7 @@ type Mutation {
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
+  updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
@@ -2335,6 +2351,19 @@ input UpdateCourierInput {
 input UpdateCourierIssueInput {
   endAt: DateTime!
   message: String!
+}
+
+input UpdateDigestInput {
+  """최대 길이 2047"""
+  content: String
+  imageUrls: [String!]
+  itemId: Int
+  itemPropertyValueIds: [Int!]
+  rating: Rating
+  size: String
+
+  """최대 길이 127"""
+  title: String
 }
 
 input UpdateItemInput {

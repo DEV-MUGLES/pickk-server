@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -8,10 +8,12 @@ import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { FollowsService } from '@user/follows/follows.service';
+import { ItemPropertiesService } from '@item/item-properties/item-properties.service';
 
 import { DigestRelationType } from './constants';
-import { DigestFilter } from './dtos';
-import { Digest } from './models';
+import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
+import { Digest, DigestImage } from './models';
+import { DigestFactory } from './factories';
 
 import { DigestsRepository } from './digests.repository';
 
@@ -21,11 +23,15 @@ export class DigestsService {
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
     private readonly likesService: LikesService,
-    private readonly followsService: FollowsService
+    private readonly followsService: FollowsService,
+    private readonly itemPropertiesService: ItemPropertiesService
   ) {}
 
-  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
-    return await this.digestsRepository.checkBelongsTo(id, userId);
+  async checkBelongsTo(id: number, userId: number): Promise<void> {
+    const isMine = await this.digestsRepository.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 Digest가 아닙니다.');
+    }
   }
 
   async get(
@@ -82,5 +88,34 @@ export class DigestsService {
   async remove(id: number): Promise<void> {
     const digest = await this.get(id);
     await this.digestsRepository.remove(digest);
+  }
+
+  async create(userId: number, input: CreateDigestInput): Promise<Digest> {
+    const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
+      input.itemPropertyValueIds
+    );
+    const digest = DigestFactory.from(
+      { ...input, itemPropertyValues, userId },
+      input.imageUrls
+    );
+    return await this.digestsRepository.save(digest);
+  }
+
+  // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
+  async update(id: number, input: UpdateDigestInput): Promise<DigestImage[]> {
+    const digest = await this.get(id, ['images']);
+    const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
+      input.itemPropertyValueIds
+    );
+    const updatedDigest = DigestFactory.from(
+      { ...digest, ...input, itemPropertyValues },
+      input.imageUrls
+    );
+    const deletedImages = digest.images.filter(
+      ({ key }) => !updatedDigest.images.find((image) => image.key === key)
+    );
+
+    await this.digestsRepository.save(updatedDigest);
+    return deletedImages;
   }
 }

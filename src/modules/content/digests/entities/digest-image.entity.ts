@@ -1,5 +1,5 @@
-import { ObjectType } from '@nestjs/graphql';
-import { Entity, ManyToOne } from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { AbstractImageEntity } from '@common/entities';
 
@@ -13,8 +13,13 @@ export class DigestImageEntity extends AbstractImageEntity {
     if (!attributes) {
       return;
     }
+    this.order = attributes.order;
     this.digest = attributes.digest;
   }
+
+  @Field()
+  @Column({ type: 'tinyint', default: 0, unsigned: true })
+  order: number;
 
   @ManyToOne('DigestEntity', 'images', {
     onDelete: 'CASCADE',
