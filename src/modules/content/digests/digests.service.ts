@@ -3,12 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import {
-  bulkEnrichUserIsMe,
-  enrichIsMine,
-  parseFilter,
-  url2key,
-} from '@common/helpers';
+import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -117,7 +112,7 @@ export class DigestsService {
       input.imageUrls
     );
     const deletedImages = digest.images.filter(
-      ({ key }) => input.imageUrls.findIndex((url) => url2key(url) === key) < 0
+      ({ key }) => !updatedDigest.images.find((image) => image.key === key)
     );
 
     await this.digestsRepository.save(updatedDigest);
