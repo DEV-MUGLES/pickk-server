@@ -1,14 +1,17 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { AlimtalkClient } from 'nest-sens';
 
+import { RefundRequest } from '@order/refund-requests/models';
+import { Order } from '@order/orders/models';
+
 import {
   DelayedExchangeRequestsTemplate,
   DelayedOrderItemsTemplate,
   DelayedRefundRequestsTemplate,
   RefundRequestedTemplate,
+  CancelOrderApprovedTemplate,
 } from '@templates/alimtalk';
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
-import { RefundRequest } from '@order/refund-requests/models';
 
 @Injectable()
 export class AlimtalkService {
@@ -43,6 +46,12 @@ export class AlimtalkService {
   ) {
     await this.alimtalkClient.send(
       DelayedExchangeRequestsTemplate.toRequest(sellerInfo, delayedCount)
+    );
+  }
+
+  async sendCancelOrderApproved(canceledOrder: Order) {
+    await this.alimtalkClient.send(
+      CancelOrderApprovedTemplate.toRequest(canceledOrder)
     );
   }
 }

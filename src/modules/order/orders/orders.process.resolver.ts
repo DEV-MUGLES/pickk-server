@@ -51,7 +51,6 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     return dodgedOrder;
   }
 
-  // @TODO: SQS에서 완료 알림톡 전송
   @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async cancelOrder(
@@ -65,7 +64,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
 
     const canceledOrder = await this.ordersService.cancel(merchantUid, input);
     await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
-
+    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(canceledOrder);
     return await this.ordersService.get(
       merchantUid,
       this.getRelationsFromInfo(info)
