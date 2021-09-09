@@ -37,6 +37,7 @@ export class InicisController {
     await this.inicisService.validateStdVbankNoti(dto, payment);
     await this.paymentsService.confirmVbankPaid(payment);
     await this.inicisProducer.processVbankPaidOrder(payment.merchantUid);
+    await this.inicisProducer.sendVbankPaidAlimtalk(payment.merchantUid);
     return 'OK';
   }
 
@@ -53,6 +54,7 @@ export class InicisController {
     await this.inicisService.validateMobVbankNoti(dto, payment);
     await this.paymentsService.confirmVbankPaid(payment);
     await this.inicisProducer.processVbankPaidOrder(payment.merchantUid);
+    await this.inicisProducer.sendVbankPaidAlimtalk(payment.merchantUid);
     return 'OK';
   }
 
