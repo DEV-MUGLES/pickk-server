@@ -13,6 +13,7 @@ import { InicisController } from './inicis.controller';
 import { InicisService } from './inicis.service';
 import { CreatePaymentDtoCreator } from '@payment/payments/creators';
 import { InicisPrepareResponseDto } from './dtos';
+import { InicisProducer } from './producers';
 
 describe('InicisController', () => {
   let inicisController: InicisController;
@@ -31,6 +32,12 @@ describe('InicisController', () => {
           useValue: {
             get: jest.fn(),
             post: jest.fn(),
+          },
+        },
+        {
+          provide: InicisProducer,
+          useValue: {
+            processVbankPaidOrder: jest.fn(),
           },
         },
       ],
