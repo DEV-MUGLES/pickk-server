@@ -5,7 +5,7 @@ import { Order } from '@order/orders/models';
 import { getPurchaseItemInfo, getTotalPayAmount } from '@templates/helpers';
 
 export class CancelOrderApprovedTemplate {
-  static code = 'ccancel01';
+  static code = 'ccancel02';
 
   static toRequest(
     canceledOrder: Order

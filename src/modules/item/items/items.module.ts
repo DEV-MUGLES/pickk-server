@@ -6,6 +6,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
   UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
+  UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
 import { CrawlerProviderModule } from '@providers/crawler';
@@ -13,6 +14,8 @@ import { CrawlerProviderModule } from '@providers/crawler';
 import { ImagesModule } from '@mcommon/images/images.module';
 import { SearchModule } from '@mcommon/search/search.module';
 import { ProductsModule } from '@item/products/products.module';
+import { DigestsRepository } from '@content/digests/digests.repository';
+
 import {
   UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
   UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
@@ -40,6 +43,7 @@ import { ItemsService } from './items.service';
       ItemSizeChartsRepository,
       ItemPricesRepository,
       ItemDetailImagesRepository,
+      DigestsRepository,
     ]),
     ProductsModule,
     HttpModule,
@@ -64,6 +68,13 @@ import { ItemsService } from './items.service';
         type: SqsQueueType.Consumer,
         consumerOptions: {
           visibilityTimeout: 100,
+        },
+      },
+      {
+        name: UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
+        type: SqsQueueType.Consumer,
+        consumerOptions: {
+          batchSize: 10,
         },
       }
     ),

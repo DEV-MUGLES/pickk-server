@@ -8,4 +8,5 @@ export * from './update-keyword-class-owning-count-cache.mto';
 export * from './restore-deducted-product-stock.mto';
 export * from './update-comment-count.mto';
 export * from './update-item-images.mto';
+export * from './update-item-digest-statistics.mto';
 export * from './send-cancel-order-approved-alimtalk.mto';
