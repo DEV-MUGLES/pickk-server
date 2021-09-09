@@ -20,7 +20,7 @@ export class AwsS3ProviderService {
       secretAccessKey: this.awsS3ConfigService.secretAccessKey,
       region: this.awsS3ConfigService.region,
     });
-    this.s3 = new AWS.S3();
+    this.s3 = new AWS.S3({ region: this.awsS3ConfigService.region });
   }
 
   private getRandomString = (length = 6): string => {
