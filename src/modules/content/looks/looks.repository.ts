@@ -42,7 +42,7 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     return raws.map((raw) => raw.id);
   }
 
-  async findIdsByStyleTags(
+  async findIdsByCustomFilter(
     filter: LookFilter,
     pageInput?: PageInput
   ): Promise<number[]> {

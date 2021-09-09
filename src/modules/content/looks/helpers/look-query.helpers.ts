@@ -20,6 +20,10 @@ export const lookStyleTagsQuery = (
   queryBuilder: SelectQueryBuilder<LookEntity>,
   styleTagIds: number[]
 ) => {
+  if (!styleTagIds?.length) {
+    return queryBuilder;
+  }
+
   const LOOK_STYLETAGS_TABLE = 'look_style_tags_style_tag';
 
   return queryBuilder
@@ -44,13 +48,11 @@ export const lookUserHeightQuery = (
 
   const [min, max] = range;
 
-  return queryBuilder
-    .leftJoinAndSelect(
-      'user',
-      'user',
-      `user.id = look.userId AND 
+  return queryBuilder.innerJoin(
+    'user',
+    'user',
+    `user.id = look.userId AND 
       user.height >= ${min} AND
       user.height <= ${max}`
-    )
-    .where(`user.height IS NOT NULL`);
+  );
 };

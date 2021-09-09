@@ -10,7 +10,11 @@ export class LookUserFilter {
 
 @InputType()
 export class LookFilter implements Partial<Omit<ILook, 'user'>> {
-  excludeFields?: Array<keyof LookFilter> = ['styleTagIdIn', 'itemId'];
+  excludeFields?: Array<keyof LookFilter | 'heightBetween'> = [
+    'styleTagIdIn',
+    'itemId',
+    'heightBetween',
+  ];
 
   @Field(() => [Int], { nullable: true })
   idIn?: number[];

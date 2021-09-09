@@ -76,22 +76,11 @@ export class LooksService {
       };
     }
 
-    if (_filter?.styleTagIdIn?.length > 0) {
-      const ids = await this.looksRepository.findIdsByStyleTags(
-        _filter,
-        _pageInput
-      );
-
-      return {
-        where: { id: In(ids) },
-        order: {
-          [filter?.orderBy ?? 'id']: 'DESC',
-        },
-      };
-    }
-
-    if (_filter?.styleTagIdIn?.length > 0) {
-      const ids = await this.looksRepository.findIdsByStyleTags(
+    if (
+      _filter?.styleTagIdIn?.length > 0 ||
+      _filter?.user?.heightBetween != null
+    ) {
+      const ids = await this.looksRepository.findIdsByCustomFilter(
         _filter,
         _pageInput
       );
