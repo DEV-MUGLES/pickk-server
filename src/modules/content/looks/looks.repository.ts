@@ -26,26 +26,7 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     );
   }
 
-  async findIdsByItemId(
-    itemId: number,
-    pageInput?: PageInput
-  ): Promise<number[]> {
-    const raws = await pageQuery(
-      lookItemIdQuery(this.createQueryBuilder('look'), itemId),
-      'look',
-      pageInput
-    )
-      .select('look.id', 'id')
-      .orderBy(`look.score`, 'DESC')
-      .execute();
-
-    return raws.map((raw) => raw.id);
-  }
-
-  async findIdsByCustomFilter(
-    filter: LookFilter,
-    pageInput?: PageInput
-  ): Promise<number[]> {
+  async findIds(filter: LookFilter, pageInput?: PageInput): Promise<number[]> {
     let qb = pageQuery(
       lookStyleTagsQuery(this.createQueryBuilder('look'), filter.styleTagIdIn),
       'look',
@@ -56,6 +37,10 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
 
     if (filter.user?.heightBetween) {
       qb = lookUserHeightQuery(qb, filter.user.heightBetween);
+    }
+
+    if (filter.itemId) {
+      qb = lookItemIdQuery(this.createQueryBuilder('look'), filter.itemId);
     }
 
     const raws = await qb.execute();

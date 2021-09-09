@@ -30,10 +30,27 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
     nullable: true,
   })
   itemId?: number;
-
   @Field(() => [Int], { nullable: true })
   styleTagIdIn?: number[];
 
   @Field(() => String, { defaultValue: 'id' })
   orderBy?: keyof ILook;
+
+  get hasCustom(): boolean {
+    return (
+      this.styleTagIdIn?.length > 0 ||
+      this.user.heightBetween != null ||
+      this.itemId != null
+    );
+  }
+
+  get cacheKey(): string {
+    const { styleTagIdIn, user, itemId } = this;
+
+    return JSON.stringify({
+      styleTagIdIn,
+      itemId,
+      heightBetween: user?.heightBetween,
+    });
+  }
 }

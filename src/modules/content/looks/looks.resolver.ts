@@ -67,7 +67,7 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     const ids = await this.lookSearchService.search(query, pageInput);
 
     return await this.looksService.list(
-      { idIn: ids },
+      { idIn: ids } as LookFilter,
       null,
       this.getRelationsFromInfo(info)
     );
@@ -87,7 +87,7 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     );
 
     return await this.looksService.list(
-      { idIn: ids },
+      { idIn: ids } as LookFilter,
       null,
       this.getRelationsFromInfo(info)
     );

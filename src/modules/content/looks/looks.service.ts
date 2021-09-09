@@ -65,25 +65,8 @@ export class LooksService {
     const _filter = plainToClass(LookFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    if (_filter?.itemId) {
-      const ids = await this.findIdsByItemId(_filter.itemId, pageInput);
-
-      return {
-        where: { id: In(ids) },
-        order: {
-          [filter?.orderBy ?? 'id']: 'DESC',
-        },
-      };
-    }
-
-    if (
-      _filter?.styleTagIdIn?.length > 0 ||
-      _filter?.user?.heightBetween != null
-    ) {
-      const ids = await this.looksRepository.findIdsByCustomFilter(
-        _filter,
-        _pageInput
-      );
+    if (_filter?.hasCustom) {
+      const ids = await this.findIds(_filter, _pageInput);
 
       return {
         where: { id: In(ids) },
@@ -102,23 +85,20 @@ export class LooksService {
     };
   }
 
-  private async findIdsByItemId(
-    itemId: number,
+  private async findIds(
+    filter: LookFilter,
     pageInput: PageInput
   ): Promise<number[]> {
-    const cacheKey = `look-ids:${itemId}`;
+    const cacheKey = `look-ids:${filter.cacheKey}:${JSON.stringify(pageInput)}`;
     const cached = await this.cacheService.get<number[]>(cacheKey);
 
     if (cached) {
       return cached;
     }
 
-    const result = await this.looksRepository.findIdsByItemId(
-      itemId,
-      pageInput
-    );
+    const result = await this.looksRepository.findIds(filter, pageInput);
 
-    await this.cacheService.set<number[]>(cacheKey, result, { ttl: 60 * 5 });
+    await this.cacheService.set<number[]>(cacheKey, result, { ttl: 60 });
     return result;
   }
 }
