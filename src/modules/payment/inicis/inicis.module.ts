@@ -3,7 +3,10 @@ import { HttpModule } from '@nestjs/axios';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import { PaymentsModule } from '@payment/payments/payments.module';
-import { PROCESS_VBANK_PAID_ORDER_QUEUE } from '@queue/constants';
+import {
+  PROCESS_VBANK_PAID_ORDER_QUEUE,
+  SEND_VBANK_PAID_ALIMTALK_QUEUE,
+} from '@queue/constants';
 
 import { InicisProducer } from './producers';
 
@@ -14,10 +17,16 @@ import { InicisService } from './inicis.service';
   imports: [
     forwardRef(() => PaymentsModule),
     HttpModule,
-    SqsModule.registerQueue({
-      name: PROCESS_VBANK_PAID_ORDER_QUEUE,
-      type: SqsQueueType.Producer,
-    }),
+    SqsModule.registerQueue(
+      {
+        name: PROCESS_VBANK_PAID_ORDER_QUEUE,
+        type: SqsQueueType.Producer,
+      },
+      {
+        name: SEND_VBANK_PAID_ALIMTALK_QUEUE,
+        type: SqsQueueType.Producer,
+      }
+    ),
   ],
   controllers: [InicisController],
   providers: [InicisService, InicisProducer],
