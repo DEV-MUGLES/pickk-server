@@ -65,7 +65,7 @@ export class UsersService {
         where: parseFilter(_filter, _pageInput?.idFilter),
         ...(_pageInput?.pageFilter ?? {}),
         order: {
-          [filter.orderBy ?? 'id']: 'DESC',
+          [filter?.orderBy ?? 'id']: 'DESC',
         },
       })
     );

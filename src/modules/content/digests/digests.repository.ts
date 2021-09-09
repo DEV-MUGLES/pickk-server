@@ -52,7 +52,7 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
       pageInput
     )
       .select('digest.id', 'id')
-      .orderBy(`digest.${filter.orderBy}`, 'DESC')
+      .orderBy(`digest.${filter?.orderBy ?? 'id'}`, 'DESC')
       .execute();
 
     return raws.map((raw) => raw.id);

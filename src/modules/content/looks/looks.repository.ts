@@ -33,7 +33,7 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
       pageInput
     )
       .select('look.id', 'id')
-      .orderBy(`look.${filter.orderBy}`, 'DESC');
+      .orderBy(`look.${filter?.orderBy ?? 'id'}`, 'DESC');
 
     if (filter.user?.heightBetween) {
       qb = lookUserHeightQuery(qb, filter.user.heightBetween);
