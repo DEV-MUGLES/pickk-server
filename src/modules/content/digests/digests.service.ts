@@ -1,9 +1,11 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
+import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -17,6 +19,7 @@ import { DigestFactory } from './factories';
 import { DigestsProducer } from './producers';
 
 import { DigestsRepository } from './digests.repository';
+import { DigestEntity } from './entities';
 
 @Injectable()
 export class DigestsService {
@@ -25,6 +28,7 @@ export class DigestsService {
     private readonly digestsRepository: DigestsRepository,
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
+    private readonly cacheService: CacheService,
     private readonly itemPropertiesService: ItemPropertiesService,
     private readonly digestsProducer: DigestsProducer
   ) {}
@@ -62,17 +66,10 @@ export class DigestsService {
     relations: DigestRelationType[] = [],
     userId?: number
   ): Promise<Digest[]> {
-    const _filter = plainToClass(DigestFilter, filter);
-    const _pageInput = plainToClass(PageInput, pageInput);
-
     const digests = this.digestsRepository.entityToModelMany(
       await this.digestsRepository.find({
         relations,
-        where: parseFilter(_filter, _pageInput?.idFilter),
-        ...(_pageInput?.pageFilter ?? {}),
-        order: {
-          [filter?.orderBy ?? 'id']: 'DESC',
-        },
+        ...(await this.getFindOptions(filter, pageInput)),
       })
     );
 
@@ -85,6 +82,52 @@ export class DigestsService {
     bulkEnrichUserIsMe(userId, digests);
 
     return digests;
+  }
+
+  private async getFindOptions(
+    filter?: DigestFilter,
+    pageInput?: PageInput
+  ): Promise<FindManyOptions<DigestEntity>> {
+    const _filter = plainToClass(DigestFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    if (_filter?.hasCustom) {
+      const ids = await this.findIds(_filter, _pageInput);
+
+      return {
+        where: { id: In(ids) },
+        order: {
+          [filter?.orderBy ?? 'id']: 'DESC',
+        },
+      };
+    }
+
+    return {
+      where: parseFilter(_filter, _pageInput?.idFilter),
+      ...(_pageInput?.pageFilter ?? {}),
+      order: {
+        [filter?.orderBy ?? 'id']: 'DESC',
+      },
+    };
+  }
+
+  private async findIds(
+    filter: DigestFilter,
+    pageInput: PageInput
+  ): Promise<number[]> {
+    const cacheKey = `digest-ids:${filter.cacheKey}:${JSON.stringify(
+      pageInput
+    )}`;
+    const cached = await this.cacheService.get<number[]>(cacheKey);
+
+    if (cached) {
+      return cached;
+    }
+
+    const result = await this.digestsRepository.findIds(filter, pageInput);
+
+    await this.cacheService.set<number[]>(cacheKey, result, { ttl: 60 });
+    return result;
   }
 
   async remove(id: number): Promise<void> {

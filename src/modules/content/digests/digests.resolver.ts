@@ -81,7 +81,7 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     const ids = await this.digestsSearchService.search(query, pageInput);
 
     return await this.digestsService.list(
-      { idIn: ids },
+      { idIn: ids } as DigestFilter,
       null,
       this.getRelationsFromInfo(info)
     );
@@ -101,7 +101,7 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     );
 
     return await this.digestsService.list(
-      { idIn: ids },
+      { idIn: ids } as DigestFilter,
       null,
       this.getRelationsFromInfo(info)
     );

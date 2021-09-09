@@ -619,8 +619,10 @@ type Digest {
 
 input DigestFilter {
   idIn: [Int!]
+  item: DigestItemFilter
   itemId: Int
   orderBy: String = "id"
+  user: DigestUserFilter
   userId: Int
   userIdIn: [Int!]
 }
@@ -631,6 +633,14 @@ type DigestImage {
   key: String!
   order: Float!
   url: String!
+}
+
+input DigestItemFilter {
+  minorCategoryId: Int
+}
+
+input DigestUserFilter {
+  heightBetween: [Int!]
 }
 
 type DigestsExhibition {

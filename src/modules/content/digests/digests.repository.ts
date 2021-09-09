@@ -1,9 +1,16 @@
 import { EntityRepository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
+import { PageInput } from '@common/dtos';
+import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
+import { DigestFilter } from './dtos';
 import { DigestEntity } from './entities';
+import {
+  digestItemMinorCategoryIdQuery,
+  digestUserHeightQuery,
+} from './helpers';
 import { Digest } from './models';
 
 @EntityRepository(DigestEntity)
@@ -27,5 +34,27 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
       .limit(1)
       .execute();
     return result?.length > 0;
+  }
+
+  async findIds(
+    filter: DigestFilter,
+    pageInput?: PageInput
+  ): Promise<number[]> {
+    const raws = await pageQuery(
+      digestItemMinorCategoryIdQuery(
+        digestUserHeightQuery(
+          this.createQueryBuilder('digest'),
+          filter.user?.heightBetween
+        ),
+        filter.item?.minorCategoryId
+      ),
+      'digest',
+      pageInput
+    )
+      .select('digest.id', 'id')
+      .orderBy(`digest.${filter.orderBy}`, 'DESC')
+      .execute();
+
+    return raws.map((raw) => raw.id);
   }
 }
