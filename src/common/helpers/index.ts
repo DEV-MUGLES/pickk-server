@@ -10,3 +10,4 @@ export * from './random.helpers';
 export * from './regex.helpers';
 export * from './set.helpers';
 export * from './image-s3-key.helpers';
+export * from './bank-code.helper';
