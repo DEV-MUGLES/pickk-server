@@ -1,6 +1,6 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { plainToClass } from 'class-transformer';
+import { plainToClass, Type } from 'class-transformer';
 
 import { Coupon } from '@order/coupons/models';
 import {
@@ -43,6 +43,7 @@ export class Order extends OrderEntity {
     return getOrderBrands(this.orderItems ?? []);
   }
 
+  @Type(() => OrderItem)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 
