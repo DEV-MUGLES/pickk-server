@@ -10,6 +10,7 @@ import {
   DelayedRefundRequestsTemplate,
   RefundRequestedTemplate,
   CancelOrderApprovedTemplate,
+  CompleteOrderTemplate,
 } from '@templates/alimtalk';
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
 
@@ -53,5 +54,9 @@ export class AlimtalkService {
     await this.alimtalkClient.send(
       CancelOrderApprovedTemplate.toRequest(canceledOrder)
     );
+  }
+
+  async sendVbankPaid(order: Order) {
+    await this.alimtalkClient.send(CompleteOrderTemplate.toRequest(order));
   }
 }
