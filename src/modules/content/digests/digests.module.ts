@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import {
   UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
+  UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
@@ -17,6 +18,7 @@ import {
   UpdateDigestCommentCountConsumer,
   UpdateDigestLikeCountConsumer,
 } from './consumers';
+import { DigestsProducer } from './producers';
 
 import { DigestsRepository } from './digests.repository';
 import { DigestsResolver } from './digests.resolver';
@@ -35,6 +37,11 @@ import { DigestsService } from './digests.service';
         name: UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
         type: SqsQueueType.Consumer,
         consumerOptions: { batchSize: 10 },
+      },
+      {
+        name: UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
+        type: SqsQueueType.Producer,
+        producerOptions: { batchSize: 10 },
       }
     ),
     LikesModule,
@@ -48,6 +55,7 @@ import { DigestsService } from './digests.service';
     DigestsService,
     UpdateDigestLikeCountConsumer,
     UpdateDigestCommentCountConsumer,
+    DigestsProducer,
   ],
   exports: [DigestsService],
 })

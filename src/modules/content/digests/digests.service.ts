@@ -14,6 +14,7 @@ import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
 import { Digest, DigestImage } from './models';
 import { DigestFactory } from './factories';
+import { DigestsProducer } from './producers';
 
 import { DigestsRepository } from './digests.repository';
 
@@ -24,7 +25,8 @@ export class DigestsService {
     private readonly digestsRepository: DigestsRepository,
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
-    private readonly itemPropertiesService: ItemPropertiesService
+    private readonly itemPropertiesService: ItemPropertiesService,
+    private readonly digestsProducer: DigestsProducer
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<void> {
@@ -88,17 +90,21 @@ export class DigestsService {
   async remove(id: number): Promise<void> {
     const digest = await this.get(id);
     await this.digestsRepository.remove(digest);
+    await this.digestsProducer.updateItemDigestStatistics([digest.itemId]);
   }
 
   async create(userId: number, input: CreateDigestInput): Promise<Digest> {
     const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
       input.itemPropertyValueIds
     );
-    const digest = DigestFactory.from(
-      { ...input, itemPropertyValues, userId },
-      input.imageUrls
+    const digest = await this.digestsRepository.save(
+      DigestFactory.from(
+        { ...input, itemPropertyValues, userId },
+        input.imageUrls
+      )
     );
-    return await this.digestsRepository.save(digest);
+    await this.digestsProducer.updateItemDigestStatistics([digest.itemId]);
+    return digest;
   }
 
   // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
