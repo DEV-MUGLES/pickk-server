@@ -38,6 +38,7 @@ describe('InicisController', () => {
           provide: InicisProducer,
           useValue: {
             processVbankPaidOrder: jest.fn(),
+            sendVbankPaidAlimtalk: jest.fn(),
           },
         },
       ],
