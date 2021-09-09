@@ -8,7 +8,8 @@ import { UpdateItemDigestStatisticsMto } from '@queue/mtos';
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async updateItemDigestStatistics(itemIds: number[]) {
+  async updateItemDigestStatistics(itemIdOrIds: number[] | number) {
+    const itemIds = Array.isArray(itemIdOrIds) ? itemIdOrIds : [itemIdOrIds];
     const messages = Array.from(new Set(itemIds)).map((itemId) => ({
       id: itemId.toString(),
       body: { itemId },

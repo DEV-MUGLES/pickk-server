@@ -90,7 +90,7 @@ export class DigestsService {
   async remove(id: number): Promise<void> {
     const digest = await this.get(id);
     await this.digestsRepository.remove(digest);
-    await this.digestsProducer.updateItemDigestStatistics([digest.itemId]);
+    await this.digestsProducer.updateItemDigestStatistics(digest.itemId);
   }
 
   async create(userId: number, input: CreateDigestInput): Promise<Digest> {
@@ -103,7 +103,7 @@ export class DigestsService {
         input.imageUrls
       )
     );
-    await this.digestsProducer.updateItemDigestStatistics([digest.itemId]);
+    await this.digestsProducer.updateItemDigestStatistics(digest.itemId);
     return digest;
   }
 
