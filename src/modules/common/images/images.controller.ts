@@ -2,13 +2,17 @@ import {
   Controller,
   Post,
   UploadedFiles,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
+import { RestVerifyGuard } from '@auth/guards';
+
 import { ImagesService } from './images.service';
 
 @Controller('/images')
+@UseGuards(RestVerifyGuard)
 export class ImagesController {
   constructor(private readonly imagesService: ImagesService) {}
 
