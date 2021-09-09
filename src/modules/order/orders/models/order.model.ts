@@ -128,6 +128,16 @@ export class Order extends OrderEntity {
     }
   }
 
+  processVbankPaid() {
+    if (
+      this.payMethod !== PayMethod.Vbank ||
+      this.status !== OrderStatus.VbankReady
+    ) {
+      throw new BadRequestException('가상계좌 주문건이 아닙니다');
+    }
+    this.markPaid();
+  }
+
   dodgeVbank() {
     this.markVbankDodged();
   }
@@ -238,9 +248,9 @@ export class Order extends OrderEntity {
   }
 
   private markPaying() {
-    const { VbankReady, Paid, VbankDodged } = OrderStatus;
+    const { Paid, VbankDodged } = OrderStatus;
 
-    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
+    if ([Paid, VbankDodged].includes(this.status)) {
       throw new BadRequestException('해당 주문은 결제할 수 없습니다.');
     }
 

@@ -27,3 +27,5 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name C2V-UPDAT
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name D2I-UPDATE_ITEM_DIGEST_STATISTICS
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O_SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE
+
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name I2O-PROCESS_VBANK_PAID_ORDER

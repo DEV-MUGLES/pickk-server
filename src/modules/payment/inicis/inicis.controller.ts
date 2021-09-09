@@ -11,6 +11,7 @@ import {
 } from './dtos';
 import { AbnormalVbankNotiException } from './exceptions';
 import { StdVbankNotiGuard, MobVbankNotiGuard } from './guards';
+import { InicisProducer } from './producers';
 
 import { InicisService } from './inicis.service';
 
@@ -19,10 +20,10 @@ import { InicisService } from './inicis.service';
 export class InicisController {
   constructor(
     @Inject(PaymentsService) private readonly paymentsService: PaymentsService,
-    @Inject(InicisService) private readonly inicisService: InicisService
+    @Inject(InicisService) private readonly inicisService: InicisService,
+    private readonly inicisProducer: InicisProducer
   ) {}
 
-  // @TODO: SQS로 주문 결제 완료 처리
   @UseGuards(StdVbankNotiGuard)
   @Post('/std/vbank-noti')
   async acceptStdVbankNoti(@Body() dto: InicisStdVbankNotiDto): Promise<'OK'> {
@@ -35,10 +36,10 @@ export class InicisController {
     });
     await this.inicisService.validateStdVbankNoti(dto, payment);
     await this.paymentsService.confirmVbankPaid(payment);
+    await this.inicisProducer.processVbankPaidOrder(payment.merchantUid);
     return 'OK';
   }
 
-  // @TODO: SQS로 주문 결제 완료 처리
   @UseGuards(MobVbankNotiGuard)
   @Post('/mob/vbank-noti')
   async acceptMobVbankNoti(@Body() dto: InicisMobVbankNotiDto): Promise<'OK'> {
@@ -51,6 +52,7 @@ export class InicisController {
     });
     await this.inicisService.validateMobVbankNoti(dto, payment);
     await this.paymentsService.confirmVbankPaid(payment);
+    await this.inicisProducer.processVbankPaidOrder(payment.merchantUid);
     return 'OK';
   }
 
