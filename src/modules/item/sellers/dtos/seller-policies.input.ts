@@ -68,7 +68,7 @@ export class CreateSellerCrawlPolicyInput extends PickType(
 @InputType()
 export class CreateSellerShippingPolicyInput extends PickType(
   SellerShippingPolicy,
-  ['minimumAmountForFree', 'fee'],
+  ['minimumAmountForFree', 'fee', 'description'],
   InputType
 ) {}
 

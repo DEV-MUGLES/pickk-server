@@ -544,6 +544,7 @@ input CreateSellerSettlePolicyInput {
 }
 
 input CreateSellerShippingPolicyInput {
+  description: String
   fee: Int!
   minimumAmountForFree: Int!
 }
@@ -2169,6 +2170,7 @@ type SellerClaimAccount {
 type SellerClaimPolicy {
   account: SellerClaimAccount
   createdAt: DateTime!
+  description: String
   fee: Int!
   feePayMethod: ClaimFeePayMethod!
   id: Int!
@@ -2243,6 +2245,7 @@ type SellerSettlePolicy {
 
 type SellerShippingPolicy {
   createdAt: DateTime!
+  description: String
   fee: Int!
   id: Int!
   minimumAmountForFree: Int!
@@ -2509,6 +2512,7 @@ input UpdateSellerSettlePolicyInput {
 }
 
 input UpdateSellerShippingPolicyInput {
+  description: String
   fee: Int
   minimumAmountForFree: Int
 }

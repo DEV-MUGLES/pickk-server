@@ -12,6 +12,7 @@ export interface ISellerClaimPolicy {
   phoneNumber: string;
   /** 교환배송비 지불방식 */
   feePayMethod: ClaimFeePayMethod;
+  description: string;
 
   isExchangable: boolean;
   isRefundable: boolean;

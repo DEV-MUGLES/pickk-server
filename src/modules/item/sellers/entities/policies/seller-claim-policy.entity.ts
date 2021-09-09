@@ -35,6 +35,7 @@ export class SellerClaimPolicyEntity
     this.phoneNumber = attributes.phoneNumber;
     this.picName = attributes.picName;
     this.feePayMethod = attributes.feePayMethod;
+    this.description = attributes.description;
 
     this.isExchangable = attributes.isExchangable;
     this.isRefundable = attributes.isRefundable;
@@ -47,19 +48,16 @@ export class SellerClaimPolicyEntity
   @IsNumber()
   @Min(0)
   fee: number;
-
   @Field({ description: '담당자 번호' })
   @Column({ type: 'char', length: 11 })
   @IsPhoneNumber('KR')
   @IsNumberString()
   phoneNumber: string;
-
   @Field({ description: '담당자 이름' })
-  @Column({ type: 'varchar', length: 20 })
+  @Column({ length: 20 })
   @IsString()
   @MaxLength(20)
   picName: string;
-
   @Field(() => ClaimFeePayMethod)
   @Column({
     type: 'enum',
@@ -68,12 +66,14 @@ export class SellerClaimPolicyEntity
   })
   @IsEnum(ClaimFeePayMethod)
   feePayMethod: ClaimFeePayMethod;
+  @Field({ nullable: true })
+  @Column({ length: 500, nullable: true })
+  description: string;
 
   @Field()
   @Column({ default: true })
   @IsBoolean()
   isExchangable: boolean;
-
   @Field()
   @Column({ default: true })
   @IsBoolean()

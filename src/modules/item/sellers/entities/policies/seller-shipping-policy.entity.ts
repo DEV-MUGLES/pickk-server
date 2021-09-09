@@ -13,17 +13,14 @@ export class SellerShippingPolicyEntity
   implements ISellerShippingPolicy
 {
   constructor(attributes?: Partial<SellerShippingPolicyEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }
 
-    this.id = attributes.id;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
-
     this.minimumAmountForFree = attributes.minimumAmountForFree;
     this.fee = attributes.fee;
+    this.description = attributes.description;
   }
 
   @Field(() => Int)
@@ -31,10 +28,12 @@ export class SellerShippingPolicyEntity
   @IsNumber()
   @Min(0)
   minimumAmountForFree: number;
-
   @Field(() => Int)
   @Column({ type: 'mediumint' })
   @IsNumber()
   @Min(0)
   fee: number;
+  @Field({ nullable: true })
+  @Column({ length: 500, nullable: true })
+  description: string;
 }
