@@ -1327,7 +1327,6 @@ type Mutation {
 
   """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
-  uploadMultipleImages(uploadImageInput: UploadMultipleImageInput!): [String!]!
 }
 
 type Order {
@@ -2531,13 +2530,6 @@ input UpdateUserInput {
   styleTagIds: [Int!]
   weight: Int
   youtubeUrl: String
-}
-
-"""The `Upload` scalar type represents a file upload."""
-scalar Upload
-
-input UploadMultipleImageInput {
-  files: [Upload!]!
 }
 
 type User {
