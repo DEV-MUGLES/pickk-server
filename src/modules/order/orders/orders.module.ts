@@ -6,6 +6,7 @@ import {
   PROCESS_VBANK_PAID_ORDER_QUEUE,
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
+  SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
   SEND_VBANK_PAID_ALIMTALK_QUEUE,
 } from '@queue/constants';
 
@@ -16,11 +17,7 @@ import { PointsModule } from '@order/points/points.module';
 import { PaymentsModule } from '@payment/payments/payments.module';
 import { UsersModule } from '@user/users/users.module';
 
-import {
-  ProcessVbankPaidOrderConsumer,
-  SendCancelOrderApprovedAlimtalkConsumer,
-  SendVbankPaidAlimtalkConsumer,
-} from './consumers';
+import { OrdersConsumers } from './consumers';
 import { OrdersProducer } from './producers';
 
 import { OrdersCreateResolver } from './orders.create.resolver';
@@ -53,6 +50,9 @@ import { OrdersService } from './orders.service';
       {
         name: SEND_VBANK_PAID_ALIMTALK_QUEUE,
         type: SqsQueueType.Consumer,
+      },
+      {
+        name: SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
       }
     ),
   ],
@@ -62,9 +62,7 @@ import { OrdersService } from './orders.service';
     OrdersResolver,
     OrdersService,
     OrdersProducer,
-    SendCancelOrderApprovedAlimtalkConsumer,
-    ProcessVbankPaidOrderConsumer,
-    SendVbankPaidAlimtalkConsumer,
+    ...OrdersConsumers,
   ],
   exports: [OrdersService],
 })

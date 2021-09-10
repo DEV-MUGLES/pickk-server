@@ -11,6 +11,7 @@ import {
   RefundRequestedTemplate,
   CancelOrderApprovedTemplate,
   CompleteOrderTemplate,
+  VbankNotiTemplate,
 } from '@templates/alimtalk';
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
 
@@ -58,5 +59,13 @@ export class AlimtalkService {
 
   async sendVbankPaid(order: Order) {
     await this.alimtalkClient.send(CompleteOrderTemplate.toRequest(order));
+  }
+
+  async sendOrderCompleted(order: Order) {
+    await this.alimtalkClient.send(CompleteOrderTemplate.toRequest(order));
+  }
+
+  async sendVbankNoti(order: Order) {
+    await this.alimtalkClient.send(VbankNotiTemplate.toRequest(order));
   }
 }

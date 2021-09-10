@@ -12,3 +12,4 @@ export * from './update-item-digest-statistics.mto';
 export * from './send-cancel-order-approved-alimtalk.mto';
 export * from './process-vbank-paid-order.mto';
 export * from './send-vbank-paid-alimtalk.mto';
+export * from './send-order-completed-alimtalk.mto';

@@ -34,6 +34,7 @@ import {
 } from './dtos';
 import { OrderFactory } from './factories';
 import { Order } from './models';
+import { OrdersProducer } from './producers';
 
 import { OrdersRepository } from './orders.repository';
 
@@ -48,7 +49,8 @@ export class OrdersService {
     private readonly couponsService: CouponsService,
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
-    private readonly usersService: UsersService
+    private readonly usersService: UsersService,
+    private readonly ordersProducer: OrdersProducer
   ) {}
 
   async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
@@ -144,7 +146,12 @@ export class OrdersService {
     merchantUid: string,
     createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput
   ): Promise<Order> {
-    const order = await this.get(merchantUid, ['orderItems', 'vbankInfo']);
+    const order = await this.get(merchantUid, [
+      'orderItems',
+      'vbankInfo',
+      'buyer',
+      'receiver',
+    ]);
 
     const { status } = await this.paymentsService.get(merchantUid);
     const paymentStatusMustBe =
@@ -156,7 +163,9 @@ export class OrdersService {
     }
 
     order.complete(createOrderVbankReceiptInput);
-    return await this.ordersRepository.save(order);
+    const completedOrder = await this.ordersRepository.save(order);
+    await this.ordersProducer.sendOrderCompletedAlimtalk(order);
+    return completedOrder;
   }
 
   async dodgeVbank(merchantUid: string): Promise<Order> {
