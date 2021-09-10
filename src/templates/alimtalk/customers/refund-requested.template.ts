@@ -70,7 +70,7 @@ class Crefund03Template {
     }
 ▶ 받는이 : ${brandNameKor}
 
-▶ 반품 예약링크 : #{courierReturnReserveUrl}
+▶ 반품 예약링크 : ${courier.returnReserveUrl}
 
 상품검수가 완료되는대로 환불이 처리되오니, 빠른 반송을 요청드립니다.`;
   }

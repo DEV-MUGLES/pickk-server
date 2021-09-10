@@ -71,7 +71,6 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     );
   }
 
-  // @TODO: 완료 알림톡 전송.
   @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async requestOrderRefund(
@@ -83,7 +82,14 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   ): Promise<Order> {
     await this.ordersService.checkBelongsTo(merchantUid, userId);
 
-    await this.ordersService.requestRefund(merchantUid, input);
+    const { refundRequests } = await this.ordersService.requestRefund(
+      merchantUid,
+      input
+    );
+
+    await this.ordersProducer.sendRefundRequestedAlimtalk(
+      refundRequests[refundRequests.length - 1].id
+    );
 
     return await this.ordersService.get(
       merchantUid,
