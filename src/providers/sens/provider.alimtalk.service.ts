@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AlimtalkClient } from 'nest-sens';
 
 import { RefundRequest } from '@order/refund-requests/models';
-import { Order, OrderBuyer } from '@order/orders/models';
+import { Order } from '@order/orders/models';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 
 import {
@@ -29,12 +29,9 @@ export class AlimtalkService {
     );
   }
 
-  async sendExchangeRequested(
-    exchangeRequest: ExchangeRequest,
-    buyer: OrderBuyer
-  ) {
+  async sendExchangeRequested(exchangeRequest: ExchangeRequest) {
     await this.alimtalkClient.send(
-      ExchangeRequestedTemplate.toRequest(exchangeRequest, buyer)
+      ExchangeRequestedTemplate.toRequest(exchangeRequest)
     );
   }
 

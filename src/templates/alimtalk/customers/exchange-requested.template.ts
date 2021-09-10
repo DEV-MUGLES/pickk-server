@@ -4,12 +4,10 @@ import { partialEncrypt } from '@common/helpers';
 import { getPurchaseItemInfo } from '@templates/helpers';
 
 import { ExchangeRequest } from '@order/exchange-requests/models';
-import { OrderBuyer } from '@order/orders/models';
 
 export class ExchangeRequestedTemplate {
   static toRequest(
-    exchangeRequest: ExchangeRequest,
-    buyer: OrderBuyer
+    exchangeRequest: ExchangeRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
     const TemplateClass = exchangeRequest.pickShipment
       ? Cexch04Template
@@ -19,8 +17,8 @@ export class ExchangeRequestedTemplate {
       templateCode: TemplateClass.code,
       messages: [
         {
-          to: buyer.phoneNumber,
-          content: TemplateClass.toContent(exchangeRequest, buyer),
+          to: exchangeRequest.orderItem.order.buyer.phoneNumber,
+          content: TemplateClass.toContent(exchangeRequest),
         },
       ],
     };
@@ -30,8 +28,12 @@ export class ExchangeRequestedTemplate {
 class Cexch04Template {
   static code = 'cexch04';
 
-  static toContent(exchangeRequest: ExchangeRequest, buyer: OrderBuyer) {
+  static toContent(exchangeRequest: ExchangeRequest) {
     const { orderItem, pickShipment } = exchangeRequest;
+    const {
+      order: { buyer },
+    } = orderItem;
+    console.log(pickShipment);
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
 
 ▶ 상품명 : ${getPurchaseItemInfo(orderItem)}
@@ -47,10 +49,13 @@ class Cexch04Template {
 class Cexch03Template {
   static code = 'cexch03';
 
-  static toContent(exchangeRequest: ExchangeRequest, buyer: OrderBuyer) {
+  static toContent(exchangeRequest: ExchangeRequest) {
     const { orderItem, seller } = exchangeRequest;
 
-    const { brandNameKor } = orderItem;
+    const {
+      brandNameKor,
+      order: { buyer },
+    } = orderItem;
     const { returnAddress, courier } = seller;
 
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
