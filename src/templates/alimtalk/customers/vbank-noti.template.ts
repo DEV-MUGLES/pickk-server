@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 
 import { Order } from '@order/orders/models';
 
+import { addCommas } from '@common/helpers';
 import { getPurchaseItemInfo } from '@templates/helpers';
 
 export class VbankNotiTemplate {
@@ -33,15 +34,15 @@ export class VbankNotiTemplate {
     return `안녕하세요! ${
       buyer.name
     }님, 가상계좌로 입금해주시면 주문이 완료됩니다.
-        [가상계좌 입금정보]
-        ▶ 입금계좌 : ${bankCodeDisplayName} ${bankNum}
-        ▶ 예금주 : ${ownerName}
-        ▶ 입금액 : ${totalPayAmount}
-        ▶ 입금기한: ${dayjs(due).format('YYYY년 MM월 DD일 HH:mm')}까지
-        [상품정보]
-        ▶ 구매 상품 : ${getPurchaseItemInfo(orderItems)}
-        ▶ 주문번호 : ${merchantUid}
-        ▶ 주문일시 : ${dayjs(createdAt).format('YYYY년 MM월 DD일 HH:mm')}
-        ▶ 배송지 : ${baseAddress} ${detailAddress}`;
+[가상계좌 입금정보]
+▶ 입금계좌 : ${bankCodeDisplayName} ${bankNum}
+▶ 예금주 : ${ownerName}
+▶ 입금액 : ${addCommas(totalPayAmount)}원
+▶ 입금기한: ${dayjs(due).format('YYYY년 MM월 DD일 HH:mm')}까지
+[상품정보]
+▶ 구매 상품 : ${getPurchaseItemInfo(orderItems)}
+▶ 주문번호 : ${merchantUid}
+▶ 주문일시 : ${dayjs(createdAt).format('YYYY년 MM월 DD일 HH:mm')}
+▶ 배송지 : ${baseAddress} ${detailAddress}`;
   }
 }
