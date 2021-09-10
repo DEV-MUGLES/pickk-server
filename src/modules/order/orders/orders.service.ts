@@ -164,7 +164,7 @@ export class OrdersService {
 
     order.complete(createOrderVbankReceiptInput);
     const completedOrder = await this.ordersRepository.save(order);
-    await this.sendCompleteAlimtalk(order);
+    await this.ordersProducer.sendOrderCompletedAlimtalk(order);
     return completedOrder;
   }
 
@@ -202,13 +202,5 @@ export class OrdersService {
     order.requestRefund(input);
 
     return await this.ordersRepository.save(order);
-  }
-
-  private async sendCompleteAlimtalk(order: Order) {
-    if (order.vbankInfo) {
-      await this.ordersProducer.sendVbankNotiAlimtalk(order);
-    } else {
-      await this.ordersProducer.sendOrderCompletedAlimtalk(order);
-    }
   }
 }

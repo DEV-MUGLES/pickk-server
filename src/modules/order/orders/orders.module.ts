@@ -7,7 +7,6 @@ import {
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
   SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
-  SEND_VBANK_NOTI_ALIMTALK_QUEUE,
   SEND_VBANK_PAID_ALIMTALK_QUEUE,
 } from '@queue/constants';
 
@@ -51,9 +50,6 @@ import { OrdersService } from './orders.service';
       {
         name: SEND_VBANK_PAID_ALIMTALK_QUEUE,
         type: SqsQueueType.Consumer,
-      },
-      {
-        name: SEND_VBANK_NOTI_ALIMTALK_QUEUE,
       },
       {
         name: SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,

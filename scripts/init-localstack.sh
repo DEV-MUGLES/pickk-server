@@ -32,4 +32,3 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name I2O-PROCE
 
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name I2O-SEND_VBANK_PAID_ALIMTALK
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-SEND_ORDER_COMPLETED_ALIMTALK
-aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-SEND_VBANK_NOTI_ALIMTALK
