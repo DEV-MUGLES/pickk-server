@@ -64,6 +64,7 @@ describe('SellersService', () => {
         isUpdatingItems: faker.datatype.boolean(),
       },
       shippingPolicyInput: {
+        description: faker.datatype.string(),
         minimumAmountForFree: faker.datatype.number(),
         fee: faker.datatype.number(),
       },
