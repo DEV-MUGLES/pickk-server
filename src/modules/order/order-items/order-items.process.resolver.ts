@@ -55,7 +55,6 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     );
 
     await this.orderItemsProducer.sendExchangeRequestedAlimtalk(
-      merchantUid,
       exchangeRequest.id
     );
 
