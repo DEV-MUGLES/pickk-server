@@ -9,6 +9,7 @@ import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { FollowsService } from '@user/follows/follows.service';
 
 import { KeywordRelationType } from './constants';
 import { KeywordClassFilter, KeywordFilter } from './dtos';
@@ -28,7 +29,8 @@ export class KeywordsService {
     @InjectRepository(KeywordClassesRepository)
     private readonly keywordClassesRepository: KeywordClassesRepository,
     private readonly likesService: LikesService,
-    private cacheService: CacheService
+    private cacheService: CacheService,
+    private readonly followsService: FollowsService
   ) {}
 
   async get(
@@ -49,6 +51,10 @@ export class KeywordsService {
       await this.likesService.bulkEnrichLiking(
         userId,
         LikeOwnerType.Digest,
+        keyword.digests
+      );
+      await this.followsService.bulkEnrichAuthorFollowing(
+        userId,
         keyword.digests
       );
     }

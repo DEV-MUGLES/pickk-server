@@ -6,6 +6,7 @@ import { UPDATE_KEYWORD_LIKE_COUNT_QUEUE } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
+import { FollowsModule } from '@user/follows/follows.module';
 
 import { UpdateKeywordLikeCountConsumer } from './consumers';
 
@@ -25,6 +26,7 @@ import { KeywordsService } from './keywords.service';
       consumerOptions: { batchSize: 10 },
     }),
     LikesModule,
+    FollowsModule,
     forwardRef(() => SearchModule),
   ],
   providers: [
