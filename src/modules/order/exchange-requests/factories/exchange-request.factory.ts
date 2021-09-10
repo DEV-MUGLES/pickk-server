@@ -30,7 +30,7 @@ export class ExchangeRequestFactory {
       );
     }
 
-    const { userId, sellerId, quantity } = orderItem;
+    const { userId, sellerId, quantity, itemName } = orderItem;
 
     const shippingFee = calcClaimShippingFee([orderItem], input.faultOf);
     const productVariantName = product.itemOptionValues
@@ -46,6 +46,7 @@ export class ExchangeRequestFactory {
       product,
       shippingFee,
       productVariantName,
+      itemName,
     });
 
     if (input.shipmentInput) {
