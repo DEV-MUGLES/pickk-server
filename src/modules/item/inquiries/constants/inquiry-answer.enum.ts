@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum InquiryAnswerFrom {
-  Seller = 'seller',
-  Super = 'super',
+  SELLER = 'SELLER',
+  ROOT = 'ROOT',
 }
 
 registerEnumType(InquiryAnswerFrom, {
   name: 'InquiryAnswerFrom',
-  description: '답변 작성 출처입니다. (super or seller)',
+  description: '답변 작성 출처입니다. (SELLER or ROOT)',
 });

@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 import { Length } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
@@ -16,6 +16,7 @@ import { Seller } from '@item/sellers/models';
 
 @ObjectType()
 @Entity({ name: 'inquiry' })
+@Index('idx_createdAt', ['createdAt'])
 export class InquiryEntity extends BaseIdEntity implements IInquiry {
   constructor(attributes?: Partial<InquiryEntity>) {
     super(attributes);
