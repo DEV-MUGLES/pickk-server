@@ -769,7 +769,7 @@ type InquiriesCountOutput {
   """답변 지연 (생성일 5일 경과)"""
   delayed: Int!
 
-  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  """sellerId와 동일한 값(or 0). Apollo Client 캐싱을 위해 존재합니다."""
   id: Int!
   lastUpdatedAt: DateTime!
 
@@ -818,10 +818,10 @@ type InquiryAnswer {
   userId: Int
 }
 
-"""답변 작성 출처입니다. (super or seller)"""
+"""답변 작성 출처입니다. (SELLER or ROOT)"""
 enum InquiryAnswerFrom {
-  Seller
-  Super
+  ROOT
+  SELLER
 }
 
 input InquiryFilter {
@@ -1296,6 +1296,7 @@ type Mutation {
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
+  rootAnswerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
 
@@ -1960,6 +1961,11 @@ type Query {
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
+  rootInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
+
+  """[ROOT ADMIN]"""
+  rootInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
+  rootInquiry(id: Int!): Inquiry!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchItem(pageInput: PageInput, query: String!): [Item!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!

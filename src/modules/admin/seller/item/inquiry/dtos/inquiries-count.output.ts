@@ -48,7 +48,8 @@ export class InquiriesCountOutput {
   }
 
   @Field(() => Int, {
-    description: 'sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다.',
+    description:
+      'sellerId와 동일한 값(or 0). Apollo Client 캐싱을 위해 존재합니다.',
   })
   id: number;
 

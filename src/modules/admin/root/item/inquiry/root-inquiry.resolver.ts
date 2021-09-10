@@ -1,16 +1,12 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser } from '@auth/decorators';
-import { JwtSellerVerifyGuard } from '@auth/guards';
+import { CurrentUser, Roles } from '@auth/decorators';
+import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
+
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
@@ -20,49 +16,56 @@ import {
   InquiryRelationType,
   INQUIRY_RELATIONS,
 } from '@item/inquiries/constants';
+import { InquiriesCountOutput } from '@admin/seller/item/inquiry/dtos';
 import { AnswerInquiryInput, InquiryFilter } from '@item/inquiries/dtos';
 import { Inquiry } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
+import { UserRole } from '@user/users/constants';
 
-import { InquiriesCountOutput } from './dtos';
-
-import { SellerInquiryService } from './seller-inquiry.service';
-
+import { RootInquiryService } from './root-inquiry.service';
 @Injectable()
-export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
+export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   relations = INQUIRY_RELATIONS;
 
   constructor(
     @Inject(InquiriesService)
     private readonly inquiriesService: InquiriesService,
-    @Inject(SellerInquiryService)
-    private readonly sellerInquiryService: SellerInquiryService,
+    @Inject(RootInquiryService)
+    private readonly rootInquiryService: RootInquiryService,
     @Inject(CacheService) private cacheService: CacheService
   ) {
     super();
   }
 
+  @Query(() => Inquiry)
+  @UseGuards(JwtVerifyGuard)
+  @Roles(UserRole.Admin)
+  async rootInquiry(
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Inquiry> {
+    return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
+  }
+
   @Query(() => [Inquiry])
-  @UseGuards(JwtSellerVerifyGuard)
-  async meSellerInquiries(
-    @CurrentUser() { sellerId }: JwtPayload,
+  @UseGuards(JwtVerifyGuard)
+  @Roles(UserRole.Admin)
+  async rootInquiries(
     @Args('filter', { nullable: true }) filter: InquiryFilter,
     @Args('pageInput', { nullable: true }) pageInput: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Inquiry[]> {
     return await this.inquiriesService.list(
-      {
-        sellerId,
-        ...filter,
-      },
+      filter,
       pageInput,
       this.getRelationsFromInfo(info)
     );
   }
 
-  @Query(() => InquiriesCountOutput)
-  @UseGuards(JwtSellerVerifyGuard)
-  async meSellerInquiriesCount(
+  @Query(() => InquiriesCountOutput, { description: '[ROOT ADMIN]' })
+  @UseGuards(JwtVerifyGuard)
+  @Roles(UserRole.Admin)
+  async rootInquiriesCount(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('forceUpdate', { nullable: true }) forceUpdate?: boolean
   ): Promise<InquiriesCountOutput> {
@@ -76,7 +79,7 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
       }
     }
 
-    const count = await this.sellerInquiryService.getCount(sellerId);
+    const count = await this.rootInquiryService.getCount();
 
     await this.cacheService.set<InquiriesCountOutput>(count.cacheKey, count, {
       ttl: 60 * 5,
@@ -86,22 +89,18 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Mutation(() => Inquiry)
-  @UseGuards(JwtSellerVerifyGuard)
-  async answerMeSellerInquiry(
-    @CurrentUser() { sellerId, sub: userId }: JwtPayload,
+  @UseGuards(JwtVerifyGuard)
+  @Roles(UserRole.Admin)
+  async rootAnswerInquiry(
+    @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Inquiry> {
-    const inquiry = await this.inquiriesService.get(id);
-    if (inquiry.sellerId !== sellerId) {
-      throw new ForbiddenException('답변 권한이 없습니다.');
-    }
-
     await this.inquiriesService.answer(id, {
       ...input,
       userId,
-      from: InquiryAnswerFrom.SELLER,
+      from: InquiryAnswerFrom.ROOT,
     });
 
     return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
