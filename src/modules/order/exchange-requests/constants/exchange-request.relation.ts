@@ -6,7 +6,9 @@ export type ExchangeRequestRelationType =
   | 'orderItem.order.buyer'
   | 'orderItem.order.receiver'
   | 'pickShipment.courier'
-  | 'reShipment.courier';
+  | 'reShipment.courier'
+  | 'seller.courier'
+  | 'seller.returnAddress';
 
 export const EXCHANGE_REQUEST_RELATIONS: Array<ExchangeRequestRelationType> = [
   'user',
