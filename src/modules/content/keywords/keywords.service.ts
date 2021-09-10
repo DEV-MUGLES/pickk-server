@@ -45,6 +45,13 @@ export class KeywordsService {
         keyword
       );
     }
+    if (userId && keyword.digests) {
+      await this.likesService.bulkEnrichLiking(
+        userId,
+        LikeOwnerType.Digest,
+        keyword.digests
+      );
+    }
 
     return keyword;
   }
