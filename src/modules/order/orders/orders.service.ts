@@ -146,7 +146,12 @@ export class OrdersService {
     merchantUid: string,
     createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput
   ): Promise<Order> {
-    const order = await this.get(merchantUid, ['orderItems', 'vbankInfo']);
+    const order = await this.get(merchantUid, [
+      'orderItems',
+      'vbankInfo',
+      'buyer',
+      'receiver',
+    ]);
 
     const { status } = await this.paymentsService.get(merchantUid);
     const paymentStatusMustBe =
