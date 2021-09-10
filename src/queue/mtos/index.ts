@@ -14,3 +14,4 @@ export * from './process-vbank-paid-order.mto';
 export * from './send-vbank-paid-alimtalk.mto';
 export * from './send-order-completed-alimtalk.mto';
 export * from './send-refund-requested-alimtalk.mto';
+export * from './send-exchange-requested-alimtalk.mto';
