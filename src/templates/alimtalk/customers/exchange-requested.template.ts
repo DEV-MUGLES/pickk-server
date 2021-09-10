@@ -31,13 +31,13 @@ class Cexch04Template {
   static code = 'cexch04';
 
   static toContent(exchangeRequest: ExchangeRequest, buyer: OrderBuyer) {
-    const { orderItem, reShipment } = exchangeRequest;
+    const { orderItem, pickShipment } = exchangeRequest;
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
 
 ▶ 상품명 : ${getPurchaseItemInfo(orderItem)}
 ▶ 주문상품번호 : ${orderItem.merchantUid}
 
-▶ 반송 운송장 번호 : ${reShipment.courier.name} ${reShipment.trackCode}
+▶ 반송 운송장 번호 : ${pickShipment.courier.name} ${pickShipment.trackCode}
 
 상품검수가 완료되는대로 신규상품이 출고됩니다.
     `;
