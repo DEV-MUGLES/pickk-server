@@ -71,7 +71,6 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     );
   }
 
-  // @TODO: 완료 알림톡 전송.
   @Mutation(() => Order)
   @UseGuards(JwtVerifyGuard)
   async requestOrderRefund(
