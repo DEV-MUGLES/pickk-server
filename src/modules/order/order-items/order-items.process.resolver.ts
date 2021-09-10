@@ -31,7 +31,6 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     super();
   }
 
-  // @TODO: 완료 알림톡 전송.
   @Mutation(() => OrderItem)
   @UseGuards(JwtVerifyGuard)
   async requestOrderItemExchange(
