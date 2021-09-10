@@ -5,12 +5,16 @@ import {
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
   SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
+  SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
 } from '@queue/constants';
 import {
   RestoreDeductedProductStockMto,
   SendCancelOrderApprovedAlimtalkMto,
   SendOrderCompletedAlimtalkMto,
+  SendRefundRequestedAlimtalkMto,
 } from '@queue/mtos';
+
+import { RefundRequest } from '@order/refund-requests/models';
 
 import { Order } from '../models';
 
@@ -44,6 +48,18 @@ export class OrdersProducer {
       {
         id: order.merchantUid,
         body: { order },
+      }
+    );
+  }
+
+  async sendRefundRequestedAlimtalk(refundRequest: RefundRequest) {
+    await this.sqsService.send<SendRefundRequestedAlimtalkMto>(
+      SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
+      {
+        id: refundRequest.id.toString(),
+        body: {
+          refundRequestId: refundRequest.id,
+        },
       }
     );
   }
