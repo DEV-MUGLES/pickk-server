@@ -14,8 +14,6 @@ import {
   SendRefundRequestedAlimtalkMto,
 } from '@queue/mtos';
 
-import { RefundRequest } from '@order/refund-requests/models';
-
 import { Order } from '../models';
 
 @Injectable()
