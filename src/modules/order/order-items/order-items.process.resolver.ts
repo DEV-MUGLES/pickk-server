@@ -15,6 +15,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { OrderItemRelationType, ORDER_ITEM_RELATIONS } from './constants';
 import { RequestOrderItemExchangeInput } from './dtos';
 import { OrderItem } from './models';
+import { OrderItemsProducer } from './producers';
 
 import { OrderItemsService } from './order-items.service';
 
@@ -24,12 +25,12 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
 
   constructor(
     @Inject(OrderItemsService)
-    private readonly orderItemsService: OrderItemsService
+    private readonly orderItemsService: OrderItemsService,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {
     super();
   }
 
-  // @TODO: 완료 알림톡 전송.
   @Mutation(() => OrderItem)
   @UseGuards(JwtVerifyGuard)
   async requestOrderItemExchange(
@@ -47,7 +48,14 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
       throw new ForbiddenException('자신의 주문상품이 아닙니다.');
     }
 
-    await this.orderItemsService.requestExchange(merchantUid, input);
+    const { exchangeRequest } = await this.orderItemsService.requestExchange(
+      merchantUid,
+      input
+    );
+
+    await this.orderItemsProducer.sendExchangeRequestedAlimtalk(
+      exchangeRequest.id
+    );
 
     return await this.orderItemsService.get(
       merchantUid,
