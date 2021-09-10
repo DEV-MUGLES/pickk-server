@@ -1,6 +1,5 @@
 import { KeywordsService } from '@content/keywords/keywords.service';
 import {
-  BadRequestException,
   ConflictException,
   Injectable,
   NotFoundException,
