@@ -4,7 +4,7 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { bulkEnrichUserIsMe, parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
@@ -57,6 +57,7 @@ export class KeywordsService {
         userId,
         keyword.digests
       );
+      bulkEnrichUserIsMe(userId, keyword.digests);
     }
 
     return keyword;
