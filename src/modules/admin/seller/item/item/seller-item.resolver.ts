@@ -3,7 +3,7 @@ import { Args, Info, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
-import { JwtAuthGuard } from '@auth/guards';
+import { JwtAuthGuard, JwtSellerVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -45,7 +45,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateItem(
     @IntArgs('itemId') itemId: number,

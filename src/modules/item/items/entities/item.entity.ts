@@ -174,25 +174,20 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @JoinTable()
   campaigns: ICampaign[];
 
-  @Field({
-    nullable: true,
-  })
-  @Column({ type: 'int', nullable: true })
-  majorCategoryId?: number;
-
-  @Field({ nullable: true })
-  @Column({ type: 'int', nullable: true })
-  minorCategoryId?: number;
-
   @Field(() => ItemCategory, { nullable: true })
   @ManyToOne(() => ItemCategoryEntity, { nullable: true })
   @JoinColumn()
   majorCategory?: ItemCategory;
-
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  majorCategoryId?: number;
   @Field(() => ItemCategory, { nullable: true })
   @ManyToOne(() => ItemCategoryEntity, { nullable: true })
   @JoinColumn()
   minorCategory?: ItemCategory;
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  minorCategoryId?: number;
 
   @Field(() => ItemNotice, { nullable: true })
   @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })

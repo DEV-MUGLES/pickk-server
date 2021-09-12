@@ -12,7 +12,6 @@ import { BrandsService } from '@item/brands/brands.service';
 import { ItemRelationType } from './constants';
 import {
   CreateItemInput,
-  UpdateItemInput,
   BulkUpdateItemInput,
   AddItemUrlInput,
   ItemFilter,
@@ -223,7 +222,7 @@ export class ItemsService {
     await item.notice.remove();
   }
 
-  async update(id: number, input: UpdateItemInput): Promise<Item> {
+  async update(id: number, input: Partial<Item>): Promise<Item> {
     const item = await this.get(id);
     return await this.itemsRepository.save(new Item({ ...item, ...input }));
   }

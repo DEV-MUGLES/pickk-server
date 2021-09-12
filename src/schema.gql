@@ -1298,6 +1298,7 @@ type Mutation {
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   rootAnswerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
+  setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
 
@@ -2257,6 +2258,11 @@ type SellerShippingPolicy {
   id: Int!
   minimumAmountForFree: Int!
   updatedAt: DateTime!
+}
+
+input SetCategoryToItemInput {
+  majorCategoryId: Int!
+  minorCategoryId: Int!
 }
 
 input ShipOrderItemInput {

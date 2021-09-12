@@ -21,7 +21,7 @@ import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
 import { ItemRelationType, ITEM_RELATIONS } from './constants';
-import { ItemFilter } from './dtos';
+import { ItemFilter, SetCategoryToItemInput } from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
 import { ItemsService } from './items.service';
@@ -120,6 +120,18 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     const { id } = await this.itemsService.createByInfoCrawl(url);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => Item)
+  @UseGuards(JwtVerifyGuard)
+  async setCategoryToItem(
+    @IntArgs('id') id: number,
+    @Args('setCategoryToItemInput')
+    input: SetCategoryToItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.update(id, input);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

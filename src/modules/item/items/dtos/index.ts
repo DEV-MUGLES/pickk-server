@@ -8,4 +8,5 @@ export * from './item-url.input';
 export * from './item.filter';
 export * from './item.input';
 export * from './add-by-crawl-datas.dto';
+export * from './set-category.input';
 export * from './update-by-crawl-datas.dto';
