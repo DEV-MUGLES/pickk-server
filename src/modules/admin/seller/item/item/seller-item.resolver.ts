@@ -133,10 +133,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   async addItemUrl(
     @IntArgs('itemId') itemId: number,
     @Args('addItemUrlInput')
-    addItemUrlInput: AddItemUrlInput
-  ): Promise<ItemUrl> {
-    const item = await this.itemsService.get(itemId, ['urls']);
-    return await this.itemsService.addUrl(item, addItemUrlInput);
+    addItemUrlInput: AddItemUrlInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.addUrl(itemId, addItemUrlInput);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
@@ -145,10 +146,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   async addItemPrice(
     @IntArgs('itemId') itemId: number,
     @Args('addItemPriceInput')
-    addItemPriceInput: AddItemPriceInput
-  ): Promise<ItemPrice> {
-    const item = await this.itemsService.get(itemId, ['prices']);
-    return await this.itemsService.addPrice(item, addItemPriceInput);
+    addItemPriceInput: AddItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.addPrice(itemId, addItemPriceInput);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)

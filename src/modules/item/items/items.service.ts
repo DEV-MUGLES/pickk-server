@@ -26,7 +26,6 @@ import {
 import { ItemFactory } from './factories';
 import {
   ItemPrice,
-  ItemUrl,
   Item,
   ItemNotice,
   ItemOption,
@@ -127,19 +126,24 @@ export class ItemsService {
     await this.itemDetailImagesRepository.remove(detailImage);
   }
 
-  async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {
-    const url = item.addUrl(addItemUrlInput);
-    await this.itemsRepository.save(item);
-    return url;
+  async addUrl(
+    itemId: number,
+    addItemUrlInput: AddItemUrlInput
+  ): Promise<Item> {
+    const item = await this.get(itemId, ['urls']);
+    item.addUrl(addItemUrlInput);
+
+    return await this.itemsRepository.save(item);
   }
 
   async addPrice(
-    item: Item,
+    itemId: number,
     addItemPriceInput: AddItemPriceInput
-  ): Promise<ItemPrice> {
-    const price = item.addPrice(addItemPriceInput);
-    await this.itemsRepository.save(item);
-    return price;
+  ): Promise<Item> {
+    const item = await this.get(itemId, ['prices']);
+    item.addPrice(addItemPriceInput);
+
+    return await this.itemsRepository.save(item);
   }
 
   async updateItemPrice(
