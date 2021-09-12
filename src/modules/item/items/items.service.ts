@@ -25,6 +25,7 @@ import {
   UpdateByCrawlDatasDto,
   AddByCrawlDatasDto,
 } from './dtos';
+import { ItemFactory } from './factories';
 import {
   ItemPrice,
   ItemUrl,
@@ -103,34 +104,14 @@ export class ItemsService {
     return await this.itemPricesRepository.get(id, relations);
   }
 
-  async create(
-    createItemInput: CreateItemInput,
-    relations: ItemRelationType[] = []
-  ): Promise<Item> {
-    const { priceInput, urlInput, ...itemAttributes } = createItemInput;
-
-    const item = new Item({
-      ...itemAttributes,
-      prices: [new ItemPrice({ ...priceInput, isActive: true, isBase: true })],
-      urls: [new ItemUrl({ ...urlInput, isPrimary: true })],
-    });
-    const newEntity = await this.itemsRepository.save(item);
-    return await this.get(newEntity.id, relations);
+  async create(input: CreateItemInput): Promise<Item> {
+    const item = ItemFactory.from(input);
+    return await this.itemsRepository.save(item);
   }
 
   async createMany(createItemInputs: CreateItemInput[]) {
-    const newItems = createItemInputs.map((createItemInput) => {
-      const { priceInput, urlInput, ...itemAttributes } = createItemInput;
-
-      return new Item({
-        ...itemAttributes,
-        prices: [
-          new ItemPrice({ ...priceInput, isActive: true, isBase: true }),
-        ],
-        urls: [new ItemUrl({ ...urlInput, isPrimary: true })],
-      });
-    });
-    return await this.itemsRepository.save(newItems);
+    const items = createItemInputs.map((input) => ItemFactory.from(input));
+    return await this.itemsRepository.save(items);
   }
 
   async findOne(param: Partial<Item>, relations: string[] = []): Promise<Item> {
