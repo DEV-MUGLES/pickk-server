@@ -18,8 +18,9 @@ import {
   UpdateItemNoticeInput,
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
-  CreateItemDetailImageInput,
 } from '../dtos';
+import { ItemDetailImageFactory } from '../factories';
+
 // @TODO:BARREL
 import { ItemEntity } from '../entities/item.entity';
 
@@ -85,17 +86,8 @@ export class Item extends ItemEntity {
     return itemUrl;
   };
 
-  public addDetailImages = (
-    createItemDetailImageInput: CreateItemDetailImageInput
-  ): ItemDetailImage[] => {
-    const { urls } = createItemDetailImageInput;
-
-    const detailImages = urls.map(
-      (url) =>
-        new ItemDetailImage({
-          key: new URL(url).pathname.slice(1),
-        })
-    );
+  public addDetailImages = (urls: string[]): ItemDetailImage[] => {
+    const detailImages = urls.map(ItemDetailImageFactory.from);
     this.detailImages = this.detailImages.concat(detailImages);
     return this.detailImages;
   };

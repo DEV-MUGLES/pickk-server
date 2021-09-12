@@ -21,7 +21,6 @@ import {
   UpdateItemSizeChartInput,
   AddItemPriceInput,
   UpdateItemPriceInput,
-  CreateItemDetailImageInput,
   UpdateByCrawlDatasDto,
 } from './dtos';
 import { ItemFactory } from './factories';
@@ -117,16 +116,15 @@ export class ItemsService {
     return await this.itemsRepository.findOneEntity(param, relations);
   }
 
-  async addDetailImages(
-    item: Item,
-    createItemDetailImageInput: CreateItemDetailImageInput
-  ): Promise<Item> {
-    item.addDetailImages(createItemDetailImageInput);
+  async addDetailImages(itemId: number, urls: string[]): Promise<Item> {
+    const item = await this.get(itemId, ['detailImages']);
+    item.addDetailImages(urls);
     return await this.itemsRepository.save(item);
   }
 
-  async removeDetailImage(itemDetailImage: ItemDetailImage): Promise<void> {
-    await this.itemDetailImagesRepository.remove(itemDetailImage);
+  async removeDetailImage(key: string): Promise<void> {
+    const detailImage = await this.getItemDetailImage(key);
+    await this.itemDetailImagesRepository.remove(detailImage);
   }
 
   async addUrl(item: Item, addItemUrlInput: AddItemUrlInput): Promise<ItemUrl> {

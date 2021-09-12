@@ -108,17 +108,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   async addItemDetailImages(
     @IntArgs('itemId') itemId: number,
     @Args('createItemDetailImageInput')
-    createItemDetailImageInput: CreateItemDetailImageInput,
+    { urls }: CreateItemDetailImageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const item = await this.itemsService.get(
-      itemId,
-      this.getRelationsFromInfo(info, ['detailImages'])
-    );
-    return await this.itemsService.addDetailImages(
-      item,
-      createItemDetailImageInput
-    );
+    await this.itemsService.addDetailImages(itemId, urls);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
@@ -129,14 +123,8 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     @Args('detailImageKey') detailImageKey: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const detailImage = await this.itemsService.getItemDetailImage(
-      detailImageKey
-    );
-    await this.itemsService.removeDetailImage(detailImage);
-    return await this.itemsService.get(
-      itemId,
-      this.getRelationsFromInfo(info, ['detailImages'])
-    );
+    await this.itemsService.removeDetailImage(detailImageKey);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
