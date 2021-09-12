@@ -6,7 +6,7 @@ import { ProductsRepository } from '@item/products/products.repository';
 import { ProductsService } from '@item/products/products.service';
 import { CrawlerProviderModule } from '@providers/crawler';
 
-import { Item } from './models';
+import { Item } from '@item/items/models';
 import {
   ItemDetailImagesRepository,
   ItemOptionsRepository,
@@ -14,13 +14,14 @@ import {
   ItemPricesRepository,
   ItemSizeChartsRepository,
   ItemsRepository,
-} from './items.repository';
-import { ItemsResolver } from './items.resolver';
-import { ItemsService } from './items.service';
+} from '@item/items/items.repository';
+import { ItemsService } from '@item/items/items.service';
 
-describe('itemsResolver', () => {
+import { SellerItemResolver } from './seller-item.resolver';
+
+describe('SellerItemResolver', () => {
   let itemsService: ItemsService;
-  let itemsResolver: ItemsResolver;
+  let sellerItemsResolver: SellerItemResolver;
   const itemId = 1;
   const item = new Item({ id: itemId });
 
@@ -49,7 +50,7 @@ describe('itemsResolver', () => {
     const moduleRef = await Test.createTestingModule({
       imports: [CrawlerProviderModule],
       providers: [
-        ItemsResolver,
+        SellerItemResolver,
         ItemsService,
         ProductsService,
         ItemsRepository,
@@ -71,7 +72,7 @@ describe('itemsResolver', () => {
     }).compile();
 
     itemsService = moduleRef.get<ItemsService>(ItemsService);
-    itemsResolver = moduleRef.get<ItemsResolver>(ItemsResolver);
+    sellerItemsResolver = moduleRef.get<SellerItemResolver>(SellerItemResolver);
 
     jest.spyOn(itemsService, 'get').mockResolvedValue(item);
     jest.spyOn(itemsService, 'updateSizeCharts').mockResolvedValue(item);
@@ -86,7 +87,11 @@ describe('itemsResolver', () => {
     it('성공적으로 사이즈 차트가 추가된다.', async () => {
       jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(item);
 
-      await itemsResolver.modifyItemSizeCharts(itemId, addSizeChartInputs, []);
+      await sellerItemsResolver.modifyItemSizeCharts(
+        itemId,
+        addSizeChartInputs,
+        []
+      );
 
       expect(itemsService.addSizeCharts).toHaveBeenCalledWith(
         item,
@@ -95,7 +100,7 @@ describe('itemsResolver', () => {
     });
 
     it('성공적으로 사이즈 차트를 업데이트한다.', async () => {
-      await itemsResolver.modifyItemSizeCharts(
+      await sellerItemsResolver.modifyItemSizeCharts(
         itemId,
         updateSizeChartInputs,
         []
@@ -110,7 +115,11 @@ describe('itemsResolver', () => {
     it('성공적으로 사이즈 차트를 삭제한다.', async () => {
       jest.spyOn(itemsService, 'removeSizeChartsByIds').mockResolvedValue(item);
 
-      await itemsResolver.modifyItemSizeCharts(itemId, [], removedChartIds);
+      await sellerItemsResolver.modifyItemSizeCharts(
+        itemId,
+        [],
+        removedChartIds
+      );
       expect(itemsService.removeSizeChartsByIds).toHaveBeenCalledWith(
         item,
         removedChartIds
@@ -121,7 +130,7 @@ describe('itemsResolver', () => {
       jest.spyOn(itemsService, 'addSizeCharts').mockResolvedValue(item);
       jest.spyOn(itemsService, 'removeSizeChartsByIds').mockResolvedValue(item);
 
-      await itemsResolver.modifyItemSizeCharts(
+      await sellerItemsResolver.modifyItemSizeCharts(
         itemId,
         [...addSizeChartInputs, ...updateSizeChartInputs],
         removedChartIds
