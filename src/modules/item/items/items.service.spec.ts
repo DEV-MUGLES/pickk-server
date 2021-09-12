@@ -48,37 +48,20 @@ describe('ItemsService', () => {
       isPrimary: true,
     };
 
-    it('should return created url', async () => {
-      const item = new Item();
+    it('성공', async () => {
+      const item = new Item({ id: faker.datatype.number() });
       const url = new ItemUrl(addItemUrlInput);
 
+      const itemsServiceGetSpy = jest
+        .spyOn(itemsService, 'get')
+        .mockResolvedValueOnce(item);
       const itemAddUrlSpy = jest.spyOn(item, 'addUrl').mockReturnValueOnce(url);
       const repositorySaveSpy = jest
         .spyOn(itemsRepository, 'save')
         .mockImplementationOnce(jest.fn());
-      const result = await itemsService.addUrl(item, addItemUrlInput);
+      await itemsService.addUrl(item.id, addItemUrlInput);
 
-      expect(result).toEqual(url);
-      expect(itemAddUrlSpy).toHaveBeenCalledWith(addItemUrlInput);
-      expect(repositorySaveSpy).toHaveBeenCalledTimes(1);
-    });
-
-    it('should first url be primary', async () => {
-      addItemUrlInput.isPrimary = false;
-
-      const item = new Item();
-      const url = new ItemUrl({
-        ...addItemUrlInput,
-        isPrimary: true,
-      });
-
-      const itemAddUrlSpy = jest.spyOn(item, 'addUrl').mockReturnValueOnce(url);
-      const repositorySaveSpy = jest
-        .spyOn(itemsRepository, 'save')
-        .mockImplementationOnce(jest.fn());
-      const result = await itemsService.addUrl(item, addItemUrlInput);
-
-      expect(result).toEqual(url);
+      expect(itemsServiceGetSpy).toHaveBeenCalledWith(item.id, ['urls']);
       expect(itemAddUrlSpy).toHaveBeenCalledWith(addItemUrlInput);
       expect(repositorySaveSpy).toHaveBeenCalledTimes(1);
     });

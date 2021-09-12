@@ -32,7 +32,7 @@ export class UpdateItemImageUrlConsumer {
     const item = await this.getItem(itemId, brandId, code);
     const uploadedImageUrl = await this.uploadImageUrl(imageUrl, item.id);
 
-    await this.itemsService.update(item, {
+    await this.itemsService.update(item.id, {
       imageUrl: uploadedImageUrl,
     });
   }

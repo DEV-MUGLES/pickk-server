@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -192,26 +192,31 @@ export class ItemsService {
     return (await this.itemsRepository.get(item.id, ['notice'])).notice;
   }
 
-  async removeNotice(item: Item): Promise<Item> {
-    const notice = item.removeNotice();
-    const result = await this.itemsRepository.save(item);
-    await notice.remove();
-    return result;
+  async removeNotice(itemId: number): Promise<void> {
+    const item = await this.get(itemId, ['notice']);
+    if (!item.notice) {
+      throw new NotFoundException('삭제할 안내가 존재하지 않습니다.');
+    }
+
+    await item.notice.remove();
   }
 
-  async update(item: Item, updateItemInput: UpdateItemInput): Promise<Item> {
-    return await this.itemsRepository.updateEntity(item, updateItemInput);
+  async update(id: number, input: UpdateItemInput): Promise<Item> {
+    const item = await this.get(id);
+    return await this.itemsRepository.save(new Item({ ...item, ...input }));
   }
 
   async updateItemOption(
-    itemOption: ItemOption,
-    updateItemOptionInput: UpdateItemOptionInput,
-    relations: string[] = []
+    id: number,
+    input: UpdateItemOptionInput
   ): Promise<ItemOption> {
-    return await this.itemOptionsRepository.updateEntity(
-      itemOption,
-      updateItemOptionInput,
-      relations
+    const itemOption = await this.getItemOption(id);
+
+    return await this.itemOptionsRepository.save(
+      new ItemOption({
+        ...itemOption,
+        ...input,
+      })
     );
   }
 

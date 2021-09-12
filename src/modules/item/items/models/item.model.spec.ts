@@ -227,21 +227,6 @@ describe('Item', () => {
     });
   });
 
-  describe('removeNotice', () => {
-    it('삭제 후 해당 Notice를 반환한다.', () => {
-      const item = new Item({
-        notice: new ItemNotice(addItemNoticeInput),
-      });
-      expect(item.removeNotice()).toMatchObject(addItemNoticeInput);
-      expect(item.notice).toEqual(null);
-    });
-
-    it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
-      const item = new Item();
-      expect(() => item.removeNotice()).toThrow(NotFoundException);
-    });
-  });
-
   describe('createOptionSet', () => {
     const createItemOptionSetInput: CreateItemOptionSetInput = {
       options: [],

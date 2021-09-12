@@ -49,10 +49,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   @Mutation(() => Item)
   async updateItem(
     @IntArgs('itemId') itemId: number,
-    @Args('updateItemInput') updateItemInput: UpdateItemInput
+    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const item = await this.itemsService.get(itemId);
-    return await this.itemsService.update(item, updateItemInput);
+    await this.itemsService.update(itemId, updateItemInput);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
@@ -63,12 +64,8 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     @Args('updateItemOptionInput')
     updateItemOptionInput: UpdateItemOptionInput
   ): Promise<ItemOption> {
-    const itemOption = await this.itemsService.getItemOption(id);
-    return await this.itemsService.updateItemOption(
-      itemOption,
-      updateItemOptionInput,
-      ['values']
-    );
+    await this.itemsService.updateItemOption(id, updateItemOptionInput);
+    return await this.itemsService.getItemOption(id, ['values']);
   }
 
   @Roles(UserRole.Seller)
@@ -97,9 +94,12 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
-  async removeItemNotice(@IntArgs('itemId') itemId: number): Promise<Item> {
-    const item = await this.itemsService.get(itemId, ['notice']);
-    return await this.itemsService.removeNotice(item);
+  async removeItemNotice(
+    @IntArgs('itemId') itemId: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.removeNotice(itemId);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)

@@ -180,16 +180,6 @@ export class Item extends ItemEntity {
     return this.notice;
   };
 
-  public removeNotice = (): ItemNotice => {
-    const { notice } = this;
-    if (!notice) {
-      throw new NotFoundException('삭제할 안내가 존재하지 않습니다.');
-    }
-
-    this.notice = null;
-    return notice;
-  };
-
   public createOptionSet = (inputs: CreateItemOptionInput[]): ItemOption[] => {
     if (this.options?.length > 0) {
       throw new ConflictException('옵션이 이미 존재합니다.');
