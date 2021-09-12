@@ -2,6 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
 import { CrawlerProviderModule, ItemInfoCrawlResult } from '@providers/crawler';
+import { SlackService } from '@providers/slack';
 
 import { ImagesService } from '@mcommon/images/images.service';
 import { BrandsService } from '@item/brands/brands.service';
@@ -41,6 +42,10 @@ describe('ItemsService', () => {
         {
           provide: ImagesService,
           useValue: new ImagesService(null, null),
+        },
+        {
+          provide: SlackService,
+          useValue: new SlackService(null),
         },
       ],
     }).compile();

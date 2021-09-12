@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 
@@ -29,6 +29,18 @@ export class CrawlerProviderService {
         `${this.url}/info?url=${encodeURI(url)}`
       )
     );
+
+    if (
+      !data.name ||
+      !data.brandKor ||
+      !data.originalPrice ||
+      !data.salePrice
+    ) {
+      throw new InternalServerErrorException(
+        '크롤링된 상품 정보가 잘못됐습니다.'
+      );
+    }
+
     return data;
   }
 

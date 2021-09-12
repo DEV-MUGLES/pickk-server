@@ -12,9 +12,11 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
+import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
+import { SlackService } from '@providers/slack';
 
 import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsService } from '@item/products/products.service';
@@ -25,7 +27,6 @@ import { ItemFilter, SetCategoryToItemInput } from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
 import { ItemsService } from './items.service';
-import { JwtPayload } from '@auth/models';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<ItemRelationType> {
@@ -37,7 +38,8 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   constructor(
     private readonly itemsService: ItemsService,
     private readonly productsService: ProductsService,
-    private readonly itemSearchService: ItemSearchService
+    private readonly itemSearchService: ItemSearchService,
+    private readonly slackService: SlackService
   ) {
     super();
   }
@@ -117,11 +119,17 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   @Mutation(() => Item)
   @UseGuards(JwtVerifyGuard)
   async createItemByUrl(
+    @CurrentUser() { nickname }: JwtPayload,
     @Args('url') url: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const { id } = await this.itemsService.createByInfoCrawl(url);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+    try {
+      const { id } = await this.itemsService.createByInfoCrawl(url);
+      return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+    } catch (err) {
+      await this.slackService.sendItemInfoCrawlFail(url, nickname);
+      throw err;
+    }
   }
 
   @Mutation(() => Item)

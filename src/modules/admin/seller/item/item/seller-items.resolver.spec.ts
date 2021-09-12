@@ -65,6 +65,7 @@ describe('SellerItemResolver', () => {
             null,
             null,
             null,
+            null,
             null
           ),
         },
