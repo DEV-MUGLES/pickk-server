@@ -3,6 +3,7 @@ import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import {
   ItemInfoCrawlFailTemplate,
+  ItemInfoCrawlSuccessTemplate,
   ItemReportTemplate,
 } from '@templates/slack';
 
@@ -13,6 +14,15 @@ export class SlackService {
   constructor(
     @Inject(IncomingWebhook) private readonly webhook: IncomingWebhook
   ) {}
+
+  async sendItemInfoCrawlSuccess(
+    item: Item,
+    nickname: string
+  ): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(
+      ItemInfoCrawlSuccessTemplate.create(item, nickname)
+    );
+  }
 
   async sendItemInfoCrawlFail(
     url: string,

@@ -125,7 +125,12 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     try {
       const { id } = await this.itemsService.createByInfoCrawl(url);
-      return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+      const item = await this.itemsService.get(
+        id,
+        this.getRelationsFromInfo(info, ['brand', 'urls'])
+      );
+      await this.slackService.sendItemInfoCrawlSuccess(item, nickname);
+      return item;
     } catch (err) {
       await this.slackService.sendItemInfoCrawlFail(url, nickname);
       throw err;
