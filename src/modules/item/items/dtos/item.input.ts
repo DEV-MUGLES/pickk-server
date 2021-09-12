@@ -36,7 +36,12 @@ export class CreateItemInput extends PickType(
     Object.assign(this, attributes);
   }
 
-  static create(v: ItemInfoCrawlResult) {
+  static create(
+    v: Pick<
+      ItemInfoCrawlResult,
+      'name' | 'imageUrl' | 'url' | 'originalPrice' | 'salePrice'
+    >
+  ) {
     return new CreateItemInput({
       name: v.name,
       imageUrl: v.imageUrl,
