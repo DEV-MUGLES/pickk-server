@@ -2,7 +2,7 @@ import { AlimtalkMessageRequest } from 'nest-sens';
 
 import { Inquiry } from '@item/inquiries/models';
 
-export class InquryAnsweredTemplate {
+export class InquiryAnsweredTemplate {
   static code = 'Cqna03';
 
   static toRequest(
@@ -12,7 +12,7 @@ export class InquryAnsweredTemplate {
       templateCode: this.code,
       messages: [
         {
-          to: inquiry.user.phoneNumber,
+          to: inquiry.contactPhoneNumber,
           content: this.toContent(inquiry),
         },
       ],
@@ -27,15 +27,14 @@ export class InquryAnsweredTemplate {
       answers,
       id,
     } = inquiry;
-    const lastAnswer = answers[answers.length - 1];
-    const url = `https://pickk.one/inquiry/${id}`;
+    const url = `https://pickk.one/my/inquiries/${id}`;
     return `안녕하세요! ${name}님, 문의주신 내용에 답변이 등록되었습니다.
 ◼︎ 문의 내역
 - 상품: ${item.name}
 - 내용: ${content}
 
 ◼︎ 답변 내역
-- 내용: ${lastAnswer.content}
+- 내용: ${answers[answers.length - 1].content}
 - 링크: ${url}`;
   }
 }
