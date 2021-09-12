@@ -8,11 +8,12 @@ import {
 } from '@pickk/nestjs-sqs';
 import { firstValueFrom } from 'rxjs';
 
+import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
+import { UpdateItemImageUrlMto } from '@queue/mtos';
+
 import { getMimeType } from '@mcommon/images/helpers';
 import { ImagesService } from '@mcommon/images/images.service';
 import { ItemsService } from '@item/items/items.service';
-import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
-import { UpdateItemImageUrlMto } from '@queue/mtos';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class UpdateItemImageUrlConsumer {
@@ -26,12 +27,12 @@ export class UpdateItemImageUrlConsumer {
   @SqsMessageHandler()
   async update(message: AWS.SQS.Message): Promise<void> {
     const mto: UpdateItemImageUrlMto = JSON.parse(message.Body);
+
     this.validateMto(mto);
-    const { brandId, code, imageUrl, itemId } = mto;
 
-    const item = await this.getItem(itemId, brandId, code);
-    const uploadedImageUrl = await this.uploadImageUrl(imageUrl, item.id);
+    const item = await this.getItem(mto);
 
+    const uploadedImageUrl = await this.uploadImageUrl(mto.imageUrl, item.id);
     await this.itemsService.update(item.id, {
       imageUrl: uploadedImageUrl,
     });
@@ -50,8 +51,10 @@ export class UpdateItemImageUrlConsumer {
     }
   }
 
-  private async getItem(itemId: number, brandId: number, providedCode: string) {
-    const findOption = itemId ? { id: itemId } : { brandId, providedCode };
+  private async getItem({ itemId, brandId, code }: UpdateItemImageUrlMto) {
+    const findOption = itemId
+      ? { id: itemId }
+      : { brandId, providedCode: code };
 
     return await this.itemsService.findOne(findOption);
   }
