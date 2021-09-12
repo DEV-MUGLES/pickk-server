@@ -5,7 +5,7 @@ import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
 
-export class ItemInfoCrawlSuccessTemplate {
+export class ItemCreationSuccessTemplate {
   static create(item: Item, nickname: string): IncomingWebhookSendArguments {
     const { id, name, brand, originalPrice, sellPrice, urls } = item;
 

@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import {
-  ItemInfoCrawlFailTemplate,
-  ItemInfoCrawlSuccessTemplate,
+  ItemCreationFailTemplate,
+  ItemCreationSuccessTemplate,
   ItemReportTemplate,
 } from '@templates/slack';
 
@@ -15,21 +15,21 @@ export class SlackService {
     @Inject(IncomingWebhook) private readonly webhook: IncomingWebhook
   ) {}
 
-  async sendItemInfoCrawlSuccess(
+  async sendItemCreationSuccess(
     item: Item,
     nickname: string
   ): Promise<IncomingWebhookResult> {
     return await this.webhook.send(
-      ItemInfoCrawlSuccessTemplate.create(item, nickname)
+      ItemCreationSuccessTemplate.create(item, nickname)
     );
   }
 
-  async sendItemInfoCrawlFail(
+  async sendItemCreationFail(
     url: string,
     nickname: string
   ): Promise<IncomingWebhookResult> {
     return await this.webhook.send(
-      ItemInfoCrawlFailTemplate.create(url, nickname)
+      ItemCreationFailTemplate.create(url, nickname)
     );
   }
 

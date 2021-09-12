@@ -129,10 +129,10 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
         id,
         this.getRelationsFromInfo(info, ['brand', 'urls'])
       );
-      await this.slackService.sendItemInfoCrawlSuccess(item, nickname);
+      await this.slackService.sendItemCreationSuccess(item, nickname);
       return item;
     } catch (err) {
-      await this.slackService.sendItemInfoCrawlFail(url, nickname);
+      await this.slackService.sendItemCreationFail(url, nickname);
       throw err;
     }
   }

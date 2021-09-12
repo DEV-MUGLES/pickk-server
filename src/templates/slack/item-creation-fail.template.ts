@@ -2,7 +2,7 @@ import { IncomingWebhookSendArguments } from '@slack/webhook';
 
 import { SlackChannelName } from '@providers/slack/constants';
 
-export class ItemInfoCrawlFailTemplate {
+export class ItemCreationFailTemplate {
   static create(url: string, nickname: string): IncomingWebhookSendArguments {
     return {
       channel: SlackChannelName.ItemManagement,
