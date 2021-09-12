@@ -9,6 +9,7 @@ import {
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
 import { CrawlerProviderModule } from '@providers/crawler';
+import { SlackProviderModule } from '@providers/slack';
 
 import { ImagesModule } from '@mcommon/images/images.module';
 import { SearchModule } from '@mcommon/search/search.module';
@@ -49,6 +50,7 @@ import { ItemsService } from './items.service';
     BrandsModule,
     ImagesModule,
     CrawlerProviderModule,
+    SlackProviderModule,
     forwardRef(() => SearchModule),
     SqsModule.registerQueue(
       {

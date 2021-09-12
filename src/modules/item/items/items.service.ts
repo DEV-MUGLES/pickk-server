@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { CrawlerProviderService } from '@providers/crawler';
+import { SlackService } from '@providers/slack';
 
 import { ImagesService } from '@mcommon/images/images.service';
 import { BrandsService } from '@item/brands/brands.service';
@@ -60,6 +61,7 @@ export class ItemsService {
     private readonly itemDetailImagesRepository: ItemDetailImagesRepository,
     private readonly brandsService: BrandsService,
     private readonly crawlerService: CrawlerProviderService,
+    private readonly slackService: SlackService,
     private readonly imagesService: ImagesService
   ) {}
 
@@ -330,5 +332,10 @@ export class ItemsService {
 
     item.updateSizeCharts(updateItemSizeChartInputs);
     return await this.itemsRepository.save(item);
+  }
+
+  async report(id: number, reason: string, nickname: string): Promise<void> {
+    const item = await this.get(id, ['brand', 'urls']);
+    await this.slackService.sendItemReport(item, reason, nickname);
   }
 }

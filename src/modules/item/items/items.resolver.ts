@@ -10,7 +10,7 @@ import {
 } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@auth/decorators';
+import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
@@ -25,6 +25,7 @@ import { ItemFilter, SetCategoryToItemInput } from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
 import { ItemsService } from './items.service';
+import { JwtPayload } from '@auth/models';
 
 @Resolver(() => Item)
 export class ItemsResolver extends BaseResolver<ItemRelationType> {
@@ -133,5 +134,18 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     await this.itemsService.update(id, input);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => Boolean, {
+    description: '정보에 오류가 있는 아이템을 신고합니다.',
+  })
+  @UseGuards(JwtVerifyGuard)
+  async reportItem(
+    @CurrentUser() payload: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('reason') reason: string
+  ): Promise<boolean> {
+    await this.itemsService.report(id, reason, payload.nickname);
+    return true;
   }
 }

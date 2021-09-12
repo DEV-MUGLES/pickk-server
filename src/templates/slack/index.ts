@@ -1,1 +1,1 @@
-export * from './item-creation.template';
+export * from './item-report.template';
