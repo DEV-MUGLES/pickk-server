@@ -6,6 +6,9 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { CrawlerProviderService } from '@providers/crawler';
 
+import { ImagesService } from '@mcommon/images/images.service';
+import { BrandsService } from '@item/brands/brands.service';
+
 import { ItemRelationType } from './constants';
 import {
   CreateItemInput,
@@ -56,7 +59,9 @@ export class ItemsService {
     private readonly itemPricesRepository: ItemPricesRepository,
     @InjectRepository(ItemDetailImagesRepository)
     private readonly itemDetailImagesRepository: ItemDetailImagesRepository,
-    private readonly crawlerService: CrawlerProviderService
+    private readonly brandsService: BrandsService,
+    private readonly crawlerService: CrawlerProviderService,
+    private readonly imagesService: ImagesService
   ) {}
 
   async list(
@@ -104,6 +109,23 @@ export class ItemsService {
   async create(input: CreateItemInput): Promise<Item> {
     const item = ItemFactory.from(input);
     return await this.itemsRepository.save(item);
+  }
+
+  async createByInfoCrawl(url: string): Promise<Item> {
+    const crawlResult = await this.crawlerService.crawlInfo(url);
+    const brand = await this.brandsService.getOrCreate({
+      nameKor: crawlResult.brandKor,
+    });
+    const [uploaded] = await this.imagesService.uploadUrls(
+      [crawlResult.imageUrl],
+      'info_crawled'
+    );
+
+    return await this.create({
+      ...CreateItemInput.create(crawlResult),
+      brandId: brand.id,
+      imageUrl: uploaded.url,
+    });
   }
 
   async createMany(createItemInputs: CreateItemInput[]) {

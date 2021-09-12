@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { CreateBrandInput, UpdateBrandInput } from './dtos';
 import { Brand } from './models';
+
 import { BrandsRepository } from './brands.repository';
 
 @Injectable()
@@ -21,13 +22,20 @@ export class BrandsService {
     return await this.brandsRepository.get(id, relations);
   }
 
-  async create(createBrandInput: CreateBrandInput): Promise<Brand> {
-    const courier = new Brand(createBrandInput);
-    return await this.brandsRepository.save(courier);
+  async create(input: CreateBrandInput): Promise<Brand> {
+    return await this.brandsRepository.save(new Brand(input));
   }
 
-  async update(id: number, input: UpdateBrandInput): Promise<Brand> {
+  async getOrCreate(input: CreateBrandInput): Promise<Brand> {
+    const existing = await this.brandsRepository.findOneEntity(input);
+    if (existing) {
+      return existing;
+    }
+
+    return await this.create(input);
+  }
+
+  async update(id: number, input: UpdateBrandInput): Promise<void> {
     await this.brandsRepository.update(id, input);
-    return await this.get(id);
   }
 }

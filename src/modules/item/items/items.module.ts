@@ -12,6 +12,7 @@ import { CrawlerProviderModule } from '@providers/crawler';
 
 import { ImagesModule } from '@mcommon/images/images.module';
 import { SearchModule } from '@mcommon/search/search.module';
+import { BrandsModule } from '@item/brands/brands.module';
 import { ProductsModule } from '@item/products/products.module';
 import { DigestsRepository } from '@content/digests/digests.repository';
 
@@ -45,6 +46,7 @@ import { ItemsService } from './items.service';
       DigestsRepository,
     ]),
     forwardRef(() => ProductsModule),
+    BrandsModule,
     ImagesModule,
     CrawlerProviderModule,
     forwardRef(() => SearchModule),

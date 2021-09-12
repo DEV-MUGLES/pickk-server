@@ -3,6 +3,9 @@ import * as faker from 'faker';
 
 import { CrawlerProviderModule, ItemInfoCrawlResult } from '@providers/crawler';
 
+import { ImagesService } from '@mcommon/images/images.service';
+import { BrandsService } from '@item/brands/brands.service';
+
 import { AddItemUrlInput, UpdateByCrawlDatasDto } from './dtos';
 import { ItemPrice, ItemUrl, Item } from './models';
 
@@ -31,6 +34,14 @@ describe('ItemsService', () => {
         ItemSizeChartsRepository,
         ItemPricesRepository,
         ItemDetailImagesRepository,
+        {
+          provide: BrandsService,
+          useValue: new BrandsService(null),
+        },
+        {
+          provide: ImagesService,
+          useValue: new ImagesService(null, null),
+        },
       ],
     }).compile();
 

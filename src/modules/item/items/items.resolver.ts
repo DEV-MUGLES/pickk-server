@@ -11,7 +11,7 @@ import {
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
-import { JwtAuthGuard } from '@auth/guards';
+import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
@@ -111,5 +111,15 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     await this.itemSearchService.index(4);
     await this.itemSearchService.index(5);
     await this.itemSearchService.refresh();
+  }
+
+  @Mutation(() => Item)
+  @UseGuards(JwtVerifyGuard)
+  async createItemByUrl(
+    @Args('url') url: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { id } = await this.itemsService.createByInfoCrawl(url);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

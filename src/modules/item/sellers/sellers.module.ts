@@ -1,5 +1,5 @@
 import { HttpModule } from '@nestjs/axios';
-import { Logger, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -36,7 +36,7 @@ import { SellersCrawlService } from './sellers.crawl.service';
     ),
     HttpModule,
     CrawlerProviderModule,
-    ItemsModule,
+    forwardRef(() => ItemsModule),
   ],
   providers: [
     SellersResolver,

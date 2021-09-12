@@ -7,14 +7,6 @@ import { ProductsService } from '@item/products/products.service';
 import { CrawlerProviderModule } from '@providers/crawler';
 
 import { Item } from '@item/items/models';
-import {
-  ItemDetailImagesRepository,
-  ItemOptionsRepository,
-  ItemOptionValuesRepository,
-  ItemPricesRepository,
-  ItemSizeChartsRepository,
-  ItemsRepository,
-} from '@item/items/items.repository';
 import { ItemsService } from '@item/items/items.service';
 
 import { SellerItemResolver } from './seller-item.resolver';
@@ -53,12 +45,6 @@ describe('SellerItemResolver', () => {
         SellerItemResolver,
         ItemsService,
         ProductsService,
-        ItemsRepository,
-        ItemOptionsRepository,
-        ItemOptionValuesRepository,
-        ItemSizeChartsRepository,
-        ItemPricesRepository,
-        ItemDetailImagesRepository,
         ProductsRepository,
         {
           provide: ProductsService,
@@ -67,6 +53,20 @@ describe('SellerItemResolver', () => {
         {
           provide: ItemSearchService,
           useValue: new ItemSearchService(null, null),
+        },
+        {
+          provide: ItemsService,
+          useValue: new ItemsService(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ),
         },
       ],
     }).compile();

@@ -1267,6 +1267,7 @@ type Mutation {
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createDigest(createDigestInput: CreateDigestInput!): Digest!
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
+  createItemByUrl(url: String!): Item!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!

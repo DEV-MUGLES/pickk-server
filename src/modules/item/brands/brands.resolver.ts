@@ -6,17 +6,19 @@ import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
+
 import { SellersService } from '@item/sellers/sellers.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 
-import { BRAND_RELATIONS } from './constants';
+import { BrandRelationType, BRAND_RELATIONS } from './constants';
 import { UpdateBrandInput } from './dtos';
 import { Brand } from './models';
+
 import { BrandsService } from './brands.service';
 
 @Resolver(() => Brand)
-export class BrandsResolver extends BaseResolver {
+export class BrandsResolver extends BaseResolver<BrandRelationType> {
   relations = BRAND_RELATIONS;
 
   constructor(
@@ -45,7 +47,8 @@ export class BrandsResolver extends BaseResolver {
   async updateBrand(
     @CurrentUser() user: User,
     @IntArgs('id') id: number,
-    @Args('updateBrandInput') updateBrandInput: UpdateBrandInput
+    @Args('updateBrandInput') input: UpdateBrandInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Brand> {
     if (user.role === UserRole.Seller) {
       const seller = await this.sellersService.findOne({ userId: user.id });
@@ -54,6 +57,7 @@ export class BrandsResolver extends BaseResolver {
       }
     }
 
-    return await this.brandsService.update(id, updateBrandInput);
+    await this.brandsService.update(id, input);
+    return await this.brandsService.get(id, this.getRelationsFromInfo(info));
   }
 }

@@ -53,8 +53,11 @@ describe('BrandsResolver', () => {
       const brand = new Brand({ id: brandId });
       const updatedBrand = new Brand({ ...brand, ...updateBrandInput });
 
-      const brandsServiceSpy = jest
+      const brandsServiceUpdateSpy = jest
         .spyOn(brandsService, 'update')
+        .mockImplementationOnce(() => null);
+      const brandsServiceGetSpy = jest
+        .spyOn(brandsService, 'get')
         .mockResolvedValueOnce(updatedBrand);
 
       const result = await brandsResolver.updateBrand(
@@ -63,7 +66,11 @@ describe('BrandsResolver', () => {
         updateBrandInput
       );
       expect(result).toEqual(updatedBrand);
-      expect(brandsServiceSpy).toHaveBeenCalledWith(brandId, updateBrandInput);
+      expect(brandsServiceUpdateSpy).toHaveBeenCalledWith(
+        brandId,
+        updateBrandInput
+      );
+      expect(brandsServiceGetSpy).toHaveBeenCalledWith(brandId, []);
     });
 
     it('Seller인 경우: 자신의 브랜드면 업데이트한다.', async () => {
@@ -79,8 +86,11 @@ describe('BrandsResolver', () => {
       const sellersServiceSpy = jest
         .spyOn(sellersService, 'findOne')
         .mockResolvedValueOnce(seller);
-      const brandsServiceSpy = jest
+      const brandsServiceUpdateSpy = jest
         .spyOn(brandsService, 'update')
+        .mockImplementationOnce(() => null);
+      const brandsServiceGetSpy = jest
+        .spyOn(brandsService, 'get')
         .mockResolvedValueOnce(updatedBrand);
 
       const result = await brandsResolver.updateBrand(
@@ -90,7 +100,11 @@ describe('BrandsResolver', () => {
       );
       expect(result).toEqual(updatedBrand);
       expect(sellersServiceSpy).toHaveBeenCalledWith({ userId });
-      expect(brandsServiceSpy).toHaveBeenCalledWith(brandId, updateBrandInput);
+      expect(brandsServiceUpdateSpy).toHaveBeenCalledWith(
+        brandId,
+        updateBrandInput
+      );
+      expect(brandsServiceGetSpy).toHaveBeenCalledWith(brandId, []);
     });
 
     it('Seller인 경우: 자신의 브랜드가 아니면 Unauthorized exception', async () => {
