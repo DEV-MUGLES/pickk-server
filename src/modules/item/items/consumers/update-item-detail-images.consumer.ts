@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import {
@@ -7,17 +6,15 @@ import {
   SqsMessageHandler,
   SqsProcess,
 } from '@pickk/nestjs-sqs';
-import { firstValueFrom } from 'rxjs';
 
-import { allSettled, FulfillResponse, isFulfilled } from '@common/helpers';
-import { getMimeType } from '@mcommon/images/helpers';
-import { UploadBufferDto } from '@mcommon/images/dtos';
+import { allSettled } from '@common/helpers';
 import { ImagesService } from '@mcommon/images/images.service';
-import { ItemsService } from '@item/items/items.service';
 import { UPDATE_ITEM_DETAIL_IMAGES_QUEUE } from '@queue/constants';
 import { UpdateItemDetailImagesMto } from '@queue/mtos';
 
-import { ItemDetailImage } from '../models';
+import { ItemsService } from '@item/items/items.service';
+
+import { ItemDetailImageFactory } from '../factories';
 
 import { ItemsRepository } from '../items.repository';
 
@@ -26,7 +23,6 @@ export class UpdateItemDetailImagesConsumer {
   constructor(
     @InjectRepository(ItemsRepository)
     private readonly itemsRepository: ItemsRepository,
-    private readonly httpService: HttpService,
     private readonly imagesService: ImagesService,
     private readonly itemsService: ItemsService,
     private readonly logger: Logger
@@ -43,11 +39,9 @@ export class UpdateItemDetailImagesConsumer {
         (mto) =>
           new Promise(async (resolve) => {
             this.validateMto(mto);
-            const { brandId, code, images, itemId } = mto;
-
-            const item = await this.getItem(itemId, brandId, code);
+            const item = await this.getItem(mto);
             const uploadedDetailImages = await this.uploadDetailImages(
-              images,
+              mto.images,
               item.id
             );
             item.detailImages = uploadedDetailImages;
@@ -70,59 +64,18 @@ export class UpdateItemDetailImagesConsumer {
     }
   }
 
-  private async getItem(itemId: number, brandId: number, providedCode: string) {
-    const findOption = itemId ? { id: itemId } : { brandId, providedCode };
+  private async getItem({ itemId, brandId, code }: UpdateItemDetailImagesMto) {
+    const findOption = itemId
+      ? { id: itemId }
+      : { brandId, providedCode: code };
 
     return await this.itemsService.findOne(findOption);
   }
 
   private async uploadDetailImages(imageUrls: string[], itemId: number) {
-    const bufferDatas = await this.getImageBufferDatas(imageUrls);
-    const uploadBufferDtos: UploadBufferDto[] = bufferDatas.map(
-      ({ imageUrl, buffer }, index) => {
-        const mimetype = getMimeType(imageUrl);
-        return {
-          buffer,
-          filename: `detail${index}.${mimetype}`,
-          mimetype,
-          prefix: `item/${itemId}`,
-        };
-      }
-    );
-
-    return (await this.imagesService.uploadBufferDatas(uploadBufferDtos)).map(
-      ({ url, key }) => new ItemDetailImage({ url, key })
-    );
-  }
-
-  private async getImageBufferDatas(
-    imageUrls: string[]
-  ): Promise<{ imageUrl: string; buffer: Buffer }[]> {
-    const settledBufferDatas = await allSettled(
-      imageUrls.map(
-        (imageUrl) =>
-          new Promise(async (resolve, reject) => {
-            try {
-              const { data } = await firstValueFrom(
-                this.httpService.get<Buffer>(imageUrl, {
-                  responseType: 'arraybuffer',
-                })
-              );
-              resolve({
-                imageUrl,
-                buffer: data,
-              });
-            } catch (err) {
-              reject(err);
-            }
-          })
-      )
-    );
-    return [].concat(
-      ...settledBufferDatas
-        .filter((data) => isFulfilled(data))
-        .map((data) => (data as FulfillResponse).value)
-    );
+    return (
+      await this.imagesService.uploadUrls(imageUrls, `item/${itemId}/detail`)
+    ).map(({ url }) => ItemDetailImageFactory.from(url));
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)

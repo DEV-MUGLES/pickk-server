@@ -1,4 +1,3 @@
-import { HttpService } from '@nestjs/axios';
 import { Logger } from '@nestjs/common';
 import {
   SqsConsumerEvent,
@@ -6,19 +5,16 @@ import {
   SqsMessageHandler,
   SqsProcess,
 } from '@pickk/nestjs-sqs';
-import { firstValueFrom } from 'rxjs';
 
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
 import { UpdateItemImageUrlMto } from '@queue/mtos';
 
-import { getMimeType } from '@mcommon/images/helpers';
 import { ImagesService } from '@mcommon/images/images.service';
 import { ItemsService } from '@item/items/items.service';
 
 @SqsProcess(UPDATE_ITEM_IMAGE_URL_QUEUE)
 export class UpdateItemImageUrlConsumer {
   constructor(
-    private readonly httpService: HttpService,
     private readonly imagesService: ImagesService,
     private readonly itemsService: ItemsService,
     private readonly logger: Logger
@@ -32,7 +28,9 @@ export class UpdateItemImageUrlConsumer {
 
     const item = await this.getItem(mto);
 
-    const uploadedImageUrl = await this.uploadImageUrl(mto.imageUrl, item.id);
+    const uploadedImageUrl = (
+      await this.imagesService.uploadUrls([mto.imageUrl], `item/${item.id}`)
+    )[0].url;
     await this.itemsService.update(item.id, {
       imageUrl: uploadedImageUrl,
     });
@@ -57,25 +55,6 @@ export class UpdateItemImageUrlConsumer {
       : { brandId, providedCode: code };
 
     return await this.itemsService.findOne(findOption);
-  }
-
-  private async uploadImageUrl(imageUrl: string, itemId: number) {
-    const { data: buffer } = await firstValueFrom(
-      this.httpService.get<Buffer>(imageUrl, {
-        responseType: 'arraybuffer',
-      })
-    );
-    const mimetype = getMimeType(imageUrl);
-    return (
-      await this.imagesService.uploadBufferDatas([
-        {
-          buffer,
-          filename: `thumbnail.${mimetype}`,
-          mimetype,
-          prefix: `item/${itemId}`,
-        },
-      ])
-    )[0].url;
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)

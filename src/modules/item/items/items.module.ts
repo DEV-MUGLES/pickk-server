@@ -1,4 +1,3 @@
-import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
@@ -46,7 +45,6 @@ import { ItemsService } from './items.service';
       DigestsRepository,
     ]),
     forwardRef(() => ProductsModule),
-    HttpModule,
     ImagesModule,
     CrawlerProviderModule,
     forwardRef(() => SearchModule),
