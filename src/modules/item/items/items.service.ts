@@ -25,6 +25,7 @@ import {
   AddItemPriceInput,
   UpdateItemPriceInput,
   UpdateByCrawlDatasDto,
+  ManualCreateItemInput,
 } from './dtos';
 import { ItemFactory } from './factories';
 import {
@@ -126,6 +127,18 @@ export class ItemsService {
       ...CreateItemInput.create(crawlResult),
       brandId: brand.id,
       imageUrl: uploaded.url,
+    });
+  }
+
+  async manualCreate(input: ManualCreateItemInput): Promise<Item> {
+    const brand = await this.brandsService.getOrCreate({
+      nameKor: input.brandNameKor,
+    });
+
+    return await this.create({
+      ...CreateItemInput.create({ ...input, salePrice: input.sellPrice }),
+      ...input,
+      brandId: brand.id,
     });
   }
 

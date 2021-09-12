@@ -1235,6 +1235,17 @@ input LookUserFilter {
   heightBetween: [Int!]
 }
 
+input ManualCreateItemInput {
+  brandNameKor: String!
+  imageUrl: String!
+  majorCategoryId: Int!
+  minorCategoryId: Int!
+  name: String!
+  originalPrice: Int!
+  sellPrice: Int!
+  url: String!
+}
+
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
@@ -1280,6 +1291,7 @@ type Mutation {
   indexKeyword: Boolean!
   indexVideo: Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
+  manualCreateItem(input: ManualCreateItemInput!): Item!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   own(keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!

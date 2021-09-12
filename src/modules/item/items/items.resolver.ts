@@ -23,7 +23,11 @@ import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
 import { ItemRelationType, ITEM_RELATIONS } from './constants';
-import { ItemFilter, SetCategoryToItemInput } from './dtos';
+import {
+  ItemFilter,
+  ManualCreateItemInput,
+  SetCategoryToItemInput,
+} from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
 import { ItemsService } from './items.service';
@@ -127,7 +131,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
       const { id } = await this.itemsService.createByInfoCrawl(url);
       const item = await this.itemsService.get(
         id,
-        this.getRelationsFromInfo(info, ['brand', 'urls'])
+        this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
       );
       await this.slackService.sendItemCreationSuccess(item, nickname);
       return item;
@@ -154,11 +158,27 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   })
   @UseGuards(JwtVerifyGuard)
   async reportItem(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { nickname }: JwtPayload,
     @IntArgs('id') id: number,
     @Args('reason') reason: string
   ): Promise<boolean> {
-    await this.itemsService.report(id, reason, payload.nickname);
+    await this.itemsService.report(id, reason, nickname);
     return true;
+  }
+
+  @Mutation(() => Item)
+  @UseGuards(JwtVerifyGuard)
+  async manualCreateItem(
+    @CurrentUser() { nickname }: JwtPayload,
+    @Args('input') input: ManualCreateItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { id } = await this.itemsService.manualCreate(input);
+    const item = await this.itemsService.get(
+      id,
+      this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
+    );
+    await this.slackService.sendItemCreationSuccess(item, nickname);
+    return item;
   }
 }
