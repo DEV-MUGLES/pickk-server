@@ -18,6 +18,7 @@ import {
   UpdateByCrawlDatasDto,
   AddByCrawlDatasDto,
   ItemCrawlData,
+  CreateItemInput,
 } from '../dtos';
 import { ItemsProducer } from '../producers';
 
@@ -70,7 +71,13 @@ export class ProcessSellerItemsScrapResultConsumer {
       return;
     }
 
-    await this.itemsService.addByCrawlDatas(addByCrawlDatasDto);
+    await this.itemsService.createMany(
+      crawlDatas.map((crawlData) => ({
+        ...CreateItemInput.create(crawlData),
+        brandId: crawlData.brandId,
+        providedCode: crawlData.code,
+      }))
+    );
     await this.updateItemDetailImages(crawlDatas);
     await this.updateItemImageUrl(crawlDatas);
   }

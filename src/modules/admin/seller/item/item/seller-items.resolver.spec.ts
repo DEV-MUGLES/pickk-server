@@ -62,7 +62,7 @@ describe('SellerItemResolver', () => {
         ProductsRepository,
         {
           provide: ProductsService,
-          useValue: new ProductsService(null),
+          useValue: new ProductsService(null, null),
         },
         {
           provide: ItemSearchService,

@@ -257,8 +257,8 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     await this.itemsService.clearOptionSet(id);
-    const item = await this.itemsService.createOptionSet(id, options);
-    await this.productsService.createByOptionSet(item);
+    await this.itemsService.createOptionSet(id, options);
+    await this.productsService.createByOptionSet(id);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }

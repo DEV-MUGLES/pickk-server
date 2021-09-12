@@ -1,8 +1,10 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import { RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE } from '@queue/constants';
+
+import { ItemsModule } from '@item/items/items.module';
 
 import { RestoreDeductedProductStockConsumer } from './consumers';
 
@@ -17,6 +19,7 @@ import { ProductsService } from './products.service';
       name: RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
       type: SqsQueueType.Consumer,
     }),
+    forwardRef(() => ItemsModule),
   ],
   providers: [
     ProductsResolver,

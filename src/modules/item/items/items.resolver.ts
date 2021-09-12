@@ -82,8 +82,8 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @IntArgs('itemId') id: number,
     @Info() info?: GraphQLResolveInfo
   ) {
-    const item = await this.itemsService.crawlOptionSet(id);
-    await this.productsService.createByOptionSet(item);
+    await this.itemsService.crawlOptionSet(id);
+    await this.productsService.createByOptionSet(id);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }

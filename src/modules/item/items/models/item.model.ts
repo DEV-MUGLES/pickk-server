@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 
+import { ItemInfoCrawlResult } from '@providers/crawler';
+
 import { Campaign } from '@item/campaigns/models';
 import { Product } from '@item/products/models/product.model';
 
@@ -254,5 +256,20 @@ export class Item extends ItemEntity {
 
     this.sizeCharts = sizeCharts.filter((size) => !removeIds.includes(size.id));
     return this.sizeCharts;
+  };
+
+  public updateByCrawlResult = (crawlData: ItemInfoCrawlResult) => {
+    const { originalPrice, salePrice, name, isSoldout } = crawlData;
+
+    this?.prices.forEach((price) => {
+      if (!price.isCrawlUpdating) {
+        return;
+      }
+      price.originalPrice = originalPrice;
+      price.sellPrice = salePrice;
+      price.finalPrice = (salePrice * (100 - price.pickkDiscountRate)) / 100;
+    });
+    this.name = name;
+    this.isSoldout = isSoldout;
   };
 }

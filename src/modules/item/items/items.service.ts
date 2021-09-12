@@ -23,7 +23,6 @@ import {
   UpdateItemPriceInput,
   CreateItemDetailImageInput,
   UpdateByCrawlDatasDto,
-  AddByCrawlDatasDto,
 } from './dtos';
 import { ItemFactory } from './factories';
 import {
@@ -224,38 +223,12 @@ export class ItemsService {
     await this.itemsRepository.bulkUpdate(ids, bulkUpdateItemInput);
   }
 
-  async addByCrawlDatas(dto: AddByCrawlDatasDto) {
-    const items = dto.crawlDatas.map((crawlData) =>
-      ItemFactory.from({
-        ...CreateItemInput.create(crawlData),
-        brandId: crawlData.brandId,
-        providedCode: crawlData.code,
-      })
-    );
-    await this.itemsRepository.save(items);
-  }
-
-  async updateByCrawlDatas(dto: UpdateByCrawlDatasDto) {
-    const { updateItemDatas } = dto;
-    const updatedItems = [];
-    for (const updateItemData of updateItemDatas) {
-      const {
-        item,
-        itemData: { originalPrice, salePrice, name, isSoldout },
-      } = updateItemData;
-      item.prices.forEach((price) => {
-        if (!price.isCrawlUpdating) {
-          return;
-        }
-        price.originalPrice = originalPrice;
-        price.sellPrice = salePrice;
-        price.finalPrice = (salePrice * (100 - price.pickkDiscountRate)) / 100;
-      });
-      item.name = name;
-      item.isSoldout = isSoldout;
-
-      updatedItems.push(item);
-    }
+  async updateByCrawlDatas({ updateItemDatas }: UpdateByCrawlDatasDto) {
+    const updatedItems = updateItemDatas.map((data) => {
+      const { item, itemData: infoCrawlResult } = data;
+      item.updateByCrawlResult(infoCrawlResult);
+      return item;
+    });
     return await this.itemsRepository.save(updatedItems);
   }
 
@@ -276,8 +249,7 @@ export class ItemsService {
   ): Promise<Item> {
     const item = await this.get(id, ['options', 'options.values']);
     item.createOptionSet(options);
-    await this.itemsRepository.save(item);
-    return await this.get(id, ['options', 'options.values', 'products']);
+    return await this.itemsRepository.save(item);
   }
 
   async crawlOptionSet(id: number): Promise<Item> {

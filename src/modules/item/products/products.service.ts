@@ -1,12 +1,12 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
-import { getOptionValueCombinations } from '@item/items/helpers';
 
-import { Item } from '@item/items/models';
+import { getOptionValueCombinations } from '@item/items/helpers';
+import { ItemsService } from '@item/items/items.service';
 
 import {
   DestockProductInput,
@@ -22,7 +22,8 @@ import { ProductsRepository } from './products.repository';
 export class ProductsService {
   constructor(
     @InjectRepository(ProductsRepository)
-    private readonly productsRepository: ProductsRepository
+    private readonly productsRepository: ProductsRepository,
+    private readonly itemsService: ItemsService
   ) {}
 
   async get(id: number, relations: string[] = []): Promise<Product> {
@@ -68,8 +69,14 @@ export class ProductsService {
     await this.productsRepository.update(productIds, { isDeleted: true });
   }
 
-  async createByOptionSet(item: Item) {
-    await this.processDeleted(item.id);
+  async createByOptionSet(itemId: number) {
+    const item = await this.itemsService.get(itemId, [
+      'options',
+      'options.values',
+      'products',
+    ]);
+
+    await this.processDeleted(itemId);
     const products = getOptionValueCombinations(item.options).map((values) => {
       const totalPriceVariant = values.reduce(
         (total, { priceVariant }) => total + priceVariant,

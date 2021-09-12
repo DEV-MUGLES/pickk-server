@@ -4,7 +4,7 @@ import { ItemInfoCrawlResult } from '@providers/crawler/dtos';
 
 export class UpdateItemData {
   item: Item;
-  itemData: Partial<ItemInfoCrawlResult>;
+  itemData: ItemInfoCrawlResult;
 }
 
 export class UpdateByCrawlDatasDto {

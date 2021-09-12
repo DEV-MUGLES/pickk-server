@@ -45,7 +45,7 @@ import { ItemsService } from './items.service';
       ItemDetailImagesRepository,
       DigestsRepository,
     ]),
-    ProductsModule,
+    forwardRef(() => ProductsModule),
     HttpModule,
     ImagesModule,
     CrawlerProviderModule,
