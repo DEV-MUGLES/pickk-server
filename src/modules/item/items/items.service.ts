@@ -225,27 +225,14 @@ export class ItemsService {
   }
 
   async addByCrawlDatas(dto: AddByCrawlDatasDto) {
-    const { crawlDatas } = dto;
-    const createItemInputs = crawlDatas.map((v) => {
-      return {
-        brandId: v.brandId,
-        name: v.name,
-        providedCode: v.code,
-        imageUrl: v.imageUrl,
-        isMdRecommended: false,
-        isSellable: false,
-        urlInput: {
-          isPrimary: true,
-          url: v.url,
-        },
-        priceInput: {
-          originalPrice: v.originalPrice,
-          sellPrice: v.salePrice,
-          isCrawlUpdating: true,
-        },
-      };
-    });
-    await this.createMany(createItemInputs);
+    const items = dto.crawlDatas.map((crawlData) =>
+      ItemFactory.from({
+        ...CreateItemInput.create(crawlData),
+        brandId: crawlData.brandId,
+        providedCode: crawlData.code,
+      })
+    );
+    await this.itemsRepository.save(items);
   }
 
   async updateByCrawlDatas(dto: UpdateByCrawlDatasDto) {

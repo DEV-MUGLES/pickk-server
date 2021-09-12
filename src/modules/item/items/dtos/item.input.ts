@@ -1,8 +1,11 @@
 import { InputType, PickType, PartialType, Field, Int } from '@nestjs/graphql';
 import { IsBoolean, IsNumber, IsOptional } from 'class-validator';
 
+import { ItemInfoCrawlResult } from '@providers/crawler';
+
 import { IItem } from '../interfaces';
 import { Item } from '../models';
+
 import { AddItemPriceInput } from './item-price.input';
 import { AddItemUrlInput } from './item-url.input';
 
@@ -27,6 +30,29 @@ export class CreateItemInput extends PickType(
 
   @Field(() => AddItemUrlInput)
   urlInput: AddItemUrlInput;
+
+  constructor(attributes: Partial<CreateItemInput>) {
+    super();
+    Object.assign(this, attributes);
+  }
+
+  static create(v: ItemInfoCrawlResult) {
+    return new CreateItemInput({
+      name: v.name,
+      imageUrl: v.imageUrl,
+      isMdRecommended: false,
+      isSellable: false,
+      urlInput: {
+        isPrimary: true,
+        url: v.url,
+      },
+      priceInput: {
+        originalPrice: v.originalPrice,
+        sellPrice: v.salePrice,
+        isCrawlUpdating: true,
+      },
+    });
+  }
 }
 
 @InputType()
