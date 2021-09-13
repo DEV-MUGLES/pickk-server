@@ -108,6 +108,17 @@ export class ItemsService {
     return await this.itemPricesRepository.get(id, relations);
   }
 
+  async findByUrl(
+    url: string,
+    relations: ItemRelationType[] = []
+  ): Promise<Item> {
+    const id = await this.itemsRepository.findIdByUrl(url);
+    if (!id) {
+      return null;
+    }
+    return await this.get(id, relations);
+  }
+
   async create(input: CreateItemInput): Promise<Item> {
     const item = ItemFactory.from(input);
     return await this.itemsRepository.save(item);

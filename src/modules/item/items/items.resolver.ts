@@ -129,6 +129,14 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     try {
+      const existing = await this.itemsService.findByUrl(
+        url,
+        this.getRelationsFromInfo(info)
+      );
+      if (existing) {
+        return existing;
+      }
+
       const { id } = await this.itemsService.createByInfoCrawl(url);
       await this.itemsProducer.sendItemCreationSuccessSlackMessage(
         id,

@@ -44,6 +44,20 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
       .where({ id: In(ids) })
       .execute();
   }
+
+  async findIdByUrl(url: string): Promise<number> {
+    const { id } = await this.createQueryBuilder('item')
+      .select('item.id')
+      .innerJoin(
+        'item.urls',
+        'item_url',
+        `item.id = item_url.itemId and item_url.url = '${url}'`
+      )
+      .take(1)
+      .getOne();
+
+    return id;
+  }
 }
 
 @EntityRepository(ItemOptionEntity)
