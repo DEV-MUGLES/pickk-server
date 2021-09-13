@@ -35,3 +35,5 @@ aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-SEND_
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-SEND_REFUND_REQUESTED_ALIMTALK
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name O2O-SEND_EXCHANGE_REQUESTED_ALIMTALK
 aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name I2I-SEND_INQUIRY_ANSWERED_ALIMTALK
+
+aws --endpoint-url http://localhost:4566 sqs create-queue --queue-name I2I-SEND_INQUIRY_CREATED_SLACK_MESSAGE
