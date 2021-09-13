@@ -3,6 +3,7 @@ import { Keyword } from '../models';
 export type KeywordRelationType =
   | keyof Keyword
   | 'looks.images'
+  | 'digests.video'
   | 'digests.images'
   | 'digests.item'
   | 'digests.item.brand'
@@ -19,6 +20,7 @@ export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'looks',
   'looks.images',
   'digests',
+  'digests.video',
   'digests.images',
   'digests.item',
   'digests.item.brand',
