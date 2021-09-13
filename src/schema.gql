@@ -593,6 +593,28 @@ input CreateUserInput {
   weight: Int
 }
 
+input CreateVideoDigestInput {
+  itemId: Int
+  itemPropertyValueIds: [Int!]
+  rating: Rating
+  size: String!
+  timestampEndSecond: Int
+  timestampStartSecond: Int
+
+  """최대 길이 127"""
+  title: String
+}
+
+input CreateVideoInput {
+  digests: [CreateVideoDigestInput!]!
+
+  """최대 길이 127"""
+  title: String!
+
+  """최대 길이 40"""
+  youtubeCode: String!
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
@@ -1299,6 +1321,7 @@ type Mutation {
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!
+  createVideo(createVideoInput: CreateVideoInput!): Video!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
