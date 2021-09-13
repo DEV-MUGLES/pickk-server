@@ -25,6 +25,7 @@ import { Inquiry } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 
 import { InquiriesCountOutput } from './dtos';
+import { SellerInquiryProducer } from './producers';
 
 import { SellerInquiryService } from './seller-inquiry.service';
 
@@ -37,7 +38,8 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     private readonly inquiriesService: InquiriesService,
     @Inject(SellerInquiryService)
     private readonly sellerInquiryService: SellerInquiryService,
-    @Inject(CacheService) private cacheService: CacheService
+    @Inject(CacheService) private cacheService: CacheService,
+    private readonly sellerInquiryProducer: SellerInquiryProducer
   ) {
     super();
   }
@@ -103,6 +105,8 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
       userId,
       from: InquiryAnswerFrom.SELLER,
     });
+
+    await this.sellerInquiryProducer.sendInquiryAnsweredAlimtalk(id);
 
     return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
   }

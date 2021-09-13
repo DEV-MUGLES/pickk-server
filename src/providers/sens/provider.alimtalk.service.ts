@@ -4,6 +4,7 @@ import { AlimtalkClient } from 'nest-sens';
 import { RefundRequest } from '@order/refund-requests/models';
 import { Order } from '@order/orders/models';
 import { ExchangeRequest } from '@order/exchange-requests/models';
+import { Inquiry } from '@item/inquiries/models';
 
 import {
   DelayedExchangeRequestsTemplate,
@@ -14,6 +15,7 @@ import {
   CompleteOrderTemplate,
   VbankNotiTemplate,
   ExchangeRequestedTemplate,
+  InquiryAnsweredTemplate,
 } from '@templates/alimtalk';
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
 
@@ -75,5 +77,9 @@ export class AlimtalkService {
 
   async sendVbankNoti(order: Order) {
     await this.alimtalkClient.send(VbankNotiTemplate.toRequest(order));
+  }
+
+  async sendInquiryAnswered(inquiry: Inquiry) {
+    await this.alimtalkClient.send(InquiryAnsweredTemplate.toRequest(inquiry));
   }
 }
