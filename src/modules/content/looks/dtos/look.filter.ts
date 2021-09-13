@@ -39,7 +39,7 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
   get hasCustom(): boolean {
     return (
       this.styleTagIdIn?.length > 0 ||
-      this.user.heightBetween != null ||
+      this.user?.heightBetween != null ||
       this.itemId != null
     );
   }
