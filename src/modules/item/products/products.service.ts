@@ -66,6 +66,9 @@ export class ProductsService {
         where: { itemId, isDeleted: false },
       })
     ).map(({ id }) => id);
+    if (!productIds?.length) {
+      return;
+    }
     await this.productsRepository.update(productIds, { isDeleted: true });
   }
 
