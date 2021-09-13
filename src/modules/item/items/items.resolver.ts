@@ -16,7 +16,6 @@ import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
-import { SlackService } from '@providers/slack';
 
 import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsService } from '@item/products/products.service';
@@ -30,6 +29,8 @@ import {
 } from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
+import { ItemsProducer } from './producers';
+
 import { ItemsService } from './items.service';
 
 @Resolver(() => Item)
@@ -43,7 +44,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     private readonly itemsService: ItemsService,
     private readonly productsService: ProductsService,
     private readonly itemSearchService: ItemSearchService,
-    private readonly slackService: SlackService
+    private readonly itemsProducer: ItemsProducer
   ) {
     super();
   }
@@ -133,10 +134,13 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
         id,
         this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
       );
-      await this.slackService.sendItemCreationSuccess(item, nickname);
+      await this.itemsProducer.sendItemCreationSuccessSlackMessage(
+        item,
+        nickname
+      );
       return item;
     } catch (err) {
-      await this.slackService.sendItemCreationFail(url, nickname);
+      await this.itemsProducer.sendItemCreationFailSlackMessage(url, nickname);
       throw err;
     }
   }
@@ -178,7 +182,10 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
       id,
       this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
     );
-    await this.slackService.sendItemCreationSuccess(item, nickname);
+    await this.itemsProducer.sendItemCreationSuccessSlackMessage(
+      item,
+      nickname
+    );
     return item;
   }
 }
