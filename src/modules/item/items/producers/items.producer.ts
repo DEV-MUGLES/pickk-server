@@ -14,8 +14,6 @@ import {
   UpdateItemImageUrlMto,
 } from '@queue/mtos';
 
-import { Item } from '../models';
-
 @Injectable()
 export class ItemsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
