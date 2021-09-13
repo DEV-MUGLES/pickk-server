@@ -130,15 +130,11 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     try {
       const { id } = await this.itemsService.createByInfoCrawl(url);
-      const item = await this.itemsService.get(
-        id,
-        this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
-      );
       await this.itemsProducer.sendItemCreationSuccessSlackMessage(
         id,
         nickname
       );
-      return item;
+      return await this.itemsService.get(id, this.getRelationsFromInfo(info));
     } catch (err) {
       await this.itemsProducer.sendItemCreationFailSlackMessage(url, nickname);
       throw err;
@@ -178,11 +174,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     const { id } = await this.itemsService.manualCreate(input);
-    const item = await this.itemsService.get(
-      id,
-      this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
-    );
     await this.itemsProducer.sendItemCreationSuccessSlackMessage(id, nickname);
-    return item;
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }
