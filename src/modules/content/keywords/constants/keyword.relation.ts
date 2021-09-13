@@ -8,6 +8,7 @@ export type KeywordRelationType =
   | 'digests.item.brand'
   | 'digests.item.minorCategory'
   | 'digests.itemPropertyValues'
+  | 'digests.itemPropertyValues.property'
   | 'digests.user'
   | 'relatedKeywords.digests'
   | 'relatedKeywords.digests.item'
@@ -23,6 +24,7 @@ export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'digests.item.brand',
   'digests.item.minorCategory',
   'digests.itemPropertyValues',
+  'digests.itemPropertyValues.property',
   'digests.user',
   'classes',
   'relatedKeywords',
