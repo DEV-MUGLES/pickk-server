@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -14,7 +14,7 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { LookRelationType, LOOK_RELATIONS } from './constants';
-import { LookFilter } from './dtos';
+import { CreateLookInput, LookFilter } from './dtos';
 import { Look } from './models';
 
 import { LooksService } from './looks.service';
@@ -91,5 +91,16 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
       null,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Mutation(() => Look)
+  @UseGuards(JwtVerifyGuard)
+  async createLook(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('createLookInput') input: CreateLookInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Look> {
+    const { id } = await this.looksService.create(userId, input);
+    return await this.looksService.get(id, this.getRelationsFromInfo(info));
   }
 }

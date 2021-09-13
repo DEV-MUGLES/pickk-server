@@ -436,6 +436,20 @@ input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
 }
 
+input CreateLookDigestInput {
+  itemId: Int!
+  size: String!
+}
+
+input CreateLookInput {
+  digests: [CreateLookDigestInput!]!
+  imageUrls: [String!]!
+  styleTagIds: [Int!]!
+
+  """최대 길이 127"""
+  title: String!
+}
+
 input CreateOrderVbankReceiptInput {
   bankCode: BankCode
   due: DateTime
@@ -1281,6 +1295,7 @@ type Mutation {
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemByUrl(url: String!): Item!
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
+  createLook(createLookInput: CreateLookInput!): Look!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createUser(createUserInput: CreateUserInput!): User!

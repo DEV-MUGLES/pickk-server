@@ -31,6 +31,7 @@ export class LookEntity extends BaseIdEntity implements ILook {
     this.userId = attributes.userId;
 
     this.styleTags = attributes.styleTags;
+    this.images = attributes.images;
     this.digests = attributes.digests;
 
     this.title = attributes.title;

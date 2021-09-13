@@ -8,5 +8,6 @@ import { StyleTagsService } from './style-tags.service';
 @Module({
   imports: [TypeOrmModule.forFeature([StyleTagsRepository])],
   providers: [StyleTagsResolver, StyleTagsService],
+  exports: [StyleTagsService],
 })
 export class StyleTagsModule {}

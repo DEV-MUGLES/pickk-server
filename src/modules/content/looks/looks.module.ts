@@ -11,6 +11,7 @@ import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
 import { CommentsModule } from '@content/comments/comments.module';
 import { CommentsRepository } from '@content/comments/comments.repository';
+import { StyleTagsModule } from '@content/style-tags/style-tags.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
 import {
@@ -41,6 +42,7 @@ import { LooksService } from './looks.service';
     FollowsModule,
     forwardRef(() => SearchModule),
     CommentsModule,
+    StyleTagsModule,
   ],
   providers: [
     LooksResolver,

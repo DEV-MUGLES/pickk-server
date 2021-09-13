@@ -9,14 +9,16 @@ import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { StyleTagsService } from '@content/style-tags/style-tags.service';
 import { FollowsService } from '@user/follows/follows.service';
 
 import { LookRelationType } from './constants';
-import { LookFilter } from './dtos';
+import { CreateLookInput, LookFilter } from './dtos';
 import { LookEntity } from './entities';
 import { Look } from './models';
 
 import { LooksRepository } from './looks.repository';
+import { LookFactory } from './factories';
 
 @Injectable()
 export class LooksService {
@@ -25,7 +27,8 @@ export class LooksService {
     private readonly looksRepository: LooksRepository,
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
-    private readonly cacheService: CacheService
+    private readonly cacheService: CacheService,
+    private readonly styleTagsService: StyleTagsService
   ) {}
 
   async get(
@@ -100,5 +103,12 @@ export class LooksService {
 
     await this.cacheService.set<number[]>(cacheKey, result, { ttl: 60 });
     return result;
+  }
+
+  async create(userId: number, input: CreateLookInput): Promise<Look> {
+    const styleTags = await this.styleTagsService.findByIds(input.styleTagIds);
+
+    const look = LookFactory.from(userId, input, styleTags);
+    return await this.looksRepository.save(look);
   }
 }
