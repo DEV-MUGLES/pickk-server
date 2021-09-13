@@ -15,7 +15,7 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
 import { Digest, DigestImage } from './models';
-import { DigestFactory } from './factories';
+import { DigestFactory, DigestImageFactory } from './factories';
 import { DigestsProducer } from './producers';
 
 import { DigestsRepository } from './digests.repository';
@@ -152,19 +152,30 @@ export class DigestsService {
 
   // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
   async update(id: number, input: UpdateDigestInput): Promise<DigestImage[]> {
-    const digest = await this.get(id, ['images']);
-    const itemPropertyValues = await this.itemPropertiesService.findValuesByIds(
-      input.itemPropertyValueIds
-    );
-    const updatedDigest = DigestFactory.from(
-      { ...digest, ...input, itemPropertyValues },
-      input.imageUrls
-    );
+    const digest = await this.get(id, ['images', 'itemPropertyValues']);
+
+    if (input.itemPropertyValueIds) {
+      digest.itemPropertyValues =
+        await this.itemPropertiesService.findValuesByIds(
+          input.itemPropertyValueIds
+        );
+    }
+    if (input.imageUrls) {
+      digest.images = input.imageUrls.map((url, order) =>
+        DigestImageFactory.from(url, order)
+      );
+    }
+
     const deletedImages = digest.images.filter(
-      ({ key }) => !updatedDigest.images.find((image) => image.key === key)
+      ({ key }) => !digest.images.find((image) => image.key === key)
     );
 
-    await this.digestsRepository.save(updatedDigest);
+    await this.digestsRepository.save(
+      new Digest({
+        ...digest,
+        ...input,
+      })
+    );
     return deletedImages;
   }
 }
