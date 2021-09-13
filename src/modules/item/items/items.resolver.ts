@@ -16,7 +16,6 @@ import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
-import { SlackService } from '@providers/slack';
 
 import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsService } from '@item/products/products.service';
@@ -30,6 +29,8 @@ import {
 } from './dtos';
 import { getSizeChartMetaDatas } from './helpers';
 import { Item, ItemSizeChartMetaData } from './models';
+import { ItemsProducer } from './producers';
+
 import { ItemsService } from './items.service';
 
 @Resolver(() => Item)
@@ -43,7 +44,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     private readonly itemsService: ItemsService,
     private readonly productsService: ProductsService,
     private readonly itemSearchService: ItemSearchService,
-    private readonly slackService: SlackService
+    private readonly itemsProducer: ItemsProducer
   ) {
     super();
   }
@@ -129,14 +130,13 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     try {
       const { id } = await this.itemsService.createByInfoCrawl(url);
-      const item = await this.itemsService.get(
+      await this.itemsProducer.sendItemCreationSuccessSlackMessage(
         id,
-        this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
+        nickname
       );
-      await this.slackService.sendItemCreationSuccess(item, nickname);
-      return item;
+      return await this.itemsService.get(id, this.getRelationsFromInfo(info));
     } catch (err) {
-      await this.slackService.sendItemCreationFail(url, nickname);
+      await this.itemsProducer.sendItemCreationFailSlackMessage(url, nickname);
       throw err;
     }
   }
@@ -174,11 +174,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     const { id } = await this.itemsService.manualCreate(input);
-    const item = await this.itemsService.get(
-      id,
-      this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
-    );
-    await this.slackService.sendItemCreationSuccess(item, nickname);
-    return item;
+    await this.itemsProducer.sendItemCreationSuccessSlackMessage(id, nickname);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

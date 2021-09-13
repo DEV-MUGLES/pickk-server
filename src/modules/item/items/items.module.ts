@@ -4,6 +4,8 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
+  SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,
+  SEND_ITEM_CREATION_SUCCESS_SLACK_MESSAGE_QUEUE,
   UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
   UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
@@ -21,7 +23,7 @@ import {
   UPDATE_ITEM_DETAIL_IMAGES_BATCH_SIZE,
   UPDATE_ITEM_IMAGE_URL_BATCH_SIZE,
 } from './constants';
-import { Consumers } from './consumers';
+import { ItemsConsumers } from './consumers';
 import { ItemsProducer } from './producers';
 
 import {
@@ -78,10 +80,22 @@ import { ItemsService } from './items.service';
         consumerOptions: {
           batchSize: 10,
         },
+      },
+      {
+        name: SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: SEND_ITEM_CREATION_SUCCESS_SLACK_MESSAGE_QUEUE,
       }
     ),
   ],
-  providers: [ItemsResolver, ItemsService, Logger, ItemsProducer, ...Consumers],
+  providers: [
+    ItemsResolver,
+    ItemsService,
+    Logger,
+    ItemsProducer,
+    ...ItemsConsumers,
+  ],
   exports: [ItemsService],
 })
 export class ItemsModule {}
