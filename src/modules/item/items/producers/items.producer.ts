@@ -61,7 +61,7 @@ export class ItemsProducer {
     await this.sqsService.send<SendItemCreationFailSlackMessagMto>(
       SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,
       {
-        id: url,
+        id: nickname,
         body: {
           url,
           nickname,
