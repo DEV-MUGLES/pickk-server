@@ -2,12 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import {
+  InquiryCreationTemplate,
   ItemCreationFailTemplate,
   ItemCreationSuccessTemplate,
   ItemReportTemplate,
 } from '@templates/slack';
 
 import { Item } from '@item/items/models';
+import { Inquiry } from '@item/inquiries/models';
 
 @Injectable()
 export class SlackService {
@@ -41,5 +43,9 @@ export class SlackService {
     return await this.webhook.send(
       ItemReportTemplate.create(item, reason, nickname)
     );
+  }
+
+  async sendInquiryCreation(inquiry: Inquiry): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(InquiryCreationTemplate.create(inquiry));
   }
 }

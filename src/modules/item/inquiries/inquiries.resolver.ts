@@ -19,6 +19,7 @@ import { ItemsService } from '@item/items/items.service';
 import { InquiryRelationType, INQUIRY_RELATIONS } from './constants';
 import { CreateInquiryInput, InquiryFilter } from './dtos';
 import { Inquiry } from './models';
+import { InquiriesProducer } from './producers';
 
 import { InquiriesService } from './inquiries.service';
 
@@ -30,7 +31,8 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
     @Inject(InquiriesService)
     private readonly inquiriesService: InquiriesService,
     @Inject(ItemsService)
-    private readonly itemsService: ItemsService
+    private readonly itemsService: ItemsService,
+    private readonly inquiriesProducer: InquiriesProducer
   ) {
     super();
   }
@@ -100,12 +102,13 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
       'brand',
       'brand.seller',
     ]);
-
-    return await this.inquiriesService.create({
+    const inquiry = await this.inquiriesService.create({
       ...input,
       sellerId: item.brand.seller.id,
       userId,
     });
+    await this.inquiriesProducer.sendInquiryCreationSlackMessage(inquiry);
+    return inquiry;
   }
 
   @Mutation(() => Boolean)
