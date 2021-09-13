@@ -1,6 +1,9 @@
 export * from './array.helpers';
+export * from './bank-code.helper';
 export * from './enrich.helpers';
 export * from './filter.helpers';
+export * from './image-s3-key.helpers';
+export * from './model.helpers';
 export * from './object.helpers';
 export * from './page-query.helper';
 export * from './parse-number.helper';
@@ -9,5 +12,3 @@ export * from './promise.helpers';
 export * from './random.helpers';
 export * from './regex.helpers';
 export * from './set.helpers';
-export * from './image-s3-key.helpers';
-export * from './bank-code.helper';

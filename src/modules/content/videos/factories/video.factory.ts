@@ -1,3 +1,5 @@
+import { findModelsByIds } from '@common/helpers';
+
 import { DigestFactory } from '@content/digests/factories';
 import { ItemPropertyValue } from '@item/item-properties/models';
 
@@ -17,19 +19,12 @@ export class VideoFactory {
         DigestFactory.from({
           userId,
           ...digest,
-          itemPropertyValues: this.findItemPropertyValues(
+          itemPropertyValues: findModelsByIds(
             digest.itemPropertyValueIds,
             itemPropertyValues
           ),
         })
       ),
     });
-  }
-
-  private static findItemPropertyValues(
-    ids: number[],
-    itemPropertyValues: ItemPropertyValue[]
-  ): ItemPropertyValue[] {
-    return ids.map((id) => itemPropertyValues.find((v) => v.id === id));
   }
 }

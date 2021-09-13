@@ -14,7 +14,7 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { VideoRelationType, VIDEO_RELATIONS } from './constants';
-import { CreateVideoInput, VideoFilter } from './dtos';
+import { CreateVideoInput, UpdateVideoInput, VideoFilter } from './dtos';
 import { Video } from './models';
 
 import { VideosService } from './videos.service';
@@ -113,6 +113,20 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Video> {
     const { id } = await this.videosService.create(userId, input);
+    return await this.videosService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => Video)
+  @UseGuards(JwtVerifyGuard)
+  async updateVideo(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('updateVideoInput') input: UpdateVideoInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Video> {
+    await this.videosService.checkBelongsTo(id, userId);
+
+    await this.videosService.update(id, input);
     return await this.videosService.get(id, this.getRelationsFromInfo(info));
   }
 }

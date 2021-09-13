@@ -1396,6 +1396,7 @@ type Mutation {
 
   """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
+  updateVideo(id: Int!, updateVideoInput: UpdateVideoInput!): Video!
 }
 
 type Order {
@@ -2627,6 +2628,29 @@ input UpdateUserInput {
   styleTagIds: [Int!]
   weight: Int
   youtubeUrl: String
+}
+
+input UpdateVideoDigestInput {
+  id: Int
+  itemId: Int
+  itemPropertyValueIds: [Int!]
+  rating: Rating
+  size: String
+  timestampEndSecond: Int
+  timestampStartSecond: Int
+
+  """최대 길이 127"""
+  title: String
+}
+
+input UpdateVideoInput {
+  digests: [UpdateVideoDigestInput!]
+
+  """최대 길이 127"""
+  title: String
+
+  """최대 길이 40"""
+  youtubeCode: String
 }
 
 type User {

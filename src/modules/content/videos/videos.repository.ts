@@ -17,4 +17,15 @@ export class VideosRepository extends BaseRepository<VideoEntity, Video> {
       this.entityToModel(entity, transformOptions)
     );
   }
+
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('video')
+      .select('1')
+      .where('video.id = :id', { id })
+      .andWhere('video.userId = :userId', { userId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
 }
