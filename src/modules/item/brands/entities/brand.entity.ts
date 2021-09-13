@@ -9,6 +9,21 @@ import { IBrand } from '../interfaces';
 @ObjectType()
 @Entity({ name: 'brand' })
 export class BrandEntity extends BaseIdEntity implements IBrand {
+  constructor(attributes?: Partial<BrandEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.nameKor = attributes.nameKor;
+    this.nameEng = attributes.nameEng;
+    this.description = attributes.description;
+    this.imageUrl = attributes.imageUrl;
+
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
+  }
+
   @Field()
   @Column({ length: 30 })
   nameKor: string;

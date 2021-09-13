@@ -11,7 +11,7 @@ import { ItemEntity } from './item.entity';
 @Entity('item_url')
 export class ItemUrlEntity extends BaseIdEntity implements IItemUrl {
   constructor(attributes?: Partial<ItemUrlEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }

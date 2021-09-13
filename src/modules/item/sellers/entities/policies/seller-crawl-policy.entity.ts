@@ -13,14 +13,10 @@ export class SellerCrawlPolicyEntity
   implements ISellerCrawlPolicy
 {
   constructor(attributes?: Partial<SellerCrawlPolicyEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }
-
-    this.id = attributes.id;
-    this.createdAt = attributes.createdAt;
-    this.updatedAt = attributes.updatedAt;
 
     this.isInspectingNew = attributes.isInspectingNew;
     this.isUpdatingItems = attributes.isUpdatingItems;

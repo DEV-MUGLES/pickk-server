@@ -45,7 +45,7 @@ import { ItemSizeChart } from '../models/item-size-chart.model';
 @Index('idx_minorCategoryId-code', ['minorCategoryId', 'score'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
-    super();
+    super(attributes);
     if (!attributes) {
       return;
     }
