@@ -1228,6 +1228,7 @@ type LookImage {
   angle: Int!
   createdAt: DateTime!
   key: String!
+  order: Int!
   url: String!
 }
 
