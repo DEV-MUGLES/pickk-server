@@ -14,7 +14,7 @@ import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { LookRelationType, LOOK_RELATIONS } from './constants';
-import { CreateLookInput, LookFilter } from './dtos';
+import { CreateLookInput, LookFilter, UpdateLookInput } from './dtos';
 import { Look } from './models';
 
 import { LooksService } from './looks.service';
@@ -101,6 +101,20 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Look> {
     const { id } = await this.looksService.create(userId, input);
+    return await this.looksService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => Look)
+  @UseGuards(JwtVerifyGuard)
+  async updateLook(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('updateLookInput') input: UpdateLookInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Look> {
+    await this.looksService.checkBelongsTo(id, userId);
+
+    await this.looksService.update(id, input);
     return await this.looksService.get(id, this.getRelationsFromInfo(info));
   }
 }

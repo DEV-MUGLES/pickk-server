@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
@@ -7,18 +7,19 @@ import { PageInput } from '@common/dtos';
 import { enrichIsMine, enrichUserIsMe, parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
+import { DigestFactory } from '@content/digests/factories';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { StyleTagsService } from '@content/style-tags/style-tags.service';
 import { FollowsService } from '@user/follows/follows.service';
 
 import { LookRelationType } from './constants';
-import { CreateLookInput, LookFilter } from './dtos';
+import { CreateLookInput, LookFilter, UpdateLookInput } from './dtos';
 import { LookEntity } from './entities';
+import { LookFactory, LookImageFactory } from './factories';
 import { Look } from './models';
 
 import { LooksRepository } from './looks.repository';
-import { LookFactory } from './factories';
 
 @Injectable()
 export class LooksService {
@@ -30,6 +31,13 @@ export class LooksService {
     private readonly cacheService: CacheService,
     private readonly styleTagsService: StyleTagsService
   ) {}
+
+  async checkBelongsTo(id: number, userId: number): Promise<void> {
+    const isMine = await this.looksRepository.checkBelongsTo(id, userId);
+    if (!isMine) {
+      throw new ForbiddenException('자신의 게시물이 아닙니다.');
+    }
+  }
 
   async get(
     id: number,
@@ -110,5 +118,35 @@ export class LooksService {
 
     const look = LookFactory.from(userId, input, styleTags);
     return await this.looksRepository.save(look);
+  }
+
+  // TODO: QUEUE 삭제된 digest, look_image 삭제하는 작업 추가
+  async update(id: number, input: UpdateLookInput): Promise<Look> {
+    const look = await this.get(id, ['digests', 'images', 'styleTags']);
+
+    if (input.digests) {
+      look.digests = input.digests.map((digest) =>
+        DigestFactory.from({
+          ...look.digests.find((v) => v.id === digest.id),
+          ...digest,
+        })
+      );
+    }
+    if (input.styleTagIds) {
+      look.styleTags = await this.styleTagsService.findByIds(input.styleTagIds);
+    }
+    if (input.imageUrls) {
+      look.images = input.imageUrls.map((url, order) =>
+        LookImageFactory.from(url, order)
+      );
+    }
+
+    return await this.looksRepository.save(
+      new Look({
+        ...look,
+        ...input,
+        digests: look.digests,
+      })
+    );
   }
 }

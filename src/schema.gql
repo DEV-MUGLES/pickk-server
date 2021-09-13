@@ -1350,6 +1350,7 @@ type Mutation {
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
+  updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
@@ -2473,6 +2474,21 @@ input UpdateItemSizeChartInput {
   totalLength: Float
   waistWidth: Float
   watchBandDepth: Float
+}
+
+input UpdateLookDigestInput {
+  id: Int
+  itemId: Int
+  size: String
+}
+
+input UpdateLookInput {
+  digests: [UpdateLookDigestInput!]
+  imageUrls: [String!]
+  styleTagIds: [Int!]
+
+  """최대 길이 127"""
+  title: String
 }
 
 input UpdateProductInput {
