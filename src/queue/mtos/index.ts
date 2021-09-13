@@ -16,4 +16,4 @@ export * from './send-order-completed-alimtalk.mto';
 export * from './send-refund-requested-alimtalk.mto';
 export * from './send-exchange-requested-alimtalk.mto';
 export * from './send-inquiry-answered-alimtalk.mto';
-export * from './send-inquiry-created-slack-message.mto';
+export * from './send-inquiry-creation-slack-message.mto';

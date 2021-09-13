@@ -1,1 +1,1 @@
-export * from './send-inquiry-creation-slack-noti.consumer';
+export * from './send-inquiry-creation-slack-message.consumer';

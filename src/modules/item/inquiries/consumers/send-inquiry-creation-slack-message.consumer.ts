@@ -2,7 +2,7 @@ import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 import { plainToClass } from 'class-transformer';
 
 import { SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE } from '@queue/constants';
-import { SendInquiryCreatedSlackMessageMto } from '@queue/mtos';
+import { SendInquiryCreationSlackMessageMto } from '@queue/mtos';
 import { SlackService } from '@providers/slack';
 
 import { UsersService } from '@user/users/users.service';
@@ -17,7 +17,7 @@ export class SendInquiryCreationSlackMessageConsumer {
   @SqsMessageHandler()
   async sendSlackMessage(message: AWS.SQS.Message) {
     const { inquiry } = plainToClass(
-      SendInquiryCreatedSlackMessageMto,
+      SendInquiryCreationSlackMessageMto,
       JSON.parse(message.Body)
     );
     inquiry.user = await this.usersService.get(inquiry.userId);
