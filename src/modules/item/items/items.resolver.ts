@@ -135,7 +135,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
         this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
       );
       await this.itemsProducer.sendItemCreationSuccessSlackMessage(
-        item,
+        id,
         nickname
       );
       return item;
@@ -182,10 +182,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
       id,
       this.getRelationsFromInfo(info, ['brand', 'urls', 'prices'])
     );
-    await this.itemsProducer.sendItemCreationSuccessSlackMessage(
-      item,
-      nickname
-    );
+    await this.itemsProducer.sendItemCreationSuccessSlackMessage(id, nickname);
     return item;
   }
 }

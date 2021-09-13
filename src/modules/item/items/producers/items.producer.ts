@@ -44,13 +44,13 @@ export class ItemsProducer {
     );
   }
 
-  async sendItemCreationSuccessSlackMessage(item: Item, nickname: string) {
+  async sendItemCreationSuccessSlackMessage(id: number, nickname: string) {
     await this.sqsService.send<SendItemCreationSuccessSlackMessageMto>(
       SEND_ITEM_CREATION_SUCCESS_SLACK_MESSAGE_QUEUE,
       {
-        id: item.id.toString(),
+        id: id.toString(),
         body: {
-          item,
+          id,
           nickname,
         },
       }
