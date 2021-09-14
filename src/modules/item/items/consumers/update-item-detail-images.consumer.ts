@@ -1,13 +1,8 @@
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import {
-  SqsConsumerEvent,
-  SqsConsumerEventHandler,
-  SqsMessageHandler,
-  SqsProcess,
-} from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { allSettled } from '@common/helpers';
+import { BaseConsumer } from '@common/base.consumer';
 import { ImagesService } from '@mcommon/images/images.service';
 import { UPDATE_ITEM_DETAIL_IMAGES_QUEUE } from '@queue/constants';
 import { UpdateItemDetailImagesMto } from '@queue/mtos';
@@ -19,14 +14,16 @@ import { ItemDetailImageFactory } from '../factories';
 import { ItemsRepository } from '../items.repository';
 
 @SqsProcess(UPDATE_ITEM_DETAIL_IMAGES_QUEUE)
-export class UpdateItemDetailImagesConsumer {
+export class UpdateItemDetailImagesConsumer extends BaseConsumer {
   constructor(
     @InjectRepository(ItemsRepository)
     private readonly itemsRepository: ItemsRepository,
     private readonly imagesService: ImagesService,
     private readonly itemsService: ItemsService,
-    private readonly logger: Logger
-  ) {}
+    readonly logger: Logger
+  ) {
+    super();
+  }
 
   @SqsMessageHandler(true)
   async update(messages: AWS.SQS.Message[]): Promise<void> {
@@ -34,7 +31,7 @@ export class UpdateItemDetailImagesConsumer {
       JSON.parse(Body)
     );
 
-    await allSettled(
+    await Promise.all(
       mtos.map(
         (mto) =>
           new Promise(async (resolve) => {
@@ -45,7 +42,8 @@ export class UpdateItemDetailImagesConsumer {
               item.id
             );
             item.detailImages = uploadedDetailImages;
-            resolve(await this.itemsRepository.save(item));
+            const updatedItem = await this.itemsRepository.save(item);
+            resolve(updatedItem);
           })
       )
     );
@@ -76,10 +74,5 @@ export class UpdateItemDetailImagesConsumer {
     return (
       await this.imagesService.uploadUrls(imageUrls, `item/${itemId}/detail`)
     ).map(({ url }) => ItemDetailImageFactory.from(url));
-  }
-
-  @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)
-  processingError(error: Error) {
-    this.logger.error(error);
   }
 }

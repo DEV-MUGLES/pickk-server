@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -30,6 +30,7 @@ import { KeywordsService } from './keywords.service';
     forwardRef(() => SearchModule),
   ],
   providers: [
+    Logger,
     KeywordsResolver,
     KeywordsService,
     UpdateKeywordLikeCountConsumer,
