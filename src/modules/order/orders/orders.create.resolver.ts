@@ -7,9 +7,9 @@ import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
-import { CART_ITEM_RELATIONS } from '@item/carts/constants';
+import { REGISTER_ORDER_CART_ITEM_RELATIONS } from '@item/carts/constants';
 import { CartsService } from '@item/carts/carts.service';
-import { PRODUCT_RELATIONS } from '@item/products/constants';
+import { REGISTER_ORDER_PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
 import { CouponStatus } from '@order/coupons/constants';
 import { CouponsService } from '@order/coupons/coupons.service';
@@ -57,7 +57,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async registerOrder(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('registerOrderInput')
     { cartItemIds, orderItemInputs }: RegisterOrderInput
   ): Promise<BaseOrderOutput> {
@@ -71,26 +71,19 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     }
 
     if (cartItemIds) {
-      const cartItemRelations = CART_ITEM_RELATIONS.filter(
-        (relation) => relation !== 'user'
-      );
       const cartItems = await this.cartsService.list(
         { idIn: cartItemIds },
         null,
-        cartItemRelations
+        REGISTER_ORDER_CART_ITEM_RELATIONS
       );
 
-      return await this.ordersService.register(payload.sub, cartItems);
+      return await this.ordersService.register(userId, cartItems);
     } else {
       const productIds = orderItemInputs.map((input) => input.productId);
-      const productRelations = PRODUCT_RELATIONS.filter(
-        (relation) =>
-          relation !== 'item.detailImages' && relation !== 'item.options'
-      );
       const products = await this.productsService.list(
         { idIn: productIds },
         null,
-        productRelations
+        REGISTER_ORDER_PRODUCT_RELATIONS
       );
       const inputs = products.map((product) => ({
         product,
@@ -99,7 +92,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
         ).quantity,
       }));
 
-      return await this.ordersService.register(payload.sub, inputs);
+      return await this.ordersService.register(userId, inputs);
     }
   }
 

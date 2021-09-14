@@ -18,3 +18,6 @@ export const CART_ITEM_RELATIONS: Array<CartItemRelationType> = [
     (relation) => relation !== 'item.detailImages'
   ).map((relation) => `product.${relation}` as CartItemRelationType),
 ];
+
+export const REGISTER_ORDER_CART_ITEM_RELATIONS: Array<CartItemRelationType> =
+  CART_ITEM_RELATIONS.filter((relation) => relation !== 'user');

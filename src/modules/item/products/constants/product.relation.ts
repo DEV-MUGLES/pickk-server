@@ -19,3 +19,9 @@ export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
   'item.brand.seller',
   'item.brand.seller.shippingPolicy',
 ];
+
+export const REGISTER_ORDER_PRODUCT_RELATIONS: Array<ProductRelationType> =
+  PRODUCT_RELATIONS.filter(
+    (relation) =>
+      relation !== 'item.detailImages' && relation !== 'item.options'
+  );
