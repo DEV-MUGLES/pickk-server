@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';
 import { RemoveExpectedPointEventMto } from '@queue/mtos';
 
@@ -12,7 +13,7 @@ export class ExpectedPointEventProducer {
     await this.sqsService.send<RemoveExpectedPointEventMto>(
       REMOVE_EXPECTED_POINT_EVENT_QUEUE,
       {
-        id: orderId.toString(),
+        id: getRandomUuid(),
         body: { orderId },
       }
     );

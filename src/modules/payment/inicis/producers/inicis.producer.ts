@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import {
   PROCESS_VBANK_PAID_ORDER_QUEUE,
   SEND_VBANK_PAID_ALIMTALK_QUEUE,
@@ -18,7 +19,7 @@ export class InicisProducer {
     await this.sqsService.send<ProcessVbankPaidOrderMto>(
       PROCESS_VBANK_PAID_ORDER_QUEUE,
       {
-        id: merchantUid,
+        id: getRandomUuid(),
         body: { merchantUid },
       }
     );
@@ -28,7 +29,7 @@ export class InicisProducer {
     await this.sqsService.send<SendVbankPaidAlimtalkMto>(
       SEND_VBANK_PAID_ALIMTALK_QUEUE,
       {
-        id: merchantUid,
+        id: getRandomUuid(),
         body: {
           merchantUid,
         },

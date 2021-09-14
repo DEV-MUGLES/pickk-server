@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import {
   UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
   UPDATE_LOOK_COMMENT_COUNT_QUEUE,
@@ -18,7 +19,7 @@ export class CommentsProducer {
     await this.sqsService.send<UpdateCommentCountMto>(
       this.getQueueNameByOwnerType(ownerType),
       {
-        id: ownerId.toString(),
+        id: getRandomUuid(),
         body: { id: ownerId },
       }
     );

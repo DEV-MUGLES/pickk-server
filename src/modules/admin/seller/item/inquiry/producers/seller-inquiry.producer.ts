@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import { SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE } from '@queue/constants';
 import { SendInquriryAnsweredAlimtalkMto } from '@queue/mtos';
 
@@ -12,7 +13,7 @@ export class SellerInquiryProducer {
     await this.sqsService.send<SendInquriryAnsweredAlimtalkMto>(
       SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE,
       {
-        id: inquiryId.toString(),
+        id: getRandomUuid(),
         body: {
           inquiryId,
         },
