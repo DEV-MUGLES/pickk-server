@@ -17,6 +17,7 @@ import {
   StartOrderInput,
 } from '../dtos';
 import { OrderEntity } from '../entities';
+import { OrderProcessStrategyFactory } from '../factories';
 import { calcTotalShippingFee, getOrderBrands } from '../helpers';
 
 import { OrderBrand } from './order-brand.model';
@@ -34,7 +35,6 @@ export class Order extends OrderEntity {
   get id(): string {
     return this.merchantUid;
   }
-
   @Field(() => [OrderBrand], { description: '[MODEL ONLY]' })
   get brands(): OrderBrand[] {
     return getOrderBrands(this.orderItems ?? []);
@@ -46,6 +46,33 @@ export class Order extends OrderEntity {
   @Type(() => RefundRequest)
   @Field(() => [RefundRequest])
   refundRequests: RefundRequest[];
+
+  /////////////////
+  // 상태변경 함수들 //
+  /////////////////
+
+  private mark(to: OrderStatus) {
+    OrderProcessStrategyFactory.from(to, this).execute();
+  }
+  markFailed() {
+    this.mark(OrderStatus.Failed);
+  }
+  markPaying() {
+    this.mark(OrderStatus.Paying);
+  }
+  markVbankReady() {
+    this.mark(OrderStatus.VbankReady);
+  }
+  markVbankDodged() {
+    this.mark(OrderStatus.VbankDodged);
+  }
+  markPaid() {
+    this.mark(OrderStatus.Paid);
+  }
+
+  ///////////////
+  // 기타 함수들 //
+  //////////////
 
   start(
     input: StartOrderInput,
@@ -106,10 +133,6 @@ export class Order extends OrderEntity {
       this.totalCouponDiscountAmount;
   }
 
-  fail() {
-    this.markFailed();
-  }
-
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
     if (this.payMethod === PayMethod.Vbank) {
       if (!createOrderVbankReceiptInput) {
@@ -123,20 +146,6 @@ export class Order extends OrderEntity {
     } else {
       this.markPaid();
     }
-  }
-
-  processVbankPaid() {
-    if (
-      this.payMethod !== PayMethod.Vbank ||
-      this.status !== OrderStatus.VbankReady
-    ) {
-      throw new BadRequestException('가상계좌 주문건이 아닙니다');
-    }
-    this.markPaid();
-  }
-
-  dodgeVbank() {
-    this.markVbankDodged();
   }
 
   cancel(orderItemMerchantUids: string[]) {
@@ -168,15 +177,15 @@ export class Order extends OrderEntity {
     };
   }
 
-  requestRefund(input: RequestOrderRefundInput): RefundRequest {
-    const orderItems = this.getOrderItems(input.orderItemMerchantUids);
-    for (const oi of orderItems) {
-      oi.markRefundRequested();
+  requestRefund(input: RequestOrderRefundInput): void {
+    for (const oi of this.orderItems) {
+      if (input.orderItemMerchantUids.includes(oi.merchantUid)) {
+        oi.markRefundRequested();
+      }
     }
-    this.orderItems = this.applyOrderItems(this.orderItems, orderItems);
 
-    return this.addRefundRequest(
-      RefundRequestFactory.create(this.userId, orderItems, input)
+    this.refundRequests.push(
+      RefundRequestFactory.create(this.userId, this.orderItems, input)
     );
   }
 
@@ -190,24 +199,6 @@ export class Order extends OrderEntity {
       );
     }
     return orderItem;
-  }
-
-  private getOrderItems(merchantUids: string[]): OrderItem[] {
-    return merchantUids.map((merchantUid) => this.getOrderItem(merchantUid));
-  }
-
-  private applyOrderItems(
-    existings: OrderItem[],
-    incomings: OrderItem[]
-  ): OrderItem[] {
-    return existings
-      .filter(
-        (existing) =>
-          !incomings.find(
-            ({ merchantUid }) => merchantUid === existing.merchantUid
-          )
-      )
-      .concat(incomings);
   }
 
   private calcTotalShippingFee() {
@@ -235,84 +226,5 @@ export class Order extends OrderEntity {
     orderItems[0].usedPointAmount +=
       usedPointAmount -
       orderItems.reduce((sum, orderItem) => sum + orderItem.usedPointAmount, 0);
-  }
-
-  private addRefundRequest(refundRequest: RefundRequest) {
-    this.refundRequests.push(refundRequest);
-
-    return refundRequest;
-  }
-
-  private markPaying() {
-    const { Paid, VbankDodged } = OrderStatus;
-
-    if ([Paid, VbankDodged].includes(this.status)) {
-      throw new BadRequestException('해당 주문은 결제할 수 없습니다.');
-    }
-
-    this.status = OrderStatus.Paying;
-    this.payingAt = new Date();
-  }
-
-  private markFailed() {
-    const { VbankReady, Paid, VbankDodged } = OrderStatus;
-
-    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
-      throw new BadRequestException('완료된 주문을 실패처리할 수 없습니다');
-    }
-
-    this.status = OrderStatus.Failed;
-    this.failedAt = new Date();
-
-    for (const orderItem of this.orderItems) {
-      orderItem.markFailed();
-    }
-  }
-
-  private markVbankReady() {
-    const { VbankReady, Paid, VbankDodged } = OrderStatus;
-
-    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
-      throw new BadRequestException(
-        '완료된 주문을 가상결제대기 처리할 수 없습니다'
-      );
-    }
-
-    this.status = OrderStatus.VbankReady;
-    this.vbankReadyAt = new Date();
-
-    for (const orderItem of this.orderItems) {
-      orderItem.markVbankReady();
-    }
-  }
-
-  private markPaid() {
-    const { VbankReady, Paid, VbankDodged } = OrderStatus;
-
-    if ([VbankReady, Paid, VbankDodged].includes(this.status)) {
-      throw new BadRequestException('완료된 주문을 완료할 수 없습니다');
-    }
-
-    this.status = OrderStatus.Paid;
-    this.paidAt = new Date();
-
-    for (const orderItem of this.orderItems) {
-      orderItem.markPaid();
-    }
-  }
-
-  private markVbankDodged() {
-    if (this.status !== OrderStatus.VbankReady) {
-      throw new BadRequestException(
-        '입금 대기 상태인 주문만 취소할 수 있습니다.'
-      );
-    }
-
-    this.status = OrderStatus.VbankDodged;
-    this.vbankDodgedAt = new Date();
-
-    for (const orderItem of this.orderItems) {
-      orderItem.markVbankDodged();
-    }
   }
 }

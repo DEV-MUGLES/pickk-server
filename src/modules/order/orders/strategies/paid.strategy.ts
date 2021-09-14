@@ -1,5 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 
+import { PayMethod } from '@payment/payments/constants';
+
 import { OrderStatus } from '../constants';
 
 import { OrderProcessStrategy } from './base.strategy';
@@ -9,10 +11,21 @@ export class OrderPaidStrategy extends OrderProcessStrategy {
   statusChangedField = 'paidAt' as const;
 
   validate() {
-    const { Pending, VbankReady } = OrderStatus;
-    if (![Pending, VbankReady].includes(this.order.status)) {
-      throw new BadRequestException('결제 완료 처리할 수 없습니다.');
+    if (
+      this.order.payMethod === PayMethod.Vbank &&
+      this.order.status === OrderStatus.VbankReady
+    ) {
+      // 가상계좌건이고 입금대기 상태 OK
+      return;
     }
+    if (
+      this.order.payMethod !== PayMethod.Vbank &&
+      this.order.status === OrderStatus.Pending
+    ) {
+      // 가상계좌건이 아니고 결제대기 상태 OK
+      return;
+    }
+    throw new BadRequestException('결제 완료 처리할 수 없습니다.');
   }
 
   execute() {
