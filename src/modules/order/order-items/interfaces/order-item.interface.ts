@@ -46,8 +46,11 @@ export interface IOrderItem {
   isDelaying: boolean;
   /** 처리 지연. 오래된 주문상품건에 대해서 batch 작업으로 자동으로 설정하는 값. */
   isProcessDelaying: boolean;
+  /** 구매시 무료배송처리되었는가 */
+  isFreeShippingPackage: boolean;
 
   itemFinalPrice: number;
+  shippingFee: number;
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
@@ -74,7 +77,6 @@ export interface IOrderItem {
   vbankReadyAt?: Date;
   vbankDodgedAt?: Date;
   paidAt?: Date;
-  withdrawnAt?: Date;
   shipReadyAt?: Date;
   shippingAt?: Date;
   shippedAt?: Date;
