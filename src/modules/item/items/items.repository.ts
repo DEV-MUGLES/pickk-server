@@ -46,7 +46,7 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
   }
 
   async findIdByUrl(url: string): Promise<number> {
-    const { id } = await this.createQueryBuilder('item')
+    const item = await this.createQueryBuilder('item')
       .select('item.id')
       .innerJoin(
         'item.urls',
@@ -56,7 +56,7 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
       .take(1)
       .getOne();
 
-    return id;
+    return item?.id;
   }
 }
 
