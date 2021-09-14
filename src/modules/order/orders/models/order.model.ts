@@ -1,4 +1,4 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import { BadRequestException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
@@ -14,6 +14,7 @@ import {
   CreateOrderVbankReceiptInput,
   RequestOrderRefundInput,
   StartOrderInput,
+  StartOrderItemInput,
 } from '../dtos';
 import { OrderEntity } from '../entities';
 import { OrderProcessStrategyFactory } from '../factories';
@@ -24,6 +25,7 @@ import { OrderBuyer } from './order-buyer.model';
 import { OrderReceiver } from './order-receiver.model';
 import { OrderRefundAccount } from './order-refund-account.model';
 import { OrderVbankReceipt } from './order-vbank-receipt.model';
+import { findModelById } from '@common/helpers';
 
 @ObjectType()
 export class Order extends OrderEntity {
@@ -100,35 +102,8 @@ export class Order extends OrderEntity {
       });
     }
 
-    this.spreadUsedPoint(input.usedPointAmount);
-
-    for (const orderItem of this.orderItems) {
-      const { product } = orderItem;
-
-      if (product.isShipReserving) {
-        orderItem.isShipReserved = true;
-        orderItem.shipReservedAt =
-          product.shippingReservePolicy.estimatedShippingBegginDate;
-      }
-
-      const orderItemInput = (input.orderItemInputs || []).find(
-        (oiInput) => oiInput.merchantUid === orderItem.merchantUid
-      );
-      if (!orderItemInput) {
-        continue;
-      }
-
-      const coupon = coupons.find(
-        (coupon) => coupon.id === orderItemInput.usedCouponId
-      );
-      if (!coupon) {
-        throw new NotFoundException(
-          `쿠폰[${orderItemInput.usedCouponId}]는 존재하지 않습니다.`
-        );
-      }
-
-      orderItem.useCoupon(coupon);
-    }
+    this.applyUsedPoints(input.usedPointAmount);
+    this.applyCoupons(input.orderItemInputs, coupons);
   }
 
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
@@ -178,7 +153,7 @@ export class Order extends OrderEntity {
   }
 
   /** evenly spread usedPointAmount to each orderItem */
-  private spreadUsedPoint(usedPointAmount: number) {
+  private applyUsedPoints(usedPointAmount: number) {
     for (const oi of this.orderItems) {
       oi.usedPointAmount = Math.ceil(
         (oi.itemFinalPrice / this.totalItemFinalPrice) * usedPointAmount
@@ -187,5 +162,16 @@ export class Order extends OrderEntity {
 
     this.orderItems[0].usedPointAmount +=
       usedPointAmount - this.totalUsedPointAmount;
+  }
+
+  private applyCoupons(inputs: StartOrderItemInput[] = [], coupons: Coupon[]) {
+    for (const oi of this.orderItems) {
+      const input = inputs.find((v) => v.merchantUid === oi.merchantUid);
+      if (!input) {
+        continue;
+      }
+
+      oi.useCoupon(findModelById(input.usedCouponId, coupons));
+    }
   }
 }

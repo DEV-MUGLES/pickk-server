@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
@@ -93,6 +93,10 @@ export class OrderItem extends OrderItemEntity {
   //////////////
 
   useCoupon(coupon: Coupon) {
+    if (!coupon) {
+      throw new NotFoundException('존재하지 않는 쿠폰입니다.');
+    }
+
     const { item } = this.product;
 
     if (coupon.checkUsableOn(item)) {
