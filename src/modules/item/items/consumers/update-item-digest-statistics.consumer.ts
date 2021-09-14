@@ -42,7 +42,7 @@ export class UpdateItemDigestStatisticsConsumer {
       digestStatistics.map(({ itemId, count, averageRating }) =>
         this.itemsRepository.update(itemId, {
           digestCount: count,
-          digestAverageRating: averageRating,
+          digestAverageRating: averageRating / 2,
         })
       )
     );
