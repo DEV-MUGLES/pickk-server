@@ -23,9 +23,7 @@ export class OrderItem extends OrderItemEntity {
   get id(): string {
     return this.merchantUid;
   }
-  @Field({
-    description: 'itemFinalPrice - usedPointAmount - couponDiscountAmount',
-  })
+  @Field({ description: '상품가격 - 포인트사용액 - 쿠폰할인액' })
   get payAmount(): number {
     return (
       this.itemFinalPrice - this.usedPointAmount - this.couponDiscountAmount

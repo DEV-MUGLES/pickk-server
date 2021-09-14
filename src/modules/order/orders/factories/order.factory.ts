@@ -13,6 +13,7 @@ type ShppinFeeMap = Map<
   { totalItemFinalPrice: number; shippingFee: number }
 >;
 
+// @FIXME: 코드 매우 더러움.. 개선 필요
 export class OrderFactory {
   static create(
     userId: number,

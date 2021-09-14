@@ -2,6 +2,8 @@ import { BadRequestException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
+import { findModelById } from '@common/helpers';
+
 import { Coupon } from '@order/coupons/models';
 import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
@@ -25,7 +27,6 @@ import { OrderBuyer } from './order-buyer.model';
 import { OrderReceiver } from './order-receiver.model';
 import { OrderRefundAccount } from './order-refund-account.model';
 import { OrderVbankReceipt } from './order-vbank-receipt.model';
-import { findModelById } from '@common/helpers';
 
 @ObjectType()
 export class Order extends OrderEntity {
@@ -133,6 +134,7 @@ export class Order extends OrderEntity {
         oi.markCancelled();
       }
     }
+    this.applyShippingFees();
 
     return {
       amount: this.totalPayAmount,
@@ -173,5 +175,27 @@ export class Order extends OrderEntity {
 
       oi.useCoupon(findModelById(input.usedCouponId, coupons));
     }
+  }
+
+  /** 각 orderItem의 shippingFee, isFreeShippingPackage를 계산한다.
+   * OrderFactory에선 사용할 수 없다. */
+  applyShippingFees() {
+    const orderBrands = this.brands;
+
+    for (const oi of this.orderItems) {
+      const orderBrand = orderBrands.find((v) => v.id === oi.seller.brandId);
+      if (!orderBrand) {
+        // orderItem의 brand의 모든 상품이 이미 취소된 경우 배송비는 0이다.
+        oi.shippingFee = 0;
+      } else {
+        // 해당 brand에 부과된 배송비가 0이면 무료배송건이다.
+        oi.isFreeShippingPackage = orderBrand.shippingFee === 0;
+        // 첫번째 orderItem이면 부과된 배송비를, 아니면 0을 부과한다.
+        oi.shippingFee =
+          orderBrand.items[0].id === oi.id ? orderBrand.shippingFee : 0;
+      }
+    }
+
+    return null;
   }
 }
