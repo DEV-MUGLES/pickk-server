@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import { SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE } from '@queue/constants';
 import { SendInquiryCreationSlackMessageMto } from '@queue/mtos';
 
@@ -14,7 +15,7 @@ export class InquiriesProducer {
     await this.sqsService.send<SendInquiryCreationSlackMessageMto>(
       SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
       {
-        id: inquiry.id.toString(),
+        id: getRandomUuid(),
         body: {
           inquiry,
         },

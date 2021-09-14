@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import {
   UPDATE_COMMENT_LIKE_COUNT_QUEUE,
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
@@ -23,7 +24,7 @@ export class LikeProducer {
     await this.sqsService.send<UpdateLikeCountMto>(
       this.getQueueNameByOwnerType(ownerType),
       {
-        id: mto.id.toString(),
+        id: getRandomUuid(),
         body: mto,
       }
     );

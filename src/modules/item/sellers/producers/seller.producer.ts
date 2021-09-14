@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import {
   SCRAP_SELLER_ITEMS_QUEUE,
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
@@ -16,25 +17,19 @@ export class SellerProducer {
   constructor(private readonly sqsService: SqsService) {}
 
   async scrapSellerItems(mto: ScrapSellerItemsMto) {
-    const {
-      brand: { id },
-    } = mto;
     await this.sqsService.send<ScrapSellerItemsMto>(SCRAP_SELLER_ITEMS_QUEUE, {
-      id: id.toString(),
+      id: getRandomUuid(),
       body: mto,
     });
   }
 
   async processSellerItemsScrapResult(mto: ProcessSellerItemsScrapResultMto) {
-    const { brandId } = mto;
-
     const splitedMtos = this.splitProcessSellerItemsScrapResultMto(mto);
-
     for (const mto of splitedMtos) {
       await this.sqsService.send<ProcessSellerItemsScrapResultMto>(
         PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
         {
-          id: brandId.toString(),
+          id: getRandomUuid(),
           body: mto,
         }
       );

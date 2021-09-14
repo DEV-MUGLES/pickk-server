@@ -1,3 +1,4 @@
+import { getRandomUuid } from '@common/helpers';
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
@@ -7,7 +8,6 @@ import {
   UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
-import { parse2MessageId } from '@queue/helpers';
 import {
   SendItemCreationFailSlackMessagMto,
   SendItemCreationSuccessSlackMessageMto,
@@ -21,7 +21,7 @@ export class ItemsProducer {
 
   async updateImageUrl(mtos: UpdateItemImageUrlMto[]) {
     const messages = mtos.map((mto) => ({
-      id: mto.itemId ? mto.itemId.toString() : mto.brandId + mto.code,
+      id: getRandomUuid(),
       body: mto,
     }));
 
@@ -33,7 +33,7 @@ export class ItemsProducer {
 
   async updateDetailImages(mtos: UpdateItemDetailImagesMto[]) {
     const messages = mtos.map((mto) => ({
-      id: mto.itemId ? mto.itemId.toString() : mto.brandId + mto.code,
+      id: getRandomUuid(),
       body: mto,
     }));
 
@@ -47,7 +47,7 @@ export class ItemsProducer {
     await this.sqsService.send<SendItemCreationSuccessSlackMessageMto>(
       SEND_ITEM_CREATION_SUCCESS_SLACK_MESSAGE_QUEUE,
       {
-        id: id.toString(),
+        id: getRandomUuid(),
         body: {
           id,
           nickname,
@@ -60,7 +60,7 @@ export class ItemsProducer {
     await this.sqsService.send<SendItemCreationFailSlackMessagMto>(
       SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,
       {
-        id: parse2MessageId(url),
+        id: getRandomUuid(),
         body: {
           url,
           nickname,

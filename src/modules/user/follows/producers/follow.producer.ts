@@ -1,8 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
+import { getRandomUuid } from '@common/helpers';
 import { UPDATE_USER_FOLLOW_COUNT_QUEUE } from '@queue/constants';
-
 import { UpdateUserFollowCountMto } from '@queue/mtos';
 
 @Injectable()
@@ -13,7 +13,7 @@ export class FollowProducer {
     await this.sqsService.send<UpdateUserFollowCountMto>(
       UPDATE_USER_FOLLOW_COUNT_QUEUE,
       {
-        id: mto.id.toString(),
+        id: getRandomUuid(),
         body: mto,
       }
     );
