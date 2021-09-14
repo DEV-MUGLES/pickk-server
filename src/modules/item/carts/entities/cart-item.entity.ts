@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
+import { Type } from 'class-transformer';
 
 import { BaseIdEntity } from '@common/entities';
 import { Product } from '@item/products/models';
@@ -37,6 +38,7 @@ export class CartItemEntity extends BaseIdEntity implements ICartItem {
   @Column()
   productId: number;
 
+  @Type(() => Product)
   @Field(() => Product)
   @ManyToOne('ProductEntity', 'products', {
     onDelete: 'CASCADE',

@@ -113,7 +113,7 @@ export class OrderItemEntity implements IOrderItem {
     this.settledAt = attributes.settledAt;
   }
 
-  @Field({ description: 'order.merchantUid + 숫자 1자리' })
+  @Field({ description: 'order.merchantUid + 숫자 2자리' })
   @PrimaryColumn({ type: 'char', length: 22 })
   @IsString()
   merchantUid: string;
