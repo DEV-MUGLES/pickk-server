@@ -182,9 +182,8 @@ export class OrdersService {
 
     const { amount, checksum } = order.cancel(orderItemMerchantUids);
 
-    const payment = await this.paymentsService.get(merchantUid);
     await this.paymentsService.cancel(
-      payment,
+      merchantUid,
       CancelPaymentInput.of(order, reason, amount, checksum)
     );
     return await this.ordersRepository.save(order);
