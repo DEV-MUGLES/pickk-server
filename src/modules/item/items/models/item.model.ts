@@ -4,6 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { ItemInfoCrawlResult } from '@providers/crawler';
 
@@ -48,6 +49,7 @@ export class Item extends ItemEntity {
   })
   options: ItemOption[];
 
+  @Type(() => Product)
   @Field(() => [Product], {
     nullable: true,
   })

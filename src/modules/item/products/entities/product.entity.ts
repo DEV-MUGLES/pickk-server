@@ -79,13 +79,13 @@ export class ProductEntity extends BaseIdEntity implements IProduct {
 
   @Field({
     description:
-      '이 Product의 stock이 0이면 예약배송정책의 stock을 반환합니다.',
+      '[MODEL ONLY] 이 Product의 stock이 0이면 예약배송정책의 stock을 반환합니다.',
   })
   get stockThreshold(): number {
     return this.stock || this.shippingReservePolicy?.stock || 0;
   }
 
-  @Field({ description: '예약배송 적용 여부' })
+  @Field({ description: '[MODEL ONLY] 예약배송 적용 여부' })
   get isShipReserving(): boolean {
     if (!this.shippingReservePolicy) {
       return false;

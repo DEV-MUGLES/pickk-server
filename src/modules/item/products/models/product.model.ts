@@ -10,6 +10,17 @@ export class Product extends ProductEntity {
   @Field(() => Item)
   item: Item;
 
+  @Field({
+    description:
+      '[MODEL ONLY] 아이템 finalPrice와 priceVariant를 더한 값입니다.',
+  })
+  get purchasePrice(): number {
+    if (!this.item?.finalPrice) {
+      return 0;
+    }
+    return this.item.finalPrice + this.priceVariant;
+  }
+
   public destock(quantity: number): void {
     if (this.stockThreshold < quantity) {
       throw new NotEnoughStockException(this, quantity);
