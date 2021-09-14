@@ -57,6 +57,6 @@ import { DigestsService } from './digests.service';
     UpdateDigestCommentCountConsumer,
     DigestsProducer,
   ],
-  exports: [DigestsService],
+  exports: [DigestsService, DigestsProducer],
 })
 export class DigestsModule {}

@@ -11,6 +11,7 @@ import {
 } from '@common/helpers';
 
 import { DigestFactory } from '@content/digests/factories';
+import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { ItemPropertiesService } from '@item/item-properties/item-properties.service';
@@ -30,7 +31,8 @@ export class VideosService {
     private readonly videosRepository: VideosRepository,
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
-    private readonly itemPropertiesService: ItemPropertiesService
+    private readonly itemPropertiesService: ItemPropertiesService,
+    private readonly digestsProducer: DigestsProducer
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<void> {
@@ -93,7 +95,12 @@ export class VideosService {
     );
 
     const video = VideoFactory.from(userId, input, itemPropertyValues);
-    return await this.videosRepository.save(video);
+    await this.videosRepository.save(video);
+    await this.digestsProducer.updateItemDigestStatistics(
+      input.digests.map((v) => v.itemId)
+    );
+
+    return video;
   }
 
   // TODO: QUEUE 삭제된 digest 삭제하는 작업 추가

@@ -10,6 +10,7 @@ import {
 import { SearchModule } from '@mcommon/search/search.module';
 import { LikesModule } from '@content/likes/likes.module';
 import { CommentsModule } from '@content/comments/comments.module';
+import { DigestsModule } from '@content/digests/digests.module';
 import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
@@ -42,6 +43,7 @@ import { VideosService } from './videos.service';
     forwardRef(() => SearchModule),
     CommentsModule,
     ItemPropertiesModule,
+    DigestsModule,
   ],
   providers: [
     VideosResolver,
