@@ -118,7 +118,7 @@ type BaseOrderOutput {
   createdAt: DateTime!
   failedAt: DateTime
 
-  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  """[MODEL ONLY]"""
   id: String!
 
   """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
@@ -129,10 +129,8 @@ type BaseOrderOutput {
   refundAccount: OrderRefundAccount
   refundRequests: [RefundRequest!]!
   status: OrderStatus!
-  totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
   totalPayAmount: Int!
-  totalShippingFee: Int!
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   userId: Int
@@ -1410,7 +1408,7 @@ type Order {
   createdAt: DateTime!
   failedAt: DateTime
 
-  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  """[MODEL ONLY]"""
   id: String!
 
   """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
@@ -1423,10 +1421,8 @@ type Order {
   refundAccount: OrderRefundAccount
   refundRequests: [RefundRequest!]!
   status: OrderStatus!
-  totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
   totalPayAmount: Int!
-  totalShippingFee: Int!
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   user: User
@@ -1479,10 +1475,11 @@ type OrderItem {
   exchangedAt: DateTime
   failedAt: DateTime
 
-  """ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다."""
+  """[MODEL ONLY]"""
   id: String!
   isConfirmed: Boolean!
   isDelaying: Boolean!
+  isFreeShippingPackage: Boolean!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
   isShipReserved: Boolean!
@@ -1491,7 +1488,7 @@ type OrderItem {
   itemId: Int
   itemName: String!
 
-  """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
+  """order.merchantUid + 숫자 1자리"""
   merchantUid: String!
   name: String!
   order: Order!
@@ -1525,9 +1522,10 @@ type OrderItem {
   shipmentId: Int
   shippedAt: DateTime
   shippingAt: DateTime
+  shippingFee: Int!
   status: OrderItemStatus!
 
-  """프론트엔드에서 보여주기 위한 status/claimStatus 표시값입니다."""
+  """프론트엔드를 위한 status/claimStatus 표시값입니다."""
   statusDisplayName: String!
   updatedAt: DateTime!
   usedCoupon: Coupon
@@ -1538,7 +1536,6 @@ type OrderItem {
   userId: Int
   vbankDodgedAt: DateTime
   vbankReadyAt: DateTime
-  withdrawnAt: DateTime
 }
 
 """주문상품 클레임상태입니다."""
@@ -2394,7 +2391,7 @@ input StartOrderInput {
 }
 
 input StartOrderItemInput {
-  """주문상품고유번호. PrimaryColumn입니다. order의 merchantUid + 숫자 1자리 형식입니다."""
+  """order.merchantUid + 숫자 1자리"""
   merchantUid: String!
   usedCouponId: Int
 }

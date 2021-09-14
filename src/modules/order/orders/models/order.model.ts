@@ -1,9 +1,8 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
 import { Coupon } from '@order/coupons/models';
-import { OrderItemClaimStatus } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
@@ -18,7 +17,7 @@ import {
 } from '../dtos';
 import { OrderEntity } from '../entities';
 import { OrderProcessStrategyFactory } from '../factories';
-import { calcTotalShippingFee, getOrderBrands } from '../helpers';
+import { getOrderBrands } from '../helpers';
 
 import { OrderBrand } from './order-brand.model';
 import { OrderBuyer } from './order-buyer.model';
@@ -28,10 +27,14 @@ import { OrderVbankReceipt } from './order-vbank-receipt.model';
 
 @ObjectType()
 export class Order extends OrderEntity {
-  @Field({
-    description:
-      'ApolloClient 최적화를 위한 필드입니다. DB에는 존재하지 않습니다.',
-  })
+  @Type(() => OrderItem)
+  @Field(() => [OrderItem])
+  orderItems: OrderItem[];
+  @Type(() => RefundRequest)
+  @Field(() => [RefundRequest])
+  refundRequests: RefundRequest[];
+
+  @Field({ description: '[MODEL ONLY]' })
   get id(): string {
     return this.merchantUid;
   }
@@ -39,13 +42,18 @@ export class Order extends OrderEntity {
   get brands(): OrderBrand[] {
     return getOrderBrands(this.orderItems ?? []);
   }
-
-  @Type(() => OrderItem)
-  @Field(() => [OrderItem])
-  orderItems: OrderItem[];
-  @Type(() => RefundRequest)
-  @Field(() => [RefundRequest])
-  refundRequests: RefundRequest[];
+  @Field(() => Int)
+  get totalItemFinalPrice(): number {
+    return this.orderItems.reduce((acc, oi) => acc + oi.itemFinalPrice, 0);
+  }
+  @Field(() => Int)
+  get totalUsedPointAmount(): number {
+    return this.orderItems.reduce((acc, oi) => acc + oi.usedPointAmount, 0);
+  }
+  @Field(() => Int)
+  get totalPayAmount(): number {
+    return this.orderItems.reduce((acc, oi) => acc + oi.payAmount, 0);
+  }
 
   /////////////////
   // 상태변경 함수들 //
@@ -79,21 +87,20 @@ export class Order extends OrderEntity {
     shippingAddress: ShippingAddress,
     coupons: Coupon[]
   ) {
+    this.markPaying();
     this.payMethod = input.payMethod;
-    this.totalUsedPointAmount = input.usedPointAmount;
-    this.spreadUsedPoint(input.usedPointAmount);
     this.buyer = new OrderBuyer({ ...input.buyerInput });
     this.receiver = OrderReceiver.from(
       shippingAddress,
       input.receiverInput.message
     );
-    this.markPaying();
-
     if (input.refundAccountInput) {
       this.refundAccount = new OrderRefundAccount({
         ...input.refundAccountInput,
       });
     }
+
+    this.spreadUsedPoint(input.usedPointAmount);
 
     for (const orderItem of this.orderItems) {
       const { product } = orderItem;
@@ -105,7 +112,7 @@ export class Order extends OrderEntity {
       }
 
       const orderItemInput = (input.orderItemInputs || []).find(
-        (itemInput) => itemInput.merchantUid === orderItem.merchantUid
+        (oiInput) => oiInput.merchantUid === orderItem.merchantUid
       );
       if (!orderItemInput) {
         continue;
@@ -122,15 +129,6 @@ export class Order extends OrderEntity {
 
       orderItem.useCoupon(coupon);
     }
-
-    this.totalCouponDiscountAmount = this.orderItems.reduce(
-      (sum, orderItem) => sum + orderItem.couponDiscountAmount,
-      0
-    );
-    this.totalPayAmount =
-      this.totalItemFinalPrice -
-      this.totalUsedPointAmount -
-      this.totalCouponDiscountAmount;
   }
 
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
@@ -155,21 +153,11 @@ export class Order extends OrderEntity {
       throw new BadRequestException('1개 이상의 주문 상품을 입력해주세요.');
     }
 
-    for (const merchantUid of orderItemMerchantUids) {
-      const orderItem = this.getOrderItem(merchantUid);
-      orderItem.markCancelled();
-
-      this.totalItemFinalPrice -= orderItem.itemFinalPrice;
-      this.totalUsedPointAmount -= orderItem.usedPointAmount;
-      this.totalCouponDiscountAmount -= orderItem.couponDiscountAmount;
+    for (const oi of this.orderItems) {
+      if (orderItemMerchantUids.includes(oi.merchantUid)) {
+        oi.markCancelled();
+      }
     }
-
-    this.totalShippingFee = this.calcTotalShippingFee();
-    this.totalPayAmount =
-      this.totalItemFinalPrice +
-      this.totalShippingFee -
-      this.totalUsedPointAmount -
-      this.totalCouponDiscountAmount;
 
     return {
       amount: this.totalPayAmount,
@@ -189,42 +177,15 @@ export class Order extends OrderEntity {
     );
   }
 
-  private getOrderItem(merchantUid: string): OrderItem {
-    const orderItem = this.orderItems.find(
-      (orderItem) => orderItem.merchantUid === merchantUid
-    );
-    if (!orderItem) {
-      throw new NotFoundException(
-        `주문 상품[${merchantUid}]이 존재하지 않습니다.`
-      );
-    }
-    return orderItem;
-  }
-
-  private calcTotalShippingFee() {
-    const { CancelRequested, Cancelled } = OrderItemClaimStatus;
-    const calcInput = this.orderItems
-      .filter(
-        (oi) => [CancelRequested, Cancelled].includes(oi.claimStatus) === false
-      )
-      .map((oi) => ({ product: oi.product, quantity: oi.quantity }));
-
-    return calcTotalShippingFee(calcInput);
-  }
-
   /** evenly spread usedPointAmount to each orderItem */
   private spreadUsedPoint(usedPointAmount: number) {
-    const { orderItems, totalItemFinalPrice } = this;
-
-    for (const orderItem of this.orderItems) {
-      const { itemFinalPrice } = orderItem;
-      orderItem.usedPointAmount = Math.ceil(
-        (itemFinalPrice / totalItemFinalPrice) * usedPointAmount
+    for (const oi of this.orderItems) {
+      oi.usedPointAmount = Math.ceil(
+        (oi.itemFinalPrice / this.totalItemFinalPrice) * usedPointAmount
       );
     }
 
-    orderItems[0].usedPointAmount +=
-      usedPointAmount -
-      orderItems.reduce((sum, orderItem) => sum + orderItem.usedPointAmount, 0);
+    this.orderItems[0].usedPointAmount +=
+      usedPointAmount - this.totalUsedPointAmount;
   }
 }

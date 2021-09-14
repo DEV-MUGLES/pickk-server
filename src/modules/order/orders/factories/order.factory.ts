@@ -6,7 +6,6 @@ import {
 import { OrderItem } from '@order/order-items/models';
 
 import { OrderStatus } from '../constants';
-import { calcTotalShippingFee } from '../helpers';
 import { Order } from '../models';
 
 export type OrderFactoryProductsInfo = OrderItemFactoryProductInfo[];
@@ -21,21 +20,11 @@ export class OrderFactory {
 
     const orderItems = this.createOrderItems(userId, merchantUid, productsInfo);
 
-    const totalItemFinalPrice = orderItems.reduce(
-      (acc, oi) => acc + oi.itemFinalPrice,
-      0
-    );
-    const totalShippingFee = calcTotalShippingFee(productsInfo);
-    const totalPayAmount = totalItemFinalPrice + totalShippingFee;
-
     return new Order({
       userId,
       merchantUid,
       status: OrderStatus.Pending,
       orderItems,
-      totalItemFinalPrice,
-      totalShippingFee,
-      totalPayAmount,
     });
   }
 
