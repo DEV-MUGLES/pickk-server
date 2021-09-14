@@ -39,22 +39,21 @@ export class CartsService {
     );
   }
 
-  async countItemsByUserId(
-    userId: number,
-    isUpdatingCache = true
-  ): Promise<number> {
+  async countItems(userId: number): Promise<number> {
     const cacheKey = CartItem.getCountCacheKey(userId);
-    const cachedCount = await this.cacheService.get<number>(cacheKey);
+    const cached = await this.cacheService.get<number>(cacheKey);
 
-    if (cachedCount != null) {
-      return cachedCount;
+    if (cached) {
+      return Number(cached);
     }
 
+    return await this.reloadItemsCount(userId);
+  }
+
+  async reloadItemsCount(userId: number): Promise<number> {
+    const cacheKey = CartItem.getCountCacheKey(userId);
     const count = await this.cartItemsRepository.countByUserId(userId);
-
-    if (isUpdatingCache) {
-      this.cacheService.set<number>(cacheKey, count);
-    }
+    this.cacheService.set<number>(cacheKey, count);
     return count;
   }
 
@@ -63,12 +62,12 @@ export class CartsService {
     createCartItemInput: CreateCartItemInput
   ): Promise<CartItem> {
     const count = await this.countItemsByUserId(userId, false);
+
     const cartItem = await this.cartItemsRepository.save(
-      new CartItem({ userId, ...createCartItemInput })
+      new CartItem({ ...existing, userId, ...createCartItemInput })
     );
 
-    const cacheKey = CartItem.getCountCacheKey(userId);
-    this.cacheService.set<number>(cacheKey, count + 1);
+    await this.reloadItemsCount(userId);
     return cartItem;
   }
 
@@ -108,13 +107,6 @@ export class CartsService {
     return this.cartItemsRepository.save(adjustedCartItems);
   }
 
-  async checkCartItemExist(
-    userId: number,
-    productId: number
-  ): Promise<boolean> {
-    return await this.cartItemsRepository.checkExist(userId, productId);
-  }
-
   createCart(userId: number, cartItems: CartItem[]): Cart {
     return Cart.create(userId, cartItems);
   }
@@ -127,10 +119,8 @@ export class CartsService {
   }
 
   async removeItemsByIds(ids: number[], userId: number): Promise<void> {
-    const count = await this.countItemsByUserId(userId, false);
     await this.cartItemsRepository.bulkDelete(ids);
 
-    const cacheKey = CartItem.getCountCacheKey(userId);
-    this.cacheService.set<number>(cacheKey, count - ids.length);
+    await this.reloadItemsCount(userId);
   }
 }

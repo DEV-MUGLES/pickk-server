@@ -1,9 +1,4 @@
-import {
-  ConflictException,
-  Inject,
-  UnauthorizedException,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -16,6 +11,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { CartItemRelationType, CART_ITEM_RELATIONS } from './constants';
 import { CreateCartItemInput, UpdateCartItemInput } from './dtos';
 import { CartItem, Cart } from './models';
+
 import { CartsService } from './carts.service';
 
 @Resolver(() => CartItem)
@@ -33,7 +29,7 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
   @UseGuards(JwtVerifyGuard)
   async myCartItemsCount(@CurrentUser() payload: JwtPayload): Promise<number> {
     const userId = payload.sub;
-    return this.cartsService.countItemsByUserId(userId);
+    return this.cartsService.countItems(userId);
   }
 
   @Query(() => Cart)
@@ -67,16 +63,10 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
   @Mutation(() => CartItem)
   @UseGuards(JwtVerifyGuard)
   async createMyCartItem(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('createCartItemInput') createCartItemInput: CreateCartItemInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<CartItem> {
-    const userId = payload.sub;
-    const { productId } = createCartItemInput;
-    if (await this.cartsService.checkCartItemExist(userId, productId)) {
-      throw new ConflictException('해당 Product가 이미 담겨있습니다.');
-    }
-
     const cartItem = await this.cartsService.createCartItem(
       userId,
       createCartItemInput
