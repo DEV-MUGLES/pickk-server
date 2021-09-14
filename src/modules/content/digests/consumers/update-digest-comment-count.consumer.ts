@@ -1,8 +1,7 @@
-import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { BaseConsumer } from '@common/base.consumer';
+import { allSettled } from '@common/helpers';
 import { UPDATE_DIGEST_COMMENT_COUNT_QUEUE } from '@queue/constants';
 import { UpdateCommentCountMto } from '@queue/mtos';
 
@@ -12,15 +11,12 @@ import { CommentsService } from '@content/comments/comments.service';
 import { DigestsRepository } from '../digests.repository';
 
 @SqsProcess(UPDATE_DIGEST_COMMENT_COUNT_QUEUE)
-export class UpdateDigestCommentCountConsumer extends BaseConsumer {
+export class UpdateDigestCommentCountConsumer {
   constructor(
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
-    private readonly commentsService: CommentsService,
-    readonly logger: Logger
-  ) {
-    super();
-  }
+    private readonly commentsService: CommentsService
+  ) {}
 
   @SqsMessageHandler(true)
   async updateCommentCount(messages: AWS.SQS.Message[]) {
@@ -29,7 +25,7 @@ export class UpdateDigestCommentCountConsumer extends BaseConsumer {
     );
 
     const uniqueIds = [...new Set(mtos.map(({ id }) => id))];
-    await Promise.all(
+    await allSettled(
       uniqueIds.map(
         (id) =>
           new Promise(async (resolve, reject) => {
@@ -38,12 +34,9 @@ export class UpdateDigestCommentCountConsumer extends BaseConsumer {
                 CommentOwnerType.Digest,
                 id
               );
-              const digest = await this.digestsRepository.update(id, {
-                commentCount,
-              });
-              resolve(digest);
-            } catch (error) {
-              reject(`digestId: ${id}, error: ${error}`);
+              resolve(this.digestsRepository.update(id, { commentCount }));
+            } catch (err) {
+              reject({ id, reason: err });
             }
           })
       )

@@ -1,8 +1,7 @@
-import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { BaseConsumer } from '@common/base.consumer';
+import { allSettled } from '@common/helpers';
 import { UPDATE_LOOK_COMMENT_COUNT_QUEUE } from '@queue/constants';
 import { UpdateCommentCountMto } from '@queue/mtos';
 
@@ -12,15 +11,12 @@ import { CommentsService } from '@content/comments/comments.service';
 import { LooksRepository } from '../looks.repository';
 
 @SqsProcess(UPDATE_LOOK_COMMENT_COUNT_QUEUE)
-export class UpdateLookCommentCountConsumer extends BaseConsumer {
+export class UpdateLookCommentCountConsumer {
   constructor(
     @InjectRepository(LooksRepository)
     private readonly looksRepository: LooksRepository,
-    private readonly commentsService: CommentsService,
-    readonly logger: Logger
-  ) {
-    super();
-  }
+    private readonly commentsService: CommentsService
+  ) {}
 
   @SqsMessageHandler(true)
   async updateCommentCount(messages: AWS.SQS.Message[]) {
@@ -29,8 +25,7 @@ export class UpdateLookCommentCountConsumer extends BaseConsumer {
     );
 
     const uniqueIds = [...new Set(mtos.map(({ id }) => id))];
-
-    await Promise.all(
+    await allSettled(
       uniqueIds.map(
         (id) =>
           new Promise(async (resolve, reject) => {
@@ -39,12 +34,9 @@ export class UpdateLookCommentCountConsumer extends BaseConsumer {
                 CommentOwnerType.Look,
                 id
               );
-              const look = await this.looksRepository.update(id, {
-                commentCount,
-              });
-              resolve(look);
-            } catch (error) {
-              reject(`lookId: ${id}, UpdateCommentCount Error: ${error}`);
+              resolve(this.looksRepository.update(id, { commentCount }));
+            } catch (err) {
+              reject({ id, reason: err });
             }
           })
       )

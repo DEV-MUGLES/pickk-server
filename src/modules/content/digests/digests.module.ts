@@ -1,4 +1,4 @@
-import { forwardRef, Logger, Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -51,7 +51,6 @@ import { DigestsService } from './digests.service';
     ItemPropertiesModule,
   ],
   providers: [
-    Logger,
     DigestsResolver,
     DigestsService,
     UpdateDigestLikeCountConsumer,

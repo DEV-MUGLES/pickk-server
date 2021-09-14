@@ -1,4 +1,4 @@
-import { forwardRef, Logger, Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -46,7 +46,6 @@ import { VideosService } from './videos.service';
     DigestsModule,
   ],
   providers: [
-    Logger,
     VideosResolver,
     VideosService,
     UpdateVideoLikeCountConsumer,

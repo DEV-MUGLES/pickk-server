@@ -1,26 +1,21 @@
-import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { UPDATE_LOOK_LIKE_COUNT_QUEUE } from '@queue/constants';
-import { UpdateLikeCountMto } from '@queue/mtos';
-
-import { BaseConsumer } from '@common/base.consumer';
+import { allSettled } from '@common/helpers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { UPDATE_LOOK_LIKE_COUNT_QUEUE } from '@queue/constants';
+import { UpdateLikeCountMto } from '@queue/mtos';
 
 import { LooksRepository } from '../looks.repository';
 
 @SqsProcess(UPDATE_LOOK_LIKE_COUNT_QUEUE)
-export class UpdateLookLikeCountConsumer extends BaseConsumer {
+export class UpdateLookLikeCountConsumer {
   constructor(
     @InjectRepository(LooksRepository)
     private readonly looksRepository: LooksRepository,
-    private readonly likesService: LikesService,
-    readonly logger: Logger
-  ) {
-    super();
-  }
+    private readonly likesService: LikesService
+  ) {}
 
   @SqsMessageHandler(true)
   async updateLikeCount(messages: AWS.SQS.Message[]) {
@@ -29,7 +24,7 @@ export class UpdateLookLikeCountConsumer extends BaseConsumer {
     );
 
     const uniqueIds = [...new Set(mtos.map(({ id }) => id))];
-    await Promise.all(
+    await allSettled(
       uniqueIds.map(
         (id) =>
           new Promise(async (resolve, reject) => {
@@ -38,10 +33,9 @@ export class UpdateLookLikeCountConsumer extends BaseConsumer {
                 LikeOwnerType.Look,
                 id
               );
-              const look = await this.looksRepository.update(id, { likeCount });
-              resolve(look);
-            } catch (error) {
-              reject(`lookId: ${id}, UpdateLikeCount Error: ${error}`);
+              resolve(this.looksRepository.update(id, { likeCount }));
+            } catch (err) {
+              reject({ id, reason: err });
             }
           })
       )

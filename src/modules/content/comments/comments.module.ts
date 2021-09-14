@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -42,7 +42,6 @@ import { CommentsService } from './comments.service';
     LikesModule,
   ],
   providers: [
-    Logger,
     CommentsResolver,
     CommentsService,
     UpdateCommentLikeCountConsumer,
