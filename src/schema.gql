@@ -1488,7 +1488,7 @@ type OrderItem {
   itemId: Int
   itemName: String!
 
-  """order.merchantUid + 숫자 1자리"""
+  """order.merchantUid + 숫자 2자리"""
   merchantUid: String!
   name: String!
   order: Order!
@@ -2391,7 +2391,7 @@ input StartOrderInput {
 }
 
 input StartOrderItemInput {
-  """order.merchantUid + 숫자 1자리"""
+  """order.merchantUid + 숫자 2자리"""
   merchantUid: String!
   usedCouponId: Int
 }
