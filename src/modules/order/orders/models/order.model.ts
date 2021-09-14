@@ -47,6 +47,7 @@ export class Order extends OrderEntity {
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 
+  @Type(() => RefundRequest)
   @Field(() => [RefundRequest])
   refundRequests: RefundRequest[];
 
@@ -192,8 +193,7 @@ export class Order extends OrderEntity {
         `주문 상품[${merchantUid}]이 존재하지 않습니다.`
       );
     }
-
-    return plainToClass(OrderItem, orderItem);
+    return orderItem;
   }
 
   private getOrderItems(merchantUids: string[]): OrderItem[] {
