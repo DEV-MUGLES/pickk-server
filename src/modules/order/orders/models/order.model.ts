@@ -195,7 +195,5 @@ export class Order extends OrderEntity {
           orderBrand.items[0].id === oi.id ? orderBrand.shippingFee : 0;
       }
     }
-
-    return null;
   }
 }
