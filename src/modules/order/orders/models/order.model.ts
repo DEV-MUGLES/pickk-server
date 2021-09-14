@@ -1,12 +1,9 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
-import { plainToClass, Type } from 'class-transformer';
+import { Type } from 'class-transformer';
 
 import { Coupon } from '@order/coupons/models';
-import {
-  OrderItemClaimStatus,
-  OrderItemStatus,
-} from '@order/order-items/constants';
+import { OrderItemClaimStatus } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
@@ -46,7 +43,6 @@ export class Order extends OrderEntity {
   @Type(() => OrderItem)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
-
   @Type(() => RefundRequest)
   @Field(() => [RefundRequest])
   refundRequests: RefundRequest[];
@@ -152,7 +148,7 @@ export class Order extends OrderEntity {
 
     for (const merchantUid of orderItemMerchantUids) {
       const orderItem = this.getOrderItem(merchantUid);
-      orderItem.cancel();
+      orderItem.markCancelled();
 
       this.totalItemFinalPrice -= orderItem.itemFinalPrice;
       this.totalUsedPointAmount -= orderItem.usedPointAmount;
@@ -175,7 +171,7 @@ export class Order extends OrderEntity {
   requestRefund(input: RequestOrderRefundInput): RefundRequest {
     const orderItems = this.getOrderItems(input.orderItemMerchantUids);
     for (const oi of orderItems) {
-      oi.requestRefund();
+      oi.markRefundRequested();
     }
     this.orderItems = this.applyOrderItems(this.orderItems, orderItems);
 
@@ -269,8 +265,7 @@ export class Order extends OrderEntity {
     this.failedAt = new Date();
 
     for (const orderItem of this.orderItems) {
-      orderItem.status = OrderItemStatus.Failed;
-      orderItem.failedAt = new Date();
+      orderItem.markFailed();
     }
   }
 
@@ -287,8 +282,7 @@ export class Order extends OrderEntity {
     this.vbankReadyAt = new Date();
 
     for (const orderItem of this.orderItems) {
-      orderItem.status = OrderItemStatus.VbankReady;
-      orderItem.vbankReadyAt = new Date();
+      orderItem.markVbankReady();
     }
   }
 
@@ -303,8 +297,7 @@ export class Order extends OrderEntity {
     this.paidAt = new Date();
 
     for (const orderItem of this.orderItems) {
-      orderItem.status = OrderItemStatus.Paid;
-      orderItem.paidAt = new Date();
+      orderItem.markPaid();
     }
   }
 
@@ -319,8 +312,7 @@ export class Order extends OrderEntity {
     this.vbankDodgedAt = new Date();
 
     for (const orderItem of this.orderItems) {
-      orderItem.status = OrderItemStatus.VbankDodged;
-      orderItem.vbankDodgedAt = new Date();
+      orderItem.markVbankDodged();
     }
   }
 }
