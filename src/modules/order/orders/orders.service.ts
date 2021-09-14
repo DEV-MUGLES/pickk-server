@@ -137,8 +137,7 @@ export class OrdersService {
 
   async fail(merchantUid: string): Promise<Order> {
     const order = await this.get(merchantUid, ['orderItems']);
-
-    order.fail();
+    order.markFailed();
     return await this.ordersRepository.save(order);
   }
 
@@ -170,10 +169,8 @@ export class OrdersService {
 
   async dodgeVbank(merchantUid: string): Promise<Order> {
     const order = await this.get(merchantUid, ['orderItems']);
-    order.dodgeVbank();
-
+    order.markVbankDodged();
     await this.paymentsService.dodgeVbank(merchantUid);
-
     return await this.ordersRepository.save(order);
   }
 

@@ -17,7 +17,7 @@ export class ProcessVbankPaidOrderConsumer {
   async processVbankPaid(message: AWS.SQS.Message) {
     const { merchantUid }: ProcessVbankPaidOrderMto = JSON.parse(message.Body);
     const order = await this.ordersRepository.get(merchantUid, ['orderItems']);
-    order.processVbankPaid();
+    order.markPaid();
     await this.ordersRepository.save(order);
   }
 }
