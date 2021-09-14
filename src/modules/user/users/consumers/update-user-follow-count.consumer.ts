@@ -1,7 +1,8 @@
+import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { allSettled } from '@common/helpers';
+import { BaseConsumer } from '@common/base.consumer';
 import { UPDATE_USER_FOLLOW_COUNT_QUEUE } from '@queue/constants';
 import { UpdateUserFollowCountMto } from '@queue/mtos';
 import { FollowsService } from '@user/follows/follows.service';
@@ -9,12 +10,15 @@ import { FollowsService } from '@user/follows/follows.service';
 import { UsersRepository } from '../users.repository';
 
 @SqsProcess(UPDATE_USER_FOLLOW_COUNT_QUEUE)
-export class UpdateUserFollowCountConsumer {
+export class UpdateUserFollowCountConsumer extends BaseConsumer {
   constructor(
     @InjectRepository(UsersRepository)
     private readonly usersRepository: UsersRepository,
-    private readonly followsService: FollowsService
-  ) {}
+    private readonly followsService: FollowsService,
+    readonly logger: Logger
+  ) {
+    super();
+  }
 
   @SqsMessageHandler(true)
   async updateFollowCount(messages: AWS.SQS.Message[]) {
@@ -22,16 +26,15 @@ export class UpdateUserFollowCountConsumer {
       JSON.parse(Body)
     );
     const uniqueIds = [...new Set(mtos.map(({ id }) => id))];
-
-    await allSettled(
+    await Promise.all(
       uniqueIds.map(
         (id) =>
           new Promise(async (resolve, reject) => {
             try {
               const followCount = await this.followsService.count(id);
               resolve(this.usersRepository.update(id, { followCount }));
-            } catch (err) {
-              reject({ id, reason: err });
+            } catch (error) {
+              reject(`userId: ${id}, UpdateFollowCount Error: ${error}`);
             }
           })
       )

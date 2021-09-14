@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -31,7 +31,12 @@ import { UsersResolver } from './users.resolver';
     FollowsModule,
     OrderItemsModule,
   ],
-  providers: [UsersService, UsersResolver, UpdateUserFollowCountConsumer],
+  providers: [
+    Logger,
+    UsersService,
+    UsersResolver,
+    UpdateUserFollowCountConsumer,
+  ],
   exports: [UsersService],
 })
 export class UsersModule {}
