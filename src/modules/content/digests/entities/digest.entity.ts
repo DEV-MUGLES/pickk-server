@@ -75,10 +75,12 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
 
   @ManyToOne('VideoEntity')
   video: IVideo;
+  @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   videoId: number;
   @ManyToOne('LookEntity')
   look: ILook;
+  @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   lookId: number;
 
