@@ -1,8 +1,9 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum ContentType {
-  Pickk = 'Pickk',
-  Look = 'Look',
+  digest = 'digest',
+  look = 'look',
+  video = 'video',
 }
 
 registerEnumType(ContentType, {

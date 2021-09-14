@@ -284,8 +284,9 @@ enum CommentOwnerType {
 
 """컨텐츠 타입입니다."""
 enum ContentType {
-  Look
-  Pickk
+  digest
+  look
+  video
 }
 
 type Coupon {
