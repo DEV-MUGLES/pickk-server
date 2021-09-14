@@ -640,6 +640,7 @@ type Digest {
   itemPropertyValues: [ItemPropertyValue!]!
   likeCount: Int!
   look: Look
+  lookId: Int
   rating: Rating
   score: Float!
   size: String!
@@ -652,6 +653,7 @@ type Digest {
   user: User
   userId: Int
   video: Video
+  videoId: Int
 }
 
 input DigestFilter {
@@ -659,6 +661,7 @@ input DigestFilter {
   item: DigestItemFilter
   itemId: Int
   orderBy: String = "id"
+  ratingIsNull: Boolean
   user: DigestUserFilter
   userId: Int
   userIdIn: [Int!]

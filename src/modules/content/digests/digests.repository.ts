@@ -40,7 +40,7 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
     filter: DigestFilter,
     pageInput?: PageInput
   ): Promise<number[]> {
-    const raws = await pageQuery(
+    const qb = pageQuery(
       digestItemMinorCategoryIdQuery(
         digestUserHeightQuery(
           this.createQueryBuilder('digest'),
@@ -52,8 +52,13 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
       pageInput
     )
       .select('digest.id', 'id')
-      .orderBy(`digest.${filter?.orderBy ?? 'id'}`, 'DESC')
-      .execute();
+      .orderBy(`digest.${filter?.orderBy ?? 'id'}`, 'DESC');
+
+    if (filter.ratingIsNull != null) {
+      qb.where(`digest.rating ${filter?.ratingIsNull ? 'is' : 'is not'} null`);
+    }
+
+    const raws = await qb.execute();
 
     return raws.map((raw) => raw.id);
   }

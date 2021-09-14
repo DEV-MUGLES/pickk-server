@@ -34,6 +34,9 @@ export class DigestFilter implements Partial<Omit<IDigest, 'item' | 'user'>> {
   @Field(() => DigestUserFilter, { nullable: true })
   user?: DigestUserFilter;
 
+  @Field({ nullable: true })
+  ratingIsNull?: boolean;
+
   @Field(() => String, { defaultValue: 'id' })
   orderBy?: keyof IDigest;
 
