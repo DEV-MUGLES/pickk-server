@@ -61,7 +61,10 @@ export class CartsService {
     userId: number,
     createCartItemInput: CreateCartItemInput
   ): Promise<CartItem> {
-    const count = await this.countItemsByUserId(userId, false);
+    const existing = await this.cartItemsRepository.findOneEntity({
+      userId,
+      productId: createCartItemInput.productId,
+    });
 
     const cartItem = await this.cartItemsRepository.save(
       new CartItem({ ...existing, userId, ...createCartItemInput })
