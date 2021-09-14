@@ -1,24 +1,26 @@
-import { Product } from '@item/products/models';
 import { OrderItemStatus } from '../constants';
 
 import { OrderItem } from '../models';
 
-export type OrderItemFactoryProductInfo = {
-  product: Product;
-  quantity: number;
-};
+export type OrderItemFactoryProductInfo = Required<
+  Pick<OrderItem, 'product' | 'quantity'>
+>;
+
+export type OrderItemFactorShipInfo = Pick<
+  OrderItem,
+  'isFreeShippingPackage' | 'shippingFee'
+>;
 
 export class OrderItemFactory {
   static create(
     userId: number,
     merchantUid: string,
-    { product, quantity }: OrderItemFactoryProductInfo
+    { product, quantity }: OrderItemFactoryProductInfo,
+    shipInfo: OrderItemFactorShipInfo
   ): OrderItem {
-    const { item, itemOptionValues, priceVariant } = product;
-    const { brand } = item;
+    const { item, itemOptionValues, priceVariant, shippingReservePolicy } =
+      product;
 
-    const brandNameKor = brand.nameKor;
-    const itemName = item.name;
     const productVariantName = itemOptionValues
       .map((value) => value.name)
       .join('/');
@@ -26,21 +28,21 @@ export class OrderItemFactory {
     const orderItem = new OrderItem({
       merchantUid,
       userId,
-      sellerId: brand.seller.id,
+      sellerId: item.brand.seller.id,
       itemId: item.id,
       productId: product.id,
       status: OrderItemStatus.Pending,
       quantity,
       itemFinalPrice: item.finalPrice + priceVariant,
-      brandNameKor,
-      itemName,
+      brandNameKor: item.brand.nameKor,
+      itemName: item.name,
       productVariantName,
+      ...shipInfo,
+      ...(product.isShipReserving && {
+        isShipReserved: true,
+        shipReservedAt: shippingReservePolicy.estimatedShippingBegginDate,
+      }),
     });
-
-    if (product.isShipReserving) {
-      orderItem.shipReservedAt =
-        product.shippingReservePolicy.estimatedShippingBegginDate;
-    }
 
     return orderItem;
   }
