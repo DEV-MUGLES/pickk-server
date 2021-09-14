@@ -1,5 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { Product } from '@item/products/models';
 import { Coupon } from '@order/coupons/models';
@@ -38,12 +39,15 @@ export class OrderItem extends OrderItemEntity {
     return `[${this.brandNameKor}] ${this.itemName} (${this.productVariantName}) ${this.quantity}개`;
   }
 
+  @Type(() => Order)
   @Field(() => Order)
   order: Order;
 
+  @Type(() => RefundRequest)
   @Field(() => RefundRequest)
   refundRequest: RefundRequest;
 
+  @Type(() => ExchangeRequest)
   @Field(() => ExchangeRequest)
   exchangeRequest: ExchangeRequest;
 
