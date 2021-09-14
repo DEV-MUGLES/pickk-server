@@ -7,6 +7,7 @@ import {
   UPDATE_ITEM_DETAIL_IMAGES_QUEUE,
   UPDATE_ITEM_IMAGE_URL_QUEUE,
 } from '@queue/constants';
+import { parse2MessageId } from '@queue/helpers';
 import {
   SendItemCreationFailSlackMessagMto,
   SendItemCreationSuccessSlackMessageMto,
@@ -59,7 +60,7 @@ export class ItemsProducer {
     await this.sqsService.send<SendItemCreationFailSlackMessagMto>(
       SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,
       {
-        id: nickname,
+        id: parse2MessageId(url),
         body: {
           url,
           nickname,
