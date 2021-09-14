@@ -4,6 +4,9 @@ import { OrderItem } from '@order/order-items/models';
 
 @ObjectType()
 export class OrderBrand {
+  @Field(() => Int)
+  id: number;
+
   @Field()
   nameKor: string;
 

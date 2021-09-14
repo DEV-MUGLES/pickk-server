@@ -1434,6 +1434,7 @@ type Order {
 }
 
 type OrderBrand {
+  id: Int!
   imageUrl: String!
   items: [OrderItem!]!
   nameKor: String!
@@ -1495,7 +1496,7 @@ type OrderItem {
   orderMerchantUid: String!
   paidAt: DateTime
 
-  """itemFinalPrice - usedPointAmount - couponDiscountAmount"""
+  """상품가격 - 포인트사용액 - 쿠폰할인액"""
   payAmount: Float!
 
   """처리지연 전환 시점"""
