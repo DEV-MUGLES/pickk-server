@@ -10,7 +10,7 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from 'typeorm';
-import { IsEnum, IsString, Min } from 'class-validator';
+import { IsEnum, IsString } from 'class-validator';
 
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
@@ -50,12 +50,6 @@ export class OrderEntity implements IOrder {
 
     this.status = attributes.status;
     this.payMethod = attributes.payMethod;
-
-    this.totalItemFinalPrice = attributes.totalItemFinalPrice;
-    this.totalShippingFee = attributes.totalShippingFee;
-    this.totalCouponDiscountAmount = attributes.totalCouponDiscountAmount;
-    this.totalUsedPointAmount = attributes.totalUsedPointAmount;
-    this.totalPayAmount = attributes.totalPayAmount;
 
     this.vbankInfo = attributes.vbankInfo;
     this.buyer = attributes.buyer;
@@ -106,27 +100,6 @@ export class OrderEntity implements IOrder {
   @Column({ type: 'enum', enum: PayMethod, nullable: true })
   @IsEnum(PayMethod)
   payMethod?: PayMethod;
-
-  @Field(() => Int)
-  @Column({ unsigned: true })
-  @Min(1)
-  totalItemFinalPrice: number;
-  @Field(() => Int)
-  @Column({ unsigned: true })
-  @Min(0)
-  totalShippingFee: number;
-  @Field(() => Int)
-  @Column({ unsigned: true, default: 0 })
-  @Min(0)
-  totalCouponDiscountAmount: number;
-  @Field(() => Int)
-  @Column({ unsigned: true, default: 0 })
-  @Min(0)
-  totalUsedPointAmount: number;
-  @Field(() => Int)
-  @Column({ unsigned: true, default: 0 })
-  @Min(1)
-  totalPayAmount: number;
 
   @Field(() => OrderVbankReceipt, { nullable: true })
   @OneToOne(() => OrderVbankReceiptEntity, { cascade: true, nullable: true })
