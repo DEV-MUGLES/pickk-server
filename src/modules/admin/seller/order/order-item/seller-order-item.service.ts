@@ -10,7 +10,6 @@ import dayjs from 'dayjs';
 
 import { OrderItemStatus } from '@order/order-items/constants';
 import { ShipOrderItemInput } from '@order/order-items/dtos';
-import { OrderItemEntity } from '@order/order-items/entities';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
@@ -38,12 +37,13 @@ export class SellerOrderItemService {
   }
 
   async bulkShipReady(sellerId: number, merchantUids: string[]) {
-    const orderItems = await this.orderItemsRepository.find({
-      select: ['merchantUid', 'status', 'sellerId'],
-      where: {
-        merchantUid: In(merchantUids),
-      },
-    });
+    const orderItems = this.orderItemsRepository.entityToModelMany(
+      await this.orderItemsRepository.find({
+        where: {
+          merchantUid: In(merchantUids),
+        },
+      })
+    );
 
     if (orderItems.some((oi) => oi.sellerId !== sellerId)) {
       const { merchantUid } = orderItems.find((oi) => oi.sellerId !== sellerId);
@@ -61,12 +61,8 @@ export class SellerOrderItemService {
       );
     }
 
-    await this.orderItemsRepository
-      .createQueryBuilder()
-      .update(OrderItemEntity)
-      .set({ status: OrderItemStatus.ShipReady, shipReadyAt: new Date() })
-      .where({ merchantUid: In(merchantUids) })
-      .execute();
+    orderItems.forEach((oi) => oi.markShipReady());
+    await this.orderItemsRepository.save(orderItems);
   }
 
   async ship(orderItem: OrderItem, input: ShipOrderItemInput) {
