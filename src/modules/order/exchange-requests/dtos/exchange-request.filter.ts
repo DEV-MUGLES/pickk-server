@@ -23,13 +23,14 @@ export class ExchangeRequestFilter
     'pickShipment.trackCode',
     'reShipment.trackCode',
   ];
-
   @Field({
     nullable: true,
-    description:
-      '주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색할 수 있습니다.',
+    description: '주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색',
   })
   search?: string;
+
+  @Field(() => [String], { nullable: true })
+  merchantUidIn?: string[];
 
   @Field(() => Int, {
     nullable: true,

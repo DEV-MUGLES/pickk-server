@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -34,11 +29,9 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
   relations = EXCHANGE_REQUEST_RELATIONS;
 
   constructor(
-    @Inject(ExchangeRequestsService)
     private readonly exchangeRequestsService: ExchangeRequestsService,
-    @Inject(SellerExchangeRequestService)
     private readonly sellerExchangeRequestService: SellerExchangeRequestService,
-    @Inject(CacheService) private cacheService: CacheService
+    private cacheService: CacheService
   ) {
     super();
   }

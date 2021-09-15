@@ -39,7 +39,7 @@ export class SellerRefundRequestService {
     const notMine = refundRequests.find((oi) => oi.sellerId !== sellerId);
     if (notMine) {
       throw new ForbiddenException(
-        `반품요청(${notMine.merchantUid})은 본인의 반품요청이 아닙니다.`
+        `반품요청(${notMine.merchantUid})에 대한 권한이 없습니다.`
       );
     }
 

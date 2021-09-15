@@ -733,13 +733,14 @@ type ExchangeRequest {
 
 input ExchangeRequestFilter {
   isProcessDelaying: Boolean
+  merchantUidIn: [String!]
   orderItem: ExchangeRequestOrderItemFilter
   requestedAtBetween: [DateTime!]
 
   """재배송 완료일 (기간). 교환 완료와 동일한 의미로 사용됩니다."""
   reshippedAtBetween: [DateTime!]
 
-  """주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색할 수 있습니다."""
+  """주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색"""
   search: String
   sellerId: Int
   status: ExchangeRequestStatus

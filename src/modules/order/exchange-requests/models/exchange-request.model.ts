@@ -23,6 +23,17 @@ export class ExchangeRequest extends ExchangeRequestEntity {
     });
   }
 
+  markPicked() {
+    if (this.status !== ExchangeRequestStatus.Requested) {
+      throw new BadRequestException(
+        `교환요청${this.merchantUid}가 요청됨 상태가 아닙니다.`
+      );
+    }
+
+    this.status = ExchangeRequestStatus.Picked;
+    this.pickedAt = new Date();
+  }
+
   private markReshipping() {
     if (this.status !== ExchangeRequestStatus.Picked) {
       throw new BadRequestException(
