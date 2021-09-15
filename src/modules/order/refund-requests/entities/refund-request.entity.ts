@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   Column,
   ManyToOne,
@@ -8,6 +7,7 @@ import {
   Entity,
   JoinColumn,
   OneToOne,
+  PrimaryColumn,
 } from 'typeorm';
 import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
@@ -28,7 +28,7 @@ export class RefundRequestEntity implements IRefundRequest {
       return;
     }
 
-    this.id = attributes.id;
+    this.merchantUid = attributes.merchantUid;
 
     this.seller = attributes.seller;
     this.sellerId = attributes.sellerId;
@@ -59,73 +59,46 @@ export class RefundRequestEntity implements IRefundRequest {
     this.confirmedAt = attributes.confirmedAt;
   }
 
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field(() => String, { description: '(PK) YYMMDDHHmmssSSS + NN(00~99) + M' })
+  @PrimaryColumn({ type: 'char', length: 20 })
+  @IsString()
+  merchantUid: string;
 
   @Field(() => Seller, { nullable: true })
   @ManyToOne('SellerEntity', { nullable: true })
   seller?: Seller;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   sellerId?: number;
-
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   userId?: number;
-
   @Field(() => Shipment, { nullable: true })
   @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
   @JoinColumn()
   shipment: Shipment;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   shipmentId: number;
 
   @ManyToOne('OrderEntity', 'refundRequests')
   order: IOrder;
-
   @Field()
   @Column({ type: 'char', length: 20 })
   orderMerchantUid: string;
-
   @OneToMany('OrderItemEntity', 'refundRequest')
   orderItems: IOrderItem[];
 
   @Field(() => RefundRequestStatus)
-  @Column({
-    type: 'enum',
-    enum: RefundRequestStatus,
-  })
+  @Column({ type: 'enum', enum: RefundRequestStatus })
   @IsEnum(RefundRequestStatus)
   status: RefundRequestStatus;
 
   @Field(() => OrderClaimFaultOf)
-  @Column({
-    type: 'enum',
-    enum: OrderClaimFaultOf,
-  })
+  @Column({ type: 'enum', enum: OrderClaimFaultOf })
   @IsEnum(OrderClaimFaultOf)
   faultOf: OrderClaimFaultOf;
 
@@ -133,17 +106,14 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column()
   @IsString()
   reason: string;
-
   @Field(() => Int)
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   amount: number;
-
   @Field(() => Int, { description: '부과된 반품 배송비' })
   @Column({ type: 'mediumint', unsigned: true })
   @Min(1)
   shippingFee: number;
-
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })
   @IsString()
@@ -153,7 +123,6 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ default: false })
   @IsOptional()
   isProcessDelaying: boolean;
-
   @Field()
   @Column({ nullable: true })
   processDelayedAt: Date;
@@ -161,15 +130,12 @@ export class RefundRequestEntity implements IRefundRequest {
   @Field()
   @CreateDateColumn()
   requestedAt: Date;
-
   @Field({ nullable: true, description: '수거 완료 시점' })
   @Column({ nullable: true })
   pickedAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   rejectedAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;

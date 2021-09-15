@@ -28,11 +28,11 @@ export class RefundRequestsRepository extends Repository<RefundRequestEntity> {
   }
 
   async get(
-    id: number,
+    merchantUid: string,
     relations: string[] = []
   ): Promise<RefundRequest | null> {
     return await this.findOne({
-      where: { id },
+      where: { merchantUid },
       relations,
     })
       .then((entity) => {

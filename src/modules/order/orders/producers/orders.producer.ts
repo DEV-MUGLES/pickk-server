@@ -51,13 +51,13 @@ export class OrdersProducer {
     );
   }
 
-  async sendRefundRequestedAlimtalk(refundRequestId: number) {
+  async sendRefundRequestedAlimtalk(merchantUid: string) {
     await this.sqsService.send<SendRefundRequestedAlimtalkMto>(
       SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
       {
         id: getRandomUuid(),
         body: {
-          refundRequestId,
+          merchantUid,
         },
       }
     );

@@ -1,3 +1,3 @@
 export class SendRefundRequestedAlimtalkMto {
-  refundRequestId: number;
+  merchantUid: string;
 }

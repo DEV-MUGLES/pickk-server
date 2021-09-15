@@ -88,7 +88,7 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     );
 
     await this.ordersProducer.sendRefundRequestedAlimtalk(
-      refundRequests[refundRequests.length - 1].id
+      refundRequests[refundRequests.length - 1].merchantUid
     );
 
     return await this.ordersService.get(

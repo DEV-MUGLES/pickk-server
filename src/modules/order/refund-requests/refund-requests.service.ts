@@ -18,10 +18,10 @@ export class RefundRequestsService {
   ) {}
 
   async get(
-    id: number,
+    merchantUid: string,
     relations: RefundRequestRelationType[]
   ): Promise<RefundRequest> {
-    return await this.refundRequestsRepository.get(id, relations);
+    return await this.refundRequestsRepository.get(merchantUid, relations);
   }
 
   async list(
@@ -40,7 +40,7 @@ export class RefundRequestsService {
         relations,
         where: parseFilter(_refundRequestFilter, _pageInput?.idFilter),
         order: {
-          id: 'DESC',
+          merchantUid: 'DESC',
         },
         ...(_pageInput?.pageFilter ?? {}),
       })

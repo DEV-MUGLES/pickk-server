@@ -150,7 +150,12 @@ export class Order extends OrderEntity {
     }
 
     this.refundRequests.push(
-      RefundRequestFactory.create(this.userId, this.orderItems, input)
+      RefundRequestFactory.create(
+        `${this.merchantUid}${this.refundRequests.length}`,
+        this.userId,
+        this.orderItems,
+        input
+      )
     );
   }
 

@@ -13,6 +13,7 @@ import { RefundRequest } from '../models';
 
 export class RefundRequestFactory {
   static create(
+    merchantUid: string,
     userId: number,
     orderItems: OrderItem[],
     input: Pick<RefundRequest, 'faultOf' | 'reason'> & {
@@ -25,6 +26,7 @@ export class RefundRequestFactory {
     const amount = calcClaimAmount(orderItems);
 
     const result = new RefundRequest({
+      merchantUid,
       ...input,
       shippingFee,
       amount,

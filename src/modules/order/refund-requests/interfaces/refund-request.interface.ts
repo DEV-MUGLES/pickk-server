@@ -7,7 +7,7 @@ import { IUser } from '@user/users/interfaces';
 import { OrderClaimFaultOf, RefundRequestStatus } from '../constants';
 
 export interface IRefundRequest {
-  id: number;
+  merchantUid: string;
 
   user?: IUser;
   userId?: number;

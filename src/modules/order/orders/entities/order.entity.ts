@@ -64,8 +64,7 @@ export class OrderEntity implements IOrder {
     this.withdrawnAt = attributes.withdrawnAt;
   }
   @Field(() => String, {
-    description:
-      '주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다.',
+    description: '(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)',
   })
   @PrimaryColumn({ type: 'char', length: 20 })
   @IsString()

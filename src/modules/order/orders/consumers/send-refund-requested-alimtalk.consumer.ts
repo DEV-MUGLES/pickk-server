@@ -28,13 +28,13 @@ export class SendRefundRequestedAlimtalkConsumer {
 
   @SqsMessageHandler()
   async sendAlimtalk(message: AWS.SQS.Message) {
-    const { refundRequestId } = plainToClass(
+    const { merchantUid } = plainToClass(
       SendRefundRequestedAlimtalkMto,
       JSON.parse(message.Body)
     );
 
     const refundRequest = await this.refundRequestsService.get(
-      refundRequestId,
+      merchantUid,
       this.REFUND_REQUEST_RELATIONS
     );
 

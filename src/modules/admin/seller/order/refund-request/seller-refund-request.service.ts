@@ -35,16 +35,18 @@ export class SellerRefundRequestService {
     return RefundRequestsCountOutput.create(sellerId, refundRequests);
   }
 
-  async bulkPick(sellerId: number, ids: number[]) {
+  async bulkPick(sellerId: number, merchantUids: string[]) {
     const refundRequests = await this.refundRequestsRepository.find({
-      select: ['id', 'status', 'sellerId'],
+      select: ['merchantUid', 'status', 'sellerId'],
       where: {
-        id: In(ids),
+        merchantUid: In(merchantUids),
       },
     });
 
     if (refundRequests.some((oi) => oi.sellerId !== sellerId)) {
-      const { id } = refundRequests.find((oi) => oi.sellerId !== sellerId);
+      const { merchantUid: id } = refundRequests.find(
+        (oi) => oi.sellerId !== sellerId
+      );
       throw new ForbiddenException(
         `입력된 반품요청 ${id}이 본인의 반품요청이 아닙니다.`
       );
@@ -53,7 +55,7 @@ export class SellerRefundRequestService {
     if (
       refundRequests.some((rr) => rr.status !== RefundRequestStatus.Requested)
     ) {
-      const { id } = refundRequests.find(
+      const { merchantUid: id } = refundRequests.find(
         (rr) => rr.status !== RefundRequestStatus.Requested
       );
       throw new BadRequestException(
@@ -65,7 +67,7 @@ export class SellerRefundRequestService {
       .createQueryBuilder()
       .update(RefundRequestEntity)
       .set({ status: RefundRequestStatus.Picked, pickedAt: new Date() })
-      .where({ id: In(ids) })
+      .where({ id: In(merchantUids) })
       .execute();
   }
 }
