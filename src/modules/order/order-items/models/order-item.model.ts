@@ -80,10 +80,14 @@ export class OrderItem extends OrderItemEntity {
       ...shipInput,
     });
   }
-  /** to: exchange_requested */
-  requestExchange(input: RequestOrderItemExchangeInput, product: Product) {
+  /** mark as: exchange_requested */
+  requestExchange(
+    input: RequestOrderItemExchangeInput,
+    product: Product
+  ): OrderItem {
     this.mark(OrderItemClaimStatus.ExchangeRequested);
     this.exchangeRequest = ExchangeRequestFactory.create(this, product, input);
+    return this;
   }
 
   ///////////////

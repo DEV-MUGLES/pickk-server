@@ -6,6 +6,7 @@ import { SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE } from '@queue/constants';
 
 import { ProductsModule } from '@item/products/products.module';
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
+import { PaymentsModule } from '@payment/payments/payments.module';
 
 import { SendExchangeRequestedAlimtalkConsumer } from './consumers';
 import { OrderItemsProducer } from './producers';
@@ -19,6 +20,7 @@ import { OrderItemsService } from './order-items.service';
     TypeOrmModule.forFeature([OrderItemsRepository]),
     ProductsModule,
     ExchangeRequestsModule,
+    PaymentsModule,
     SqsModule.registerQueue({
       name: SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,
     }),
