@@ -21,7 +21,7 @@ export class RemoveDeletedDigestImagesStep extends BaseStep {
       digestId: null,
     });
     const deletedKeys = deletedDigestImages.map(({ key }) => key);
-    await this.digestImagesRepository.remove(deletedDigestImages);
     await this.imagesService.removeByKeys(deletedKeys);
+    await this.digestImagesRepository.remove(deletedDigestImages);
   }
 }
