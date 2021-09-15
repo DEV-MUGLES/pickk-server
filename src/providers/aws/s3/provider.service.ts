@@ -7,6 +7,8 @@ import { AwsS3ConfigService } from '@config/providers/aws/s3';
 
 import { S3UploadResultDto } from './dtos';
 
+const MAX_DELETE_SIZE = 1000;
+
 @Injectable()
 export class AwsS3ProviderService {
   private ACL = 'public-read';
@@ -96,5 +98,51 @@ export class AwsS3ProviderService {
       key,
       url: this.getUrl(key),
     };
+  }
+
+  async deleteObject(keys: string | string[]) {
+    const startIndex = 0;
+    const deletedObjects = [];
+    const errors = [];
+    const keysArray = !Array.isArray(keys) ? [keys] : keys;
+    return await this.deleteObjectBatch(
+      errors,
+      deletedObjects,
+      keysArray,
+      startIndex
+    );
+  }
+
+  private async deleteObjectBatch(
+    errors?: AWS.S3.Errors,
+    deletedObjects?: AWS.S3.DeletedObjects,
+    keys?: string[],
+    startIndex?: number
+  ) {
+    const endIndex = startIndex + MAX_DELETE_SIZE;
+    const batchKeys = keys.slice(startIndex, endIndex);
+    const params: AWS.S3.Types.DeleteObjectsRequest = {
+      Bucket: this.awsS3ConfigService.publicBucketName,
+      Delete: {
+        Objects: batchKeys.map((key) => ({ Key: key })),
+      },
+    };
+    const result = await this.s3.deleteObjects(params).promise();
+    const errorsBatch = errors.concat(result.Errors);
+    const deletedObjectsBatch = deletedObjects.concat(result.Deleted);
+    if (endIndex < keys.length) {
+      return this.deleteObjectBatch(
+        errorsBatch,
+        deletedObjectsBatch,
+        keys,
+        endIndex
+      );
+    }
+    if (errorsBatch.length > 0) {
+      throw new Error(
+        `Failed to delete objects, errors: ${JSON.stringify(errors)}`
+      );
+    }
+    return deletedObjectsBatch;
   }
 }
