@@ -2,7 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 
-import { AwsS3ProviderService, S3UploadResultDto } from '@providers/aws/s3';
+import {
+  AwsS3ProviderService,
+  S3DeleteResultDto,
+  S3UploadResultDto,
+} from '@providers/aws/s3';
 
 import { UploadBufferDto } from './dtos';
 import { getMimeType } from './helpers';
@@ -60,5 +64,9 @@ export class ImagesService {
     );
 
     return await this.uploadBufferDatas(bufferDtos);
+  }
+
+  async removeByKeys(keys: string | string[]): Promise<S3DeleteResultDto> {
+    return await this.awsS3Service.deleteObject(keys);
   }
 }
