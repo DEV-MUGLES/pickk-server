@@ -14,7 +14,7 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
-import { Digest, DigestImage } from './models';
+import { Digest } from './models';
 import { DigestFactory, DigestImageFactory } from './factories';
 import { DigestsProducer } from './producers';
 
@@ -150,8 +150,7 @@ export class DigestsService {
     return digest;
   }
 
-  // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
-  async update(id: number, input: UpdateDigestInput): Promise<DigestImage[]> {
+  async update(id: number, input: UpdateDigestInput): Promise<Digest> {
     const digest = await this.get(id, ['images', 'itemPropertyValues']);
 
     if (input.itemPropertyValueIds) {
@@ -166,16 +165,11 @@ export class DigestsService {
       );
     }
 
-    const deletedImages = digest.images.filter(
-      ({ key }) => !digest.images.find((image) => image.key === key)
-    );
-
-    await this.digestsRepository.save(
+    return await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
       })
     );
-    return deletedImages;
   }
 }
