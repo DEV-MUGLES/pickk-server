@@ -8,13 +8,13 @@ import { SendExchangeRequestedAlimtalkMto } from '@queue/mtos';
 export class OrderItemsProducer {
   constructor(private readonly sqsService: SqsService) {}
 
-  async sendExchangeRequestedAlimtalk(exchangeRequestId: number) {
+  async sendExchangeRequestedAlimtalk(merchantUid: string) {
     await this.sqsService.send<SendExchangeRequestedAlimtalkMto>(
       SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,
       {
-        id: exchangeRequestId.toString(),
+        id: merchantUid.toString(),
         body: {
-          exchangeRequestId,
+          merchantUid,
         },
       }
     );

@@ -1,3 +1,3 @@
 export class SendExchangeRequestedAlimtalkMto {
-  exchangeRequestId: number;
+  merchantUid: string;
 }

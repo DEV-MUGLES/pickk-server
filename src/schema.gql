@@ -692,9 +692,11 @@ type DigestsExhibition {
 type ExchangeRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
-  id: Int!
   isProcessDelaying: Boolean!
   itemName: String!
+
+  """orderItemMerchantUid와 동일"""
+  merchantUid: String!
   orderItem: OrderItem!
   orderItemMerchantUid: String!
   pickShipment: Shipment
@@ -1296,7 +1298,7 @@ type Mutation {
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
-  bulkPickMeSellerExchangeRequests(ids: [Int!]!): Boolean!
+  bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
   bulkPickMeSellerRefundRequests(ids: [Int!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
@@ -1352,7 +1354,7 @@ type Mutation {
   reportItem(id: Int!, reason: String!): Boolean!
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
-  reshipMeSellerExchangeRequest(id: Int!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
+  reshipMeSellerExchangeRequest(merchantUid: String!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   rootAnswerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!

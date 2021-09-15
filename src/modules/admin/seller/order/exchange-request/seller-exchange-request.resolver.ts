@@ -4,13 +4,12 @@ import {
   Injectable,
   UseGuards,
 } from '@nestjs/common';
-import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
-import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
@@ -96,10 +95,10 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
   @UseGuards(JwtSellerVerifyGuard)
   async bulkPickMeSellerExchangeRequests(
     @CurrentUser() { sellerId }: JwtPayload,
-    @Args('ids', { type: () => [Int] })
-    ids: number[]
+    @Args('merchantUids', { type: () => [String] })
+    merchantUids: string[]
   ): Promise<boolean> {
-    await this.sellerExchangeRequestService.bulkPick(sellerId, ids);
+    await this.sellerExchangeRequestService.bulkPick(sellerId, merchantUids);
 
     return true;
   }
@@ -108,11 +107,11 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
   @UseGuards(JwtSellerVerifyGuard)
   async reshipMeSellerExchangeRequest(
     @CurrentUser() { sellerId }: JwtPayload,
-    @IntArgs('id') id: number,
+    @Args('merchantUid') merchantUid: string,
     @Args('reshipExchangeRequestInput') input: ReshipExchangeRequestInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<ExchangeRequest> {
-    const exchangeRequest = await this.exchangeRequestsService.get(id);
+    const exchangeRequest = await this.exchangeRequestsService.get(merchantUid);
     if (exchangeRequest.sellerId !== sellerId) {
       throw new ForbiddenException('해당 교환 요청에 대한 권한이 없습니다.');
     }
@@ -120,7 +119,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
     await this.sellerExchangeRequestService.reship(exchangeRequest, input);
 
     return await this.exchangeRequestsService.get(
-      id,
+      merchantUid,
       this.getRelationsFromInfo(info)
     );
   }

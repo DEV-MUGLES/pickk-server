@@ -8,7 +8,7 @@ import { IUser } from '@user/users/interfaces';
 import { ExchangeRequestStatus } from '../constants';
 
 export interface IExchangeRequest {
-  id: number;
+  merchantUid: string;
 
   user?: IUser;
   userId?: number;

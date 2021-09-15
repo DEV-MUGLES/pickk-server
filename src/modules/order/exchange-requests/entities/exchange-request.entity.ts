@@ -1,12 +1,12 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
-  PrimaryGeneratedColumn,
   CreateDateColumn,
   Column,
   ManyToOne,
   Entity,
   OneToOne,
   JoinColumn,
+  PrimaryColumn,
 } from 'typeorm';
 import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
 
@@ -28,7 +28,7 @@ export class ExchangeRequestEntity implements IExchangeRequest {
       return;
     }
 
-    this.id = attributes.id;
+    this.merchantUid = attributes.merchantUid;
 
     this.user = attributes.user;
     this.userId = attributes.userId;
@@ -66,81 +66,49 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.confirmedAt = attributes.confirmedAt;
   }
 
-  @Field(() => Int)
-  @PrimaryGeneratedColumn()
-  id: number;
+  @Field({ description: 'orderItemMerchantUid와 동일' })
+  @PrimaryColumn({ type: 'char', length: 22 })
+  @IsString()
+  merchantUid: string;
 
   @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   userId?: number;
-
   @Field(() => Product, { nullable: true })
   @ManyToOne('ProductEntity', { nullable: true })
   product?: Product;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   productId: number;
-
   @Field(() => Seller, { nullable: true })
   @ManyToOne('SellerEntity', { nullable: true })
   seller?: Seller;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   sellerId?: number;
 
   @Field(() => Shipment, { nullable: true })
   @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
   @JoinColumn()
   pickShipment: Shipment;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   pickShipmentId: number;
 
   @Field(() => Shipment, { nullable: true })
   @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
   @JoinColumn()
   reShipment: Shipment;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', nullable: true })
   reShipmentId: number;
 
   @OneToOne('OrderItemEntity', 'refundRequests')
   @JoinColumn()
   orderItem: IOrderItem;
-
   @Field()
   @Column({ type: 'char', length: 20 })
   orderItemMerchantUid: string;
@@ -165,12 +133,10 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Column()
   @IsString()
   reason: string;
-
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })
   @IsString()
   rejectReason: string;
-
   @Field(() => Int, { description: '결제된 교환 배송비' })
   @Column({ type: 'mediumint', unsigned: true })
   @Min(1)
@@ -180,12 +146,10 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Column({ type: 'smallint', unsigned: true })
   @Min(1)
   quantity: number;
-
   @Field()
   @Column()
   @IsString()
   itemName: string;
-
   @Field()
   @Column()
   @IsString()
@@ -195,7 +159,6 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Column({ default: false })
   @IsOptional()
   isProcessDelaying: boolean;
-
   @Field()
   @Column({ nullable: true })
   processDelayedAt: Date;
@@ -203,23 +166,18 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Field()
   @CreateDateColumn()
   requestedAt: Date;
-
   @Field({ nullable: true, description: '수거 완료 시점' })
   @Column({ nullable: true })
   pickedAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   reshippingAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   reshippedAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   rejectedAt: Date;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;

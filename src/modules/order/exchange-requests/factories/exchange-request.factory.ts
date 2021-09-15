@@ -39,6 +39,7 @@ export class ExchangeRequestFactory {
 
     const result = new ExchangeRequest({
       ...input,
+      merchantUid: orderItem.merchantUid,
       status: ExchangeRequestStatus.Requested,
       userId,
       sellerId,

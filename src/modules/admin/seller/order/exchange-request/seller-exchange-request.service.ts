@@ -37,18 +37,20 @@ export class SellerExchangeRequestService {
     return ExchangeRequestsCountOutput.create(sellerId, exchangeRequests);
   }
 
-  async bulkPick(sellerId: number, ids: number[]) {
+  async bulkPick(sellerId: number, merchantUids: string[]) {
     const exchangeRequests = await this.exchangeRequestsRepository.find({
-      select: ['id', 'status', 'sellerId'],
+      select: ['merchantUid', 'status', 'sellerId'],
       where: {
-        id: In(ids),
+        merchantUid: In(merchantUids),
       },
     });
 
     if (exchangeRequests.some((oi) => oi.sellerId !== sellerId)) {
-      const { id } = exchangeRequests.find((oi) => oi.sellerId !== sellerId);
+      const { merchantUid } = exchangeRequests.find(
+        (oi) => oi.sellerId !== sellerId
+      );
       throw new ForbiddenException(
-        `입력된 교환요청 ${id}이 본인의 교환요청이 아닙니다.`
+        `입력된 교환요청 ${merchantUid}에 대한 권한이 없습니다.`
       );
     }
 
@@ -57,11 +59,11 @@ export class SellerExchangeRequestService {
         (rr) => rr.status !== ExchangeRequestStatus.Requested
       )
     ) {
-      const { id } = exchangeRequests.find(
+      const { merchantUid } = exchangeRequests.find(
         (rr) => rr.status !== ExchangeRequestStatus.Requested
       );
       throw new BadRequestException(
-        `입력된 반품신청 ${id}가 요청됨 상태가 아닙니다.`
+        `입력된 교환신청 ${merchantUid}가 요청됨 상태가 아닙니다.`
       );
     }
 
@@ -69,7 +71,7 @@ export class SellerExchangeRequestService {
       .createQueryBuilder()
       .update(ExchangeRequestEntity)
       .set({ status: ExchangeRequestStatus.Picked, pickedAt: new Date() })
-      .where({ id: In(ids) })
+      .where({ merchantUid: In(merchantUids) })
       .execute();
   }
 

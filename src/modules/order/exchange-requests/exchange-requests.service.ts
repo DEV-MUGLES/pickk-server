@@ -19,10 +19,10 @@ export class ExchangeRequestsService {
   ) {}
 
   async get(
-    id: number,
+    merchantUid: string,
     relations: ExchangeRequestRelationType[] = []
   ): Promise<ExchangeRequest> {
-    return await this.exchangeRequestsRepository.get(id, relations);
+    return await this.exchangeRequestsRepository.get(merchantUid, relations);
   }
 
   async list(
@@ -41,7 +41,7 @@ export class ExchangeRequestsService {
         relations,
         where: parseFilter(_exchangeRequestFilter, _pageInput?.idFilter),
         order: {
-          id: 'DESC',
+          merchantUid: 'DESC',
         },
         ...(_pageInput?.pageFilter ?? {}),
       })

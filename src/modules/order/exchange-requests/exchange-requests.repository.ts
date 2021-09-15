@@ -28,16 +28,16 @@ export class ExchangeRequestsRepository extends Repository<ExchangeRequestEntity
   }
 
   async get(
-    id: number,
+    merchantUid: string,
     relations: string[] = []
   ): Promise<ExchangeRequest | null> {
     return await this.findOne({
-      where: { id },
+      where: { merchantUid },
       relations,
     })
       .then((entity) => {
         if (!entity) {
-          throw new NotFoundException('해당 반품요청이 존재하지 않습니다.');
+          throw new NotFoundException('해당 교환요청이 존재하지 않습니다.');
         }
 
         return Promise.resolve(this.entityToModel(entity));

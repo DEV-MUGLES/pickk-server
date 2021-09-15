@@ -15,12 +15,12 @@ export class SendExchangeRequestedAlimtalkConsumer {
 
   @SqsMessageHandler()
   async sendAlimtalk(message: AWS.SQS.Message) {
-    const { exchangeRequestId }: SendExchangeRequestedAlimtalkMto = JSON.parse(
+    const { merchantUid }: SendExchangeRequestedAlimtalkMto = JSON.parse(
       message.Body
     );
 
     const exchangeRequest = await this.exchangeRequestsService.get(
-      exchangeRequestId,
+      merchantUid,
       [
         'seller',
         'pickShipment',
