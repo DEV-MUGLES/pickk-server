@@ -3,6 +3,7 @@ import { OrderItem } from '../models';
 export type OrderItemRelationType =
   | keyof OrderItem
   | 'item.brand'
+  | 'seller.claimPolicy'
   | 'seller.shippingPolicy'
   | 'order.buyer'
   | 'order.receiver'
@@ -27,5 +28,6 @@ export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
 
 export const EXCHANGE_ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'seller',
+  'seller.claimPolicy',
   'seller.shippingPolicy',
 ];

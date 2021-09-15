@@ -14,6 +14,7 @@ export type OrderRelationType =
   | 'orderItems.item'
   | 'orderItems.seller'
   | 'orderItems.seller.brand'
+  | 'orderItems.seller.claimPolicy'
   | 'orderItems.seller.shippingPolicy';
 
 export const ORDER_RELATIONS: Array<OrderRelationType> = [
@@ -70,6 +71,7 @@ export const REFUND_ORDER_RELATIONS: Array<OrderRelationType> = [
   'user',
   'orderItems',
   'orderItems.seller',
+  'orderItems.seller.claimPolicy',
   'orderItems.seller.shippingPolicy',
   'refundRequests',
 ];
