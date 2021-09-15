@@ -2114,11 +2114,12 @@ enum RefundRequestFaultOf {
 input RefundRequestFilter {
   confirmedAtBetween: [DateTime!]
   isProcessDelaying: Boolean
+  merchantUidIn: [String!]
   order: RefundRequestOrderFilter
   pickedAtBetween: [DateTime!]
   requestedAtBetween: [DateTime!]
 
-  """주문번호, 운송장번호로 검색할 수 있습니다."""
+  """주문번호, 운송장번호로 검색"""
   search: String
   sellerId: Int
   status: RefundRequestStatus

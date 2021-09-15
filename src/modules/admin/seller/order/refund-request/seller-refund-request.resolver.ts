@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Query, Info, Args, Mutation } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -26,11 +26,9 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
   relations = REFUND_REQUEST_RELATIONS;
 
   constructor(
-    @Inject(RefundRequestsService)
     private readonly refundRequestsService: RefundRequestsService,
-    @Inject(SellerRefundRequestService)
     private readonly sellerRefundRequestService: SellerRefundRequestService,
-    @Inject(CacheService) private cacheService: CacheService
+    private cacheService: CacheService
   ) {
     super();
   }

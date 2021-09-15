@@ -20,16 +20,12 @@ export class RefundRequestFilter
     'orderMerchantUid',
     'shipment.trackCode',
   ];
-
-  @Field({
-    nullable: true,
-    description: '주문번호, 운송장번호로 검색할 수 있습니다.',
-  })
+  @Field({ nullable: true, description: '주문번호, 운송장번호로 검색' })
   search?: string;
 
-  @Field(() => Int, {
-    nullable: true,
-  })
+  @Field(() => [String], { nullable: true })
+  merchantUidIn?: string[];
+  @Field(() => Int, { nullable: true })
   @IsOptional()
   sellerId?: number;
 
