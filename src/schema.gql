@@ -121,7 +121,7 @@ type BaseOrderOutput {
   """[MODEL ONLY]"""
   id: String!
 
-  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  """(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)"""
   merchantUid: String!
   paidAt: DateTime
   payMethod: PayMethod
@@ -1108,6 +1108,15 @@ type ItemsExhibition {
   updatedAt: DateTime!
 }
 
+type ItemsPackage {
+  """최대 50자"""
+  code: String!
+  createdAt: DateTime!
+  id: Int!
+  items: [Item!]!
+  updatedAt: DateTime!
+}
+
 type JwtPayload {
   """Seller 로그인인 경우에만 발급된다."""
   brandId: Float
@@ -1299,7 +1308,7 @@ type Mutation {
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
-  bulkPickMeSellerRefundRequests(ids: [Int!]!): Boolean!
+  bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
@@ -1377,6 +1386,7 @@ type Mutation {
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
+  updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
@@ -1413,7 +1423,7 @@ type Order {
   """[MODEL ONLY]"""
   id: String!
 
-  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  """(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)"""
   merchantUid: String!
   orderItems: [OrderItem!]!
   paidAt: DateTime
@@ -1980,6 +1990,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
+  itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
   keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
   keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
@@ -2063,8 +2074,10 @@ type RefundRequest {
   amount: Int!
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
-  id: Int!
   isProcessDelaying: Boolean!
+
+  """(PK) YYMMDDHHmmssSSS + NN(00~99) + M"""
+  merchantUid: String!
   order: Order!
   orderItems: [OrderItem!]!
   orderMerchantUid: String!
