@@ -15,12 +15,6 @@ export class ExchangeRequest extends ExchangeRequestEntity {
   orderItem: OrderItem;
 
   reship(reshipInput: ReshipExchangeRequestInput) {
-    if (this.status !== ExchangeRequestStatus.Picked) {
-      throw new BadRequestException(
-        '수거완료 상태인 교환요청만 재배송 처리할 수 있습니다.'
-      );
-    }
-
     this.markReshipping();
     this.reShipment = ShipmentFactory.create({
       ownerType: ShipmentOwnerType.ExchangeRequestReShip,
@@ -30,6 +24,12 @@ export class ExchangeRequest extends ExchangeRequestEntity {
   }
 
   private markReshipping() {
+    if (this.status !== ExchangeRequestStatus.Picked) {
+      throw new BadRequestException(
+        '수거완료 상태인 교환요청만 재배송 처리할 수 있습니다.'
+      );
+    }
+
     this.status = ExchangeRequestStatus.Reshipping;
     this.reshippingAt = new Date();
   }
