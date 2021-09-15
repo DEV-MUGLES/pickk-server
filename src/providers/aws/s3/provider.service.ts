@@ -5,7 +5,7 @@ import dayjs from 'dayjs';
 
 import { AwsS3ConfigService } from '@config/providers/aws/s3';
 
-import { S3UploadResultDto } from './dtos';
+import { S3DeleteResultDto, S3UploadResultDto } from './dtos';
 
 const MAX_DELETE_SIZE = 1000;
 
@@ -100,7 +100,7 @@ export class AwsS3ProviderService {
     };
   }
 
-  async deleteObject(keys: string | string[]) {
+  async deleteObject(keys: string | string[]): Promise<S3DeleteResultDto> {
     const startIndex = 0;
     const deletedObjects = [];
     const errors = [];
@@ -118,7 +118,7 @@ export class AwsS3ProviderService {
     deletedObjects?: AWS.S3.DeletedObjects,
     keys?: string[],
     startIndex?: number
-  ) {
+  ): Promise<S3DeleteResultDto> {
     const endIndex = startIndex + MAX_DELETE_SIZE;
     const batchKeys = keys.slice(startIndex, endIndex);
     const params: AWS.S3.Types.DeleteObjectsRequest = {
