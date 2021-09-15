@@ -61,4 +61,8 @@ export class ImagesService {
 
     return await this.uploadBufferDatas(bufferDtos);
   }
+
+  async removeByKeys(keys: string[]) {
+    await this.awsS3Service.deleteObjects(keys);
+  }
 }
