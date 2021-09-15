@@ -14,6 +14,7 @@ export class DigestImageEntity extends AbstractImageEntity {
       return;
     }
     this.order = attributes.order;
+    this.digestId = attributes.digestId;
     this.digest = attributes.digest;
   }
 
@@ -21,6 +22,8 @@ export class DigestImageEntity extends AbstractImageEntity {
   @Column({ type: 'tinyint', default: 0, unsigned: true })
   order: number;
 
+  @Column({ type: 'int', nullable: true })
+  digestId: number;
   @ManyToOne('DigestEntity', 'images', {
     onDelete: 'CASCADE',
   })
