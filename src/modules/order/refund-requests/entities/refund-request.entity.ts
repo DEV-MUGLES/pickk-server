@@ -89,7 +89,7 @@ export class RefundRequestEntity implements IRefundRequest {
   @Field()
   @Column({ type: 'char', length: 20 })
   orderMerchantUid: string;
-  @OneToMany('OrderItemEntity', 'refundRequest')
+  @OneToMany('OrderItemEntity', 'refundRequest', { cascade: true })
   orderItems: IOrderItem[];
 
   @Field(() => RefundRequestStatus)
