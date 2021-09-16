@@ -163,7 +163,7 @@ export class OrderItemEntity implements IOrderItem {
   @Column({ type: 'int', nullable: true })
   shipmentId: number;
 
-  @ManyToOne('OrderEntity')
+  @ManyToOne('OrderEntity', { onDelete: 'CASCADE' })
   order: IOrder;
   @Field()
   @Column({ type: 'char', length: 20 })
