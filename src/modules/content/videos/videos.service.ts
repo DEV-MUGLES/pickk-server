@@ -6,11 +6,13 @@ import { PageInput } from '@common/dtos';
 import {
   bulkEnrichUserIsMe,
   enrichIsMine,
+  findModelById,
   findModelsByIds,
   parseFilter,
 } from '@common/helpers';
 
 import { DigestFactory } from '@content/digests/factories';
+import { Digest } from '@content/digests/models';
 import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -103,7 +105,6 @@ export class VideosService {
     return video;
   }
 
-  // TODO: QUEUE 삭제된 digest 삭제하는 작업 추가
   async update(id: number, input: UpdateVideoInput): Promise<Video> {
     const itemPropertyValueIds =
       input?.digests?.reduce(
@@ -116,6 +117,7 @@ export class VideosService {
         : [];
 
     const video = await this.get(id, ['digests', 'digests.itemPropertyValues']);
+    const { digests: videoDigests } = video;
 
     if (input.digests) {
       video.digests = input.digests.map((digest) =>
@@ -132,12 +134,29 @@ export class VideosService {
       );
     }
 
-    return await this.videosRepository.save(
+    const updatedVideo = await this.videosRepository.save(
       new Video({
         ...video,
         ...input,
         digests: video.digests,
       })
+    );
+    await this.removeDeletedDigests(videoDigests, updatedVideo.digests);
+
+    return updatedVideo;
+  }
+
+  private async removeDeletedDigests(
+    digests: Digest[],
+    updatedDigests: Digest[]
+  ) {
+    if (updatedDigests === undefined) {
+      return;
+    }
+    await this.digestsProducer.removeDigests(
+      digests
+        .filter(({ id }) => !findModelById(id, updatedDigests))
+        .map(({ id }) => id)
     );
   }
 }
