@@ -4,13 +4,17 @@ import { IDigest } from '../interfaces';
 
 @InputType()
 export class DigestItemFilter {
-  @Field(() => Int, { nullable: true })
+  @Field(() => Int, { nullable: true, description: '[CUSTOM]' })
+  brandId?: number;
+  @Field(() => Int, { nullable: true, description: '[CUSTOM]' })
+  majorCategoryId?: number;
+  @Field(() => Int, { nullable: true, description: '[CUSTOM]' })
   minorCategoryId?: number;
 }
 
 @InputType()
 export class DigestUserFilter {
-  @Field(() => [Int, Int], { nullable: true })
+  @Field(() => [Int, Int], { nullable: true, description: '[CUSTOM]' })
   heightBetween?: [number, number];
 }
 
@@ -42,7 +46,10 @@ export class DigestFilter implements Partial<Omit<IDigest, 'item' | 'user'>> {
 
   get hasCustom(): boolean {
     return (
-      this.item?.minorCategoryId != null || this.user?.heightBetween != null
+      this.item?.brandId != null ||
+      this.item?.majorCategoryId != null ||
+      this.item?.minorCategoryId != null ||
+      this.user?.heightBetween != null
     );
   }
 
@@ -50,6 +57,8 @@ export class DigestFilter implements Partial<Omit<IDigest, 'item' | 'user'>> {
     const { item, user } = this;
 
     return JSON.stringify({
+      brandId: item?.brandId,
+      majorCategoryId: item?.majorCategoryId,
       minorCategoryId: item?.minorCategoryId,
       heightBetween: user?.heightBetween,
     });

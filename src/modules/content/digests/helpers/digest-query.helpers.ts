@@ -1,22 +1,29 @@
 import { SelectQueryBuilder } from 'typeorm';
 
+import { DigestItemFilter } from '../dtos';
 import { DigestEntity } from '../entities';
 
 // @TODO: 테스트 작성
-export const digestItemMinorCategoryIdQuery = (
+export const digestItemQuery = (
   queryBuilder: SelectQueryBuilder<DigestEntity>,
-  minorCategoryId: number
+  itemFilter: DigestItemFilter
 ) => {
-  if (!minorCategoryId) {
+  if (
+    itemFilter?.brandId == null &&
+    itemFilter?.majorCategoryId == null &&
+    itemFilter?.minorCategoryId == null
+  ) {
     return queryBuilder;
   }
 
-  return queryBuilder.innerJoin(
-    'item',
-    'item',
-    `item.id = digest.itemId AND 
-        item.minorCategoryId = ${minorCategoryId}`
-  );
+  const { brandId, majorCategoryId, minorCategoryId } = itemFilter;
+
+  const chunks = ['item.id = digest.itemId'];
+  brandId && chunks.push(`item.brandId = ${brandId}`);
+  majorCategoryId && chunks.push(`item.majorCategoryId = ${majorCategoryId}`);
+  minorCategoryId && chunks.push(`item.minorCategoryId = ${minorCategoryId}`);
+
+  return queryBuilder.innerJoin('item', 'item', chunks.join(' AND '));
 };
 
 export const digestUserHeightQuery = (

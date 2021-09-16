@@ -675,10 +675,18 @@ type DigestImage {
 }
 
 input DigestItemFilter {
+  """[CUSTOM]"""
+  brandId: Int
+
+  """[CUSTOM]"""
+  majorCategoryId: Int
+
+  """[CUSTOM]"""
   minorCategoryId: Int
 }
 
 input DigestUserFilter {
+  """[CUSTOM]"""
   heightBetween: [Int!]
 }
 

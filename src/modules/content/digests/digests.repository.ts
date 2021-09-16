@@ -7,10 +7,7 @@ import { BaseRepository } from '@common/base.repository';
 
 import { DigestFilter } from './dtos';
 import { DigestEntity, DigestImageEntity } from './entities';
-import {
-  digestItemMinorCategoryIdQuery,
-  digestUserHeightQuery,
-} from './helpers';
+import { digestItemQuery, digestUserHeightQuery } from './helpers';
 import { Digest } from './models';
 
 @EntityRepository(DigestEntity)
@@ -41,12 +38,12 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
     pageInput?: PageInput
   ): Promise<number[]> {
     const qb = pageQuery(
-      digestItemMinorCategoryIdQuery(
+      digestItemQuery(
         digestUserHeightQuery(
           this.createQueryBuilder('digest'),
           filter.user?.heightBetween
         ),
-        filter.item?.minorCategoryId
+        filter.item
       ),
       'digest',
       pageInput
