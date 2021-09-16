@@ -106,7 +106,7 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Column({ type: 'int', nullable: true })
   reShipmentId: number;
 
-  @OneToOne('OrderItemEntity', 'refundRequests')
+  @OneToOne('OrderItemEntity', 'refundRequests', { cascade: ['update'] })
   @JoinColumn()
   orderItem: IOrderItem;
   @Field()
