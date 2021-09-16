@@ -693,6 +693,7 @@ type ExchangeRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
   isProcessDelaying: Boolean!
+  isSettled: Boolean!
   itemName: String!
 
   """orderItemMerchantUid와 동일"""
@@ -723,6 +724,7 @@ type ExchangeRequest {
   reshippingAt: DateTime
   seller: Seller
   sellerId: Int
+  settledAt: DateTime
 
   """결제된 교환 배송비"""
   shippingFee: Int!
@@ -2082,6 +2084,7 @@ type RefundRequest {
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
   isProcessDelaying: Boolean!
+  isSettled: Boolean!
 
   """(PK) YYMMDDHHmmssSSS + NN(00~99) + M"""
   merchantUid: String!
@@ -2102,6 +2105,7 @@ type RefundRequest {
   requestedAt: DateTime!
   seller: Seller
   sellerId: Int
+  settledAt: DateTime
   shipment: Shipment
   shipmentId: Int
 

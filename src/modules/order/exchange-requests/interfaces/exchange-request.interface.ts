@@ -39,8 +39,9 @@ export interface IExchangeRequest {
    * product entity에 field로 존재하진 않습니다. */
   productVariantName: string;
 
+  /** @default false */
+  isSettled: boolean;
   isProcessDelaying: boolean;
-
   /** createdAt과 같다. */
   processDelayedAt: Date;
 
@@ -50,4 +51,6 @@ export interface IExchangeRequest {
   reshippingAt: Date;
   reshippedAt: Date;
   rejectedAt: Date;
+
+  settledAt: Date;
 }

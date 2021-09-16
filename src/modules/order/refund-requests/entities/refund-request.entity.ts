@@ -49,14 +49,16 @@ export class RefundRequestEntity implements IRefundRequest {
     this.shippingFee = attributes.shippingFee;
     this.rejectReason = attributes.rejectReason;
 
+    this.isSettled = attributes.isSettled;
     this.isProcessDelaying = attributes.isProcessDelaying;
-
     this.processDelayedAt = attributes.processDelayedAt;
 
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
     this.rejectedAt = attributes.rejectedAt;
     this.confirmedAt = attributes.confirmedAt;
+
+    this.settledAt = attributes.settledAt;
   }
 
   @Field(() => String, { description: '(PK) YYMMDDHHmmssSSS + NN(00~99) + M' })
@@ -119,6 +121,10 @@ export class RefundRequestEntity implements IRefundRequest {
   @IsString()
   rejectReason: string;
 
+  @Field()
+  @Column({ default: false })
+  @IsOptional()
+  isSettled: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
   @IsOptional()
@@ -139,4 +145,8 @@ export class RefundRequestEntity implements IRefundRequest {
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  settledAt: Date;
 }

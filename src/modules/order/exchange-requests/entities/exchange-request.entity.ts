@@ -56,14 +56,16 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.itemName = attributes.itemName;
     this.productVariantName = attributes.productVariantName;
 
+    this.isSettled = attributes.isSettled;
     this.isProcessDelaying = attributes.isProcessDelaying;
-
     this.processDelayedAt = attributes.processDelayedAt;
 
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
     this.rejectedAt = attributes.rejectedAt;
     this.confirmedAt = attributes.confirmedAt;
+
+    this.settledAt = attributes.settledAt;
   }
 
   @Field({ description: 'orderItemMerchantUid와 동일' })
@@ -155,6 +157,10 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @IsString()
   productVariantName: string;
 
+  @Field()
+  @Column({ default: false })
+  @IsOptional()
+  isSettled: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
   @IsOptional()
@@ -181,4 +187,8 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  settledAt: Date;
 }

@@ -31,8 +31,9 @@ export interface IRefundRequest {
 
   rejectReason: string;
 
+  /** @default false */
+  isSettled: boolean;
   isProcessDelaying: boolean;
-
   processDelayedAt: Date;
 
   requestedAt: Date;
@@ -40,4 +41,6 @@ export interface IRefundRequest {
   pickedAt: Date;
   rejectedAt: Date;
   confirmedAt: Date;
+
+  settledAt: Date;
 }
