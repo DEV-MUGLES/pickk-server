@@ -46,18 +46,18 @@ export class KeywordsService {
         LikeOwnerType.Keyword,
         keyword
       );
-    }
-    if (userId && keyword.digests) {
-      await this.likesService.bulkEnrichLiking(
-        userId,
-        LikeOwnerType.Digest,
-        keyword.digests
-      );
-      await this.followsService.bulkEnrichAuthorFollowing(
-        userId,
-        keyword.digests
-      );
-      bulkEnrichUserIsMe(userId, keyword.digests);
+      if (keyword.digests) {
+        await this.likesService.bulkEnrichLiking(
+          userId,
+          LikeOwnerType.Digest,
+          keyword.digests
+        );
+        await this.followsService.bulkEnrichAuthorFollowing(
+          userId,
+          keyword.digests
+        );
+        bulkEnrichUserIsMe(userId, keyword.digests);
+      }
     }
 
     return keyword;
@@ -69,7 +69,7 @@ export class KeywordsService {
     relations: KeywordRelationType[] = [],
     userId?: number
   ): Promise<Keyword[]> {
-    if (filter.isOwning === true && !userId) {
+    if (!userId && (filter?.isLiking === true || filter?.isOwning === true)) {
       return [];
     }
 
@@ -78,35 +78,23 @@ export class KeywordsService {
         relations,
         where: await this.getFindWhere(filter, pageInput, userId),
         order: {
-          score: 'DESC',
+          [filter?.orderBy ?? 'id']: 'DESC',
         },
       })
     );
 
-    if (filter.isOwning != null && userId) {
+    if (filter?.isLiking != null && userId) {
       for (const keyword of keywords) {
-        keyword.isOwning = filter.isOwning;
+        keyword.isLiking = filter?.isLiking;
+      }
+    }
+    if (filter?.isOwning != null && userId) {
+      for (const keyword of keywords) {
+        keyword.isOwning = filter?.isOwning;
       }
     }
 
     return keywords;
-  }
-
-  async listClasses(
-    filter: KeywordClassFilter,
-    pageInput?: PageInput
-  ): Promise<KeywordClass[]> {
-    const _filter = plainToClass(KeywordClassFilter, filter);
-    const _pageInput = plainToClass(PageInput, pageInput);
-
-    return this.keywordClassesRepository.entityToModelMany(
-      await this.keywordClassesRepository.find({
-        where: parseFilter(_filter, _pageInput?.idFilter),
-        order: {
-          order: 'ASC',
-        },
-      })
-    );
   }
 
   private async getFindWhere(
@@ -117,18 +105,17 @@ export class KeywordsService {
     const _filter = plainToClass(KeywordFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    if (!_filter.keywordClassId) {
-      return parseFilter(_filter, _pageInput?.idFilter);
+    if (_filter?.hasCustom) {
+      const ids = await this.keywordsRepository.findIds(
+        _filter,
+        _pageInput,
+        userId
+      );
+
+      return { id: In(ids) };
     }
 
-    const ids = await this.keywordsRepository.findIdsByClass(
-      _filter.keywordClassId,
-      userId,
-      _filter.isOwning,
-      _pageInput
-    );
-
-    return { id: In(ids) };
+    return parseFilter(_filter, _pageInput?.idFilter);
   }
 
   async countByClass(classId: number) {
@@ -146,5 +133,22 @@ export class KeywordsService {
   /** 입력된 id의 키워드가 연관된 키워드 클래스들의 id를 반환합니다. */
   async getClassIds(id: number): Promise<number[]> {
     return await this.keywordsRepository.getClassIds(id);
+  }
+
+  async listClasses(
+    filter: KeywordClassFilter,
+    pageInput?: PageInput
+  ): Promise<KeywordClass[]> {
+    const _filter = plainToClass(KeywordClassFilter, filter);
+    const _pageInput = plainToClass(PageInput, pageInput);
+
+    return this.keywordClassesRepository.entityToModelMany(
+      await this.keywordClassesRepository.find({
+        where: parseFilter(_filter, _pageInput?.idFilter),
+        order: {
+          order: 'ASC',
+        },
+      })
+    );
   }
 }

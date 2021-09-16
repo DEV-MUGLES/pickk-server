@@ -8,6 +8,8 @@ export class KeywordFilter implements Partial<IKeyword> {
     'keywordClassId',
     'isOwning',
     'isLiking',
+    'hasCustom',
+    'orderBy',
   ];
 
   @Field({ nullable: true })
@@ -15,20 +17,21 @@ export class KeywordFilter implements Partial<IKeyword> {
   @Field(() => [Int], { nullable: true })
   idIn?: number[];
 
-  @Field(() => Int, { description: '제공시 추가 연산을 수행합니다.' })
+  @Field(() => Int, { description: '[CUSTOM]', nullable: true })
   keywordClassId?: number;
-  @Field({
-    description: '제공시 추가 연산을 수행합니다. (비로그인시 무시)',
-    nullable: true,
-  })
+  @Field({ description: '[CUSTOM]', nullable: true })
   isOwning?: boolean;
-  @Field({
-    description: '제공시 추가 연산을 수행합니다. (비로그인시 무시)',
-    nullable: true,
-  })
+  @Field({ description: '[CUSTOM]', nullable: true })
   isLiking?: boolean;
 
   get hasCustom() {
-    return this.excludeFields.some((field) => this[field]);
+    return (
+      this.keywordClassId != null ||
+      this.isLiking != null ||
+      this.isOwning != null
+    );
   }
+
+  @Field(() => String, { description: '기본값 id', nullable: true })
+  orderBy?: keyof IKeyword;
 }

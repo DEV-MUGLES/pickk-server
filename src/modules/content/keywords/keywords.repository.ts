@@ -5,8 +5,13 @@ import { PageInput } from '@common/dtos';
 import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
+import { KeywordFilter } from './dtos';
 import { KeywordEntity, KeywordClassEntity } from './entities';
-import { keywordClassQuery, keywordOwningQuery } from './helpers';
+import {
+  keywordClassQuery,
+  keywordLikingQuery,
+  keywordOwningQuery,
+} from './helpers';
 import { Keyword, KeywordClass } from './models';
 
 @EntityRepository(KeywordEntity)
@@ -52,17 +57,23 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
     return result.map(({ keywordClassId }) => keywordClassId);
   }
 
-  async findIdsByClass(
-    classId: number,
-    userId: number,
-    isOwning: boolean,
-    pageInput?: PageInput
+  async findIds(
+    filter: KeywordFilter,
+    pageInput?: PageInput,
+    userId?: number
   ): Promise<number[]> {
     const raws = await pageQuery(
-      keywordOwningQuery(
-        keywordClassQuery(this.createQueryBuilder('keyword'), classId),
+      keywordLikingQuery(
+        keywordOwningQuery(
+          keywordClassQuery(
+            this.createQueryBuilder('keyword'),
+            filter.keywordClassId
+          ),
+          userId,
+          filter.isOwning
+        ),
         userId,
-        isOwning
+        filter.isLiking
       ),
       'keyword',
       pageInput

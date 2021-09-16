@@ -1208,15 +1208,18 @@ enum KeywordClassType {
 input KeywordFilter {
   idIn: [Int!]
 
-  """제공시 추가 연산을 수행합니다. (비로그인시 무시)"""
+  """[CUSTOM]"""
   isLiking: Boolean
 
-  """제공시 추가 연산을 수행합니다. (비로그인시 무시)"""
+  """[CUSTOM]"""
   isOwning: Boolean
   isVisible: Boolean
 
-  """제공시 추가 연산을 수행합니다."""
-  keywordClassId: Int!
+  """[CUSTOM]"""
+  keywordClassId: Int
+
+  """기본값 id"""
+  orderBy: String
 }
 
 """좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""
@@ -2010,7 +2013,7 @@ type Query {
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
   keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
-  keywords(filter: KeywordFilter!, pageInput: PageInput): [Keyword!]!
+  keywords(filter: KeywordFilter, pageInput: PageInput): [Keyword!]!
   keywordsCountByClass(keywordClassId: Int!): Int!
   likingDigests(pageInput: PageInput!): [Digest!]!
   likingKeywords(pageInput: PageInput!): [Keyword!]!

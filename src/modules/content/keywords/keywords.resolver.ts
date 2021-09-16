@@ -49,7 +49,7 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
   @UseGuards(JwtOrNotGuard)
   async keywords(
     @CurrentUser() payload: JwtPayload,
-    @Args('filter') filter: KeywordFilter,
+    @Args('filter', { nullable: true }) filter: KeywordFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Keyword[]> {
