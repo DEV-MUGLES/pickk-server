@@ -67,19 +67,21 @@ export class ItemsService {
   ) {}
 
   async list(
-    itemFilter?: ItemFilter,
+    filter?: ItemFilter,
     pageInput?: PageInput,
     relations: string[] = []
   ): Promise<Item[]> {
-    const _itemFilter = plainToClass(ItemFilter, itemFilter);
+    const _filter = plainToClass(ItemFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
     return this.itemsRepository.entityToModelMany(
       await this.itemsRepository.find({
         relations,
         where: {
-          ...parseFilter(_itemFilter, _pageInput?.idFilter),
-          [itemFilter?.orderBy ?? 'id']: 'DESC',
+          ...parseFilter(_filter, _pageInput?.idFilter),
+        },
+        order: {
+          [_filter?.orderBy ?? 'id']: 'DESC',
         },
         ...(_pageInput?.pageFilter ?? {}),
       })

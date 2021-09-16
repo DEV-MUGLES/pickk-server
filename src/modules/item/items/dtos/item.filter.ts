@@ -5,6 +5,8 @@ import { Item } from '../models';
 
 @InputType()
 export class ItemFilter implements Partial<IItem> {
+  excludeFields?: ['orderBy'];
+
   searchFields?: Array<keyof Item> = ['name'];
 
   @Field({ nullable: true })
@@ -44,6 +46,6 @@ export class ItemFilter implements Partial<IItem> {
   })
   brandId?: number;
 
-  @Field(() => String)
+  @Field(() => String, { nullable: true })
   orderBy?: keyof IItem;
 }

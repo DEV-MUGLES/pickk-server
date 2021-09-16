@@ -957,7 +957,7 @@ input ItemFilter {
   isSellable: Boolean
   majorCategoryId: Float
   minorCategoryId: Float
-  orderBy: String!
+  orderBy: String
   scoreMt: DateTime
 
   """아이템 이름(name)으로 검색합니다."""
