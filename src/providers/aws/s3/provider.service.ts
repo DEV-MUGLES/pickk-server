@@ -101,17 +101,13 @@ export class AwsS3ProviderService {
   }
 
   async deleteObjects(keys: string[]) {
-    const chunk = Math.ceil(keys.length / MAX_DELETE_SIZE);
+    for (let start = 0; start < keys.length; start += MAX_DELETE_SIZE) {
+      const end = start + MAX_DELETE_SIZE;
 
-    for (let i = 0; i < chunk; i++) {
-      const startIndex = MAX_DELETE_SIZE * i;
-      const lastIndex = MAX_DELETE_SIZE * (i + 1);
       const params = {
         Bucket: this.awsS3ConfigService.publicBucketName,
         Delete: {
-          Objects: keys
-            .slice(startIndex, lastIndex)
-            .map((key) => ({ Key: key })),
+          Objects: keys.slice(start, end).map((key) => ({ Key: key })),
         },
       };
       await this.s3.deleteObjects(params).promise();
