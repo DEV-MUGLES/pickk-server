@@ -71,6 +71,9 @@ export class OrderItem extends OrderItemEntity {
   markRefundRequested() {
     this.markAs(OrderItemClaimStatus.RefundRequested);
   }
+  markRefunded() {
+    this.markAs(OrderItemClaimStatus.Refunded);
+  }
   /** to: shipping */
   ship(shipInput: ShipOrderItemInput) {
     this.markAs(OrderItemStatus.Shipping);

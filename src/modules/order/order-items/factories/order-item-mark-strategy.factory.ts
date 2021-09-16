@@ -12,13 +12,14 @@ import {
   OrderItemShippingStrategy,
   OrderItemCancelledStrategy,
   OrderItemRefundRequestedStrategy,
+  OrderItemRefundedStrategy,
   OrderItemExchangeRequestedStrategy,
   OrderItemExchangedStrategy,
 } from '../strategies';
 
 const { Failed, VbankReady, VbankDodged, Paid, ShipReady, Shipping } =
   OrderItemStatus;
-const { Cancelled, RefundRequested, ExchangeRequested, Exchanged } =
+const { Cancelled, RefundRequested, Refunded, ExchangeRequested, Exchanged } =
   OrderItemClaimStatus;
 
 export class OrderItemMarkStrategyFactory {
@@ -45,6 +46,8 @@ export class OrderItemMarkStrategyFactory {
         return new OrderItemCancelledStrategy(orderItem);
       case RefundRequested:
         return new OrderItemRefundRequestedStrategy(orderItem);
+      case Refunded:
+        return new OrderItemRefundedStrategy(orderItem);
       case ExchangeRequested:
         return new OrderItemExchangeRequestedStrategy(orderItem);
       case Exchanged:

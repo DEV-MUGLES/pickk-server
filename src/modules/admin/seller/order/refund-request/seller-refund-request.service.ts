@@ -16,6 +16,18 @@ export class SellerRefundRequestService {
     private readonly refundRequestsService: RefundRequestsService
   ) {}
 
+  async checkBelongsTo(merchantUid: string, sellerId: number): Promise<void> {
+    const refundRequest = await this.refundRequestsRepository.findOneOrFail({
+      select: ['sellerId'],
+      where: { merchantUid },
+    });
+    if (refundRequest.sellerId !== sellerId) {
+      throw new ForbiddenException(
+        `반품요청(${merchantUid})에 대한 권한이 없습니다.`
+      );
+    }
+  }
+
   async getCount(
     sellerId: number,
     month = 3

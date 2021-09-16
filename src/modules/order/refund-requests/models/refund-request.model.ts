@@ -1,27 +1,37 @@
-import { BadRequestException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { OrderItem } from '@order/order-items/models';
 import { Order } from '@order/orders/models';
-import { RefundRequestStatus } from '../constants';
 
+import { RefundRequestStatus } from '../constants';
 import { RefundRequestEntity } from '../entities';
+import { RefundRequestMarkStrategyFactory } from '../factories';
 
 @ObjectType()
 export class RefundRequest extends RefundRequestEntity {
   @Field(() => Order)
   order: Order;
+  @Type(() => OrderItem)
   @Field(() => [OrderItem])
   orderItems: OrderItem[];
 
-  markPicked() {
-    if (this.status !== RefundRequestStatus.Requested) {
-      throw new BadRequestException(
-        `반품요청${this.merchantUid}가 요청됨 상태가 아닙니다.`
-      );
-    }
+  /////////////////
+  // 상태변경 함수들 //
+  /////////////////
 
-    this.status = RefundRequestStatus.Picked;
-    this.pickedAt = new Date();
+  private markAs(as: RefundRequestStatus) {
+    RefundRequestMarkStrategyFactory.from(as, this).execute();
+  }
+  markPicked() {
+    this.markAs(RefundRequestStatus.Picked);
+  }
+  /** mark as: confirmed. orderItem의 상태도 변경된다. (join 필요)
+   * @param {number} shippingFee 부과된 배송비를 변경하며 승인하고 싶을 때 넘겨주세용 */
+  confirm(shippingFee?: number) {
+    this.markAs(RefundRequestStatus.Confirmed);
+    if (shippingFee) {
+      this.shippingFee = shippingFee;
+    }
   }
 }

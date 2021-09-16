@@ -22,6 +22,7 @@ import { UsersService } from '@user/users/users.service';
 
 import {
   CANCEL_ORDER_RELATIONS,
+  OrderRelationType,
   REFUND_ORDER_RELATIONS,
   START_ORDER_RELATIONS,
 } from './constants';
@@ -63,7 +64,10 @@ export class OrdersService {
     }
   }
 
-  async get(merchantUid: string, relations: string[] = []): Promise<Order> {
+  async get(
+    merchantUid: string,
+    relations: OrderRelationType[] = []
+  ): Promise<Order> {
     return await this.ordersRepository.get(merchantUid, relations);
   }
 

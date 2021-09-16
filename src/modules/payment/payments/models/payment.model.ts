@@ -1,4 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import {
   PayMethod,
@@ -6,8 +7,6 @@ import {
   PaymentStatus,
 } from '../constants';
 import { CancelPaymentInput, CompletePaymentDto } from '../dtos';
-
-import { PaymentEntity } from '../entities/payment.entity';
 import {
   NotJoinedCancelException,
   StatusInvalidToCancelException,
@@ -17,12 +16,23 @@ import {
   StatusInvalidToVbankPayException,
 } from '../exceptions';
 
+import { PaymentEntity } from '../entities/payment.entity';
+
 import { PaymentCancellation } from './payment-cancellation.model';
 
 @ObjectType()
 export class Payment extends PaymentEntity {
+  @Type(() => PaymentCancellation)
   @Field(() => [PaymentCancellation])
   cancellations: PaymentCancellation[];
+
+  @Field(() => Int)
+  get remainAmount(): number {
+    return (
+      this.amount -
+      (this.cancellations ?? []).reduce((acc, { amount }) => acc + amount, 0)
+    );
+  }
 
   public dodgeVbank() {
     if (this.status !== PaymentStatus.VbankReady) {

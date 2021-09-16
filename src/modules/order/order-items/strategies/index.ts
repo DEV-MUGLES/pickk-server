@@ -7,5 +7,6 @@ export * from './ship-ready.strategy';
 export * from './shipping.strategy';
 export * from './cancelled.strategy';
 export * from './refund-requested.strategy';
+export * from './refunded.strategy';
 export * from './exchange-requested.strategy';
 export * from './exchanged.strategy';

@@ -4,11 +4,17 @@ import { AlimtalkService } from '@providers/sens';
 import { SEND_VBANK_PAID_ALIMTALK_QUEUE } from '@queue/constants';
 import { SendVbankPaidAlimtalkMto } from '@queue/mtos';
 
+import { OrderRelationType } from '../constants';
 import { OrdersService } from '../orders.service';
 
 @SqsProcess(SEND_VBANK_PAID_ALIMTALK_QUEUE)
 export class SendVbankPaidAlimtalkConsumer {
-  private ORDER_RELATION = ['receiver', 'buyer', 'orderItems'];
+  private ORDER_RELATION: OrderRelationType[] = [
+    'receiver',
+    'buyer',
+    'orderItems',
+  ];
+
   constructor(
     private readonly ordersService: OrdersService,
     private readonly alimtalkService: AlimtalkService
