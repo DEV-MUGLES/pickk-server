@@ -17,27 +17,22 @@ export class PaymentCancellation extends PaymentCancellationEntity {
   payment: Payment;
 
   static of(input: CancelPaymentInput, payment: Payment): PaymentCancellation {
+    const { remainAmount, payMethod } = payment;
     const {
       amount,
-      checksum,
+      checksum = remainAmount,
       refundVbankNum,
       refundVbankHolder,
       refundVbankCode,
     } = input;
 
-    const remainAmount =
-      payment.amount -
-      (payment.cancellations ?? []).reduce(
-        (acc, { amount }) => acc + amount,
-        0
-      );
-    if (amount > remainAmount) {
+    if (remainAmount < amount) {
       throw new NotEnoughRemainAmountException();
     }
     if (remainAmount !== checksum) {
       throw new InconsistentChecksumException();
     }
-    if (payment.payMethod === PayMethod.Vbank) {
+    if (payMethod === PayMethod.Vbank) {
       if (!refundVbankCode || !refundVbankHolder || !refundVbankNum) {
         throw new VbankRefundInfoRequiredException();
       }

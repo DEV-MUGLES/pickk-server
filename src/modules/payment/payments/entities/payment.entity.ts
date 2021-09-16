@@ -38,14 +38,6 @@ import { IPayment, IPaymentCancellation } from '../interfaces';
 @Entity('payment')
 @Index('id_pg-tid', ['pgTid'])
 export class PaymentEntity implements IPayment {
-  @Field(() => Int)
-  public get remainAmount(): number {
-    return (
-      this.amount -
-      (this.cancellations ?? []).reduce((acc, { amount }) => acc + amount, 0)
-    );
-  }
-
   constructor(attributes?: Partial<PaymentEntity>) {
     if (!attributes) {
       return;

@@ -1,10 +1,10 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
-import { IsNumber } from 'class-validator';
+import { IsNumber, IsOptional } from 'class-validator';
 
 import { Order } from '@order/orders/models';
 
-import { PaymentCancellation } from '../models';
 import { PayMethod } from '../constants';
+import { PaymentCancellation } from '../models';
 
 @InputType()
 export class CancelPaymentInput extends PickType(
@@ -18,9 +18,10 @@ export class CancelPaymentInput extends PickType(
   ] as const,
   InputType
 ) {
-  @Field(() => Int)
+  @Field(() => Int, { nullable: true })
   @IsNumber()
-  checksum: number;
+  @IsOptional()
+  checksum?: number;
 
   constructor(attributes: CancelPaymentInput) {
     super(attributes);
@@ -37,7 +38,7 @@ export class CancelPaymentInput extends PickType(
     order: Order,
     reason: string,
     amount: number,
-    checksum: number
+    checksum?: number
   ): CancelPaymentInput {
     const result = new CancelPaymentInput({ reason, amount, checksum });
 
