@@ -152,6 +152,7 @@ export class DigestsService {
 
   async update(id: number, input: UpdateDigestInput): Promise<Digest> {
     const digest = await this.get(id, ['images', 'itemPropertyValues']);
+    const { images: digestImages } = digest;
 
     if (input.itemPropertyValueIds) {
       digest.itemPropertyValues =
@@ -159,18 +160,19 @@ export class DigestsService {
           input.itemPropertyValueIds
         );
     }
+    if (input.imageUrls) {
+      digest.images = input.imageUrls.map((url, order) =>
+        DigestImageFactory.from(url, order)
+      );
+    }
 
     const updatedDigest = await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
-        images: input.imageUrls?.map((url, order) =>
-          DigestImageFactory.from(url, order)
-        ),
       })
     );
-    await this.removeDeletedDigestImages(digest.images, updatedDigest.images);
-
+    await this.removeDeletedDigestImages(digestImages, updatedDigest.images);
     return updatedDigest;
   }
 
@@ -178,9 +180,6 @@ export class DigestsService {
     images: DigestImage[],
     updatedImages: DigestImage[]
   ) {
-    if (updatedImages === undefined) {
-      return;
-    }
     const deletedImageKeys = images
       .filter((image) => !updatedImages.find(({ key }) => image.key === key))
       .map(({ key }) => key);
