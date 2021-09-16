@@ -31,10 +31,8 @@ export class CreateSellerInput extends PickType(
 ) {
   @Field(() => Int)
   userId: number;
-
   @Field(() => Int)
   brandId: number;
-
   @Field(() => Int)
   courierId: number;
 
@@ -43,16 +41,12 @@ export class CreateSellerInput extends PickType(
 
   @Field()
   claimPolicyInput: CreateSellerClaimPolicyInput;
-
   @Field()
   crawlPolicyInput: CreateSellerCrawlPolicyInput;
-
   @Field()
   crawlStrategyInput: CreateSellerCrawlStrategyInput;
-
   @Field()
   shippingPolicyInput: CreateSellerShippingPolicyInput;
-
   @Field()
   returnAddressInput: CreateSellerReturnAddressInput;
 

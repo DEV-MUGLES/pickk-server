@@ -27,49 +27,37 @@ export class PaymentCancellationEntity
       return;
     }
 
+    this.payment = attributes.payment;
+
     this.type = attributes.type;
     this.amount = attributes.amount;
     this.reason = attributes.reason;
     this.taxFree = attributes.taxFree;
+
     this.refundVbankCode = attributes.refundVbankCode;
     this.refundVbankHolder = attributes.refundVbankHolder;
     this.refundVbankNum = attributes.refundVbankNum;
   }
 
+  @ManyToOne('PaymentEntity', 'cancellations', { onDelete: 'RESTRICT' })
+  payment: IPayment;
+
   @Field(() => PaymentCancellationType)
-  @Column({
-    type: 'enum',
-    enum: PaymentCancellationType,
-  })
+  @Column({ type: 'enum', enum: PaymentCancellationType })
   @IsEnum(PaymentCancellationType)
   type: PaymentCancellationType;
-
   @Field(() => Int)
-  @Column({
-    type: 'int',
-    unsigned: true,
-  })
+  @Column({ type: 'int', unsigned: true })
   @IsNumber()
   @Min(1)
   amount: number;
-
   @Field()
   @Column({ length: 30 })
   @IsString()
   @MaxLength(30)
   reason: string;
-
-  @ManyToOne('PaymentEntity', 'cancellations', {
-    onDelete: 'CASCADE',
-  })
-  payment: IPayment;
-
   @Field(() => Int)
-  @Column({
-    type: 'int',
-    unsigned: true,
-    default: 0,
-  })
+  @Column({ type: 'int', unsigned: true, default: 0 })
   @IsNumber()
   @Min(0)
   @IsOptional()
@@ -78,21 +66,15 @@ export class PaymentCancellationEntity
   // 가상계좌 관련 정보
 
   @Field(() => BankCode)
-  @Column({
-    type: 'enum',
-    enum: BankCode,
-    nullable: true,
-  })
+  @Column({ type: 'enum', enum: BankCode, nullable: true })
   @IsEnum(BankCode)
   @IsOptional()
   refundVbankCode?: BankCode;
-
   @Field()
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
   refundVbankNum?: string;
-
   @Field()
   @Column({ length: 15, nullable: true })
   @IsString()

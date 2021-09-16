@@ -1,10 +1,21 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
+
+import { Product } from '@item/products/models';
+import { User } from '@user/users/models';
 
 import { CartItemEntity } from '../entities';
 
 @ObjectType()
 export class CartItem extends CartItemEntity {
-  @Field({ defaultValue: false })
+  @Type(() => Product)
+  @Field(() => Product)
+  product: Product;
+  @Type(() => User)
+  @Field(() => User)
+  user: User;
+
+  @Field({ description: '[MODEL ONLY]' })
   isAdjusted: boolean;
 
   /** 이 CartItem의 quantity가 재고를 넘지 않도록 조정합니다. 

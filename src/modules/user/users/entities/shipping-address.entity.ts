@@ -35,6 +35,6 @@ export class ShippingAddressEntity
   })
   user: UserEntity;
   @Field(() => Int)
-  @Column({ nullable: true })
+  @Column()
   userId: number;
 }

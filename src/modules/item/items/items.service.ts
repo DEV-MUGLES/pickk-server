@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -16,8 +16,6 @@ import {
   BulkUpdateItemInput,
   AddItemUrlInput,
   ItemFilter,
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
   CreateItemOptionInput,
   UpdateItemOptionInput,
   AddItemSizeChartInput,
@@ -28,13 +26,7 @@ import {
   ManualCreateItemInput,
 } from './dtos';
 import { ItemFactory } from './factories';
-import {
-  ItemPrice,
-  Item,
-  ItemNotice,
-  ItemOption,
-  ItemDetailImage,
-} from './models';
+import { ItemPrice, Item, ItemOption, ItemDetailImage } from './models';
 
 import {
   ItemDetailImagesRepository,
@@ -221,33 +213,6 @@ export class ItemsService {
   async activateItemPrice(item: Item, priceId: number): Promise<Item> {
     item.activatePrice(priceId);
     return await this.itemsRepository.save(item);
-  }
-
-  async addNotice(
-    item: Item,
-    addItemNoticeInput: AddItemNoticeInput
-  ): Promise<ItemNotice> {
-    item.addNotice(addItemNoticeInput);
-    await this.itemsRepository.save(item);
-    return (await this.itemsRepository.get(item.id, ['notice'])).notice;
-  }
-
-  async updateNotice(
-    item: Item,
-    updateItemNoticeInput: UpdateItemNoticeInput
-  ): Promise<ItemNotice> {
-    item.updateNotice(updateItemNoticeInput);
-    await this.itemsRepository.save(item);
-    return (await this.itemsRepository.get(item.id, ['notice'])).notice;
-  }
-
-  async removeNotice(itemId: number): Promise<void> {
-    const item = await this.get(itemId, ['notice']);
-    if (!item.notice) {
-      throw new NotFoundException('삭제할 안내가 존재하지 않습니다.');
-    }
-
-    await item.notice.remove();
   }
 
   async update(id: number, input: Partial<Item>): Promise<Item> {

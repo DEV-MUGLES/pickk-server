@@ -1,5 +1,5 @@
-import { Entity, ManyToOne } from 'typeorm';
-import { ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { AbstractImageEntity } from '@common/entities';
 
@@ -16,10 +16,12 @@ export class ItemDetailImageEntity extends AbstractImageEntity {
       return;
     }
     this.item = attributes.item;
+    this.itemId = attributes.itemId;
   }
 
-  @ManyToOne('ItemEntity', 'detailImages', {
-    onDelete: 'CASCADE',
-  })
+  @ManyToOne('ItemEntity', 'detailImages', { onDelete: 'CASCADE' })
   item: ItemEntity;
+  @Field(() => Int)
+  @Column()
+  itemId: number;
 }

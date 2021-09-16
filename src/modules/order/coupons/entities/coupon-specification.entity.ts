@@ -5,7 +5,6 @@ import {
   IsEnum,
   IsInt,
   IsOptional,
-  IsString,
   Max,
   MaxLength,
   Min,
@@ -46,53 +45,30 @@ export class CouponSpecificationEntity
     this.expireAt = attributes.expireAt;
   }
 
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
-  brandId?: number;
-
-  @Field(() => Brand, {
-    nullable: true,
-  })
-  @ManyToOne(() => BrandEntity, {
-    nullable: true,
-  })
+  @Field(() => Brand, { nullable: true })
+  @ManyToOne(() => BrandEntity, { onDelete: 'CASCADE', nullable: true })
   @JoinColumn()
   brand?: Brand;
+  @Field({ nullable: true })
+  @Column({ type: 'int', nullable: true })
+  brandId: number;
 
-  @Field({
-    description: '최대 30자까지 입력할 수 있습니다.',
-  })
-  @Column({
-    length: 30,
-  })
-  @IsString()
+  @Field({ description: '최대 30자' })
+  @Column({ length: 30 })
   @MaxLength(30)
   name: string;
-
   @Field(() => CouponType)
-  @Column({
-    type: 'enum',
-    enum: CouponType,
-  })
+  @Column({ type: 'enum', enum: CouponType })
   @IsEnum(CouponType)
   type: CouponType;
 
-  @Field(() => Int, {
-    nullable: true,
-    description: '1~99 정수만 입력 가능합니다.',
-  })
+  @Field(() => Int, { nullable: true, description: '1~99 정수' })
   @Column({ type: 'tinyint', nullable: true, unsigned: true })
   @IsInt()
   @Min(1)
   @Max(99)
   @IsOptional()
   discountRate?: number;
-
   @Field(() => Int, { nullable: true })
   @Column({ type: 'mediumint', nullable: true, unsigned: true })
   @IsInt()
@@ -106,7 +82,6 @@ export class CouponSpecificationEntity
   @Min(1)
   @IsOptional()
   minimumForUse?: number;
-
   @Field(() => Int, { nullable: true })
   @Column({ type: 'mediumint', nullable: true, unsigned: true })
   @IsInt()
@@ -122,7 +97,6 @@ export class CouponSpecificationEntity
   @IsDate()
   @IsOptional()
   availableAt?: Date;
-
   @Field()
   @Column()
   @IsDate()

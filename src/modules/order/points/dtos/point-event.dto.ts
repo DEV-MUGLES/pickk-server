@@ -5,6 +5,6 @@ import { PointEvent } from '../models';
 @InputType()
 export class CreateEventInput extends PickType(
   PointEvent,
-  ['userId', 'orderId', 'title', 'content', 'amount', 'orderItemId', 'type'],
+  ['userId', 'title', 'content', 'amount', 'orderItemMerchantUid', 'type'],
   InputType
 ) {}

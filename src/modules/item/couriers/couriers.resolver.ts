@@ -8,12 +8,8 @@ import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 import { UserRole } from '@user/users/constants';
 
-import {
-  CreateCourierInput,
-  UpdateCourierInput,
-  UpdateCourierIssueInput,
-} from './dtos';
-import { Courier, CourierIssue } from './models';
+import { CreateCourierInput, UpdateCourierInput } from './dtos';
+import { Courier } from './models';
 
 import { CouriersService } from './couriers.service';
 
@@ -57,30 +53,5 @@ export class CouriersResolver extends BaseResolver {
     @Args('updateCourierInput') updateCourierInput: UpdateCourierInput
   ): Promise<Courier> {
     return await this.couriersService.update(id, { ...updateCourierInput });
-  }
-
-  @Roles(UserRole.Admin)
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => CourierIssue)
-  async updateCourierIssue(
-    @IntArgs('courierId') courierId: number,
-    @Args('updateCourierIssueInput')
-    updateCourierIssueInput: UpdateCourierIssueInput
-  ): Promise<CourierIssue> {
-    const courier = await this.couriersService.get(courierId);
-    return await this.couriersService.updateIssue(
-      courier,
-      updateCourierIssueInput
-    );
-  }
-
-  @Roles(UserRole.Admin)
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => Courier)
-  async removeCourierIssue(
-    @IntArgs('courierId') courierId: number
-  ): Promise<Courier> {
-    const courier = await this.couriersService.get(courierId, ['issue']);
-    return await this.couriersService.removeIssue(courier);
   }
 }

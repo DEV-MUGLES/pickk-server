@@ -1,3 +1,3 @@
 export class RemoveExpectedPointEventMto {
-  orderId: number;
+  merchantUid: string;
 }

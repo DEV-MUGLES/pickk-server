@@ -16,20 +16,15 @@ import { StyleTagEntity } from '@content/style-tags/entities';
 import { StyleTag } from '@content/style-tags/models';
 
 import { DEFAULT_AVATAR_URL, UserOauthProvider, UserRole } from '../constants';
-import { IUser } from '../interfaces';
-
-import { RefundAccountEntity } from './refund-account.entity';
+import { IRefundAccount, IShippingAddress, IUser } from '../interfaces';
 
 import { UserPassword } from '../models/user-password.model';
-import { ShippingAddress } from '../models/shipping-address.model';
-import { RefundAccount } from '../models/refund-account.model';
 
 @ObjectType()
-@Entity({
-  name: 'user',
-})
-@Index('idx_code', ['code'], { unique: true })
-@Index('idx_oauth_code', ['oauthCode'])
+@Entity({ name: 'user' })
+@Index('idx-code', ['code'], { unique: true })
+@Index('idx-nickname', ['nickname'], { unique: true })
+@Index('idx-oauth_code', ['oauthCode'])
 export class UserEntity extends BaseIdEntity implements IUser {
   constructor(attributes?: Partial<UserEntity>) {
     super(attributes);
@@ -96,10 +91,10 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsOptional()
   code?: string;
   @Field({ nullable: true })
-  @Column({ unique: true, nullable: true })
+  @Column({ nullable: true })
   email: string;
   @Field({ nullable: true })
-  @Column({ type: 'char', length: 11, nullable: true })
+  @Column({ type: 'char', length: 12, nullable: true })
   @IsPhoneNumber('KR')
   @MaxLength(11)
   @IsOptional()
@@ -124,14 +119,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Column({ length: 15, nullable: true })
   name?: string;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'smallint', nullable: true })
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
   weight?: number;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'smallint', nullable: true })
+  @Column({ type: 'smallint', unsigned: true, nullable: true })
   height?: number;
 
   @Field({ nullable: true })
-  @Column({ length: 30, nullable: true })
+  @Column({ length: 50, nullable: true })
   instagramCode: string;
   @Field({ nullable: true })
   @Column({ nullable: true })
@@ -145,15 +140,14 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @JoinTable()
   styleTags: StyleTag[];
   @OneToMany('ShippingAddressEntity', 'user', { cascade: true })
-  shippingAddresses: ShippingAddress[];
-  @Field(() => RefundAccount, { nullable: true })
-  @OneToOne(() => RefundAccountEntity, { nullable: true, cascade: true })
+  shippingAddresses: IShippingAddress[];
+  @OneToOne('RefundAccountEntity', 'user', { nullable: true, cascade: true })
   @JoinColumn()
-  refundAccount: RefundAccountEntity;
+  refundAccount: IRefundAccount;
 
   // queue에서 계산해서 update하는 값들
   @Field(() => Int, { defaultValue: 0 })
-  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  @Column({ type: 'int', unsigned: true, default: 0 })
   followCount: number;
 
   // model only fields

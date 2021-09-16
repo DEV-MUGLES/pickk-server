@@ -4,7 +4,7 @@ import { Order } from '../models';
 
 @ObjectType()
 export class BaseOrderOutput extends OmitType(Order, [
-  'vbankInfo',
+  'vbankReceipt',
   'buyer',
   'receiver',
   'orderItems',

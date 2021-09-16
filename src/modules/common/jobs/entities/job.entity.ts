@@ -20,15 +20,10 @@ export class JobEntity extends BaseEntity implements IJob {
     this.updatedAt = attributes.updatedAt;
   }
 
-  @PrimaryColumn({
-    type: 'varchar',
-    length: 50,
-  })
+  @PrimaryColumn({ length: 50 })
   name: string;
-
   @CreateDateColumn()
   createdAt: Date;
-
   @UpdateDateColumn()
   updatedAt: Date;
 }

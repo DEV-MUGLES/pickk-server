@@ -1,16 +1,16 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne } from 'typeorm';
-import { Type } from 'class-transformer';
 
 import { BaseIdEntity } from '@common/entities';
-import { Product } from '@item/products/models';
-import { User } from '@user/users/models';
+
+import { IProduct } from '@item/products/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import { ICartItem } from '../interfaces';
 
 @ObjectType()
 @Entity('cart_item')
-@Index('idx_createdAt', ['createdAt'])
+@Index('idx-createdAt', ['createdAt'])
 export class CartItemEntity extends BaseIdEntity implements ICartItem {
   constructor(attributes?: Partial<CartItemEntity>) {
     super(attributes);
@@ -18,38 +18,26 @@ export class CartItemEntity extends BaseIdEntity implements ICartItem {
       return;
     }
 
-    this.quantity = attributes.quantity;
-
-    this.productId = attributes.productId;
     this.product = attributes.product;
-    this.userId = attributes.userId;
+    this.productId = attributes.productId;
     this.user = attributes.user;
+    this.userId = attributes.userId;
+
+    this.quantity = attributes.quantity;
   }
 
+  @ManyToOne('ProductEntity', { onDelete: 'CASCADE' })
+  product: IProduct;
   @Field(() => Int)
-  @Column({
-    type: 'smallint',
-    unsigned: true,
-    default: 0,
-  })
-  quantity: number;
-
-  @Field()
   @Column()
   productId: number;
-
-  @Type(() => Product)
-  @Field(() => Product)
-  @ManyToOne('ProductEntity', 'products', {
-    onDelete: 'CASCADE',
-  })
-  product: Product;
-
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
+  user: IUser;
+  @Field(() => Int)
   @Column()
   userId: number;
 
-  @ManyToOne('UserEntity', 'users', {
-    onDelete: 'CASCADE',
-  })
-  user: User;
+  @Field(() => Int)
+  @Column({ type: 'smallint', unsigned: true, default: 0 })
+  quantity: number;
 }

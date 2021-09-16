@@ -1,4 +1,4 @@
-import { IImage } from '@common/interfaces';
+import { IBaseId, IImage } from '@common/interfaces';
 
 import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
@@ -6,15 +6,12 @@ import { IItemCategory } from '@item/item-categories/interfaces';
 import { IProduct } from '@item/products/interfaces';
 
 import { IItemSizeChart } from './item-size-chart.interface';
-import { IItemNotice } from './item-notice.interface';
 import { IItemOption } from './item-option.interface';
 import { IItemPrice } from './item-price.interface';
 import { IItemUrl } from './item-url.interface';
 import { IItemSalePolicy } from './item-sale-policy.interface';
 
-export interface IItem {
-  id: number;
-
+export interface IItem extends IBaseId {
   brand: IBrand;
   brandId: number;
 
@@ -27,7 +24,6 @@ export interface IItem {
   minorCategory?: IItemCategory;
   minorCategoryId?: number;
 
-  notice: IItemNotice;
   salePolicy: IItemSalePolicy;
   prices: IItemPrice[];
   urls: IItemUrl[];

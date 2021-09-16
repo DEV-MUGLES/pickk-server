@@ -1,5 +1,4 @@
 export * from './item-detail-image.entity';
-export * from './item-notice.entity';
 export * from './item-option-value.entity';
 export * from './item-option.entity';
 export * from './item-price.entity';

@@ -3,11 +3,11 @@ import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { Item } from '@item/items/models';
+import { IItem } from '@item/items/interfaces';
 
 import { IItemsPackageItem, IItemsPackage } from '../interfaces';
 
-@ObjectType()
+@ObjectType({ description: '프론트엔드에는 노출되지 않는다.' })
 @Entity({ name: 'items_package_item' })
 export class ItemsPackageItemEntity
   extends BaseIdEntity
@@ -28,15 +28,14 @@ export class ItemsPackageItemEntity
     this.order = attributes.order;
   }
 
-  @ManyToOne('ItemsPackageEntity', 'packageItems')
+  @ManyToOne('ItemsPackageEntity', 'packageItems', { onDelete: 'CASCADE' })
   package: IItemsPackage;
-  @Column({ type: 'int', nullable: true })
+  @Column()
   packageId: number;
 
-  @Field(() => Item)
-  @ManyToOne('ItemEntity')
-  item: Item;
-  @Column({ type: 'int', nullable: true })
+  @ManyToOne('ItemEntity', { onDelete: 'CASCADE' })
+  item: IItem;
+  @Column()
   itemId: number;
 
   @Field(() => Int)

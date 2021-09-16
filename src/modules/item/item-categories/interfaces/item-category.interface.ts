@@ -1,7 +1,9 @@
-export interface IItemCategory {
+import { IBaseId } from '@common/interfaces';
+
+export interface IItemCategory extends IBaseId {
+  parent: IItemCategory;
+  children: IItemCategory[];
+
   name: string;
   code: string;
-
-  children: IItemCategory[];
-  parent: IItemCategory;
 }

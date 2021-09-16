@@ -7,8 +7,8 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import { Keyword } from '@content/keywords/models';
-import { User } from '@user/users/models';
+import { IKeyword } from '@content/keywords/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import { IOwn } from '../interfaces';
 
@@ -37,17 +37,15 @@ export class OwnEntity implements IOwn {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  user: User;
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
+  user: IUser;
+  @Field(() => Int)
+  @Column()
   userId: number;
 
-  @Field(() => Keyword, { nullable: true })
-  @ManyToOne('KeywordEntity', { nullable: true })
-  keyword: Keyword;
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @ManyToOne('KeywordEntity', { onDelete: 'CASCADE' })
+  keyword: IKeyword;
+  @Field(() => Int)
+  @Column()
   keywordId: number;
 }

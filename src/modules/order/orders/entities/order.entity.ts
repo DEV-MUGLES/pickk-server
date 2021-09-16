@@ -51,7 +51,7 @@ export class OrderEntity implements IOrder {
     this.status = attributes.status;
     this.payMethod = attributes.payMethod;
 
-    this.vbankInfo = attributes.vbankInfo;
+    this.vbankReceipt = attributes.vbankReceipt;
     this.buyer = attributes.buyer;
     this.receiver = attributes.receiver;
     this.refundAccount = attributes.refundAccount;
@@ -80,14 +80,13 @@ export class OrderEntity implements IOrder {
   @ManyToOne('UserEntity', { nullable: true })
   user?: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column()
   userId?: number;
 
-  @OneToMany('OrderItemEntity', 'order', { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany('OrderItemEntity', 'order', { cascade: true })
   orderItems: IOrderItem[];
   @OneToMany('RefundRequestEntity', 'order', {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   refundRequests: IRefundRequest[];
 
@@ -103,7 +102,7 @@ export class OrderEntity implements IOrder {
   @Field(() => OrderVbankReceipt, { nullable: true })
   @OneToOne(() => OrderVbankReceiptEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  vbankInfo?: OrderVbankReceipt;
+  vbankReceipt?: OrderVbankReceipt;
 
   @Field(() => OrderBuyer, { nullable: true })
   @OneToOne(() => OrderBuyerEntity, { cascade: true, nullable: true })

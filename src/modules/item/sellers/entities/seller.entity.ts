@@ -1,44 +1,24 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
-import {
-  IsEmail,
-  IsNumberString,
-  IsOptional,
-  IsPhoneNumber,
-  IsString,
-  MaxLength,
-} from 'class-validator';
-import { Exclude } from 'class-transformer';
+import { IsEmail, IsOptional, IsPhoneNumber, MaxLength } from 'class-validator';
 
 import { IsBusinessCode } from '@common/decorators';
 import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
 import { SaleStrategy } from '@common/models';
-import { BrandEntity } from '@item/brands/entities';
-import { Courier } from '@item/couriers/models';
-// @TODO:jBARREL
-import { CourierEntity } from '@item/couriers/entities/courier.entity';
-// @TODO:jBARREL 경로 '@user/users/entities'로 바꾸면 circulrar dependency 생김! 없애기
-import { UserEntity } from '@user/users/entities/user.entity';
-import { User } from '@user/users/models';
 
-import { ISeller } from '../interfaces';
-import {
-  SellerShippingPolicyEntity,
-  SellerClaimPolicyEntity,
-  SellerCrawlPolicyEntity,
-  SellerSettlePolicyEntity,
-} from './policies';
+import { IBrand } from '@item/brands/interfaces';
+import { ICourier } from '@item/couriers/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import {
-  SellerShippingPolicy,
-  SellerClaimPolicy,
-  SellerCrawlPolicy,
-  SellerSettlePolicy,
-} from '../models/policies';
-import { SellerReturnAddress } from '../models/seller-return-address.model';
-import { SellerCrawlStrategy } from '../models/seller-crawl-strategy.model';
-import { SellerCrawlStrategyEntity } from './seller-crawl-strategy.entity';
-import { SellerReturnAddressEntity } from './seller-return-address.entity';
+  ISeller,
+  ISellerClaimPolicy,
+  ISellerCrawlPolicy,
+  ISellerCrawlStrategy,
+  ISellerReturnAddress,
+  ISellerSettlePolicy,
+  ISellerShippingPolicy,
+} from '../interfaces';
 
 @ObjectType()
 @Entity('seller')
@@ -78,124 +58,91 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
     this.returnAddress = attributes.returnAddress;
   }
 
-  @Field()
-  @Column()
-  @IsString()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   businessName: string;
-
-  @Field()
-  @Column({ type: 'char', length: 12 })
+  @Field({ nullable: true })
+  @Column({ type: 'char', length: 12, nullable: true })
   @IsBusinessCode()
+  @IsOptional()
   businessCode: string;
-
-  @Field()
-  @Column()
-  @IsString()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   mailOrderBusinessCode: string;
-
-  @Field()
-  @Column({ type: 'varchar', length: 20 })
-  @IsString()
+  @Field({ description: '최대 20자', nullable: true })
+  @Column({ type: 'varchar', length: 20, nullable: true })
   @MaxLength(20)
+  @IsOptional()
   representativeName: string;
-
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   @IsPhoneNumber('KR')
-  @IsNumberString()
+  @IsOptional()
   phoneNumber: string;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsPhoneNumber('KR')
-  @IsNumberString()
   @IsOptional()
-  orderNotiPhoneNumber?: string;
-
+  orderNotiPhoneNumber: string;
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsPhoneNumber('KR')
-  @IsNumberString()
   @IsOptional()
-  csNotiPhoneNumber?: string;
+  csNotiPhoneNumber: string;
 
-  @Field()
-  @Column()
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   @IsEmail()
+  @IsOptional()
   email: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  kakaoTalkCode: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  @IsString()
-  @IsOptional()
-  kakaoTalkCode?: string;
-
-  @Field()
-  @Column()
-  @IsString()
   operationTimeMessage: string;
 
-  @Field(() => User)
-  @OneToOne(() => UserEntity)
+  @OneToOne('BrandEntity', { onDelete: 'SET NULL' })
   @JoinColumn()
-  user: User;
-
+  user: IUser;
   @Field(() => Int, { nullable: true })
-  @Column()
-  @Exclude()
+  @Column({ nullable: true })
   userId: number;
-
-  @OneToOne('BrandEntity', 'seller')
+  @OneToOne('BrandEntity', 'seller', { onDelete: 'SET NULL' })
   @JoinColumn()
-  brand: BrandEntity;
-
+  brand: IBrand;
   @Field(() => Int, { nullable: true })
-  @Column()
-  @Exclude()
+  @Column({ nullable: true })
   brandId: number;
 
-  @Field(() => Courier)
-  @ManyToOne(() => CourierEntity)
+  @ManyToOne('CourierEntity', { onDelete: 'SET NULL' })
   @JoinColumn()
-  courier: Courier;
-
+  courier: ICourier;
   @Field(() => Int, { nullable: true })
-  @Column()
-  @Exclude()
+  @Column({ nullable: true })
   courierId: number;
 
-  @Field(() => SaleStrategy)
   @ManyToOne(() => SaleStrategyEntity)
   @JoinColumn()
   saleStrategy: SaleStrategy;
 
-  @Field(() => SellerCrawlStrategy)
-  @ManyToOne(() => SellerCrawlStrategyEntity, { cascade: true })
+  @ManyToOne('SellerCrawlStrategyEntity', 'seller', { cascade: true })
   @JoinColumn()
-  crawlStrategy: SellerCrawlStrategy;
-
-  @Field(() => SellerClaimPolicy)
-  @OneToOne(() => SellerClaimPolicyEntity, { cascade: true })
+  crawlStrategy: ISellerCrawlStrategy;
+  @OneToOne('SellerClaimPolicyEntity', 'seller', { cascade: true })
   @JoinColumn()
-  claimPolicy: SellerClaimPolicy;
-
-  @Field(() => SellerCrawlPolicy)
-  @OneToOne(() => SellerCrawlPolicyEntity, { cascade: true })
+  claimPolicy: ISellerClaimPolicy;
+  @OneToOne('SellerCrawlPolicyEntity', 'seller', { cascade: true })
   @JoinColumn()
-  crawlPolicy: SellerCrawlPolicy;
-
-  @Field(() => SellerShippingPolicy)
-  @OneToOne(() => SellerShippingPolicyEntity, { cascade: true })
+  crawlPolicy: ISellerCrawlPolicy;
+  @OneToOne('SellerShippingPolicyEntity', 'seller', { cascade: true })
   @JoinColumn()
-  shippingPolicy: SellerShippingPolicy;
-
-  @Field(() => SellerSettlePolicy, { nullable: true })
-  @OneToOne(() => SellerSettlePolicyEntity, { cascade: true, nullable: true })
+  shippingPolicy: ISellerShippingPolicy;
+  @OneToOne('SellerSettlePolicyEntity', 'seller', { cascade: true })
   @JoinColumn()
-  settlePolicy?: SellerSettlePolicy;
-
-  @Field(() => SellerReturnAddress)
-  @OneToOne(() => SellerReturnAddressEntity, { cascade: true })
+  settlePolicy?: ISellerSettlePolicy;
+  @OneToOne('SellerReturnAddressEntity', 'seller', { cascade: true })
   @JoinColumn()
-  returnAddress: SellerReturnAddress;
+  returnAddress: ISellerReturnAddress;
 }

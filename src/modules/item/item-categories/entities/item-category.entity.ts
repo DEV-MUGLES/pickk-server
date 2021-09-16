@@ -13,29 +13,22 @@ export class ItemCategoryEntity extends BaseIdEntity implements IItemCategory {
     super(attributes);
     if (!attributes) return;
 
-    this.name = attributes.name;
-    this.code = attributes.code;
     this.parent = attributes.parent;
     this.children = attributes.children;
+
+    this.name = attributes.name;
+    this.code = attributes.code;
   }
-  @Column({
-    type: 'varchar',
-    length: 20,
-    unique: true,
-  })
-  @Field()
-  code: string;
 
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
-  @Field()
-  name: string;
-
+  @TreeParent({ onDelete: 'CASCADE' })
+  parent: ItemCategoryEntity;
   @TreeChildren()
   children: ItemCategoryEntity[];
 
-  @TreeParent()
-  parent: ItemCategoryEntity;
+  @Field({ description: '최대 20자' })
+  @Column({ length: 20, unique: true })
+  code: string;
+  @Field({ description: '최대 20자' })
+  @Column({ length: 20 })
+  name: string;
 }

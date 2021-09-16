@@ -1,19 +1,30 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { Item } from '@item/items/models';
 
 import { ProductEntity } from '../entities';
 import { NotEnoughStockException } from '../exceptions';
 
+import { ProductShippingReservePolicy } from './product-shipping-reserve-policy.model';
+
 @ObjectType()
 export class Product extends ProductEntity {
+  @Type(() => Item)
   @Field(() => Item)
   item: Item;
 
-  @Field({
-    description:
-      '[MODEL ONLY] 아이템 finalPrice와 priceVariant를 더한 값입니다.',
-  })
+  @Field(() => ProductShippingReservePolicy, { nullable: true })
+  shippingReservePolicy: ProductShippingReservePolicy;
+
+  @Field({ description: '[MODEL ONLY] 예약배송 적용 여부' })
+  get isShipReserving(): boolean {
+    if (!this.shippingReservePolicy) {
+      return false;
+    }
+    return this.stock === 0 && this.shippingReservePolicy.stock > 0;
+  }
+  @Field({ description: '[MODEL ONLY] item.finalPrice + priceVariant' })
   get purchasePrice(): number {
     if (!this.item?.finalPrice) {
       return 0;

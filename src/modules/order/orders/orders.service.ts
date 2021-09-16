@@ -151,7 +151,7 @@ export class OrdersService {
   ): Promise<Order> {
     const order = await this.get(merchantUid, [
       'orderItems',
-      'vbankInfo',
+      'vbankReceipt',
       'buyer',
       'receiver',
     ]);

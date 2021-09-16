@@ -1,4 +1,4 @@
-import { IImage } from '@common/interfaces';
+import { IBaseId } from '@common/interfaces';
 
 import { ILook } from '@content/looks/interfaces';
 import { IVideo } from '@content/videos/interfaces';
@@ -6,11 +6,9 @@ import { IItemPropertyValue } from '@item/item-properties/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IUser } from '@user/users/interfaces';
 
-export interface IDigest {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
+import { IDigestImage } from './digest-image.interface';
 
+export interface IDigest extends IBaseId {
   item: IItem;
   itemId: number;
   user: IUser;
@@ -22,7 +20,7 @@ export interface IDigest {
   lookId: number;
 
   itemPropertyValues: IItemPropertyValue[];
-  images: IImage[];
+  images: IDigestImage[];
 
   /** 착용 사이즈 */
   size: string;

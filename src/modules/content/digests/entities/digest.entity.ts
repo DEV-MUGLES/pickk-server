@@ -17,8 +17,7 @@ import { ItemPropertyValue } from '@item/item-properties/models';
 import { Item } from '@item/items/models';
 import { User } from '@user/users/models';
 
-import { IDigest } from '../interfaces';
-import { DigestImage } from '../models';
+import { IDigest, IDigestImage } from '../interfaces';
 import { Rating } from '../scalars';
 
 @ObjectType()
@@ -60,36 +59,33 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
     this.isMine = attributes.isMine;
   }
 
-  @Field(() => Item, { nullable: true })
-  @ManyToOne('ItemEntity', { nullable: true })
+  @ManyToOne('ItemEntity', { onDelete: 'SET NULL', nullable: true })
   item: Item;
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   itemId: number;
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user: User;
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   userId: number;
 
-  @ManyToOne('VideoEntity')
+  @ManyToOne('VideoEntity', { onDelete: 'CASCADE', nullable: true })
   video: IVideo;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   videoId: number;
-  @ManyToOne('LookEntity')
+  @ManyToOne('LookEntity', { onDelete: 'CASCADE', nullable: true })
   look: ILook;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   lookId: number;
 
-  @Field(() => [ItemPropertyValue])
   @ManyToMany(() => ItemPropertyValueEntity)
   @JoinTable()
   itemPropertyValues: ItemPropertyValue[];
   @OneToMany('DigestImageEntity', 'digest', { cascade: true })
-  images: DigestImage[];
+  images: IDigestImage[];
 
   // 여기부터 정보 fields
   @Field()

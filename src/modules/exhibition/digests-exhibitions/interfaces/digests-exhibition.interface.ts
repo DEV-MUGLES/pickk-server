@@ -1,9 +1,7 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IDigestsExhibitionDigest } from './digests-exhibition-digest.interface';
 
-export interface IDigestsExhibition {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface IDigestsExhibition extends IBaseId {
   exhibitionDigests: IDigestsExhibitionDigest[];
 }

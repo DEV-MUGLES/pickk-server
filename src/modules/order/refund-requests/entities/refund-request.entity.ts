@@ -9,7 +9,7 @@ import {
   OneToOne,
   PrimaryColumn,
 } from 'typeorm';
-import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 import { Seller } from '@item/sellers/models';
 import { IOrderItem } from '@order/order-items/interfaces';
@@ -67,26 +67,26 @@ export class RefundRequestEntity implements IRefundRequest {
   merchantUid: string;
 
   @Field(() => Seller, { nullable: true })
-  @ManyToOne('SellerEntity', { nullable: true })
+  @ManyToOne('SellerEntity', { onDelete: 'SET NULL', nullable: true })
   seller?: Seller;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   sellerId?: number;
   @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user?: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId?: number;
   @Field(() => Shipment, { nullable: true })
   @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
   @JoinColumn()
   shipment: Shipment;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   shipmentId: number;
 
-  @ManyToOne('OrderEntity', 'refundRequests')
+  @ManyToOne('OrderEntity', 'refundRequests', { onDelete: 'RESTRICT' })
   order: IOrder;
   @Field()
   @Column({ type: 'char', length: 20 })
@@ -98,25 +98,23 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ type: 'enum', enum: RefundRequestStatus })
   @IsEnum(RefundRequestStatus)
   status: RefundRequestStatus;
-
   @Field(() => OrderClaimFaultOf)
   @Column({ type: 'enum', enum: OrderClaimFaultOf })
   @IsEnum(OrderClaimFaultOf)
   faultOf: OrderClaimFaultOf;
-
-  @Field({ description: '255자 이내로 적어주세요' })
+  @Field({ description: '최대 255자' })
   @Column()
   @IsString()
   reason: string;
-  @Field(() => Int)
-  @Column({ unsigned: true, default: 0 })
-  @Min(0)
+  @Field(() => Int, {
+    description: '반품대상 주문상품 총 결제액 (배송비 제외)',
+  })
+  @Column({ unsigned: true })
   amount: number;
   @Field(() => Int, { description: '부과된 반품 배송비' })
   @Column({ type: 'mediumint', unsigned: true })
-  @Min(1)
   shippingFee: number;
-  @Field({ description: '255자 이내로 적어주세요', nullable: true })
+  @Field({ description: '최대 255자', nullable: true })
   @Column({ nullable: true })
   @IsString()
   rejectReason: string;
@@ -125,7 +123,7 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ default: false })
   @IsOptional()
   isSettled: boolean;
-  @Field({ defaultValue: false })
+  @Field()
   @Column({ default: false })
   @IsOptional()
   isProcessDelaying: boolean;

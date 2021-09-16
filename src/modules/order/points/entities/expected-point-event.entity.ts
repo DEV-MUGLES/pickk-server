@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { IsNumber, IsString } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
@@ -10,8 +9,8 @@ import { IExpectedPointEvent } from '../interfaces';
 
 @ObjectType()
 @Entity('expected_point_event')
-@Index('idx_createdAt', ['userId', 'createdAt'])
-@Index('idx_orderId', ['orderId'])
+@Index('idx-createdAt', ['userId', 'createdAt'])
+@Index('idx-orderItemMerchantUid', ['orderItemMerchantUid'])
 export class ExpectedPointEventEntity
   extends BaseIdEntity
   implements IExpectedPointEvent
@@ -22,47 +21,32 @@ export class ExpectedPointEventEntity
       return;
     }
 
-    this.amount = attributes.amount;
     this.title = attributes.title;
     this.content = attributes.content;
+    this.amount = attributes.amount;
 
-    this.orderId = attributes.orderId;
+    this.orderItemMerchantUid = attributes.orderItemMerchantUid;
     this.user = attributes.user;
     this.userId = attributes.userId;
   }
 
-  @Field(() => Int, {
-    description: '적립/사용 금액. 적립인 경우 양수, 사용인 경우 음수입니다.',
-  })
+  @Field()
+  @Column({ length: 30 })
+  title: string;
+  @Field()
+  @Column({ length: 30 })
+  content: string;
+  @Field(() => Int, { description: '적립/사용 금액. 양수/음수 구분함' })
   @Column({ type: 'int' })
-  @IsNumber()
   amount: number;
 
-  @Field()
-  @Column({
-    length: 30,
-  })
-  @IsString()
-  title: string;
-
-  @Field()
-  @Column({
-    length: 50,
-  })
-  @IsString()
-  content: string;
-
-  @Field()
-  @Column({ type: 'int' })
-  orderId: number;
-
-  @Field()
-  @Column()
-  userId: number;
-
-  @ManyToOne(() => UserEntity, {
-    onDelete: 'CASCADE',
-  })
+  @Field({ nullable: true })
+  @Column({ type: 'char', length: 22, nullable: true })
+  orderItemMerchantUid: string;
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
+  @Field(() => Int)
+  @Column()
+  userId: number;
 }

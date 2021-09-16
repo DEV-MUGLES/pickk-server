@@ -10,7 +10,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import {
-  IsDateString,
   IsEmail,
   IsEnum,
   IsNumber,
@@ -42,6 +41,8 @@ export class PaymentEntity implements IPayment {
     if (!attributes) {
       return;
     }
+    this.cancellations = attributes.cancellations;
+
     this.merchantUid = attributes.merchantUid;
     this.createdAt = attributes.createdAt;
     this.updatedAt = attributes.updatedAt;
@@ -54,31 +55,35 @@ export class PaymentEntity implements IPayment {
     this.payMethod = attributes.payMethod;
     this.name = attributes.name;
     this.amount = attributes.amount;
+    this.failedReason = attributes.failedReason;
+
     this.buyerName = attributes.buyerName;
     this.buyerTel = attributes.buyerTel;
     this.buyerEmail = attributes.buyerEmail;
     this.buyerAddr = attributes.buyerAddr;
     this.buyerPostalcode = attributes.buyerPostalcode;
+
     this.applyNum = attributes.applyNum;
     this.cardCode = attributes.cardCode;
     this.cardNum = attributes.cardNum;
+
     this.vbankCode = attributes.vbankCode;
     this.vbankNum = attributes.vbankNum;
     this.vbankHolder = attributes.vbankHolder;
 
-    this.failedReason = attributes.failedReason;
     this.failedAt = attributes.failedAt;
     this.paidAt = attributes.paidAt;
     this.cancelledAt = attributes.cancelledAt;
     this.vbankDodgedAt = attributes.vbankDodgedAt;
-
-    this.cancellations = attributes.cancellations;
   }
 
-  @Field({
-    description:
-      '주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다.',
+  @OneToMany('PaymentCancellationEntity', 'payment', {
+    cascade: true,
   })
+  @JoinColumn()
+  cancellations: IPaymentCancellation[];
+
+  @Field({ description: '(PK) 결제유번호. YYMMDDHHmmssSSS + NN(00~99) 형식' })
   @PrimaryColumn({ type: 'char', length: 20 })
   @IsString()
   merchantUid: string;
@@ -90,57 +95,43 @@ export class PaymentEntity implements IPayment {
   updatedAt: Date;
 
   @Field(() => PaymentStatus)
-  @Column({
-    type: 'enum',
-    enum: PaymentStatus,
-  })
+  @Column({ type: 'enum', enum: PaymentStatus })
   @IsEnum(PaymentStatus)
   status: PaymentStatus;
   @Field(() => PayEnviroment)
-  @Column({
-    type: 'enum',
-    enum: PayEnviroment,
-  })
+  @Column({ type: 'enum', enum: PayEnviroment })
   @IsEnum(PayEnviroment)
   env: PayEnviroment;
   @Field()
   @Column()
   origin: string;
   @Field(() => Pg)
-  @Column({
-    type: 'enum',
-    enum: Pg,
-  })
+  @Column({ type: 'enum', enum: Pg })
   @IsEnum(Pg)
   pg: Pg;
-
   @Field({ nullable: true })
   @Column({ nullable: true })
   @IsString()
   @IsOptional()
   pgTid: string;
-
   @Field(() => PayMethod)
-  @Column({
-    type: 'enum',
-    enum: PayMethod,
-  })
+  @Column({ type: 'enum', enum: PayMethod })
   @IsEnum(PayMethod)
   payMethod: PayMethod;
-
   @Field()
   @Column()
   @IsString()
   name: string;
-
   @Field(() => Int)
-  @Column({
-    type: 'int',
-    unsigned: true,
-  })
+  @Column({ type: 'int', unsigned: true })
   @IsNumber()
   @Min(1)
   amount: number;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  @IsString()
+  @IsOptional()
+  failedReason: string;
 
   // 주문자 정보
   @Field()
@@ -176,11 +167,7 @@ export class PaymentEntity implements IPayment {
   @IsOptional()
   applyNum?: string;
   @Field(() => CardCode, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: CardCode,
-    nullable: true,
-  })
+  @Column({ type: 'enum', enum: CardCode, nullable: true })
   @IsEnum(CardCode)
   @IsOptional()
   cardCode?: CardCode;
@@ -192,11 +179,7 @@ export class PaymentEntity implements IPayment {
 
   // 가상계좌 관련 정보
   @Field(() => BankCode, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: BankCode,
-    nullable: true,
-  })
+  @Column({ type: 'enum', enum: BankCode, nullable: true })
   @IsEnum(BankCode)
   @IsOptional()
   vbankCode?: BankCode;
@@ -211,52 +194,25 @@ export class PaymentEntity implements IPayment {
   @MaxLength(15)
   @IsOptional()
   vbankHolder?: string;
-
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
   vbankDate?: Date;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  @IsString()
-  @IsOptional()
-  failedReason: string;
 
   // timestamps
 
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   failedAt?: Date;
-
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   vbankReadyAt?: Date;
-
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   paidAt?: Date;
-
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   cancelledAt?: Date;
-
   @Field({ nullable: true })
   @Column({ type: 'timestamp', nullable: true })
-  @IsDateString()
-  @IsOptional()
   vbankDodgedAt: Date;
-
-  @OneToMany('PaymentCancellationEntity', 'payment', {
-    cascade: true,
-  })
-  @JoinColumn()
-  cancellations: IPaymentCancellation[];
 }

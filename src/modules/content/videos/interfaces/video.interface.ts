@@ -1,11 +1,9 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IDigest } from '@content/digests/interfaces';
 import { IUser } from '@user/users/interfaces';
 
-export interface IVideo {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface IVideo extends IBaseId {
   user: IUser;
   userId: number;
 

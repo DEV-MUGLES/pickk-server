@@ -1,13 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import {
-  CreateCourierInput,
-  UpdateCourierInput,
-  UpdateCourierIssueInput,
-} from './dtos';
-import { CourierIssueNotFoundException } from './exceptions';
-import { Courier, CourierIssue } from './models';
+import { CreateCourierInput, UpdateCourierInput } from './dtos';
+import { Courier } from './models';
 
 import { CouriersRepository } from './couriers.repository';
 
@@ -35,26 +30,5 @@ export class CouriersService {
   async update(id: number, input: UpdateCourierInput): Promise<Courier> {
     await this.couriersRepository.update(id, input);
     return await this.get(id);
-  }
-
-  async updateIssue(
-    courier: Courier,
-    updateCourierIssueInput: UpdateCourierIssueInput
-  ): Promise<CourierIssue> {
-    courier.updateIssue(updateCourierIssueInput);
-    return (await this.couriersRepository.save(courier)).issue;
-  }
-
-  async removeIssue(courier: Courier): Promise<Courier> {
-    const { issue } = courier;
-
-    if (!issue) {
-      throw new CourierIssueNotFoundException();
-    }
-    courier.issue = null;
-    const _courier = await this.couriersRepository.save(courier);
-
-    await issue.remove();
-    return _courier;
   }
 }

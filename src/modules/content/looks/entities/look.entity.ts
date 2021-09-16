@@ -15,8 +15,7 @@ import { StyleTagEntity } from '@content/style-tags/entities';
 import { StyleTag } from '@content/style-tags/models';
 import { User } from '@user/users/models';
 
-import { ILook } from '../interfaces';
-import { LookImage } from '../models';
+import { ILook, ILookImage } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'look' })
@@ -31,6 +30,7 @@ export class LookEntity extends BaseIdEntity implements ILook {
     this.userId = attributes.userId;
 
     this.styleTags = attributes.styleTags;
+
     this.images = attributes.images;
     this.digests = attributes.digests;
 
@@ -45,20 +45,18 @@ export class LookEntity extends BaseIdEntity implements ILook {
     this.isMine = attributes.isMine;
   }
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId: number;
 
-  @Field(() => [StyleTag])
   @ManyToMany(() => StyleTagEntity)
   @JoinTable()
   styleTags: StyleTag[];
   @OneToMany('LookImageEntity', 'look', { cascade: true })
-  images: LookImage[];
-  @OneToMany('DigestEntity', 'look', { cascade: true, onDelete: 'CASCADE' })
+  images: ILookImage[];
+  @OneToMany('DigestEntity', 'look', { cascade: true })
   digests: IDigest[];
 
   // 여기부터 정보 fields
@@ -67,16 +65,16 @@ export class LookEntity extends BaseIdEntity implements ILook {
   title: string;
 
   // queue에서 계산해서 update하는 값들
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   likeCount: number;
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   hitCount: number;
-  @Field(() => Int, { defaultValue: 0 })
+  @Field(() => Int)
   @Column({ type: 'mediumint', unsigned: true, default: 0 })
   commentCount: number;
-  @Field({ defaultValue: 0 })
+  @Field()
   @Column({ type: 'float', default: 0 })
   score: number;
 

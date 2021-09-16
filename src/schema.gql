@@ -2,20 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input AddItemNoticeInput {
-  endAt: DateTime
-  message: String!
-  startAt: DateTime
-  type: ItemNoticeType
-}
-
 input AddItemPriceInput {
   endAt: DateTime
   isActive: Boolean
   isCrawlUpdating: Boolean!
   originalPrice: Int!
   pickkDiscountAmount: Int
-  pickkDiscountRate: Int
+  pickkDiscountRate: Int!
   sellPrice: Int!
   startAt: DateTime
 }
@@ -147,7 +140,6 @@ type Brand {
   nameEng: String
   nameKor: String!
   seller: Seller
-  sellerId: Int
   updatedAt: DateTime!
 }
 
@@ -223,22 +215,20 @@ type CartBrand {
 type CartItem {
   createdAt: DateTime!
   id: Int!
+
+  """[MODEL ONLY]"""
   isAdjusted: Boolean!
   product: Product!
-  productId: Float!
+  productId: Int!
   quantity: Int!
   updatedAt: DateTime!
+  user: User!
+  userId: Int!
 }
 
 input CheckPinInput {
   code: String!
   phoneNumber: String!
-}
-
-"""교환/반품 배송비 지불 방식. (Trans:계좌입금, Enclose:택배상자 동봉)"""
-enum ClaimFeePayMethod {
-  Enclose
-  Trans
 }
 
 type Comment {
@@ -291,9 +281,11 @@ type Coupon {
   createdAt: DateTime!
   id: Int!
   spec: CouponSpecification
-  specId: Float!
+  specId: Int!
   status: CouponStatus
   updatedAt: DateTime!
+  user: User!
+  userId: Int!
 }
 
 type CouponSpecification {
@@ -304,14 +296,14 @@ type CouponSpecification {
   createdAt: DateTime!
   discountAmount: Int
 
-  """1~99 정수만 입력 가능합니다."""
+  """1~99 정수"""
   discountRate: Int
   expireAt: DateTime!
   id: Int!
   maximumDiscountPrice: Int
   minimumForUse: Int
 
-  """최대 30자까지 입력할 수 있습니다."""
+  """최대 30자"""
   name: String!
   type: CouponType!
   updatedAt: DateTime!
@@ -333,23 +325,14 @@ type Courier {
   code: String!
   createdAt: DateTime!
   id: Int!
-  issue: CourierIssue
   name: String!
   phoneNumber: String!
   returnReserveUrl: String!
   updatedAt: DateTime!
 }
 
-type CourierIssue {
-  createdAt: DateTime!
-  endAt: DateTime!
-  id: Int!
-  message: String!
-  updatedAt: DateTime!
-}
-
 input CreateCartItemInput {
-  productId: Float!
+  productId: Int!
   quantity: Int!
 }
 
@@ -362,7 +345,8 @@ input CreateCommentInput {
 }
 
 input CreateCouponInput {
-  specId: Float!
+  specId: Int!
+  userId: Int!
 }
 
 input CreateCouponSpecificationInput {
@@ -371,13 +355,13 @@ input CreateCouponSpecificationInput {
   brandId: Float
   discountAmount: Int
 
-  """1~99 정수만 입력 가능합니다."""
+  """1~99 정수"""
   discountRate: Int
   expireAt: DateTime!
   maximumDiscountPrice: Int
   minimumForUse: Int
 
-  """최대 30자까지 입력할 수 있습니다."""
+  """최대 30자"""
   name: String!
   type: CouponType!
 }
@@ -466,18 +450,8 @@ input CreateRefundAccountInput {
   ownerName: String!
 }
 
-input CreateSellerClaimAccountInput {
-  bankCode: BankCode!
-
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
-  number: String!
-  ownerName: String!
-}
-
 input CreateSellerClaimPolicyInput {
-  accountInput: CreateSellerClaimAccountInput
   fee: Int!
-  feePayMethod: ClaimFeePayMethod!
   isExchangable: Boolean!
   isRefundable: Boolean!
 
@@ -489,7 +463,10 @@ input CreateSellerClaimPolicyInput {
 }
 
 input CreateSellerCrawlPolicyInput {
+  """크롤링된 새로운 아이템들을 추가 등록하는가"""
   isInspectingNew: Boolean!
+
+  """기존 아이템들의 이름/가격을 업데이트하는가"""
   isUpdatingItems: Boolean!
 }
 
@@ -506,20 +483,22 @@ input CreateSellerCrawlStrategyInput {
 
 input CreateSellerInput {
   brandId: Int!
-  businessCode: String!
-  businessName: String!
+  businessCode: String
+  businessName: String
   claimPolicyInput: CreateSellerClaimPolicyInput!
   courierId: Int!
   crawlPolicyInput: CreateSellerCrawlPolicyInput!
   crawlStrategyInput: CreateSellerCrawlStrategyInput!
   csNotiPhoneNumber: String
-  email: String!
+  email: String
   kakaoTalkCode: String
-  mailOrderBusinessCode: String!
-  operationTimeMessage: String!
+  mailOrderBusinessCode: String
+  operationTimeMessage: String
   orderNotiPhoneNumber: String
-  phoneNumber: String!
-  representativeName: String!
+  phoneNumber: String
+
+  """최대 20자"""
+  representativeName: String
   returnAddressInput: CreateSellerReturnAddressInput!
   saleStrategyInput: FindSaleStrategyInput!
   settlePolicyInput: CreateSellerSettlePolicyInput
@@ -552,7 +531,7 @@ input CreateSellerSettlePolicyInput {
   phoneNumber: String!
   picName: String!
 
-  """정산율"""
+  """기본 정산율"""
   rate: Int!
 }
 
@@ -563,8 +542,8 @@ input CreateSellerShippingPolicyInput {
 }
 
 input CreateShipmentInput {
-  courierId: Int
-  trackCode: String
+  courierId: Int!
+  trackCode: String!
 }
 
 input CreateShippingAddressInput {
@@ -669,6 +648,8 @@ input DigestFilter {
 type DigestImage {
   angle: Int!
   createdAt: DateTime!
+  digest: Digest!
+  digestId: Int!
   key: String!
   order: Float!
   url: String!
@@ -796,9 +777,9 @@ type ExchangeRequestsCountOutput {
 }
 
 input ExtendedShipOrderItemInput {
-  courierId: Int
+  courierId: Int!
   merchantUid: String!
-  trackCode: String
+  trackCode: String!
 }
 
 input FindSaleStrategyInput {
@@ -851,8 +832,8 @@ type Inquiry {
   title: String!
   type: InquiryType!
   updatedAt: DateTime!
-  user: User
-  userId: Int
+  user: User!
+  userId: Int!
 }
 
 type InquiryAnswer {
@@ -864,6 +845,8 @@ type InquiryAnswer {
   displayAuthor: String!
   from: InquiryAnswerFrom!
   id: Int!
+  inquiry: Inquiry!
+  inquiryId: Int!
   updatedAt: DateTime!
   user: User
   userId: Int
@@ -890,7 +873,7 @@ enum InquiryType {
 }
 
 type Item {
-  brand: Brand!
+  brand: Brand
   brandId: Int!
   campaigns: [Campaign!]
   createdAt: DateTime!
@@ -898,6 +881,8 @@ type Item {
   detailImages: [ItemDetailImage!]
   digestAverageRating: Float!
   digestCount: Int!
+
+  """[MODEL ONLY]"""
   finalPrice: Float!
   hitCount: Int!
   id: Int!
@@ -912,14 +897,17 @@ type Item {
   minorCategory: ItemCategory
   minorCategoryId: Float
   name: String!
-  notice: ItemNotice
   options: [ItemOption!]
+
+  """[MODEL ONLY]"""
   originalPrice: Float!
   prices: [ItemPrice!]!
   products: [Product!]
   providedCode: String
   salePolicy: ItemSalePolicy
   score: Float!
+
+  """[MODEL ONLY]"""
   sellPrice: Float!
 
   """판매가능시점(=활성전환일)"""
@@ -932,9 +920,13 @@ type Item {
 
 type ItemCategory {
   children: [ItemCategory!]!
+
+  """최대 20자"""
   code: String!
   createdAt: DateTime!
   id: Int!
+
+  """최대 20자"""
   name: String!
   parent: ItemCategory!
   updatedAt: DateTime!
@@ -943,6 +935,7 @@ type ItemCategory {
 type ItemDetailImage {
   angle: Int!
   createdAt: DateTime!
+  itemId: Int!
   key: String!
   url: String!
 }
@@ -966,28 +959,10 @@ input ItemFilter {
   sellableAtMte: DateTime
 }
 
-type ItemNotice {
-  createdAt: DateTime!
-  endAt: DateTime
-  id: Int!
-  message: String!
-  startAt: DateTime
-  type: ItemNoticeType
-  updatedAt: DateTime!
-}
-
-"""아이템 안내 분류입니다. 기본값은 General입니다."""
-enum ItemNoticeType {
-  CustomOrder
-  DeliveryDelay
-  General
-  OverseaDelivery
-  PreorderDelivery
-}
-
 type ItemOption {
   createdAt: DateTime!
   id: Int!
+  itemId: Int!
   name: String!
   order: Float!
   updatedAt: DateTime!
@@ -997,6 +972,7 @@ type ItemOption {
 type ItemOptionValue {
   createdAt: DateTime!
   id: Int!
+  itemOptionId: Int!
   name: String!
   order: Float!
   priceVariant: Int!
@@ -1015,7 +991,7 @@ type ItemPrice {
   itemId: Int!
   originalPrice: Int!
   pickkDiscountAmount: Int
-  pickkDiscountRate: Int
+  pickkDiscountRate: Int!
   sellPrice: Int!
   startAt: DateTime
   unit: ItemPriceUnit
@@ -1058,6 +1034,7 @@ type ItemPropertyValue {
   """표시될 순서. 최소 0, 최대 255입니다."""
   order: Float!
   property: ItemProperty!
+  propertyId: Int!
   updatedAt: DateTime!
 }
 
@@ -1125,6 +1102,9 @@ type ItemsPackage {
   createdAt: DateTime!
   id: Int!
   items: [Item!]!
+
+  """최대 50자"""
+  title: String!
   updatedAt: DateTime!
 }
 
@@ -1179,7 +1159,7 @@ type Keyword {
   stylingTip: String!
   updatedAt: DateTime!
 
-  """0~100 정수. 필수템에 표시될 녀석들한테만 존재"""
+  """0~100 정수. 필수템만 있음"""
   usablityRate: Int
 }
 
@@ -1190,7 +1170,7 @@ type KeywordClass {
   name: String!
 
   """0~255 정수"""
-  order: Int!
+  order: Int
   type: KeywordClassType!
   updatedAt: DateTime!
 }
@@ -1291,6 +1271,8 @@ type LookImage {
   angle: Int!
   createdAt: DateTime!
   key: String!
+  look: Look!
+  lookId: Int!
   order: Int!
   url: String!
 }
@@ -1313,7 +1295,6 @@ input ManualCreateItemInput {
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
-  addItemNotice(addItemNoticeInput: AddItemNoticeInput!, itemId: Int!): ItemNotice!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
@@ -1368,11 +1349,9 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeComment(id: Int!): Comment!
-  removeCourierIssue(courierId: Int!): Courier!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
-  removeItemNotice(itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
   removeMeRefundAccount: User!
@@ -1398,11 +1377,9 @@ type Mutation {
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
-  updateCourierIssue(courierId: Int!, updateCourierIssueInput: UpdateCourierIssueInput!): CourierIssue!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
-  updateItemNotice(itemId: Int!, updateItemNoticeInput: UpdateItemNoticeInput!): ItemNotice!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
@@ -1460,8 +1437,8 @@ type Order {
   user: User
   userId: Int
   vbankDodgedAt: DateTime
-  vbankInfo: OrderVbankReceipt
   vbankReadyAt: DateTime
+  vbankReceipt: OrderVbankReceipt
   withdrawnAt: DateTime
 }
 
@@ -1722,7 +1699,7 @@ type OrderSheet {
   brands: [OrderBrand!]!
   coupons: [Coupon!]!
 
-  """ApolloClient 최적화를 위한 필드입니다. order의 merchantUid와 같습니다."""
+  """[MODEL ONLY] order의 merchantUid와 같습니다."""
   id: String!
   me: User!
   order: Order!
@@ -1814,7 +1791,7 @@ type Payment {
   failedAt: DateTime
   failedReason: String
 
-  """주문고유번호. PrimaryColumn입니다. YYMMDDHHmmssSSS + NN(00~99) 형식입니다."""
+  """(PK) 결제유번호. YYMMDDHHmmssSSS + NN(00~99) 형식"""
   merchantUid: String!
   name: String!
   origin: String!
@@ -1915,20 +1892,19 @@ enum Pg {
 }
 
 type PointEvent {
-  """적립/사용 금액. 적립인 경우 양수, 사용인 경우 음수입니다."""
+  """적립/사용 금액. 양수/음수 구분함"""
   amount: Int!
   content: String!
   createdAt: DateTime!
   id: Int!
-  orderId: Float
-  orderItemId: Float
+  orderItemMerchantUid: String
 
   """적립/사용 이후 잔고"""
   resultBalance: Int!
   title: String!
   type: PointType!
   updatedAt: DateTime!
-  userId: Float!
+  userId: Int!
 }
 
 input PointEventFilter {
@@ -1956,12 +1932,12 @@ type Product {
   itemOptionValues: [ItemOptionValue!]!
   priceVariant: Int!
 
-  """[MODEL ONLY] 아이템 finalPrice와 priceVariant를 더한 값입니다."""
+  """[MODEL ONLY] item.finalPrice + priceVariant"""
   purchasePrice: Float!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
 
-  """[MODEL ONLY] 이 Product의 stock이 0이면 예약배송정책의 stock을 반환합니다."""
+  """[MODEL ONLY] stock || shippingReservePolicy?.stock || 0"""
   stockThreshold: Float!
   updatedAt: DateTime!
 }
@@ -2088,9 +2064,11 @@ type RefundAccount {
   number: String!
   ownerName: String!
   updatedAt: DateTime!
+  user: User!
 }
 
 type RefundRequest {
+  """반품대상 주문상품 총 결제액 (배송비 제외)"""
   amount: Int!
   confirmedAt: DateTime
   faultOf: RefundRequestFaultOf!
@@ -2107,10 +2085,10 @@ type RefundRequest {
   pickedAt: DateTime
   processDelayedAt: DateTime!
 
-  """255자 이내로 적어주세요"""
+  """최대 255자"""
   reason: String!
 
-  """255자 이내로 적어주세요"""
+  """최대 255자"""
   rejectReason: String
   rejectedAt: DateTime
   requestedAt: DateTime!
@@ -2211,7 +2189,7 @@ input RequestOrderRefundInput {
   """반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다."""
   orderItemMerchantUids: [String!]!
 
-  """255자 이내로 적어주세요"""
+  """최대 255자"""
   reason: String!
   shipmentInput: CreateShipmentInput
 }
@@ -2221,8 +2199,8 @@ input RequestPinInput {
 }
 
 input ReshipExchangeRequestInput {
-  courierId: Int
-  trackCode: String
+  courierId: Int!
+  trackCode: String!
 }
 
 type SaleStrategy {
@@ -2236,23 +2214,25 @@ type SaleStrategy {
 type Seller {
   brand: Brand!
   brandId: Int
-  businessCode: String!
-  businessName: String!
+  businessCode: String
+  businessName: String
   claimPolicy: SellerClaimPolicy!
-  courier: Courier!
+  courier: Courier
   courierId: Int
   crawlPolicy: SellerCrawlPolicy!
   crawlStrategy: SellerCrawlStrategy!
   createdAt: DateTime!
   csNotiPhoneNumber: String
-  email: String!
+  email: String
   id: Int!
   kakaoTalkCode: String
-  mailOrderBusinessCode: String!
-  operationTimeMessage: String!
+  mailOrderBusinessCode: String
+  operationTimeMessage: String
   orderNotiPhoneNumber: String
-  phoneNumber: String!
-  representativeName: String!
+  phoneNumber: String
+
+  """최대 20자"""
+  representativeName: String
   returnAddress: SellerReturnAddress!
   saleStrategy: SaleStrategy!
   settlePolicy: SellerSettlePolicy
@@ -2262,24 +2242,10 @@ type Seller {
   userId: Int
 }
 
-"""교환배송비 지불 계좌"""
-type SellerClaimAccount {
-  bankCode: BankCode!
-  createdAt: DateTime!
-  id: Int!
-
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
-  number: String!
-  ownerName: String!
-  updatedAt: DateTime!
-}
-
 type SellerClaimPolicy {
-  account: SellerClaimAccount
   createdAt: DateTime!
   description: String
   fee: Int!
-  feePayMethod: ClaimFeePayMethod!
   id: Int!
   isExchangable: Boolean!
   isRefundable: Boolean!
@@ -2289,14 +2255,20 @@ type SellerClaimPolicy {
 
   """담당자 이름"""
   picName: String!
+  sellerId: Int!
   updatedAt: DateTime!
 }
 
 type SellerCrawlPolicy {
   createdAt: DateTime!
   id: Int!
+
+  """크롤링된 새로운 아이템들을 추가 등록하는가"""
   isInspectingNew: Boolean!
+
+  """기존 아이템들의 이름/가격을 업데이트하는가"""
   isUpdatingItems: Boolean!
+  sellerId: Int!
   updatedAt: DateTime!
 }
 
@@ -2308,6 +2280,7 @@ type SellerCrawlStrategy {
   itemsSelector: String!
   pageParam: String
   pagination: Boolean!
+  sellerId: Int!
 
   """'<>'으로 join된 상태다."""
   startPathNamesJoin: String!
@@ -2329,12 +2302,26 @@ type SellerReturnAddress {
   phoneNumber: String!
   postalCode: String!
   receiverName: String!
+  sellerId: Int!
+  updatedAt: DateTime!
+}
+
+"""정산 계좌"""
+type SellerSettleAccount {
+  bankCode: BankCode!
+  claimPolicyId: Int!
+  createdAt: DateTime!
+  id: Int!
+
+  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  number: String!
+  ownerName: String!
   updatedAt: DateTime!
 }
 
 type SellerSettlePolicy {
   """정산 받을 계좌"""
-  account: SellerClaimAccount!
+  account: SellerSettleAccount!
   createdAt: DateTime!
 
   """세금계산서 수령이메일"""
@@ -2345,8 +2332,9 @@ type SellerSettlePolicy {
   phoneNumber: String!
   picName: String!
 
-  """정산율"""
+  """기본 정산율"""
   rate: Int!
+  sellerId: Int!
   updatedAt: DateTime!
 }
 
@@ -2356,6 +2344,7 @@ type SellerShippingPolicy {
   fee: Int!
   id: Int!
   minimumAmountForFree: Int!
+  sellerId: Int!
   updatedAt: DateTime!
 }
 
@@ -2365,13 +2354,13 @@ input SetCategoryToItemInput {
 }
 
 input ShipOrderItemInput {
-  courierId: Int
-  trackCode: String
+  courierId: Int!
+  trackCode: String!
 }
 
 type Shipment {
-  courier: Courier
-  courierId: Int
+  courier: Courier!
+  courierId: Int!
   createdAt: DateTime!
   id: Int!
   lastTrackedAt: DateTime
@@ -2379,7 +2368,7 @@ type Shipment {
   ownerType: ShipmentOwnerType
   shipmentHistories: [ShipmentHistory!]!
   status: ShipmentStatus!
-  trackCode: String
+  trackCode: String!
 }
 
 type ShipmentHistory {
@@ -2472,11 +2461,6 @@ input UpdateCourierInput {
   returnReserveUrl: String
 }
 
-input UpdateCourierIssueInput {
-  endAt: DateTime!
-  message: String!
-}
-
 input UpdateDigestInput {
   """최대 길이 2047"""
   content: String
@@ -2497,13 +2481,6 @@ input UpdateItemInput {
   majorCategoryId: Float
   minorCategoryId: Float
   name: String
-}
-
-input UpdateItemNoticeInput {
-  endAt: DateTime
-  message: String
-  startAt: DateTime
-  type: ItemNoticeType
 }
 
 input UpdateItemOptionInput {
@@ -2570,18 +2547,8 @@ input UpdateRefundAccountInput {
   ownerName: String
 }
 
-input UpdateSellerClaimAccountInput {
-  bankCode: BankCode
-
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
-  number: String
-  ownerName: String
-}
-
 input UpdateSellerClaimPolicyInput {
-  accountInput: UpdateSellerClaimAccountInput
   fee: Int
-  feePayMethod: ClaimFeePayMethod
   isExchangable: Boolean
   isRefundable: Boolean
 
@@ -2593,7 +2560,10 @@ input UpdateSellerClaimPolicyInput {
 }
 
 input UpdateSellerCrawlPolicyInput {
+  """크롤링된 새로운 아이템들을 추가 등록하는가"""
   isInspectingNew: Boolean
+
+  """기존 아이템들의 이름/가격을 업데이트하는가"""
   isUpdatingItems: Boolean
 }
 
@@ -2607,6 +2577,8 @@ input UpdateSellerInput {
   operationTimeMessage: String
   orderNotiPhoneNumber: String
   phoneNumber: String
+
+  """최대 20자"""
   representativeName: String
 }
 
@@ -2634,7 +2606,7 @@ input UpdateSellerSettlePolicyInput {
   phoneNumber: String
   picName: String
 
-  """정산율"""
+  """기본 정산율"""
   rate: Int
 }
 

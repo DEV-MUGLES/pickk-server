@@ -12,14 +12,10 @@ import { Order } from './order.model';
 
 @ObjectType()
 export class OrderSheet {
-  @Field({
-    description:
-      'ApolloClient 최적화를 위한 필드입니다. order의 merchantUid와 같습니다.',
-  })
+  @Field({ description: '[MODEL ONLY] order의 merchantUid와 같습니다.' })
   get id(): string {
     return this.order.merchantUid;
   }
-
   @Field(() => [OrderBrand])
   get brands(): OrderBrand[] {
     return getOrderBrands(this.order.orderItems);
@@ -27,19 +23,16 @@ export class OrderSheet {
 
   @Field(() => User)
   me: User;
+  @Field(() => [ShippingAddress])
+  shippingAddresses: ShippingAddress[];
 
   @Field(() => Order)
   order: Order;
 
   @Field(() => Int)
   availablePointAmount: number;
-
   @Field(() => [Coupon])
   coupons: Coupon[];
-
-  @Field(() => [ShippingAddress])
-  shippingAddresses: ShippingAddress[];
-
   @Field(() => RefundAccount, { nullable: true })
   refundAccount: RefundAccount;
 

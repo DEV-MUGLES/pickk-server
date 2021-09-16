@@ -14,21 +14,13 @@ import {
   AddItemUrlInput,
   AddItemPriceInput,
   UpdateItemPriceInput,
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
   CreateItemOptionSetInput,
   UpdateItemInput,
   UpdateItemOptionInput,
 } from '@item/items/dtos';
-import {
-  Item,
-  ItemNotice,
-  ItemOption,
-  ItemPrice,
-  ItemUrl,
-} from '@item/items/models';
+import { Item, ItemOption, ItemPrice, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { UserRole } from '@user/users/constants';
 import { ProductsService } from '@item/products/products.service';
@@ -77,29 +69,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<boolean> {
     await this.itemsService.bulkUpdate(ids, bulkUpdateItemInput);
     return true;
-  }
-
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ItemNotice)
-  async updateItemNotice(
-    @IntArgs('itemId') itemId: number,
-    @Args('updateItemNoticeInput')
-    updateItemNoticeInput: UpdateItemNoticeInput
-  ): Promise<ItemNotice> {
-    const item = await this.itemsService.get(itemId, ['notice']);
-    return await this.itemsService.updateNotice(item, updateItemNoticeInput);
-  }
-
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => Item)
-  async removeItemNotice(
-    @IntArgs('itemId') itemId: number,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<Item> {
-    await this.itemsService.removeNotice(itemId);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
@@ -201,17 +170,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.basifyPrice(item, priceId);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
-  @Mutation(() => ItemNotice)
-  async addItemNotice(
-    @IntArgs('itemId') itemId: number,
-    @Args('addItemNoticeInput')
-    addItemNoticeInput: AddItemNoticeInput
-  ): Promise<ItemNotice> {
-    const item = await this.itemsService.get(itemId, ['notice']);
-    return await this.itemsService.addNotice(item, addItemNoticeInput);
-  }
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)

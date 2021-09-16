@@ -1,7 +1,9 @@
 import { IAddress } from '@common/interfaces';
 
+import { IOrder } from './order.interface';
+
 export interface IOrderReceiver extends IAddress {
-  name: string;
-  phoneNumber: string;
+  order: IOrder;
+
   message: string;
 }

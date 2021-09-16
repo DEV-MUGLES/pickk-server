@@ -61,17 +61,6 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     );
   }
 
-  @Mutation(() => Boolean)
-  @UseGuards(JwtVerifyGuard)
-  async removeDigest(
-    @CurrentUser() { sub: userId }: JwtPayload,
-    @IntArgs('id') id: number
-  ): Promise<boolean> {
-    await this.digestsService.checkBelongsTo(id, userId);
-    await this.digestsService.remove(id);
-    return true;
-  }
-
   @Query(() => [Digest])
   async searchDigest(
     @Args('query') query: string,
@@ -132,5 +121,16 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
       this.getRelationsFromInfo(info),
       userId
     );
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeDigest(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number
+  ): Promise<boolean> {
+    await this.digestsService.checkBelongsTo(id, userId);
+    await this.digestsService.remove(id);
+    return true;
   }
 }

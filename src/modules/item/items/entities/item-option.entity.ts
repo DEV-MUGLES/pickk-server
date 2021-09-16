@@ -1,6 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
-import { IsOptional, Max, Min } from 'class-validator';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -16,37 +15,31 @@ export class ItemOptionEntity extends BaseIdEntity implements IItemOption {
       return;
     }
 
+    this.item = attributes.item;
+    this.itemId = attributes.itemId;
+
+    this.values = attributes.values;
+
     this.name = attributes.name;
     this.order = attributes.order;
-    this.values = attributes.values;
-    this.item = attributes.item;
   }
-
-  @Field()
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
-  name: string;
-
-  @Field()
-  @Column({
-    type: 'tinyint',
-    unsigned: true,
-    default: 0,
-  })
-  @IsOptional()
-  @Min(0)
-  @Max(255)
-  order: number;
-
-  @OneToMany('ItemOptionValueEntity', 'itemOption', {
-    cascade: true,
-  })
-  values: ItemOptionValue[];
 
   @ManyToOne('ItemEntity', 'options', {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   item: IItem;
+  @Field(() => Int)
+  @Column()
+  itemId: number;
+
+  @OneToMany('ItemOptionValueEntity', 'itemOption', { cascade: true })
+  values: ItemOptionValue[];
+
+  @Field()
+  @Column({ length: 20 })
+  name: string;
+  @Field()
+  @Column({ type: 'tinyint', unsigned: true, default: 0 })
+  order: number;
 }

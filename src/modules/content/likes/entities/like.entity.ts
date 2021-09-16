@@ -9,14 +9,14 @@ import {
 } from 'typeorm';
 import { IsEnum } from 'class-validator';
 
-import { User } from '@user/users/models';
+import { IUser } from '@user/users/interfaces';
 
 import { LikeOwnerType } from '../constants';
 import { ILike } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'like' })
-@Index('idx_ownerId-userId', ['ownerId', 'userId'])
+@Index('idx-ownerId-userId', ['ownerId', 'userId'])
 export class LikeEntity implements ILike {
   constructor(attributes?: Partial<LikeEntity>) {
     if (!attributes) {
@@ -40,11 +40,10 @@ export class LikeEntity implements ILike {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  user: User;
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE', nullable: true })
+  user: IUser;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column()
   userId: number;
 
   @Field(() => LikeOwnerType)
@@ -52,6 +51,6 @@ export class LikeEntity implements ILike {
   @IsEnum(LikeOwnerType)
   ownerType: LikeOwnerType;
   @Field(() => Int)
-  @Column({ type: 'int', unsigned: true })
+  @Column({ type: 'int' })
   ownerId: number;
 }

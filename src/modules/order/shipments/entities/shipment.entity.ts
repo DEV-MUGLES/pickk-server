@@ -18,7 +18,7 @@ import { ShipmentHistory } from '../models';
 
 @ObjectType()
 @Entity('shipment')
-@Index('idx_status', ['status'])
+@Index('idx-status', ['status'])
 export class ShipmentEntity implements IShipment {
   constructor(attributes?: Partial<ShipmentEntity>) {
     if (!attributes) {
@@ -28,6 +28,8 @@ export class ShipmentEntity implements IShipment {
     this.id = attributes.id;
     this.createdAt = attributes.createdAt;
 
+    this.histories = attributes.histories;
+
     this.status = attributes.status;
     this.ownerType = attributes.ownerType;
     this.ownerPk = attributes.ownerPk;
@@ -35,7 +37,6 @@ export class ShipmentEntity implements IShipment {
     this.courier = attributes.courier;
     this.courierId = attributes.courierId;
     this.trackCode = attributes.trackCode;
-    this.histories = attributes.histories;
 
     this.lastTrackedAt = attributes.lastTrackedAt;
   }
@@ -47,63 +48,34 @@ export class ShipmentEntity implements IShipment {
   @CreateDateColumn()
   createdAt: Date;
 
+  @OneToMany('ShipmentHistoryEntity', 'shipment', { cascade: true })
+  histories: ShipmentHistory[];
+
   @Field(() => ShipmentStatus)
-  @Column({
-    type: 'enum',
-    enum: ShipmentStatus,
-  })
+  @Column({ type: 'enum', enum: ShipmentStatus })
   @IsEnum(ShipmentStatus)
   status: ShipmentStatus;
-
   @Field(() => ShipmentOwnerType, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: ShipmentOwnerType,
-    nullable: true,
-  })
+  @Column({ type: 'enum', enum: ShipmentOwnerType, nullable: true })
   @IsEnum(ShipmentOwnerType)
   @IsOptional()
   ownerType: ShipmentOwnerType;
-
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    length: 30,
-    nullable: true,
-  })
+  @Field({ nullable: true })
+  @Column({ nullable: true, length: 30 })
   ownerPk: string;
 
   // 배송 정보
 
-  @Field(() => Courier, { nullable: true })
-  @ManyToOne('CourierEntity', { nullable: true })
+  @Field(() => Courier)
+  @ManyToOne('CourierEntity', { onDelete: 'RESTRICT' })
   courier: Courier;
-
-  @Field(() => Int, {
-    nullable: true,
-  })
-  @Column({
-    type: 'int',
-    nullable: true,
-  })
+  @Field(() => Int)
+  @Column()
   courierId: number;
-
-  @Field({
-    nullable: true,
-  })
-  @Column({
-    type: 'varchar',
-    nullable: true,
-    length: 30,
-  })
+  @Field()
+  @Column({ length: 30 })
   @MaxLength(30)
   trackCode: string;
-
-  @OneToMany('ShipmentHistoryEntity', 'shipment', { cascade: true })
-  histories: ShipmentHistory[];
-
-  // Dates
 
   @Field({ nullable: true })
   @Column({ nullable: true })

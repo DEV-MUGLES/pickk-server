@@ -1,23 +1,14 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, ManyToOne } from 'typeorm';
-import {
-  IsBoolean,
-  IsDate,
-  IsEnum,
-  IsNumber,
-  IsOptional,
-  Min,
-} from 'class-validator';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { IsEnum, IsOptional } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
 import { ItemPriceUnit } from '../constants';
-import { IItemPrice } from '../interfaces';
-import { ItemEntity } from './item.entity';
+import { IItem, IItemPrice } from '../interfaces';
 
 @ObjectType()
 @Entity('item_price')
-@Index('idx_sellPrice', ['sellPrice'])
 export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
   constructor(attributes?: Partial<ItemPriceEntity>) {
     super(attributes);
@@ -25,130 +16,83 @@ export class ItemPriceEntity extends BaseIdEntity implements IItemPrice {
       return;
     }
 
+    this.item = attributes.item;
+    this.itemId = attributes.itemId;
+
     this.originalPrice = attributes.originalPrice;
     this.sellPrice = attributes.sellPrice;
+    this.finalPrice = (() => {
+      const {
+        sellPrice,
+        pickkDiscountAmount: amount,
+        pickkDiscountRate: rate,
+      } = attributes;
+
+      return amount
+        ? sellPrice - amount
+        : Math.floor((sellPrice * (100 - (rate ?? 5))) / 100);
+    })();
 
     this.pickkDiscountAmount = attributes.pickkDiscountAmount;
-    this.pickkDiscountRate = attributes.pickkDiscountRate || 5;
+    this.pickkDiscountRate = attributes.pickkDiscountRate ?? 5;
 
-    this.finalPrice = this.pickkDiscountAmount
-      ? this.sellPrice - this.pickkDiscountAmount
-      : Math.floor((this.sellPrice * (100 - this.pickkDiscountRate)) / 100);
-
-    this.isActive = attributes.isActive || false;
+    this.isActive = attributes.isActive ?? false;
     this.isCrawlUpdating = attributes.isCrawlUpdating;
-    this.isBase = attributes.isBase || false;
+    this.isBase = attributes.isBase ?? false;
 
     this.startAt = attributes.startAt;
     this.endAt = attributes.endAt;
 
     this.displayPrice = attributes.displayPrice;
     this.unit = attributes.unit;
-
-    this.item = attributes.item;
-    this.itemId = attributes.itemId;
   }
 
+  @ManyToOne('ItemEntity', 'prices', { onDelete: 'CASCADE' })
+  item: IItem;
   @Field(() => Int)
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-  })
-  @IsNumber()
-  @Min(1)
+  @Column()
+  itemId: number;
+
+  @Field(() => Int)
+  @Column({ type: 'mediumint', unsigned: true })
   originalPrice: number;
-
   @Field(() => Int)
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-  })
-  @IsNumber()
-  @Min(1)
+  @Column({ type: 'mediumint', unsigned: true })
   sellPrice: number;
-
   @Field(() => Int)
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-  })
-  @IsNumber()
-  @Min(1)
-  @IsOptional()
+  @Column({ type: 'mediumint', unsigned: true })
   finalPrice: number;
 
   @Field(() => Int, { nullable: true })
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-    nullable: true,
-  })
-  @IsNumber()
-  @Min(1)
-  @IsOptional()
+  @Column({ type: 'mediumint', unsigned: true, nullable: true })
   pickkDiscountAmount?: number;
-
-  @Field(() => Int, { nullable: true })
-  @Column({
-    type: 'mediumint',
-    unsigned: true,
-    nullable: true,
-  })
-  @IsNumber()
-  @Min(1)
-  @IsOptional()
+  @Field(() => Int)
+  @Column({ type: 'float', default: 5 })
   pickkDiscountRate?: number;
 
   @Field()
   @Column()
-  @IsBoolean()
   isActive: boolean;
-
   @Field()
   @Column()
-  @IsBoolean()
   isCrawlUpdating: boolean;
-
   @Field()
   @Column()
-  @IsBoolean()
-  @IsOptional()
   isBase: boolean;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  @IsDate()
-  @IsOptional()
-  startAt?: Date | null;
+  startAt?: Date;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  endAt?: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
-  @IsDate()
-  @IsOptional()
-  endAt?: Date | null;
-
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  @IsNumber()
-  @IsOptional()
-  displayPrice?: number | null;
-
+  displayPrice?: number;
   @Field(() => ItemPriceUnit, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: ItemPriceUnit,
-    default: ItemPriceUnit.KRW,
-  })
+  @Column({ type: 'enum', enum: ItemPriceUnit, default: ItemPriceUnit.KRW })
   @IsEnum(ItemPriceUnit)
   @IsOptional()
   unit?: ItemPriceUnit;
-
-  @ManyToOne('ItemEntity', 'prices', {
-    onDelete: 'CASCADE',
-  })
-  item: ItemEntity;
-
-  @Field(() => Int)
-  @Column()
-  itemId: number;
 }

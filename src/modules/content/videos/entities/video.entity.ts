@@ -4,7 +4,7 @@ import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { BaseIdEntity } from '@common/entities';
 
 import { IDigest } from '@content/digests/interfaces';
-import { User } from '@user/users/models';
+import { IUser } from '@user/users/interfaces';
 
 import { IVideo } from '../interfaces';
 
@@ -34,14 +34,13 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
     this.isMine = attributes.isMine;
   }
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  user: User;
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
+  user: IUser;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId: number;
 
-  @OneToMany('DigestEntity', 'video', { cascade: true, onDelete: 'CASCADE' })
+  @OneToMany('DigestEntity', 'video', { cascade: true })
   digests: IDigest[];
 
   // 여기부터 정보 fields

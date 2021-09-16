@@ -4,19 +4,17 @@ import { Length } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { Item } from '@item/items/models';
-import { OrderItem } from '@order/order-items/models';
-import { User } from '@user/users/models';
+import { IItem } from '@item/items/interfaces';
+import { ISeller } from '@item/sellers/interfaces';
+import { IOrderItem } from '@order/order-items/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import { InquiryType } from '../constants';
 import { IInquiry, IInquiryAnswer } from '../interfaces';
 
-import { InquiryAnswer } from '../models/inquiry-answer.model';
-import { Seller } from '@item/sellers/models';
-
 @ObjectType()
 @Entity({ name: 'inquiry' })
-@Index('idx_createdAt', ['createdAt'])
+@Index('idx-createdAt', ['createdAt'])
 export class InquiryEntity extends BaseIdEntity implements IInquiry {
   constructor(attributes?: Partial<InquiryEntity>) {
     super(attributes);
@@ -44,36 +42,28 @@ export class InquiryEntity extends BaseIdEntity implements IInquiry {
     this.isAnswered = attributes.isAnswered;
   }
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
-  user: User;
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
+  user: IUser;
+  @Field(() => Int)
+  @Column()
   userId: number;
-  @Field(() => Item, { nullable: true })
-  @ManyToOne('ItemEntity', { nullable: true })
-  item: Item;
+  @ManyToOne('ItemEntity', { onDelete: 'SET NULL', nullable: true })
+  item: IItem;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   itemId: number;
-  @Field(() => Seller, { nullable: true })
-  @ManyToOne('SellerEntity', { nullable: true })
-  seller: Seller;
+  @ManyToOne('SellerEntity', { onDelete: 'SET NULL', nullable: true })
+  seller: ISeller;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   sellerId: number;
-  @Field(() => OrderItem, { nullable: true })
-  @ManyToOne('OrderItemEntity', { nullable: true })
-  orderItem: OrderItem;
+  @ManyToOne('OrderItemEntity', { onDelete: 'SET NULL', nullable: true })
+  orderItem: IOrderItem;
   @Field({ nullable: true })
   @Column({ nullable: true })
   orderItemMerchantUid: string;
 
-  @Field(() => [InquiryAnswer])
-  @OneToMany('InquiryAnswerEntity', 'inquiry', {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
+  @OneToMany('InquiryAnswerEntity', 'inquiry', { cascade: true })
   answers: IInquiryAnswer[];
 
   // 여기부터 정보 fields
@@ -87,7 +77,7 @@ export class InquiryEntity extends BaseIdEntity implements IInquiry {
   @Column()
   content: string;
   @Field({ description: '알림톡 받을 전화번호 (11글자)' })
-  @Column({ type: 'char', length: 11 })
+  @Column({ type: 'char', length: 12 })
   @Length(11)
   contactPhoneNumber: string;
   @Field()

@@ -1,9 +1,9 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { User } from '@user/users/models';
+import { IUser } from '@user/users/interfaces';
 
 import { InquiryAnswerFrom } from '../constants';
 import { IInquiry, IInquiryAnswer } from '../interfaces';
@@ -21,6 +21,7 @@ export class InquiryAnswerEntity
     }
 
     this.inquiry = attributes.inquiry;
+    this.inquiryId = attributes.inquiryId;
 
     this.user = attributes.user;
     this.userId = attributes.userId;
@@ -30,14 +31,17 @@ export class InquiryAnswerEntity
     this.content = attributes.content;
   }
 
-  @ManyToOne('InquiryEntity')
+  @ManyToOne('InquiryEntity', { onDelete: 'CASCADE' })
+  @JoinColumn()
   inquiry: IInquiry;
+  @Field(() => Int)
+  @Column()
+  inquiryId: number;
 
-  @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
-  user: User;
+  user: IUser;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column()
   userId: number;
 
   // 여기부터 정보 fields

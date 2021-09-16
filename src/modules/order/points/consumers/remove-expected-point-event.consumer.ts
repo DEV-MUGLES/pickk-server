@@ -17,8 +17,8 @@ export class RemoveExpectedPointEventConsumer {
   @SqsMessageHandler()
   public async remove(message: AWS.SQS.Message) {
     const { Body } = message;
-    const { orderId }: RemoveExpectedPointEventMto = JSON.parse(Body);
-    await this.pointsService.removeExpectedEvent(orderId);
+    const { merchantUid }: RemoveExpectedPointEventMto = JSON.parse(Body);
+    await this.pointsService.removeExpectedEvent(merchantUid);
   }
 
   @SqsConsumerEventHandler(SqsConsumerEvent.PROCESSING_ERROR)

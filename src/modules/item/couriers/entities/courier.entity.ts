@@ -1,59 +1,41 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
-import {
-  IsPhoneNumber,
-  IsNumberString,
-  IsString,
-  IsUrl,
-  MaxLength,
-} from 'class-validator';
+import { Column, Entity, Index } from 'typeorm';
+import { IsPhoneNumber, IsUrl, MaxLength } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
 import { ICourier } from '../interfaces';
-import { CourierIssue } from '../models';
-import { CourierIssueEntity } from './courier-issue.entity';
 
 @ObjectType()
-@Entity({
-  name: 'courier',
-})
+@Entity({ name: 'courier' })
+@Index('idx-code', ['code'], { unique: true })
+@Index('idx-name', ['name'], { unique: true })
 export class CourierEntity extends BaseIdEntity implements ICourier {
+  constructor(attributes?: Partial<CourierEntity>) {
+    super(attributes);
+    if (!attributes) {
+      return;
+    }
+
+    this.code = attributes.code;
+    this.name = attributes.name;
+    this.phoneNumber = attributes.phoneNumber;
+    this.returnReserveUrl = attributes.returnReserveUrl;
+  }
+
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 30,
-    unique: true,
-  })
-  @IsString()
+  @Column({ length: 30, unique: true })
   @MaxLength(30)
   code: string;
-
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 20,
-    unique: true,
-  })
-  @IsString()
+  @Column({ length: 20, unique: true })
   name: string;
-
   @Field()
-  @Column({ type: 'char', length: 11 })
+  @Column({ type: 'char', length: 12 })
   @IsPhoneNumber('KR')
-  @IsNumberString()
   phoneNumber: string;
-
   @Field()
-  @Column({
-    type: 'varchar',
-    length: 300,
-  })
+  @Column({ length: 300 })
   @IsUrl()
   returnReserveUrl: string;
-
-  @Field(() => CourierIssue, { nullable: true })
-  @OneToOne(() => CourierIssueEntity, { cascade: true, nullable: true })
-  @JoinColumn()
-  issue?: CourierIssue;
 }

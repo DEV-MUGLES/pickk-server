@@ -1,10 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
-import { IsBoolean } from 'class-validator';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { ISellerCrawlPolicy } from '../../interfaces';
+import { ISeller, ISellerCrawlPolicy } from '../../interfaces';
 
 @ObjectType()
 @Entity('seller_crawl_policy')
@@ -18,17 +17,24 @@ export class SellerCrawlPolicyEntity
       return;
     }
 
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
+
     this.isInspectingNew = attributes.isInspectingNew;
     this.isUpdatingItems = attributes.isUpdatingItems;
   }
 
-  @Field()
+  @OneToOne('SellerEntity', 'crawlPolicy', { onDelete: 'CASCADE' })
+  @JoinColumn()
+  seller: ISeller;
+  @Field(() => Int)
   @Column()
-  @IsBoolean()
-  isInspectingNew: boolean;
+  sellerId: number;
 
-  @Field()
-  @Column()
-  @IsBoolean()
+  @Field({ description: '크롤링된 새로운 아이템들을 추가 등록하는가' })
+  @Column({ default: true })
+  isInspectingNew: boolean;
+  @Field({ description: '기존 아이템들의 이름/가격을 업데이트하는가' })
+  @Column({ default: true })
   isUpdatingItems: boolean;
 }

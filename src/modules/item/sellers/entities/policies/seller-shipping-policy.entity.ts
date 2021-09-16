@@ -1,10 +1,10 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
-import { IsNumber, Min } from 'class-validator';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
+import { Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { ISellerShippingPolicy } from '../../interfaces';
+import { ISeller, ISellerShippingPolicy } from '../../interfaces';
 
 @ObjectType()
 @Entity('seller_shipping_policy')
@@ -18,19 +18,27 @@ export class SellerShippingPolicyEntity
       return;
     }
 
+    this.seller = attributes.seller;
+    this.sellerId = attributes.sellerId;
+
     this.minimumAmountForFree = attributes.minimumAmountForFree;
     this.fee = attributes.fee;
     this.description = attributes.description;
   }
 
+  @OneToOne('SellerEntity', 'shippingPolicy', { onDelete: 'CASCADE' })
+  @JoinColumn()
+  seller: ISeller;
+  @Field(() => Int)
+  @Column()
+  sellerId: number;
+
   @Field(() => Int)
   @Column({ type: 'mediumint' })
-  @IsNumber()
   @Min(0)
   minimumAmountForFree: number;
   @Field(() => Int)
   @Column({ type: 'mediumint' })
-  @IsNumber()
   @Min(0)
   fee: number;
   @Field({ nullable: true })

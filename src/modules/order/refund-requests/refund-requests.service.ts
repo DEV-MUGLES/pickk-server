@@ -61,7 +61,7 @@ export class RefundRequestsService {
     const amount = refundRequest.amount - refundRequest.shippingFee;
 
     const order = await this.ordersService.get(refundRequest.orderMerchantUid, [
-      'vbankInfo',
+      'vbankReceipt',
     ]);
     await this.paymentsService.cancel(
       order.merchantUid,

@@ -1,6 +1,5 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { IsOptional, Max, Min } from 'class-validator';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -20,32 +19,25 @@ export class ItemPropertyValueEntity
       return;
     }
 
+    this.property = attributes.property;
+
     this.name = attributes.name;
     this.order = attributes.order;
-
-    this.property = attributes.property;
   }
-
-  @Field()
-  @Column({
-    type: 'varchar',
-    length: 20,
-  })
-  name: string;
-
-  @Field({ description: '표시될 순서. 최소 0, 최대 255입니다.' })
-  @Column({
-    type: 'tinyint',
-    unsigned: true,
-    default: 0,
-  })
-  @IsOptional()
-  @Min(0)
-  @Max(255)
-  order: number;
 
   @ManyToOne('ItemPropertyEntity', 'values', {
     onDelete: 'CASCADE',
   })
+  @JoinColumn()
   property: ItemPropertyEntity;
+  @Field(() => Int)
+  @Column()
+  propertyId: number;
+
+  @Field()
+  @Column({ length: 20 })
+  name: string;
+  @Field({ description: '표시될 순서. 최소 0, 최대 255입니다.' })
+  @Column({ type: 'tinyint', unsigned: true, default: 0 })
+  order: number;
 }

@@ -1,23 +1,21 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IUser } from '@user/users/interfaces';
 
 import { CommentOwnerType } from '../constants';
 
-export interface IComment {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface IComment extends IBaseId {
   user: IUser;
   userId: number;
 
-  ownerType: CommentOwnerType;
-  ownerId: number;
-
   parent: IComment;
   parentId: number;
-
+  replies: IComment[];
   mentionedUser: IUser;
   mentionedUserId: number;
+
+  ownerType: CommentOwnerType;
+  ownerId: number;
 
   content: string;
   isContentUpdated: boolean;

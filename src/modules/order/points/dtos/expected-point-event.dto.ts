@@ -5,6 +5,6 @@ import { ExpectedPointEvent } from '../models';
 @InputType()
 export class CreateExpectedPointEventInput extends PickType(
   ExpectedPointEvent,
-  ['amount', 'title', 'orderId', 'content', 'userId'],
+  ['amount', 'title', 'orderItemMerchantUid', 'content', 'userId'],
   InputType
 ) {}

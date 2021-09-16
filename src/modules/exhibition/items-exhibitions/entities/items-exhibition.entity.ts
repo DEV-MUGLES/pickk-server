@@ -17,18 +17,15 @@ export class ItemsExhibitionEntity
       return;
     }
 
-    this.title = attributes.title;
-
     this.exhibitionItems = attributes.exhibitionItems;
+
+    this.title = attributes.title;
   }
+
+  @OneToMany('ItemsExhibitionItemEntity', 'exhibition', { cascade: true })
+  exhibitionItems: IItemsExhibitionItem[];
 
   @Field({ description: '최대 50자' })
   @Column({ length: 50 })
   title: string;
-
-  @OneToMany('ItemsExhibitionItemEntity', 'exhibition', {
-    cascade: true,
-    onDelete: 'CASCADE',
-  })
-  exhibitionItems: IItemsExhibitionItem[];
 }

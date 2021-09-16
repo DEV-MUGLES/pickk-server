@@ -1,4 +1,3 @@
-import { Optional } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
   BeforeInsert,
@@ -13,36 +12,30 @@ import {
   OneToMany,
   OneToOne,
 } from 'typeorm';
-import { IsBoolean, IsOptional, IsString, IsUrl } from 'class-validator';
+import { IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
 import { BrandEntity } from '@item/brands/entities';
-import { Brand } from '@item/brands/models';
+import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
-import { ItemCategoryEntity } from '@item/item-categories/entities';
-import { ItemCategory } from '@item/item-categories/models';
+import { IItemCategory } from '@item/item-categories/interfaces';
 import { IProduct } from '@item/products/interfaces';
 
-import { IItem, IItemOption } from '../interfaces';
-
-import { ItemNoticeEntity } from './item-notice.entity';
-import { ItemSalePolicyEntity } from './item-sale-policy.entity';
+import { IItem, IItemOption, IItemSalePolicy } from '../interfaces';
 
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
-import { ItemSalePolicy } from '../models/item-sale-policy.model';
 import { ItemPrice } from '../models/item-price.model';
-import { ItemNotice } from '../models/item-notice.model';
 import { ItemSizeChart } from '../models/item-size-chart.model';
 
 @ObjectType()
 @Entity({
   name: 'item',
 })
-@Index('idx_providedCode', ['providedCode'])
-@Index('idx_majorCategoryId-code', ['majorCategoryId', 'score'])
-@Index('idx_minorCategoryId-code', ['minorCategoryId', 'score'])
+@Index('idx-providedCode', ['providedCode'])
+@Index('idx-majorCategoryId:code', ['majorCategoryId', 'score'])
+@Index('idx-minorCategoryId:code', ['minorCategoryId', 'score'])
 export class ItemEntity extends BaseIdEntity implements IItem {
   constructor(attributes?: Partial<ItemEntity>) {
     super(attributes);
@@ -62,7 +55,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.majorCategoryId = attributes.majorCategoryId;
     this.minorCategoryId = attributes.minorCategoryId;
 
-    this.notice = attributes.notice;
     this.salePolicy = attributes.salePolicy;
     this.prices = attributes.prices;
     this.urls = attributes.urls;
@@ -88,31 +80,55 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.score = attributes.score;
   }
 
-  @Field(() => Brand)
-  @ManyToOne(() => BrandEntity, { onDelete: 'CASCADE' })
+  @ManyToOne(() => BrandEntity, { onDelete: 'SET NULL' })
   @JoinColumn()
-  brand: Brand;
+  brand: IBrand;
   @Field(() => Int)
-  @Column()
+  @Column({ nullable: true })
   brandId: number;
+
+  @OneToMany('ItemOptionEntity', 'item', { cascade: true })
+  options: IItemOption[];
+  @OneToMany('ProductEntity', 'item', { cascade: true })
+  products: IProduct[];
+  @ManyToMany('CampaignEntity', 'items')
+  @JoinTable()
+  campaigns: ICampaign[];
+
+  @ManyToOne('ItemCategoryEntity', { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn()
+  majorCategory?: IItemCategory;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  majorCategoryId?: number;
+  @ManyToOne('ItemCategoryEntity', { onDelete: 'SET NULL', nullable: true })
+  @JoinColumn()
+  minorCategory?: IItemCategory;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  minorCategoryId?: number;
+
+  @OneToOne('ItemSalePolicyEntity', { cascade: true, nullable: true })
+  @JoinColumn()
+  salePolicy: IItemSalePolicy;
+  @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })
+  prices: ItemPrice[];
+  @OneToMany('ItemUrlEntity', 'item', { cascade: true })
+  urls: ItemUrl[];
+  @OneToMany('ItemDetailImageEntity', 'item', { cascade: true })
+  detailImages: ItemDetailImage[];
+  @OneToMany('ItemSizeChartEntity', 'item', { cascade: true })
+  sizeCharts: ItemSizeChart[];
 
   @Field()
   @Column()
-  @IsString()
   name: string;
-
   @Field({ nullable: true })
-  @Column({ length: 100, nullable: true })
-  @IsString()
-  @IsOptional()
-  providedCode?: string;
-
-  @Field({ nullable: true })
-  @Column({ length: 100, nullable: true })
-  @IsString()
-  @IsOptional()
+  @Column({ nullable: true })
   description?: string;
-
+  @Field({ nullable: true })
+  @Column({ length: 100, nullable: true })
+  providedCode?: string;
   @Field()
   @Column()
   @IsUrl()
@@ -120,87 +136,23 @@ export class ItemEntity extends BaseIdEntity implements IItem {
 
   @Field({ defaultValue: true })
   @Column({ default: true })
-  @IsBoolean()
-  @Optional()
-  isInfiniteStock: boolean;
-
+  isMdRecommended: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsBoolean()
-  @Optional()
-  isSoldout: boolean;
-
+  isSellable: boolean;
   @Field({ defaultValue: true })
   @Column({ default: true })
-  @IsBoolean()
-  @Optional()
-  isMdRecommended: boolean;
-
+  isInfiniteStock: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsBoolean()
-  @Optional()
-  isSellable: boolean;
-
-  @Field({ defaultValue: false })
-  @Column({ default: false })
-  @IsBoolean()
-  @Optional()
   isPurchasable: boolean;
-
-  @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })
-  prices: ItemPrice[];
-
-  @OneToMany('ItemUrlEntity', 'item', { cascade: true })
-  urls: ItemUrl[];
-
-  @OneToMany('ItemDetailImageEntity', 'item', { cascade: true })
-  detailImages: ItemDetailImage[];
-
-  @OneToMany('ItemOptionEntity', 'item', { cascade: true })
-  options: IItemOption[];
-
-  @Field(() => ItemSalePolicy, {
-    nullable: true,
-  })
-  @OneToOne(() => ItemSalePolicyEntity, { cascade: true, nullable: true })
-  @JoinColumn()
-  salePolicy: ItemSalePolicy;
-
-  @OneToMany('ProductEntity', 'item', { cascade: true })
-  products: IProduct[];
-
-  @ManyToMany('CampaignEntity', 'items')
-  @JoinTable()
-  campaigns: ICampaign[];
-
-  @Field(() => ItemCategory, { nullable: true })
-  @ManyToOne(() => ItemCategoryEntity, { nullable: true })
-  @JoinColumn()
-  majorCategory?: ItemCategory;
-  @Field({ nullable: true })
-  @Column({ type: 'int', nullable: true })
-  majorCategoryId?: number;
-  @Field(() => ItemCategory, { nullable: true })
-  @ManyToOne(() => ItemCategoryEntity, { nullable: true })
-  @JoinColumn()
-  minorCategory?: ItemCategory;
-  @Field({ nullable: true })
-  @Column({ type: 'int', nullable: true })
-  minorCategoryId?: number;
-
-  @Field(() => ItemNotice, { nullable: true })
-  @OneToOne(() => ItemNoticeEntity, { cascade: true, nullable: true })
-  @JoinColumn()
-  notice: ItemNotice;
-
-  @OneToMany('ItemSizeChartEntity', 'item', { cascade: true })
-  sizeCharts: ItemSizeChart[];
+  @Field({ defaultValue: false })
+  @Column({ default: false })
+  isSoldout: boolean;
 
   @Field({ nullable: true, description: '판매가능시점(=활성전환일)' })
   @Column({ nullable: true })
   sellableAt?: Date;
-
   @BeforeInsert()
   @BeforeUpdate()
   setSellableAt() {
@@ -222,15 +174,15 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Column({ type: 'float', default: 0 })
   score: number;
 
-  @Field()
+  @Field({ description: '[MODEL ONLY]' })
   get originalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).originalPrice;
   }
-  @Field()
+  @Field({ description: '[MODEL ONLY]' })
   get sellPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).sellPrice;
   }
-  @Field()
+  @Field({ description: '[MODEL ONLY]' })
   get finalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).finalPrice;
   }

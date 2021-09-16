@@ -1,6 +1,7 @@
 import { ConflictException } from '@nestjs/common';
 import { NotFoundException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { PasswordIncorrectException } from '@auth/exceptions';
 
@@ -22,8 +23,12 @@ import { UserPassword } from './user-password.model';
 
 @ObjectType()
 export class User extends UserEntity {
+  @Type(() => ShippingAddress)
   @Field(() => [ShippingAddress], { nullable: true })
   shippingAddresses: ShippingAddress[];
+  @Type(() => RefundAccount)
+  @Field(() => RefundAccount, { nullable: true })
+  refundAccount: RefundAccount;
 
   public updatePassword = (password: string, input: string): User => {
     if (!this.comparePassword(password)) {

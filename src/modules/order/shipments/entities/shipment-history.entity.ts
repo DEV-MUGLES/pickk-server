@@ -37,7 +37,7 @@ export class ShipmentHistoryEntity implements IShipmentHistory {
   createdAt: Date;
 
   @Field()
-  @Column({ length: 20 })
+  @Column({ length: 50 })
   @MaxLength(20)
   statusText: string;
   @Field()
@@ -48,9 +48,9 @@ export class ShipmentHistoryEntity implements IShipmentHistory {
   @Column()
   time: Date;
 
-  @ManyToOne('ShipmentEntity', 'histories')
+  @ManyToOne('ShipmentEntity', 'histories', { onDelete: 'CASCADE' })
   shipment: Shipment;
   @Field(() => Int)
-  @Column({ nullable: true })
+  @Column()
   shipmentId: number;
 }

@@ -9,54 +9,55 @@ import { Type } from 'class-transformer';
 import { ItemInfoCrawlResult } from '@providers/crawler';
 
 import { Campaign } from '@item/campaigns/models';
-import { Product } from '@item/products/models/product.model';
+import { ItemCategory } from '@item/item-categories/models';
+import { Product } from '@item/products/models';
 
 import {
   AddItemUrlInput,
   CreateItemOptionInput,
   AddItemPriceInput,
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
   AddItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from '../dtos';
+import { ItemEntity } from '../entities';
 import { ItemDetailImageFactory } from '../factories';
-
-// @TODO:BARREL
-import { ItemEntity } from '../entities/item.entity';
 
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
 import { ItemUrl } from './item-url.model';
 import { ItemPrice } from './item-price.model';
-import { ItemNotice } from './item-notice.model';
 import { ItemSizeChart } from './item-size-chart.model';
 import { ItemOptionValue } from './item-option-value.model';
+import { Brand } from '@item/brands/models';
+import { ItemSalePolicy } from './item-sale-policy.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
-  @Field(() => [ItemPrice])
-  prices: ItemPrice[];
+  @Field(() => Brand, { nullable: true })
+  brand: Brand;
 
-  @Field(() => [ItemUrl])
-  urls: ItemUrl[];
+  @Field(() => ItemCategory, { nullable: true })
+  majorCategory?: ItemCategory;
+  @Field(() => ItemCategory, { nullable: true })
+  minorCategory?: ItemCategory;
 
-  @Field(() => [ItemDetailImage], { nullable: true })
-  detailImages: ItemDetailImage[];
-
-  @Field(() => [ItemOption], {
-    nullable: true,
-  })
+  @Type(() => ItemOption)
+  @Field(() => [ItemOption], { nullable: true })
   options: ItemOption[];
-
   @Type(() => Product)
-  @Field(() => [Product], {
-    nullable: true,
-  })
+  @Field(() => [Product], { nullable: true })
   products: Product[];
-
   @Field(() => [Campaign], { nullable: true })
   campaigns: Campaign[];
+
+  @Field(() => ItemSalePolicy, { nullable: true })
+  salePolicy: ItemSalePolicy;
+  @Field(() => [ItemPrice])
+  prices: ItemPrice[];
+  @Field(() => [ItemUrl])
+  urls: ItemUrl[];
+  @Field(() => [ItemDetailImage], { nullable: true })
+  detailImages: ItemDetailImage[];
 
   @Field(() => [ItemSizeChart], { nullable: true })
   sizeCharts: ItemSizeChart[];
@@ -154,32 +155,6 @@ export class Item extends ItemEntity {
 
     this.setActivePrice(index);
     return this.prices;
-  };
-
-  public addNotice = (addItemNoticeInput: AddItemNoticeInput): ItemNotice => {
-    if (this.notice) {
-      throw new ConflictException('이미 안내 메세지가 존재합니다.');
-    }
-
-    const itemNotice = new ItemNotice(addItemNoticeInput);
-    this.notice = itemNotice;
-
-    return this.notice;
-  };
-
-  public updateNotice = (
-    updateItemNoticeInput: UpdateItemNoticeInput
-  ): ItemNotice => {
-    if (!this.notice) {
-      throw new NotFoundException('수정할 안내가 존재하지 않습니다.');
-    }
-
-    this.notice = new ItemNotice({
-      ...this.notice,
-      ...updateItemNoticeInput,
-    });
-
-    return this.notice;
   };
 
   public createOptionSet = (inputs: CreateItemOptionInput[]): ItemOption[] => {

@@ -1,10 +1,10 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, OneToOne } from 'typeorm';
 import { IsOptional, IsString } from 'class-validator';
 
 import { AbstractAddressEntity } from '@common/entities';
 
-import { IOrderReceiver } from '../interfaces';
+import { IOrder, IOrderReceiver } from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'order_receiver' })
@@ -18,8 +18,13 @@ export class OrderReceiverEntity
       return;
     }
 
+    this.order = attributes.order;
+
     this.message = attributes.message;
   }
+
+  @OneToOne('OrderEntity', 'receiver', { onDelete: 'CASCADE' })
+  order: IOrder;
 
   @Field({ description: '베송 요청사항 (최대 50자)', nullable: true })
   @Column({ length: 50, nullable: true })

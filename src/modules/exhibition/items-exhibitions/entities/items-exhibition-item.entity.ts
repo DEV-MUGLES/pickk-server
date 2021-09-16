@@ -1,9 +1,9 @@
-import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { Item } from '@item/items/models';
+import { IItem } from '@item/items/interfaces';
 
 import { IItemsExhibitionItem, IItemsExhibition } from '../interfaces';
 
@@ -28,18 +28,18 @@ export class ItemsExhibitionItemEntity
     this.order = attributes.order;
   }
 
-  @ManyToOne('ItemsExhibitionEntity', 'exhibitionItems')
+  @ManyToOne('ItemsExhibitionEntity', 'exhibitionItems', {
+    onDelete: 'CASCADE',
+  })
   exhibition: IItemsExhibition;
-  @Column({ type: 'int', nullable: true })
+  @Column()
   exhibitionId: number;
 
-  @Field(() => Item)
-  @ManyToOne('ItemEntity')
-  item: Item;
-  @Column({ type: 'int', nullable: true })
+  @ManyToOne('ItemEntity', { onDelete: 'CASCADE' })
+  item: IItem;
+  @Column()
   itemId: number;
 
-  @Field(() => Int)
   @Column({ type: 'smallint', default: 0 })
   order: number;
 }

@@ -116,7 +116,7 @@ export class Order extends OrderEntity {
       }
 
       this.markVbankReady();
-      this.vbankInfo = new OrderVbankReceipt(createOrderVbankReceiptInput);
+      this.vbankReceipt = new OrderVbankReceipt(createOrderVbankReceiptInput);
     } else {
       this.markPaid();
     }

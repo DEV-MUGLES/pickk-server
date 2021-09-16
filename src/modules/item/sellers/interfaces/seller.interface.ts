@@ -1,7 +1,7 @@
-import { IAddress, ISaleStrategy } from '@common/interfaces';
+import { IAddress, IBaseId, ISaleStrategy } from '@common/interfaces';
 
-import { IBrand } from '../../brands/interfaces/brand.interface';
-import { ICourier } from '../../couriers/interfaces/courier.interface';
+import { IBrand } from '@item/brands/interfaces';
+import { ICourier } from '@item/couriers/interfaces';
 
 import {
   ISellerClaimPolicy,
@@ -11,11 +11,7 @@ import {
 } from './policies';
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
 
-export interface ISeller {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface ISeller extends IBaseId {
   /** 상호 */
   businessName: string;
   /** 사업자번호 */
@@ -48,6 +44,5 @@ export interface ISeller {
   crawlPolicy: ISellerCrawlPolicy;
   shippingPolicy: ISellerShippingPolicy;
   settlePolicy?: ISellerSettlePolicy;
-
   returnAddress: IAddress;
 }

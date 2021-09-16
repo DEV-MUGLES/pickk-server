@@ -1,4 +1,5 @@
 import { IAccount } from '@common/interfaces';
+
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { PayMethod } from '@payment/payments/constants';
@@ -19,18 +20,18 @@ export interface IOrder {
   userId?: number;
   orderItems: IOrderItem[];
 
-  refundRequests?: IRefundRequest[];
-
-  status: OrderStatus;
-  payMethod?: PayMethod;
-
   // 가상계좌 관련 정보
-  vbankInfo?: IOrderVbankReceipt;
+  vbankReceipt?: IOrderVbankReceipt;
   // 구매자 정보
   buyer?: IOrderBuyer;
   // 수령인 정보
   receiver?: IOrderReceiver;
   refundAccount?: IAccount;
+
+  refundRequests?: IRefundRequest[];
+
+  status: OrderStatus;
+  payMethod?: PayMethod;
 
   payingAt?: Date;
   failedAt?: Date;

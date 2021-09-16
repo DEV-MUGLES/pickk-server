@@ -23,7 +23,6 @@ import {
   SellerShippingPolicy,
   SellerReturnAddress,
   Seller,
-  SellerClaimAccount,
   SellerSettlePolicy,
   SellerSettleAccount,
 } from './models';
@@ -47,11 +46,13 @@ export class SellersService {
     const _sellerFilter = plainToClass(SellerFilter, sellerFilter);
     const _pageInput = plainToClass(PageInput, pageInput);
 
-    return await this.sellersRepository.find({
-      relations,
-      where: parseFilter(_sellerFilter, _pageInput?.idFilter),
-      ...(_pageInput?.pageFilter ?? {}),
-    });
+    return this.sellersRepository.entityToModelMany(
+      await this.sellersRepository.find({
+        relations,
+        where: parseFilter(_sellerFilter, _pageInput?.idFilter),
+        ...(_pageInput?.pageFilter ?? {}),
+      })
+    );
   }
 
   async get(id: number, relations: string[] = []): Promise<Seller> {
@@ -80,10 +81,7 @@ export class SellersService {
   ): Promise<Seller> {
     const {
       saleStrategyInput,
-      claimPolicyInput: {
-        accountInput: claimAccountInput,
-        ...claimPolicyInput
-      },
+      claimPolicyInput,
       settlePolicyInput,
       crawlPolicyInput,
       shippingPolicyInput,
@@ -99,7 +97,6 @@ export class SellersService {
       ...sellerAttributes,
       claimPolicy: new SellerClaimPolicy({
         ...claimPolicyInput,
-        account: new SellerClaimAccount(claimAccountInput),
       }),
       crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
       shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),

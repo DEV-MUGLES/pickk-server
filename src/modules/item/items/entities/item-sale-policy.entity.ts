@@ -1,6 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import { IsNumber, Max, Min } from 'class-validator';
+import { Max, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -17,23 +17,17 @@ export class ItemSalePolicyEntity
   @Field()
   @Column()
   isUsingStock: boolean;
-
   @Field(() => Int)
-  @Column({
-    type: 'tinyint',
-    unsigned: true,
-  })
-  @IsNumber()
+  @Column({ type: 'tinyint', unsigned: true })
   @Min(0)
   @Max(255)
   quantityLimit: number;
-
   @Field()
   @Column()
   isUsingQuantityLimit: boolean;
 }
 
-export const DEFAULT_ITEM_SALE_POLICY: IItemSalePolicy = {
+export const DEFAULT_ITEM_SALE_POLICY: Partial<IItemSalePolicy> = {
   isUsingStock: false,
   quantityLimit: 0,
   isUsingQuantityLimit: false,

@@ -9,12 +9,12 @@ import { RemoveExpectedPointEventMto } from '@queue/mtos';
 export class ExpectedPointEventProducer {
   constructor(private readonly sqsService: SqsService) {}
 
-  public async removeByOrderId(orderId: number) {
+  public async removeByOrderItemUid(merchantUid: string) {
     await this.sqsService.send<RemoveExpectedPointEventMto>(
       REMOVE_EXPECTED_POINT_EVENT_QUEUE,
       {
         id: getRandomUuid(),
-        body: { orderId },
+        body: { merchantUid },
       }
     );
   }

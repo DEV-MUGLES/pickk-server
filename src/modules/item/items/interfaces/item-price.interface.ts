@@ -1,8 +1,13 @@
+import { IBaseId } from '@common/interfaces';
+
 import { ItemPriceUnit } from '../constants';
 
 import { IItem } from './item.interface';
 
-export interface IItemPrice {
+export interface IItemPrice extends IBaseId {
+  item: IItem;
+  itemId: number;
+
   originalPrice: number;
   sellPrice: number;
 
@@ -14,20 +19,12 @@ export interface IItemPrice {
   /** 핔 부담 할인율. amount와 rate중 1개만 존재합니다. */
   pickkDiscountRate?: number;
 
-  /** 활성화 여부. 1개의 ItemPrice만 활성화될 수 있다.
-   * @default isFirst ? true : false */
   isActive: boolean;
-  /** 크롤링 업데이트 여부.
-   * @default isFirst ? true : false */
   isCrawlUpdating: boolean;
-  /** Base 가격인가 여부. 1개의 ItemPrice만 Base로 설정될 수 있다.
-   * - Base 가격은 삭제할 수 없다.
-   * @default isFirst ? true : false */
   isBase: boolean;
 
   /** 입력된 시점이 됐을 때 이 가격이 활성화된다. */
   startAt?: Date | null;
-
   /** 입력된 시점이 됐을 때 이 가격이 비활성화되고 Base 가격이 활성화된다. */
   endAt?: Date | null;
 
@@ -35,6 +32,4 @@ export interface IItemPrice {
   displayPrice?: number | null;
   /** 노출되는 가격 단위. @default KRW */
   unit?: ItemPriceUnit;
-
-  item: IItem;
 }

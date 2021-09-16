@@ -36,17 +36,17 @@ export class FollowEntity implements IFollow {
   @CreateDateColumn()
   createdAt: Date;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @Field(() => User)
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
   user: User;
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Field(() => Int)
+  @Column()
   userId: number;
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @Field(() => User)
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
   target: User;
-  @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Field(() => Int)
+  @Column()
   targetId: number;
 }

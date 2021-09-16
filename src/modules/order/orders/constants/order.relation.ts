@@ -33,7 +33,7 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'orderItems.seller.shippingPolicy',
   'buyer',
   'receiver',
-  'vbankInfo',
+  'vbankReceipt',
   'refundRequests',
   'refundRequests.shipment',
   'refundRequests.shipment.courier',
@@ -62,7 +62,7 @@ export const CANCEL_ORDER_RELATIONS: Array<OrderRelationType> = [
   'orderItems.product.item.brand',
   'orderItems.product.item.brand.seller',
   'orderItems.product.item.brand.seller.shippingPolicy',
-  'vbankInfo',
+  'vbankReceipt',
   'receiver',
   'buyer',
 ];

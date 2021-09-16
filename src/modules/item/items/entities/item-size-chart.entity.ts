@@ -3,16 +3,14 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItemSizeChart } from '../interfaces';
-import { ItemEntity } from './item.entity';
+import { IItem, IItemSizeChart } from '../interfaces';
 
+const NullableField = () => Field({ nullable: true });
 const NullableFloatColumn = () =>
   Column({ type: 'float', default: null, nullable: true });
 
 @ObjectType()
-@Entity({
-  name: 'item_size_chart',
-})
+@Entity({ name: 'item_size_chart' })
 export class ItemSizeChartEntity
   extends BaseIdEntity
   implements IItemSizeChart
@@ -22,6 +20,10 @@ export class ItemSizeChartEntity
     if (!attributes) {
       return;
     }
+
+    this.item = attributes.item;
+    this.itemId = attributes.itemId;
+
     this.name = attributes.name;
 
     this.totalLength = attributes.totalLength;
@@ -42,85 +44,66 @@ export class ItemSizeChartEntity
     this.glassWidth = attributes.glassWidth;
     this.glassBridgeLength = attributes.glassBridgeLength;
     this.glassLegLength = attributes.glassLegLength;
-
-    this.itemId = attributes.itemId;
-    this.item = attributes.item;
   }
+
+  @ManyToOne('ItemEntity', 'sizeCharts', { onDelete: 'CASCADE' })
+  item: IItem;
+  @Field(() => Int)
+  @Column()
+  itemId: number;
 
   @Field()
   @Column()
   name: string;
 
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   totalLength?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   shoulderWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   chestWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   sleeveLength?: number;
 
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   waistWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   riseHeight?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   thighWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   hemWidth?: number;
 
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   accWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   accHeight?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   accDepth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   crossStrapLength?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   watchBandDepth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   glassWidth?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   glassBridgeLength?: number;
-
-  @Field({ nullable: true })
+  @NullableField()
   @NullableFloatColumn()
   glassLegLength?: number;
-
-  @Field(() => Int)
-  @Column()
-  itemId: number;
-
-  @ManyToOne('ItemEntity', 'sizeCharts', {
-    onDelete: 'CASCADE',
-  })
-  item: ItemEntity;
 }

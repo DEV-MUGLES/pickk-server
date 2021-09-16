@@ -8,7 +8,7 @@ import {
   JoinColumn,
   PrimaryColumn,
 } from 'typeorm';
-import { IsEnum, IsOptional, IsString, Min } from 'class-validator';
+import { IsEnum, IsString, Min } from 'class-validator';
 
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
@@ -74,38 +74,46 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   merchantUid: string;
 
   @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user?: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId?: number;
   @Field(() => Product, { nullable: true })
-  @ManyToOne('ProductEntity', { nullable: true })
+  @ManyToOne('ProductEntity', { onDelete: 'SET NULL', nullable: true })
   product?: Product;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   productId: number;
   @Field(() => Seller, { nullable: true })
-  @ManyToOne('SellerEntity', { nullable: true })
+  @ManyToOne('SellerEntity', { onDelete: 'SET NULL', nullable: true })
   seller?: Seller;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   sellerId?: number;
 
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @OneToOne('ShipmentEntity', {
+    onDelete: 'SET NULL',
+    nullable: true,
+    cascade: true,
+  })
   @JoinColumn()
   pickShipment: Shipment;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   pickShipmentId: number;
 
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @OneToOne('ShipmentEntity', {
+    onDelete: 'SET NULL',
+    nullable: true,
+    cascade: true,
+  })
   @JoinColumn()
   reShipment: Shipment;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   reShipmentId: number;
 
   @OneToOne('OrderItemEntity', 'refundRequests', { cascade: ['update'] })
@@ -116,28 +124,20 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   orderItemMerchantUid: string;
 
   @Field(() => ExchangeRequestStatus)
-  @Column({
-    type: 'enum',
-    enum: ExchangeRequestStatus,
-  })
+  @Column({ type: 'enum', enum: ExchangeRequestStatus })
   @IsEnum(ExchangeRequestStatus)
   status: ExchangeRequestStatus;
 
   @Field(() => OrderClaimFaultOf)
-  @Column({
-    type: 'enum',
-    enum: OrderClaimFaultOf,
-  })
+  @Column({ type: 'enum', enum: OrderClaimFaultOf })
   @IsEnum(OrderClaimFaultOf)
   faultOf: OrderClaimFaultOf;
 
   @Field({ description: '255자 이내로 적어주세요' })
   @Column()
-  @IsString()
   reason: string;
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })
-  @IsString()
   rejectReason: string;
   @Field(() => Int, { description: '결제된 교환 배송비' })
   @Column({ type: 'mediumint', unsigned: true })
@@ -159,11 +159,9 @@ export class ExchangeRequestEntity implements IExchangeRequest {
 
   @Field()
   @Column({ default: false })
-  @IsOptional()
   isSettled: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isProcessDelaying: boolean;
   @Field()
   @Column({ nullable: true })

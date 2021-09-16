@@ -25,7 +25,7 @@ export class VbankNotiTemplate {
     const {
       merchantUid,
       buyer,
-      vbankInfo: { ownerName, due, bankCodeDisplayName, number: bankNum },
+      vbankReceipt: { ownerName, due, bankCodeDisplayName, number: bankNum },
       totalPayAmount,
       orderItems,
       createdAt,

@@ -1,3 +1,5 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IItem } from '@item/items/interfaces';
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IUser } from '@user/users/interfaces';
@@ -6,11 +8,7 @@ import { InquiryType } from '../constants';
 
 import { IInquiryAnswer } from './inquiry-answer.interface';
 
-export interface IInquiry {
-  id: number;
-  createdAt: Date;
-  updatedAt: Date;
-
+export interface IInquiry extends IBaseId {
   user: IUser;
   userId: number;
   item: IItem;

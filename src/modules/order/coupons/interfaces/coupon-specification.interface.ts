@@ -1,8 +1,10 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IBrand } from '@item/brands/interfaces';
 
 import { CouponType } from '../constants';
 
-export interface ICouponSpecification {
+export interface ICouponSpecification extends IBaseId {
   brand?: IBrand;
   brandId?: number;
 

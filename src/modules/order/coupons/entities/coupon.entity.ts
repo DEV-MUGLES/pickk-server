@@ -1,6 +1,6 @@
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { IsEnum, IsOptional } from 'class-validator';
+import { IsEnum } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
@@ -9,8 +9,8 @@ import { User } from '@user/users/models';
 import { CouponStatus } from '../constants';
 import { ICoupon } from '../interfaces';
 
-// @TODO:BARREL circular dependency
 import { CouponSpecification } from '../models/coupon-specification.model';
+
 import { CouponSpecificationEntity } from './coupon-specification.entity';
 
 @ObjectType()
@@ -24,39 +24,29 @@ export class CouponEntity extends BaseIdEntity implements ICoupon {
 
     this.user = attributes.user;
     this.userId = attributes.userId;
-
     this.spec = attributes.spec;
     this.specId = attributes.specId;
+
     this.status = attributes.status;
   }
 
-  @Column()
-  userId: number;
-
-  @ManyToOne(() => UserEntity, {
-    onDelete: 'CASCADE',
-  })
+  @Field(() => User)
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
-
-  @Field()
+  @Field(() => Int)
+  @Column()
+  userId: number;
+  @Field(() => CouponSpecification, { nullable: true })
+  @ManyToOne(() => CouponSpecificationEntity, { onDelete: 'CASCADE' })
+  @JoinColumn()
+  spec: CouponSpecification;
+  @Field(() => Int)
   @Column()
   specId: number;
 
-  @Field(() => CouponSpecification, { nullable: true })
-  @ManyToOne(() => CouponSpecificationEntity, {
-    onDelete: 'CASCADE',
-  })
-  @JoinColumn()
-  spec: CouponSpecification;
-
   @Field(() => CouponStatus, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: CouponStatus,
-    default: CouponStatus.Ready,
-  })
+  @Column({ type: 'enum', enum: CouponStatus, default: CouponStatus.Ready })
   @IsEnum(CouponStatus)
-  @IsOptional()
   status: CouponStatus;
 }

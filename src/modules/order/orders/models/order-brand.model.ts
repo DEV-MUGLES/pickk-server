@@ -9,13 +9,11 @@ export class OrderBrand {
 
   @Field()
   nameKor: string;
-
   @Field()
   imageUrl: string;
 
   @Field(() => Int)
   shippingFee: number;
-
   @Field(() => Int)
   totalItemFinalPrice: number;
 

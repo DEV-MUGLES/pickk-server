@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
-import { IsEnum, IsNumber, IsOptional, IsString, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
@@ -11,8 +10,8 @@ import { IPointEvent } from '../interfaces';
 
 @ObjectType()
 @Entity('point_event')
-@Index('idx_createdAt', ['userId', 'createdAt'])
-@Index('idx_orderId', ['orderId'])
+@Index('idx-createdAt', ['userId', 'createdAt'])
+@Index('idx-orderItemMerchantUid', ['orderItemMerchantUid'])
 export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   constructor(attributes?: Partial<PointEventEntity>) {
     super(attributes);
@@ -20,70 +19,40 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
       return;
     }
 
+    this.title = attributes.title;
+    this.content = attributes.content;
     this.type = attributes.type;
     this.amount = attributes.amount;
     this.resultBalance = attributes.resultBalance;
-    this.title = attributes.title;
-    this.content = attributes.content;
 
-    this.orderId = attributes.orderId;
-    this.orderItemId = attributes.orderItemId;
+    this.orderItemMerchantUid = attributes.orderItemMerchantUid;
     this.user = attributes.user;
     this.userId = attributes.userId;
   }
 
+  @Field()
+  @Column({ length: 30 })
+  title: string;
+  @Field()
+  @Column({ length: 30 })
+  content: string;
   @Field(() => PointType)
-  @Column({
-    type: 'enum',
-    enum: PointType,
-  })
-  @IsEnum(PointType)
+  @Column({ type: 'enum', enum: PointType })
   type: PointType;
-
-  @Field(() => Int, {
-    description: '적립/사용 금액. 적립인 경우 양수, 사용인 경우 음수입니다.',
-  })
+  @Field(() => Int, { description: '적립/사용 금액. 양수/음수 구분함' })
   @Column({ type: 'int' })
-  @IsNumber()
   amount: number;
-
   @Field(() => Int, { description: '적립/사용 이후 잔고' })
-  @Column({ type: 'int' })
-  @IsNumber()
-  @Min(1)
+  @Column({ type: 'int', unsigned: true })
   resultBalance: number;
 
-  @Field()
-  @Column({
-    length: 30,
-  })
-  @IsString()
-  title: string;
-
-  @Field()
-  @Column({
-    length: 50,
-  })
-  @IsString()
-  content: string;
-
   @Field({ nullable: true })
-  @Column({ type: 'int', nullable: true })
-  @IsOptional()
-  orderId?: number;
-
-  @Field({ nullable: true })
-  @Column({ type: 'int', nullable: true })
-  @IsOptional()
-  orderItemId?: number;
-
-  @Field()
-  @Column()
-  userId: number;
-
-  @ManyToOne(() => UserEntity, {
-    onDelete: 'CASCADE',
-  })
+  @Column({ type: 'char', length: 22, nullable: true })
+  orderItemMerchantUid: string;
+  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
   @JoinColumn()
   user: User;
+  @Field(() => Int)
+  @Column()
+  userId: number;
 }

@@ -1,15 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Column, Entity } from 'typeorm';
-import {
-  IsBoolean,
-  IsEnum,
-  IsInt,
-  IsOptional,
-  IsString,
-  Max,
-  MaxLength,
-  Min,
-} from 'class-validator';
+import { IsEnum, Max, MaxLength, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -37,18 +28,14 @@ export class KeywordClassEntity extends BaseIdEntity implements IKeywordClass {
   type: KeywordClassType;
   @Field()
   @Column({ length: 30 })
-  @IsString()
   @MaxLength(30)
   name: string;
-  @Field(() => Int, { description: '0~255 정수' })
-  @Column({ type: 'tinyint', unsigned: true, nullable: true })
-  @IsInt()
+  @Field(() => Int, { description: '0~255 정수', nullable: true })
+  @Column({ type: 'tinyint', unsigned: true, default: 0 })
   @Min(0)
   @Max(255)
   order: number;
   @Field()
   @Column({ default: true })
-  @IsBoolean()
-  @IsOptional()
   isVisible: boolean;
 }

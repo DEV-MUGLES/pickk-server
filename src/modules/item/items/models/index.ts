@@ -1,5 +1,4 @@
 export * from './item-detail-image.model';
-export * from './item-notice.model';
 export * from './item-option-value.model';
 export * from './item-option.model';
 export * from './item-price.model';

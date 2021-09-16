@@ -37,9 +37,7 @@ export abstract class AbstractImageEntity
   angle: number;
 
   @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Field()

@@ -1,16 +1,18 @@
-import { IAccount } from '@common/interfaces';
+import { IBaseId } from '@common/interfaces';
+
 import { IStyleTag } from '@content/style-tags/interfaces';
 
 import { UserOauthProvider, UserRole } from '../constants';
 
 import { IShippingAddress } from './shipping-address.interface';
+import { IRefundAccount } from './refund-account.interface';
 
 /**
  * User variable type declaration.
  *
  * @interface
  */
-export interface IUser {
+export interface IUser extends IBaseId {
   role?: UserRole;
   oauthProvider?: UserOauthProvider;
   oauthCode?: string;
@@ -32,7 +34,7 @@ export interface IUser {
 
   styleTags: IStyleTag[];
   shippingAddresses: IShippingAddress[];
-  refundAccount: IAccount;
+  refundAccount: IRefundAccount;
 
   // 계산되는 field들
   followCount: number;

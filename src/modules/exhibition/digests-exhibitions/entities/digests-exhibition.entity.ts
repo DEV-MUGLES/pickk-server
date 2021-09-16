@@ -22,7 +22,6 @@ export class DigestsExhibitionEntity
 
   @OneToMany('DigestsExhibitionDigestEntity', 'exhibition', {
     cascade: true,
-    onDelete: 'CASCADE',
   })
   exhibitionDigests: IDigestsExhibitionDigest[];
 }

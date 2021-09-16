@@ -1,8 +1,10 @@
+import { IBaseId } from '@common/interfaces';
+
 import { ItemSizeChartColumnName } from '../constants';
 
 import { IItem } from './item.interface';
 
-export interface IItemSizeChart {
+export interface IItemSizeChart extends IBaseId {
   name: string;
   //상의,아우터,하의,악세사리등 총 길이와 관련된 정보
   totalLength?: number;

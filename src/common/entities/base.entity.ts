@@ -6,8 +6,10 @@ import {
   BaseEntity as _TypeORMBaseEntity,
 } from 'typeorm';
 
+import { IBaseId } from '../interfaces';
+
 @ObjectType()
-export class BaseIdEntity extends _TypeORMBaseEntity {
+export class BaseIdEntity extends _TypeORMBaseEntity implements IBaseId {
   constructor(attributes?: Partial<BaseIdEntity>) {
     super();
     if (!attributes) {
@@ -24,15 +26,10 @@ export class BaseIdEntity extends _TypeORMBaseEntity {
   id: number;
 
   @Field()
-  @CreateDateColumn({
-    name: 'created_at',
-  })
+  @CreateDateColumn()
   createdAt: Date;
 
   @Field()
-  @UpdateDateColumn({
-    name: 'updated_at',
-    type: 'timestamp',
-  })
+  @UpdateDateColumn()
   updatedAt: Date;
 }

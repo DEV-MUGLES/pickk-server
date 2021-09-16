@@ -125,42 +125,46 @@ export class OrderItemEntity implements IOrderItem {
   updatedAt: Date;
 
   @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user?: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId?: number;
   @Field(() => Seller, { nullable: true })
-  @ManyToOne('SellerEntity', { nullable: true })
+  @ManyToOne('SellerEntity', { onDelete: 'SET NULL', nullable: true })
   seller?: Seller;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   sellerId?: number;
   @Field(() => Item, { nullable: true })
-  @ManyToOne('ItemEntity', { nullable: true })
+  @ManyToOne('ItemEntity', { onDelete: 'SET NULL', nullable: true })
   item?: Item;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   itemId?: number;
   @Field(() => Product, { nullable: true })
-  @ManyToOne('ProductEntity', { nullable: true })
+  @ManyToOne('ProductEntity', { onDelete: 'SET NULL', nullable: true })
   product?: Product;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   productId: number;
 
   @Field(() => Coupon, { nullable: true })
-  @ManyToOne('CouponEntity', { nullable: true })
+  @ManyToOne('CouponEntity', { onDelete: 'SET NULL', nullable: true })
   usedCoupon?: Coupon;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   usedCouponId?: number;
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @OneToOne('ShipmentEntity', {
+    onDelete: 'SET NULL',
+    nullable: true,
+    cascade: true,
+  })
   @JoinColumn()
   shipment: Shipment;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   shipmentId: number;
 
   @ManyToOne('OrderEntity', { onDelete: 'CASCADE' })
@@ -171,7 +175,10 @@ export class OrderItemEntity implements IOrderItem {
 
   @ManyToOne('RefundRequestEntity', 'orderItems')
   refundRequest: IRefundRequest;
-  @OneToOne('ExchangeRequestEntity', 'orderItem', { cascade: true })
+  @OneToOne('ExchangeRequestEntity', 'orderItem', {
+    onDelete: 'SET NULL',
+    cascade: true,
+  })
   exchangeRequest: IExchangeRequest;
 
   @Field({ description: '프론트엔드를 위한 status/claimStatus 표시값입니다.' })
@@ -202,23 +209,18 @@ export class OrderItemEntity implements IOrderItem {
 
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isConfirmed: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isShipReserved: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isSettled: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isDelaying: boolean;
   @Field({ defaultValue: false })
   @Column({ default: false })
-  @IsOptional()
   isProcessDelaying: boolean;
   @Field()
   @Column()
@@ -244,8 +246,7 @@ export class OrderItemEntity implements IOrderItem {
   @Field({ nullable: true })
   @Column({ length: 30, nullable: true })
   @MaxLength(30)
-  @IsOptional()
-  usedCouponName?: string;
+  usedCouponName: string;
 
   @Field()
   @Column({ length: 30 })
@@ -253,11 +254,9 @@ export class OrderItemEntity implements IOrderItem {
   brandNameKor: string;
   @Field()
   @Column()
-  @IsString()
   itemName: string;
   @Field()
   @Column()
-  @IsString()
   productVariantName: string;
 
   @Field(() => Int, { nullable: true })

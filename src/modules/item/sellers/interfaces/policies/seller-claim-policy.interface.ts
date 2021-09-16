@@ -1,8 +1,11 @@
-import { IAccount } from '@common/interfaces';
+import { IBaseId } from '@common/interfaces';
 
-import { ClaimFeePayMethod } from '../../constants';
+import { ISeller } from '../seller.interface';
 
-export interface ISellerClaimPolicy {
+export interface ISellerClaimPolicy extends IBaseId {
+  seller: ISeller;
+  sellerId: number;
+
   /** 교환/반품 배송비
    - 전액환불, 반액환불, 0, 직접입력 중 선택해서 진행 가능 */
   fee: number;
@@ -10,13 +13,8 @@ export interface ISellerClaimPolicy {
   picName: string;
   /** 담당자 번호 */
   phoneNumber: string;
-  /** 교환배송비 지불방식 */
-  feePayMethod: ClaimFeePayMethod;
   description: string;
 
   isExchangable: boolean;
   isRefundable: boolean;
-
-  /** 교환배송비 지불 게좌 */
-  account?: IAccount;
 }

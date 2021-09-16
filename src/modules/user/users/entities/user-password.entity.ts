@@ -3,12 +3,12 @@ import { Column } from 'typeorm';
 import { IUserPassword } from '../interfaces';
 
 export class UserPasswordEntity implements IUserPassword {
-  @Column('varchar', { nullable: true })
+  @Column({ nullable: true })
   encrypted: string;
 
-  @Column('varchar', { nullable: true })
+  @Column({ nullable: true })
   salt: string;
 
-  @Column('datetime', { nullable: true })
+  @Column({ type: 'datetime', nullable: true })
   createdAt!: Date;
 }

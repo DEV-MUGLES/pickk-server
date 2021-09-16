@@ -7,7 +7,6 @@ import {
 } from '@nestjs/graphql';
 
 import {
-  SellerClaimAccount,
   SellerClaimPolicy,
   SellerCrawlPolicy,
   SellerSettleAccount,
@@ -18,28 +17,11 @@ import {
 } from '../models';
 
 @InputType()
-export class CreateSellerClaimAccountInput extends PickType(
-  SellerClaimAccount,
-  ['bankCode', 'number', 'ownerName'],
-  InputType
-) {}
-
-@InputType()
 export class CreateSellerClaimPolicyInput extends PickType(
   SellerClaimPolicy,
-  [
-    'fee',
-    'phoneNumber',
-    'picName',
-    'feePayMethod',
-    'isExchangable',
-    'isRefundable',
-  ],
+  ['fee', 'phoneNumber', 'picName', 'isExchangable', 'isRefundable'],
   InputType
-) {
-  @Field({ nullable: true })
-  accountInput?: CreateSellerClaimAccountInput;
-}
+) {}
 
 @InputType()
 export class CreateSellerSettleAccountInput extends PickType(
@@ -94,22 +76,14 @@ export class CreateSellerCrawlStrategyInput extends PickType(
 ) {}
 
 @InputType()
-export class UpdateSellerClaimAccountInput extends PartialType(
-  CreateSellerClaimAccountInput
-) {}
-
-@InputType()
 export class UpdateSellerSettleAccountInput extends PartialType(
   CreateSellerSettleAccountInput
 ) {}
 
 @InputType()
 export class UpdateSellerClaimPolicyInput extends PartialType(
-  OmitType(CreateSellerClaimPolicyInput, ['accountInput'])
-) {
-  @Field({ nullable: true })
-  accountInput?: UpdateSellerClaimAccountInput;
-}
+  CreateSellerClaimPolicyInput
+) {}
 
 @InputType()
 export class UpdateSellerSettlePolicyInput extends PartialType(

@@ -1,7 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
-import { DeleteResult } from 'typeorm';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
@@ -104,15 +103,17 @@ export class PointsService {
   }
 
   async createEvent(createEventInput: CreateEventInput): Promise<PointEvent> {
-    const { userId, orderId } = createEventInput;
+    const { userId, orderItemMerchantUid } = createEventInput;
     const currentAmount = await this.getAvailableAmount(userId);
     const pointEvent = PointEvent.of(createEventInput, currentAmount);
 
     await this.updateAvailableAmount(userId, pointEvent.resultBalance);
     const createdPointEvent = await this.pointEventsRepository.save(pointEvent);
 
-    if (orderId) {
-      this.expectedPointEventProducer.removeByOrderId(orderId);
+    if (orderItemMerchantUid) {
+      this.expectedPointEventProducer.removeByOrderItemUid(
+        orderItemMerchantUid
+      );
     }
 
     return createdPointEvent;
@@ -127,7 +128,11 @@ export class PointsService {
     return await this.expectedpointEventsRepository.save(expectedPointEvent);
   }
 
-  async removeExpectedEvent(orderId: number): Promise<DeleteResult> {
-    return await this.expectedpointEventsRepository.delete(orderId);
+  async removeExpectedEvent(orderItemMerchantUid: string): Promise<void> {
+    const expectedPointEvent =
+      await this.expectedpointEventsRepository.findOneEntity({
+        orderItemMerchantUid,
+      });
+    await this.expectedpointEventsRepository.remove(expectedPointEvent);
   }
 }

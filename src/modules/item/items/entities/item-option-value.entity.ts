@@ -1,6 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne } from 'typeorm';
-import { IsOptional, Max, Min } from 'class-validator';
+import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -19,11 +18,20 @@ export class ItemOptionValueEntity
       return;
     }
 
+    this.itemOption = attributes.itemOption;
+    this.itemOptionId = attributes.itemOptionId;
+
     this.name = attributes.name;
     this.priceVariant = attributes.priceVariant;
     this.order = attributes.order;
-    this.itemOption = attributes.itemOption;
   }
+
+  @ManyToOne('ItemOptionEntity', 'values', { onDelete: 'CASCADE' })
+  @JoinColumn()
+  itemOption: ItemOptionEntity;
+  @Field(() => Int)
+  @Column()
+  itemOptionId: number;
 
   @Field()
   @Column()
@@ -32,18 +40,6 @@ export class ItemOptionValueEntity
   @Column({ type: 'mediumint', unsigned: true })
   priceVariant: number;
   @Field()
-  @Column({
-    type: 'tinyint',
-    unsigned: true,
-    default: 0,
-  })
-  @IsOptional()
-  @Min(0)
-  @Max(255)
+  @Column({ type: 'tinyint', unsigned: true, default: 0 })
   order: number;
-
-  @ManyToOne('ItemOptionEntity', 'values', {
-    onDelete: 'CASCADE',
-  })
-  itemOption: ItemOptionEntity;
 }

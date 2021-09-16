@@ -10,7 +10,7 @@ import { CommentOwnerType } from '../constants';
 
 @ObjectType()
 @Entity({ name: 'comment' })
-@Index('idx_ownerId-id', ['ownerId', 'id'])
+@Index('idx-ownerId:id', ['ownerId', 'id'])
 export class CommentEntity extends BaseIdEntity implements IComment {
   constructor(attributes?: Partial<CommentEntity>) {
     super(attributes);
@@ -21,13 +21,14 @@ export class CommentEntity extends BaseIdEntity implements IComment {
     this.user = attributes.user;
     this.userId = attributes.userId;
 
-    this.ownerType = attributes.ownerType;
-    this.ownerId = attributes.ownerId;
-
     this.parent = attributes.parent;
     this.parentId = attributes.parentId;
+    this.replies = attributes.replies;
     this.mentionedUser = attributes.mentionedUser;
     this.mentionedUserId = attributes.mentionedUserId;
+
+    this.ownerType = attributes.ownerType;
+    this.ownerId = attributes.ownerId;
 
     this.content = attributes.content;
     this.isContentUpdated = attributes.isContentUpdated;
@@ -41,36 +42,32 @@ export class CommentEntity extends BaseIdEntity implements IComment {
     this.isMine = attributes.isMine;
   }
 
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   user: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   userId: number;
-
-  @Field(() => CommentOwnerType)
-  @Column({ type: 'enum', enum: CommentOwnerType })
-  @IsEnum(CommentOwnerType)
-  ownerType: CommentOwnerType;
-  @Field(() => Int)
-  @Column({ type: 'int', unsigned: true })
-  ownerId: number;
-
-  @OneToMany('CommentEntity', 'parent', { cascade: true })
-  replies: CommentEntity[];
 
   @ManyToOne('CommentEntity', { nullable: true })
   parent: CommentEntity;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   parentId: number;
-
-  @Field(() => User, { nullable: true })
-  @ManyToOne('UserEntity', { nullable: true })
+  @OneToMany('CommentEntity', 'parent', { cascade: true })
+  replies: CommentEntity[];
+  @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
   mentionedUser: User;
   @Field(() => Int, { nullable: true })
-  @Column({ type: 'int', nullable: true })
+  @Column({ nullable: true })
   mentionedUserId: number;
+
+  @Field(() => CommentOwnerType)
+  @Column({ type: 'enum', enum: CommentOwnerType })
+  @IsEnum(CommentOwnerType)
+  ownerType: CommentOwnerType;
+  @Field(() => Int)
+  @Column({ type: 'int' })
+  ownerId: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

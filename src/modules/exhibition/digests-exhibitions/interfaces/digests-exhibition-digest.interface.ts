@@ -1,8 +1,10 @@
+import { IBaseId } from '@common/interfaces';
+
 import { IDigest } from '@content/digests/interfaces';
 
 import { IDigestsExhibition } from './digests-exhibition.interface';
 
-export interface IDigestsExhibitionDigest {
+export interface IDigestsExhibitionDigest extends IBaseId {
   exhibition: IDigestsExhibition;
   exhibitionId: number;
 

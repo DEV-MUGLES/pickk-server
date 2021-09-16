@@ -31,7 +31,7 @@ export function commentDiffByIntervalQuery(
     .select('count(ownerId)', 'diff')
     .addSelect('ownerId', 'id')
     .where('ownerType = :ownerType', { ownerType })
-    .andWhere('created_at BETWEEN :from AND :to', {
+    .andWhere('createdAt BETWEEN :from AND :to', {
       from,
       to,
     })
