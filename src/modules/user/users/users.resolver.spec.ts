@@ -35,7 +35,7 @@ describe('UsersResolver', () => {
         },
         {
           provide: OrderItemsService,
-          useValue: new OrderItemsService(null, null, null),
+          useValue: new OrderItemsService(null, null, null, null),
         },
       ],
     }).compile();
