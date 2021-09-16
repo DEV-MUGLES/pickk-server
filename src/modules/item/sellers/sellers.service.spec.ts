@@ -4,7 +4,6 @@ import * as faker from 'faker';
 import { SaleStrategy } from '@common/models';
 import { SaleStrategyRepository } from '@common/repositories';
 
-import { ClaimFeePayMethod } from './constants';
 import { CreateSellerInput } from './dtos';
 import {
   Seller,
@@ -44,6 +43,8 @@ describe('SellersService', () => {
       phoneNumber: '01044131261',
       representativeName: faker.lorem.text(),
       operationTimeMessage: faker.lorem.text(),
+      csNotiPhoneNumber: '111-22-33333',
+      orderNotiPhoneNumber: '111-22-33333',
       userId: faker.datatype.number(),
       brandId: faker.datatype.number(),
       courierId: faker.datatype.number(),
@@ -55,7 +56,6 @@ describe('SellersService', () => {
         fee: faker.datatype.number(),
         phoneNumber: '01044131261',
         picName: faker.lorem.text(),
-        feePayMethod: ClaimFeePayMethod.Enclose,
         isExchangable: faker.datatype.boolean(),
         isRefundable: faker.datatype.boolean(),
       },

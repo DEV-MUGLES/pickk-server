@@ -3,20 +3,19 @@ import * as faker from 'faker';
 import { BankCode } from '@common/constants';
 import { IAccount } from '@common/interfaces';
 
-import { ClaimFeePayMethod } from '../constants';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerSettlePolicyInput,
 } from '../dtos';
 import {
-  SellerClaimAccount,
   SellerClaimPolicy,
+  SellerSettleAccount,
   SellerSettlePolicy,
 } from './policies';
 
 import { Seller } from './seller.model';
 
-const getAccountMockData = (): IAccount => ({
+const getAccountMockData = (): Partial<IAccount> => ({
   bankCode: BankCode.AbnAmro,
   ownerName: faker.name.findName(),
   number: faker.phone.phoneNumber('###########'),
@@ -24,17 +23,15 @@ const getAccountMockData = (): IAccount => ({
 
 const getClaimPolicyMockData = (): Partial<SellerClaimPolicy> => ({
   fee: faker.datatype.number(),
-  feePayMethod: ClaimFeePayMethod.Enclose,
   picName: faker.name.findName(),
   phoneNumber: faker.phone.phoneNumber('###########'),
-  account: new SellerClaimAccount(getAccountMockData()),
 });
 
 const getSettlePolicyMockData = (): Partial<SellerSettlePolicy> => ({
   email: faker.internet.email(),
   picName: faker.name.findName(),
   phoneNumber: faker.phone.phoneNumber('###########'),
-  account: new SellerClaimAccount(getAccountMockData()),
+  account: new SellerSettleAccount(getAccountMockData()),
 });
 
 describe('Seller', () => {
@@ -43,37 +40,11 @@ describe('Seller', () => {
       const claimPolicy = new SellerClaimPolicy(getClaimPolicyMockData());
       const seller = new Seller({ claimPolicy });
 
-      const updateInput: UpdateSellerClaimPolicyInput = {
-        ...getClaimPolicyMockData(),
-        accountInput: getAccountMockData(),
-      };
-      delete updateInput['account'];
+      const updateInput: UpdateSellerClaimPolicyInput =
+        getClaimPolicyMockData();
 
-      const { account, ...claimPolicyAttributes } =
-        seller.updateClaimPolicy(updateInput);
-      expect(account).toMatchObject(updateInput.accountInput);
-      delete updateInput['accountInput'];
-      expect(claimPolicyAttributes).toMatchObject(updateInput);
-    });
-
-    it('Account가 없었으면 추가하면서 성공한다', () => {
-      const claimPolicy = new SellerClaimPolicy({
-        ...getClaimPolicyMockData(),
-        account: null,
-      });
-      const seller = new Seller({ claimPolicy });
-
-      const updateInput: UpdateSellerClaimPolicyInput = {
-        ...getClaimPolicyMockData(),
-        accountInput: getAccountMockData(),
-      };
-      delete updateInput['account'];
-
-      const { account, ...claimPolicyAttributes } =
-        seller.updateClaimPolicy(updateInput);
-      expect(account).toMatchObject(updateInput.accountInput);
-      delete updateInput['accountInput'];
-      expect(claimPolicyAttributes).toMatchObject(updateInput);
+      const result = seller.updateClaimPolicy(updateInput);
+      expect(result).toMatchObject(updateInput);
     });
   });
 

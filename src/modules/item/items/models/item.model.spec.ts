@@ -5,10 +5,7 @@ import {
 } from '@nestjs/common';
 import * as faker from 'faker';
 
-import { ItemNoticeType } from '../constants';
 import {
-  AddItemNoticeInput,
-  UpdateItemNoticeInput,
   CreateItemOptionSetInput,
   AddItemPriceInput,
   AddItemSizeChartInput,
@@ -16,7 +13,6 @@ import {
   AddItemUrlInput,
 } from '../dtos';
 
-import { ItemNotice } from './item-notice.model';
 import { ItemOption } from './item-option.model';
 import { ItemPrice } from './item-price.model';
 import { ItemSizeChart } from './item-size-chart.model';
@@ -174,56 +170,6 @@ describe('Item', () => {
       });
 
       expect(() => item.activatePrice(priceId)).toThrow(ConflictException);
-    });
-  });
-
-  const addItemNoticeInput: AddItemNoticeInput = {
-    type: ItemNoticeType.General,
-    message: faker.lorem.text(),
-    startAt: faker.datatype.datetime(),
-    endAt: faker.datatype.datetime(),
-  };
-
-  describe('addNotice', () => {
-    it('성공적으로 추가된다.', () => {
-      const item = new Item();
-      expect(item.addNotice(addItemNoticeInput)).toMatchObject(
-        addItemNoticeInput
-      );
-    });
-
-    it('이미 존재할 경우 ConflictException 발생', () => {
-      const item = new Item({
-        notice: new ItemNotice(),
-      });
-
-      expect(() => item.addNotice(addItemNoticeInput)).toThrow(
-        ConflictException
-      );
-    });
-  });
-
-  const updateItemNoticeInput: UpdateItemNoticeInput = {
-    message: faker.lorem.text(),
-    endAt: faker.datatype.datetime(),
-  };
-
-  describe('updateNotice', () => {
-    it('성공적으로 업데이트된다.', () => {
-      const item = new Item({
-        notice: new ItemNotice(addItemNoticeInput),
-      });
-      expect(item.updateNotice(updateItemNoticeInput)).toMatchObject(
-        updateItemNoticeInput
-      );
-    });
-
-    it('Notice가 존재하지 않으면 NotFoundException 발생', () => {
-      const item = new Item();
-
-      expect(() => item.updateNotice(updateItemNoticeInput)).toThrow(
-        NotFoundException
-      );
     });
   });
 
