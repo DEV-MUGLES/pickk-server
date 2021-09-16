@@ -3,14 +3,14 @@ import { InjectRepository } from '@nestjs/typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { allSettled } from '@common/helpers';
+import { DeliveryTrackerService } from '@providers/delivery-tracker';
+
 import { Shipment, ShipmentHistory } from '@order/shipments/models';
 import { ShipmentOwnerType, ShipmentStatus } from '@order/shipments/constants';
 import { ShipmentsRepository } from '@order/shipments/shipments.repository';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
-import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
-import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
-import { DeliveryTrackerService } from '@providers/delivery-tracker';
+import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
 
 const SHIPPED_STATUS_TEXT = '배송완료';
 
@@ -22,8 +22,7 @@ export class TrackShipmentsStep extends BaseStep {
     private readonly shipmentsRepository: ShipmentsRepository,
     @InjectRepository(OrderItemsRepository)
     private readonly orderItemsRepository: OrderItemsRepository,
-    @InjectRepository(ExchangeRequestsRepository)
-    private readonly exchangeRequestsRepository: ExchangeRequestsRepository
+    private readonly exchangeRequestsService: ExchangeRequestsService
   ) {
     super();
   }
@@ -83,9 +82,7 @@ export class TrackShipmentsStep extends BaseStep {
       });
     }
     if (ownerType === ShipmentOwnerType.ExchangeRequestReShip) {
-      await this.exchangeRequestsRepository.update(ownerPk, {
-        status: ExchangeRequestStatus.Reshipped,
-      });
+      await this.exchangeRequestsService.markReshipped(ownerPk);
     }
   }
 
