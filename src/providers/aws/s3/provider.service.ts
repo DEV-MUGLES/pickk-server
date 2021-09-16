@@ -101,7 +101,7 @@ export class AwsS3ProviderService {
   }
 
   async deleteObjects(keys: string[]) {
-    const chunk = Math.floor(keys.length / MAX_DELETE_SIZE);
+    const chunk = Math.ceil(keys.length / MAX_DELETE_SIZE);
 
     for (let i = 0; i < chunk; i++) {
       const startIndex = chunk * i;
