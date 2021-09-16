@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -37,7 +37,7 @@ import { OrdersService } from './orders.service';
     PointsModule,
     PaymentsModule,
     UsersModule,
-    RefundRequestsModule,
+    forwardRef(() => RefundRequestsModule),
     SqsModule.registerQueue(
       {
         name: RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,

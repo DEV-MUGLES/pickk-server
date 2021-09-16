@@ -1322,7 +1322,12 @@ type Mutation {
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
-  confirmMeSellerRefundRequest(merchantUid: String!): Boolean!
+  confirmMeSellerRefundRequest(
+    merchantUid: String!
+
+    """부과된 배송비"""
+    shippingFee: Int!
+  ): Boolean!
   crawlItemOptionSet(itemId: Int!): Item!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!

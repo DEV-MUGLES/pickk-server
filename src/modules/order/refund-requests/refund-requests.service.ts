@@ -1,8 +1,13 @@
-import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+
+import { PageInput } from '@common/dtos';
+import { parseFilter } from '@common/helpers';
+
+import { OrdersService } from '@order/orders/orders.service';
+import { CancelPaymentInput } from '@payment/payments/dtos';
+import { PaymentsService } from '@payment/payments/payments.service';
 
 import { RefundRequestRelationType } from './constants';
 import { RefundRequestFilter } from './dtos';
@@ -14,7 +19,9 @@ import { RefundRequestsRepository } from './refund-requests.repository';
 export class RefundRequestsService {
   constructor(
     @InjectRepository(RefundRequestsRepository)
-    private readonly refundRequestsRepository: RefundRequestsRepository
+    private readonly refundRequestsRepository: RefundRequestsRepository,
+    private readonly ordersService: OrdersService,
+    private readonly paymentsService: PaymentsService
   ) {}
 
   async get(
@@ -47,7 +54,20 @@ export class RefundRequestsService {
     );
   }
 
-  async confirm(merchantUid: string) {
+  async confirm(merchantUid: string, shippingFee?: number) {
     const refundRequest = await this.get(merchantUid, ['orderItems']);
+    refundRequest.confirm(shippingFee);
+
+    const amount = refundRequest.amount - refundRequest.shippingFee;
+
+    const order = await this.ordersService.get(refundRequest.orderMerchantUid, [
+      'vbankInfo',
+    ]);
+    await this.paymentsService.cancel(
+      order.merchantUid,
+      CancelPaymentInput.of(order, '반품', amount)
+    );
+
+    return await this.refundRequestsRepository.save(refundRequest);
   }
 }

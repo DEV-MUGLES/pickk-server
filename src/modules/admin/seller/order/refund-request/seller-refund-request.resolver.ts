@@ -5,6 +5,7 @@ import { GraphQLResolveInfo } from 'graphql';
 import { CurrentUser } from '@auth/decorators';
 import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
+import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
@@ -97,11 +98,13 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
   @UseGuards(JwtSellerVerifyGuard)
   async confirmMeSellerRefundRequest(
     @CurrentUser() { sellerId }: JwtPayload,
-    @Args('merchantUid') merchantUid: string
+    @Args('merchantUid') merchantUid: string,
+    @IntArgs('shippingFee', { description: '부과된 배송비' })
+    shippingFee: number
   ): Promise<boolean> {
     await this.sellerRefundRequestService.checkBelongsTo(merchantUid, sellerId);
 
-    await this.refundRequestsService.confirm(merchantUid);
+    await this.refundRequestsService.confirm(merchantUid, shippingFee);
 
     return true;
   }
