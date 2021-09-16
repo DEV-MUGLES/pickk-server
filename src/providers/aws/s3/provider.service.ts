@@ -104,8 +104,8 @@ export class AwsS3ProviderService {
     const chunk = Math.ceil(keys.length / MAX_DELETE_SIZE);
 
     for (let i = 0; i < chunk; i++) {
-      const startIndex = chunk * i;
-      const lastIndex = chunk * (i + 1);
+      const startIndex = MAX_DELETE_SIZE * i;
+      const lastIndex = MAX_DELETE_SIZE * (i + 1);
       const params = {
         Bucket: this.awsS3ConfigService.publicBucketName,
         Delete: {
