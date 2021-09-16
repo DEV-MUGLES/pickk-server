@@ -4,7 +4,12 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { enrichIsMine, enrichUserIsMe, parseFilter } from '@common/helpers';
+import {
+  enrichIsMine,
+  enrichUserIsMe,
+  findModelById,
+  parseFilter,
+} from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { DigestFactory } from '@content/digests/factories';
@@ -164,9 +169,10 @@ export class LooksService {
     if (updatedDigests === undefined) {
       return;
     }
-    const deletedIds = digests
-      .filter((digest) => !updatedDigests.find(({ id }) => id === digest.id))
-      .map(({ id }) => id);
-    await this.digestsProducer.removeDigests(deletedIds);
+    await this.digestsProducer.removeDigests(
+      digests
+        .filter(({ id }) => !findModelById(id, updatedDigests))
+        .map(({ id }) => id)
+    );
   }
 }
