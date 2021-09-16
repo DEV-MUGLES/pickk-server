@@ -13,7 +13,7 @@ import { ShipmentFactory } from '@order/shipments/factories';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { RequestOrderItemExchangeInput, ShipOrderItemInput } from '../dtos';
-import { OrderItemProcessStrategyFactory } from '../factories';
+import { OrderItemMarkStrategyFactory } from '../factories';
 
 import { OrderItemEntity } from '../entities/order-item.entity';
 
@@ -47,33 +47,33 @@ export class OrderItem extends OrderItemEntity {
   // 상태변경 함수들 //
   /////////////////
 
-  private mark(to: OrderItemStatus | OrderItemClaimStatus) {
-    OrderItemProcessStrategyFactory.from(to, this).execute();
+  private markAs(as: OrderItemStatus | OrderItemClaimStatus) {
+    OrderItemMarkStrategyFactory.from(as, this).execute();
   }
   markFailed() {
-    this.mark(OrderItemStatus.Failed);
+    this.markAs(OrderItemStatus.Failed);
   }
   markVbankReady() {
-    this.mark(OrderItemStatus.VbankReady);
+    this.markAs(OrderItemStatus.VbankReady);
   }
   markVbankDodged() {
-    this.mark(OrderItemStatus.VbankDodged);
+    this.markAs(OrderItemStatus.VbankDodged);
   }
   markPaid() {
-    this.mark(OrderItemStatus.Paid);
+    this.markAs(OrderItemStatus.Paid);
   }
   markShipReady() {
-    this.mark(OrderItemStatus.ShipReady);
+    this.markAs(OrderItemStatus.ShipReady);
   }
   markCancelled() {
-    this.mark(OrderItemClaimStatus.Cancelled);
+    this.markAs(OrderItemClaimStatus.Cancelled);
   }
   markRefundRequested() {
-    this.mark(OrderItemClaimStatus.RefundRequested);
+    this.markAs(OrderItemClaimStatus.RefundRequested);
   }
   /** to: shipping */
   ship(shipInput: ShipOrderItemInput) {
-    this.mark(OrderItemStatus.Shipping);
+    this.markAs(OrderItemStatus.Shipping);
     this.shipment = ShipmentFactory.create({
       ownerType: ShipmentOwnerType.OrderItem,
       ownerPk: this.merchantUid,
@@ -85,9 +85,12 @@ export class OrderItem extends OrderItemEntity {
     input: RequestOrderItemExchangeInput,
     product: Product
   ): OrderItem {
-    this.mark(OrderItemClaimStatus.ExchangeRequested);
+    this.markAs(OrderItemClaimStatus.ExchangeRequested);
     this.exchangeRequest = ExchangeRequestFactory.create(this, product, input);
     return this;
+  }
+  markExchanged() {
+    this.markAs(OrderItemClaimStatus.Exchanged);
   }
 
   ///////////////

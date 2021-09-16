@@ -2,9 +2,9 @@ import { BadRequestException } from '@nestjs/common';
 
 import { OrderItemStatus } from '../constants';
 
-import { OrderItemProcessStrategy } from './base.strategy';
+import { OrderItemMarkStrategy } from './base.strategy';
 
-export class OrderItemVbankDodgedStrategy extends OrderItemProcessStrategy {
+export class OrderItemVbankDodgedStrategy extends OrderItemMarkStrategy {
   status = OrderItemStatus.VbankDodged;
   statusChangedField = 'vbankDodgedAt' as const;
 

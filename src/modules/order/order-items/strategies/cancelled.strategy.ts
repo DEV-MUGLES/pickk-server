@@ -2,9 +2,9 @@ import { BadRequestException } from '@nestjs/common';
 
 import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 
-import { OrderItemProcessStrategy } from './base.strategy';
+import { OrderItemMarkStrategy } from './base.strategy';
 
-export class OrderItemCancelledStrategy extends OrderItemProcessStrategy {
+export class OrderItemCancelledStrategy extends OrderItemMarkStrategy {
   status = OrderItemClaimStatus.Cancelled;
   statusChangedField = 'cancelledAt' as const;
 

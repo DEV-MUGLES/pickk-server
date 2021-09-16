@@ -3,7 +3,7 @@ import { InternalServerErrorException } from '@nestjs/common';
 import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 import { OrderItem } from '../models';
 import {
-  OrderItemProcessStrategy,
+  OrderItemMarkStrategy,
   OrderItemFailedStrategy,
   OrderItemVbankReadyStrategy,
   OrderItemVbankDodgedStrategy,
@@ -11,19 +11,21 @@ import {
   OrderItemShipReadyStrategy,
   OrderItemShippingStrategy,
   OrderItemCancelledStrategy,
-  OrderItemExchangeRequestedStrategy,
   OrderItemRefundRequestedStrategy,
+  OrderItemExchangeRequestedStrategy,
+  OrderItemExchangedStrategy,
 } from '../strategies';
 
 const { Failed, VbankReady, VbankDodged, Paid, ShipReady, Shipping } =
   OrderItemStatus;
-const { Cancelled, RefundRequested, ExchangeRequested } = OrderItemClaimStatus;
+const { Cancelled, RefundRequested, ExchangeRequested, Exchanged } =
+  OrderItemClaimStatus;
 
-export class OrderItemProcessStrategyFactory {
+export class OrderItemMarkStrategyFactory {
   static from(
     status: OrderItemStatus | OrderItemClaimStatus,
     orderItem: OrderItem
-  ): OrderItemProcessStrategy {
+  ): OrderItemMarkStrategy {
     switch (status) {
       case Failed:
         return new OrderItemFailedStrategy(orderItem);
@@ -41,10 +43,12 @@ export class OrderItemProcessStrategyFactory {
 
       case Cancelled:
         return new OrderItemCancelledStrategy(orderItem);
-      case ExchangeRequested:
-        return new OrderItemExchangeRequestedStrategy(orderItem);
       case RefundRequested:
         return new OrderItemRefundRequestedStrategy(orderItem);
+      case ExchangeRequested:
+        return new OrderItemExchangeRequestedStrategy(orderItem);
+      case Exchanged:
+        return new OrderItemExchangedStrategy(orderItem);
 
       default:
         throw new InternalServerErrorException(

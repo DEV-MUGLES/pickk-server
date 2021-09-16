@@ -1,5 +1,5 @@
-import { BadRequestException } from '@nestjs/common';
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { OrderItem } from '@order/order-items/models';
 import { ShipmentOwnerType } from '@order/shipments/constants';
@@ -8,40 +8,35 @@ import { ShipmentFactory } from '@order/shipments/factories';
 import { ExchangeRequestStatus } from '../constants';
 import { ReshipExchangeRequestInput } from '../dtos';
 import { ExchangeRequestEntity } from '../entities';
+import { ExchangeRequestMarkStrategyFactory } from '../factories';
 
 @ObjectType()
 export class ExchangeRequest extends ExchangeRequestEntity {
+  @Type(() => OrderItem)
   @Field(() => OrderItem)
   orderItem: OrderItem;
 
+  /////////////////
+  // 상태변경 함수들 //
+  /////////////////
+
+  private markAs(as: ExchangeRequestStatus) {
+    ExchangeRequestMarkStrategyFactory.from(as, this).execute();
+  }
+  markPicked() {
+    this.markAs(ExchangeRequestStatus.Picked);
+  }
+  /** mark as: reshipping */
   reship(reshipInput: ReshipExchangeRequestInput) {
-    this.markReshipping();
+    this.markAs(ExchangeRequestStatus.Reshipping);
     this.reShipment = ShipmentFactory.create({
       ownerType: ShipmentOwnerType.ExchangeRequestReShip,
       ownerPk: this.merchantUid.toString(),
       ...reshipInput,
     });
   }
-
-  markPicked() {
-    if (this.status !== ExchangeRequestStatus.Requested) {
-      throw new BadRequestException(
-        `교환요청${this.merchantUid}가 요청됨 상태가 아닙니다.`
-      );
-    }
-
-    this.status = ExchangeRequestStatus.Picked;
-    this.pickedAt = new Date();
-  }
-
-  private markReshipping() {
-    if (this.status !== ExchangeRequestStatus.Picked) {
-      throw new BadRequestException(
-        '수거완료 상태인 교환요청만 재배송 처리할 수 있습니다.'
-      );
-    }
-
-    this.status = ExchangeRequestStatus.Reshipping;
-    this.reshippingAt = new Date();
+  /** orderItem의 상태도 변경된다. (join 필요) */
+  markReshipped() {
+    this.markAs(ExchangeRequestStatus.Reshipped);
   }
 }

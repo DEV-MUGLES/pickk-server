@@ -47,4 +47,11 @@ export class ExchangeRequestsService {
       })
     );
   }
+
+  async markReshipped(merchantUid: string): Promise<ExchangeRequest> {
+    const exchangeRequest = await this.get(merchantUid, ['orderItem']);
+    exchangeRequest.markReshipped();
+
+    return await this.exchangeRequestsRepository.save(exchangeRequest);
+  }
 }

@@ -3,13 +3,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
+import { DeliveryTrackerProviderModule } from '@providers/delivery-tracker';
+
+import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
+import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import {
   ShipmentHistoriesRepository,
   ShipmentsRepository,
 } from '@order/shipments/shipments.repository';
-import { OrderItemsRepository } from '@order/order-items/order-items.repository';
-import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
-import { DeliveryTrackerProviderModule } from '@providers/delivery-tracker';
 
 import { TrackShipmentsJob, TrackShipmentsStep } from './track-shipments';
 import {
@@ -28,8 +29,8 @@ import { ShipmentJobsController } from './shipment-jobs.controller';
       ShipmentsRepository,
       OrderItemsRepository,
       ShipmentHistoriesRepository,
-      ExchangeRequestsRepository,
     ]),
+    ExchangeRequestsModule,
   ],
   controllers: [ShipmentJobsController],
   providers: [
