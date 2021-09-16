@@ -46,4 +46,8 @@ export class RefundRequestsService {
       })
     );
   }
+
+  async confirm(merchantUid: string) {
+    const refundRequest = await this.get(merchantUid, ['orderItems']);
+  }
 }
