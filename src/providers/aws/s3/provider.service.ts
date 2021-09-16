@@ -7,6 +7,8 @@ import { AwsS3ConfigService } from '@config/providers/aws/s3';
 
 import { S3UploadResultDto } from './dtos';
 
+const MAX_DELETE_SIZE = 1000;
+
 @Injectable()
 export class AwsS3ProviderService {
   private ACL = 'public-read';
@@ -96,5 +98,19 @@ export class AwsS3ProviderService {
       key,
       url: this.getUrl(key),
     };
+  }
+
+  async deleteObjects(keys: string[]) {
+    for (let start = 0; start < keys.length; start += MAX_DELETE_SIZE) {
+      const end = start + MAX_DELETE_SIZE;
+
+      const params = {
+        Bucket: this.awsS3ConfigService.publicBucketName,
+        Delete: {
+          Objects: keys.slice(start, end).map((key) => ({ Key: key })),
+        },
+      };
+      await this.s3.deleteObjects(params).promise();
+    }
   }
 }

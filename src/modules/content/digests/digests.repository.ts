@@ -1,4 +1,4 @@
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
@@ -6,7 +6,7 @@ import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
 import { DigestFilter } from './dtos';
-import { DigestEntity } from './entities';
+import { DigestEntity, DigestImageEntity } from './entities';
 import {
   digestItemMinorCategoryIdQuery,
   digestUserHeightQuery,
@@ -63,3 +63,6 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
     return raws.map((raw) => raw.id);
   }
 }
+
+@EntityRepository(DigestImageEntity)
+export class DigestImagesRepository extends Repository<DigestImageEntity> {}

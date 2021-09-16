@@ -2,8 +2,14 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
 import { getRandomUuid } from '@common/helpers';
-import { UPDATE_ITEM_DIGEST_STATISTICS_QUEUE } from '@queue/constants';
-import { UpdateItemDigestStatisticsMto } from '@queue/mtos';
+import {
+  REMOVE_DIGEST_IMAGES_QUEUE,
+  UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
+} from '@queue/constants';
+import {
+  RemoveDigestImagesMto,
+  UpdateItemDigestStatisticsMto,
+} from '@queue/mtos';
 
 @Injectable()
 export class DigestsProducer {
@@ -19,6 +25,16 @@ export class DigestsProducer {
     await this.sqsService.send<UpdateItemDigestStatisticsMto>(
       UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
       messages
+    );
+  }
+
+  async removeDigestImages(keys: string[]) {
+    await this.sqsService.send<RemoveDigestImagesMto>(
+      REMOVE_DIGEST_IMAGES_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: { keys },
+      }
     );
   }
 }

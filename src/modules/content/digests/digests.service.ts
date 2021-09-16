@@ -150,9 +150,9 @@ export class DigestsService {
     return digest;
   }
 
-  // TODO: QUEUE deletedImages 제거하는 큐 작업 추가
-  async update(id: number, input: UpdateDigestInput): Promise<DigestImage[]> {
+  async update(id: number, input: UpdateDigestInput): Promise<Digest> {
     const digest = await this.get(id, ['images', 'itemPropertyValues']);
+    const { images: digestImages } = digest;
 
     if (input.itemPropertyValueIds) {
       digest.itemPropertyValues =
@@ -166,16 +166,23 @@ export class DigestsService {
       );
     }
 
-    const deletedImages = digest.images.filter(
-      ({ key }) => !digest.images.find((image) => image.key === key)
-    );
-
-    await this.digestsRepository.save(
+    const updatedDigest = await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
       })
     );
-    return deletedImages;
+    await this.removeDeletedDigestImages(digestImages, updatedDigest.images);
+    return updatedDigest;
+  }
+
+  private async removeDeletedDigestImages(
+    images: DigestImage[],
+    updatedImages: DigestImage[]
+  ) {
+    const deletedImageKeys = images
+      .filter((image) => !updatedImages.find(({ key }) => image.key === key))
+      .map(({ key }) => key);
+    await this.digestsProducer.removeDigestImages(deletedImageKeys);
   }
 }
