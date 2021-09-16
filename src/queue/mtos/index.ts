@@ -19,3 +19,4 @@ export * from './send-inquiry-answered-alimtalk.mto';
 export * from './send-inquiry-creation-slack-message.mto';
 export * from './send-item-creation-fail-slack-message.mto';
 export * from './send-item-creation-success-slack-message.mto';
+export * from './remove-digest-images.mto';
