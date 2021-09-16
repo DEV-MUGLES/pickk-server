@@ -3,7 +3,7 @@ import { getEnumValues } from '@common/helpers';
 import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 import { OrderItem } from '../models';
 
-export abstract class OrderItemProcessStrategy {
+export abstract class OrderItemMarkStrategy {
   abstract status: OrderItemStatus | OrderItemClaimStatus;
   abstract statusChangedField: keyof Pick<
     OrderItem,
@@ -16,7 +16,9 @@ export abstract class OrderItemProcessStrategy {
     | 'shippedAt'
     | 'cancelledAt'
     | 'refundRequestedAt'
+    | 'refundedAt'
     | 'exchangeRequestedAt'
+    | 'exchangedAt'
   >;
 
   constructor(protected orderItem: OrderItem) {}

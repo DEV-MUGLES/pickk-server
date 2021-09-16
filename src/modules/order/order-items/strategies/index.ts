@@ -8,3 +8,4 @@ export * from './shipping.strategy';
 export * from './cancelled.strategy';
 export * from './refund-requested.strategy';
 export * from './exchange-requested.strategy';
+export * from './exchanged.strategy';
