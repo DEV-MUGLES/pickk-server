@@ -39,7 +39,13 @@ import {
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
+import {
+  RemoveExpiredOrdersJob,
+  RemoveExpiredOrdersStep,
+} from './remove-expired-orders';
+import { OrdersRepository } from '@order/orders/orders.repository';
 
+// TODO: job,step provider inject 개선하기
 @Module({
   imports: [
     JobsModule,
@@ -47,6 +53,7 @@ import { OrderJobsService } from './order-jobs.service';
       OrderItemsRepository,
       RefundRequestsRepository,
       ExchangeRequestsRepository,
+      OrdersRepository,
     ]),
   ],
   controllers: [OrderJobsController],
@@ -68,6 +75,8 @@ import { OrderJobsService } from './order-jobs.service';
     ConfirmOrderItemsJob,
     ConfirmOrderItemsStep,
     ConfirmExchangedOrderItemsStep,
+    RemoveExpiredOrdersJob,
+    RemoveExpiredOrdersStep,
   ],
 })
 export class OrderJobsModule {}

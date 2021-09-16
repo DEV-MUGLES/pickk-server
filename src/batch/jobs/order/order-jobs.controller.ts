@@ -1,4 +1,4 @@
-import { Post, UseGuards } from '@nestjs/common';
+import { Delete, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { SuperSecretGuard } from '@auth/guards';
@@ -46,5 +46,10 @@ export class OrderJobsController {
   @Post('/confirm-order-items')
   async confirmOrderItems() {
     return await this.orderJobsService.confirmOrderItems();
+  }
+
+  @Delete('/remove-expired-orders')
+  async removeExpiredOrders() {
+    return await this.orderJobsService.removeExpiredOrders();
   }
 }
