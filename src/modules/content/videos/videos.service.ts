@@ -23,6 +23,7 @@ import { VideoFactory } from './factories';
 import { Video } from './models';
 
 import { VideosRepository } from './videos.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class VideosService {
@@ -83,6 +84,31 @@ export class VideosService {
     bulkEnrichUserIsMe(userId, videos);
 
     return videos;
+  }
+
+  async likingListByIds(
+    ids: number[],
+    relations: VideoRelationType[] = [],
+    userId: number
+  ): Promise<Video[]> {
+    const videos = this.videosRepository.entityToModelMany(
+      await this.videosRepository.find({
+        relations,
+        where: {
+          id: In(ids),
+        },
+      })
+    );
+
+    for (const video of videos) {
+      video.isLiking = true;
+    }
+    await this.followsService.bulkEnrichAuthorFollowing(userId, videos);
+    bulkEnrichUserIsMe(userId, videos);
+
+    return ids
+      .map((id) => videos.find((video) => video.id === id))
+      .filter((video) => video != null);
   }
 
   async create(userId: number, input: CreateVideoInput): Promise<Video> {

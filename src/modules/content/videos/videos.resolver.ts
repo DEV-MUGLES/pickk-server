@@ -98,10 +98,10 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
       pageInput
     );
 
-    return await this.videosService.list(
-      { idIn: ids },
-      null,
-      this.getRelationsFromInfo(info)
+    return await this.videosService.likingListByIds(
+      ids,
+      this.getRelationsFromInfo(info),
+      userId
     );
   }
 
