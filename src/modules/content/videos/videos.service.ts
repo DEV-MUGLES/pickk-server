@@ -142,7 +142,9 @@ export class VideosService {
       })
     );
     await this.removeDeletedDigests(videoDigests, updatedVideo.digests);
-
+    await this.digestsProducer.updateItemDigestStatistics(
+      updatedVideo.digests.map(({ itemId }) => itemId)
+    );
     return updatedVideo;
   }
 
