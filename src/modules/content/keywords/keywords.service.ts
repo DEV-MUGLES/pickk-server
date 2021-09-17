@@ -97,6 +97,28 @@ export class KeywordsService {
     return keywords;
   }
 
+  // @TODO: list 메소드와 원만히 합치기
+  async likingListByIds(
+    ids: number[],
+    relations: KeywordRelationType[] = []
+  ): Promise<Keyword[]> {
+    const keywords = this.keywordsRepository.entityToModelMany(
+      await this.keywordsRepository.find({
+        relations,
+        where: {
+          id: In(ids),
+        },
+      })
+    );
+
+    for (const keyword of keywords) {
+      keyword.isLiking = true;
+    }
+    return ids
+      .map((id) => keywords.find((keyword) => keyword.id === id))
+      .filter((keyword) => keyword != null);
+  }
+
   private async getFindWhere(
     filter: KeywordFilter,
     pageInput?: PageInput,
