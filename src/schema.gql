@@ -1354,6 +1354,7 @@ type Mutation {
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
+  removeLook(id: Int!): Boolean!
   removeMeRefundAccount: User!
   removeMeShippingAddress(addressId: Int!): [ShippingAddress!]!
   removeMyCartItems(ids: [Int!]!): Boolean!
