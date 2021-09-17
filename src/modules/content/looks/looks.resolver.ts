@@ -16,6 +16,7 @@ import { LikesService } from '@content/likes/likes.service';
 import { LookRelationType, LOOK_RELATIONS } from './constants';
 import { CreateLookInput, LookFilter, UpdateLookInput } from './dtos';
 import { Look } from './models';
+import { LooksProducer } from './producers';
 
 import { LooksService } from './looks.service';
 
@@ -26,7 +27,8 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
   constructor(
     private readonly looksService: LooksService,
     private readonly lookSearchService: LookSearchService,
-    private readonly likesService: LikesService
+    private readonly likesService: LikesService,
+    private readonly looksProducer: LooksProducer
   ) {
     super();
   }
@@ -101,6 +103,7 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Look> {
     const { id } = await this.looksService.create(userId, input);
+    await this.looksProducer.sendLookCreationSlackMessage(id);
     return await this.looksService.get(id, this.getRelationsFromInfo(info));
   }
 
