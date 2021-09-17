@@ -21,3 +21,5 @@ export * from './send-item-creation-fail-slack-message.mto';
 export * from './send-item-creation-success-slack-message.mto';
 export * from './remove-digest-images.mto';
 export * from './send-digest-creation-slack-message.mto';
+export * from './send-look-creation-slack-message.mto';
+export * from './send-video-creation-slack-message.mto';
