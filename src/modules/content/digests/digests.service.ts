@@ -84,6 +84,31 @@ export class DigestsService {
     return digests;
   }
 
+  async likingListByIds(
+    ids: number[],
+    relations: DigestRelationType[] = [],
+    userId: number
+  ): Promise<Digest[]> {
+    const digests = this.digestsRepository.entityToModelMany(
+      await this.digestsRepository.find({
+        relations,
+        where: {
+          id: In(ids),
+        },
+      })
+    );
+
+    for (const digest of digests) {
+      digest.isLiking = true;
+    }
+    await this.followsService.bulkEnrichAuthorFollowing(userId, digests);
+    bulkEnrichUserIsMe(userId, digests);
+
+    return ids
+      .map((id) => digests.find((digest) => digest.id === id))
+      .filter((digest) => digest != null);
+  }
+
   private async getFindOptions(
     filter?: DigestFilter,
     pageInput?: PageInput
