@@ -171,8 +171,8 @@ export class LooksService {
     }
     await this.digestsProducer.removeDigests(
       digests
-        .filter(({ id }) => !findModelById(id, updatedDigests))
-        .map(({ id }) => id)
+        .filter((v) => !findModelById(v.id, updatedDigests))
+        .map((v) => v.id)
     );
   }
 }
