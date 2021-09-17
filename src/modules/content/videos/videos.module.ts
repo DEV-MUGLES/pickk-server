@@ -15,10 +15,7 @@ import { DigestsModule } from '@content/digests/digests.module';
 import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
-import {
-  UpdateVideoLikeCountConsumer,
-  UpdateVideoCommentCountConsumer,
-} from './consumers';
+import { VideosConsumers } from './consumers';
 import { VideosProducer } from './producers';
 
 import { VideosRepository } from './videos.repository';
@@ -55,8 +52,7 @@ import { VideosService } from './videos.service';
     VideosResolver,
     VideosService,
     VideosProducer,
-    UpdateVideoLikeCountConsumer,
-    UpdateVideoCommentCountConsumer,
+    ...VideosConsumers,
   ],
   exports: [VideosService],
 })
