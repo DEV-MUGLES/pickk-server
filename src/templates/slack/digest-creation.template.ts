@@ -18,7 +18,7 @@ export class DigestCreationTemplate extends BaseSlackTemplate {
 
     return {
       channel: SlackChannelName.ContentUpload,
-      blocks: this.blocksBuilder
+      blocks: this.getBlocksBuilder()
         .addText(`:pushpin: *꿀템 등록 알림*`)
         .addText(`*<${pickkUrl}|${title}>*`)
         .addText(`*작성자*:\n${nickname}(<mailto:${email}|${email}>)`)
