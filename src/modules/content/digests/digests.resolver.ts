@@ -16,6 +16,7 @@ import { LikesService } from '@content/likes/likes.service';
 import { DigestRelationType, DIGEST_RELATIONS } from './constants';
 import { DigestFilter, CreateDigestInput, UpdateDigestInput } from './dtos';
 import { Digest } from './models';
+import { DigestsProducer } from './producers';
 
 import { DigestsService } from './digests.service';
 
@@ -26,7 +27,8 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
   constructor(
     private readonly digestsService: DigestsService,
     private readonly digestsSearchService: DigestsSearchService,
-    private readonly likesService: LikesService
+    private readonly likesService: LikesService,
+    private readonly digestsProducer: DigestsProducer
   ) {
     super();
   }
@@ -102,7 +104,9 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('createDigestInput') input: CreateDigestInput
   ) {
-    return await this.digestsService.create(userId, input);
+    const digest = await this.digestsService.create(userId, input);
+    await this.digestsProducer.sendDigestCreationSlackMessage(digest.id);
+    return digest;
   }
 
   @Mutation(() => Digest)

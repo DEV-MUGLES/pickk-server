@@ -4,10 +4,12 @@ import { SqsService } from '@pickk/nestjs-sqs';
 import { getRandomUuid } from '@common/helpers';
 import {
   REMOVE_DIGEST_IMAGES_QUEUE,
+  SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
   UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
 } from '@queue/constants';
 import {
   RemoveDigestImagesMto,
+  SendDigestCreationSlackMessageMto,
   UpdateItemDigestStatisticsMto,
 } from '@queue/mtos';
 
@@ -34,6 +36,16 @@ export class DigestsProducer {
       {
         id: getRandomUuid(),
         body: { keys },
+      }
+    );
+  }
+
+  async sendDigestCreationSlackMessage(id: number) {
+    await this.sqsService.send<SendDigestCreationSlackMessageMto>(
+      SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: { id },
       }
     );
   }
