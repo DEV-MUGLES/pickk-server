@@ -18,7 +18,7 @@ export class VideoCreationTemplate extends BaseSlackTemplate {
     const pickkUrl = `https://pickk.one/videos/${id}`;
 
     return {
-      channel: SlackChannelName.ContentUpload,
+      channel: SlackChannelName.CONTENT_UPLOAD,
       blocks: this.getBlocksBuilder()
         .addText(`:pushpin: *VIDEO 등록 알림*`)
         .addText(`*<${pickkUrl}|${title}>*`)
