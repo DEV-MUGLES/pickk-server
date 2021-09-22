@@ -4,10 +4,17 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { enrichIsMine, enrichUserIsMe, parseFilter } from '@common/helpers';
+import {
+  enrichIsMine,
+  enrichUserIsMe,
+  findModelById,
+  parseFilter,
+} from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { DigestFactory } from '@content/digests/factories';
+import { Digest } from '@content/digests/models';
+import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 import { StyleTagsService } from '@content/style-tags/style-tags.service';
@@ -29,7 +36,8 @@ export class LooksService {
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
     private readonly cacheService: CacheService,
-    private readonly styleTagsService: StyleTagsService
+    private readonly styleTagsService: StyleTagsService,
+    private readonly digestsProducer: DigestsProducer
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<void> {
@@ -120,9 +128,10 @@ export class LooksService {
     return await this.looksRepository.save(look);
   }
 
-  // TODO: QUEUE 삭제된 digest, look_image 삭제하는 작업 추가
+  // TODO: QUEUE 삭제된 look_image 삭제하는 작업 추가
   async update(id: number, input: UpdateLookInput): Promise<Look> {
     const look = await this.get(id, ['digests', 'images', 'styleTags']);
+    const { digests: lookDigests } = look;
 
     if (input.digests) {
       look.digests = input.digests.map((digest) =>
@@ -141,12 +150,29 @@ export class LooksService {
       );
     }
 
-    return await this.looksRepository.save(
+    const updatedLook = await this.looksRepository.save(
       new Look({
         ...look,
         ...input,
         digests: look.digests,
       })
+    );
+    await this.removeDeletedDigests(lookDigests, updatedLook.digests);
+
+    return updatedLook;
+  }
+
+  private async removeDeletedDigests(
+    digests: Digest[],
+    updatedDigests: Digest[]
+  ) {
+    if (updatedDigests === undefined) {
+      return;
+    }
+    await this.digestsProducer.removeDigests(
+      digests
+        .filter((v) => !findModelById(v.id, updatedDigests))
+        .map((v) => v.id)
     );
   }
 

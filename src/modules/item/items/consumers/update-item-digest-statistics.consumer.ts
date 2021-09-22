@@ -1,9 +1,12 @@
+import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
 
-import { DigestsRepository } from '@content/digests/digests.repository';
+import { BaseConsumer } from '@common/base.consumer';
 import { UPDATE_ITEM_DIGEST_STATISTICS_QUEUE } from '@queue/constants';
 import { UpdateItemDigestStatisticsMto } from '@queue/mtos';
+
+import { DigestsRepository } from '@content/digests/digests.repository';
 
 import { ItemsRepository } from '../items.repository';
 
@@ -14,13 +17,16 @@ type DigestStatistic = {
 };
 
 @SqsProcess(UPDATE_ITEM_DIGEST_STATISTICS_QUEUE)
-export class UpdateItemDigestStatisticsConsumer {
+export class UpdateItemDigestStatisticsConsumer extends BaseConsumer {
   constructor(
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
     @InjectRepository(ItemsRepository)
-    private readonly itemsRepository: ItemsRepository
-  ) {}
+    private readonly itemsRepository: ItemsRepository,
+    readonly logger: Logger
+  ) {
+    super();
+  }
 
   @SqsMessageHandler(true)
   async updateDigestStatistics(messages: AWS.SQS.Message[]) {
