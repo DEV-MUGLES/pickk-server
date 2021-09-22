@@ -120,4 +120,15 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     await this.looksService.update(id, input);
     return await this.looksService.get(id, this.getRelationsFromInfo(info));
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeLook(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number
+  ): Promise<boolean> {
+    await this.looksService.checkBelongsTo(id, userId);
+    await this.looksService.remove(id);
+    return true;
+  }
 }

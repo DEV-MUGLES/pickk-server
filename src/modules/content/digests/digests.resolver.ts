@@ -91,10 +91,10 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
       pageInput
     );
 
-    return await this.digestsService.list(
-      { idIn: ids } as DigestFilter,
-      null,
-      this.getRelationsFromInfo(info)
+    return await this.digestsService.likingListByIds(
+      ids,
+      this.getRelationsFromInfo(info),
+      userId
     );
   }
 

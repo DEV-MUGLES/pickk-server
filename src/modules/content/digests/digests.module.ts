@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
+  REMOVE_DIGESTS_QUEUE,
   REMOVE_DIGEST_IMAGES_QUEUE,
   SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
   UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
@@ -51,6 +52,9 @@ import { DigestsService } from './digests.service';
       },
       {
         name: SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: REMOVE_DIGESTS_QUEUE,
       }
     ),
     LikesModule,

@@ -103,9 +103,8 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       pageInput
     );
 
-    return await this.keywordsService.list(
-      { idIn: ids, hasCustom: null },
-      null,
+    return await this.keywordsService.likingListByIds(
+      ids,
       this.getRelationsFromInfo(info)
     );
   }

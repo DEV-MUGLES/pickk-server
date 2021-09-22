@@ -6,11 +6,13 @@ import { PageInput } from '@common/dtos';
 import {
   bulkEnrichUserIsMe,
   enrichIsMine,
+  findModelById,
   findModelsByIds,
   parseFilter,
 } from '@common/helpers';
 
 import { DigestFactory } from '@content/digests/factories';
+import { Digest } from '@content/digests/models';
 import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -23,6 +25,7 @@ import { VideoFactory } from './factories';
 import { Video } from './models';
 
 import { VideosRepository } from './videos.repository';
+import { In } from 'typeorm';
 
 @Injectable()
 export class VideosService {
@@ -85,6 +88,31 @@ export class VideosService {
     return videos;
   }
 
+  async likingListByIds(
+    ids: number[],
+    relations: VideoRelationType[] = [],
+    userId: number
+  ): Promise<Video[]> {
+    const videos = this.videosRepository.entityToModelMany(
+      await this.videosRepository.find({
+        relations,
+        where: {
+          id: In(ids),
+        },
+      })
+    );
+
+    for (const video of videos) {
+      video.isLiking = true;
+    }
+    await this.followsService.bulkEnrichAuthorFollowing(userId, videos);
+    bulkEnrichUserIsMe(userId, videos);
+
+    return ids
+      .map((id) => videos.find((video) => video.id === id))
+      .filter((video) => video != null);
+  }
+
   async create(userId: number, input: CreateVideoInput): Promise<Video> {
     const itemPropertyValueIds = input.digests.reduce(
       (acc, digest) => [...acc, ...digest.itemPropertyValueIds],
@@ -103,7 +131,6 @@ export class VideosService {
     return video;
   }
 
-  // TODO: QUEUE 삭제된 digest 삭제하는 작업 추가
   async update(id: number, input: UpdateVideoInput): Promise<Video> {
     const itemPropertyValueIds =
       input?.digests?.reduce(
@@ -116,6 +143,7 @@ export class VideosService {
         : [];
 
     const video = await this.get(id, ['digests', 'digests.itemPropertyValues']);
+    const { digests: videoDigests } = video;
 
     if (input.digests) {
       video.digests = input.digests.map((digest) =>
@@ -132,12 +160,41 @@ export class VideosService {
       );
     }
 
-    return await this.videosRepository.save(
+    const updatedVideo = await this.videosRepository.save(
       new Video({
         ...video,
         ...input,
         digests: video.digests,
       })
     );
+    await this.removeDeletedDigests(videoDigests, updatedVideo.digests);
+    await this.digestsProducer.updateItemDigestStatistics(
+      updatedVideo.digests.map(({ itemId }) => itemId)
+    );
+    return updatedVideo;
+  }
+
+  private async removeDeletedDigests(
+    digests: Digest[],
+    updatedDigests: Digest[]
+  ) {
+    if (updatedDigests === undefined) {
+      return;
+    }
+    await this.digestsProducer.removeDigests(
+      digests
+        .filter((v) => !findModelById(v.id, updatedDigests))
+        .map((v) => v.id)
+    );
+  }
+
+  async remove(id: number): Promise<void> {
+    const video = await this.get(id, ['digests']);
+    await this.videosRepository.remove(video);
+    // 각 리뷰된 아이템들의 리뷰 현황 업데이트
+    await this.digestsProducer.updateItemDigestStatistics(
+      video.digests.map((v) => v.itemId)
+    );
+    // @TODO: 이미지들 S3에서 삭제,
   }
 }

@@ -9,9 +9,10 @@ import {
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
-import { LikesModule } from '@content/likes/likes.module';
 import { CommentsModule } from '@content/comments/comments.module';
 import { CommentsRepository } from '@content/comments/comments.repository';
+import { DigestsModule } from '@content/digests/digests.module';
+import { LikesModule } from '@content/likes/likes.module';
 import { StyleTagsModule } from '@content/style-tags/style-tags.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
@@ -45,6 +46,7 @@ import { LooksService } from './looks.service';
     forwardRef(() => SearchModule),
     CommentsModule,
     StyleTagsModule,
+    DigestsModule,
   ],
   providers: [
     Logger,

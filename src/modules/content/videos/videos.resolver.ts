@@ -100,10 +100,10 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
       pageInput
     );
 
-    return await this.videosService.list(
-      { idIn: ids },
-      null,
-      this.getRelationsFromInfo(info)
+    return await this.videosService.likingListByIds(
+      ids,
+      this.getRelationsFromInfo(info),
+      userId
     );
   }
 
@@ -131,5 +131,16 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
 
     await this.videosService.update(id, input);
     return await this.videosService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtVerifyGuard)
+  async removeVideo(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @IntArgs('id') id: number
+  ): Promise<boolean> {
+    await this.videosService.checkBelongsTo(id, userId);
+    await this.videosService.remove(id);
+    return true;
   }
 }

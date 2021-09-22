@@ -1354,9 +1354,11 @@ type Mutation {
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
+  removeLook(id: Int!): Boolean!
   removeMeRefundAccount: User!
   removeMeShippingAddress(addressId: Int!): [ShippingAddress!]!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeVideo(id: Int!): Boolean!
 
   """정보에 오류가 있는 아이템을 신고합니다."""
   reportItem(id: Int!, reason: String!): Boolean!
