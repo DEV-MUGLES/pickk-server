@@ -50,8 +50,19 @@ export class Order extends OrderEntity {
     return this.orderItems.reduce((acc, oi) => acc + oi.itemFinalPrice, 0);
   }
   @Field(() => Int)
+  get totalShippingFee(): number {
+    return this.orderItems.reduce((acc, oi) => acc + oi.shippingFee, 0);
+  }
+  @Field(() => Int)
   get totalUsedPointAmount(): number {
     return this.orderItems.reduce((acc, oi) => acc + oi.usedPointAmount, 0);
+  }
+  @Field(() => Int)
+  get totalCouponDiscountAmount(): number {
+    return this.orderItems.reduce(
+      (acc, oi) => acc + oi.couponDiscountAmount,
+      0
+    );
   }
   @Field(() => Int)
   get totalPayAmount(): number {

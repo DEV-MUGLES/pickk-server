@@ -122,8 +122,10 @@ type BaseOrderOutput {
   refundAccount: OrderRefundAccount
   refundRequests: [RefundRequest!]!
   status: OrderStatus!
+  totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
   totalPayAmount: Int!
+  totalShippingFee: Int!
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   userId: Int
@@ -1432,8 +1434,10 @@ type Order {
   refundAccount: OrderRefundAccount
   refundRequests: [RefundRequest!]!
   status: OrderStatus!
+  totalCouponDiscountAmount: Int!
   totalItemFinalPrice: Int!
   totalPayAmount: Int!
+  totalShippingFee: Int!
   totalUsedPointAmount: Int!
   updatedAt: DateTime!
   user: User
