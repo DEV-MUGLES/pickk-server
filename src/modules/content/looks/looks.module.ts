@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import {
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_COMMENT_COUNT_QUEUE,
+  SEND_LOOK_CREATION_SLACK_MESSAGE_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
@@ -15,10 +16,8 @@ import { LikesModule } from '@content/likes/likes.module';
 import { StyleTagsModule } from '@content/style-tags/style-tags.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
-import {
-  UpdateLookCommentCountConsumer,
-  UpdateLookLikeCountConsumer,
-} from './consumers';
+import { LooksConsumers } from './consumers';
+import { LooksProducer } from './producers';
 
 import { LooksRepository } from './looks.repository';
 import { LooksResolver } from './looks.resolver';
@@ -37,6 +36,9 @@ import { LooksService } from './looks.service';
         name: UPDATE_LOOK_COMMENT_COUNT_QUEUE,
         type: SqsQueueType.Consumer,
         consumerOptions: { batchSize: 10 },
+      },
+      {
+        name: SEND_LOOK_CREATION_SLACK_MESSAGE_QUEUE,
       }
     ),
     LikesModule,
@@ -50,8 +52,8 @@ import { LooksService } from './looks.service';
     Logger,
     LooksResolver,
     LooksService,
-    UpdateLookLikeCountConsumer,
-    UpdateLookCommentCountConsumer,
+    LooksProducer,
+    ...LooksConsumers,
   ],
   exports: [LooksService],
 })
