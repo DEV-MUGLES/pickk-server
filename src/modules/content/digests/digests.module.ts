@@ -3,7 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
+  REMOVE_DIGESTS_QUEUE,
   REMOVE_DIGEST_IMAGES_QUEUE,
+  SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
   UPDATE_DIGEST_COMMENT_COUNT_QUEUE,
   UPDATE_DIGEST_LIKE_COUNT_QUEUE,
   UPDATE_ITEM_DIGEST_STATISTICS_QUEUE,
@@ -16,11 +18,7 @@ import { FollowsModule } from '@user/follows/follows.module';
 import { LikesModule } from '@content/likes/likes.module';
 import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
 
-import {
-  RemoveDigestImagesConsumer,
-  UpdateDigestCommentCountConsumer,
-  UpdateDigestLikeCountConsumer,
-} from './consumers';
+import { DigestsConsumers } from './consumers';
 import { DigestsProducer } from './producers';
 
 import {
@@ -51,6 +49,12 @@ import { DigestsService } from './digests.service';
       },
       {
         name: REMOVE_DIGEST_IMAGES_QUEUE,
+      },
+      {
+        name: SEND_DIGEST_CREATION_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: REMOVE_DIGESTS_QUEUE,
       }
     ),
     LikesModule,
@@ -64,10 +68,8 @@ import { DigestsService } from './digests.service';
     Logger,
     DigestsResolver,
     DigestsService,
-    UpdateDigestLikeCountConsumer,
-    UpdateDigestCommentCountConsumer,
     DigestsProducer,
-    RemoveDigestImagesConsumer,
+    ...DigestsConsumers,
   ],
   exports: [DigestsService, DigestsProducer],
 })

@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import {
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_COMMENT_COUNT_QUEUE,
+  SEND_VIDEO_CREATION_SLACK_MESSAGE_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
@@ -14,10 +15,8 @@ import { DigestsModule } from '@content/digests/digests.module';
 import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
-import {
-  UpdateVideoLikeCountConsumer,
-  UpdateVideoCommentCountConsumer,
-} from './consumers';
+import { VideosConsumers } from './consumers';
+import { VideosProducer } from './producers';
 
 import { VideosRepository } from './videos.repository';
 import { VideosResolver } from './videos.resolver';
@@ -36,6 +35,9 @@ import { VideosService } from './videos.service';
         name: UPDATE_VIDEO_COMMENT_COUNT_QUEUE,
         type: SqsQueueType.Consumer,
         consumerOptions: { batchSize: 10 },
+      },
+      {
+        name: SEND_VIDEO_CREATION_SLACK_MESSAGE_QUEUE,
       }
     ),
     LikesModule,
@@ -49,8 +51,8 @@ import { VideosService } from './videos.service';
     Logger,
     VideosResolver,
     VideosService,
-    UpdateVideoLikeCountConsumer,
-    UpdateVideoCommentCountConsumer,
+    VideosProducer,
+    ...VideosConsumers,
   ],
   exports: [VideosService],
 })

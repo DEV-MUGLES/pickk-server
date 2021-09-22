@@ -9,7 +9,6 @@ import {
 import { PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE } from '@queue/constants';
 import {
   ProcessSellerItemsScrapResultMto,
-  UpdateItemDetailImagesMto,
   UpdateItemImageUrlMto,
 } from '@queue/mtos';
 
@@ -78,19 +77,7 @@ export class ProcessSellerItemsScrapResultConsumer {
         providedCode: crawlData.code,
       }))
     );
-    await this.updateItemDetailImages(crawlDatas);
     await this.updateItemImageUrl(crawlDatas);
-  }
-
-  private async updateItemDetailImages(crawlDatas: ItemCrawlData[]) {
-    const updateItemDetailImagesMtos = crawlDatas.map(
-      (v): UpdateItemDetailImagesMto => ({
-        brandId: v.brandId,
-        code: v.code,
-        images: v.images,
-      })
-    );
-    await this.itemsProducer.updateDetailImages(updateItemDetailImagesMtos);
   }
 
   private async updateItemImageUrl(crawlDatas: ItemCrawlData[]) {

@@ -206,8 +206,8 @@ export class DigestsService {
     updatedImages: DigestImage[]
   ) {
     const deletedImageKeys = images
-      .filter((image) => !updatedImages.find(({ key }) => image.key === key))
-      .map(({ key }) => key);
+      .filter((v) => !updatedImages.find(({ key }) => v.key === key))
+      .map((v) => v.key);
     await this.digestsProducer.removeDigestImages(deletedImageKeys);
   }
 }

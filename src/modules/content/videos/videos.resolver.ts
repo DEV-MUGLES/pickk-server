@@ -16,6 +16,7 @@ import { LikesService } from '@content/likes/likes.service';
 import { VideoRelationType, VIDEO_RELATIONS } from './constants';
 import { CreateVideoInput, UpdateVideoInput, VideoFilter } from './dtos';
 import { Video } from './models';
+import { VideosProducer } from './producers';
 
 import { VideosService } from './videos.service';
 
@@ -26,7 +27,8 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
   constructor(
     private readonly videosService: VideosService,
     private readonly videosSearchService: VideoSearchService,
-    private readonly likesService: LikesService
+    private readonly likesService: LikesService,
+    private readonly videosProducer: VideosProducer
   ) {
     super();
   }
@@ -113,6 +115,7 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Video> {
     const { id } = await this.videosService.create(userId, input);
+    await this.videosProducer.sendVideoCreationSlackMessage(id);
     return await this.videosService.get(id, this.getRelationsFromInfo(info));
   }
 

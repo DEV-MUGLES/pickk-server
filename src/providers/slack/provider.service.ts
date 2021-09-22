@@ -2,14 +2,20 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import {
+  DigestCreationTemplate,
   InquiryCreationTemplate,
   ItemCreationFailTemplate,
   ItemCreationSuccessTemplate,
   ItemReportTemplate,
+  LookCreationTemplate,
+  VideoCreationTemplate,
 } from '@templates/slack';
 
 import { Item } from '@item/items/models';
 import { Inquiry } from '@item/inquiries/models';
+import { Digest } from '@content/digests/models';
+import { Look } from '@content/looks/models';
+import { Video } from '@content/videos/models';
 
 @Injectable()
 export class SlackService {
@@ -47,5 +53,17 @@ export class SlackService {
 
   async sendInquiryCreation(inquiry: Inquiry): Promise<IncomingWebhookResult> {
     return await this.webhook.send(InquiryCreationTemplate.create(inquiry));
+  }
+
+  async sendDigestCreation(digest: Digest): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(DigestCreationTemplate.create(digest));
+  }
+
+  async sendLookCreation(look: Look): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(LookCreationTemplate.create(look));
+  }
+
+  async sendVideoCreation(video: Video): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(VideoCreationTemplate.create(video));
   }
 }
