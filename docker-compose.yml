@@ -87,6 +87,13 @@ services:
       - data03:/usr/share/elasticsearch/data
     networks:
       - elastic
+  local-sqs:
+    container_name: local-sqs
+    image: greatsumini/local-sqs:0.1.1
+    networks:
+      - webnet
+    ports:
+      - '${LOCAL_SQS_PORT}:${LOCAL_SQS_PORT}'
 networks:
   webnet:
   elastic:
