@@ -875,7 +875,7 @@ enum InquiryType {
 }
 
 type Item {
-  brand: Brand
+  brand: Brand!
   brandId: Int!
   campaigns: [Campaign!]
   createdAt: DateTime!

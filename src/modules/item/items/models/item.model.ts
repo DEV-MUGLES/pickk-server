@@ -33,7 +33,7 @@ import { ItemSalePolicy } from './item-sale-policy.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
-  @Field(() => Brand, { nullable: true })
+  @Field(() => Brand)
   brand: Brand;
 
   @Field(() => ItemCategory, { nullable: true })

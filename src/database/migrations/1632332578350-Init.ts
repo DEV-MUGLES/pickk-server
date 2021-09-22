@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1632325769423 implements MigrationInterface {
-  name = 'Init1632325769423';
+export class Init1632332578350 implements MigrationInterface {
+  name = 'Init1632332578350';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -50,7 +50,7 @@ export class Init1632325769423 implements MigrationInterface {
       'CREATE TABLE `brand` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `nameKor` varchar(30) NOT NULL, `nameEng` varchar(30) NULL, `description` varchar(255) NULL, `imageUrl` varchar(255) NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB'
     );
     await queryRunner.query(
-      "CREATE TABLE `item` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `brandId` int NULL, `majorCategoryId` int NULL, `minorCategoryId` int NULL, `name` varchar(255) NOT NULL, `description` varchar(255) NULL, `providedCode` varchar(100) NULL, `imageUrl` varchar(255) NOT NULL, `isMdRecommended` tinyint NOT NULL DEFAULT 1, `isSellable` tinyint NOT NULL DEFAULT 0, `isInfiniteStock` tinyint NOT NULL DEFAULT 1, `isPurchasable` tinyint NOT NULL DEFAULT 0, `isSoldout` tinyint NOT NULL DEFAULT 0, `sellableAt` datetime NULL, `digestAverageRating` float NOT NULL DEFAULT '0', `digestCount` mediumint UNSIGNED NOT NULL DEFAULT '0', `hitCount` mediumint UNSIGNED NOT NULL DEFAULT '0', `score` float NOT NULL DEFAULT '0', `salePolicyId` int NULL, INDEX `idx-minorCategoryId:code` (`minorCategoryId`, `score`), INDEX `idx-majorCategoryId:code` (`majorCategoryId`, `score`), INDEX `idx-providedCode` (`providedCode`), UNIQUE INDEX `REL_b035f04726e12394e3f1d9bb38` (`salePolicyId`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
+      "CREATE TABLE `item` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `brandId` int NOT NULL, `majorCategoryId` int NULL, `minorCategoryId` int NULL, `name` varchar(255) NOT NULL, `description` varchar(255) NULL, `providedCode` varchar(100) NULL, `imageUrl` varchar(255) NOT NULL, `isMdRecommended` tinyint NOT NULL DEFAULT 1, `isSellable` tinyint NOT NULL DEFAULT 0, `isInfiniteStock` tinyint NOT NULL DEFAULT 1, `isPurchasable` tinyint NOT NULL DEFAULT 0, `isSoldout` tinyint NOT NULL DEFAULT 0, `sellableAt` datetime NULL, `digestAverageRating` float NOT NULL DEFAULT '0', `digestCount` mediumint UNSIGNED NOT NULL DEFAULT '0', `hitCount` mediumint UNSIGNED NOT NULL DEFAULT '0', `score` float NOT NULL DEFAULT '0', `salePolicyId` int NULL, INDEX `idx-minorCategoryId:code` (`minorCategoryId`, `score`), INDEX `idx-majorCategoryId:code` (`majorCategoryId`, `score`), INDEX `idx-providedCode` (`providedCode`), UNIQUE INDEX `REL_b035f04726e12394e3f1d9bb38` (`salePolicyId`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       "CREATE TABLE `item_detail_image` (`key` varchar(75) NOT NULL, `angle` int NOT NULL DEFAULT '0', `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `itemId` int NOT NULL, PRIMARY KEY (`key`)) ENGINE=InnoDB"
@@ -308,7 +308,7 @@ export class Init1632325769423 implements MigrationInterface {
       'ALTER TABLE `seller` ADD CONSTRAINT `FK_d89bdeef7b538af93c258d0a8be` FOREIGN KEY (`returnAddressId`) REFERENCES `seller_return_address`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION'
     );
     await queryRunner.query(
-      'ALTER TABLE `item` ADD CONSTRAINT `FK_9e2a16fa67338b5d7ba015b4e98` FOREIGN KEY (`brandId`) REFERENCES `brand`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
+      'ALTER TABLE `item` ADD CONSTRAINT `FK_9e2a16fa67338b5d7ba015b4e98` FOREIGN KEY (`brandId`) REFERENCES `brand`(`id`) ON DELETE RESTRICT ON UPDATE NO ACTION'
     );
     await queryRunner.query(
       'ALTER TABLE `item` ADD CONSTRAINT `FK_997e492bfce50fe9ab960f5f5e3` FOREIGN KEY (`majorCategoryId`) REFERENCES `item_category`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'

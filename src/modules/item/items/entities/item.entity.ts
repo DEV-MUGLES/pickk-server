@@ -80,11 +80,11 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.score = attributes.score;
   }
 
-  @ManyToOne(() => BrandEntity, { onDelete: 'SET NULL' })
+  @ManyToOne(() => BrandEntity, { onDelete: 'RESTRICT' })
   @JoinColumn()
   brand: IBrand;
   @Field(() => Int)
-  @Column({ nullable: true })
+  @Column()
   brandId: number;
 
   @OneToMany('ItemOptionEntity', 'item', { cascade: true })
