@@ -11,20 +11,20 @@ import {
   OrderPaidStrategy,
 } from '../strategies';
 
-const { FAILED, PAYING, VBANK_READY, VBANK_DODGED, PAID } = OrderStatus;
+const { Failed, Paying, VbankReady, VbankDodged, Paid } = OrderStatus;
 
 export class OrderProcessStrategyFactory {
   static from(status: OrderStatus, order: Order): OrderProcessStrategy {
     switch (status) {
-      case FAILED:
+      case Failed:
         return new OrderFailedStrategy(order);
-      case PAYING:
+      case Paying:
         return new OrderPayingStrategy(order);
-      case VBANK_READY:
+      case VbankReady:
         return new OrderVbankReadyStrategy(order);
-      case VBANK_DODGED:
+      case VbankDodged:
         return new OrderVbankDodgedStrategy(order);
-      case PAID:
+      case Paid:
         return new OrderPaidStrategy(order);
 
       default:

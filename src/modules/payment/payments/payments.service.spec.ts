@@ -43,7 +43,7 @@ describe('PaymentsService', () => {
       const paymentsServiceCreateSpy = jest
         .spyOn(paymentsService, 'create')
         .mockResolvedValueOnce(
-          new Payment({ ...dto, status: PaymentStatus.PENDING })
+          new Payment({ ...dto, status: PaymentStatus.Pending })
         );
 
       const result = await paymentsService.createOrUpdate(dto);
@@ -70,7 +70,7 @@ describe('PaymentsService', () => {
       expect(paymentsServiceGetSpy).toHaveBeenCalledWith(dto.merchantUid);
       expect(paymentsServiceUpdateSpy).toHaveBeenCalledWith(payment, {
         ...dto,
-        status: PaymentStatus.PENDING,
+        status: PaymentStatus.Pending,
       });
       expect(paymentsServiceCreateSpy).toHaveBeenCalledTimes(0);
     });

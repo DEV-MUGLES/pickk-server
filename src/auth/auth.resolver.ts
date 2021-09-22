@@ -74,7 +74,7 @@ export class AuthResolver {
   ): Promise<JwtToken> {
     const oauthCode = await this.appleService.auth(code, clientType);
     return await this.loginByOauth({
-      oauthProvider: UserOauthProvider.APPLE,
+      oauthProvider: UserOauthProvider.Apple,
       oauthCode,
     });
   }

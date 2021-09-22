@@ -27,22 +27,22 @@ export class PaymentsListPayMethodCount {
 @ObjectType()
 export class PaymentsListStatusCount {
   @Field()
-  [PaymentStatus.PENDING]: number;
+  [PaymentStatus.Pending]: number;
 
   @Field()
-  [PaymentStatus.VBANK_READY]: number;
+  [PaymentStatus.VbankReady]: number;
 
   @Field()
-  [PaymentStatus.PAID]: number;
+  [PaymentStatus.Paid]: number;
 
   @Field()
-  [PaymentStatus.CANCELLED]: number;
+  [PaymentStatus.Cancelled]: number;
 
   @Field()
-  [PaymentStatus.PARTIAL_CANCELLED]: number;
+  [PaymentStatus.PartialCancelled]: number;
 
   @Field()
-  [PaymentStatus.FAILED]: number;
+  [PaymentStatus.Failed]: number;
 }
 
 @ObjectType()
@@ -78,12 +78,12 @@ export class PaymentListOutput {
         [Pg.Inicis]: 0,
       },
       statusCount = {
-        [PaymentStatus.PENDING]: 0,
-        [PaymentStatus.VBANK_READY]: 0,
-        [PaymentStatus.PAID]: 0,
-        [PaymentStatus.FAILED]: 0,
-        [PaymentStatus.CANCELLED]: 0,
-        [PaymentStatus.PARTIAL_CANCELLED]: 0,
+        [PaymentStatus.Pending]: 0,
+        [PaymentStatus.VbankReady]: 0,
+        [PaymentStatus.Paid]: 0,
+        [PaymentStatus.Failed]: 0,
+        [PaymentStatus.Cancelled]: 0,
+        [PaymentStatus.PartialCancelled]: 0,
       },
       payMethodCount = {
         [PayMethod.Card]: 0,
@@ -107,13 +107,13 @@ export class PaymentListOutput {
         ? (payMethodCount[payMethod] += 1)
         : (payMethodCount[payMethod] = 1);
 
-      const { PAID, CANCELLED, PARTIAL_CANCELLED } = PaymentStatus;
+      const { Paid, Cancelled, PartialCancelled } = PaymentStatus;
 
-      if ([PAID, CANCELLED, PARTIAL_CANCELLED].includes(status)) {
+      if ([Paid, Cancelled, PartialCancelled].includes(status)) {
         amounts.totalPaidAmount += amount;
       }
 
-      if ([CANCELLED, PARTIAL_CANCELLED].includes(status)) {
+      if ([Cancelled, PartialCancelled].includes(status)) {
         amounts.totalCancelledAmount += amount;
       }
     });

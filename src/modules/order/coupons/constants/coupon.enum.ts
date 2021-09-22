@@ -1,21 +1,21 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum CouponType {
-  RATE = 'RATE',
-  AMOUNT = 'AMOUNT',
+  Rate = 'Rate',
+  Amount = 'Amount',
 }
 
 registerEnumType(CouponType, {
   name: 'CouponType',
-  description: '쿠폰 분류입니다. 정률적용(RATE), 정액적용(AMOUNT)',
+  description: '쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)',
 });
 
 export enum CouponStatus {
-  READY = 'READY',
-  APPLIED = 'APPLIED',
+  Ready = 'Ready',
+  Applied = 'Applied',
 }
 
 registerEnumType(CouponStatus, {
   name: 'CouponStatus',
-  description: '쿠폰 상태입니다. 사용가능(READY), 사용됨(APPLIED)',
+  description: '쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)',
 });

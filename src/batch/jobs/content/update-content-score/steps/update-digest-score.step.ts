@@ -82,11 +82,11 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
     const likesQueryBuilder = this.likesRepository.createQueryBuilder();
     await this.setFirstIntervalLikeCountDiffMap(
       likesQueryBuilder,
-      LikeOwnerType.DIGEST
+      LikeOwnerType.Digest
     );
     await this.setSecondIntervalLikeCountDiffMap(
       likesQueryBuilder,
-      LikeOwnerType.DIGEST
+      LikeOwnerType.Digest
     );
   }
 
@@ -94,11 +94,11 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
     const commentsQueryBuilder = this.commentsRepository.createQueryBuilder();
     await this.setFirstIntervalCommentCountDiffMap(
       commentsQueryBuilder,
-      CommentOwnerType.DIGEST
+      CommentOwnerType.Digest
     );
     await this.setSecondIntervalCommentCountDiffMap(
       commentsQueryBuilder,
-      CommentOwnerType.DIGEST
+      CommentOwnerType.Digest
     );
   }
 

@@ -59,11 +59,11 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
     const likesQueryBuilder = this.likesRepository.createQueryBuilder();
     await this.setFirstIntervalLikeCountDiffMap(
       likesQueryBuilder,
-      LikeOwnerType.VIDEO
+      LikeOwnerType.Video
     );
     await this.setSecondIntervalLikeCountDiffMap(
       likesQueryBuilder,
-      LikeOwnerType.VIDEO
+      LikeOwnerType.Video
     );
   }
 
@@ -71,11 +71,11 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
     const commentsQueryBuilder = this.commentsRepository.createQueryBuilder();
     await this.setFirstIntervalCommentCountDiffMap(
       commentsQueryBuilder,
-      CommentOwnerType.VIDEO
+      CommentOwnerType.Video
     );
     await this.setSecondIntervalCommentCountDiffMap(
       commentsQueryBuilder,
-      CommentOwnerType.VIDEO
+      CommentOwnerType.Video
     );
   }
 }

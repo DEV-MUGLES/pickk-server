@@ -1,14 +1,14 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum ExchangeRequestStatus {
-  REQUESTED = 'REQUESTED',
+  Requested = 'Requested',
   /** 상품 수거 완료 */
-  PICKED = 'PICKED',
+  Picked = 'Picked',
   /** 재배송 중 */
-  RESHIPPING = 'RESHIPPING',
+  Reshipping = 'Reshipping',
   /** 재배송 완료 */
-  RESHIPPED = 'RESHIPPED',
-  REJECTED = 'REJECTED',
+  Reshipped = 'Reshipped',
+  Rejected = 'Rejected',
 }
 
 registerEnumType(ExchangeRequestStatus, {

@@ -86,7 +86,7 @@ export class CommentsService {
 
     await this.likesService.bulkEnrichLiking(
       userId,
-      LikeOwnerType.COMMENT,
+      LikeOwnerType.Comment,
       comments
     );
     bulkEnrichIsMine(userId, comments);

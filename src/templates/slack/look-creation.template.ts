@@ -18,7 +18,7 @@ export class LookCreationTemplate extends BaseSlackTemplate {
     const pickkUrl = `https://pickk.one/looks/${id}`;
 
     return {
-      channel: SlackChannelName.CONTENT_UPLOAD,
+      channel: SlackChannelName.ContentUpload,
       blocks: this.getBlocksBuilder()
         .addText(`:pushpin: *LOOK 등록 알림*`)
         .addText(`*<${pickkUrl}|${title}>*`)

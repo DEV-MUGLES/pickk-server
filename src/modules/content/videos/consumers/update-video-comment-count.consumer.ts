@@ -35,7 +35,7 @@ export class UpdateVideoCommentCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const commentCount = await this.commentsService.reloadCount(
-                CommentOwnerType.LOOK,
+                CommentOwnerType.Look,
                 id
               );
               const video = await this.videosRepository.update(id, {

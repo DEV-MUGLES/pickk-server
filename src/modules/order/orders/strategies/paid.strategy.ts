@@ -7,20 +7,20 @@ import { OrderStatus } from '../constants';
 import { OrderProcessStrategy } from './base.strategy';
 
 export class OrderPaidStrategy extends OrderProcessStrategy {
-  status = OrderStatus.PAID;
+  status = OrderStatus.Paid;
   statusChangedField = 'paidAt' as const;
 
   validate() {
     if (
       this.order.payMethod === PayMethod.Vbank &&
-      this.order.status === OrderStatus.VBANK_READY
+      this.order.status === OrderStatus.VbankReady
     ) {
       // 가상계좌건이고 입금대기 상태 OK
       return;
     }
     if (
       this.order.payMethod !== PayMethod.Vbank &&
-      this.order.status === OrderStatus.PENDING
+      this.order.status === OrderStatus.Pending
     ) {
       // 가상계좌건이 아니고 결제대기 상태 OK
       return;

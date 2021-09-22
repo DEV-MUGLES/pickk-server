@@ -50,7 +50,7 @@ export class VideosService {
 
     if (userId) {
       enrichIsMine(userId, video);
-      await this.likesService.enrichLiking(userId, LikeOwnerType.VIDEO, video);
+      await this.likesService.enrichLiking(userId, LikeOwnerType.Video, video);
       await this.followsService.enrichAuthorFollowing(userId, video);
     }
 
@@ -79,7 +79,7 @@ export class VideosService {
 
     await this.likesService.bulkEnrichLiking(
       userId,
-      LikeOwnerType.VIDEO,
+      LikeOwnerType.Video,
       videos
     );
     await this.followsService.bulkEnrichAuthorFollowing(userId, videos);

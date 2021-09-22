@@ -40,8 +40,8 @@ export class PaymentCancellation extends PaymentCancellationEntity {
 
     const type =
       input.amount === payment.amount
-        ? PaymentCancellationType.CANCEL
-        : PaymentCancellationType.PARTIAL_CANCEL;
+        ? PaymentCancellationType.Cancel
+        : PaymentCancellationType.PartialCancel;
 
     return new PaymentCancellation({ ...input, type });
   }

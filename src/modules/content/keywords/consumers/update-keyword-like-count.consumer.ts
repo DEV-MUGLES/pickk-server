@@ -35,7 +35,7 @@ export class UpdateKeywordLikeCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const likeCount = await this.likesService.count(
-                LikeOwnerType.KEYWORD,
+                LikeOwnerType.Keyword,
                 id
               );
               const keyword = await this.keywordsRepository.update(id, {

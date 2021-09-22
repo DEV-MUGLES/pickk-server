@@ -36,7 +36,7 @@ export class UpdateCommentLikeCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const likeCount = await this.likesService.count(
-                LikeOwnerType.COMMENT,
+                LikeOwnerType.Comment,
                 id
               );
               const comment = await this.commentsRepository.update(id, {

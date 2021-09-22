@@ -24,12 +24,12 @@ export class RefundRequest extends RefundRequestEntity {
     RefundRequestMarkStrategyFactory.from(as, this).execute();
   }
   markPicked() {
-    this.markAs(RefundRequestStatus.PICKED);
+    this.markAs(RefundRequestStatus.Picked);
   }
   /** mark as: confirmed. orderItem의 상태도 변경된다. (join 필요)
    * @param {number} shippingFee 부과된 배송비를 변경하며 승인하고 싶을 때 넘겨주세용 */
   confirm(shippingFee?: number) {
-    this.markAs(RefundRequestStatus.CONFIRMED);
+    this.markAs(RefundRequestStatus.Confirmed);
     if (shippingFee) {
       this.shippingFee = shippingFee;
     }

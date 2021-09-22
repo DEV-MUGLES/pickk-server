@@ -23,7 +23,7 @@ export class InquiryCreationTemplate extends BaseSlackTemplate {
     const pickkUrl = `https://pickk.one/item/${itemId}/questions/`;
 
     return {
-      channel: SlackChannelName.INQUIRY_MANAGEMENT,
+      channel: SlackChannelName.InquiryManagement,
       blocks: this.getBlocksBuilder()
         .addText('*문의 등록 알림*')
         .addText(`*<${superUrl}|${title}>* \n${content}`)

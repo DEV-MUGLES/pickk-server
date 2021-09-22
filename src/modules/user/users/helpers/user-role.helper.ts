@@ -8,7 +8,7 @@ export const checkIsPermitted = (
     return false;
   }
 
-  const { USER, EDITOR, SELLER, ADMIN } = UserRole;
-  const roles = [USER, EDITOR, SELLER, ADMIN];
+  const { User, Editor, Seller, Admin } = UserRole;
+  const roles = [User, Editor, Seller, Admin];
   return roles.indexOf(userRole) >= roles.indexOf(role);
 };

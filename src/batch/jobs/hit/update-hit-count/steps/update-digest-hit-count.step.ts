@@ -18,7 +18,7 @@ export class UpdateDigestHitCountStep extends BaseStep {
 
   async tasklet(): Promise<void> {
     const countMap = await this.hitsService.getOwnerCountMap(
-      HitOwnerType.DIGEST
+      HitOwnerType.Digest
     );
     const digestIds = Object.keys(countMap);
 
@@ -28,6 +28,6 @@ export class UpdateDigestHitCountStep extends BaseStep {
     });
 
     await this.digestsRepository.save(digests);
-    await this.hitsService.clearOwnerCountMap(HitOwnerType.DIGEST);
+    await this.hitsService.clearOwnerCountMap(HitOwnerType.Digest);
   }
 }

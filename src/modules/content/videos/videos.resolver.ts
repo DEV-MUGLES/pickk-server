@@ -96,7 +96,7 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
   ): Promise<Video[]> {
     const ids = await this.likesService.findOwnerIds(
       userId,
-      LikeOwnerType.VIDEO,
+      LikeOwnerType.Video,
       pageInput
     );
 

@@ -31,7 +31,7 @@ export class RefundRequestFactory {
       shippingFee,
       amount,
       userId,
-      status: RefundRequestStatus.REQUESTED,
+      status: RefundRequestStatus.Requested,
       orderItems,
       sellerId: orderItems[0].sellerId,
     });
@@ -39,7 +39,7 @@ export class RefundRequestFactory {
     if (input.shipmentInput) {
       result.shipment = ShipmentFactory.create({
         ...input.shipmentInput,
-        ownerType: ShipmentOwnerType.REFUND_REQUEST,
+        ownerType: ShipmentOwnerType.RefundRequest,
         ownerPk: null,
       });
     }

@@ -39,7 +39,7 @@ export class CouponsResolver extends BaseResolver<CouponRelationType> {
     );
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @Mutation(() => CouponSpecification)
   @UseGuards(JwtAuthGuard)
   async createCouponSpecification(
@@ -48,7 +48,7 @@ export class CouponsResolver extends BaseResolver<CouponRelationType> {
     createCouponSpecificationInput: CreateCouponSpecificationInput
   ): Promise<CouponSpecification> {
     const { brandId } = createCouponSpecificationInput;
-    if (user.role === UserRole.SELLER) {
+    if (user.role === UserRole.Seller) {
       const seller = await this.sellersService.findOne({ userId: user.id });
       if (brandId !== seller.brandId) {
         throw new ForbiddenException(

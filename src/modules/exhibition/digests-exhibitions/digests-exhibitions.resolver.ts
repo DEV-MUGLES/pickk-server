@@ -32,7 +32,7 @@ export class DigestsExhibitionsResolver extends BaseResolver<DigestsExhibitionRe
     return await this.digestsExhibitionsService.list(this.relations);
   }
 
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => DigestsExhibition)
   async updateDigestsExhibitionDigests(

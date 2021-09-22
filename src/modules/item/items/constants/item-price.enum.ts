@@ -1,5 +1,6 @@
 import { registerEnumType } from '@nestjs/graphql';
 
+/** 값 자체의 형태 때문에 예외적으로 UPPER_SNAKE_CASE를 사용한다. */
 export enum ItemPriceUnit {
   KRW = 'KRW',
   USD = 'USD',

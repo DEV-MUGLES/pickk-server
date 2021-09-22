@@ -51,34 +51,34 @@ export class OrderItem extends OrderItemEntity {
     OrderItemMarkStrategyFactory.from(as, this).execute();
   }
   markFailed() {
-    this.markAs(OrderItemStatus.FAILED);
+    this.markAs(OrderItemStatus.Failed);
   }
   markVbankReady() {
-    this.markAs(OrderItemStatus.VBANK_READY);
+    this.markAs(OrderItemStatus.VbankReady);
   }
   markVbankDodged() {
-    this.markAs(OrderItemStatus.VBANK_DODGED);
+    this.markAs(OrderItemStatus.VbankDodged);
   }
   markPaid() {
-    this.markAs(OrderItemStatus.PAID);
+    this.markAs(OrderItemStatus.Paid);
   }
   markShipReady() {
-    this.markAs(OrderItemStatus.SHIP_READY);
+    this.markAs(OrderItemStatus.ShipReady);
   }
   markCancelled() {
-    this.markAs(OrderItemClaimStatus.CANCELLED);
+    this.markAs(OrderItemClaimStatus.Cancelled);
   }
   markRefundRequested() {
-    this.markAs(OrderItemClaimStatus.REFUND_REQUESTED);
+    this.markAs(OrderItemClaimStatus.RefundRequested);
   }
   markRefunded() {
-    this.markAs(OrderItemClaimStatus.REFUNDED);
+    this.markAs(OrderItemClaimStatus.Refunded);
   }
   /** to: shipping */
   ship(shipInput: ShipOrderItemInput) {
-    this.markAs(OrderItemStatus.SHIPPING);
+    this.markAs(OrderItemStatus.Shipping);
     this.shipment = ShipmentFactory.create({
-      ownerType: ShipmentOwnerType.ORDER_ITEM,
+      ownerType: ShipmentOwnerType.OrderItem,
       ownerPk: this.merchantUid,
       ...shipInput,
     });
@@ -88,12 +88,12 @@ export class OrderItem extends OrderItemEntity {
     input: RequestOrderItemExchangeInput,
     product: Product
   ): OrderItem {
-    this.markAs(OrderItemClaimStatus.EXCHANGE_REQUESTED);
+    this.markAs(OrderItemClaimStatus.ExchangeRequested);
     this.exchangeRequest = ExchangeRequestFactory.create(this, product, input);
     return this;
   }
   markExchanged() {
-    this.markAs(OrderItemClaimStatus.EXCHANGED);
+    this.markAs(OrderItemClaimStatus.Exchanged);
   }
 
   ///////////////

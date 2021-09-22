@@ -15,7 +15,7 @@ export class ItemReportTemplate extends BaseSlackTemplate {
   ): IncomingWebhookSendArguments {
     const { id, name, brand, originalPrice, sellPrice, urls } = item;
     return {
-      channel: SlackChannelName.ITEM_MANAGEMENT,
+      channel: SlackChannelName.ItemManagement,
       blocks: this.getBlocksBuilder()
         .addText('*🚨 상품 정보 오류 신고가 접수되었습니다.*')
         .addText(`*상품명* :\n[${brand.nameKor}] ${name} (id: ${id})`)

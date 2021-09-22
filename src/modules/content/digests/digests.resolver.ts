@@ -87,7 +87,7 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
   ): Promise<Digest[]> {
     const ids = await this.likesService.findOwnerIds(
       userId,
-      LikeOwnerType.DIGEST,
+      LikeOwnerType.Digest,
       pageInput
     );
 

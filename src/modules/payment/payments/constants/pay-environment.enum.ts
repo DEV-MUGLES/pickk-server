@@ -1,8 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum PayEnviroment {
-  PC = 'PC',
-  MOBILE = 'MOBILE',
+  Pc = 'Pc',
+  Mobile = 'Mobile',
 }
 
 registerEnumType(PayEnviroment, {

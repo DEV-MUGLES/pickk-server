@@ -12,7 +12,7 @@ export class ItemCreationSuccessTemplate extends BaseSlackTemplate {
     const { id, name, brand, originalPrice, sellPrice, urls } = item;
 
     return {
-      channel: SlackChannelName.ITEM_MANAGEMENT,
+      channel: SlackChannelName.ItemManagement,
       blocks: this.getBlocksBuilder()
         .addText('*👕 새로운 상품이 생성되었습니다.*')
         .addText(`*상품명* :\n[${brand.nameKor}] ${name} (id: ${id})`)

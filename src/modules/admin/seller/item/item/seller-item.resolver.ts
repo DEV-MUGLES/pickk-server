@@ -36,7 +36,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     super();
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateItem(
@@ -48,7 +48,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemOption)
   async updateItemOption(
@@ -60,7 +60,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.getItemOption(id, ['values']);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
   async bulkUpdateItems(
@@ -71,7 +71,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return true;
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async addItemDetailImages(
@@ -84,7 +84,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemDetailImage(
@@ -96,7 +96,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemUrl)
   async addItemUrl(
@@ -109,7 +109,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemPrice)
   async addItemPrice(
@@ -122,7 +122,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemPrice)
   async updateItemPrice(
@@ -137,7 +137,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     );
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemPrice(
@@ -148,7 +148,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.removePrice(item, priceId);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async activateItemPrice(
@@ -159,7 +159,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.activateItemPrice(item, priceId);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async basifyPrice(
@@ -170,7 +170,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.basifyPrice(item, priceId);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async addItemSizeCharts(
@@ -185,7 +185,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async removeItemSizeChartsAll(
@@ -195,7 +195,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.removeSizeChartsAll(item);
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async createItemOptionSet(
@@ -211,7 +211,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.SELLER)
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async modifyItemSizeCharts(

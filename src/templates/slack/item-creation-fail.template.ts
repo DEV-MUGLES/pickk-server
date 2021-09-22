@@ -7,7 +7,7 @@ import { BaseSlackTemplate } from './base-slack.template';
 export class ItemCreationFailTemplate extends BaseSlackTemplate {
   static create(url: string, nickname: string): IncomingWebhookSendArguments {
     return {
-      channel: SlackChannelName.ITEM_MANAGEMENT,
+      channel: SlackChannelName.ItemManagement,
       attachments: [
         {
           color: '#f00',

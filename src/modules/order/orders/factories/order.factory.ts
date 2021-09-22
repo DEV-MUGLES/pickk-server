@@ -27,7 +27,7 @@ export class OrderFactory {
     return new Order({
       userId,
       merchantUid,
-      status: OrderStatus.PENDING,
+      status: OrderStatus.Pending,
       orderItems,
     });
   }

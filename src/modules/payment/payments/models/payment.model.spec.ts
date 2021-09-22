@@ -26,7 +26,7 @@ describe('Payment', () => {
     it('성공적으로 수행한다.', () => {
       const payment = new Payment({
         cancelledAt: null,
-        status: PaymentStatus.PAID,
+        status: PaymentStatus.Paid,
         amount,
         cancellations: [],
       });
@@ -36,7 +36,7 @@ describe('Payment', () => {
       delete input.checksum;
       expect(result).toMatchObject(input);
       expect(payment.cancelledAt).toBeTruthy();
-      expect(payment.status).toEqual(PaymentStatus.CANCELLED);
+      expect(payment.status).toEqual(PaymentStatus.Cancelled);
     });
 
     it('throw NotJoinedCancelException', () => {
@@ -57,19 +57,19 @@ describe('Payment', () => {
   describe('confirmVbankPaid', () => {
     it('성공적으로 수행한다.', () => {
       const payment = new Payment({
-        status: PaymentStatus.VBANK_READY,
+        status: PaymentStatus.VbankReady,
       });
 
       payment.confirmVbankPaid();
 
       expect(payment.paidAt).toBeTruthy();
-      expect(payment.status).toEqual(PaymentStatus.PAID);
+      expect(payment.status).toEqual(PaymentStatus.Paid);
     });
 
     it('throw StatusInvalidToVbankPayException', () => {
       const payment = new Payment({
         status: getRandomEnumValue(PaymentStatus, [
-          PaymentStatus.VBANK_READY,
+          PaymentStatus.VbankReady,
         ]) as PaymentStatus,
       });
 
@@ -82,19 +82,19 @@ describe('Payment', () => {
   describe('fail', () => {
     it('성공적으로 수행한다.', () => {
       const payment = new Payment({
-        status: PaymentStatus.PENDING,
+        status: PaymentStatus.Pending,
       });
 
       payment.fail();
 
       expect(payment.failedAt).toBeTruthy();
-      expect(payment.status).toEqual(PaymentStatus.FAILED);
+      expect(payment.status).toEqual(PaymentStatus.Failed);
     });
 
     it('throw StatusInvalidToFailException', () => {
       const payment = new Payment({
         status: getRandomEnumValue(PaymentStatus, [
-          PaymentStatus.PENDING,
+          PaymentStatus.Pending,
         ]) as PaymentStatus,
       });
 
@@ -109,7 +109,7 @@ describe('Payment', () => {
 
     it('성공적으로 수행한다. (not 가상계좌)', () => {
       const payment = new Payment({
-        status: PaymentStatus.PENDING,
+        status: PaymentStatus.Pending,
         payMethod: getRandomEnumValue(PayMethod, [
           PayMethod.Vbank,
         ]) as PayMethod,
@@ -119,12 +119,12 @@ describe('Payment', () => {
 
       expect(payment).toMatchObject(dto);
       expect(payment.paidAt).toBeTruthy();
-      expect(payment.status).toEqual(PaymentStatus.PAID);
+      expect(payment.status).toEqual(PaymentStatus.Paid);
     });
 
     it('성공적으로 수행한다. (가상계좌)', () => {
       const payment = new Payment({
-        status: PaymentStatus.PENDING,
+        status: PaymentStatus.Pending,
         payMethod: PayMethod.Vbank,
       });
 
@@ -133,13 +133,13 @@ describe('Payment', () => {
       expect(payment).toMatchObject(dto);
       expect(payment.vbankReadyAt).toBeTruthy();
       expect(payment.paidAt).toBeFalsy();
-      expect(payment.status).toEqual(PaymentStatus.VBANK_READY);
+      expect(payment.status).toEqual(PaymentStatus.VbankReady);
     });
 
     it('Pending 상태가 아닐 경우 StatusInvalidToCompleteException 발생', () => {
       const payment = new Payment({
         status: getRandomEnumValue(PaymentStatus, [
-          PaymentStatus.PENDING,
+          PaymentStatus.Pending,
         ]) as PaymentStatus,
       });
 

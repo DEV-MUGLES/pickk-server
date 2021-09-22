@@ -51,7 +51,7 @@ export class DigestsService {
       enrichIsMine(userId, digest);
       await this.likesService.enrichLiking(
         userId,
-        LikeOwnerType.DIGEST,
+        LikeOwnerType.Digest,
         digest
       );
       await this.followsService.enrichAuthorFollowing(userId, digest);
@@ -75,7 +75,7 @@ export class DigestsService {
 
     await this.likesService.bulkEnrichLiking(
       userId,
-      LikeOwnerType.DIGEST,
+      LikeOwnerType.Digest,
       digests
     );
     await this.followsService.bulkEnrichAuthorFollowing(userId, digests);

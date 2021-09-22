@@ -26,7 +26,7 @@ export class PaymentsResolver extends BaseResolver {
   @Query(() => PaymentListOutput, {
     description: '[Admin] 결제 목록을 조회합니다.',
   })
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
   async payments(
     @Args('paymentFilter') paymentFilter: PaymentFilter,

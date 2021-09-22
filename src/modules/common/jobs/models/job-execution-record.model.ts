@@ -11,16 +11,16 @@ export class JobExecutionRecord extends JobExecutionRecordEntity {
   }
 
   private markCompleted() {
-    this.status = JobStatus.COMPLETED;
+    this.status = JobStatus.Completed;
   }
 
   private markStarted() {
-    this.status = JobStatus.STARTED;
+    this.status = JobStatus.Started;
     this.startedAt = new Date();
   }
 
   private markFailed() {
-    this.status = JobStatus.FAILED;
+    this.status = JobStatus.Failed;
   }
 
   private markEnd() {

@@ -26,13 +26,13 @@ export class CommentsProducer {
   }
 
   private getQueueNameByOwnerType(ownerType: CommentOwnerType) {
-    if (ownerType === CommentOwnerType.DIGEST) {
+    if (ownerType === CommentOwnerType.Digest) {
       return UPDATE_DIGEST_COMMENT_COUNT_QUEUE;
     }
-    if (ownerType === CommentOwnerType.LOOK) {
+    if (ownerType === CommentOwnerType.Look) {
       return UPDATE_LOOK_COMMENT_COUNT_QUEUE;
     }
-    if (ownerType === CommentOwnerType.VIDEO) {
+    if (ownerType === CommentOwnerType.Video) {
       return UPDATE_VIDEO_COMMENT_COUNT_QUEUE;
     }
   }

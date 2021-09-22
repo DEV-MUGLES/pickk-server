@@ -36,7 +36,7 @@ export class UpdateLookCommentCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const commentCount = await this.commentsService.reloadCount(
-                CommentOwnerType.LOOK,
+                CommentOwnerType.Look,
                 id
               );
               const look = await this.looksRepository.update(id, {

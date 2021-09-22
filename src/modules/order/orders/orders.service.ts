@@ -159,8 +159,8 @@ export class OrdersService {
     const { status } = await this.paymentsService.get(merchantUid);
     const paymentStatusMustBe =
       order.payMethod === PayMethod.Vbank
-        ? PaymentStatus.VBANK_READY
-        : PaymentStatus.PAID;
+        ? PaymentStatus.VbankReady
+        : PaymentStatus.Paid;
     if (status !== paymentStatusMustBe) {
       throw new BadRequestException('결제가 정상적으로 처리되지 않았습니다.');
     }

@@ -1,5 +1,5 @@
 export enum JobStatus {
-  STARTED = 'STARTED',
-  COMPLETED = 'COMPLETED',
-  FAILED = 'FAILED',
+  Started = 'Started',
+  Completed = 'Completed',
+  Failed = 'Failed',
 }

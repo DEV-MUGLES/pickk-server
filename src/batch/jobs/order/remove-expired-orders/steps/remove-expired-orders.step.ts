@@ -19,7 +19,7 @@ export class RemoveExpiredOrdersStep extends BaseStep {
 
   async tasklet() {
     const expiredOrders = await this.ordersRepository.find({
-      status: In([OrderStatus.FAILED, OrderStatus.PENDING]),
+      status: In([OrderStatus.Failed, OrderStatus.Pending]),
       createdAt: LessThan(dayjs().subtract(1, 'day').toDate()),
     });
     await this.ordersRepository.remove(expiredOrders);

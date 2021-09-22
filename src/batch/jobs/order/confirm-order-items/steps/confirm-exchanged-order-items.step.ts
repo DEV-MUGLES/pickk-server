@@ -28,7 +28,7 @@ export class ConfirmExchangedOrderItemsStep extends BaseStep {
           'orderItem.isConfirmed = false'
         )
         .where('exchangeRequest.status = :status', {
-          status: ExchangeRequestStatus.RESHIPPED,
+          status: ExchangeRequestStatus.Reshipped,
         })
         .andWhere('exchangeRequest.reShippedAt < :reShippedAt', {
           reShippedAt: dayjs().add(-14, 'day').toDate(),

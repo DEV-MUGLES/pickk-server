@@ -103,7 +103,7 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     await this.inquiriesService.answer(id, {
       ...input,
       userId,
-      from: InquiryAnswerFrom.SELLER,
+      from: InquiryAnswerFrom.Seller,
     });
 
     await this.sellerInquiryProducer.sendInquiryAnsweredAlimtalk(id);

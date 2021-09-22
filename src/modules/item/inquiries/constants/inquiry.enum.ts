@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum InquiryType {
-  SHIP = 'SHIP',
-  SIZE = 'SIZE',
-  RESTOCK = 'RESTOCK',
-  ETC = 'ETC',
+  Ship = 'Ship',
+  Size = 'Size',
+  Restock = 'Restock',
+  Etc = 'Etc',
 }
 
 registerEnumType(InquiryType, {

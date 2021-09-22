@@ -30,7 +30,7 @@ export class TrackShipmentsStep extends BaseStep {
   async tasklet(): Promise<void> {
     const shipments = this.shipmentsRepository.entityToModelMany(
       await this.shipmentsRepository.find({
-        where: { status: ShipmentStatus.SHIPPING },
+        where: { status: ShipmentStatus.Shipping },
         relations: ['courier', 'histories'],
       })
     );
@@ -43,7 +43,7 @@ export class TrackShipmentsStep extends BaseStep {
               shipment.histories = await this.getNewHistories(shipment);
               shipment.lastTrackedAt = new Date();
               if (this.isShippedShipment(shipment.histories)) {
-                shipment.status = ShipmentStatus.SHIPPED;
+                shipment.status = ShipmentStatus.Shipped;
                 await this.processShippedShipment(shipment);
               }
               resolve(await this.shipmentsRepository.save(shipment));
@@ -76,12 +76,12 @@ export class TrackShipmentsStep extends BaseStep {
 
   private async processShippedShipment(shipment: Shipment) {
     const { ownerPk, ownerType } = shipment;
-    if (ownerType === ShipmentOwnerType.ORDER_ITEM) {
+    if (ownerType === ShipmentOwnerType.OrderItem) {
       await this.orderItemsRepository.update(ownerPk, {
-        status: OrderItemStatus.SHIPPED,
+        status: OrderItemStatus.Shipped,
       });
     }
-    if (ownerType === ShipmentOwnerType.EXCHANGE_REQUEST_RESHIP) {
+    if (ownerType === ShipmentOwnerType.ExchangeRequestReship) {
       await this.exchangeRequestsService.markReshipped(ownerPk);
     }
   }

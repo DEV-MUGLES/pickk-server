@@ -6,16 +6,16 @@ import { StepExecutionRecordEntity } from '../entities';
 @ObjectType()
 export class StepExecutionRecord extends StepExecutionRecordEntity {
   private markCompleted() {
-    this.status = StepStatus.COMPLETED;
+    this.status = StepStatus.Completed;
   }
 
   private markStarted() {
-    this.status = StepStatus.STARTED;
+    this.status = StepStatus.Started;
     this.startedAt = new Date();
   }
 
   private markFailed() {
-    this.status = StepStatus.FAILED;
+    this.status = StepStatus.Failed;
   }
 
   private markEnd() {

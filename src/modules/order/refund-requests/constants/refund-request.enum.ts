@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum RefundRequestStatus {
-  REQUESTED = 'REQUESTED',
+  Requested = 'Requested',
   /** 상품 수거 완료 */
-  PICKED = 'PICKED',
-  REJECTED = 'REJECTED',
-  CONFIRMED = 'CONFIRMED',
+  Picked = 'Picked',
+  Rejected = 'Rejected',
+  Confirmed = 'Confirmed',
 }
 
 registerEnumType(RefundRequestStatus, {
@@ -14,8 +14,8 @@ registerEnumType(RefundRequestStatus, {
 });
 
 export enum OrderClaimFaultOf {
-  CUSTOMER = 'CUSTOMER',
-  SELLER = 'SELLER',
+  Customer = 'Customer',
+  Seller = 'Seller',
 }
 
 registerEnumType(OrderClaimFaultOf, {

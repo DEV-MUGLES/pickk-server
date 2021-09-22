@@ -17,7 +17,7 @@ export class DigestCreationTemplate extends BaseSlackTemplate {
     const pickkUrl = `https://pickk.one/digests/${id}`;
 
     return {
-      channel: SlackChannelName.CONTENT_UPLOAD,
+      channel: SlackChannelName.ContentUpload,
       blocks: this.getBlocksBuilder()
         .addText(`:pushpin: *꿀템 등록 알림*`)
         .addText(`*<${pickkUrl}|${title}>*`)

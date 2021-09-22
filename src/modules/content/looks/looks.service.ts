@@ -57,7 +57,7 @@ export class LooksService {
     if (userId) {
       enrichIsMine(userId, look);
       enrichUserIsMe(userId, look);
-      await this.likesService.enrichLiking(userId, LikeOwnerType.LOOK, look);
+      await this.likesService.enrichLiking(userId, LikeOwnerType.Look, look);
       await this.followsService.enrichAuthorFollowing(userId, look);
     }
 

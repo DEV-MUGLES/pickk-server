@@ -8,7 +8,7 @@ export const getOrderBrands = (orderItems: OrderItem[]): OrderBrand[] => {
   const brandItemsMap = new Map<number, OrderBrand>();
 
   orderItems
-    .filter((v) => v.claimStatus !== OrderItemClaimStatus.CANCELLED)
+    .filter((v) => v.claimStatus !== OrderItemClaimStatus.Cancelled)
     .forEach((orderItem) => {
       const { seller } = orderItem;
       const { minimumAmountForFree, fee } = seller.shippingPolicy;

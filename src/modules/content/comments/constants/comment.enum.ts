@@ -1,9 +1,9 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum CommentOwnerType {
-  DIGEST = 'DIGEST',
-  LOOK = 'LOOK',
-  VIDEO = 'VIDEO',
+  Digest = 'Digest',
+  Look = 'Look',
+  Video = 'Video',
 }
 
 registerEnumType(CommentOwnerType, {

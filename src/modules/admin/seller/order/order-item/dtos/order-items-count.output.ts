@@ -9,9 +9,9 @@ import {
 import { OrderItemEntity } from '@order/order-items/entities';
 
 const processDelayStatuses = [
-  OrderItemStatus.PAID,
-  OrderItemStatus.SHIP_PENDING,
-  OrderItemStatus.SHIP_READY,
+  OrderItemStatus.Paid,
+  OrderItemStatus.ShipPending,
+  OrderItemStatus.ShipReady,
 ] as const;
 export type ProcessDelayStatus = typeof processDelayStatuses[number];
 export type ProcessDelayedFieldName = `process_delayed_${ProcessDelayStatus}`;
@@ -96,25 +96,25 @@ export class OrderItemsCountOutput {
   lastUpdatedAt: Date;
 
   @Field(() => Int, { description: '결제대기 (입금대기와 다릅니다.)' })
-  [OrderItemStatus.PENDING]: number;
+  [OrderItemStatus.Pending]: number;
 
   @Field(() => Int, { description: '결제 실패' })
-  [OrderItemStatus.FAILED]: number;
+  [OrderItemStatus.Failed]: number;
 
   @Field(() => Int, { description: '입금 대기' })
-  [OrderItemStatus.VBANK_READY]: number;
+  [OrderItemStatus.VbankReady]: number;
 
   @Field(() => Int, { description: '입금 전 취소' })
-  [OrderItemStatus.VBANK_DODGED]: number;
+  [OrderItemStatus.VbankDodged]: number;
 
   @Field(() => Int, { description: '결제 완료' })
-  [OrderItemStatus.PAID]: number;
+  [OrderItemStatus.Paid]: number;
 
   @Field(() => Int, { description: '배송 보류중(예약중)' })
-  [OrderItemStatus.SHIP_PENDING]: number;
+  [OrderItemStatus.ShipPending]: number;
 
   @Field(() => Int, { description: '배송 준비중' })
-  [OrderItemStatus.SHIP_READY]: number;
+  [OrderItemStatus.ShipReady]: number;
 
   @Field(() => Int, { description: '결제 완료' })
   process_delayed_paid: number;
@@ -129,29 +129,29 @@ export class OrderItemsCountOutput {
   confirmed: number;
 
   @Field(() => Int, { description: '배송 중' })
-  [OrderItemStatus.SHIPPING]: number;
+  [OrderItemStatus.Shipping]: number;
 
   @Field(() => Int, { description: '배송 완료' })
-  [OrderItemStatus.SHIPPED]: number;
+  [OrderItemStatus.Shipped]: number;
 
   @Field(() => Int, {
     deprecationReason: '현재 취소는 신청 즉시 완료됩니다.',
     description: '취소 요청됨 (deprecated)',
   })
-  [OrderItemClaimStatus.CANCEL_REQUESTED]: number;
+  [OrderItemClaimStatus.CancelRequested]: number;
 
   @Field(() => Int, { description: '취소 완료' })
-  [OrderItemClaimStatus.CANCELLED]: number;
+  [OrderItemClaimStatus.Cancelled]: number;
 
   @Field(() => Int, { description: '교환 요청됨' })
-  [OrderItemClaimStatus.EXCHANGE_REQUESTED]: number;
+  [OrderItemClaimStatus.ExchangeRequested]: number;
 
   @Field(() => Int, { description: '교환 완료' })
-  [OrderItemClaimStatus.EXCHANGED]: number;
+  [OrderItemClaimStatus.Exchanged]: number;
 
   @Field(() => Int, { description: '반품 요청됨' })
-  [OrderItemClaimStatus.REFUND_REQUESTED]: number;
+  [OrderItemClaimStatus.RefundRequested]: number;
 
   @Field(() => Int, { description: '반품 완료' })
-  [OrderItemClaimStatus.REFUNDED]: number;
+  [OrderItemClaimStatus.Refunded]: number;
 }

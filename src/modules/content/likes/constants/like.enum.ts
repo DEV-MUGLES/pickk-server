@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum LikeOwnerType {
-  DIGEST = 'DIGEST',
-  LOOK = 'LOOK',
-  VIDEO = 'VIDEO',
-  COMMENT = 'COMMENT',
-  KEYWORD = 'KEYWORD',
+  Digest = 'Digest',
+  Look = 'Look',
+  Video = 'Video',
+  Comment = 'Comment',
+  Keyword = 'Keyword',
 }
 
 registerEnumType(LikeOwnerType, {

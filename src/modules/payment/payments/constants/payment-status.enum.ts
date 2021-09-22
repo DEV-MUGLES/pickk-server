@@ -2,19 +2,19 @@ import { registerEnumType } from '@nestjs/graphql';
 
 export enum PaymentStatus {
   /** 미결제 */
-  PENDING = 'PENDING',
+  Pending = 'Pending',
   /** 가상계좌 입금대기 */
-  VBANK_READY = 'VBANK_READY',
+  VbankReady = 'VbankReady',
   /** 결제완료 */
-  PAID = 'PAID',
+  Paid = 'Paid',
   /** 전액취소 */
-  CANCELLED = 'CANCELLED',
+  Cancelled = 'Cancelled',
   /** 부분취소 */
-  PARTIAL_CANCELLED = 'PARTIAL_CANCELLED',
+  PartialCancelled = 'PartialCancelled',
   /** 가상계좌 입금 전 취소 */
-  VBANK_DODGED = 'VBANK_DODGED',
+  VbankDodged = 'VbankDodged',
   /** 결제실패 */
-  FAILED = 'FAILED',
+  Failed = 'Failed',
 }
 
 registerEnumType(PaymentStatus, {

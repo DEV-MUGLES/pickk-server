@@ -8,7 +8,7 @@ import {
   RefundRequestConfirmedStrategy,
 } from '../strategies';
 
-const { PICKED, CONFIRMED } = RefundRequestStatus;
+const { Picked, Confirmed } = RefundRequestStatus;
 
 export class RefundRequestMarkStrategyFactory {
   static from(
@@ -16,9 +16,9 @@ export class RefundRequestMarkStrategyFactory {
     refundRequest: RefundRequest
   ): RefundRequestMarkStrategy {
     switch (status) {
-      case PICKED:
+      case Picked:
         return new RefundRequestPickedStrategy(refundRequest);
-      case CONFIRMED:
+      case Confirmed:
         return new RefundRequestConfirmedStrategy(refundRequest);
 
       default:

@@ -31,19 +31,19 @@ export class LikeProducer {
   }
 
   private getQueueNameByOwnerType(ownerType: LikeOwnerType) {
-    if (ownerType === LikeOwnerType.COMMENT) {
+    if (ownerType === LikeOwnerType.Comment) {
       return UPDATE_COMMENT_LIKE_COUNT_QUEUE;
     }
-    if (ownerType === LikeOwnerType.DIGEST) {
+    if (ownerType === LikeOwnerType.Digest) {
       return UPDATE_DIGEST_LIKE_COUNT_QUEUE;
     }
-    if (ownerType === LikeOwnerType.LOOK) {
+    if (ownerType === LikeOwnerType.Look) {
       return UPDATE_LOOK_LIKE_COUNT_QUEUE;
     }
-    if (ownerType === LikeOwnerType.VIDEO) {
+    if (ownerType === LikeOwnerType.Video) {
       return UPDATE_VIDEO_LIKE_COUNT_QUEUE;
     }
-    if (ownerType === LikeOwnerType.KEYWORD) {
+    if (ownerType === LikeOwnerType.Keyword) {
       return UPDATE_KEYWORD_LIKE_COUNT_QUEUE;
     }
   }
