@@ -3,16 +3,16 @@ import { PredefinedCategoryCode } from '@item/item-categories/constants';
 import { ItemSizeChartColumnName } from './item-size-chart.enum';
 
 export const {
-  Outer,
-  Top,
-  Bag,
-  Belt,
-  Bottom,
-  Acc,
-  Watch,
-  Sunglasses,
-  Muffler,
-  Hat,
+  OUTER,
+  TOP,
+  BAG,
+  BELT,
+  BOTTOM,
+  ACC,
+  WATCH,
+  SUNGLASSES,
+  MUFFLER,
+  HAT,
 } = PredefinedCategoryCode;
 
 const {
@@ -62,15 +62,15 @@ const GlassesSizeChartColumns = [
 const MufflerSizeChartColumns = [totalLength, accDepth];
 
 export const AvailItemSizeChartColumns = {
-  [Outer]: OuterSizeChartColumns,
-  [Top]: OuterSizeChartColumns,
-  [Bottom]: BottomSizeChartColumns,
-  [Acc]: AccessorySizeChartColumns,
-  [Bag]: BagSizeChartColumns,
-  [Belt]: BeltSizeChartColumns,
-  [Watch]: WatchSizeChartColumns,
-  [Sunglasses]: GlassesSizeChartColumns,
-  [Muffler]: MufflerSizeChartColumns,
+  [OUTER]: OuterSizeChartColumns,
+  [TOP]: OuterSizeChartColumns,
+  [BOTTOM]: BottomSizeChartColumns,
+  [ACC]: AccessorySizeChartColumns,
+  [BAG]: BagSizeChartColumns,
+  [BELT]: BeltSizeChartColumns,
+  [WATCH]: WatchSizeChartColumns,
+  [SUNGLASSES]: GlassesSizeChartColumns,
+  [MUFFLER]: MufflerSizeChartColumns,
 };
 
 export const ItemSizeChartColumnDisplayName = [
@@ -80,7 +80,7 @@ export const ItemSizeChartColumnDisplayName = [
   },
   {
     columnName: totalLength,
-    displayNames: [{ name: '총길이' }, { code: Hat, name: '챙길이' }],
+    displayNames: [{ name: '총길이' }, { code: HAT, name: '챙길이' }],
   },
   {
     columnName: shoulderWidth,
@@ -134,24 +134,24 @@ export const ItemSizeChartColumnDisplayName = [
     columnName: accWidth,
     displayNames: [
       { name: '너비' },
-      { code: Hat, name: '머리둘레' },
-      { code: Watch, name: '케이스가로지름' },
-      { code: Sunglasses, name: '렌즈너비' },
-      { code: Belt, name: '버클가로' },
+      { code: HAT, name: '머리둘레' },
+      { code: WATCH, name: '케이스가로지름' },
+      { code: SUNGLASSES, name: '렌즈너비' },
+      { code: BELT, name: '버클가로' },
     ],
   },
   {
     columnName: accHeight,
     displayNames: [
       { name: '높이' },
-      { code: Hat, name: '깊이' },
-      { code: Watch, name: '케이스세로지름' },
-      { code: Sunglasses, name: '렌즈높이' },
-      { code: Belt, name: '버클세로' },
+      { code: HAT, name: '깊이' },
+      { code: WATCH, name: '케이스세로지름' },
+      { code: SUNGLASSES, name: '렌즈높이' },
+      { code: BELT, name: '버클세로' },
     ],
   },
   {
     columnName: accDepth,
-    displayNames: [{ name: '폭' }, { code: Watch, name: '케이스폭' }],
+    displayNames: [{ name: '폭' }, { code: WATCH, name: '케이스폭' }],
   },
 ];

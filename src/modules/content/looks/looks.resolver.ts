@@ -82,7 +82,7 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
   ): Promise<Look[]> {
     const ids = await this.likesService.findOwnerIds(
       userId,
-      LikeOwnerType.Look,
+      LikeOwnerType.LOOK,
       pageInput
     );
 

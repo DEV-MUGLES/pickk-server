@@ -52,9 +52,9 @@ export class SellerOrderItemService {
       );
     }
 
-    if (orderItems.some((oi) => oi.status !== OrderItemStatus.Paid)) {
+    if (orderItems.some((oi) => oi.status !== OrderItemStatus.PAID)) {
       const { merchantUid } = orderItems.find(
-        (oi) => oi.status !== OrderItemStatus.Paid
+        (oi) => oi.status !== OrderItemStatus.PAID
       );
       throw new BadRequestException(
         `입력된 주문상품 ${merchantUid}가 결제완료 상태가 아닙니다.`

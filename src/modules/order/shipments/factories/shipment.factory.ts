@@ -6,7 +6,7 @@ export class ShipmentFactory {
     input: Pick<Shipment, 'ownerType' | 'ownerPk' | 'courierId' | 'trackCode'>
   ): Shipment {
     return new Shipment({
-      status: ShipmentStatus.Shipping,
+      status: ShipmentStatus.SHIPPING,
       ...input,
     });
   }

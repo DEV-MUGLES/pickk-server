@@ -34,7 +34,7 @@ export class RefundRequestsCountOutput {
 
       if (
         isProcessDelaying &&
-        [RefundRequestStatus.Requested, RefundRequestStatus.Picked].includes(
+        [RefundRequestStatus.REQUESTED, RefundRequestStatus.PICKED].includes(
           status
         )
       ) {
@@ -71,16 +71,16 @@ export class RefundRequestsCountOutput {
   lastUpdatedAt: Date;
 
   @Field(() => Int, { description: '반품 요청 (= 수거중)' })
-  [RefundRequestStatus.Requested]: number;
+  [RefundRequestStatus.REQUESTED]: number;
 
   @Field(() => Int, { description: '수거 완료' })
-  [RefundRequestStatus.Picked]: number;
+  [RefundRequestStatus.PICKED]: number;
 
   @Field(() => Int, { description: '반품 거부' })
-  [RefundRequestStatus.Rejected]: number;
+  [RefundRequestStatus.REJECTED]: number;
 
   @Field(() => Int, { description: '반품 승인' })
-  [RefundRequestStatus.Confirmed]: number;
+  [RefundRequestStatus.CONFIRMED]: number;
 
   @Field(() => Int, {
     description: '반품 처리 지연 (지연중인 requested + picked)',

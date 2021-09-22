@@ -5,7 +5,7 @@ import { SlackChannelName } from '@providers/slack/constants';
 export class ItemCreationFailTemplate {
   static create(url: string, nickname: string): IncomingWebhookSendArguments {
     return {
-      channel: SlackChannelName.ItemManagement,
+      channel: SlackChannelName.ITEM_MANAGEMENT,
       attachments: [
         {
           color: '#f00',

@@ -24,19 +24,19 @@ export class ExchangeRequest extends ExchangeRequestEntity {
     ExchangeRequestMarkStrategyFactory.from(as, this).execute();
   }
   markPicked() {
-    this.markAs(ExchangeRequestStatus.Picked);
+    this.markAs(ExchangeRequestStatus.PICKED);
   }
   /** mark as: reshipping */
   reship(reshipInput: ReshipExchangeRequestInput) {
-    this.markAs(ExchangeRequestStatus.Reshipping);
+    this.markAs(ExchangeRequestStatus.RESHIPPING);
     this.reShipment = ShipmentFactory.create({
-      ownerType: ShipmentOwnerType.ExchangeRequestReShip,
+      ownerType: ShipmentOwnerType.EXCHANGE_REQUEST_RESHIP,
       ownerPk: this.merchantUid.toString(),
       ...reshipInput,
     });
   }
   /** orderItem의 상태도 변경된다. (join 필요) */
   markReshipped() {
-    this.markAs(ExchangeRequestStatus.Reshipped);
+    this.markAs(ExchangeRequestStatus.RESHIPPED);
   }
 }

@@ -25,7 +25,7 @@ describe('PaymentCancellation', () => {
     it('성공!', () => {
       const payment = new Payment({
         cancelledAt: null,
-        status: PaymentStatus.Paid,
+        status: PaymentStatus.PAID,
         amount,
         cancellations: [],
       });
@@ -39,7 +39,7 @@ describe('PaymentCancellation', () => {
     it('throw NotEnoughRemainAmountException', () => {
       const payment = new Payment({
         amount: amount - 100,
-        status: PaymentStatus.Paid,
+        status: PaymentStatus.PAID,
         cancellations: [],
       });
       expect(() => PaymentCancellation.of(input, payment)).toThrow(
@@ -50,7 +50,7 @@ describe('PaymentCancellation', () => {
     it('throw InconsistentChecksumException', () => {
       const payment = new Payment({
         amount,
-        status: PaymentStatus.Paid,
+        status: PaymentStatus.PAID,
         cancellations: [],
       });
       expect(() =>
@@ -61,7 +61,7 @@ describe('PaymentCancellation', () => {
     it('throw VbankRefundInfoRequiredException', () => {
       const payment = new Payment({
         amount,
-        status: PaymentStatus.Paid,
+        status: PaymentStatus.PAID,
         payMethod: PayMethod.Vbank,
         cancellations: [],
       });

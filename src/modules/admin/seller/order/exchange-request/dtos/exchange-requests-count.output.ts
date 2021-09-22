@@ -38,8 +38,8 @@ export class ExchangeRequestsCountOutput {
       if (
         isProcessDelaying &&
         [
-          ExchangeRequestStatus.Requested,
-          ExchangeRequestStatus.Picked,
+          ExchangeRequestStatus.REQUESTED,
+          ExchangeRequestStatus.PICKED,
         ].includes(status)
       ) {
         countMap.set(
@@ -74,19 +74,19 @@ export class ExchangeRequestsCountOutput {
   lastUpdatedAt: Date;
 
   @Field(() => Int, { description: '교환 요청 (= 수거중)' })
-  [ExchangeRequestStatus.Requested]: number;
+  [ExchangeRequestStatus.REQUESTED]: number;
 
   @Field(() => Int, { description: '수거 완료' })
-  [ExchangeRequestStatus.Picked]: number;
+  [ExchangeRequestStatus.PICKED]: number;
 
   @Field(() => Int, { description: '교환 거부' })
-  [ExchangeRequestStatus.Rejected]: number;
+  [ExchangeRequestStatus.REJECTED]: number;
 
   @Field(() => Int, { description: '교환 배송 중' })
-  [ExchangeRequestStatus.Reshipping]: number;
+  [ExchangeRequestStatus.RESHIPPING]: number;
 
   @Field(() => Int, { description: '교환 배송 완료' })
-  [ExchangeRequestStatus.Reshipped]: number;
+  [ExchangeRequestStatus.RESHIPPED]: number;
 
   @Field(() => Int, {
     description: '교환 처리 지연 (지연중인 requested + picked)',

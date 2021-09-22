@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum HitOwnerType {
-  Digest = 'digest',
-  Look = 'look',
-  Video = 'video',
-  Item = 'item',
-  Keyword = 'keyword',
+  DIGEST = 'DIGEST',
+  LOOK = 'LOOK',
+  VIDEO = 'VIDEO',
+  ITEM = 'ITEM',
+  KEYWORD = 'KEYWORD',
 }
 
 registerEnumType(HitOwnerType, {

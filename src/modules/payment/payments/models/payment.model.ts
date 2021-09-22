@@ -35,7 +35,7 @@ export class Payment extends PaymentEntity {
   }
 
   public dodgeVbank() {
-    if (this.status !== PaymentStatus.VbankReady) {
+    if (this.status !== PaymentStatus.VBANK_READY) {
       throw new StatusInvalidToDodgeException();
     }
     this.markVbankDodged();
@@ -46,7 +46,7 @@ export class Payment extends PaymentEntity {
       throw new NotJoinedCancelException();
     }
     if (
-      ![PaymentStatus.Paid, PaymentStatus.PartialCancelled].includes(
+      ![PaymentStatus.PAID, PaymentStatus.PARTIAL_CANCELLED].includes(
         this.status
       )
     ) {
@@ -60,21 +60,21 @@ export class Payment extends PaymentEntity {
   }
 
   public confirmVbankPaid() {
-    if (this.status !== PaymentStatus.VbankReady) {
+    if (this.status !== PaymentStatus.VBANK_READY) {
       throw new StatusInvalidToVbankPayException(this.status);
     }
     this.markPaid();
   }
 
   public fail(): void {
-    if (this.status !== PaymentStatus.Pending) {
+    if (this.status !== PaymentStatus.PENDING) {
       throw new StatusInvalidToFailException(this.status);
     }
     this.markFailed();
   }
 
   public complete(dto: CompletePaymentDto): void {
-    if (this.status !== PaymentStatus.Pending) {
+    if (this.status !== PaymentStatus.PENDING) {
       throw new StatusInvalidToCompleteException(this.status);
     }
 
@@ -89,29 +89,29 @@ export class Payment extends PaymentEntity {
 
   private markVbankDodged() {
     this.vbankDodgedAt = new Date();
-    this.status = PaymentStatus.VbankDodged;
+    this.status = PaymentStatus.VBANK_DODGED;
   }
 
   private markCancelled(type: PaymentCancellationType) {
     this.cancelledAt = new Date();
     this.status =
-      type === PaymentCancellationType.Cancel
-        ? PaymentStatus.Cancelled
-        : PaymentStatus.PartialCancelled;
+      type === PaymentCancellationType.CANCEL
+        ? PaymentStatus.CANCELLED
+        : PaymentStatus.PARTIAL_CANCELLED;
   }
 
   private markPaid() {
     this.paidAt = new Date();
-    this.status = PaymentStatus.Paid;
+    this.status = PaymentStatus.PAID;
   }
 
   private markFailed() {
     this.failedAt = new Date();
-    this.status = PaymentStatus.Failed;
+    this.status = PaymentStatus.FAILED;
   }
 
   private markVbankReady() {
     this.vbankReadyAt = new Date();
-    this.status = PaymentStatus.VbankReady;
+    this.status = PaymentStatus.VBANK_READY;
   }
 }

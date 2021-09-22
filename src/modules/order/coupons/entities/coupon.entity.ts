@@ -46,7 +46,7 @@ export class CouponEntity extends BaseIdEntity implements ICoupon {
   specId: number;
 
   @Field(() => CouponStatus, { nullable: true })
-  @Column({ type: 'enum', enum: CouponStatus, default: CouponStatus.Ready })
+  @Column({ type: 'enum', enum: CouponStatus, default: CouponStatus.READY })
   @IsEnum(CouponStatus)
   status: CouponStatus;
 }

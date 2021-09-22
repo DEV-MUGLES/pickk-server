@@ -14,7 +14,7 @@ export const calcClaimShippingFee = (
   );
   const isFreeShipped = totalItemFinalPrice >= minimumAmountForFree;
 
-  return faultOf === OrderClaimFaultOf.Seller
+  return faultOf === OrderClaimFaultOf.SELLER
     ? 0
     : isFreeShipped
     ? claimPolicy.fee + shippingPolicy.fee

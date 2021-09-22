@@ -20,9 +20,9 @@ export class RestoreDeductedProductStockConsumer {
 
     const canceledOrFailedOrderItems = orderItems.filter(
       (orderItem) =>
-        orderItem.status === OrderItemStatus.Failed ||
-        orderItem.status === OrderItemStatus.VbankDodged ||
-        orderItem.claimStatus === OrderItemClaimStatus.Cancelled
+        orderItem.status === OrderItemStatus.FAILED ||
+        orderItem.status === OrderItemStatus.VBANK_DODGED ||
+        orderItem.claimStatus === OrderItemClaimStatus.CANCELLED
     );
 
     await this.productsService.bulkRestock(canceledOrFailedOrderItems);

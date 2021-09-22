@@ -43,13 +43,13 @@ export class KeywordsService {
     if (userId) {
       await this.likesService.enrichLiking(
         userId,
-        LikeOwnerType.Keyword,
+        LikeOwnerType.KEYWORD,
         keyword
       );
       if (keyword.digests) {
         await this.likesService.bulkEnrichLiking(
           userId,
-          LikeOwnerType.Digest,
+          LikeOwnerType.DIGEST,
           keyword.digests
         );
         await this.followsService.bulkEnrichAuthorFollowing(

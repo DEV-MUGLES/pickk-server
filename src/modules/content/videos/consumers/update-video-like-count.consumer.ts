@@ -35,7 +35,7 @@ export class UpdateVideoLikeCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const likeCount = await this.likesService.count(
-                LikeOwnerType.Video,
+                LikeOwnerType.VIDEO,
                 id
               );
               const video = await this.videosRepository.update(id, {

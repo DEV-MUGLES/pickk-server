@@ -41,7 +41,7 @@ export class BrandsResolver extends BaseResolver<BrandRelationType> {
     return await this.brandsService.list(this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
+  @Roles(UserRole.SELLER)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Brand)
   async updateBrand(
@@ -50,7 +50,7 @@ export class BrandsResolver extends BaseResolver<BrandRelationType> {
     @Args('updateBrandInput') input: UpdateBrandInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Brand> {
-    if (user.role === UserRole.Seller) {
+    if (user.role === UserRole.SELLER) {
       const seller = await this.sellersService.findOne({ userId: user.id });
       if (seller?.brandId !== id) {
         throw new UnauthorizedException('자신의 브랜드만 수정할 수 있습니다.');

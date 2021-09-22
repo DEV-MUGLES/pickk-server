@@ -18,7 +18,7 @@ export class UpdateKeywordHitCountStep extends BaseStep {
 
   async tasklet(): Promise<void> {
     const countMap = await this.hitsService.getOwnerCountMap(
-      HitOwnerType.Keyword
+      HitOwnerType.KEYWORD
     );
     const keywordIds = Object.keys(countMap);
 
@@ -28,6 +28,6 @@ export class UpdateKeywordHitCountStep extends BaseStep {
     });
 
     await this.keywordsRepository.save(keywords);
-    await this.hitsService.clearOwnerCountMap(HitOwnerType.Keyword);
+    await this.hitsService.clearOwnerCountMap(HitOwnerType.KEYWORD);
   }
 }

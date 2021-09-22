@@ -11,7 +11,7 @@ export class LoginByCodeInput extends PickType(User, ['code'], InputType) {
   password: string;
 
   @Field(() => UserRole, {
-    defaultValue: UserRole.User,
+    defaultValue: UserRole.USER,
     description:
       '로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)',
   })
@@ -27,7 +27,7 @@ export class LoginByOauthInput extends PickType(
   InputType
 ) {
   @Field(() => UserRole, {
-    defaultValue: UserRole.User,
+    defaultValue: UserRole.USER,
     description:
       '로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)',
   })

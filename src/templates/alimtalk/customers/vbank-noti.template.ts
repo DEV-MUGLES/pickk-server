@@ -25,7 +25,7 @@ export class VbankNotiTemplate {
     const {
       merchantUid,
       buyer,
-      vbankReceipt: { ownerName, due, bankCodeDisplayName, number: bankNum },
+      vbankReceipt: { ownerName, due, bankDisplayName, number: bankNum },
       totalPayAmount,
       orderItems,
       createdAt,
@@ -35,7 +35,7 @@ export class VbankNotiTemplate {
       buyer.name
     }님, 가상계좌로 입금해주시면 주문이 완료됩니다.
 [가상계좌 입금정보]
-▶ 입금계좌 : ${bankCodeDisplayName} ${bankNum}
+▶ 입금계좌 : ${bankDisplayName} ${bankNum}
 ▶ 예금주 : ${ownerName}
 ▶ 입금액 : ${addCommas(totalPayAmount)}원
 ▶ 입금기한: ${dayjs(due).format('YYYY년 MM월 DD일 HH:mm')}까지

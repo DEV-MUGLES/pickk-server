@@ -5,11 +5,11 @@ import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 import { OrderItemMarkStrategy } from './base.strategy';
 
 export class OrderItemCancelledStrategy extends OrderItemMarkStrategy {
-  status = OrderItemClaimStatus.Cancelled;
+  status = OrderItemClaimStatus.CANCELLED;
   statusChangedField = 'cancelledAt' as const;
 
   validate() {
-    if (this.orderItem.status !== OrderItemStatus.Paid) {
+    if (this.orderItem.status !== OrderItemStatus.PAID) {
       throw new BadRequestException(
         `결제 완료 상태인 주문 상품만 취소할 수 있습니다.\n문제 주문상품: ${this.orderItem.name})`
       );

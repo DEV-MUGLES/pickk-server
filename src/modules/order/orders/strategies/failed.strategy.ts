@@ -5,12 +5,12 @@ import { OrderStatus } from '../constants';
 import { OrderProcessStrategy } from './base.strategy';
 
 export class OrderFailedStrategy extends OrderProcessStrategy {
-  status = OrderStatus.Failed;
+  status = OrderStatus.FAILED;
   statusChangedField = 'failedAt' as const;
 
   validate() {
-    const { Pending, Failed } = OrderStatus;
-    if (![Pending, Failed].includes(this.order.status)) {
+    const { PENDING, FAILED } = OrderStatus;
+    if (![PENDING, FAILED].includes(this.order.status)) {
       throw new BadRequestException('완료된 주문을 실패처리할 수 없습니다');
     }
   }

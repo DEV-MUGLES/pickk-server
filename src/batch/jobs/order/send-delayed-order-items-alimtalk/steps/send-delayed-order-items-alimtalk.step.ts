@@ -27,9 +27,9 @@ export class SendDelayedOrderItemsAlimtalkStep extends BaseStep {
       .where('orderItem.isProcessDelaying = true')
       .andWhere('orderItem.status IN (:...status)', {
         status: [
-          OrderItemStatus.Paid,
-          OrderItemStatus.ShipReady,
-          OrderItemStatus.ShipPending,
+          OrderItemStatus.PAID,
+          OrderItemStatus.SHIP_READY,
+          OrderItemStatus.SHIP_PENDING,
         ],
       })
       .groupBy('orderItem.sellerId')

@@ -1,13 +1,13 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum OrderStatus {
-  Pending = 'pending',
-  Paying = 'paying',
-  Failed = 'failed',
-  VbankReady = 'vbank_ready',
+  PENDING = 'PENDING',
+  PAYING = 'PAYING',
+  FAILED = 'FAILED',
+  VBANK_READY = 'VBANK_READY',
   /** 발주 전 즉시 취소된 경우 */
-  VbankDodged = 'vbank_dodged',
-  Paid = 'paid',
+  VBANK_DODGED = 'VBANK_DODGED',
+  PAID = 'PAID',
 }
 
 registerEnumType(OrderStatus, {

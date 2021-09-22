@@ -52,7 +52,7 @@ export class PaymentsService {
       const payment = await this.get(dto.merchantUid);
       return await this.update(payment, {
         ...dto,
-        status: PaymentStatus.Pending,
+        status: PaymentStatus.PENDING,
       });
     } catch {
       return await this.create(dto);
@@ -62,7 +62,7 @@ export class PaymentsService {
   async create(dto: CreatePaymentDto): Promise<Payment> {
     const payment = new Payment({
       ...dto,
-      status: PaymentStatus.Pending,
+      status: PaymentStatus.PENDING,
     });
     return await this.paymentsRepository.save(payment);
   }
@@ -121,7 +121,7 @@ export class PaymentsService {
     const payment = await this.get(merchantUid);
 
     if (
-      ![PaymentStatus.Pending, PaymentStatus.Failed].includes(payment.status)
+      ![PaymentStatus.PENDING, PaymentStatus.FAILED].includes(payment.status)
     ) {
       throw new BadRequestException(
         '미결제 상태인 결제건만 삭제할 수 있습니다.'

@@ -66,19 +66,19 @@ export class Order extends OrderEntity {
     OrderProcessStrategyFactory.from(to, this).execute();
   }
   markFailed() {
-    this.mark(OrderStatus.Failed);
+    this.mark(OrderStatus.FAILED);
   }
   markPaying() {
-    this.mark(OrderStatus.Paying);
+    this.mark(OrderStatus.PAYING);
   }
   markVbankReady() {
-    this.mark(OrderStatus.VbankReady);
+    this.mark(OrderStatus.VBANK_READY);
   }
   markVbankDodged() {
-    this.mark(OrderStatus.VbankDodged);
+    this.mark(OrderStatus.VBANK_DODGED);
   }
   markPaid() {
-    this.mark(OrderStatus.Paid);
+    this.mark(OrderStatus.PAID);
   }
 
   ///////////////

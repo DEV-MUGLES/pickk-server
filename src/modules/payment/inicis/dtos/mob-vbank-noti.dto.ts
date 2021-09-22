@@ -30,7 +30,7 @@ export class InicisMobVbankNotiDto
         `[KG이니시스 가상계좌 입금통보] 가상계좌 거래건이 아닙니다. (지불수단: ${payment.payMethod})`
       );
     }
-    if (payment.status !== PaymentStatus.VbankReady) {
+    if (payment.status !== PaymentStatus.VBANK_READY) {
       throw new StatusInvalidToVbankDepositException(payment.status);
     }
     if (!isAllEleSame([dto.P_AMT, payment.amount, transaction.price])) {

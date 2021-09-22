@@ -46,8 +46,8 @@ export class JwtAuthGuard extends GqlAuthGuard('jwt') {
   }
 
   checkIsPermitted(userRole: UserRole, role: UserRole) {
-    const { User, Editor, Seller, Admin } = UserRole;
-    const roles = [User, Editor, Seller, Admin];
+    const { USER, EDITOR, SELLER, ADMIN } = UserRole;
+    const roles = [USER, EDITOR, SELLER, ADMIN];
     return roles.indexOf(userRole) >= roles.indexOf(role);
   }
 }

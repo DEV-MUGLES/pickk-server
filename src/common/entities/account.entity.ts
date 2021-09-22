@@ -2,7 +2,7 @@ import { Field, ObjectType } from '@nestjs/graphql';
 import { Column } from 'typeorm';
 import { IsEnum, IsNumberString, IsString, MaxLength } from 'class-validator';
 
-import { getBankCodeDisplayName } from '@common/helpers/bank-code.helper';
+import { getBankDisplayName } from '@common/helpers/bank-code.helper';
 import { BankCode } from '@common/constants';
 
 import { IAccount } from '../interfaces';
@@ -25,8 +25,8 @@ export abstract class AbstractAccountEntity
     this.ownerName = attributes.ownerName;
   }
 
-  get bankCodeDisplayName() {
-    return getBankCodeDisplayName(this.bankCode);
+  get bankDisplayName() {
+    return getBankDisplayName(this.bankCode);
   }
 
   @Field(() => BankCode)

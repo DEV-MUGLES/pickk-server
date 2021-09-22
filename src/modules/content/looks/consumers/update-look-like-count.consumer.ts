@@ -35,7 +35,7 @@ export class UpdateLookLikeCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const likeCount = await this.likesService.count(
-                LikeOwnerType.Look,
+                LikeOwnerType.LOOK,
                 id
               );
               const look = await this.looksRepository.update(id, { likeCount });

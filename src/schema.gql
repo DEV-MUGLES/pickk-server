@@ -46,10 +46,10 @@ input AnswerInquiryInput {
   displayAuthor: String!
 }
 
-"""애플 로그인시 사용됩니다. [App, Web]"""
+"""애플 로그인시 사용됩니다. [APP, WEB]"""
 enum AppleClientType {
-  App
-  Web
+  APP
+  WEB
 }
 
 """은행 식별 코드입니다. InicisBankCode와 값이 같습니다."""
@@ -265,16 +265,16 @@ input CommentFilter {
 
 """댓글 연관 객체 분류입니다."""
 enum CommentOwnerType {
-  Digest
-  Look
-  Video
+  DIGEST
+  LOOK
+  VIDEO
 }
 
 """컨텐츠 타입입니다."""
 enum ContentType {
-  digest
-  look
-  video
+  DIGEST
+  LOOK
+  VIDEO
 }
 
 type Coupon {
@@ -309,16 +309,16 @@ type CouponSpecification {
   updatedAt: DateTime!
 }
 
-"""쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)"""
+"""쿠폰 상태입니다. 사용가능(READY), 사용됨(APPLIED)"""
 enum CouponStatus {
-  Applied
-  Ready
+  APPLIED
+  READY
 }
 
-"""쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)"""
+"""쿠폰 분류입니다. 정률적용(RATE), 정액적용(AMOUNT)"""
 enum CouponType {
-  Amount
-  Rate
+  AMOUNT
+  RATE
 }
 
 type Courier {
@@ -744,36 +744,36 @@ input ExchangeRequestOrderItemFilter {
 
 """교한신청 상태입니다."""
 enum ExchangeRequestStatus {
-  Picked
-  Rejected
-  Requested
-  Reshipped
-  Reshipping
+  PICKED
+  REJECTED
+  REQUESTED
+  RESHIPPED
+  RESHIPPING
 }
 
 """생성일 기준 3달 이내의 건들만 count합니다."""
 type ExchangeRequestsCountOutput {
+  """수거 완료"""
+  PICKED: Int!
+
+  """교환 거부"""
+  REJECTED: Int!
+
+  """교환 요청 (= 수거중)"""
+  REQUESTED: Int!
+
+  """교환 배송 완료"""
+  RESHIPPED: Int!
+
+  """교환 배송 중"""
+  RESHIPPING: Int!
+
   """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """수거 완료"""
-  picked: Int!
-
   """교환 처리 지연 (지연중인 requested + picked)"""
   process_delayed: Int!
-
-  """교환 거부"""
-  rejected: Int!
-
-  """교환 요청 (= 수거중)"""
-  requested: Int!
-
-  """교환 배송 완료"""
-  reshipped: Int!
-
-  """교환 배송 중"""
-  reshipping: Int!
 }
 
 input ExtendedShipOrderItemInput {
@@ -789,11 +789,11 @@ input FindSaleStrategyInput {
 
 """조회수 누적 대상 객체 분류입니다."""
 enum HitOwnerType {
-  Digest
-  Item
-  Keyword
-  Look
-  Video
+  DIGEST
+  ITEM
+  KEYWORD
+  LOOK
+  VIDEO
 }
 
 """생성일 기준 3달 이내의 건들만 count합니다."""
@@ -866,10 +866,10 @@ input InquiryFilter {
 
 """배송/사이즈/재입고/기타"""
 enum InquiryType {
-  Etc
-  Restock
-  Ship
-  Size
+  ETC
+  RESTOCK
+  SHIP
+  SIZE
 }
 
 type Item {
@@ -1181,8 +1181,8 @@ input KeywordClassFilter {
 }
 
 enum KeywordClassType {
-  Essential
-  Trending
+  ESSENTIAL
+  TRENDING
 }
 
 input KeywordFilter {
@@ -1204,24 +1204,24 @@ input KeywordFilter {
 
 """좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""
 enum LikeOwnerType {
-  Comment
-  Digest
-  Keyword
-  Look
-  Video
+  COMMENT
+  DIGEST
+  KEYWORD
+  LOOK
+  VIDEO
 }
 
 input LoginByCodeInput {
   code: String
 
   """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
-  minRole: UserRole = User
+  minRole: UserRole = USER
   password: String!
 }
 
 input LoginByOauthInput {
   """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
-  minRole: UserRole = User
+  minRole: UserRole = USER
   oauthCode: String
   oauthProvider: UserProviderType
 }
@@ -1552,12 +1552,12 @@ type OrderItem {
 
 """주문상품 클레임상태입니다."""
 enum OrderItemClaimStatus {
-  CancelRequested
-  Cancelled
-  ExchangeRequested
-  Exchanged
-  RefundRequested
-  Refunded
+  CANCELLED
+  CANCEL_REQUESTED
+  EXCHANGED
+  EXCHANGE_REQUESTED
+  REFUNDED
+  REFUND_REQUESTED
 }
 
 input OrderItemFilter {
@@ -1580,46 +1580,70 @@ input OrderItemFilter {
 
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
 enum OrderItemStatus {
-  Failed
-  Paid
-  Pending
-  ShipPending
-  ShipReady
-  Shipped
-  Shipping
-  VbankDodged
-  VbankReady
+  FAILED
+  PAID
+  PENDING
+  SHIPPED
+  SHIPPING
+  SHIP_PENDING
+  SHIP_READY
+  VBANK_DODGED
+  VBANK_READY
 }
 
 """생성일 기준 3달 이내의 건들만 count합니다."""
 type OrderItemsCountOutput {
-  """취소 요청됨 (deprecated)"""
-  cancel_requested: Int! @deprecated(reason: "현재 취소는 신청 즉시 완료됩니다.")
-
   """취소 완료"""
-  cancelled: Int!
+  CANCELLED: Int!
+
+  """취소 요청됨 (deprecated)"""
+  CANCEL_REQUESTED: Int! @deprecated(reason: "현재 취소는 신청 즉시 완료됩니다.")
+
+  """교환 완료"""
+  EXCHANGED: Int!
+
+  """교환 요청됨"""
+  EXCHANGE_REQUESTED: Int!
+
+  """결제 실패"""
+  FAILED: Int!
+
+  """결제 완료"""
+  PAID: Int!
+
+  """결제대기 (입금대기와 다릅니다.)"""
+  PENDING: Int!
+
+  """반품 완료"""
+  REFUNDED: Int!
+
+  """반품 요청됨"""
+  REFUND_REQUESTED: Int!
+
+  """배송 완료"""
+  SHIPPED: Int!
+
+  """배송 중"""
+  SHIPPPING: Int!
+
+  """배송 보류중(예약중)"""
+  SHIP_PENDING: Int!
+
+  """배송 준비중"""
+  SHIP_READY: Int!
+
+  """입금 전 취소"""
+  VBANK_DODGED: Int!
+
+  """입금 대기"""
+  VBANK_READY: Int!
 
   """구매 확정"""
   confirmed: Int!
 
-  """교환 요청됨"""
-  exchange_requested: Int!
-
-  """교환 완료"""
-  exchanged: Int!
-
-  """결제 실패"""
-  failed: Int!
-
   """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
   id: Int!
   lastUpdatedAt: DateTime!
-
-  """결제 완료"""
-  paid: Int!
-
-  """결제대기 (입금대기와 다릅니다.)"""
-  pending: Int!
 
   """결제 완료"""
   process_delayed_paid: Int!
@@ -1629,30 +1653,6 @@ type OrderItemsCountOutput {
 
   """배송 준비중"""
   process_delayed_ship_ready: Int!
-
-  """반품 요청됨"""
-  refund_requested: Int!
-
-  """반품 완료"""
-  refunded: Int!
-
-  """배송 보류중(예약중)"""
-  ship_pending: Int!
-
-  """배송 준비중"""
-  ship_ready: Int!
-
-  """배송 완료"""
-  shipped: Int!
-
-  """배송 중"""
-  shipping: Int!
-
-  """입금 전 취소"""
-  vbank_dodged: Int!
-
-  """입금 대기"""
-  vbank_ready: Int!
 }
 
 type OrderReceiver {
@@ -1711,12 +1711,12 @@ type OrderSheet {
 
 """주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
 enum OrderStatus {
-  Failed
-  Paid
-  Paying
-  Pending
-  VbankDodged
-  VbankReady
+  FAILED
+  PAID
+  PAYING
+  PENDING
+  VBANK_DODGED
+  VBANK_READY
 }
 
 type OrderVbankReceipt {
@@ -1750,8 +1750,8 @@ input PageInput {
 }
 
 enum PayEnviroment {
-  Mobile
-  Pc
+  MOBILE
+  PC
 }
 
 """결제수단입니다."""
@@ -1827,8 +1827,8 @@ type PaymentCancellation {
 }
 
 enum PaymentCancellationType {
-  Cancel
-  PatialCancel
+  CANCEL
+  PARTIAL_CANCEL
 }
 
 input PaymentFilter {
@@ -1854,13 +1854,13 @@ type PaymentListOutput {
 }
 
 enum PaymentStatus {
-  Cancelled
-  Failed
-  Paid
-  PartialCancelled
-  Pending
-  VbankDodged
-  VbankReady
+  CANCELLED
+  FAILED
+  PAID
+  PARTIAL_CANCELLED
+  PENDING
+  VBANK_DODGED
+  VBANK_READY
 }
 
 type PaymentsListAmount {
@@ -1880,12 +1880,12 @@ type PaymentsListPgCount {
 }
 
 type PaymentsListStatusCount {
-  cancelled: Float!
-  failed: Float!
-  paid: Float!
-  partial_cancelled: Float!
-  pending: Float!
-  vbank_ready: Float!
+  CANCELLED: Float!
+  FAILED: Float!
+  PAID: Float!
+  PARTIAL_CANCELLED: Float!
+  PENDING: Float!
+  VBANK_READY: Float!
 }
 
 """PG사입니다."""
@@ -1916,10 +1916,10 @@ input PointEventFilter {
   userId: Int
 }
 
-"""포인트 분류입니다. 적립(Add), 사용(Sub)"""
+"""포인트 분류입니다. 적립(ADD), 사용(SUB)"""
 enum PointType {
-  Add
-  Sub
+  ADD
+  SUB
 }
 
 type Product {
@@ -2109,8 +2109,8 @@ type RefundRequest {
 
 """교환/반품 책임자?입니다. (구매자 or 판매자)"""
 enum RefundRequestFaultOf {
-  Customer
-  Seller
+  CUSTOMER
+  SELLER
 }
 
 input RefundRequestFilter {
@@ -2134,32 +2134,32 @@ input RefundRequestOrderFilter {
 
 """반품요청 상태입니다."""
 enum RefundRequestStatus {
-  Confirmed
-  Picked
-  Rejected
-  Requested
+  CONFIRMED
+  PICKED
+  REJECTED
+  REQUESTED
 }
 
 """생성일 기준 3달 이내의 건들만 count합니다."""
 type RefundRequestsCountOutput {
   """반품 승인"""
-  confirmed: Int!
+  CONFIRMED: Int!
+
+  """수거 완료"""
+  PICKED: Int!
+
+  """반품 거부"""
+  REJECTED: Int!
+
+  """반품 요청 (= 수거중)"""
+  REQUESTED: Int!
 
   """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """수거 완료"""
-  picked: Int!
-
   """반품 처리 지연 (지연중인 requested + picked)"""
   process_delayed: Int!
-
-  """반품 거부"""
-  rejected: Int!
-
-  """반품 요청 (= 수거중)"""
-  requested: Int!
 }
 
 input RegisterOrderInput {
@@ -2384,17 +2384,17 @@ type ShipmentHistory {
 
 """배송 연관 객체 분류입니다."""
 enum ShipmentOwnerType {
-  ExchangeRequestPick
-  ExchangeRequestReShip
-  OrderItem
-  RefundRequest
+  EXCHANGE_REQUEST_PICK
+  EXCHANGE_REQUEST_RESHIP
+  ORDER_ITEM
+  REFUND_REQUEST
 }
 
 enum ShipmentStatus {
-  Cancelled
-  Failed
-  Shipped
-  Shipping
+  CANCELLED
+  FAILED
+  SHIPPED
+  SHIPPING
 }
 
 type ShippingAddress {
@@ -2714,17 +2714,17 @@ type User {
 
 """Oauth 제공 서비스입니다."""
 enum UserProviderType {
-  Apple
-  Facebook
-  Kakao
+  APPLE
+  FACEBOOK
+  KAKAO
 }
 
-"""유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""
+"""유저의 역할/권한을 나타냅니다. USER->EDITOR->SELLER->ADMIN 순으로 계층 구조입니다."""
 enum UserRole {
-  Admin
-  Editor
-  Seller
-  User
+  ADMIN
+  EDITOR
+  SELLER
+  USER
 }
 
 type Video {

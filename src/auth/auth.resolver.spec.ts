@@ -114,11 +114,11 @@ describe('AuthResolver', () => {
       const loginByCodeInput: LoginByCodeInput = {
         code: faker.lorem.text(),
         password: faker.lorem.text(),
-        minRole: UserRole.Admin,
+        minRole: UserRole.ADMIN,
       };
       const existingUser = new User({
         code: loginByCodeInput.code,
-        role: UserRole.Admin,
+        role: UserRole.ADMIN,
       });
       const jwtToken: JwtToken = {
         access: JWT_TOKEN,

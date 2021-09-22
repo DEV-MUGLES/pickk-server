@@ -26,7 +26,7 @@ export class SendDelayedRefundRequestsAlimtalkStep extends BaseStep {
       .leftJoinAndSelect('seller.brand', 'brand')
       .where('refundRequest.isProcessDelaying = true')
       .andWhere('refundRequest.status != :status', {
-        status: RefundRequestStatus.Confirmed,
+        status: RefundRequestStatus.CONFIRMED,
       })
       .groupBy('refundRequest.sellerId')
       .getRawMany();

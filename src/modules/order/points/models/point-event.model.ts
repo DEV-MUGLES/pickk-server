@@ -20,10 +20,10 @@ export class PointEvent extends PointEventEntity {
     currentAmount: number
   ): PointEvent {
     const { amount: diff, type } = createEventInput;
-    if (type === PointType.Add && diff < 0) {
+    if (type === PointType.ADD && diff < 0) {
       throw new AddPointTypeAmountInvalidException();
     }
-    if (type === PointType.Sub && diff > 0) {
+    if (type === PointType.SUB && diff > 0) {
       throw new SubPointTypeAmountInvalidException();
     }
 

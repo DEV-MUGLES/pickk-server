@@ -36,7 +36,7 @@ export class CouriersResolver extends BaseResolver {
     return await this.couriersService.list(this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Courier)
   async createCourier(
@@ -45,7 +45,7 @@ export class CouriersResolver extends BaseResolver {
     return await this.couriersService.create(createCourierInput);
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Courier)
   async updateCourier(

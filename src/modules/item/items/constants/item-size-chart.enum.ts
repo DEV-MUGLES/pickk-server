@@ -1,3 +1,4 @@
+/** 값 자체의 형태 때문에 예외적으로 lowerCamelCase를 사용한다. */
 export enum ItemSizeChartColumnName {
   name = 'name',
   totalLength = 'totalLength',

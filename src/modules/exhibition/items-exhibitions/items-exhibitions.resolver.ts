@@ -32,7 +32,7 @@ export class ItemsExhibitionsResolver extends BaseResolver<ItemsExhibitionRelati
     return await this.itemsExhibitionsService.list(this.relations);
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemsExhibition)
   async updateItemsExhibitionItems(

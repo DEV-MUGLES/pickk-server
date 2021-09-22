@@ -1,10 +1,10 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum ShipmentOwnerType {
-  ExchangeRequestPick = 'exchange_request_pick',
-  ExchangeRequestReShip = 'exchange_request_reship',
-  RefundRequest = 'refund_request',
-  OrderItem = 'order_item',
+  EXCHANGE_REQUEST_PICK = 'EXCHANGE_REQUEST_PICK',
+  EXCHANGE_REQUEST_RESHIP = 'EXCHANGE_REQUEST_RESHIP',
+  REFUND_REQUEST = 'REFUND_REQUEST',
+  ORDER_ITEM = 'ORDER_ITEM',
 }
 
 registerEnumType(ShipmentOwnerType, {
@@ -13,10 +13,10 @@ registerEnumType(ShipmentOwnerType, {
 });
 
 export enum ShipmentStatus {
-  Shipping = 'shipping',
-  Shipped = 'shipped',
-  Cancelled = 'cancelled',
-  Failed = 'failed',
+  SHIPPING = 'SHIPPING',
+  SHIPPED = 'SHIPPED',
+  CANCELLED = 'CANCELLED',
+  FAILED = 'FAILED',
 }
 
 registerEnumType(ShipmentStatus, {

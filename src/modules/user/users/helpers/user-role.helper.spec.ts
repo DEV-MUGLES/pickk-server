@@ -4,8 +4,8 @@ import { UserRole } from '../constants';
 
 import { checkIsPermitted } from './user-role.helper';
 
-const { User, Editor, Seller, Admin } = UserRole;
-const roles = [User, Editor, Seller, Admin];
+const { USER, EDITOR, SELLER, ADMIN } = UserRole;
+const roles = [USER, EDITOR, SELLER, ADMIN];
 
 describe('UserRoleHelpers', () => {
   describe('checkIsPermitted', () => {
@@ -47,7 +47,7 @@ describe('UserRoleHelpers', () => {
       const invalidInputs = [
         [null, null],
         [undefined, undefined],
-        [User, null],
+        [USER, null],
       ];
 
       invalidInputs.forEach(([userRole, targetRole]) => {

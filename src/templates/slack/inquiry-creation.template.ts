@@ -20,7 +20,7 @@ export class InquiryCreationTemplate {
     const superUrl = `https://super.admin.pickk.one/manage/question/${id}`;
     const pickkUrl = `https://pickk.one/item/${itemId}/questions/`;
     return {
-      channel: SlackChannelName.InquiryManagement,
+      channel: SlackChannelName.INQUIRY_MANAGEMENT,
       blocks: [
         {
           type: 'section',

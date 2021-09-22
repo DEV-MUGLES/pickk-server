@@ -27,9 +27,9 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
       ],
       where: {
         status: In([
-          OrderItemStatus.Paid,
-          OrderItemStatus.ShipReady,
-          OrderItemStatus.ShipPending,
+          OrderItemStatus.PAID,
+          OrderItemStatus.SHIP_READY,
+          OrderItemStatus.SHIP_PENDING,
         ]),
       },
     });

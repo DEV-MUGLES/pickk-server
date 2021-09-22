@@ -1,8 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum KeywordClassType {
-  Trending = 'trending',
-  Essential = 'essential',
+  TRENDING = 'TRENDING',
+  ESSENTIAL = 'ESSENTIAL',
 }
 
 registerEnumType(KeywordClassType, {

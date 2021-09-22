@@ -106,7 +106,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
       this.ordersService.get(merchantUid, CHECKOUT_ORDER_RELATIONS),
       this.usersService.get(userId),
       this.pointsService.getAvailableAmount(userId),
-      this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [
+      this.couponsService.list({ userId, status: CouponStatus.READY }, null, [
         'spec',
       ]),
     ]);

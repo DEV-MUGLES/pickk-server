@@ -20,7 +20,7 @@ export class ConfirmOrderItemsStep extends BaseStep {
       await this.orderItemsRepository.find({
         select: ['merchantUid'],
         where: {
-          status: OrderItemStatus.Shipped,
+          status: OrderItemStatus.SHIPPED,
           isConfirmed: false,
           claimStatus: IsNull(),
           shippedAt: LessThan(dayjs().add(-14, 'day').toDate()),

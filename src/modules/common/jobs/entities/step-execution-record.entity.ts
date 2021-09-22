@@ -34,7 +34,7 @@ export class StepExecutionRecordEntity
 
   @Column({ length: 50 })
   stepName: string;
-  @Column({ type: 'enum', enum: StepStatus, default: StepStatus.Started })
+  @Column({ type: 'enum', enum: StepStatus, default: StepStatus.STARTED })
   status: string;
 
   @Column({ nullable: true })

@@ -99,7 +99,7 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
   ): Promise<Keyword[]> {
     const ids = await this.likesService.findOwnerIds(
       userId,
-      LikeOwnerType.Keyword,
+      LikeOwnerType.KEYWORD,
       pageInput
     );
 

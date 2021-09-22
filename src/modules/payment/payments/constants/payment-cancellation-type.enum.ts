@@ -1,8 +1,8 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum PaymentCancellationType {
-  Cancel = 'cancel',
-  PatialCancel = 'partial_cancel',
+  CANCEL = 'CANCEL',
+  PARTIAL_CANCEL = 'PARTIAL_CANCEL',
 }
 
 registerEnumType(PaymentCancellationType, {

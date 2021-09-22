@@ -67,7 +67,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Column({
     type: 'enum',
     enum: UserRole,
-    default: UserRole.User,
+    default: UserRole.USER,
   })
   @IsEnum(UserRole)
   @IsOptional()

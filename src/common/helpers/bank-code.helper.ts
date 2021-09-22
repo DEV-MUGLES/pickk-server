@@ -1,6 +1,6 @@
 import { BankCode } from '@common/constants';
 
-export const getBankCodeDisplayName = (code: BankCode): string => {
+export const getBankDisplayName = (code: BankCode): string => {
   const {
     Ibk,
     Kb,

@@ -26,7 +26,7 @@ export class ItemsPackagesResolver extends BaseResolver<ItemsPackageRelationType
     return await this.itemsPackagesService.findByCode(code, this.relations);
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => ItemsPackage)
   async updateItemsPackageItems(

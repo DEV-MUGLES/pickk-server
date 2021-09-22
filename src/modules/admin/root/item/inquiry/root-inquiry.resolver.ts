@@ -39,7 +39,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
 
   @Query(() => Inquiry)
   @UseGuards(JwtVerifyGuard)
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   async rootInquiry(
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
@@ -49,7 +49,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
 
   @Query(() => [Inquiry])
   @UseGuards(JwtVerifyGuard)
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   async rootInquiries(
     @Args('filter', { nullable: true }) filter: InquiryFilter,
     @Args('pageInput', { nullable: true }) pageInput: PageInput,
@@ -64,7 +64,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
 
   @Query(() => InquiriesCountOutput, { description: '[ROOT ADMIN]' })
   @UseGuards(JwtVerifyGuard)
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   async rootInquiriesCount(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('forceUpdate', { nullable: true }) forceUpdate?: boolean
@@ -90,7 +90,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
 
   @Mutation(() => Inquiry)
   @UseGuards(JwtVerifyGuard)
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   async rootAnswerInquiry(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,

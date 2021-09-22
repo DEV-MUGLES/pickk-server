@@ -1,22 +1,22 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum UserRole {
-  User = 'user',
-  Editor = 'editor',
-  Seller = 'seller',
-  Admin = 'admin',
+  USER = 'USER',
+  EDITOR = 'EDITOR',
+  SELLER = 'SELLER',
+  ADMIN = 'ADMIN',
 }
 
 registerEnumType(UserRole, {
   name: 'UserRole',
   description:
-    '유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다.',
+    '유저의 역할/권한을 나타냅니다. USER->EDITOR->SELLER->ADMIN 순으로 계층 구조입니다.',
 });
 
 export enum UserOauthProvider {
-  Facebook = 'facebook',
-  Kakao = 'kakao',
-  Apple = 'apple',
+  FACEBOOK = 'FACEBOOK',
+  KAKAO = 'KAKAO',
+  APPLE = 'APPLE',
 }
 
 registerEnumType(UserOauthProvider, {

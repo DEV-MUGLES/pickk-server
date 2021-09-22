@@ -83,7 +83,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     );
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async crawlItemOptionSet(

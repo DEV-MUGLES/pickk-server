@@ -28,8 +28,8 @@ export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
         .where('exchangeRequest.isProcessDelaying = true')
         .andWhere('exchangeRequest.status IN (:...status)', {
           status: [
-            ExchangeRequestStatus.Picked,
-            ExchangeRequestStatus.Requested,
+            ExchangeRequestStatus.PICKED,
+            ExchangeRequestStatus.REQUESTED,
           ],
         })
         .groupBy('exchangeRequest.sellerId')

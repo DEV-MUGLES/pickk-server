@@ -45,7 +45,7 @@ export class SellersResolver extends BaseResolver {
     );
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Seller)
   async createSeller(
@@ -58,7 +58,7 @@ export class SellersResolver extends BaseResolver {
     );
   }
 
-  @Roles(UserRole.Admin)
+  @Roles(UserRole.ADMIN)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => SaleStrategy, {
     description:

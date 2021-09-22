@@ -49,7 +49,7 @@ export class OrderSheet {
     if (order.userId !== user.id) {
       throw new ForbiddenException('본인의 주문건이 아닙니다.');
     }
-    if (order.status === OrderStatus.Paid) {
+    if (order.status === OrderStatus.PAID) {
       throw new BadRequestException('이미 결제된 주문건입니다.');
     }
 

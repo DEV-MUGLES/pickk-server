@@ -93,7 +93,7 @@ export class CouponsService {
 
     const coupon = new Coupon({
       ...createCouponInput,
-      status: CouponStatus.Ready,
+      status: CouponStatus.READY,
     });
     return await this.couponsRepository.save(coupon);
   }

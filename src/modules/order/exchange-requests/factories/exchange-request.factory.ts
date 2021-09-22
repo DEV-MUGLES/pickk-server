@@ -40,7 +40,7 @@ export class ExchangeRequestFactory {
     const result = new ExchangeRequest({
       ...input,
       merchantUid: orderItem.merchantUid,
-      status: ExchangeRequestStatus.Requested,
+      status: ExchangeRequestStatus.REQUESTED,
       userId,
       sellerId,
       quantity,
@@ -53,7 +53,7 @@ export class ExchangeRequestFactory {
     if (input.shipmentInput) {
       result.pickShipment = ShipmentFactory.create({
         ...input.shipmentInput,
-        ownerType: ShipmentOwnerType.ExchangeRequestPick,
+        ownerType: ShipmentOwnerType.EXCHANGE_REQUEST_PICK,
         ownerPk: null,
       });
     }

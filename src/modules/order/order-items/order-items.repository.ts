@@ -49,16 +49,22 @@ export class OrderItemsRepository extends Repository<OrderItemEntity> {
   }
 
   async countActive(userId: number): Promise<number> {
-    const { VbankReady, Paid, ShipPending, ShipReady, Shipping } =
+    const { VBANK_READY, PAID, SHIP_PENDING, SHIP_READY, SHIPPING } =
       OrderItemStatus;
-    const activeStatuses = [VbankReady, Paid, ShipPending, ShipReady, Shipping];
+    const activeStatuses = [
+      VBANK_READY,
+      PAID,
+      SHIP_PENDING,
+      SHIP_READY,
+      SHIPPING,
+    ];
 
-    const { CancelRequested, ExchangeRequested, RefundRequested } =
+    const { CANCEL_REQUESTED, EXCHANGE_REQUESTED, REFUND_REQUESTED } =
       OrderItemClaimStatus;
     const activeClaimStatuses = [
-      CancelRequested,
-      ExchangeRequested,
-      RefundRequested,
+      CANCEL_REQUESTED,
+      EXCHANGE_REQUESTED,
+      REFUND_REQUESTED,
     ];
 
     return await this.count({

@@ -28,7 +28,7 @@ export class Coupon extends CouponEntity {
       spec: { minimumForUse, brandId, expireAt },
     } = this;
     const { finalPrice, brandId: itemBrandId } = item;
-    if (status !== CouponStatus.Ready || dayjs().isAfter(expireAt)) {
+    if (status !== CouponStatus.READY || dayjs().isAfter(expireAt)) {
       return false;
     }
 
@@ -45,7 +45,7 @@ export class Coupon extends CouponEntity {
     const {
       spec: { type, maximumDiscountPrice, discountAmount },
     } = this;
-    if (type === CouponType.Rate) {
+    if (type === CouponType.RATE) {
       return min(
         maximumDiscountPrice,
         ceil((item.finalPrice * this.spec.discountRate) / 100)

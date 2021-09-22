@@ -35,7 +35,7 @@ export class UpdateDigestLikeCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const likeCount = await this.likesService.count(
-                LikeOwnerType.Digest,
+                LikeOwnerType.DIGEST,
                 id
               );
               const digest = await this.digestsRepository.update(id, {

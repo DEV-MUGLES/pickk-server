@@ -31,7 +31,7 @@ export class OrderItemFactory {
       sellerId: item.brand.seller.id,
       itemId: item.id,
       productId: product.id,
-      status: OrderItemStatus.Pending,
+      status: OrderItemStatus.PENDING,
       quantity,
       itemFinalPrice: item.finalPrice + priceVariant,
       brandNameKor: item.brand.nameKor,

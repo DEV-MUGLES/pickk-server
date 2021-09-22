@@ -17,9 +17,9 @@ import {
   OrderItemExchangedStrategy,
 } from '../strategies';
 
-const { Failed, VbankReady, VbankDodged, Paid, ShipReady, Shipping } =
+const { FAILED, VBANK_READY, VBANK_DODGED, PAID, SHIP_READY, SHIPPING } =
   OrderItemStatus;
-const { Cancelled, RefundRequested, Refunded, ExchangeRequested, Exchanged } =
+const { CANCELLED, REFUND_REQUESTED, REFUNDED, EXCHANGE_REQUESTED, EXCHANGED } =
   OrderItemClaimStatus;
 
 export class OrderItemMarkStrategyFactory {
@@ -28,29 +28,29 @@ export class OrderItemMarkStrategyFactory {
     orderItem: OrderItem
   ): OrderItemMarkStrategy {
     switch (status) {
-      case Failed:
+      case FAILED:
         return new OrderItemFailedStrategy(orderItem);
-      case VbankReady:
+      case VBANK_READY:
         return new OrderItemVbankReadyStrategy(orderItem);
-      case VbankDodged:
+      case VBANK_DODGED:
         return new OrderItemVbankDodgedStrategy(orderItem);
-      case Paid:
+      case PAID:
         return new OrderItemPaidStrategy(orderItem);
 
-      case ShipReady:
+      case SHIP_READY:
         return new OrderItemShipReadyStrategy(orderItem);
-      case Shipping:
+      case SHIPPING:
         return new OrderItemShippingStrategy(orderItem);
 
-      case Cancelled:
+      case CANCELLED:
         return new OrderItemCancelledStrategy(orderItem);
-      case RefundRequested:
+      case REFUND_REQUESTED:
         return new OrderItemRefundRequestedStrategy(orderItem);
-      case Refunded:
+      case REFUNDED:
         return new OrderItemRefundedStrategy(orderItem);
-      case ExchangeRequested:
+      case EXCHANGE_REQUESTED:
         return new OrderItemExchangeRequestedStrategy(orderItem);
-      case Exchanged:
+      case EXCHANGED:
         return new OrderItemExchangedStrategy(orderItem);
 
       default:

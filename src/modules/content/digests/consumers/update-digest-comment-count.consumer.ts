@@ -35,7 +35,7 @@ export class UpdateDigestCommentCountConsumer extends BaseConsumer {
           new Promise(async (resolve, reject) => {
             try {
               const commentCount = await this.commentsService.reloadCount(
-                CommentOwnerType.Digest,
+                CommentOwnerType.DIGEST,
                 id
               );
               const digest = await this.digestsRepository.update(id, {

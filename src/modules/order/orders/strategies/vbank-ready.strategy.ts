@@ -4,11 +4,11 @@ import { OrderStatus } from '../constants';
 import { OrderProcessStrategy } from './base.strategy';
 
 export class OrderVbankReadyStrategy extends OrderProcessStrategy {
-  status = OrderStatus.VbankReady;
+  status = OrderStatus.VBANK_READY;
   statusChangedField = 'vbankReadyAt' as const;
 
   validate() {
-    if (this.order.status !== OrderStatus.Pending) {
+    if (this.order.status !== OrderStatus.PENDING) {
       throw new BadRequestException('결제 완료 처리할 수 없습니다.');
     }
   }

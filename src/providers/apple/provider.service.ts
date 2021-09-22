@@ -27,7 +27,7 @@ export class AppleProviderService {
 
   async auth(code: string, clientType: AppleClientType) {
     const clientId =
-      clientType === AppleClientType.App
+      clientType === AppleClientType.APP
         ? this.configService.appBundleId
         : this.configService.webBundleId;
 

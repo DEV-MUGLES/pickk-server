@@ -18,7 +18,7 @@ export class ItemReportTemplate {
     const { id, name, brand, originalPrice, sellPrice, urls } = item;
 
     return {
-      channel: SlackChannelName.ItemManagement,
+      channel: SlackChannelName.ITEM_MANAGEMENT,
       blocks: [
         {
           type: 'section',

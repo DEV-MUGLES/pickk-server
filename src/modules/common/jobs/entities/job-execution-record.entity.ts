@@ -58,7 +58,7 @@ export class JobExecutionRecordEntity
   })
   stepExecutionRecords: StepExecutionRecord[];
 
-  @Column({ type: 'enum', enum: JobStatus, default: JobStatus.Started })
+  @Column({ type: 'enum', enum: JobStatus, default: JobStatus.STARTED })
   status: JobStatus;
   @Column({ nullable: true })
   @IsDate()
