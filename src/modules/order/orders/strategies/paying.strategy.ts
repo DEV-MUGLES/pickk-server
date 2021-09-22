@@ -8,8 +8,8 @@ export class OrderPayingStrategy extends OrderProcessStrategy {
   statusChangedField = 'payingAt' as const;
 
   validate() {
-    const { Pending, Failed } = OrderStatus;
-    if (![Pending, Failed].includes(this.order.status)) {
+    const { Pending, Paying, Failed } = OrderStatus;
+    if (![Pending, Paying, Failed].includes(this.order.status)) {
       throw new BadRequestException('이미 완료된 주문입니다.');
     }
   }
