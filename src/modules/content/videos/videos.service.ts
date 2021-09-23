@@ -7,8 +7,8 @@ import { PageInput } from '@common/dtos';
 import {
   bulkEnrichUserIsMe,
   enrichIsMine,
-  findModelById,
   findModelsByIds,
+  getRemovedDigests,
   parseFilter,
 } from '@common/helpers';
 
@@ -141,7 +141,7 @@ export class VideosService {
         : [];
 
     const video = await this.get(id, ['digests', 'digests.itemPropertyValues']);
-    const { digests: videoDigests } = video;
+    const original = { ...video };
 
     if (input.digests) {
       video.digests = input.digests.map((digest) =>
@@ -158,7 +158,7 @@ export class VideosService {
       );
     }
 
-    const updatedVideo = await this.videosRepository.save(
+    const updated = await this.videosRepository.save(
       new Video({
         ...video,
         ...input,
@@ -166,10 +166,10 @@ export class VideosService {
       })
     );
     await this.digestsProducer.removeDigests(
-      videoDigests.filter((v) => !findModelById(v.id, updatedVideo.digests))
+      getRemovedDigests(original, updated)
     );
-    await this.digestsProducer.updateItemDigestStatistics(updatedVideo.digests);
-    return updatedVideo;
+    await this.digestsProducer.updateItemDigestStatistics(updated.digests);
+    return updated;
   }
 
   async remove(id: number): Promise<void> {
@@ -177,6 +177,5 @@ export class VideosService {
     await this.videosRepository.remove(video);
     // 각 리뷰된 아이템들의 리뷰 현황 업데이트
     await this.digestsProducer.updateItemDigestStatistics(video.digests);
-    // @TODO: 이미지들 S3에서 삭제,
   }
 }
