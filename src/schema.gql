@@ -1311,7 +1311,7 @@ type Mutation {
   bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
-  cancelMeSellerOrderItem(merchantUid: String!): OrderItem!
+  cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeOrder(
     """가상계좌 주문건인 경우에만 필요합니다."""

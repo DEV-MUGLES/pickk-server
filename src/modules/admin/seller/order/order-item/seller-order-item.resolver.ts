@@ -21,6 +21,7 @@ import {
 import { OrderItemFilter, ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsService } from '@order/order-items/order-items.service';
+import { OrdersProducer } from '@order/orders/producers';
 import { OrdersService } from '@order/orders/orders.service';
 
 import { BulkShipOrderItemInput, OrderItemsCountOutput } from './dtos';
@@ -34,11 +35,10 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   constructor(
     @Inject(OrderItemsService)
     private readonly orderItemsService: OrderItemsService,
-    @Inject(OrdersService)
     private readonly ordersService: OrdersService,
-    @Inject(SellerOrderItemService)
     private readonly sellerOrderItemService: SellerOrderItemService,
-    @Inject(CacheService) private cacheService: CacheService
+    private cacheService: CacheService,
+    private readonly ordersProducer: OrdersProducer
   ) {
     super();
   }
@@ -175,6 +175,7 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   async cancelMeSellerOrderItem(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('merchantUid') merchantUid: string,
+    @Args('restock') restock: boolean,
     @Info() info?: GraphQLResolveInfo
   ): Promise<OrderItem> {
     const orderItem = await this.orderItemsService.get(merchantUid);
@@ -182,10 +183,17 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       throw new ForbiddenException('자신의 주문 상품이 아닙니다.');
     }
 
-    await this.ordersService.cancel(orderItem.orderMerchantUid, {
-      reason: '담당자 취소 처리',
-      orderItemMerchantUids: [merchantUid],
-    });
+    const canceledOrder = await this.ordersService.cancel(
+      orderItem.orderMerchantUid,
+      {
+        reason: '담당자 취소 처리',
+        orderItemMerchantUids: [merchantUid],
+      }
+    );
+    if (restock) {
+      await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
+    }
+    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(canceledOrder);
 
     return await this.orderItemsService.get(
       merchantUid,

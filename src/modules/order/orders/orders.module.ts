@@ -70,6 +70,6 @@ import { OrdersService } from './orders.service';
     OrdersProducer,
     ...OrdersConsumers,
   ],
-  exports: [OrdersService],
+  exports: [OrdersService, OrdersProducer],
 })
 export class OrdersModule {}
