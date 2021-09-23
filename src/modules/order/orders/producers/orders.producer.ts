@@ -31,12 +31,18 @@ export class OrdersProducer {
     );
   }
 
-  async sendCancelOrderApprovedAlimtalk(canceledOrder: Order) {
+  async sendCancelOrderApprovedAlimtalk(
+    orderMerchantUid: string,
+    orderItemMerchantUids: string[]
+  ) {
     await this.sqsService.send<SendCancelOrderApprovedAlimtalkMto>(
       SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
       {
         id: getRandomUuid(),
-        body: { canceledOrder },
+        body: {
+          orderMerchantUid,
+          orderItemMerchantUids,
+        },
       }
     );
   }

@@ -193,7 +193,10 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     if (restock) {
       await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
     }
-    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(canceledOrder);
+    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(
+      orderItem.orderMerchantUid,
+      [merchantUid]
+    );
 
     return await this.orderItemsService.get(
       merchantUid,

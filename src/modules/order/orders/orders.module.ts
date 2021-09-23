@@ -1,4 +1,4 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -63,6 +63,7 @@ import { OrdersService } from './orders.service';
     ),
   ],
   providers: [
+    Logger,
     OrdersCreateResolver,
     OrdersProcessResolver,
     OrdersResolver,

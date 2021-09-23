@@ -64,7 +64,10 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
 
     const canceledOrder = await this.ordersService.cancel(merchantUid, input);
     await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
-    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(canceledOrder);
+    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(
+      merchantUid,
+      input.orderItemMerchantUids
+    );
     return await this.ordersService.get(
       merchantUid,
       this.getRelationsFromInfo(info)
