@@ -15,14 +15,18 @@ import {
   UpdateItemDigestStatisticsMto,
 } from '@queue/mtos';
 
+import { IDigest } from '../interfaces';
 import { Digest } from '../models';
 
 @Injectable()
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async updateItemDigestStatistics(itemIdOrIds: number[] | number) {
-    const itemIds = Array.isArray(itemIdOrIds) ? itemIdOrIds : [itemIdOrIds];
+  async updateItemDigestStatistics(digests: Digest[] | IDigest[]) {
+    if (digests.length === 0) {
+      return;
+    }
+    const itemIds = digests.map(({ itemId }) => itemId);
     const messages = Array.from(new Set(itemIds)).map((itemId) => ({
       id: getRandomUuid(),
       body: { itemId },
@@ -54,7 +58,7 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigests(digests: Digest[]) {
+  async removeDigests(digests: Digest[] | IDigest[]) {
     if (digests.length === 0) {
       return;
     }

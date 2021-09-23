@@ -26,8 +26,6 @@ export class RemoveDigestsConsumer extends BaseConsumer {
     const digests = await this.digestsRepository.findByIds(ids);
 
     await this.digestsRepository.remove(digests);
-    await this.digestsProducer.updateItemDigestStatistics(
-      digests.map(({ itemId }) => itemId)
-    );
+    await this.digestsProducer.updateItemDigestStatistics(digests);
   }
 }

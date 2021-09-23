@@ -121,11 +121,10 @@ export class VideosService {
       itemPropertyValueIds
     );
 
-    const video = VideoFactory.from(userId, input, itemPropertyValues);
-    await this.videosRepository.save(video);
-    await this.digestsProducer.updateItemDigestStatistics(
-      input.digests.map((v) => v.itemId)
+    const video = await this.videosRepository.save(
+      VideoFactory.from(userId, input, itemPropertyValues)
     );
+    await this.digestsProducer.updateItemDigestStatistics(video.digests);
 
     return video;
   }
@@ -169,9 +168,7 @@ export class VideosService {
     await this.digestsProducer.removeDigests(
       videoDigests.filter((v) => !findModelById(v.id, updatedVideo.digests))
     );
-    await this.digestsProducer.updateItemDigestStatistics(
-      updatedVideo.digests.map(({ itemId }) => itemId)
-    );
+    await this.digestsProducer.updateItemDigestStatistics(updatedVideo.digests);
     return updatedVideo;
   }
 
@@ -179,9 +176,7 @@ export class VideosService {
     const video = await this.get(id, ['digests']);
     await this.videosRepository.remove(video);
     // 각 리뷰된 아이템들의 리뷰 현황 업데이트
-    await this.digestsProducer.updateItemDigestStatistics(
-      video.digests.map((v) => v.itemId)
-    );
+    await this.digestsProducer.updateItemDigestStatistics(video.digests);
     // @TODO: 이미지들 S3에서 삭제,
   }
 }
