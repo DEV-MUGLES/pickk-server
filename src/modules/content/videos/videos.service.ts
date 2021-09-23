@@ -1,6 +1,7 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { In } from 'typeorm';
 
 import { PageInput } from '@common/dtos';
 import {
@@ -12,7 +13,6 @@ import {
 } from '@common/helpers';
 
 import { DigestFactory } from '@content/digests/factories';
-import { Digest } from '@content/digests/models';
 import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -25,7 +25,6 @@ import { VideoFactory } from './factories';
 import { Video } from './models';
 
 import { VideosRepository } from './videos.repository';
-import { In } from 'typeorm';
 
 @Injectable()
 export class VideosService {
@@ -167,25 +166,13 @@ export class VideosService {
         digests: video.digests,
       })
     );
-    await this.removeDeletedDigests(videoDigests, updatedVideo.digests);
+    await this.digestsProducer.removeDigests(
+      videoDigests.filter((v) => !findModelById(v.id, updatedVideo.digests))
+    );
     await this.digestsProducer.updateItemDigestStatistics(
       updatedVideo.digests.map(({ itemId }) => itemId)
     );
     return updatedVideo;
-  }
-
-  private async removeDeletedDigests(
-    digests: Digest[],
-    updatedDigests: Digest[]
-  ) {
-    if (updatedDigests === undefined) {
-      return;
-    }
-    await this.digestsProducer.removeDigests(
-      digests
-        .filter((v) => !findModelById(v.id, updatedDigests))
-        .map((v) => v.id)
-    );
   }
 
   async remove(id: number): Promise<void> {

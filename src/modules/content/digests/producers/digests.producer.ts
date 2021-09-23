@@ -15,6 +15,8 @@ import {
   UpdateItemDigestStatisticsMto,
 } from '@queue/mtos';
 
+import { Digest } from '../models';
+
 @Injectable()
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
@@ -52,11 +54,14 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigests(ids: number[]) {
+  async removeDigests(digests: Digest[]) {
+    if (digests.length === 0) {
+      return;
+    }
     await this.sqsService.send<RemoveDigestsMto>(REMOVE_DIGESTS_QUEUE, {
       id: getRandomUuid(),
       body: {
-        ids,
+        ids: digests.map((v) => v.id),
       },
     });
   }
