@@ -2,7 +2,7 @@ import { AlimtalkMessageRequest } from 'nest-sens';
 
 import { Order } from '@order/orders/models';
 
-import { addCommas } from '@common/helpers';
+import { addCommas, partialEncrypt } from '@common/helpers';
 
 import { getPurchaseItemInfo } from '../../helpers';
 
@@ -23,7 +23,7 @@ export class CompleteOrderTemplate {
 
   static toContent(order: Order) {
     const { buyer, merchantUid, totalPayAmount, receiver, orderItems } = order;
-    return `${buyer.name}님의 주문이 완료되었습니다.
+    return `${partialEncrypt(buyer.name, 1)}님의 주문이 완료되었습니다.
   
   ▶ 주문번호 : ${merchantUid}
   ▶ 상품명 : ${getPurchaseItemInfo(orderItems)}
