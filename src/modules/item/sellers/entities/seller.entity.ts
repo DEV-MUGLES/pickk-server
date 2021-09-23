@@ -103,7 +103,7 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @Column({ nullable: true })
   operationTimeMessage: string;
 
-  @OneToOne('BrandEntity', { onDelete: 'SET NULL' })
+  @OneToOne('UserEntity', { onDelete: 'SET NULL' })
   @JoinColumn()
   user: IUser;
   @Field(() => Int, { nullable: true })

@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1632335941033 implements MigrationInterface {
-  name = 'Init1632335941033';
+export class Init1632364162540 implements MigrationInterface {
+  name = 'Init1632364162540';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -278,7 +278,7 @@ export class Init1632335941033 implements MigrationInterface {
       'ALTER TABLE `item_property_value` ADD CONSTRAINT `FK_6c99732cbdc0ece066e64eb4c7c` FOREIGN KEY (`propertyId`) REFERENCES `item_property`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
     );
     await queryRunner.query(
-      'ALTER TABLE `seller` ADD CONSTRAINT `FK_af49645e98a3d39bd4f3591b334` FOREIGN KEY (`userId`) REFERENCES `brand`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
+      'ALTER TABLE `seller` ADD CONSTRAINT `FK_af49645e98a3d39bd4f3591b334` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
     );
     await queryRunner.query(
       'ALTER TABLE `seller` ADD CONSTRAINT `FK_e2dea4bd18238e9ab6bd645c9e3` FOREIGN KEY (`brandId`) REFERENCES `brand`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
