@@ -57,11 +57,11 @@ export const START_ORDER_RELATIONS: Array<OrderRelationType> = [
 
 export const CANCEL_ORDER_RELATIONS: Array<OrderRelationType> = [
   'orderItems',
+  'orderItems.seller',
+  'orderItems.seller.brand',
+  'orderItems.seller.shippingPolicy',
   'orderItems.product',
   'orderItems.product.item',
-  'orderItems.product.item.brand',
-  'orderItems.product.item.brand.seller',
-  'orderItems.product.item.brand.seller.shippingPolicy',
   'vbankReceipt',
   'receiver',
   'buyer',
