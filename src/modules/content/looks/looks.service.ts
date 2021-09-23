@@ -170,9 +170,8 @@ export class LooksService {
   }
 
   async remove(id: number): Promise<void> {
-    const look = await this.get(id, ['digests']);
+    const look = await this.get(id, ['digests', 'images']);
     await this.looksRepository.remove(look);
-    // look의 digest는 모두 꿀템PICK이 아니기 때문에 digestsProducer.updateItemDigestStatistics는 필요 없다.
-    // @TODO: 이미지들 S3에서 삭제
+    await this.looksProducer.removeLookImages(look.images);
   }
 }

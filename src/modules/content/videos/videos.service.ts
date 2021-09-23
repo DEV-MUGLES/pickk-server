@@ -175,7 +175,6 @@ export class VideosService {
   async remove(id: number): Promise<void> {
     const video = await this.get(id, ['digests']);
     await this.videosRepository.remove(video);
-    // 각 리뷰된 아이템들의 리뷰 현황 업데이트
     await this.digestsProducer.updateItemDigestStatistics(video.digests);
   }
 }
