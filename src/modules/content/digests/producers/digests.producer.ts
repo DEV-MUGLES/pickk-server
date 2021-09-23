@@ -15,14 +15,13 @@ import {
   UpdateItemDigestStatisticsMto,
 } from '@queue/mtos';
 
-import { IDigest } from '../interfaces';
 import { Digest, DigestImage } from '../models';
 
 @Injectable()
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async updateItemDigestStatistics(digests: IDigest[]) {
+  async updateItemDigestStatistics(digests: Digest[]) {
     if (digests.length === 0) {
       return;
     }

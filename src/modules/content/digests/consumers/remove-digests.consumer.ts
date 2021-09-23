@@ -23,7 +23,9 @@ export class RemoveDigestsConsumer extends BaseConsumer {
   @SqsMessageHandler()
   async remove(message: AWS.SQS.Message) {
     const { ids }: RemoveDigestsMto = JSON.parse(message.Body);
-    const digests = await this.digestsRepository.findByIds(ids);
+    const digests = this.digestsRepository.entityToModelMany(
+      await this.digestsRepository.findByIds(ids)
+    );
 
     await this.digestsRepository.remove(digests);
     await this.digestsProducer.updateItemDigestStatistics(digests);
