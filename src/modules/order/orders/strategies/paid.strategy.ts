@@ -20,9 +20,9 @@ export class OrderPaidStrategy extends OrderProcessStrategy {
     }
     if (
       this.order.payMethod !== PayMethod.Vbank &&
-      this.order.status === OrderStatus.Pending
+      this.order.status === OrderStatus.Paying
     ) {
-      // 가상계좌건이 아니고 결제대기 상태 OK
+      // 가상계좌건이 아니고 결제중인 상태 OK
       return;
     }
     throw new BadRequestException('결제 완료 처리할 수 없습니다.');
