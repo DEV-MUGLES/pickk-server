@@ -90,10 +90,10 @@ export class PaymentsService {
 
   async cancel(merchantUid: string, input: CancelPaymentInput) {
     const payment = await this.get(merchantUid, ['cancellations']);
-    const cancellation = payment.cancel(input);
+    payment.cancel(input);
 
-    await getManager().transaction(async (manager) => {
-      await manager.save(cancellation);
+    await getManager().transaction(async () => {
+      await this.paymentsRepository.save(payment);
 
       await this.inicisService.cancel({
         ...input,
