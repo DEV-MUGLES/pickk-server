@@ -15,12 +15,17 @@ import {
   UpdateItemDigestStatisticsMto,
 } from '@queue/mtos';
 
+import { Digest, DigestImage } from '../models';
+
 @Injectable()
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async updateItemDigestStatistics(itemIdOrIds: number[] | number) {
-    const itemIds = Array.isArray(itemIdOrIds) ? itemIdOrIds : [itemIdOrIds];
+  async updateItemDigestStatistics(digests: Digest[]) {
+    if (digests.length === 0) {
+      return;
+    }
+    const itemIds = digests.map(({ itemId }) => itemId);
     const messages = Array.from(new Set(itemIds)).map((itemId) => ({
       id: getRandomUuid(),
       body: { itemId },
@@ -32,12 +37,15 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigestImages(keys: string[]) {
+  async removeDigestImages(images: DigestImage[]) {
+    if (images.length === 0) {
+      return;
+    }
     await this.sqsService.send<RemoveDigestImagesMto>(
       REMOVE_DIGEST_IMAGES_QUEUE,
       {
         id: getRandomUuid(),
-        body: { keys },
+        body: { keys: images.map((v) => v.key) },
       }
     );
   }
@@ -52,11 +60,14 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigests(ids: number[]) {
+  async removeDigests(digests: Digest[]) {
+    if (digests.length === 0) {
+      return;
+    }
     await this.sqsService.send<RemoveDigestsMto>(REMOVE_DIGESTS_QUEUE, {
       id: getRandomUuid(),
       body: {
-        ids,
+        ids: digests.map((v) => v.id),
       },
     });
   }

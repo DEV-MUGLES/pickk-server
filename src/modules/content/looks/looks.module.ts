@@ -6,9 +6,11 @@ import {
   UPDATE_LOOK_LIKE_COUNT_QUEUE,
   UPDATE_LOOK_COMMENT_COUNT_QUEUE,
   SEND_LOOK_CREATION_SLACK_MESSAGE_QUEUE,
+  REMOVE_LOOK_IMAGES_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
+import { ImagesModule } from '@mcommon/images/images.module';
 import { CommentsModule } from '@content/comments/comments.module';
 import { CommentsRepository } from '@content/comments/comments.repository';
 import { DigestsModule } from '@content/digests/digests.module';
@@ -19,13 +21,17 @@ import { FollowsModule } from '@user/follows/follows.module';
 import { LooksConsumers } from './consumers';
 import { LooksProducer } from './producers';
 
-import { LooksRepository } from './looks.repository';
+import { LookImagesRepository, LooksRepository } from './looks.repository';
 import { LooksResolver } from './looks.resolver';
 import { LooksService } from './looks.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([LooksRepository, CommentsRepository]),
+    TypeOrmModule.forFeature([
+      LooksRepository,
+      CommentsRepository,
+      LookImagesRepository,
+    ]),
     SqsModule.registerQueue(
       {
         name: UPDATE_LOOK_LIKE_COUNT_QUEUE,
@@ -39,6 +45,9 @@ import { LooksService } from './looks.service';
       },
       {
         name: SEND_LOOK_CREATION_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: REMOVE_LOOK_IMAGES_QUEUE,
       }
     ),
     LikesModule,
@@ -47,6 +56,7 @@ import { LooksService } from './looks.service';
     CommentsModule,
     StyleTagsModule,
     DigestsModule,
+    ImagesModule,
   ],
   providers: [
     Logger,

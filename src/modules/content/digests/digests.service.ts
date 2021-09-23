@@ -4,7 +4,12 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
+import {
+  bulkEnrichUserIsMe,
+  enrichIsMine,
+  getRemovedImages,
+  parseFilter,
+} from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
@@ -14,7 +19,7 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
-import { Digest, DigestImage } from './models';
+import { Digest } from './models';
 import { DigestFactory, DigestImageFactory } from './factories';
 import { DigestsProducer } from './producers';
 
@@ -156,9 +161,10 @@ export class DigestsService {
   }
 
   async remove(id: number): Promise<void> {
-    const digest = await this.get(id);
+    const digest = await this.get(id, ['images']);
     await this.digestsRepository.remove(digest);
-    await this.digestsProducer.updateItemDigestStatistics(digest.itemId);
+    await this.digestsProducer.updateItemDigestStatistics([digest]);
+    await this.digestsProducer.removeDigestImages(digest.images);
   }
 
   async create(userId: number, input: CreateDigestInput): Promise<Digest> {
@@ -171,13 +177,13 @@ export class DigestsService {
         input.imageUrls
       )
     );
-    await this.digestsProducer.updateItemDigestStatistics(digest.itemId);
+    await this.digestsProducer.updateItemDigestStatistics([digest]);
     return digest;
   }
 
   async update(id: number, input: UpdateDigestInput): Promise<Digest> {
     const digest = await this.get(id, ['images', 'itemPropertyValues']);
-    const { images: digestImages } = digest;
+    const original = { ...digest };
 
     if (input.itemPropertyValueIds) {
       digest.itemPropertyValues =
@@ -191,23 +197,17 @@ export class DigestsService {
       );
     }
 
-    const updatedDigest = await this.digestsRepository.save(
+    const updated = await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
       })
     );
-    await this.removeDeletedDigestImages(digestImages, updatedDigest.images);
-    return updatedDigest;
-  }
 
-  private async removeDeletedDigestImages(
-    images: DigestImage[],
-    updatedImages: DigestImage[]
-  ) {
-    const deletedImageKeys = images
-      .filter((v) => !updatedImages.find(({ key }) => v.key === key))
-      .map((v) => v.key);
-    await this.digestsProducer.removeDigestImages(deletedImageKeys);
+    await this.digestsProducer.removeDigestImages(
+      getRemovedImages(original, updated)
+    );
+
+    return updated;
   }
 }

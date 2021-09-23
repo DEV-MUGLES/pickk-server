@@ -1,18 +1,18 @@
 import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import { In } from 'typeorm';
 
 import { PageInput } from '@common/dtos';
 import {
   bulkEnrichUserIsMe,
   enrichIsMine,
-  findModelById,
   findModelsByIds,
+  getRemovedDigests,
   parseFilter,
 } from '@common/helpers';
 
 import { DigestFactory } from '@content/digests/factories';
-import { Digest } from '@content/digests/models';
 import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -25,7 +25,6 @@ import { VideoFactory } from './factories';
 import { Video } from './models';
 
 import { VideosRepository } from './videos.repository';
-import { In } from 'typeorm';
 
 @Injectable()
 export class VideosService {
@@ -122,11 +121,10 @@ export class VideosService {
       itemPropertyValueIds
     );
 
-    const video = VideoFactory.from(userId, input, itemPropertyValues);
-    await this.videosRepository.save(video);
-    await this.digestsProducer.updateItemDigestStatistics(
-      input.digests.map((v) => v.itemId)
+    const video = await this.videosRepository.save(
+      VideoFactory.from(userId, input, itemPropertyValues)
     );
+    await this.digestsProducer.updateItemDigestStatistics(video.digests);
 
     return video;
   }
@@ -143,7 +141,7 @@ export class VideosService {
         : [];
 
     const video = await this.get(id, ['digests', 'digests.itemPropertyValues']);
-    const { digests: videoDigests } = video;
+    const original = { ...video };
 
     if (input.digests) {
       video.digests = input.digests.map((digest) =>
@@ -160,41 +158,23 @@ export class VideosService {
       );
     }
 
-    const updatedVideo = await this.videosRepository.save(
+    const updated = await this.videosRepository.save(
       new Video({
         ...video,
         ...input,
         digests: video.digests,
       })
     );
-    await this.removeDeletedDigests(videoDigests, updatedVideo.digests);
-    await this.digestsProducer.updateItemDigestStatistics(
-      updatedVideo.digests.map(({ itemId }) => itemId)
-    );
-    return updatedVideo;
-  }
-
-  private async removeDeletedDigests(
-    digests: Digest[],
-    updatedDigests: Digest[]
-  ) {
-    if (updatedDigests === undefined) {
-      return;
-    }
     await this.digestsProducer.removeDigests(
-      digests
-        .filter((v) => !findModelById(v.id, updatedDigests))
-        .map((v) => v.id)
+      getRemovedDigests(original, updated)
     );
+    await this.digestsProducer.updateItemDigestStatistics(updated.digests);
+    return updated;
   }
 
   async remove(id: number): Promise<void> {
     const video = await this.get(id, ['digests']);
     await this.videosRepository.remove(video);
-    // 각 리뷰된 아이템들의 리뷰 현황 업데이트
-    await this.digestsProducer.updateItemDigestStatistics(
-      video.digests.map((v) => v.itemId)
-    );
-    // @TODO: 이미지들 S3에서 삭제,
+    await this.digestsProducer.updateItemDigestStatistics(video.digests);
   }
 }

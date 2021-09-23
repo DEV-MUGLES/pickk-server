@@ -7,13 +7,13 @@ import { PageInput } from '@common/dtos';
 import {
   enrichIsMine,
   enrichUserIsMe,
-  findModelById,
+  getRemovedDigests,
+  getRemovedImages,
   parseFilter,
 } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { DigestFactory } from '@content/digests/factories';
-import { Digest } from '@content/digests/models';
 import { DigestsProducer } from '@content/digests/producers';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
@@ -25,6 +25,7 @@ import { CreateLookInput, LookFilter, UpdateLookInput } from './dtos';
 import { LookEntity } from './entities';
 import { LookFactory, LookImageFactory } from './factories';
 import { Look } from './models';
+import { LooksProducer } from './producers';
 
 import { LooksRepository } from './looks.repository';
 
@@ -37,7 +38,8 @@ export class LooksService {
     private readonly followsService: FollowsService,
     private readonly cacheService: CacheService,
     private readonly styleTagsService: StyleTagsService,
-    private readonly digestsProducer: DigestsProducer
+    private readonly digestsProducer: DigestsProducer,
+    private readonly looksProducer: LooksProducer
   ) {}
 
   async checkBelongsTo(id: number, userId: number): Promise<void> {
@@ -128,10 +130,9 @@ export class LooksService {
     return await this.looksRepository.save(look);
   }
 
-  // TODO: QUEUE 삭제된 look_image 삭제하는 작업 추가
   async update(id: number, input: UpdateLookInput): Promise<Look> {
     const look = await this.get(id, ['digests', 'images', 'styleTags']);
-    const { digests: lookDigests } = look;
+    const original = { ...look };
 
     if (input.digests) {
       look.digests = input.digests.map((digest) =>
@@ -150,36 +151,27 @@ export class LooksService {
       );
     }
 
-    const updatedLook = await this.looksRepository.save(
+    const updated = await this.looksRepository.save(
       new Look({
         ...look,
         ...input,
         digests: look.digests,
       })
     );
-    await this.removeDeletedDigests(lookDigests, updatedLook.digests);
 
-    return updatedLook;
-  }
-
-  private async removeDeletedDigests(
-    digests: Digest[],
-    updatedDigests: Digest[]
-  ) {
-    if (updatedDigests === undefined) {
-      return;
-    }
     await this.digestsProducer.removeDigests(
-      digests
-        .filter((v) => !findModelById(v.id, updatedDigests))
-        .map((v) => v.id)
+      getRemovedDigests(original, updated)
     );
+    await this.looksProducer.removeLookImages(
+      getRemovedImages(original, updated)
+    );
+
+    return updated;
   }
 
   async remove(id: number): Promise<void> {
-    const look = await this.get(id, ['digests']);
+    const look = await this.get(id, ['digests', 'images']);
     await this.looksRepository.remove(look);
-    // look의 digest는 모두 꿀템PICK이 아니기 때문에 digestsProducer.updateItemDigestStatistics는 필요 없다.
-    // @TODO: 이미지들 S3에서 삭제
+    await this.looksProducer.removeLookImages(look.images);
   }
 }

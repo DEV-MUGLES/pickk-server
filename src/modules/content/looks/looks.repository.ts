@@ -1,4 +1,4 @@
-import { EntityRepository } from 'typeorm';
+import { EntityRepository, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
@@ -6,7 +6,7 @@ import { pageQuery } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
 import { LookFilter } from './dtos';
-import { LookEntity } from './entities';
+import { LookEntity, LookImageEntity } from './entities';
 import {
   lookItemIdQuery,
   lookStyleTagsQuery,
@@ -59,3 +59,6 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     return raws.map((raw) => raw.id);
   }
 }
+
+@EntityRepository(LookImageEntity)
+export class LookImagesRepository extends Repository<LookImageEntity> {}
