@@ -2,6 +2,7 @@ export * from './array.helpers';
 export * from './bank-code.helper';
 export * from './enrich.helpers';
 export * from './filter.helpers';
+export * from './get-removed.helpers';
 export * from './image-s3-key.helpers';
 export * from './model.helpers';
 export * from './object.helpers';

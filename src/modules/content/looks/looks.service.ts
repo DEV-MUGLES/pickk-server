@@ -7,7 +7,8 @@ import { PageInput } from '@common/dtos';
 import {
   enrichIsMine,
   enrichUserIsMe,
-  findModelById,
+  getRemovedDigests,
+  getRemovedImages,
   parseFilter,
 } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
@@ -131,7 +132,7 @@ export class LooksService {
 
   async update(id: number, input: UpdateLookInput): Promise<Look> {
     const look = await this.get(id, ['digests', 'images', 'styleTags']);
-    const { digests: lookDigests, images: lookImages } = look;
+    const original = { ...look };
 
     if (input.digests) {
       look.digests = input.digests.map((digest) =>
@@ -150,22 +151,22 @@ export class LooksService {
       );
     }
 
-    const updatedLook = await this.looksRepository.save(
+    const updated = await this.looksRepository.save(
       new Look({
         ...look,
         ...input,
         digests: look.digests,
       })
     );
+
     await this.digestsProducer.removeDigests(
-      lookDigests.filter((v) => !findModelById(v.id, updatedLook.digests))
+      getRemovedDigests(original, updated)
     );
     await this.looksProducer.removeLookImages(
-      lookImages.filter(
-        (v) => !updatedLook.images.find(({ key }) => v.key === key)
-      )
+      getRemovedImages(original, updated)
     );
-    return updatedLook;
+
+    return updated;
   }
 
   async remove(id: number): Promise<void> {

@@ -4,7 +4,12 @@ import { FindManyOptions, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
-import { bulkEnrichUserIsMe, enrichIsMine, parseFilter } from '@common/helpers';
+import {
+  bulkEnrichUserIsMe,
+  enrichIsMine,
+  getRemovedImages,
+  parseFilter,
+} from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { LikeOwnerType } from '@content/likes/constants';
@@ -177,7 +182,7 @@ export class DigestsService {
 
   async update(id: number, input: UpdateDigestInput): Promise<Digest> {
     const digest = await this.get(id, ['images', 'itemPropertyValues']);
-    const { images: digestImages } = digest;
+    const original = { ...digest };
 
     if (input.itemPropertyValueIds) {
       digest.itemPropertyValues =
@@ -191,18 +196,17 @@ export class DigestsService {
       );
     }
 
-    const updatedDigest = await this.digestsRepository.save(
+    const updated = await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
       })
     );
+
     await this.digestsProducer.removeDigestImages(
-      digestImages.filter(
-        (v) => !updatedDigest.images.find(({ key }) => v.key === key)
-      )
+      getRemovedImages(original, updated)
     );
 
-    return updatedDigest;
+    return updated;
   }
 }
