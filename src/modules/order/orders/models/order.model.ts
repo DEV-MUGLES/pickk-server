@@ -5,6 +5,7 @@ import { Type } from 'class-transformer';
 import { findModelById } from '@common/helpers';
 
 import { Coupon } from '@order/coupons/models';
+import { OrderItemClaimStatus } from '@order/order-items/constants';
 import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
@@ -45,28 +46,46 @@ export class Order extends OrderEntity {
   get brands(): OrderBrand[] {
     return getOrderBrands(this.orderItems ?? []);
   }
+  get availableOrderItems(): OrderItem[] {
+    return this.orderItems.filter(
+      (oi) =>
+        ![
+          OrderItemClaimStatus.Cancelled,
+          OrderItemClaimStatus.Refunded,
+        ].includes(oi.claimStatus)
+    );
+  }
   @Field(() => Int)
   get totalItemFinalPrice(): number {
-    return this.orderItems.reduce((acc, oi) => acc + oi.itemFinalPrice, 0);
+    return this.availableOrderItems.reduce(
+      (acc, oi) => acc + oi.itemFinalPrice,
+      0
+    );
   }
   @Field(() => Int)
   get totalShippingFee(): number {
-    return this.orderItems.reduce((acc, oi) => acc + oi.shippingFee, 0);
+    return this.availableOrderItems.reduce(
+      (acc, oi) => acc + oi.shippingFee,
+      0
+    );
   }
   @Field(() => Int)
   get totalUsedPointAmount(): number {
-    return this.orderItems.reduce((acc, oi) => acc + oi.usedPointAmount, 0);
+    return this.availableOrderItems.reduce(
+      (acc, oi) => acc + oi.usedPointAmount,
+      0
+    );
   }
   @Field(() => Int)
   get totalCouponDiscountAmount(): number {
-    return this.orderItems.reduce(
+    return this.availableOrderItems.reduce(
       (acc, oi) => acc + oi.couponDiscountAmount,
       0
     );
   }
   @Field(() => Int)
   get totalPayAmount(): number {
-    return this.orderItems.reduce((acc, oi) => acc + oi.payAmount, 0);
+    return this.availableOrderItems.reduce((acc, oi) => acc + oi.payAmount, 0);
   }
 
   /////////////////
