@@ -161,9 +161,10 @@ export class DigestsService {
   }
 
   async remove(id: number): Promise<void> {
-    const digest = await this.get(id);
+    const digest = await this.get(id, ['images']);
     await this.digestsRepository.remove(digest);
     await this.digestsProducer.updateItemDigestStatistics([digest]);
+    await this.digestsProducer.removeDigestImages(digest.images);
   }
 
   async create(userId: number, input: CreateDigestInput): Promise<Digest> {
