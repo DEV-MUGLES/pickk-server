@@ -1506,13 +1506,15 @@ type OrderItem {
 
   """order.merchantUid + 숫자 2자리"""
   merchantUid: String!
+
+  """[MODEL ONLY]"""
   name: String!
   order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
 
-  """상품가격 - 포인트사용액 - 쿠폰할인액"""
-  payAmount: Float!
+  """[MODEL ONLY]"""
+  payAmount: Int!
 
   """처리지연 전환 시점"""
   processDelayedAt: DateTime

@@ -1,5 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-import { Field, ObjectType } from '@nestjs/graphql';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
 import { Product } from '@item/products/models';
@@ -13,9 +13,8 @@ import { ShipmentFactory } from '@order/shipments/factories';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { RequestOrderItemExchangeInput, ShipOrderItemInput } from '../dtos';
+import { OrderItemEntity } from '../entities';
 import { OrderItemMarkStrategyFactory } from '../factories';
-
-import { OrderItemEntity } from '../entities/order-item.entity';
 
 @ObjectType()
 export class OrderItem extends OrderItemEntity {
@@ -23,13 +22,16 @@ export class OrderItem extends OrderItemEntity {
   get id(): string {
     return this.merchantUid;
   }
-  @Field({ description: '상품가격 - 포인트사용액 - 쿠폰할인액' })
+  @Field(() => Int, { description: '[MODEL ONLY]' })
   get payAmount(): number {
     return (
-      this.itemFinalPrice - this.usedPointAmount - this.couponDiscountAmount
+      this.itemFinalPrice +
+      this.shippingFee -
+      this.usedPointAmount -
+      this.couponDiscountAmount
     );
   }
-  @Field()
+  @Field({ description: '[MODEL ONLY]' })
   get name(): string {
     return `[${this.brandNameKor}] ${this.itemName} (${this.productVariantName}) ${this.quantity}개`;
   }
