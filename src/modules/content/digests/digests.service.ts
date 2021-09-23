@@ -14,7 +14,7 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
-import { Digest, DigestImage } from './models';
+import { Digest } from './models';
 import { DigestFactory, DigestImageFactory } from './factories';
 import { DigestsProducer } from './producers';
 
@@ -197,17 +197,12 @@ export class DigestsService {
         ...input,
       })
     );
-    await this.removeDeletedDigestImages(digestImages, updatedDigest.images);
-    return updatedDigest;
-  }
+    await this.digestsProducer.removeDigestImages(
+      digestImages.filter(
+        (v) => !updatedDigest.images.find(({ key }) => v.key === key)
+      )
+    );
 
-  private async removeDeletedDigestImages(
-    images: DigestImage[],
-    updatedImages: DigestImage[]
-  ) {
-    const deletedImageKeys = images
-      .filter((v) => !updatedImages.find(({ key }) => v.key === key))
-      .map((v) => v.key);
-    await this.digestsProducer.removeDigestImages(deletedImageKeys);
+    return updatedDigest;
   }
 }

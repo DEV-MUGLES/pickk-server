@@ -16,13 +16,13 @@ import {
 } from '@queue/mtos';
 
 import { IDigest } from '../interfaces';
-import { Digest } from '../models';
+import { Digest, DigestImage } from '../models';
 
 @Injectable()
 export class DigestsProducer {
   constructor(@Inject(SqsService) private readonly sqsService: SqsService) {}
 
-  async updateItemDigestStatistics(digests: Digest[] | IDigest[]) {
+  async updateItemDigestStatistics(digests: IDigest[]) {
     if (digests.length === 0) {
       return;
     }
@@ -38,12 +38,15 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigestImages(keys: string[]) {
+  async removeDigestImages(images: DigestImage[]) {
+    if (images.length === 0) {
+      return;
+    }
     await this.sqsService.send<RemoveDigestImagesMto>(
       REMOVE_DIGEST_IMAGES_QUEUE,
       {
         id: getRandomUuid(),
-        body: { keys },
+        body: { keys: images.map((v) => v.key) },
       }
     );
   }
@@ -58,7 +61,7 @@ export class DigestsProducer {
     );
   }
 
-  async removeDigests(digests: Digest[] | IDigest[]) {
+  async removeDigests(digests: Digest[]) {
     if (digests.length === 0) {
       return;
     }
