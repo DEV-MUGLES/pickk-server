@@ -50,6 +50,7 @@ export class Inquiry extends InquiryEntity {
   }
 
   answer(input: AnswerInquiryInput) {
+    this.isAnswered = true;
     this.answers.push(new InquiryAnswer(input));
   }
 }
