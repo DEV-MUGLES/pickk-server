@@ -3,7 +3,7 @@ import dayjs from 'dayjs';
 
 import { Order } from '@order/orders/models';
 
-import { addCommas } from '@common/helpers';
+import { addCommas, partialEncrypt } from '@common/helpers';
 import { getPurchaseItemInfo } from '@templates/helpers';
 
 export class VbankNotiTemplate {
@@ -31,9 +31,10 @@ export class VbankNotiTemplate {
       createdAt,
       receiver: { baseAddress, detailAddress },
     } = order;
-    return `안녕하세요! ${
-      buyer.name
-    }님, 가상계좌로 입금해주시면 주문이 완료됩니다.
+    return `안녕하세요! ${partialEncrypt(
+      buyer.name,
+      1
+    )}님, 가상계좌로 입금해주시면 주문이 완료됩니다.
 [가상계좌 입금정보]
 ▶ 입금계좌 : ${bankDisplayName} ${bankNum}
 ▶ 예금주 : ${ownerName}

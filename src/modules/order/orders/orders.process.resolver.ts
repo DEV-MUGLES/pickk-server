@@ -46,7 +46,9 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     const dodgedOrder = await this.ordersService.dodgeVbank(merchantUid);
-    await this.ordersProducer.restoreDeductedProductStock(dodgedOrder);
+    await this.ordersProducer.restoreDeductedProductStock(
+      dodgedOrder.orderItems.map((oi) => oi.merchantUid)
+    );
 
     return dodgedOrder;
   }
@@ -62,9 +64,14 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   ): Promise<Order> {
     await this.ordersService.checkBelongsTo(merchantUid, userId);
 
-    const canceledOrder = await this.ordersService.cancel(merchantUid, input);
-    await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
-    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(canceledOrder);
+    await this.ordersService.cancel(merchantUid, input);
+    await this.ordersProducer.restoreDeductedProductStock(
+      input.orderItemMerchantUids
+    );
+    await this.ordersProducer.sendCancelOrderApprovedAlimtalk(
+      merchantUid,
+      input.orderItemMerchantUids
+    );
     return await this.ordersService.get(
       merchantUid,
       this.getRelationsFromInfo(info)

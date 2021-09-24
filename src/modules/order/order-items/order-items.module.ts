@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
@@ -18,9 +18,9 @@ import { OrderItemsService } from './order-items.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrderItemsRepository]),
-    ProductsModule,
     ExchangeRequestsModule,
     PaymentsModule,
+    forwardRef(() => ProductsModule),
     SqsModule.registerQueue({
       name: SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,
     }),

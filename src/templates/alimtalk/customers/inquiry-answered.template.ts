@@ -2,6 +2,8 @@ import { AlimtalkMessageRequest } from 'nest-sens';
 
 import { Inquiry } from '@item/inquiries/models';
 
+import { partialEncrypt } from '@common/helpers';
+
 export class InquiryAnsweredTemplate {
   static code = 'Cqna03';
 
@@ -28,8 +30,11 @@ export class InquiryAnsweredTemplate {
       id,
     } = inquiry;
     const url = `https://pickk.one/my/inquiries/${id}`;
-    return `안녕하세요! ${name}님, 문의주신 내용에 답변이 등록되었습니다.
-◼︎ 문의 내역
+    return `안녕하세요! ${partialEncrypt(
+      name,
+      1
+    )}님, 문의주신 내용에 답변이 등록되었습니다.
+    ◼︎ 문의 내역
 - 상품: ${item.name}
 - 내용: ${content}
 

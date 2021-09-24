@@ -20,16 +20,15 @@ export class PaymentCancellation extends PaymentCancellationEntity {
     const { remainAmount, payMethod } = payment;
     const {
       amount,
-      checksum = remainAmount,
+      checksum = remainAmount - amount,
       refundVbankNum,
       refundVbankHolder,
       refundVbankCode,
     } = input;
-
     if (remainAmount < amount) {
       throw new NotEnoughRemainAmountException();
     }
-    if (remainAmount !== checksum) {
+    if (remainAmount !== amount + checksum) {
       throw new InconsistentChecksumException();
     }
     if (payMethod === PayMethod.Vbank) {

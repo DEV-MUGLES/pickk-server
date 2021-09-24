@@ -33,7 +33,7 @@ class Cexch04Template {
     const {
       order: { buyer },
     } = orderItem;
-    console.log(pickShipment);
+
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
 
 ▶ 상품명 : ${getPurchaseItemInfo(orderItem)}

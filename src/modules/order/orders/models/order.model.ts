@@ -167,8 +167,8 @@ export class Order extends OrderEntity {
     this.applyShippingFees();
 
     return {
-      amount: this.totalPayAmount,
-      checksum: beforeAmount - this.totalPayAmount,
+      amount: beforeAmount - this.totalPayAmount,
+      checksum: this.totalPayAmount,
     };
   }
 

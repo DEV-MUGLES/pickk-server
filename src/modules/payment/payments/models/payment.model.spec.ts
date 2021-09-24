@@ -16,25 +16,44 @@ import { Payment } from './payment.model';
 
 describe('Payment', () => {
   describe('cancel', () => {
-    const amount = getRandomIntBetween(1000, 100000);
+    const canceledAmount = getRandomIntBetween(1000, 100000);
+    const remainAmount = canceledAmount + getRandomIntBetween(1000, 100000);
     const input: CancelPaymentInput = {
-      amount,
+      amount: canceledAmount,
       reason: faker.lorem.text(),
-      checksum: amount,
+      checksum: remainAmount - canceledAmount,
     };
 
-    it('성공적으로 수행한다.', () => {
+    it('성공적으로 부분 취소를 수행한다.', () => {
       const payment = new Payment({
         cancelledAt: null,
         status: PaymentStatus.Paid,
-        amount,
+        amount: remainAmount,
         cancellations: [],
       });
 
-      const result = payment.cancel(input);
+      payment.cancel(input);
 
       delete input.checksum;
-      expect(result).toMatchObject(input);
+      expect(payment.cancellations.reverse()[0]).toMatchObject(input);
+      expect(payment.cancelledAt).toBeTruthy();
+      expect(payment.status).toEqual(PaymentStatus.PartialCancelled);
+    });
+
+    it('성공적으로 전액 취소를 수행한다', () => {
+      const payment = new Payment({
+        cancelledAt: null,
+        status: PaymentStatus.Paid,
+        amount: canceledAmount,
+        cancellations: [],
+      });
+      input.checksum = 0;
+
+      payment.cancel(input);
+
+      delete input.checksum;
+
+      expect(payment.cancellations.reverse()[0]).toMatchObject(input);
       expect(payment.cancelledAt).toBeTruthy();
       expect(payment.status).toEqual(PaymentStatus.Cancelled);
     });
