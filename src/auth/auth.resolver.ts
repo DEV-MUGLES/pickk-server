@@ -1,7 +1,6 @@
-import { BadRequestException, Inject, UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
-import { UserOauthProvider } from '@user/users/constants';
 import { checkIsPermitted } from '@user/users/helpers';
 import { UsersService } from '@user/users/users.service';
 import { AppleProviderService } from '@providers/apple';
@@ -9,7 +8,7 @@ import { SmsService } from '@providers/sens';
 
 import { CurrentUser } from './decorators';
 import {
-  LoginWithAppleInput,
+  GetAppleAuthCodeInput,
   LoginByCodeInput,
   LoginByOauthInput,
   RequestPinInput,
@@ -25,10 +24,10 @@ import { AuthService } from './auth.service';
 @Resolver()
 export class AuthResolver {
   constructor(
-    @Inject(UsersService) private usersService: UsersService,
-    @Inject(AuthService) private authService: AuthService,
-    @Inject(AppleProviderService) private appleService: AppleProviderService,
-    @Inject(SmsService) private smsService: SmsService
+    private usersService: UsersService,
+    private authService: AuthService,
+    private appleService: AppleProviderService,
+    private smsService: SmsService
   ) {}
 
   @Query(() => JwtToken, {
@@ -67,16 +66,12 @@ export class AuthResolver {
     return this.authService.getToken(user);
   }
 
-  @Query(() => JwtToken)
-  async loginWithApple(
-    @Args('getAppleProviderIdInput')
-    { code, clientType }: LoginWithAppleInput
-  ): Promise<JwtToken> {
-    const oauthCode = await this.appleService.auth(code, clientType);
-    return await this.loginByOauth({
-      oauthProvider: UserOauthProvider.Apple,
-      oauthCode,
-    });
+  @Query(() => String)
+  async getAppleAuthCode(
+    @Args('getAppleAuthCodeInput')
+    { code, clientType }: GetAppleAuthCodeInput
+  ): Promise<string> {
+    return await this.appleService.auth(code, clientType);
   }
 
   @Query(() => Boolean, {

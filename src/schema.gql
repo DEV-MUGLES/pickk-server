@@ -789,6 +789,11 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+input GetAppleAuthCodeInput {
+  clientType: AppleClientType!
+  code: String!
+}
+
 """조회수 누적 대상 객체 분류입니다."""
 enum HitOwnerType {
   Digest
@@ -1226,11 +1231,6 @@ input LoginByOauthInput {
   minRole: UserRole = User
   oauthCode: String
   oauthProvider: UserProviderType
-}
-
-input LoginWithAppleInput {
-  clientType: AppleClientType!
-  code: String!
 }
 
 type Look {
@@ -1985,6 +1985,7 @@ type Query {
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   digestsExhibitions: [DigestsExhibition!]!
   genRandomNickname: String!
+  getAppleAuthCode(getAppleAuthCodeInput: GetAppleAuthCodeInput!): String!
   inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   inquiriesCount(itemId: Int!): Int!
   item(id: Int!): Item!
@@ -2006,7 +2007,6 @@ type Query {
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
-  loginWithApple(getAppleProviderIdInput: LoginWithAppleInput!): JwtToken!
   look(id: Int!): Look!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
   me: User!

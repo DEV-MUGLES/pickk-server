@@ -37,7 +37,7 @@ export class LoginByOauthInput extends PickType(
 }
 
 @InputType()
-export class LoginWithAppleInput {
+export class GetAppleAuthCodeInput {
   @Field()
   @IsString()
   code: string;
