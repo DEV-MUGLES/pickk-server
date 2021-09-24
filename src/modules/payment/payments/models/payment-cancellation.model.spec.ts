@@ -15,18 +15,20 @@ import { PaymentCancellation } from './payment-cancellation.model';
 
 describe('PaymentCancellation', () => {
   describe('of', () => {
-    const amount = getRandomIntBetween(1000, 100000);
+    const canceledAmount = getRandomIntBetween(1000, 100000);
+    const remainAmount = canceledAmount + getRandomIntBetween(1000, 100000);
+
     const input: CancelPaymentInput = {
-      amount,
+      amount: canceledAmount,
       reason: faker.lorem.text(),
-      checksum: amount,
+      checksum: remainAmount - canceledAmount,
     };
 
     it('성공!', () => {
       const payment = new Payment({
         cancelledAt: null,
         status: PaymentStatus.Paid,
-        amount,
+        amount: remainAmount,
         cancellations: [],
       });
 
@@ -38,7 +40,7 @@ describe('PaymentCancellation', () => {
 
     it('throw NotEnoughRemainAmountException', () => {
       const payment = new Payment({
-        amount: amount - 100,
+        amount: canceledAmount - 100,
         status: PaymentStatus.Paid,
         cancellations: [],
       });
@@ -49,18 +51,21 @@ describe('PaymentCancellation', () => {
 
     it('throw InconsistentChecksumException', () => {
       const payment = new Payment({
-        amount,
+        amount: remainAmount,
         status: PaymentStatus.Paid,
         cancellations: [],
       });
       expect(() =>
-        PaymentCancellation.of({ ...input, checksum: amount - 10 }, payment)
+        PaymentCancellation.of(
+          { ...input, checksum: remainAmount - canceledAmount - 10 },
+          payment
+        )
       ).toThrow(InconsistentChecksumException);
     });
 
     it('throw VbankRefundInfoRequiredException', () => {
       const payment = new Payment({
-        amount,
+        amount: remainAmount,
         status: PaymentStatus.Paid,
         payMethod: PayMethod.Vbank,
         cancellations: [],
