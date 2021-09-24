@@ -21,12 +21,12 @@ import { Order } from '../models';
 export class OrdersProducer {
   constructor(private readonly sqsService: SqsService) {}
 
-  async restoreDeductedProductStock(order: Order) {
+  async restoreDeductedProductStock(orderItemMerchantUids: string[]) {
     await this.sqsService.send<RestoreDeductedProductStockMto>(
       RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
       {
         id: getRandomUuid(),
-        body: { order },
+        body: { orderItemMerchantUids },
       }
     );
   }

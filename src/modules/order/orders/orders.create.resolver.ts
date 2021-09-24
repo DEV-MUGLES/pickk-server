@@ -139,10 +139,14 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   ): Promise<BaseOrderOutput> {
     await this.ordersService.checkBelongsTo(merchantUid, userId);
 
-    const failedOrder = await this.ordersService.fail(merchantUid);
-    await this.ordersProducer.restoreDeductedProductStock(failedOrder);
+    await this.ordersService.fail(merchantUid);
 
-    return failedOrder;
+    const failed = await this.ordersService.get(merchantUid, ['orderItems']);
+    await this.ordersProducer.restoreDeductedProductStock(
+      failed.orderItems.map((v) => v.merchantUid)
+    );
+
+    return failed;
   }
 
   // @TODO: Queue에서 주문완료 카톡 알림 보내기

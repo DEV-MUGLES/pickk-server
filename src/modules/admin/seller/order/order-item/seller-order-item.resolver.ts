@@ -183,15 +183,12 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       throw new ForbiddenException('자신의 주문 상품이 아닙니다.');
     }
 
-    const canceledOrder = await this.ordersService.cancel(
-      orderItem.orderMerchantUid,
-      {
-        reason: '담당자 취소 처리',
-        orderItemMerchantUids: [merchantUid],
-      }
-    );
+    await this.ordersService.cancel(orderItem.orderMerchantUid, {
+      reason: '담당자 취소 처리',
+      orderItemMerchantUids: [merchantUid],
+    });
     if (restock) {
-      await this.ordersProducer.restoreDeductedProductStock(canceledOrder);
+      await this.ordersProducer.restoreDeductedProductStock([merchantUid]);
     }
     await this.ordersProducer.sendCancelOrderApprovedAlimtalk(
       orderItem.orderMerchantUid,
