@@ -6,7 +6,7 @@ import { partialEncrypt } from '@common/helpers';
 import { getPurchaseItemInfo, getTotalPayAmount } from '@templates/helpers';
 
 export class CancelOrderApprovedTemplate {
-  static code = 'ccancel02';
+  static code = 'ccancel03';
 
   static toRequest(
     canceledOrder: Order
