@@ -41,7 +41,7 @@ export class Payment extends PaymentEntity {
     this.markVbankDodged();
   }
 
-  public cancel(input: CancelPaymentInput): PaymentCancellation {
+  public cancel(input: CancelPaymentInput) {
     if (this.cancellations == null) {
       throw new NotJoinedCancelException();
     }
@@ -53,10 +53,11 @@ export class Payment extends PaymentEntity {
       throw new StatusInvalidToCancelException(this.status);
     }
 
-    const cancellation = PaymentCancellation.of(input, this);
-    this.markCancelled(cancellation.type);
-
-    return cancellation;
+    this.cancellations = [
+      ...this.cancellations,
+      PaymentCancellation.of(input, this),
+    ];
+    this.markCancelled(this.cancellations.reverse()[0].type);
   }
 
   public confirmVbankPaid() {
