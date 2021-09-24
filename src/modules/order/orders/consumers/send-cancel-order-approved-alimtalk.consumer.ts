@@ -30,13 +30,12 @@ export class SendCancelOrderApprovedAlimtalkConsumer extends BaseConsumer {
     const canceledOrder = this.ordersRepository.entityToModel(
       await this.ordersRepository
         .createQueryBuilder('order')
-        .select('merchantUid')
         .leftJoinAndSelect('order.buyer', 'buyer')
         .leftJoinAndSelect('order.receiver', 'receiver')
         .leftJoinAndSelect('order.orderItems', 'orderItems')
-        .where('merchantUid = :merchantUid', { merchantUid: orderMerchantUid })
-        .andWhere('orderItems.merchantUid IN(:...merchantUids)', {
-          merchantUids: orderItemMerchantUids,
+        .where('order.merchantUid = :orderMerchantUid', { orderMerchantUid })
+        .andWhere('orderItems.merchantUid IN(:...orderItemMerchantUids)', {
+          orderItemMerchantUids,
         })
         .getOne()
     );
