@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -42,6 +37,18 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     private readonly sellerInquiryProducer: SellerInquiryProducer
   ) {
     super();
+  }
+
+  @Query(() => Inquiry)
+  @UseGuards(JwtSellerVerifyGuard)
+  async meSellerInquiry(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Inquiry> {
+    await this.sellerInquiryService.checkBelongsTo(id, sellerId);
+
+    return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
   }
 
   @Query(() => [Inquiry])
@@ -95,10 +102,7 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Inquiry> {
-    const inquiry = await this.inquiriesService.get(id);
-    if (inquiry.sellerId !== sellerId) {
-      throw new ForbiddenException('답변 권한이 없습니다.');
-    }
+    await this.sellerInquiryService.checkBelongsTo(id, sellerId);
 
     await this.inquiriesService.answer(id, {
       ...input,

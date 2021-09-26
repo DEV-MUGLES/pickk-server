@@ -866,7 +866,11 @@ enum InquiryAnswerFrom {
 }
 
 input InquiryFilter {
+  isAnswered: Boolean
   itemId: Int
+
+  """주문상품번호로 검색 가능"""
+  search: String
   sellerId: Int
   userId: Int
 }
@@ -2021,6 +2025,7 @@ type Query {
   meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
   meSellerInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
+  meSellerInquiry(id: Int!): Inquiry!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
