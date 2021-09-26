@@ -183,10 +183,10 @@ export class OrderItemEntity implements IOrderItem {
 
   @Field({ description: '프론트엔드를 위한 status/claimStatus 표시값입니다.' })
   get statusDisplayName(): string {
-    return (
-      getOrderItemClaimStatusDisplayName(this.claimStatus) ??
-      getOrderItemStatusDisplayName(this.status)
-    );
+    return this.isConfirmed
+      ? '구매 확정'
+      : getOrderItemClaimStatusDisplayName(this.claimStatus) ??
+          getOrderItemStatusDisplayName(this.status);
   }
 
   @Field(() => OrderItemStatus)
