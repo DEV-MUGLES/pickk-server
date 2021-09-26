@@ -22,8 +22,8 @@ import { RefundRequestsModule } from '@order/refund-requests/refund-requests.mod
 import { OrdersConsumers } from './consumers';
 import { OrdersProducer } from './producers';
 
-import { OrdersCreateResolver } from './orders.create.resolver';
-import { OrdersProcessResolver } from './orders.process.resolver';
+import { OrdersCreateResolver } from './orders-create.resolver';
+import { OrdersProcessResolver } from './orders-process.resolver';
 import { OrdersResolver } from './orders.resolver';
 import { OrdersRepository } from './orders.repository';
 import { OrdersService } from './orders.service';
