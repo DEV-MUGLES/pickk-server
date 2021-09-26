@@ -26,7 +26,6 @@ import { SentryProviderModule } from '@providers/sentry';
 import { SlackProviderModule } from '@providers/slack';
 
 import { AppController } from './app.controller';
-import { AppService } from './app.service';
 
 @Module({
   imports: [
@@ -60,7 +59,6 @@ import { AppService } from './app.service';
     BatchModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {
   constructor(private connection: Connection) {}
