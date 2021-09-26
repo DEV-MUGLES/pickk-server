@@ -1,6 +1,6 @@
-import { GraphQLResolveInfo } from 'graphql';
 import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
+import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtVerifyGuard } from '@auth/guards';
@@ -75,6 +75,22 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     return await this.ordersService.get(
       merchantUid,
       this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtVerifyGuard)
+  async expectedCancelAmount(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('orderItemMerchantUids', { type: () => [String] })
+    orderItemMerchantUids: string[]
+  ): Promise<number> {
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
+
+    return await this.ordersService.getExpectedCancelAmount(
+      merchantUid,
+      orderItemMerchantUids
     );
   }
 

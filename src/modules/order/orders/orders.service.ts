@@ -178,6 +178,15 @@ export class OrdersService {
     return await this.ordersRepository.save(order);
   }
 
+  async getExpectedCancelAmount(
+    merchantUid: string,
+    orderItemMerchantUids: string[]
+  ): Promise<number> {
+    const order = await this.get(merchantUid, CANCEL_ORDER_RELATIONS);
+
+    return order.cancel(orderItemMerchantUids).amount;
+  }
+
   async cancel(
     merchantUid: string,
     { reason, orderItemMerchantUids }: CancelOrderInput
