@@ -9,6 +9,12 @@ export class OrderItemExchangeRequestedStrategy extends OrderItemMarkStrategy {
   statusChangedField = 'exchangeRequestedAt' as const;
 
   validate() {
+    if (this.orderItem.seller.claimPolicy.isExchangable === false) {
+      throw new BadRequestException(
+        `"${this.orderItem.brandNameKor}" 상품은 교환처리할 수 없습니다.`
+      );
+    }
+
     const { ShipReady, Shipping, Shipped } = OrderItemStatus;
 
     if (![ShipReady, Shipping, Shipped].includes(this.orderItem.status)) {

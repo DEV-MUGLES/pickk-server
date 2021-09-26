@@ -64,10 +64,7 @@ export class Order extends OrderEntity {
   }
   @Field(() => Int)
   get totalShippingFee(): number {
-    return this.availableOrderItems.reduce(
-      (acc, oi) => acc + oi.shippingFee,
-      0
-    );
+    return this.orderItems.reduce((acc, oi) => acc + oi.shippingFee, 0);
   }
   @Field(() => Int)
   get totalUsedPointAmount(): number {
@@ -173,9 +170,12 @@ export class Order extends OrderEntity {
   }
 
   requestRefund(input: RequestOrderRefundInput): void {
+    const orderItems = [];
+
     for (const oi of this.orderItems) {
       if (input.orderItemMerchantUids.includes(oi.merchantUid)) {
         oi.markRefundRequested();
+        orderItems.push(oi);
       }
     }
 
@@ -183,7 +183,7 @@ export class Order extends OrderEntity {
       RefundRequestFactory.create(
         `${this.merchantUid}${this.refundRequests.length}`,
         this.userId,
-        this.orderItems,
+        orderItems,
         input
       )
     );

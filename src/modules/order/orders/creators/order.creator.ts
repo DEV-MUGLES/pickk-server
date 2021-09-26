@@ -8,7 +8,11 @@ import {
 } from '@common/helpers';
 
 import { Brand } from '@item/brands/models';
-import { Seller, SellerShippingPolicy } from '@item/sellers/models';
+import {
+  Seller,
+  SellerClaimPolicy,
+  SellerShippingPolicy,
+} from '@item/sellers/models';
 import { Item, ItemOptionValue, ItemPrice } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { OrderItemFactoryProductInfo } from '@order/order-items/factories';
@@ -31,6 +35,7 @@ export class OrderCreator {
       oi.couponDiscountAmount = 0;
       oi.usedPointAmount = 0;
     }
+    order.refundRequests = [];
 
     return order;
   }
@@ -48,6 +53,11 @@ export class OrderCreator {
         shippingPolicy: new SellerShippingPolicy({
           minimumAmountForFree: getRandomIntBetween(30, 50) * 1000,
           fee: getRandomIntBetween(15, 30) * 100,
+        }),
+        claimPolicy: new SellerClaimPolicy({
+          fee: getRandomIntBetween(15, 30) * 100,
+          isExchangable: true,
+          isRefundable: true,
         }),
       });
 

@@ -2,16 +2,21 @@ import {
   OrderItemClaimStatus,
   OrderItemStatus,
 } from '@order/order-items/constants';
+import { OrderItem } from '@order/order-items/models';
 import { PayMethod } from '@payment/payments/constants';
 import { ShippingAddress } from '@user/users/models';
 
 import { OrderStatus } from '../constants';
-import { OrderCreator, StartOrderInputCreator } from '../creators';
+import {
+  OrderCreator,
+  RequestOrderRefundInputCreator,
+  StartOrderInputCreator,
+} from '../creators';
 
 describe('Order model', () => {
   const setUp = () => {
     const order = OrderCreator.create();
-    const startInput = StartOrderInputCreator.create(order);
+    const cardStartInput = StartOrderInputCreator.create(order, PayMethod.Card);
     const vbankStartInput = StartOrderInputCreator.create(
       order,
       PayMethod.Vbank
@@ -19,28 +24,30 @@ describe('Order model', () => {
 
     return {
       order,
-      startInput,
+      cardStartInput,
       vbankStartInput,
     };
   };
 
   describe('start', () => {
     it('성공적으로 수행한다.', () => {
-      const { order, startInput } = setUp();
+      const { order, cardStartInput } = setUp();
 
-      order.start(startInput, new ShippingAddress(), []);
+      order.start(cardStartInput, new ShippingAddress(), []);
 
-      expect(order.payMethod).toEqual(startInput.payMethod);
+      expect(order.payMethod).toEqual(cardStartInput.payMethod);
       expect(order.status).toEqual(OrderStatus.Paying);
-      expect(order.totalUsedPointAmount).toEqual(startInput.usedPointAmount);
+      expect(order.totalUsedPointAmount).toEqual(
+        cardStartInput.usedPointAmount
+      );
     });
   });
 
   describe('markFailed', () => {
     it('성공적으로 수행한다.', () => {
-      const { order, startInput } = setUp();
+      const { order, cardStartInput } = setUp();
 
-      order.start(startInput, new ShippingAddress(), []);
+      order.start(cardStartInput, new ShippingAddress(), []);
       order.markFailed();
 
       expect(order.status).toEqual(OrderStatus.Failed);
@@ -52,12 +59,9 @@ describe('Order model', () => {
 
   describe('complete', () => {
     it('성공적으로 수행한다.', () => {
-      const { order, startInput } = setUp();
-      if (startInput.payMethod === PayMethod.Vbank) {
-        startInput.payMethod = PayMethod.Card;
-      }
+      const { order, cardStartInput: cardStartInput } = setUp();
 
-      order.start(startInput, new ShippingAddress(), []);
+      order.start(cardStartInput, new ShippingAddress(), []);
       order.complete();
 
       expect(order.status).toEqual(OrderStatus.Paid);
@@ -73,17 +77,95 @@ describe('Order model', () => {
     });
 
     it('실패한 이후에도 성공적으로 수행한다.', () => {
-      const { order, startInput } = setUp();
-      if (startInput.payMethod === PayMethod.Vbank) {
-        startInput.payMethod = PayMethod.Card;
-      }
+      const { order, cardStartInput: cardStartInput } = setUp();
 
-      order.start(startInput, new ShippingAddress(), []);
+      order.start(cardStartInput, new ShippingAddress(), []);
       order.markFailed();
-      order.start(startInput, new ShippingAddress(), []);
+      order.start(cardStartInput, new ShippingAddress(), []);
       order.complete();
 
       expect(order.status).toEqual(OrderStatus.Paid);
+    });
+  });
+
+  describe('cancel', () => {
+    it('성공적으로 수행한다.', () => {
+      const { order, cardStartInput } = setUp();
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      const result = order.cancel([order.orderItems[0].merchantUid]);
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.Cancelled
+      );
+      expect(order.totalPayAmount).toEqual(result.checksum);
+      expect(result.amount).toEqual(order.orderItems[0].payAmount);
+    });
+
+    it('포인트를 사용하지 않았을 때도 성공한다.', () => {
+      const { order, cardStartInput } = setUp();
+      cardStartInput.usedPointAmount = 0;
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      const beforeOi = new OrderItem(order.orderItems[0]);
+      const result = order.cancel([order.orderItems[0].merchantUid]);
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.Cancelled
+      );
+      expect(order.totalPayAmount).toEqual(result.checksum);
+      expect(result.amount).toEqual(
+        order.orderItems[0].payAmount -
+          order.orderItems[0].shippingFee +
+          beforeOi.shippingFee
+      );
+    });
+  });
+
+  describe('requestRefund', () => {
+    it('성공적으로 수행한다.', () => {
+      const { order, cardStartInput } = setUp();
+
+      const requestRefundInput = RequestOrderRefundInputCreator.create(
+        [order.orderItems[0].merchantUid],
+        true
+      );
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      for (const oi of order.orderItems) {
+        oi.markShipReady();
+      }
+
+      order.requestRefund(requestRefundInput);
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.RefundRequested
+      );
+      expect(order.refundRequests[0].amount).toEqual(
+        order.orderItems[0].payAmount - order.orderItems[0].shippingFee
+      );
+    });
+
+    it('반품불가면 실패한다.', () => {
+      const { order, cardStartInput } = setUp();
+
+      const requestRefundInput = RequestOrderRefundInputCreator.create(
+        [order.orderItems[0].merchantUid],
+        true
+      );
+
+      order.orderItems[0].seller.claimPolicy.isRefundable = false;
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      for (const oi of order.orderItems) {
+        oi.markShipReady();
+      }
+
+      expect(() => order.requestRefund(requestRefundInput)).toThrowError();
     });
   });
 });

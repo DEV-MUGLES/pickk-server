@@ -23,5 +23,5 @@ export const calcClaimShippingFee = (
 
 /** 대상 주문상품의 결제금액의 합산입니다. 반품 배송비가 계산되지 않은 상태입니다. */
 export const calcClaimAmount = (orderItems: OrderItem[]) => {
-  return orderItems.reduce((sum, oi) => sum + oi.payAmount, 0);
+  return orderItems.reduce((sum, oi) => sum + oi.payAmount - oi.shippingFee, 0);
 };
