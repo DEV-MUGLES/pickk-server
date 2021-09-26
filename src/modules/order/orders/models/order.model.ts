@@ -119,7 +119,7 @@ export class Order extends OrderEntity {
     input: StartOrderInput,
     shippingAddress: ShippingAddress,
     coupons: Coupon[]
-  ) {
+  ): void {
     this.markPaying();
     this.payMethod = input.payMethod;
     this.buyer = new OrderBuyer({ ...input.buyerInput });
