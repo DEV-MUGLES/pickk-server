@@ -1990,6 +1990,8 @@ type Query {
   digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   digestsExhibitions: [DigestsExhibition!]!
+  expectedCancelAmount(merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
+  expectedClaimShippingFee(faultOf: RefundRequestFaultOf!, merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
   genRandomNickname: String!
   getAppleAuthCode(getAppleAuthCodeInput: GetAppleAuthCodeInput!): String!
   inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!

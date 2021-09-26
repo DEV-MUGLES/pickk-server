@@ -7,6 +7,8 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
+
 import { OrderRelationType, ORDER_RELATIONS } from './constants';
 import {
   BaseOrderOutput,
@@ -91,6 +93,25 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     return await this.ordersService.getExpectedCancelAmount(
       merchantUid,
       orderItemMerchantUids
+    );
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtVerifyGuard)
+  async expectedClaimShippingFee(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('orderItemMerchantUids', { type: () => [String] })
+    orderItemMerchantUids: string[],
+    @Args('faultOf', { type: () => OrderClaimFaultOf })
+    faultOf: OrderClaimFaultOf
+  ): Promise<number> {
+    await this.ordersService.checkBelongsTo(merchantUid, userId);
+
+    return await this.ordersService.getExpectedClaimShippingFee(
+      merchantUid,
+      orderItemMerchantUids,
+      faultOf
     );
   }
 

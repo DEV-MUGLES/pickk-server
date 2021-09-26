@@ -11,3 +11,12 @@ export const findModelsByIds = <T extends { id: number }>(
 ): T[] => {
   return ids.map((id) => models.find((model) => model.id === id));
 };
+
+export const findModelsByMUids = <T extends { merchantUid: string }>(
+  merchantUids: string[],
+  models: T[]
+): T[] => {
+  return merchantUids.map((merchantUid) =>
+    models.find((model) => model.merchantUid === merchantUid)
+  );
+};

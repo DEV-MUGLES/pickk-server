@@ -10,11 +10,12 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 import { PageInput } from '@common/dtos';
-import { parseFilter } from '@common/helpers';
+import { findModelsByMUids, parseFilter } from '@common/helpers';
 
 import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
 import { CouponsService } from '@order/coupons/coupons.service';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
@@ -38,6 +39,7 @@ import { Order } from './models';
 import { OrdersProducer } from './producers';
 
 import { OrdersRepository } from './orders.repository';
+import { calcClaimShippingFee } from './helpers';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -185,6 +187,24 @@ export class OrdersService {
     const order = await this.get(merchantUid, CANCEL_ORDER_RELATIONS);
 
     return order.cancel(orderItemMerchantUids).amount;
+  }
+
+  async getExpectedClaimShippingFee(
+    merchantUid: string,
+    orderItemMerchantUids: string[],
+    faultOf: OrderClaimFaultOf
+  ): Promise<number> {
+    const order = await this.get(merchantUid, [
+      'orderItems',
+      'orderItems.seller',
+      'orderItems.seller.claimPolicy',
+      'orderItems.seller.shippingPolicy',
+    ]);
+
+    return calcClaimShippingFee(
+      findModelsByMUids(orderItemMerchantUids, order.orderItems),
+      faultOf
+    );
   }
 
   async cancel(
