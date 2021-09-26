@@ -3,7 +3,7 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtSellerVerifyGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
@@ -17,12 +17,17 @@ import {
   INQUIRY_RELATIONS,
 } from '@item/inquiries/constants';
 import { InquiriesCountOutput } from '@admin/seller/item/inquiry/dtos';
-import { AnswerInquiryInput, InquiryFilter } from '@item/inquiries/dtos';
-import { Inquiry } from '@item/inquiries/models';
+import {
+  AnswerInquiryInput,
+  InquiryFilter,
+  UpdateInquiryAnswerInput,
+} from '@item/inquiries/dtos';
+import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 import { UserRole } from '@user/users/constants';
 
 import { RootInquiryService } from './root-inquiry.service';
+
 @Injectable()
 export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   relations = INQUIRY_RELATIONS;
@@ -104,5 +109,16 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
     });
 
     return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => InquiryAnswer)
+  @UseGuards(JwtSellerVerifyGuard)
+  async updateRootInquiryAnswer(
+    @IntArgs('id') id: number,
+    @Args('updateInquiryAnswerInput') input: UpdateInquiryAnswerInput
+  ): Promise<InquiryAnswer> {
+    await this.inquiriesService.updateAnswer(id, input);
+
+    return await this.inquiriesService.getAnswer(id);
   }
 }
