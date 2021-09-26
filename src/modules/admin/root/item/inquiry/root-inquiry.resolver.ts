@@ -91,7 +91,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @Mutation(() => Inquiry)
   @UseGuards(JwtVerifyGuard)
   @Roles(UserRole.Admin)
-  async rootAnswerInquiry(
+  async answerRootInquiry(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,

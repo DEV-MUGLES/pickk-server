@@ -1307,6 +1307,7 @@ type Mutation {
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
+  answerRootInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
@@ -1371,7 +1372,6 @@ type Mutation {
   requestOrderItemExchange(merchantUid: String!, requestOrderItemExchangeInput: RequestOrderItemExchangeInput!): OrderItem!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(merchantUid: String!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
-  rootAnswerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
