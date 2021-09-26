@@ -22,6 +22,21 @@ describe('Order model', () => {
     });
   });
 
+  describe('fail', () => {
+    it('성공적으로 수행한다.', () => {
+      const order = OrderCreator.create();
+      const input = StartOrderInputCreator.create(order);
+
+      order.start(input, new ShippingAddress(), []);
+      order.markFailed();
+
+      expect(order.status).toEqual(OrderStatus.Failed);
+      order.orderItems.forEach((oi) => {
+        expect(oi.status).toEqual(OrderItemStatus.Failed);
+      });
+    });
+  });
+
   describe('complete', () => {
     it('성공적으로 수행한다.', () => {
       const order = OrderCreator.create();

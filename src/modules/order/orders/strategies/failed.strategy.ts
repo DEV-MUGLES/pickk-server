@@ -9,8 +9,8 @@ export class OrderFailedStrategy extends OrderProcessStrategy {
   statusChangedField = 'failedAt' as const;
 
   validate() {
-    const { Pending, Failed } = OrderStatus;
-    if (![Pending, Failed].includes(this.order.status)) {
+    const { Pending, Paying, Failed } = OrderStatus;
+    if (![Pending, Paying, Failed].includes(this.order.status)) {
       throw new BadRequestException('완료된 주문을 실패처리할 수 없습니다');
     }
   }
