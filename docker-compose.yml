@@ -39,7 +39,7 @@ services:
       - '${LOCAL_SQS_PORT}:${LOCAL_SQS_PORT}'
   es01:
     container_name: es01
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: greatsumini/pickk-elasticsearch:7.10.2
     ports:
       - '${ELASTICSEARCH_PORT}:${ELASTICSEARCH_PORT}'
     environment:
@@ -60,7 +60,7 @@ services:
       - elastic
   es02:
     container_name: es02
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: greatsumini/pickk-elasticsearch:7.10.2
     environment:
       - node.name=es02
       - cluster.name=es-docker-cluster
@@ -78,7 +78,7 @@ services:
       - elastic
   es03:
     container_name: es03
-    image: docker.elastic.co/elasticsearch/elasticsearch:7.10.2
+    image: greatsumini/pickk-elasticsearch:7.10.2
     environment:
       - node.name=es03
       - cluster.name=es-docker-cluster
