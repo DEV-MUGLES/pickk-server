@@ -88,6 +88,18 @@ describe('Order model', () => {
     });
   });
 
+  describe('markVbankDodged', () => {
+    it('성공적으로 수행한다.', () => {
+      const { order, vbankStartInput } = setUp();
+
+      order.start(vbankStartInput, new ShippingAddress(), []);
+      order.complete({});
+      order.markVbankDodged();
+
+      expect(order.status).toEqual(OrderStatus.VbankDodged);
+    });
+  });
+
   describe('cancel', () => {
     it('성공적으로 수행한다.', () => {
       const { order, cardStartInput } = setUp();

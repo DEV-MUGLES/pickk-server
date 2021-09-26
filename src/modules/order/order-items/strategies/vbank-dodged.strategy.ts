@@ -9,10 +9,9 @@ export class OrderItemVbankDodgedStrategy extends OrderItemMarkStrategy {
   statusChangedField = 'vbankDodgedAt' as const;
 
   validate() {
-    const { Pending, Failed } = OrderItemStatus;
-    if (![Pending, Failed].includes(this.orderItem.status)) {
+    if (this.orderItem.status !== OrderItemStatus.VbankReady) {
       throw new BadRequestException(
-        `결제된 주문상품을 가상계좌 입금 대기 처리할 수 없습니다\n${this.orderItem.name}`
+        `invalid orderItem status \n${this.orderItem.name}, ${this.orderItem.status}`
       );
     }
   }
