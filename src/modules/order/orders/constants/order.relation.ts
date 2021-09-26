@@ -10,6 +10,7 @@ export type OrderRelationType =
   | 'orderItems.product.item.brand'
   | 'orderItems.product.item.brand.seller'
   | 'orderItems.product.item.brand.seller.shippingPolicy'
+  | 'orderItems.product.item.brand.seller.claimPolicy'
   | 'orderItems.product.shippingReservePolicy'
   | 'orderItems.item'
   | 'orderItems.seller'
@@ -26,11 +27,13 @@ export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'orderItems.product.item.brand',
   'orderItems.product.item.brand.seller',
   'orderItems.product.item.brand.seller.shippingPolicy',
+  'orderItems.product.item.brand.seller.claimPolicy',
   'orderItems.product.shippingReservePolicy',
   'orderItems.item',
   'orderItems.seller',
   'orderItems.seller.brand',
   'orderItems.seller.shippingPolicy',
+  'orderItems.seller.claimPolicy',
   'buyer',
   'receiver',
   'vbankReceipt',
