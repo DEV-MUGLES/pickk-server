@@ -65,6 +65,9 @@ describe('Order model', () => {
       order.complete();
 
       expect(order.status).toEqual(OrderStatus.Paid);
+      order.orderItems.forEach((oi) => {
+        expect(oi.status).toEqual(OrderItemStatus.Paid);
+      });
     });
 
     it('가상계좌도 성공적으로 수행한다.', () => {
@@ -74,6 +77,9 @@ describe('Order model', () => {
       order.complete({});
 
       expect(order.status).toEqual(OrderStatus.VbankReady);
+      order.orderItems.forEach((oi) => {
+        expect(oi.status).toEqual(OrderItemStatus.VbankReady);
+      });
     });
 
     it('실패한 이후에도 성공적으로 수행한다.', () => {
@@ -85,6 +91,9 @@ describe('Order model', () => {
       order.complete();
 
       expect(order.status).toEqual(OrderStatus.Paid);
+      order.orderItems.forEach((oi) => {
+        expect(oi.status).toEqual(OrderItemStatus.Paid);
+      });
     });
   });
 
@@ -97,6 +106,9 @@ describe('Order model', () => {
       order.markVbankDodged();
 
       expect(order.status).toEqual(OrderStatus.VbankDodged);
+      order.orderItems.forEach((oi) => {
+        expect(oi.status).toEqual(OrderItemStatus.VbankDodged);
+      });
     });
   });
 
