@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -50,8 +50,14 @@ export class OrderItemsService {
     );
   }
 
-  async checkBelongsTo(merchantUid: string, userId: number): Promise<boolean> {
-    return await this.orderItemsRepository.checkBelongsTo(merchantUid, userId);
+  async checkBelongsTo(merchantUid: string, userId: number) {
+    const isMine = await this.orderItemsRepository.checkBelongsTo(
+      merchantUid,
+      userId
+    );
+    if (!isMine) {
+      throw new ForbiddenException('자신의 주문상품이 아닙니다.');
+    }
   }
 
   async requestExchange(
@@ -82,6 +88,17 @@ export class OrderItemsService {
 
     return await this.orderItemsRepository.save(orderItem);
   }
+
+  async confirm(merchantUid: string) {
+    const orderItem = await this.get(merchantUid);
+    orderItem.confirm();
+
+    return await this.orderItemsRepository.save(orderItem);
+  }
+
+  ////////////////////////////
+  // active count 관련 함수들 //
+  ///////////////////////////
 
   getActivesCountCacheKey(userId: number): string {
     return `user:${userId}:active-order-items-count`;

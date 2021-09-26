@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { Inject, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -40,13 +35,7 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     input: RequestOrderItemExchangeInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<OrderItem> {
-    const isMine = await this.orderItemsService.checkBelongsTo(
-      merchantUid,
-      userId
-    );
-    if (!isMine) {
-      throw new ForbiddenException('자신의 주문상품이 아닙니다.');
-    }
+    await this.orderItemsService.checkBelongsTo(merchantUid, userId);
 
     const { exchangeRequest } = await this.orderItemsService.requestExchange(
       merchantUid,
@@ -56,6 +45,22 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     await this.orderItemsProducer.sendExchangeRequestedAlimtalk(
       exchangeRequest.merchantUid
     );
+
+    return await this.orderItemsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Mutation(() => OrderItem)
+  @UseGuards(JwtVerifyGuard)
+  async confirmMeOrderItem(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<OrderItem> {
+    await this.orderItemsService.checkBelongsTo(merchantUid, userId);
+    await this.orderItemsService.confirm(merchantUid);
 
     return await this.orderItemsService.get(
       merchantUid,

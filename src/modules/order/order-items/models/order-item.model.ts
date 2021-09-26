@@ -97,6 +97,11 @@ export class OrderItem extends OrderItemEntity {
   markExchanged() {
     this.markAs(OrderItemClaimStatus.Exchanged);
   }
+  /** status, claimStatus는 건드리지 않음 */
+  confirm() {
+    // @TODO: status, claimStatus validate
+    this.isConfirmed = true;
+  }
 
   ///////////////
   // 기타 함수들 //

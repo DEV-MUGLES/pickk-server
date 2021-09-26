@@ -1323,6 +1323,7 @@ type Mutation {
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
+  confirmMeOrderItem(merchantUid: String!): OrderItem!
   confirmMeSellerRefundRequest(
     merchantUid: String!
 
