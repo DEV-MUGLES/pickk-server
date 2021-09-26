@@ -48,11 +48,7 @@ export class Order extends OrderEntity {
   }
   get availableOrderItems(): OrderItem[] {
     return this.orderItems.filter(
-      (oi) =>
-        ![
-          OrderItemClaimStatus.Cancelled,
-          OrderItemClaimStatus.Refunded,
-        ].includes(oi.claimStatus)
+      (oi) => oi.claimStatus !== OrderItemClaimStatus.Cancelled
     );
   }
   @Field(() => Int)

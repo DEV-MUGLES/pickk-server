@@ -32,6 +32,10 @@ export class OrderCreator {
         oi.sellerId,
         productsInfo.map((v) => v.product.item.brand.seller)
       );
+      oi.item = findModelById(
+        oi.itemId,
+        productsInfo.map((v) => v.product.item)
+      );
       oi.couponDiscountAmount = 0;
       oi.usedPointAmount = 0;
     }

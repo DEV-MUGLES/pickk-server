@@ -1,12 +1,17 @@
 import * as faker from 'faker';
 
-import { OrderCreator, StartOrderInputCreator } from '@order/orders/creators';
+import {
+  OrderCreator,
+  RequestOrderRefundInputCreator,
+  StartOrderInputCreator,
+} from '@order/orders/creators';
 import { ShipmentOwnerType } from '@order/shipments/constants';
 import { PayMethod } from '@payment/payments/constants';
 import { ShippingAddress } from '@user/users/models';
 
-import { OrderItemStatus } from '../constants';
+import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 import { ShipOrderItemInput } from '../dtos';
+import { RequestExchangeInputCreator } from '../creators';
 
 describe('OrderItem model', () => {
   const setUp = () => {
@@ -57,6 +62,49 @@ describe('OrderItem model', () => {
       );
       expect(order.orderItems[0].shipment.ownerType).toEqual(
         ShipmentOwnerType.OrderItem
+      );
+    });
+  });
+
+  describe('markRefunded', () => {
+    it('성공적으로 수행한다', () => {
+      const { order, cardStartInput } = setUp();
+
+      const requestRefundInput = RequestOrderRefundInputCreator.create(
+        [order.orderItems[0].merchantUid],
+        true
+      );
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      for (const oi of order.orderItems) {
+        oi.markShipReady();
+      }
+      order.requestRefund(requestRefundInput);
+      order.orderItems[0].markRefunded();
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.Refunded
+      );
+    });
+  });
+
+  describe('requestExchange', () => {
+    it('성공적으로 수행한다', () => {
+      const { order, cardStartInput } = setUp();
+      const { input, product } = RequestExchangeInputCreator.create(
+        order.orderItems[0].item
+      );
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      for (const oi of order.orderItems) {
+        oi.markShipReady();
+      }
+      order.orderItems[0].requestExchange(input, product);
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.ExchangeRequested
       );
     });
   });
