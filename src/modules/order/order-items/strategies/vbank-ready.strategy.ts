@@ -9,9 +9,10 @@ export class OrderItemVbankReadyStrategy extends OrderItemMarkStrategy {
   statusChangedField = 'vbankReadyAt' as const;
 
   validate() {
-    if (this.orderItem.status !== OrderItemStatus.VbankReady) {
+    const { Pending, Failed } = OrderItemStatus;
+    if (![Pending, Failed].includes(this.orderItem.status)) {
       throw new BadRequestException(
-        `입금 대기 상태인 주문만 취소할 수 있습니다.\n${this.orderItem.name}`
+        `아래 주문상품을 결제 처리할 수 없습니다\n${this.orderItem.name}`
       );
     }
   }

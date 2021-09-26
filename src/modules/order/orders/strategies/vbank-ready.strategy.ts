@@ -8,7 +8,7 @@ export class OrderVbankReadyStrategy extends OrderProcessStrategy {
   statusChangedField = 'vbankReadyAt' as const;
 
   validate() {
-    if (this.order.status !== OrderStatus.Pending) {
+    if (this.order.status !== OrderStatus.Paying) {
       throw new BadRequestException('결제 완료 처리할 수 없습니다.');
     }
   }

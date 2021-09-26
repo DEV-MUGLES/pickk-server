@@ -1,7 +1,11 @@
 import dayjs from 'dayjs';
 import * as faker from 'faker';
 
-import { getRandomEle, getRandomIntBetween } from '@common/helpers';
+import {
+  findModelById,
+  getRandomEle,
+  getRandomIntBetween,
+} from '@common/helpers';
 
 import { Brand } from '@item/brands/models';
 import { Seller, SellerShippingPolicy } from '@item/sellers/models';
@@ -18,7 +22,17 @@ export class OrderCreator {
     const merchantUid = this.createMerchantUid();
     const productsInfo = this.createProductsInfo(getRandomIntBetween(1, 5));
 
-    return OrderFactory.create(userId, merchantUid, productsInfo);
+    const order = OrderFactory.create(userId, merchantUid, productsInfo);
+    for (const oi of order.orderItems) {
+      oi.seller = findModelById(
+        oi.sellerId,
+        productsInfo.map((v) => v.product.item.brand.seller)
+      );
+      oi.couponDiscountAmount = 0;
+      oi.usedPointAmount = 0;
+    }
+
+    return order;
   }
 
   static createMerchantUid(): string {
@@ -43,13 +57,16 @@ export class OrderCreator {
         seller,
       });
 
+      seller.brand = brand;
+
       const item = new Item({
         id: faker.datatype.number(),
         name: faker.name.firstName(),
         prices: [
           new ItemPrice({
             isActive: true,
-            finalPrice: getRandomIntBetween(15, 55) * 1000,
+            originalPrice: getRandomIntBetween(30, 55) * 1000,
+            sellPrice: getRandomIntBetween(20, 25) * 1000,
           }),
         ],
         brand,

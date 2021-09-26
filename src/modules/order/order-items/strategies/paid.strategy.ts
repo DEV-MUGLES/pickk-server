@@ -9,7 +9,8 @@ export class OrderItemPaidStrategy extends OrderItemMarkStrategy {
   statusChangedField = 'paidAt' as const;
 
   validate() {
-    if (this.orderItem.status !== OrderItemStatus.Pending) {
+    const { Pending, Failed } = OrderItemStatus;
+    if (![Pending, Failed].includes(this.orderItem.status)) {
       throw new BadRequestException(
         `아래 주문상품을 결제 처리할 수 없습니다\n${this.orderItem.name}`
       );

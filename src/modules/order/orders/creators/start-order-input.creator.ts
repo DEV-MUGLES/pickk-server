@@ -14,10 +14,11 @@ import {
 import { Order } from '../models';
 
 export class StartOrderInputCreator {
-  static create(order: Order): StartOrderInput {
+  static create(order: Order, payMethod?: PayMethod): StartOrderInput {
     const result = new StartOrderInput();
 
-    result.payMethod = getRandomEnumValue(PayMethod) as PayMethod;
+    result.payMethod =
+      payMethod ?? (getRandomEnumValue(PayMethod) as PayMethod);
     result.usedPointAmount = getRandomIntBetween(0, order.totalPayAmount);
 
     result.buyerInput = this.createBuyerInput();
