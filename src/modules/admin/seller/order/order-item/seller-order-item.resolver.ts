@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -33,7 +28,6 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   relations = ORDER_ITEM_RELATIONS;
 
   constructor(
-    @Inject(OrderItemsService)
     private readonly orderItemsService: OrderItemsService,
     private readonly ordersService: OrdersService,
     private readonly sellerOrderItemService: SellerOrderItemService,

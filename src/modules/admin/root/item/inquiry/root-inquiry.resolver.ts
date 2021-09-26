@@ -3,7 +3,7 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
-import { JwtSellerVerifyGuard, JwtVerifyGuard } from '@auth/guards';
+import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
@@ -112,7 +112,8 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Mutation(() => InquiryAnswer)
-  @UseGuards(JwtSellerVerifyGuard)
+  @UseGuards(JwtVerifyGuard)
+  @Roles(UserRole.Admin)
   async updateRootInquiryAnswer(
     @IntArgs('id') id: number,
     @Args('updateInquiryAnswerInput') input: UpdateInquiryAnswerInput

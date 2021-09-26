@@ -2053,6 +2053,7 @@ type Query {
   """[ROOT ADMIN]"""
   rootInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   rootInquiry(id: Int!): Inquiry!
+  rootOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchItem(pageInput: PageInput, query: String!): [Item!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
