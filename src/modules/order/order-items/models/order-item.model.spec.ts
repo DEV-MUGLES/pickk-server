@@ -9,9 +9,9 @@ import { ShipmentOwnerType } from '@order/shipments/constants';
 import { PayMethod } from '@payment/payments/constants';
 import { ShippingAddress } from '@user/users/models';
 
+import { RequestExchangeInputCreator } from '../creators';
 import { OrderItemClaimStatus, OrderItemStatus } from '../constants';
 import { ShipOrderItemInput } from '../dtos';
-import { RequestExchangeInputCreator } from '../creators';
 
 describe('OrderItem model', () => {
   const setUp = () => {
@@ -105,6 +105,27 @@ describe('OrderItem model', () => {
 
       expect(order.orderItems[0].claimStatus).toEqual(
         OrderItemClaimStatus.ExchangeRequested
+      );
+    });
+  });
+
+  describe('markExchanged', () => {
+    it('성공적으로 수행한다', () => {
+      const { order, cardStartInput } = setUp();
+      const { input, product } = RequestExchangeInputCreator.create(
+        order.orderItems[0].item
+      );
+
+      order.start(cardStartInput, new ShippingAddress(), []);
+      order.complete();
+      for (const oi of order.orderItems) {
+        oi.markShipReady();
+      }
+      order.orderItems[0].requestExchange(input, product);
+      order.orderItems[0].markExchanged();
+
+      expect(order.orderItems[0].claimStatus).toEqual(
+        OrderItemClaimStatus.Exchanged
       );
     });
   });
