@@ -10,13 +10,16 @@ import { UsersModule } from '@user/users/users.module';
 import { SendInquiryCreationSlackMessageConsumer } from './consumers';
 import { InquiriesProducer } from './producers';
 
-import { InquiriesRepository } from './inquiries.repository';
+import {
+  InquiriesRepository,
+  InquiryAnswersRepository,
+} from './inquiries.repository';
 import { InquiriesResolver } from './inquiries.resolver';
 import { InquiriesService } from './inquiries.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([InquiriesRepository]),
+    TypeOrmModule.forFeature([InquiriesRepository, InquiryAnswersRepository]),
     ItemsModule,
     UsersModule,
     SqsModule.registerQueue({

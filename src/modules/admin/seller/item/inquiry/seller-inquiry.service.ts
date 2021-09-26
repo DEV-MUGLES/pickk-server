@@ -35,4 +35,13 @@ export class SellerInquiryService {
       throw new ForbiddenException('답변 권한이 없습니다.');
     }
   }
+
+  async checkAnswerBelongsTo(id: number, sellerId): Promise<void> {
+    const inquiryAnswer = await this.inquiriesService.getAnswer(id, [
+      'inquiry',
+    ]);
+    if (inquiryAnswer.inquiry.sellerId !== sellerId) {
+      throw new ForbiddenException('권한이 없습니다.');
+    }
+  }
 }

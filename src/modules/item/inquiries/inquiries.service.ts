@@ -6,16 +6,26 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
 import { InquiryRelationType } from './constants';
-import { AnswerInquiryInput, CreateInquiryInput, InquiryFilter } from './dtos';
-import { Inquiry } from './models';
+import {
+  AnswerInquiryInput,
+  CreateInquiryInput,
+  InquiryFilter,
+  UpdateInquiryAnswerInput,
+} from './dtos';
+import { Inquiry, InquiryAnswer } from './models';
 
-import { InquiriesRepository } from './inquiries.repository';
+import {
+  InquiriesRepository,
+  InquiryAnswersRepository,
+} from './inquiries.repository';
 
 @Injectable()
 export class InquiriesService {
   constructor(
     @InjectRepository(InquiriesRepository)
-    private readonly inquiriesRepository: InquiriesRepository
+    private readonly inquiriesRepository: InquiriesRepository,
+    @InjectRepository(InquiryAnswersRepository)
+    private readonly inquiryAnswersRepository: InquiryAnswersRepository
   ) {}
 
   async count(itemId: number): Promise<number> {
@@ -27,6 +37,13 @@ export class InquiriesService {
     relations: InquiryRelationType[] = []
   ): Promise<Inquiry> {
     return await this.inquiriesRepository.get(id, relations);
+  }
+
+  async getAnswer(
+    id: number,
+    relations: string[] = []
+  ): Promise<InquiryAnswer> {
+    return await this.inquiryAnswersRepository.get(id, relations);
   }
 
   async list(
@@ -62,5 +79,18 @@ export class InquiriesService {
     inquiry.answer(input);
 
     return await this.inquiriesRepository.save(inquiry);
+  }
+
+  async updateAnswer(
+    answerId: number,
+    input: UpdateInquiryAnswerInput
+  ): Promise<InquiryAnswer> {
+    const inquiryAnswer = await this.getAnswer(answerId);
+    return await this.inquiryAnswersRepository.save(
+      new InquiryAnswer({
+        ...inquiryAnswer,
+        ...input,
+      })
+    );
   }
 }

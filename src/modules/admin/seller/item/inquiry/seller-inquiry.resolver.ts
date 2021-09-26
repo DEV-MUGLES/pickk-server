@@ -15,8 +15,12 @@ import {
   InquiryRelationType,
   INQUIRY_RELATIONS,
 } from '@item/inquiries/constants';
-import { AnswerInquiryInput, InquiryFilter } from '@item/inquiries/dtos';
-import { Inquiry } from '@item/inquiries/models';
+import {
+  AnswerInquiryInput,
+  InquiryFilter,
+  UpdateInquiryAnswerInput,
+} from '@item/inquiries/dtos';
+import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 
 import { InquiriesCountOutput } from './dtos';
@@ -113,5 +117,18 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     await this.sellerInquiryProducer.sendInquiryAnsweredAlimtalk(id);
 
     return await this.inquiriesService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Mutation(() => InquiryAnswer)
+  @UseGuards(JwtSellerVerifyGuard)
+  async updateMeSellerInquiryAnswer(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @IntArgs('id') id: number,
+    @Args('updateInquiryAnswerInput') input: UpdateInquiryAnswerInput
+  ): Promise<InquiryAnswer> {
+    await this.sellerInquiryService.checkAnswerBelongsTo(id, sellerId);
+    await this.inquiriesService.updateAnswer(id, input);
+
+    return await this.inquiriesService.getAnswer(id);
   }
 }

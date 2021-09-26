@@ -1396,6 +1396,7 @@ type Mutation {
   updateMe(updateUserInput: UpdateUserInput!): User!
   updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
+  updateMeSellerInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
 
   """주문상품 단건 운송장 수정"""
   updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
@@ -2485,6 +2486,14 @@ input UpdateDigestInput {
 
   """최대 길이 127"""
   title: String
+}
+
+input UpdateInquiryAnswerInput {
+  """최대 길이 255"""
+  content: String
+
+  """표시될 답변작성자 이름. 최대 길이 30"""
+  displayAuthor: String
 }
 
 input UpdateItemInput {

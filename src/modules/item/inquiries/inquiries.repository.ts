@@ -3,8 +3,8 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 
-import { InquiryEntity } from './entities';
-import { Inquiry } from './models';
+import { InquiryAnswerEntity, InquiryEntity } from './entities';
+import { Inquiry, InquiryAnswer } from './models';
 
 @EntityRepository(InquiryEntity)
 export class InquiriesRepository extends BaseRepository<
@@ -19,6 +19,32 @@ export class InquiriesRepository extends BaseRepository<
     entities: InquiryEntity[],
     transformOptions = {}
   ): Inquiry[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+}
+
+@EntityRepository(InquiryAnswerEntity)
+export class InquiryAnswersRepository extends BaseRepository<
+  InquiryAnswerEntity,
+  InquiryAnswer
+> {
+  entityToModel(
+    entity: InquiryAnswerEntity,
+    transformOptions = {}
+  ): InquiryAnswer {
+    return plainToClass(
+      InquiryAnswer,
+      entity,
+      transformOptions
+    ) as InquiryAnswer;
+  }
+
+  entityToModelMany(
+    entities: InquiryAnswerEntity[],
+    transformOptions = {}
+  ): InquiryAnswer[] {
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
