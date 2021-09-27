@@ -33,7 +33,7 @@ export class BrandEntity extends BaseIdEntity implements IBrand {
   @Column({ length: 30, nullable: true })
   nameEng?: string;
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ length: 512, nullable: true })
   description?: string;
   @Field({ nullable: true })
   @Column({ nullable: true })
