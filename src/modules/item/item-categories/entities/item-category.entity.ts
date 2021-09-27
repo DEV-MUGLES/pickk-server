@@ -31,4 +31,9 @@ export class ItemCategoryEntity extends BaseIdEntity implements IItemCategory {
   @Field({ description: '최대 20자' })
   @Column({ length: 20 })
   name: string;
+
+  @Column({ nullable: true })
+  oldItemMajorTypeId: number;
+  @Column({ nullable: true })
+  oldItemMinorTypeId: number;
 }
