@@ -52,4 +52,9 @@ export class OrderJobsController {
   async removeExpiredOrders() {
     return await this.orderJobsService.removeExpiredOrders();
   }
+
+  @Delete('/remove-paying-orders')
+  async removePayingOrders() {
+    return await this.orderJobsService.removePayingOrders();
+  }
 }
