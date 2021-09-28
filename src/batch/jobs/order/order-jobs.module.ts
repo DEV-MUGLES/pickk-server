@@ -3,9 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
+import { OrdersRepository } from '@order/orders/orders.repository';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { ProductsModule } from '@item/products/products.module';
 
 import {
   ProcessDelayedExchangeRequestsJob,
@@ -36,14 +38,17 @@ import {
   ConfirmOrderItemsJob,
   ConfirmOrderItemsStep,
 } from './confirm-order-items';
-
-import { OrderJobsController } from './order-jobs.controller';
-import { OrderJobsService } from './order-jobs.service';
 import {
   RemoveExpiredOrdersJob,
   RemoveExpiredOrdersStep,
 } from './remove-expired-orders';
-import { OrdersRepository } from '@order/orders/orders.repository';
+import {
+  RemovePayingOrdersJob,
+  RemovePayingOrdersStep,
+} from './remove-paying-orders';
+
+import { OrderJobsController } from './order-jobs.controller';
+import { OrderJobsService } from './order-jobs.service';
 
 // TODO: job,step provider inject 개선하기
 @Module({
@@ -55,6 +60,7 @@ import { OrdersRepository } from '@order/orders/orders.repository';
       ExchangeRequestsRepository,
       OrdersRepository,
     ]),
+    ProductsModule,
   ],
   controllers: [OrderJobsController],
   providers: [
@@ -77,6 +83,8 @@ import { OrdersRepository } from '@order/orders/orders.repository';
     ConfirmExchangedOrderItemsStep,
     RemoveExpiredOrdersJob,
     RemoveExpiredOrdersStep,
+    RemovePayingOrdersJob,
+    RemovePayingOrdersStep,
   ],
 })
 export class OrderJobsModule {}
