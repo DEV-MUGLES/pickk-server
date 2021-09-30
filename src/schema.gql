@@ -1304,7 +1304,7 @@ input ManualCreateItemInput {
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
-  addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): ItemPrice!
+  addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): Item!
   addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
@@ -1393,7 +1393,7 @@ type Mutation {
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
-  updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): ItemPrice!
+  updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): Item!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!

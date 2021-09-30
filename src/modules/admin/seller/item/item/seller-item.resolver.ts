@@ -130,7 +130,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => ItemPrice)
+  @Mutation(() => Item)
   async addItemPrice(
     @IntArgs('itemId') itemId: number,
     @Args('addItemPriceInput')
@@ -143,7 +143,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => ItemPrice)
+  @Mutation(() => Item)
   async updateItemPrice(
     @IntArgs('id') id: number,
     @Args('updateItemPriceInput')
