@@ -124,7 +124,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Column()
   name: string;
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ length: 511, nullable: true })
   description?: string;
   @Field({ nullable: true })
   @Column({ length: 100, nullable: true })
