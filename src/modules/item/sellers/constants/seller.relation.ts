@@ -1,9 +1,6 @@
 import { Seller } from '../models';
 
-export type SellerRelationType =
-  | keyof Seller
-  | 'claimPolicy.account'
-  | 'settlePolicy.account';
+export type SellerRelationType = keyof Seller | 'settlePolicy.account';
 
 export const SELLER_RELATIONS: SellerRelationType[] = [
   'user',
@@ -11,7 +8,6 @@ export const SELLER_RELATIONS: SellerRelationType[] = [
   'saleStrategy',
   'crawlStrategy',
   'claimPolicy',
-  'claimPolicy.account',
   'settlePolicy',
   'settlePolicy.account',
   'crawlPolicy',
