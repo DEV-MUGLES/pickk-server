@@ -112,13 +112,10 @@ export class ProductsService {
     const productIds = restockProductDtos.map(({ productId }) => productId);
     const products = await this.productsRepository.findByIds(productIds);
 
-    products.forEach((product) => {
-      const { quantity, isShipReserved } = restockProductDtos.find(
-        ({ productId }) => productId === product.id
-      );
+    restockProductDtos.forEach(({ productId, quantity, isShipReserved }) => {
+      const product = products.find((product) => product.id === productId);
       product.restock(quantity, isShipReserved);
     });
-
     await this.productsRepository.save(products);
   }
 }

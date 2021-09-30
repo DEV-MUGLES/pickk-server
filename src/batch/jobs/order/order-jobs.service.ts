@@ -10,6 +10,7 @@ import { SendDelayedOrderItemsAlimtalkJob } from './send-delayed-order-items-ali
 import { SendDelayedExchangeRequestsAlimtalkJob } from './send-delayed-exchange-requests-alimtalk';
 import { SendDelayedRefundRequestsAlimtalkJob } from './send-delayed-refund-requests-alimtalk';
 import { RemoveExpiredOrdersJob } from './remove-expired-orders';
+import { RemovePayingOrdersJob } from './remove-paying-orders';
 
 @Injectable()
 export class OrderJobsService {
@@ -22,7 +23,8 @@ export class OrderJobsService {
     private readonly sendDelayedOrderItemsAlimtalkJob: SendDelayedOrderItemsAlimtalkJob,
     private readonly sendDelayedExchangeRequestsAlimtalkJob: SendDelayedExchangeRequestsAlimtalkJob,
     private readonly sendDelayedRefundRequestsAlimtalkJob: SendDelayedRefundRequestsAlimtalkJob,
-    private readonly removeExpiredOrdersJob: RemoveExpiredOrdersJob
+    private readonly removeExpiredOrdersJob: RemoveExpiredOrdersJob,
+    private readonly removePayingOrdersJob: RemovePayingOrdersJob
   ) {}
 
   async processDelayedExchangeRequests() {
@@ -59,5 +61,9 @@ export class OrderJobsService {
 
   async removeExpiredOrders() {
     return await this.bacthWorker.run(this.removeExpiredOrdersJob);
+  }
+
+  async removePayingOrders() {
+    return await this.bacthWorker.run(this.removePayingOrdersJob);
   }
 }
