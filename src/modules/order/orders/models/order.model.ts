@@ -10,7 +10,7 @@ import { OrderItem } from '@order/order-items/models';
 import { RefundRequestFactory } from '@order/refund-requests/factories';
 import { RefundRequest } from '@order/refund-requests/models';
 import { PayMethod } from '@payment/payments/constants';
-import { ShippingAddress } from '@user/users/models';
+import { ShippingAddress, User } from '@user/users/models';
 
 import { OrderStatus } from '../constants';
 import {
@@ -31,12 +31,28 @@ import { OrderVbankReceipt } from './order-vbank-receipt.model';
 
 @ObjectType()
 export class Order extends OrderEntity {
-  @Type(() => OrderItem)
+  @Field(() => User, { nullable: true })
+  @Type(() => User)
+  user?: User;
   @Field(() => [OrderItem])
+  @Type(() => OrderItem)
   orderItems: OrderItem[];
-  @Type(() => RefundRequest)
   @Field(() => [RefundRequest])
+  @Type(() => RefundRequest)
   refundRequests: RefundRequest[];
+
+  @Field(() => OrderVbankReceipt, { nullable: true })
+  @Type(() => OrderVbankReceipt)
+  vbankReceipt?: OrderVbankReceipt;
+  @Field(() => OrderBuyer, { nullable: true })
+  @Type(() => OrderBuyer)
+  buyer: OrderBuyer;
+  @Field(() => OrderReceiver, { nullable: true })
+  @Type(() => OrderReceiver)
+  receiver: OrderReceiver;
+  @Field(() => OrderRefundAccount, { nullable: true })
+  @Type(() => OrderRefundAccount)
+  refundAccount: OrderRefundAccount;
 
   @Field({ description: '[MODEL ONLY]' })
   get id(): string {

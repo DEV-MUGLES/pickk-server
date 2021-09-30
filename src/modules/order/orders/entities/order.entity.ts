@@ -12,18 +12,20 @@ import {
 } from 'typeorm';
 import { IsEnum, IsString } from 'class-validator';
 
+import { IAccount } from '@common/interfaces';
+
 import { IOrderItem } from '@order/order-items/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { PayMethod } from '@payment/payments/constants';
-import { User } from '@user/users/models';
+import { IUser } from '@user/users/interfaces';
 
 import { OrderStatus } from '../constants';
-import { IOrder } from '../interfaces';
-
-import { OrderBuyer } from '../models/order-buyer.model';
-import { OrderReceiver } from '../models/order-receiver.model';
-import { OrderRefundAccount } from '../models/order-refund-account.model';
-import { OrderVbankReceipt } from '../models/order-vbank-receipt.model';
+import {
+  IOrder,
+  IOrderBuyer,
+  IOrderReceiver,
+  IOrderVbankReceipt,
+} from '../interfaces';
 
 import { OrderVbankReceiptEntity } from './order-vbank-receipt.entity';
 import { OrderBuyerEntity } from './order-buyer.entity';
@@ -76,18 +78,15 @@ export class OrderEntity implements IOrder {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { nullable: true })
-  user?: User;
+  user?: IUser;
   @Field(() => Int, { nullable: true })
   @Column()
   userId?: number;
 
   @OneToMany('OrderItemEntity', 'order', { cascade: true })
   orderItems: IOrderItem[];
-  @OneToMany('RefundRequestEntity', 'order', {
-    cascade: true,
-  })
+  @OneToMany('RefundRequestEntity', 'order', { cascade: true })
   refundRequests: IRefundRequest[];
 
   @Field(() => OrderStatus)
@@ -99,23 +98,19 @@ export class OrderEntity implements IOrder {
   @IsEnum(PayMethod)
   payMethod?: PayMethod;
 
-  @Field(() => OrderVbankReceipt, { nullable: true })
   @OneToOne(() => OrderVbankReceiptEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  vbankReceipt?: OrderVbankReceipt;
+  vbankReceipt?: IOrderVbankReceipt;
 
-  @Field(() => OrderBuyer, { nullable: true })
   @OneToOne(() => OrderBuyerEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  buyer: OrderBuyer;
-  @Field(() => OrderReceiver, { nullable: true })
+  buyer: IOrderBuyer;
   @OneToOne(() => OrderReceiverEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  receiver: OrderReceiver;
-  @Field(() => OrderRefundAccount, { nullable: true })
+  receiver: IOrderReceiver;
   @OneToOne(() => OrderRefundAccountEntity, { cascade: true, nullable: true })
   @JoinColumn()
-  refundAccount: OrderRefundAccount;
+  refundAccount: IAccount;
 
   @Field({ nullable: true })
   @Column({ nullable: true })

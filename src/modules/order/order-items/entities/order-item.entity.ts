@@ -12,15 +12,16 @@ import {
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 import { ContentType } from '@common/constants';
-import { Item } from '@item/items/models';
-import { Product } from '@item/products/models';
-import { Seller } from '@item/sellers/models';
+
+import { IItem } from '@item/items/interfaces';
+import { IProduct } from '@item/products/interfaces';
+import { ISeller } from '@item/sellers/interfaces';
 import { Coupon } from '@order/coupons/models';
 import { IExchangeRequest } from '@order/exchange-requests/interfaces';
 import { IOrder } from '@order/orders/interfaces';
 import { IRefundRequest } from '@order/refund-requests/interfaces';
-import { Shipment } from '@order/shipments/models';
-import { User } from '@user/users/models';
+import { IShipment } from '@order/shipments/interfaces';
+import { IUser } from '@user/users/interfaces';
 
 import {
   OrderItemStatus,
@@ -124,27 +125,23 @@ export class OrderItemEntity implements IOrderItem {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Field(() => User, { nullable: true })
   @ManyToOne('UserEntity', { onDelete: 'SET NULL', nullable: true })
-  user?: User;
+  user?: IUser;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   userId?: number;
-  @Field(() => Seller, { nullable: true })
   @ManyToOne('SellerEntity', { onDelete: 'SET NULL', nullable: true })
-  seller?: Seller;
+  seller?: ISeller;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   sellerId?: number;
-  @Field(() => Item, { nullable: true })
   @ManyToOne('ItemEntity', { onDelete: 'SET NULL', nullable: true })
-  item?: Item;
+  item?: IItem;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   itemId?: number;
-  @Field(() => Product, { nullable: true })
   @ManyToOne('ProductEntity', { onDelete: 'SET NULL', nullable: true })
-  product?: Product;
+  product?: IProduct;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   productId: number;
@@ -155,14 +152,13 @@ export class OrderItemEntity implements IOrderItem {
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   usedCouponId?: number;
-  @Field(() => Shipment, { nullable: true })
   @OneToOne('ShipmentEntity', {
     onDelete: 'SET NULL',
     nullable: true,
     cascade: true,
   })
   @JoinColumn()
-  shipment: Shipment;
+  shipment: IShipment;
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   shipmentId: number;

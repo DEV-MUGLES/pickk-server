@@ -2,7 +2,9 @@ import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
+import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
+import { Seller } from '@item/sellers/models';
 import { Coupon } from '@order/coupons/models';
 import { ExchangeRequestFactory } from '@order/exchange-requests/factories';
 import { ExchangeRequest } from '@order/exchange-requests/models';
@@ -10,6 +12,8 @@ import { Order } from '@order/orders/models';
 import { RefundRequest } from '@order/refund-requests/models';
 import { ShipmentOwnerType } from '@order/shipments/constants';
 import { ShipmentFactory } from '@order/shipments/factories';
+import { Shipment } from '@order/shipments/models';
+import { User } from '@user/users/models';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
 import { RequestOrderItemExchangeInput, ShipOrderItemInput } from '../dtos';
@@ -35,14 +39,32 @@ export class OrderItem extends OrderItemEntity {
   get name(): string {
     return `[${this.brandNameKor}] ${this.itemName} (${this.productVariantName}) ${this.quantity}개`;
   }
-  @Type(() => Order)
+
+  @Field(() => User, { nullable: true })
+  @Type(() => User)
+  user?: User;
+  @Field(() => Seller, { nullable: true })
+  @Type(() => Seller)
+  seller?: Seller;
+  @Field(() => Item, { nullable: true })
+  @Type(() => Item)
+  item?: Item;
+  @Field(() => Product, { nullable: true })
+  @Type(() => Product)
+  product?: Product;
+
+  @Field(() => Shipment, { nullable: true })
+  @Type(() => Shipment)
+  shipment: Shipment;
+
   @Field(() => Order)
+  @Type(() => Order)
   order: Order;
-  @Type(() => RefundRequest)
   @Field(() => RefundRequest)
+  @Type(() => RefundRequest)
   refundRequest: RefundRequest;
-  @Type(() => ExchangeRequest)
   @Field(() => ExchangeRequest)
+  @Type(() => ExchangeRequest)
   exchangeRequest: ExchangeRequest;
 
   /////////////////
