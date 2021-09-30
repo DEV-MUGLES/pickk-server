@@ -92,14 +92,11 @@ export class PaymentsService {
     const payment = await this.get(merchantUid, ['cancellations']);
     payment.cancel(input);
 
-    await getManager().transaction(async () => {
-      await this.paymentsRepository.save(payment);
-
-      await this.inicisService.cancel({
-        ...input,
-        payment,
-      });
+    await this.inicisService.cancel({
+      ...input,
+      payment,
     });
+    await this.paymentsRepository.save(payment);
   }
 
   async dodgeVbank(merchantUid: string) {
