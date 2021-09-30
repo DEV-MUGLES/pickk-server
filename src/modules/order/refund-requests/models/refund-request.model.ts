@@ -11,9 +11,10 @@ import { RefundRequestMarkStrategyFactory } from '../factories';
 @ObjectType()
 export class RefundRequest extends RefundRequestEntity {
   @Field(() => Order)
+  @Type(() => Order)
   order: Order;
-  @Type(() => OrderItem)
   @Field(() => [OrderItem])
+  @Type(() => OrderItem)
   orderItems: OrderItem[];
 
   /////////////////

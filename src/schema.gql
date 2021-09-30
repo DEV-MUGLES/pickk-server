@@ -219,7 +219,7 @@ type CartItem {
   id: Int!
 
   """[MODEL ONLY]"""
-  isAdjusted: Boolean!
+  isAdjusted: Boolean
   product: Product!
   productId: Int!
   quantity: Int!

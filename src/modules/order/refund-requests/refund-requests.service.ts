@@ -34,7 +34,7 @@ export class RefundRequestsService {
   async list(
     refundRequestFilter?: RefundRequestFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: RefundRequestRelationType[] = []
   ): Promise<RefundRequest[]> {
     const _refundRequestFilter = plainToClass(
       RefundRequestFilter,
@@ -45,7 +45,7 @@ export class RefundRequestsService {
     return this.refundRequestsRepository.entityToModelMany(
       await this.refundRequestsRepository.find({
         relations,
-        where: parseFilter(_refundRequestFilter, _pageInput?.idFilter),
+        where: parseFilter(_refundRequestFilter),
         order: {
           merchantUid: 'DESC',
         },
