@@ -15,7 +15,7 @@ export class CartItem extends CartItemEntity {
   @Field(() => User)
   user: User;
 
-  @Field({ description: '[MODEL ONLY]' })
+  @Field({ description: '[MODEL ONLY]', nullable: true })
   isAdjusted: boolean;
 
   /** 이 CartItem의 quantity가 재고를 넘지 않도록 조정합니다. 

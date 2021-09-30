@@ -76,13 +76,13 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
   @Mutation(() => CartItem)
   @UseGuards(JwtVerifyGuard)
   async updateMyCartItem(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('id') id: number,
     @Args('updateCartItemInput') updateCartItemInput: UpdateCartItemInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<CartItem> {
     const cartItem = await this.cartsService.getItem(id);
-    if (cartItem.userId !== payload.sub) {
+    if (cartItem.userId !== userId) {
       throw new UnauthorizedException('본인의 CartItem만 수정할 수 있습니다.');
     }
 
