@@ -954,6 +954,7 @@ type ItemDetailImage {
 
 input ItemFilter {
   brandId: Int
+  createdAtBetween: [DateTime!]
   createdAtLte: DateTime
   createdAtMte: DateTime
   idIn: [Int!]
@@ -967,6 +968,7 @@ input ItemFilter {
 
   """아이템 이름(name)으로 검색합니다."""
   search: String
+  sellableAtBetween: [DateTime!]
   sellableAtLte: DateTime
   sellableAtMte: DateTime
 }

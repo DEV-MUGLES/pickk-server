@@ -32,10 +32,14 @@ export class ItemFilter implements Partial<IItem> {
   @Field({ nullable: true })
   scoreMt?: number;
 
+  @Field(() => [Date, Date], { nullable: true })
+  sellableAtBetween?: [Date, Date];
   @Field({ nullable: true })
   sellableAtMte?: Date;
   @Field({ nullable: true })
   sellableAtLte?: Date;
+  @Field(() => [Date, Date], { nullable: true })
+  createdAtBetween?: [Date, Date];
   @Field({ nullable: true })
   createdAtMte?: Date;
   @Field({ nullable: true })
