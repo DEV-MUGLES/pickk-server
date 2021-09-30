@@ -10,14 +10,14 @@ import { IntArgs } from '@common/decorators';
 import { SaleStrategy } from '@common/models';
 import { UserRole } from '@user/users/constants';
 
-import { SELLER_RELATIONS } from './constants';
+import { SellerRelationType, SELLER_RELATIONS } from './constants';
 import { SellerFilter, CreateSellerInput } from './dtos';
 import { Seller } from './models';
 
 import { SellersService } from './sellers.service';
 
 @Resolver(() => Seller)
-export class SellersResolver extends BaseResolver {
+export class SellersResolver extends BaseResolver<SellerRelationType> {
   relations = SELLER_RELATIONS;
 
   constructor(@Inject(SellersService) private sellersService: SellersService) {

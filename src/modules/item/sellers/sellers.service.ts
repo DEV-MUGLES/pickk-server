@@ -7,6 +7,7 @@ import { parseFilter } from '@common/helpers';
 import { SaleStrategy } from '@common/models';
 import { SaleStrategyRepository } from '@common/repositories';
 
+import { SellerRelationType } from './constants';
 import {
   UpdateSellerClaimPolicyInput,
   UpdateSellerCrawlPolicyInput,
@@ -55,7 +56,7 @@ export class SellersService {
     );
   }
 
-  async get(id: number, relations: string[] = []): Promise<Seller> {
+  async get(id: number, relations: SellerRelationType[] = []): Promise<Seller> {
     return await this.sellersRepository.get(id, relations);
   }
 
@@ -69,7 +70,7 @@ export class SellersService {
   async update(
     id: number,
     input: UpdateSellerInput,
-    relations: string[] = []
+    relations: SellerRelationType[] = []
   ): Promise<Seller> {
     await this.sellersRepository.update(id, input);
     return await this.get(id, relations);
@@ -77,7 +78,7 @@ export class SellersService {
 
   async create(
     createSellerInput: CreateSellerInput,
-    relations: string[] = []
+    relations: SellerRelationType[] = []
   ): Promise<Seller> {
     const {
       saleStrategyInput,
@@ -114,25 +115,28 @@ export class SellersService {
   }
 
   async updateClaimPolicy(
-    seller: Seller,
+    id: number,
     input: UpdateSellerClaimPolicyInput
   ): Promise<SellerClaimPolicy> {
+    const seller = await this.get(id, ['claimPolicy']);
     seller.updateClaimPolicy(input);
     return (await this.sellersRepository.save(seller)).claimPolicy;
   }
 
   async updateSettlePolicy(
-    seller: Seller,
+    id: number,
     input: UpdateSellerSettlePolicyInput
   ): Promise<SellerSettlePolicy> {
+    const seller = await this.get(id, ['settlePolicy', 'settlePolicy.account']);
     seller.updateSettlePolicy(input);
     return (await this.sellersRepository.save(seller)).settlePolicy;
   }
 
   async updateCrawlPolicy(
-    seller: Seller,
+    id: number,
     input: UpdateSellerCrawlPolicyInput
   ): Promise<SellerCrawlPolicy> {
+    const seller = await this.get(id, ['crawlPolicy']);
     seller.crawlPolicy = new SellerCrawlPolicy({
       ...seller.crawlPolicy,
       ...input,
@@ -141,9 +145,10 @@ export class SellersService {
   }
 
   async updateShippingPolicy(
-    seller: Seller,
+    id: number,
     input: UpdateSellerShippingPolicyInput
   ): Promise<SellerShippingPolicy> {
+    const seller = await this.get(id, ['shippingPolicy']);
     seller.shippingPolicy = new SellerShippingPolicy({
       ...seller.shippingPolicy,
       ...input,
@@ -161,9 +166,10 @@ export class SellersService {
   }
 
   async updateReturnAddress(
-    seller: Seller,
+    id: number,
     input: UpdateSellerReturnAddressInput
   ): Promise<SellerReturnAddress> {
+    const seller = await this.get(id, ['returnAddress']);
     seller.returnAddress = new SellerReturnAddress({
       ...seller.returnAddress,
       ...input,

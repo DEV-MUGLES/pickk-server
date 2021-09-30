@@ -1,11 +1,13 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { JwtSellerGuard } from '@auth/guards';
+import { CurrentUser } from '@auth/decorators';
+import { JwtSellerGuard, JwtSellerVerifyGuard } from '@auth/guards';
+import { JwtPayload } from '@auth/models';
 import { BaseResolver } from '@common/base.resolver';
-import { SELLER_RELATIONS } from '@item/sellers/constants';
-import { CurrentSeller } from '@item/sellers/decorators';
+
+import { SellerRelationType, SELLER_RELATIONS } from '@item/sellers/constants';
 import {
   UpdateSellerInput,
   UpdateSellerClaimPolicyInput,
@@ -25,28 +27,34 @@ import {
 import { SellersService } from '@item/sellers/sellers.service';
 
 @Resolver()
-export class MySellerResolver extends BaseResolver {
+export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   relations = SELLER_RELATIONS;
 
-  constructor(@Inject(SellersService) private sellersService: SellersService) {
+  constructor(private sellersService: SellersService) {
     super();
   }
 
   @Query(() => Seller)
-  @UseGuards(JwtSellerGuard)
-  meSeller(@CurrentSeller() seller: Seller) {
-    return seller;
+  @UseGuards(JwtSellerVerifyGuard)
+  async meSeller(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Seller> {
+    return await this.sellersService.get(
+      sellerId,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => Seller)
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMeSeller(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerInput') updateSellerInput: UpdateSellerInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Seller> {
     return await this.sellersService.update(
-      seller.id,
+      sellerId,
       {
         ...updateSellerInput,
       },
@@ -57,12 +65,12 @@ export class MySellerResolver extends BaseResolver {
   @Mutation(() => SellerClaimPolicy)
   @UseGuards(JwtSellerGuard)
   async updateMySellerClaimPolicy(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerClaimPolicyInput')
     updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput
   ): Promise<SellerClaimPolicy> {
     return await this.sellersService.updateClaimPolicy(
-      seller,
+      sellerId,
       updateSellerClaimPolicyInput
     );
   }
@@ -72,12 +80,12 @@ export class MySellerResolver extends BaseResolver {
   })
   @UseGuards(JwtSellerGuard)
   async updateMySellerSettlePolicy(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerSettlePolicyInput')
     updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput
   ): Promise<SellerSettlePolicy> {
     return await this.sellersService.updateSettlePolicy(
-      seller,
+      sellerId,
       updateSellerSettlePolicyInput
     );
   }
@@ -85,12 +93,12 @@ export class MySellerResolver extends BaseResolver {
   @Mutation(() => SellerCrawlPolicy)
   @UseGuards(JwtSellerGuard)
   async updateMySellerCrawlPolicy(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerCrawlPolicyInput')
     updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput
   ): Promise<SellerCrawlPolicy> {
     return await this.sellersService.updateCrawlPolicy(
-      seller,
+      sellerId,
       updateSellerCrawlPolicyInput
     );
   }
@@ -98,12 +106,12 @@ export class MySellerResolver extends BaseResolver {
   @Mutation(() => SellerShippingPolicy)
   @UseGuards(JwtSellerGuard)
   async updateMySellerShippingPolicy(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerShippingPolicyInput')
     updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput
   ): Promise<SellerShippingPolicy> {
     return await this.sellersService.updateShippingPolicy(
-      seller,
+      sellerId,
       updateSellerShippingPolicyInput
     );
   }
@@ -111,12 +119,12 @@ export class MySellerResolver extends BaseResolver {
   @Mutation(() => SellerReturnAddress)
   @UseGuards(JwtSellerGuard)
   async updateMySellerReturnAddress(
-    @CurrentSeller() seller: Seller,
+    @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerReturnAddressInput')
     updateSellerReturnAddressInput: UpdateSellerReturnAddressInput
   ): Promise<SellerReturnAddress> {
     return await this.sellersService.updateReturnAddress(
-      seller,
+      sellerId,
       updateSellerReturnAddressInput
     );
   }
