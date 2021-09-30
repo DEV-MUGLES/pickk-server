@@ -78,6 +78,15 @@ export class CartsService {
     return await this.cartItemsRepository.get(id, relations);
   }
 
+  async getCart(userId: number): Promise<Cart> {
+    const cartItems = await this.findItemsByUserId(userId);
+
+    cartItems.forEach((cartItem) => cartItem.adjustQuantityToStock());
+    await this.cartItemsRepository.save(cartItems);
+
+    return this.createCart(userId, cartItems);
+  }
+
   async updateItem(
     cartItem: CartItem,
     updateCartItemInput: UpdateCartItemInput

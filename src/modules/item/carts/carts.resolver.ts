@@ -34,13 +34,8 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
 
   @Query(() => Cart)
   @UseGuards(JwtVerifyGuard)
-  async myCart(@CurrentUser() payload: JwtPayload): Promise<Cart> {
-    const userId = payload.sub;
-
-    const cartItems = await this.cartsService.findItemsByUserId(userId);
-    await this.cartsService.adjustQuantitiesToStock(cartItems);
-
-    return this.cartsService.createCart(userId, cartItems);
+  async myCart(@CurrentUser() { sub: userId }: JwtPayload): Promise<Cart> {
+    return this.cartsService.getCart(userId);
   }
 
   @Mutation(() => Boolean)

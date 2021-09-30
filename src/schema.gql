@@ -200,7 +200,7 @@ enum CardCode {
 }
 
 type Cart {
-  """CartItem들을 브랜드 단위로 묶은 단위입니다."""
+  """CartItem을 브랜드 단위로 묶은 것"""
   cartBrands: [CartBrand!]!
   cartItems: [CartItem!]!
 

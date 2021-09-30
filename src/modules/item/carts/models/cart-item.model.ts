@@ -26,9 +26,11 @@ export class CartItem extends CartItemEntity {
     if (stockThreshold < this.quantity) {
       this.quantity = stockThreshold;
       this.isAdjusted = true;
+    } else {
+      this.isAdjusted = false;
     }
 
-    return this.isAdjusted || false;
+    return this.isAdjusted;
   }
 
   public static getCountCacheKey(userId: number): string {
