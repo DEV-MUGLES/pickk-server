@@ -30,7 +30,7 @@ export class ItemFilter implements Partial<IItem> {
   @Field(() => [Int], { nullable: true })
   idIn?: number[];
   @Field({ nullable: true })
-  scoreMt?: Date;
+  scoreMt?: number;
 
   @Field({ nullable: true })
   sellableAtMte?: Date;
