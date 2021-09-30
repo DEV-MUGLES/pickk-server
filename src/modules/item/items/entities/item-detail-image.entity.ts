@@ -24,4 +24,8 @@ export class ItemDetailImageEntity extends AbstractImageEntity {
   @Field(() => Int)
   @Column()
   itemId: number;
+
+  @Field(() => Int)
+  @Column({ type: 'tinyint', default: 0, unsigned: true })
+  order: number;
 }
