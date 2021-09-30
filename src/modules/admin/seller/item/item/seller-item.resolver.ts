@@ -1,10 +1,12 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Info, Int, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@auth/decorators';
+import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard, JwtSellerVerifyGuard } from '@auth/guards';
+import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
+import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
@@ -19,11 +21,12 @@ import {
   CreateItemOptionSetInput,
   UpdateItemInput,
   UpdateItemOptionInput,
+  ItemFilter,
 } from '@item/items/dtos';
 import { Item, ItemOption, ItemPrice, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
-import { UserRole } from '@user/users/constants';
 import { ProductsService } from '@item/products/products.service';
+import { UserRole } from '@user/users/constants';
 
 @Resolver(() => Item)
 export class SellerItemResolver extends BaseResolver<ItemRelationType> {
@@ -34,6 +37,22 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     private readonly productsService: ProductsService
   ) {
     super();
+  }
+
+  @Roles(UserRole.Seller)
+  @UseGuards(JwtSellerVerifyGuard)
+  @Query(() => [Item])
+  async meSellerItems(
+    @CurrentUser() { brandId }: JwtPayload,
+    @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    return await this.itemsService.list(
+      { brandId, ...itemFilter },
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Roles(UserRole.Seller)
