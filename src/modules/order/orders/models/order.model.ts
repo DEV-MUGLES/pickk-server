@@ -37,6 +37,9 @@ export class Order extends OrderEntity {
   @Type(() => RefundRequest)
   @Field(() => [RefundRequest])
   refundRequests: RefundRequest[];
+  @Type(() => OrderVbankReceipt)
+  @Field(() => OrderVbankReceipt, { nullable: true })
+  vbankReceipt?: OrderVbankReceipt;
 
   @Field({ description: '[MODEL ONLY]' })
   get id(): string {

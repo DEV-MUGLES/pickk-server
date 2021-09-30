@@ -99,7 +99,6 @@ export class OrderEntity implements IOrder {
   @IsEnum(PayMethod)
   payMethod?: PayMethod;
 
-  @Field(() => OrderVbankReceipt, { nullable: true })
   @OneToOne(() => OrderVbankReceiptEntity, { cascade: true, nullable: true })
   @JoinColumn()
   vbankReceipt?: OrderVbankReceipt;
