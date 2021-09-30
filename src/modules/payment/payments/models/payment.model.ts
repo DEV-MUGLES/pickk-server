@@ -22,8 +22,8 @@ import { PaymentCancellation } from './payment-cancellation.model';
 
 @ObjectType()
 export class Payment extends PaymentEntity {
-  @Type(() => PaymentCancellation)
   @Field(() => [PaymentCancellation])
+  @Type(() => PaymentCancellation)
   cancellations: PaymentCancellation[];
 
   @Field(() => Int)

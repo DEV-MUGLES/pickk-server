@@ -4,7 +4,7 @@ import { BankCode } from '@common/constants';
 import { Payment } from '@payment/payments/models';
 
 export class InicisCancelDto {
-  payment: Payment;
+  cancelledPayment: Payment;
 
   @IsNumber()
   amount: number;

@@ -93,8 +93,8 @@ export class PaymentsService {
     payment.cancel(input);
 
     await this.inicisService.cancel({
+      cancelledPayment: payment,
       ...input,
-      payment,
     });
     await this.paymentsRepository.save(payment);
   }

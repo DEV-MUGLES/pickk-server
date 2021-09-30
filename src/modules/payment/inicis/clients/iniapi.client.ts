@@ -46,16 +46,16 @@ export class IniapiClient {
   }
 
   public getCancelParams(
-    cancelDto: InicisCancelDto
+    dto: InicisCancelDto
   ):
     | IniapiRefundRequestParams
     | IniapiPartialRefundRequestParams
     | IniapiVacctRefundRequestParams {
-    const { payment, amount, reason, taxFree = 0 } = cancelDto;
+    const { cancelledPayment, amount, reason, taxFree = 0 } = dto;
 
     const { timestamp, clientIp, mid } = this.iniapiMap;
-    const paymethod = toIniapiPayMethod(payment.payMethod);
-    const tid = payment.pgTid;
+    const paymethod = toIniapiPayMethod(cancelledPayment.payMethod);
+    const tid = cancelledPayment.pgTid;
     const msg = reason;
 
     const getHashDataString = (type: string) =>
@@ -70,8 +70,8 @@ export class IniapiClient {
       clientIp: '127.0.0.1',
     };
 
-    // 전액 취소인 경우
-    if (amount !== payment.amount) {
+    // 전액 취소인 경우 (주의: 최초 결제시 결제한 금액을 모두 한번에 취소할 때만 전액 취소임)
+    if (amount === cancelledPayment.amount) {
       return {
         ...params,
         type: 'Refund',
@@ -80,7 +80,7 @@ export class IniapiClient {
     }
 
     const price = amount;
-    const confirmPrice = payment.remainAmount - amount;
+    const confirmPrice = cancelledPayment.remainAmount;
 
     return {
       ...params,
