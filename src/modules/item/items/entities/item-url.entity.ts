@@ -31,7 +31,7 @@ export class ItemUrlEntity extends BaseIdEntity implements IItemUrl {
   itemId: number;
 
   @Field()
-  @Column({ length: 512 })
+  @Column({ length: 2048 })
   @IsUrl()
   url: string;
   @Field()
