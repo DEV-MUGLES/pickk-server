@@ -1,11 +1,17 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
+import { Timezone } from '@common/constants';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class ItemCreationSuccessTemplate extends BaseSlackTemplate {
   static create(item: Item, nickname: string): IncomingWebhookSendArguments {
@@ -28,7 +34,7 @@ export class ItemCreationSuccessTemplate extends BaseSlackTemplate {
             style: 'primary',
           },
         ])
-        .addContext(dayjs().format('YYYY. MM. DD. hh:mm:ss'))
+        .addContext(dayjs().tz(Timezone.Seoul).format('YYYY. MM. DD. hh:mm:ss'))
         .build(),
     };
   }

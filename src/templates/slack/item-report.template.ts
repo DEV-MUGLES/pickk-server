@@ -1,11 +1,16 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class ItemReportTemplate extends BaseSlackTemplate {
   static create(
