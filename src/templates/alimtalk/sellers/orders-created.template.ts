@@ -23,7 +23,7 @@ export class OrdersCreatedTemplate {
 
   static toContent(brandKor: string, orderCount: number): string {
     return `안녕하세요! ${brandKor} 담당자님, 새로운 주문이 ${orderCount}건 발생했습니다!
-    발주확인 처리 요청드립니다.
+발주확인 처리 요청드립니다.
     `;
   }
 }

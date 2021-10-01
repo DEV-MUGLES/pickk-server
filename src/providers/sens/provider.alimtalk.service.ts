@@ -72,10 +72,8 @@ export class AlimtalkService {
     );
   }
 
-  async sendInquiryCreated(sellerInfo: ISellerInfo, inquiry: Inquiry) {
-    await this.alimtalkClient.send(
-      InquiryCreatedTemplate.toRequest(sellerInfo, inquiry)
-    );
+  async sendInquiryCreated(inquiry: Inquiry) {
+    await this.alimtalkClient.send(InquiryCreatedTemplate.toRequest(inquiry));
   }
 
   async sendOrdersCreated(sellerInfo: ISellerInfo, ordersCount: number) {
