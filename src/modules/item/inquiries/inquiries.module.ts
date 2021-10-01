@@ -2,12 +2,15 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
-import { SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE } from '@queue/constants';
+import {
+  SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
+  SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
+} from '@queue/constants';
 
 import { ItemsModule } from '@item/items/items.module';
 import { UsersModule } from '@user/users/users.module';
 
-import { SendInquiryCreationSlackMessageConsumer } from './consumers';
+import { InquiriesConsumers } from './consumers';
 import { InquiriesProducer } from './producers';
 
 import {
@@ -22,15 +25,20 @@ import { InquiriesService } from './inquiries.service';
     TypeOrmModule.forFeature([InquiriesRepository, InquiryAnswersRepository]),
     ItemsModule,
     UsersModule,
-    SqsModule.registerQueue({
-      name: SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
-    }),
+    SqsModule.registerQueue(
+      {
+        name: SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
+      }
+    ),
   ],
   providers: [
     InquiriesResolver,
     InquiriesService,
     InquiriesProducer,
-    SendInquiryCreationSlackMessageConsumer,
+    ...InquiriesConsumers,
   ],
   exports: [InquiriesService],
 })

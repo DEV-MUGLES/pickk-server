@@ -108,6 +108,7 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
       userId,
     });
     await this.inquiriesProducer.sendInquiryCreationSlackMessage(inquiry);
+    await this.inquiriesProducer.sendInquiryCreatedAlimtalk(inquiry.id);
     return inquiry;
   }
 
