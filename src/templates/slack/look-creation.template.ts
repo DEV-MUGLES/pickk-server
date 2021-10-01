@@ -1,11 +1,17 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
 import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
+import { Timezone } from '@common/constants';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Look } from '@content/looks/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export class LookCreationTemplate extends BaseSlackTemplate {
   static create(look: Look): IncomingWebhookSendArguments {
@@ -26,7 +32,8 @@ export class LookCreationTemplate extends BaseSlackTemplate {
         .addText(`*아이템*`)
         .addButtons([{ text: '핔에서 보기', url: pickkUrl, style: 'primary' }])
         .addContext(
-          `*<mailto:${email}|${email}(${nickname})>* at ${dayjs(createdAt)
+          `*<mailto:${email}|${email}(${nickname})>* at ${dayjs
+            .tz(createdAt, Timezone.Seoul)
             .format('YYYY. M. D. a H:mm:ss')
             .replace('pm', '오후')
             .replace('am', '오전')}`
