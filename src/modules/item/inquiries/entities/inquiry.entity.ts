@@ -60,7 +60,7 @@ export class InquiryEntity extends BaseIdEntity implements IInquiry {
   @ManyToOne('OrderItemEntity', { onDelete: 'SET NULL', nullable: true })
   orderItem: IOrderItem;
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'char', length: 20 })
   orderItemMerchantUid: string;
 
   @OneToMany('InquiryAnswerEntity', 'inquiry', { cascade: true })
