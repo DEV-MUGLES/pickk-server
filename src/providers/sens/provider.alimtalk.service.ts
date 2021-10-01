@@ -10,13 +10,18 @@ import {
   DelayedExchangeRequestsTemplate,
   DelayedOrderItemsTemplate,
   DelayedRefundRequestsTemplate,
-  RefundRequestedTemplate,
+  ExchangeRequestedTemplate,
   CancelOrderApprovedTemplate,
   CompleteOrderTemplate,
   VbankNotiTemplate,
-  ExchangeRequestedTemplate,
   InquiryAnsweredTemplate,
+  InquiryCreatedTemplate,
+  OrdersCreatedTemplate,
+  RefundRequestedTemplate,
+  RefundRequestCreatedTemplate,
+  ExchangeRequestedCreatedTemplate,
 } from '@templates/alimtalk';
+
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
 
 @Injectable()
@@ -58,6 +63,36 @@ export class AlimtalkService {
   ) {
     await this.alimtalkClient.send(
       DelayedExchangeRequestsTemplate.toRequest(sellerInfo, delayedCount)
+    );
+  }
+
+  async sendInquiryCreated(sellerInfo: ISellerInfo, inquiry: Inquiry) {
+    await this.alimtalkClient.send(
+      InquiryCreatedTemplate.toRequest(sellerInfo, inquiry)
+    );
+  }
+
+  async sendOrdersCreated(sellerInfo: ISellerInfo, ordersCount: number) {
+    await this.alimtalkClient.send(
+      OrdersCreatedTemplate.toRequest(sellerInfo, ordersCount)
+    );
+  }
+
+  async sendRefundRequestCreated(
+    sellerInfo: ISellerInfo,
+    refundRequest: RefundRequest
+  ) {
+    await this.alimtalkClient.send(
+      RefundRequestCreatedTemplate.toRequest(sellerInfo, refundRequest)
+    );
+  }
+
+  async sendExchangeRequestCreated(
+    sellerInfo: ISellerInfo,
+    exchangeRequest: ExchangeRequest
+  ) {
+    await this.alimtalkClient.send(
+      ExchangeRequestedCreatedTemplate.toRequest(sellerInfo, exchangeRequest)
     );
   }
 
