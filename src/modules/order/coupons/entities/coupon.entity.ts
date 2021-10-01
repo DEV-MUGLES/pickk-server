@@ -3,15 +3,10 @@ import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { IsEnum } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
-import { UserEntity } from '@user/users/entities';
-import { User } from '@user/users/models';
+import { IUser } from '@user/users/interfaces';
 
 import { CouponStatus } from '../constants';
-import { ICoupon } from '../interfaces';
-
-import { CouponSpecification } from '../models/coupon-specification.model';
-
-import { CouponSpecificationEntity } from './coupon-specification.entity';
+import { ICoupon, ICouponSpecification } from '../interfaces';
 
 @ObjectType()
 @Entity('coupon')
@@ -30,17 +25,15 @@ export class CouponEntity extends BaseIdEntity implements ICoupon {
     this.status = attributes.status;
   }
 
-  @Field(() => User)
-  @ManyToOne(() => UserEntity, { onDelete: 'CASCADE' })
+  @ManyToOne('UserEntity', { onDelete: 'CASCADE' })
   @JoinColumn()
-  user: User;
+  user: IUser;
   @Field(() => Int)
   @Column()
   userId: number;
-  @Field(() => CouponSpecification, { nullable: true })
-  @ManyToOne(() => CouponSpecificationEntity, { onDelete: 'CASCADE' })
+  @ManyToOne('CouponSpecificationEntity', { onDelete: 'CASCADE' })
   @JoinColumn()
-  spec: CouponSpecification;
+  spec: ICouponSpecification;
   @Field(() => Int)
   @Column()
   specId: number;

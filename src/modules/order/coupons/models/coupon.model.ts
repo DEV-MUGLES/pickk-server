@@ -1,26 +1,23 @@
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 import dayjs from 'dayjs';
 
 import { Item } from '@item/items/models';
+import { User } from '@user/users/models';
 
 import { CouponStatus, CouponType } from '../constants';
 import { CouponEntity } from '../entities';
 
+import { CouponSpecification } from './coupon-specification.model';
+
 @ObjectType()
 export class Coupon extends CouponEntity {
-  constructor(attributes?: Partial<Coupon>) {
-    super(attributes);
-    if (!attributes) {
-      return;
-    }
-
-    this.user = attributes.user;
-    this.userId = attributes.userId;
-
-    this.spec = attributes.spec;
-    this.specId = attributes.specId;
-    this.status = attributes.status;
-  }
+  @Field(() => User)
+  @Type(() => User)
+  user: User;
+  @Field(() => CouponSpecification, { nullable: true })
+  @Type(() => CouponSpecification)
+  spec: CouponSpecification;
 
   public checkUsableOn(item: Item): boolean {
     const {

@@ -10,11 +10,12 @@ import { ProductShippingReservePolicy } from './product-shipping-reserve-policy.
 
 @ObjectType()
 export class Product extends ProductEntity {
-  @Type(() => Item)
   @Field(() => Item)
+  @Type(() => Item)
   item: Item;
 
   @Field(() => ProductShippingReservePolicy, { nullable: true })
+  @Type(() => ProductShippingReservePolicy)
   shippingReservePolicy: ProductShippingReservePolicy;
 
   @Field({ description: '[MODEL ONLY] 예약배송 적용 여부' })

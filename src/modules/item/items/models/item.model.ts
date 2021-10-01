@@ -8,6 +8,7 @@ import { Type } from 'class-transformer';
 
 import { ItemInfoCrawlResult } from '@providers/crawler';
 
+import { Brand } from '@item/brands/models';
 import { Campaign } from '@item/campaigns/models';
 import { ItemCategory } from '@item/item-categories/models';
 import { Product } from '@item/products/models';
@@ -28,35 +29,42 @@ import { ItemUrl } from './item-url.model';
 import { ItemPrice } from './item-price.model';
 import { ItemSizeChart } from './item-size-chart.model';
 import { ItemOptionValue } from './item-option-value.model';
-import { Brand } from '@item/brands/models';
 import { ItemSalePolicy } from './item-sale-policy.model';
 
 @ObjectType()
 export class Item extends ItemEntity {
   @Field(() => Brand)
+  @Type(() => Brand)
   brand: Brand;
 
   @Field(() => ItemCategory, { nullable: true })
+  @Type(() => ItemCategory)
   majorCategory?: ItemCategory;
   @Field(() => ItemCategory, { nullable: true })
+  @Type(() => ItemCategory)
   minorCategory?: ItemCategory;
 
-  @Type(() => ItemOption)
   @Field(() => [ItemOption], { nullable: true })
+  @Type(() => ItemOption)
   options: ItemOption[];
-  @Type(() => Product)
   @Field(() => [Product], { nullable: true })
+  @Type(() => Product)
   products: Product[];
   @Field(() => [Campaign], { nullable: true })
+  @Type(() => Campaign)
   campaigns: Campaign[];
 
   @Field(() => ItemSalePolicy, { nullable: true })
+  @Type(() => ItemSalePolicy)
   salePolicy: ItemSalePolicy;
   @Field(() => [ItemPrice])
+  @Type(() => ItemPrice)
   prices: ItemPrice[];
   @Field(() => [ItemUrl])
+  @Type(() => ItemUrl)
   urls: ItemUrl[];
   @Field(() => [ItemDetailImage], { nullable: true })
+  @Type(() => ItemDetailImage)
   detailImages: ItemDetailImage[];
 
   @Field(() => [ItemSizeChart], { nullable: true })

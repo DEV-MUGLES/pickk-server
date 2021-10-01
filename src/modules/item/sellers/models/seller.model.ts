@@ -1,8 +1,11 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { SaleStrategy } from '@common/models';
 
 import { Brand } from '@item/brands/models';
+import { Courier } from '@item/couriers/models';
+import { User } from '@user/users/models';
 
 import {
   UpdateSellerClaimPolicyInput,
@@ -19,32 +22,40 @@ import {
 } from './policies';
 import { SellerCrawlStrategy } from './seller-crawl-strategy.model';
 import { SellerReturnAddress } from './seller-return-address.model';
-import { User } from '@user/users/models';
-import { Courier } from '@item/couriers/models';
 
 @ObjectType()
 export class Seller extends SellerEntity {
   @Field(() => User)
+  @Type(() => User)
   user: User;
   @Field(() => Brand)
+  @Type(() => Brand)
   brand: Brand;
 
   @Field(() => Courier, { nullable: true })
+  @Type(() => Courier)
   courier: Courier;
 
   @Field(() => SaleStrategy)
+  @Type(() => SaleStrategy)
   saleStrategy: SaleStrategy;
   @Field(() => SellerCrawlStrategy)
+  @Type(() => SellerCrawlStrategy)
   crawlStrategy: SellerCrawlStrategy;
   @Field(() => SellerClaimPolicy)
+  @Type(() => SellerClaimPolicy)
   claimPolicy: SellerClaimPolicy;
   @Field(() => SellerCrawlPolicy)
+  @Type(() => SellerCrawlPolicy)
   crawlPolicy: SellerCrawlPolicy;
   @Field(() => SellerShippingPolicy)
+  @Type(() => SellerShippingPolicy)
   shippingPolicy: SellerShippingPolicy;
   @Field(() => SellerSettlePolicy, { nullable: true })
+  @Type(() => SellerSettlePolicy)
   settlePolicy?: SellerSettlePolicy;
   @Field(() => SellerReturnAddress)
+  @Type(() => SellerReturnAddress)
   returnAddress: SellerReturnAddress;
 
   updateClaimPolicy(input: UpdateSellerClaimPolicyInput): SellerClaimPolicy {

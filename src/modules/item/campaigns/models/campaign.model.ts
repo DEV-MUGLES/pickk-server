@@ -8,7 +8,7 @@ import { CampaignEntity } from '../entities';
 
 @ObjectType()
 export class Campaign extends CampaignEntity {
-  @Type(() => Item)
   @Field(() => [Item])
+  @Type(() => Item)
   items: IItem[];
 }
