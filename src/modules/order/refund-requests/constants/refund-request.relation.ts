@@ -3,6 +3,7 @@ import { RefundRequest } from '../models';
 export type RefundRequestRelationType =
   | keyof RefundRequest
   | 'seller.courier'
+  | 'seller.brand'
   | 'seller.returnAddress'
   | 'shipment.courier'
   | 'order.buyer';

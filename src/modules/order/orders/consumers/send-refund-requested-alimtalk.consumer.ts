@@ -14,6 +14,7 @@ export class SendRefundRequestedAlimtalkConsumer {
     'order',
     'orderItems',
     'seller',
+    'seller.brand',
     'seller.returnAddress',
     'seller.courier',
     'shipment',

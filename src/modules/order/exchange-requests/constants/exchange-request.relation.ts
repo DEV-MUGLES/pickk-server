@@ -8,6 +8,7 @@ export type ExchangeRequestRelationType =
   | 'pickShipment.courier'
   | 'reShipment.courier'
   | 'seller.courier'
+  | 'seller.brand'
   | 'seller.returnAddress';
 
 export const EXCHANGE_REQUEST_RELATIONS: Array<ExchangeRequestRelationType> = [
