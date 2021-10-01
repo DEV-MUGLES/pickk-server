@@ -57,4 +57,8 @@ export class OrderJobsController {
   async removePayingOrders() {
     return await this.orderJobsService.removePayingOrders();
   }
+  @Post('/send-orders-created-alimtalk')
+  async sendOrdersCreatedAlimtalkJob() {
+    return await this.orderJobsService.sendOrdersCreatedAlimtalk();
+  }
 }

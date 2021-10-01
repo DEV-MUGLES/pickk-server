@@ -46,6 +46,10 @@ import {
   RemovePayingOrdersJob,
   RemovePayingOrdersStep,
 } from './remove-paying-orders';
+import {
+  SendOrdersCreatedAlimtalkJob,
+  SendOrdersCreatedAlimtalkStep,
+} from './send-order-created-alimtalk';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
@@ -85,6 +89,8 @@ import { OrderJobsService } from './order-jobs.service';
     RemoveExpiredOrdersStep,
     RemovePayingOrdersJob,
     RemovePayingOrdersStep,
+    SendOrdersCreatedAlimtalkJob,
+    SendOrdersCreatedAlimtalkStep,
   ],
 })
 export class OrderJobsModule {}
