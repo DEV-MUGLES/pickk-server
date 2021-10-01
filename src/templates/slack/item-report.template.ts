@@ -3,6 +3,7 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
+import { Timezone } from '@common/constants';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
@@ -32,7 +33,7 @@ export class ItemReportTemplate extends BaseSlackTemplate {
         .addButtons([
           { text: '아이템 링크', url: urls[0].url, style: 'primary' },
         ])
-        .addContext(dayjs().format('YYYY. MM. DD. hh:mm:ss'))
+        .addContext(dayjs().tz(Timezone.Seoul).format('YYYY. MM. DD. hh:mm:ss'))
         .build(),
     };
   }
