@@ -59,7 +59,7 @@ class Bqna02Template {
 ▶ 문의자 : ${user.name}
 ▶ 문의상품 : ${item.name}
 ▶ 문의내용 : ${content}
-URL: ${item.urls[0]}
+URL: https://pickk.one/item/${item.id}
         `;
   }
 }
