@@ -948,6 +948,7 @@ type ItemDetailImage {
   createdAt: DateTime!
   itemId: Int!
   key: String!
+  order: Int!
   url: String!
 }
 
@@ -962,7 +963,7 @@ input ItemFilter {
   majorCategoryId: Float
   minorCategoryId: Float
   orderBy: String
-  scoreMt: DateTime
+  scoreMt: Float
 
   """아이템 이름(name)으로 검색합니다."""
   search: String
