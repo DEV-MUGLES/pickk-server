@@ -10,16 +10,16 @@ import {
   DelayedExchangeRequestsTemplate,
   DelayedOrderItemsTemplate,
   DelayedRefundRequestsTemplate,
-  ExchangeRequestedTemplate,
   CancelOrderApprovedTemplate,
   CompleteOrderTemplate,
   VbankNotiTemplate,
   InquiryAnsweredTemplate,
   InquiryCreatedTemplate,
   OrdersCreatedTemplate,
-  RefundRequestedTemplate,
-  RefundRequestCreatedTemplate,
-  ExchangeRequestedCreatedTemplate,
+  ExchangeRequestedCustomerTemplate,
+  RefundRequestedCustomerTemplate,
+  RefundRequestedSellerTemplate,
+  ExchangeRequestedSellerTemplate,
 } from '@templates/alimtalk';
 
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
@@ -32,13 +32,19 @@ export class AlimtalkService {
 
   async sendRefundRequested(refundRequest: RefundRequest) {
     await this.alimtalkClient.send(
-      RefundRequestedTemplate.toRequest(refundRequest)
+      RefundRequestedCustomerTemplate.toRequest(refundRequest)
+    );
+    await this.alimtalkClient.send(
+      RefundRequestedSellerTemplate.toRequest(refundRequest)
     );
   }
 
   async sendExchangeRequested(exchangeRequest: ExchangeRequest) {
     await this.alimtalkClient.send(
-      ExchangeRequestedTemplate.toRequest(exchangeRequest)
+      ExchangeRequestedCustomerTemplate.toRequest(exchangeRequest)
+    );
+    await this.alimtalkClient.send(
+      ExchangeRequestedSellerTemplate.toRequest(exchangeRequest)
     );
   }
 
@@ -75,24 +81,6 @@ export class AlimtalkService {
   async sendOrdersCreated(sellerInfo: ISellerInfo, ordersCount: number) {
     await this.alimtalkClient.send(
       OrdersCreatedTemplate.toRequest(sellerInfo, ordersCount)
-    );
-  }
-
-  async sendRefundRequestCreated(
-    sellerInfo: ISellerInfo,
-    refundRequest: RefundRequest
-  ) {
-    await this.alimtalkClient.send(
-      RefundRequestCreatedTemplate.toRequest(sellerInfo, refundRequest)
-    );
-  }
-
-  async sendExchangeRequestCreated(
-    sellerInfo: ISellerInfo,
-    exchangeRequest: ExchangeRequest
-  ) {
-    await this.alimtalkClient.send(
-      ExchangeRequestedCreatedTemplate.toRequest(sellerInfo, exchangeRequest)
     );
   }
 
