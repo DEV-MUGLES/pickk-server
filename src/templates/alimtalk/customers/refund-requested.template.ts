@@ -5,7 +5,7 @@ import { RefundRequest } from '@order/refund-requests/models';
 
 import { getPurchaseItemInfo } from '../../helpers';
 
-export class RefundRequestedTemplate {
+export class RefundRequestedCustomerTemplate {
   static toRequest(
     refundRequest: RefundRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {

@@ -4,5 +4,5 @@ export * from './delayed-refund-requests.template';
 export * from './orders-created.template';
 export * from './inquiry-created.template';
 export * from './orders-created.template';
-export * from './refund-requeste-created.template';
-export * from './exchange-request-created.template';
+export * from './refund-requested.template';
+export * from './exchange-requested.template';
