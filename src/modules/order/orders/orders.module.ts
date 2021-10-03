@@ -5,6 +5,7 @@ import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 import {
   PROCESS_VBANK_PAID_ORDER_QUEUE,
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
+  SAVE_BUYER_INFO_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
   SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
   SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
@@ -59,6 +60,10 @@ import { OrdersService } from './orders.service';
       },
       {
         name: SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
+      },
+      {
+        name: SAVE_BUYER_INFO_QUEUE,
+        type: SqsQueueType.Producer,
       }
     ),
   ],
