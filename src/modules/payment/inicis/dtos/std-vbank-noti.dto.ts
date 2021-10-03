@@ -3,6 +3,7 @@ import { IniapiGetTransactionResult, StdpayVbankNoti } from 'inicis';
 
 import { BankCode } from '@common/constants';
 import { isAllEleSame } from '@common/helpers';
+
 import { Pg, PayMethod, PaymentStatus } from '@payment/payments/constants';
 import { Payment } from '@payment/payments/models';
 
@@ -36,7 +37,13 @@ export class InicisStdVbankNotiDto
     if (payment.status !== PaymentStatus.VbankReady) {
       throw new StatusInvalidToVbankDepositException(payment.status);
     }
-    if (!isAllEleSame([dto.amt_input, payment.amount, transaction.price])) {
+    if (
+      !isAllEleSame([
+        dto.amt_input.toString(),
+        payment.amount.toString(),
+        transaction.price.toString(),
+      ])
+    ) {
       throw new VbankInvalidPricesException(
         dto.amt_input,
         payment.amount,

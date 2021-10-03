@@ -27,7 +27,6 @@ export class InicisController {
   @UseGuards(StdVbankNotiGuard)
   @Post('/std/vbank-noti')
   async acceptStdVbankNoti(@Body() dto: InicisStdVbankNotiDto): Promise<'OK'> {
-    console.log(dto);
     if (dto.type_msg !== '0200') {
       throw new AbnormalVbankNotiException();
     }

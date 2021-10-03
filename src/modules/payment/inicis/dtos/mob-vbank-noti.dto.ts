@@ -33,7 +33,13 @@ export class InicisMobVbankNotiDto
     if (payment.status !== PaymentStatus.VbankReady) {
       throw new StatusInvalidToVbankDepositException(payment.status);
     }
-    if (!isAllEleSame([dto.P_AMT, payment.amount, transaction.price])) {
+    if (
+      !isAllEleSame([
+        dto.P_AMT.toString(),
+        payment.amount.toString(),
+        transaction.price.toString(),
+      ])
+    ) {
       throw new VbankInvalidPricesException(
         dto.P_AMT,
         payment.amount,

@@ -1,4 +1,4 @@
-export const isAllEleSame = (arr: unknown[]): boolean =>
+export const isAllEleSame = <T>(arr: T[]): boolean =>
   [...new Set(arr)].length <= 1;
 
 /** 두 배열의 차집합을 반환합니다.
