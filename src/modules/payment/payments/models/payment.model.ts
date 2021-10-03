@@ -53,11 +53,9 @@ export class Payment extends PaymentEntity {
       throw new StatusInvalidToCancelException(this.status);
     }
 
-    this.cancellations = [
-      ...this.cancellations,
-      PaymentCancellation.of(input, this),
-    ];
-    this.markCancelled(this.cancellations.reverse()[0].type);
+    const cancellation = PaymentCancellation.of(input, this);
+    this.cancellations.push(cancellation);
+    this.markCancelled(cancellation.type);
   }
 
   public confirmVbankPaid() {
