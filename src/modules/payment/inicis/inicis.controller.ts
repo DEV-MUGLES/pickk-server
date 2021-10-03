@@ -4,11 +4,9 @@ import {
   HttpCode,
   Inject,
   Post,
-  Req,
   UseGuards,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { Request } from 'express';
 
 import { CreatePaymentDto } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
@@ -54,9 +52,8 @@ export class InicisController {
   @UseGuards(MobVbankNotiGuard)
   @Post('/mob/vbank-noti')
   @HttpCode(200)
-  async acceptMobVbankNoti(@Req() req: Request): Promise<'OK'> {
-    console.log(req);
-    const dto: InicisMobVbankNotiDto = req.body.dto;
+  async acceptMobVbankNoti(@Body() dto: InicisMobVbankNotiDto): Promise<'OK'> {
+    console.log(dto);
     if (dto.P_STATUS !== '02') {
       throw new AbnormalVbankNotiException();
     }
