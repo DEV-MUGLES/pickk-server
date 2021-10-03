@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import dayjs from 'dayjs';
 import {
   IniapiRefundRequestParams,
@@ -12,9 +13,25 @@ import {
 import { PayMethod } from '@payment/payments/constants';
 import { Payment } from '@payment/payments/models';
 
-import { INICIS_INIAPI_KEY, INICIS_MID } from '../constants';
+import { INICIS_INIAPI_IV, INICIS_INIAPI_KEY, INICIS_MID } from '../constants';
 import { InicisCancelDto } from '../dtos';
 import { toIniapiPayMethod } from '../serializers';
+
+const aes = (data: string) => {
+  if (!data) {
+    return data;
+  }
+
+  const cipher = crypto.createCipheriv(
+    'aes-128-cbc',
+    INICIS_INIAPI_KEY,
+    INICIS_INIAPI_IV
+  );
+
+  return (
+    cipher.update(data).toString('base64') + cipher.final().toString('base64')
+  );
+};
 
 export class IniapiClient {
   private get iniapiMap(): IniapiCommonRequestParams {
@@ -60,6 +77,8 @@ export class IniapiClient {
     const tid = cancelledPayment.pgTid;
     const msg = reason;
 
+    const refundAcctNum = aes(dto.refundVbankNum) || '';
+
     const getHashDataString = (type: string) =>
       INICIS_INIAPI_KEY + type + paymethod + timestamp + clientIp + mid + tid;
 
@@ -71,7 +90,7 @@ export class IniapiClient {
       msg,
       clientIp: '127.0.0.1',
       ...(cancelledPayment.payMethod === PayMethod.Vbank && {
-        refundAcctNum: dto.refundVbankNum,
+        refundAcctNum,
         refundBankCode: dto.refundVbankCode,
         refundAcctName: dto.refundVbankHolder,
       }),
@@ -85,7 +104,7 @@ export class IniapiClient {
         hashData: hash(
           getHashDataString('Refund') +
             (cancelledPayment.payMethod === PayMethod.Vbank
-              ? dto.refundVbankNum
+              ? refundAcctNum
               : ''),
           'RSA-SHA512'
         ),
@@ -102,9 +121,7 @@ export class IniapiClient {
         getHashDataString('PartialRefund') +
           price.toString() +
           confirmPrice.toString() +
-          (cancelledPayment.payMethod === PayMethod.Vbank
-            ? dto.refundVbankNum
-            : ''),
+          (cancelledPayment.payMethod === PayMethod.Vbank ? refundAcctNum : ''),
         'RSA-SHA512'
       ),
       price,
