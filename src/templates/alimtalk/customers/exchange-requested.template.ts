@@ -5,7 +5,7 @@ import { getPurchaseItemInfo } from '@templates/helpers';
 
 import { ExchangeRequest } from '@order/exchange-requests/models';
 
-export class ExchangeRequestedTemplate {
+export class ExchangeRequestedCustomerTemplate {
   static toRequest(
     exchangeRequest: ExchangeRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {

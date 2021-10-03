@@ -28,6 +28,7 @@ export class SendExchangeRequestedAlimtalkConsumer {
         'orderItem',
         'orderItem.order',
         'orderItem.order.buyer',
+        'seller.brand',
         'seller.courier',
         'seller.returnAddress',
       ]

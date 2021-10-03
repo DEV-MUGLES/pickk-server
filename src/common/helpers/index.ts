@@ -13,3 +13,4 @@ export * from './promise.helpers';
 export * from './random.helpers';
 export * from './regex.helpers';
 export * from './set.helpers';
+export * from './format-date.helper';
