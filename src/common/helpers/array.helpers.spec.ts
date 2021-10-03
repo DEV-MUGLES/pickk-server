@@ -11,7 +11,7 @@ describe('isAllEleSame', () => {
     ];
 
     validInputs.forEach((input) => {
-      expect(isAllEleSame(input)).toEqual(true);
+      expect(isAllEleSame(input as unknown[])).toEqual(true);
     });
   });
 
@@ -24,7 +24,7 @@ describe('isAllEleSame', () => {
     ];
 
     validInputs.forEach((input) => {
-      expect(isAllEleSame(input)).toEqual(false);
+      expect(isAllEleSame(input as unknown[])).toEqual(false);
     });
   });
 });
