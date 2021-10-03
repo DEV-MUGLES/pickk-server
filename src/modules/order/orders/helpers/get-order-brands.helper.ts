@@ -26,7 +26,8 @@ export const getOrderBrands = (orderItems: OrderItem[]): OrderBrand[] => {
 
       const orderBrand = brandItemsMap.get(seller.id);
       orderBrand.items.push(orderItem);
-      orderBrand.totalItemFinalPrice += orderItem.itemFinalPrice;
+      orderBrand.totalItemFinalPrice +=
+        orderItem.itemFinalPrice * orderItem.quantity;
 
       if (orderBrand.totalItemFinalPrice >= minimumAmountForFree) {
         orderBrand.shippingFee = 0;
