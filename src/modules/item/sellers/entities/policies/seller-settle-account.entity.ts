@@ -4,8 +4,8 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 import { AbstractAccountEntity } from '@common/entities';
 
 import {
-  ISellerClaimPolicy,
   ISellerSettleAccount,
+  ISellerSettlePolicy,
 } from '../../interfaces/policies';
 
 @ObjectType()
@@ -14,10 +14,10 @@ export class SellerSettleAccountEntity
   extends AbstractAccountEntity
   implements ISellerSettleAccount
 {
-  @OneToOne('SellerClaimPolicyEntity', 'account', { onDelete: 'CASCADE' })
+  @OneToOne('SellerSettlePolicyEntity', 'account', { onDelete: 'CASCADE' })
   @JoinColumn()
-  claimPolicy: ISellerClaimPolicy;
+  settlePolicy: ISellerSettlePolicy;
   @Field(() => Int)
   @Column()
-  claimPolicyId: number;
+  settlePolicyId: number;
 }

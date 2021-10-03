@@ -127,22 +127,16 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @JoinColumn()
   saleStrategy: SaleStrategy;
 
-  @ManyToOne('SellerCrawlStrategyEntity', 'seller', { cascade: true })
-  @JoinColumn()
+  @OneToOne('SellerCrawlStrategyEntity', 'seller', { cascade: true })
   crawlStrategy: ISellerCrawlStrategy;
   @OneToOne('SellerClaimPolicyEntity', 'seller', { cascade: true })
-  @JoinColumn()
   claimPolicy: ISellerClaimPolicy;
   @OneToOne('SellerCrawlPolicyEntity', 'seller', { cascade: true })
-  @JoinColumn()
   crawlPolicy: ISellerCrawlPolicy;
   @OneToOne('SellerShippingPolicyEntity', 'seller', { cascade: true })
-  @JoinColumn()
   shippingPolicy: ISellerShippingPolicy;
   @OneToOne('SellerSettlePolicyEntity', 'seller', { cascade: true })
-  @JoinColumn()
   settlePolicy?: ISellerSettlePolicy;
   @OneToOne('SellerReturnAddressEntity', 'seller', { cascade: true })
-  @JoinColumn()
   returnAddress: ISellerReturnAddress;
 }

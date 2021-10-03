@@ -1,8 +1,8 @@
 import { IAccount } from '@common/interfaces';
 
-import { ISellerClaimPolicy } from './seller-claim-policy.interface';
+import { ISellerSettlePolicy } from './seller-settle-policy.interface';
 
 export interface ISellerSettleAccount extends IAccount {
-  claimPolicy: ISellerClaimPolicy;
-  claimPolicyId: number;
+  settlePolicy: ISellerSettlePolicy;
+  settlePolicyId: number;
 }
