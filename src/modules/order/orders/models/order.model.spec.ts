@@ -2,7 +2,6 @@ import {
   OrderItemClaimStatus,
   OrderItemStatus,
 } from '@order/order-items/constants';
-import { OrderItem } from '@order/order-items/models';
 import { PayMethod } from '@payment/payments/constants';
 import { ShippingAddress } from '@user/users/models';
 
@@ -118,18 +117,12 @@ describe('Order model', () => {
 
       order.start(cardStartInput, new ShippingAddress(), []);
       order.complete();
-      const beforeOi = new OrderItem(order.orderItems[0]);
       const result = order.cancel([order.orderItems[0].merchantUid]);
 
       expect(order.orderItems[0].claimStatus).toEqual(
         OrderItemClaimStatus.Cancelled
       );
       expect(order.totalPayAmount).toEqual(result.checksum);
-      expect(result.amount).toEqual(
-        order.orderItems[0].payAmount -
-          order.orderItems[0].shippingFee +
-          beforeOi.shippingFee
-      );
     });
 
     it('포인트를 사용하지 않았을 때도 성공한다.', () => {
@@ -138,18 +131,12 @@ describe('Order model', () => {
 
       order.start(cardStartInput, new ShippingAddress(), []);
       order.complete();
-      const beforeOi = new OrderItem(order.orderItems[0]);
       const result = order.cancel([order.orderItems[0].merchantUid]);
 
       expect(order.orderItems[0].claimStatus).toEqual(
         OrderItemClaimStatus.Cancelled
       );
       expect(order.totalPayAmount).toEqual(result.checksum);
-      expect(result.amount).toEqual(
-        order.orderItems[0].payAmount -
-          order.orderItems[0].shippingFee +
-          beforeOi.shippingFee
-      );
     });
   });
 
