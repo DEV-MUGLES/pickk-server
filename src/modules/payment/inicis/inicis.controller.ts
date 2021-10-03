@@ -44,6 +44,7 @@ export class InicisController {
   @UseGuards(MobVbankNotiGuard)
   @Post('/mob/vbank-noti')
   async acceptMobVbankNoti(@Body() dto: InicisMobVbankNotiDto): Promise<'OK'> {
+    console.log(dto);
     if (dto.P_STATUS !== '02') {
       throw new AbnormalVbankNotiException();
     }
