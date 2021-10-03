@@ -136,6 +136,7 @@ export class OrdersService {
 
     const order = await this.get(merchantUid, START_ORDER_RELATIONS);
     order.start(startOrderInput, shippingAddress, usedCoupons);
+
     await this.productsService.bulkDestock(order.orderItems);
 
     return await this.ordersRepository.save(order);

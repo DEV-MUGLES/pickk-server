@@ -5,6 +5,7 @@ export * from './remove-digests.mto';
 export * from './remove-expected-event-point.mto';
 export * from './remove-look-images.mto';
 export * from './restore-deducted-product-stock.mto';
+export * from './save-buyer-info.mto';
 export * from './scrap-seller-items.mto';
 export * from './update-item-image-url.mto';
 export * from './send-cancel-order-approved-alimtalk.mto';

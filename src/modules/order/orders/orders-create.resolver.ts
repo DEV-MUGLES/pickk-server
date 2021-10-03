@@ -125,6 +125,8 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     await this.ordersService.checkBelongsTo(merchantUid, userId);
 
     await this.ordersService.start(merchantUid, startOrderInput);
+    await this.ordersProducer.saveBuyerInfo(userId, startOrderInput.buyerInput);
+
     return await this.ordersService.get(
       merchantUid,
       this.getRelationsFromInfo(info)

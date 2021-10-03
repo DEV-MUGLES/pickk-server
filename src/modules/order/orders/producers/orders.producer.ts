@@ -4,17 +4,20 @@ import { SqsService } from '@pickk/nestjs-sqs';
 import { getRandomUuid } from '@common/helpers';
 import {
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
+  SAVE_BUYER_INFO_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
   SEND_ORDER_COMPLETED_ALIMTALK_QUEUE,
   SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
 } from '@queue/constants';
 import {
   RestoreDeductedProductStockMto,
+  SaveBuyerInfoMto,
   SendCancelOrderApprovedAlimtalkMto,
   SendOrderCompletedAlimtalkMto,
   SendRefundRequestedAlimtalkMto,
 } from '@queue/mtos';
 
+import { OrderBuyerInput } from '../dtos';
 import { Order } from '../models';
 
 @Injectable()
@@ -67,5 +70,12 @@ export class OrdersProducer {
         },
       }
     );
+  }
+
+  async saveBuyerInfo(userId: number, buyerInput: OrderBuyerInput) {
+    await this.sqsService.send<SaveBuyerInfoMto>(SAVE_BUYER_INFO_QUEUE, {
+      id: getRandomUuid(),
+      body: { userId, buyerInput },
+    });
   }
 }
