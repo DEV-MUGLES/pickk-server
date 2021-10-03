@@ -1662,13 +1662,13 @@ type OrderItemsCountOutput {
   lastUpdatedAt: DateTime!
 
   """결제 완료"""
-  process_delayed_paid: Int!
+  process_delayed_Paid: Int!
 
   """배송 보류중(예약중)"""
-  process_delayed_ship_pending: Int!
+  process_delayed_ShipPending: Int!
 
   """배송 준비중"""
-  process_delayed_ship_ready: Int!
+  process_delayed_ShipReady: Int!
 }
 
 type OrderReceiver {

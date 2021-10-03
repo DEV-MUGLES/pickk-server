@@ -117,13 +117,13 @@ export class OrderItemsCountOutput {
   [OrderItemStatus.ShipReady]: number;
 
   @Field(() => Int, { description: '결제 완료' })
-  process_delayed_paid: number;
+  process_delayed_Paid: number;
 
   @Field(() => Int, { description: '배송 보류중(예약중)' })
-  process_delayed_ship_pending: number;
+  process_delayed_ShipPending: number;
 
   @Field(() => Int, { description: '배송 준비중' })
-  process_delayed_ship_ready: number;
+  process_delayed_ShipReady: number;
 
   @Field(() => Int, { description: '구매 확정' })
   confirmed: number;
