@@ -230,17 +230,27 @@ export class Order extends OrderEntity {
   applyShippingFees() {
     const orderBrands = this.brands;
 
+    const chargedMap = new Map<number, boolean>();
+
     for (const oi of this.orderItems) {
-      const orderBrand = orderBrands.find((v) => v.id === oi.seller.brandId);
-      if (!orderBrand) {
-        // orderItem의 brand의 모든 상품이 이미 취소된 경우 배송비는 0이다.
+      // 취소된 주문상품은 배송비 계산 로직에서 제외한다.
+      if (oi.claimStatus === OrderItemClaimStatus.Cancelled) {
         oi.shippingFee = 0;
+        continue;
+      }
+
+      const orderBrand = orderBrands.find((v) => v.id === oi.seller.brandId);
+
+      // 해당 brand에 부과된 배송비가 0이면 무료배송건이다.
+      oi.isFreeShippingPackage = orderBrand.shippingFee === 0;
+
+      // 아직 부과한적 없는 브랜드면 부과된 배송비를, 아니면 0을 부과한다.
+      if (!chargedMap.get(orderBrand.id)) {
+        oi.shippingFee = orderBrand.shippingFee;
+
+        chargedMap.set(orderBrand.id, true);
       } else {
-        // 해당 brand에 부과된 배송비가 0이면 무료배송건이다.
-        oi.isFreeShippingPackage = orderBrand.shippingFee === 0;
-        // 첫번째 orderItem이면 부과된 배송비를, 아니면 0을 부과한다.
-        oi.shippingFee =
-          orderBrand.items[0].id === oi.id ? orderBrand.shippingFee : 0;
+        oi.shippingFee = 0;
       }
     }
   }
