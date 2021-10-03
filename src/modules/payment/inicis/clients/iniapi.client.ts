@@ -1,4 +1,3 @@
-import { Payment } from '@payment/payments/models';
 import dayjs from 'dayjs';
 import {
   IniapiRefundRequestParams,
@@ -9,6 +8,9 @@ import {
   IniapiGetTransactionRequestParams,
   IniapiPaymethod,
 } from 'inicis';
+
+import { PayMethod } from '@payment/payments/constants';
+import { Payment } from '@payment/payments/models';
 
 import { INICIS_INIAPI_KEY, INICIS_MID } from '../constants';
 import { InicisCancelDto } from '../dtos';
@@ -68,6 +70,11 @@ export class IniapiClient {
       tid,
       msg,
       clientIp: '127.0.0.1',
+      ...(cancelledPayment.payMethod === PayMethod.Vbank && {
+        refundAcctNum: dto.refundVbankNum,
+        refundBankCode: dto.refundVbankCode,
+        refundAcctName: dto.refundVbankHolder,
+      }),
     };
 
     // 전액 취소인 경우 (주의: 최초 결제시 결제한 금액을 모두 한번에 취소할 때만 전액 취소임)
@@ -75,7 +82,13 @@ export class IniapiClient {
       return {
         ...params,
         type: 'Refund',
-        hashData: hash(getHashDataString('Refund'), 'RSA-SHA512'),
+        hashData: hash(
+          getHashDataString('Refund') +
+            (cancelledPayment.payMethod === PayMethod.Vbank
+              ? dto.refundVbankNum
+              : ''),
+          'RSA-SHA512'
+        ),
       } as IniapiRefundRequestParams;
     }
 
@@ -88,7 +101,10 @@ export class IniapiClient {
       hashData: hash(
         getHashDataString('PartialRefund') +
           price.toString() +
-          confirmPrice.toString(),
+          confirmPrice.toString() +
+          (cancelledPayment.payMethod === PayMethod.Vbank
+            ? dto.refundVbankNum
+            : ''),
         'RSA-SHA512'
       ),
       price,
