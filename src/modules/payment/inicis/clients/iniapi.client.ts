@@ -86,7 +86,7 @@ export class IniapiClient {
       ...params,
       type: 'PartialRefund',
       hashData: hash(
-        getHashDataString('Refund') +
+        getHashDataString('PartialRefund') +
           price.toString() +
           confirmPrice.toString(),
         'RSA-SHA512'
