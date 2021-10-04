@@ -89,6 +89,30 @@ export class DigestsService {
     return digests;
   }
 
+  async bulkEnrichDigest<Enriched, Model>(
+    models: Model[],
+    propertyName = 'digest',
+    relations: DigestRelationType[] = []
+  ): Promise<(Model & Enriched)[]> {
+    const digestIds = models
+      .map((model) => model[`${propertyName}Id`])
+      .filter((v) => v);
+    const digests = await this.list(
+      { idIn: digestIds } as DigestFilter,
+      null,
+      relations
+    );
+
+    for (const model of models) {
+      const digest = digests.find((v) => v.id === model[`${propertyName}Id`]);
+      if (digest) {
+        model[propertyName] = digest;
+      }
+    }
+
+    return models as (Model & Enriched)[];
+  }
+
   async likingListByIds(
     ids: number[],
     relations: DigestRelationType[] = [],

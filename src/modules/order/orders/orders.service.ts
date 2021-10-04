@@ -12,6 +12,8 @@ import timezone from 'dayjs/plugin/timezone';
 import { PageInput } from '@common/dtos';
 import { findModelsByMUids, parseFilter } from '@common/helpers';
 
+import { DigestsService } from '@content/digests/digests.service';
+import { REGISTER_ORDER_PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
@@ -39,7 +41,6 @@ import { OrdersProducer } from './producers';
 
 import { OrdersRepository } from './orders.repository';
 import { calcClaimShippingFee } from './helpers';
-import { REGISTER_ORDER_PRODUCT_RELATIONS } from '@item/products/constants';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -49,6 +50,7 @@ export class OrdersService {
   constructor(
     @InjectRepository(OrdersRepository)
     private readonly ordersRepository: OrdersRepository,
+    private readonly digestsService: DigestsService,
     private readonly couponsService: CouponsService,
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
@@ -106,6 +108,9 @@ export class OrdersService {
       'product',
       REGISTER_ORDER_PRODUCT_RELATIONS
     );
+    await this.digestsService.bulkEnrichDigest(inputs, 'recommendDigest', [
+      'user',
+    ]);
 
     const merchantUid = await this.genMerchantUid();
     const order = OrderFactory.create(userId, merchantUid, inputs as any);

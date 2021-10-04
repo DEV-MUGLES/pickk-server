@@ -12,6 +12,7 @@ import {
   SEND_VBANK_PAID_ALIMTALK_QUEUE,
 } from '@queue/constants';
 
+import { DigestsModule } from '@content/digests/digests.module';
 import { CartsModule } from '@item/carts/carts.module';
 import { ProductsModule } from '@item/products/products.module';
 import { CouponsModule } from '@order/coupons/coupons.module';
@@ -32,6 +33,7 @@ import { OrdersService } from './orders.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrdersRepository]),
+    DigestsModule,
     CartsModule,
     ProductsModule,
     CouponsModule,
