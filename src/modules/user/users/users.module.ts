@@ -19,6 +19,7 @@ import {
 
 import { UsersService } from './users.service';
 import {
+  RefundAccountsRepository,
   ShippingAddressesRepository,
   UsersRepository,
 } from './users.repository';
@@ -26,7 +27,11 @@ import { UsersResolver } from './users.resolver';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([UsersRepository, ShippingAddressesRepository]),
+    TypeOrmModule.forFeature([
+      UsersRepository,
+      ShippingAddressesRepository,
+      RefundAccountsRepository,
+    ]),
     SqsModule.registerQueue(
       {
         name: UPDATE_USER_FOLLOW_COUNT_QUEUE,

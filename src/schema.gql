@@ -1366,8 +1366,8 @@ type Mutation {
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeItemSizeChartsAll(itemId: Int!): Item!
   removeLook(id: Int!): Boolean!
-  removeMeRefundAccount: User!
-  removeMeShippingAddress(addressId: Int!): [ShippingAddress!]!
+  removeMeRefundAccount: Boolean!
+  removeMeShippingAddress(addressId: Int!): [Boolean!]!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeVideo(id: Int!): Boolean!
 
@@ -2026,6 +2026,8 @@ type Query {
   meInquiries(pageInput: PageInput): [Inquiry!]!
   meInquiry(id: Int!): Inquiry!
   meOrder(merchantUid: String!): Order!
+
+  """VbankReady, Paid만 표시"""
   meOrders(pageInput: PageInput): [Order!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!

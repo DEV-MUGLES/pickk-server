@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -20,6 +20,7 @@ import { UserEntity } from './entities';
 import { User, UserPassword, ShippingAddress, RefundAccount } from './models';
 
 import {
+  RefundAccountsRepository,
   ShippingAddressesRepository,
   UsersRepository,
 } from './users.repository';
@@ -31,6 +32,8 @@ export class UsersService {
     private readonly usersRepository: UsersRepository,
     @InjectRepository(ShippingAddressesRepository)
     private readonly shippingAddressesRepository: ShippingAddressesRepository,
+    @InjectRepository(RefundAccountsRepository)
+    private readonly refundAccountsRepository: RefundAccountsRepository,
     private readonly followsService: FollowsService
   ) {}
 
@@ -45,6 +48,16 @@ export class UsersService {
     await this.followsService.enrichFollowing(userId, user);
 
     return user;
+  }
+
+  async checkAddressBelongsTo(id: number, userId: number): Promise<void> {
+    const isMine = await this.shippingAddressesRepository.checkBelongsTo(
+      id,
+      userId
+    );
+    if (!isMine) {
+      throw new ForbiddenException('자신의 배송지가 아닙니다.');
+    }
   }
 
   async getShippingAddress(id: number): Promise<ShippingAddress> {
@@ -73,6 +86,14 @@ export class UsersService {
 
   async getNicknameOnly(id: number): Promise<Pick<User, 'id' | 'nickname'>> {
     return await this.usersRepository.getNicknameOnly(id);
+  }
+
+  async getAddress(id: number): Promise<ShippingAddress> {
+    return await this.shippingAddressesRepository.get(id);
+  }
+
+  async findRefundAccount(userId: number): Promise<RefundAccount> {
+    return await this.refundAccountsRepository.findOneEntity({ userId });
   }
 
   async create({ password, ...input }: CreateUserInput): Promise<User> {
@@ -140,13 +161,9 @@ export class UsersService {
     );
   }
 
-  async removeShippingAddress(
-    user: User,
-    addressId: number
-  ): Promise<ShippingAddress[]> {
-    const deletedShippingAddress = user.removeShippingAddress(addressId);
-    deletedShippingAddress.remove();
-    return (await this.usersRepository.save(user)).shippingAddresses;
+  async removeShippingAddress(id: number): Promise<void> {
+    const address = await this.getAddress(id);
+    await this.shippingAddressesRepository.remove(address);
   }
 
   async addRefundAccount(
@@ -165,10 +182,9 @@ export class UsersService {
     return (await this.usersRepository.save(user)).refundAccount;
   }
 
-  async removeRefundAccount(user: User): Promise<User> {
-    const deleted = user.removeRefundAccount();
-    deleted.remove();
-    return await this.usersRepository.save(user);
+  async removeRefundAccount(userId: number): Promise<void> {
+    const account = await this.findRefundAccount(userId);
+    await this.refundAccountsRepository.remove(account);
   }
 
   async checkUserExist(nickname: string): Promise<boolean> {

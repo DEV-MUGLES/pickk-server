@@ -1,6 +1,5 @@
 import { Inject, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
@@ -15,7 +14,7 @@ import {
   CreateRefundAccountInput,
   UpdateRefundAccountInput,
 } from '@user/users/dtos';
-import { RefundAccount, ShippingAddress, User } from '@user/users/models';
+import { RefundAccount, ShippingAddress } from '@user/users/models';
 import { UsersService } from '@user/users/users.service';
 
 @Resolver()
@@ -70,16 +69,15 @@ export class MyCommonResolver extends BaseResolver {
     );
   }
 
-  @Mutation(() => [ShippingAddress])
+  @Mutation(() => [Boolean])
   @UseGuards(JwtVerifyGuard)
   async removeMeShippingAddress(
-    @CurrentUser() payload: JwtPayload,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('addressId') addressId: number
-  ): Promise<ShippingAddress[]> {
-    const user = await this.usersService.get(payload.sub, [
-      'shippingAddresses',
-    ]);
-    return await this.usersService.removeShippingAddress(user, addressId);
+  ): Promise<boolean> {
+    await this.usersService.checkAddressBelongsTo(addressId, userId);
+    await this.usersService.removeShippingAddress(addressId);
+    return true;
   }
 
   @Mutation(() => RefundAccount)
@@ -110,17 +108,12 @@ export class MyCommonResolver extends BaseResolver {
     );
   }
 
-  @Mutation(() => User)
+  @Mutation(() => Boolean)
   @UseGuards(JwtVerifyGuard)
   async removeMeRefundAccount(
-    @CurrentUser() payload: JwtPayload,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<User> {
-    const user = await this.usersService.get(payload.sub, ['refundAccount']);
-    await this.usersService.removeRefundAccount(user);
-    return await this.usersService.get(
-      payload.sub,
-      this.getRelationsFromInfo(info)
-    );
+    @CurrentUser() { sub: userId }: JwtPayload
+  ): Promise<boolean> {
+    await this.usersService.removeRefundAccount(userId);
+    return true;
   }
 }

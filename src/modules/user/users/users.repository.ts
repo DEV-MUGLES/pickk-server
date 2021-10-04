@@ -5,8 +5,12 @@ import { plainToClass } from 'class-transformer';
 import { diffArr } from '@common/helpers';
 import { BaseRepository } from '@common/base.repository';
 
-import { ShippingAddressEntity, UserEntity } from './entities';
-import { ShippingAddress, User } from './models';
+import {
+  RefundAccountEntity,
+  ShippingAddressEntity,
+  UserEntity,
+} from './entities';
+import { RefundAccount, ShippingAddress, User } from './models';
 
 @EntityRepository(UserEntity)
 export class UsersRepository extends BaseRepository<UserEntity, User> {
@@ -116,5 +120,49 @@ export class ShippingAddressesRepository extends BaseRepository<
     return entities.map((entity) =>
       this.entityToModel(entity, transformOptions)
     );
+  }
+
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('shipping_address')
+      .select('1')
+      .where('shipping_address.id = :id', { id })
+      .andWhere('shipping_address.userId = :userId', { userId })
+      .execute();
+    return result?.length > 0;
+  }
+}
+
+@EntityRepository(RefundAccountEntity)
+export class RefundAccountsRepository extends BaseRepository<
+  RefundAccountEntity,
+  RefundAccount
+> {
+  entityToModel(
+    entity: RefundAccountEntity,
+    transformOptions = {}
+  ): RefundAccount {
+    return plainToClass(
+      RefundAccount,
+      entity,
+      transformOptions
+    ) as RefundAccount;
+  }
+
+  entityToModelMany(
+    entities: RefundAccountEntity[],
+    transformOptions = {}
+  ): RefundAccount[] {
+    return entities.map((entity) =>
+      this.entityToModel(entity, transformOptions)
+    );
+  }
+
+  async checkBelongsTo(id: number, userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('refund_account')
+      .select('1')
+      .where('refund_account.id = :id', { id })
+      .andWhere('refund_account.userId = :userId', { userId })
+      .execute();
+    return result?.length > 0;
   }
 }
