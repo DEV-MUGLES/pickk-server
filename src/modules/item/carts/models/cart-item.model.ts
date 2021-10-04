@@ -25,9 +25,9 @@ export class CartItem extends CartItemEntity {
   /** 이 CartItem의 quantity가 재고를 넘지 않도록 조정합니다. 
    - @returns 조정 수행 여부 */
   adjustQuantityToStock(): boolean {
-    const { stockThreshold } = this.product;
+    const { item, stockThreshold } = this.product;
 
-    if (stockThreshold < this.quantity) {
+    if (!item.isInfiniteStock && stockThreshold < this.quantity) {
       this.quantity = stockThreshold;
       this.isAdjusted = true;
     } else {
