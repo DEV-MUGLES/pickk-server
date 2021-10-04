@@ -3,6 +3,7 @@ import * as faker from 'faker';
 import { Product } from '@item/products/models/product.model';
 
 import { CartItem } from './cart-item.model';
+import { Item } from '@item/items/models';
 
 describe('CartItem', () => {
   describe('adjustQuantityToStock', () => {
@@ -14,7 +15,10 @@ describe('CartItem', () => {
 
       const cartItem = new CartItem({
         quantity: quantity + 1,
-        product: new Product({ stock }),
+        product: new Product({
+          stock,
+          item: new Item({ isInfiniteStock: false }),
+        }),
       });
 
       expect(cartItem.quantity).toBeGreaterThan(
@@ -32,7 +36,10 @@ describe('CartItem', () => {
 
       const cartItem = new CartItem({
         quantity,
-        product: new Product({ stock: stock + 1 }),
+        product: new Product({
+          stock: stock + 1,
+          item: new Item({ isInfiniteStock: false }),
+        }),
       });
 
       expect(cartItem.quantity).toBeLessThan(cartItem.product.stockThreshold);
