@@ -8,7 +8,7 @@ import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
-import { OrderRelationType, ORDER_RELATIONS } from './constants';
+import { OrderRelationType, OrderStatus, ORDER_RELATIONS } from './constants';
 import { Order } from './models';
 
 import { OrdersService } from './orders.service';
@@ -43,7 +43,7 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     );
   }
 
-  @Query(() => [Order])
+  @Query(() => [Order], { description: 'VbankReady, Paid만 표시' })
   @UseGuards(JwtVerifyGuard)
   async meOrders(
     @CurrentUser() payload: JwtPayload,
@@ -51,7 +51,10 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Order[]> {
     return await this.ordersService.list(
-      { userId: payload.sub },
+      {
+        userId: payload.sub,
+        statusIn: [OrderStatus.VbankReady, OrderStatus.Paid],
+      },
       pageInput,
       this.getRelationsFromInfo(info)
     );
