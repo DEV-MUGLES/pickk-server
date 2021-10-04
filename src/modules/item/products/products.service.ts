@@ -118,6 +118,11 @@ export class ProductsService {
     const products = await this.productsRepository.findByIds(productIds);
 
     products.forEach((product) => {
+      if (product.item.isInfiniteStock) {
+        // 무한재고 상품이면 destock하지 않는다.
+        return;
+      }
+
       const { quantity } = destockProductInputs.find(
         ({ productId }) => product.id === productId
       );
@@ -133,6 +138,11 @@ export class ProductsService {
 
     restockProductDtos.forEach(({ productId, quantity, isShipReserved }) => {
       const product = products.find((product) => product.id === productId);
+      if (product.item.isInfiniteStock) {
+        // 무한재고 상품이면 restock하지 않는다.
+        return;
+      }
+
       product.restock(quantity, isShipReserved);
     });
     await this.productsRepository.save(products);
