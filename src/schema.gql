@@ -223,6 +223,8 @@ type CartItem {
   product: Product!
   productId: Int!
   quantity: Int!
+  recommendDigest: Digest
+  recommendDigestId: Int
   updatedAt: DateTime!
   user: User!
   userId: Int!
@@ -267,13 +269,6 @@ input CommentFilter {
 
 """댓글 연관 객체 분류입니다."""
 enum CommentOwnerType {
-  Digest
-  Look
-  Video
-}
-
-"""컨텐츠 타입입니다."""
-enum ContentType {
   Digest
   Look
   Video
@@ -336,6 +331,7 @@ type Courier {
 input CreateCartItemInput {
   productId: Int!
   quantity: Int!
+  recommendDigestId: Int
 }
 
 input CreateCommentInput {
@@ -1367,7 +1363,7 @@ type Mutation {
   removeItemSizeChartsAll(itemId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
-  removeMeShippingAddress(addressId: Int!): [Boolean!]!
+  removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeVideo(id: Int!): Boolean!
 
@@ -1532,8 +1528,8 @@ type OrderItem {
   productId: Int
   productVariantName: String!
   quantity: Int!
-  recommendContentItemId: Int
-  recommendContentType: ContentType
+  recommendDigest: Digest
+  recommendDigestId: Int
   recommenderId: Int
   recommenderNickname: String
   refundRequest: RefundRequest!
@@ -2193,8 +2189,7 @@ input RegisterOrderInput {
 input RegisterOrderItemInput {
   productId: Int!
   quantity: Int!
-  recommendContentItemId: Int
-  recommendContentType: ContentType
+  recommendDigestId: Int
 }
 
 input RequestOrderItemExchangeInput {

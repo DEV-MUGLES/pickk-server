@@ -1,4 +1,4 @@
-import { ContentType } from '@common/constants';
+import { IDigest } from '@content/digests/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
@@ -68,9 +68,9 @@ export interface IOrderItem {
   recommenderId?: number;
   recommenderNickname?: string;
 
-  // 추천 컨텐츠 관련 정보
-  recommendContentType?: ContentType;
-  recommendContentItemId?: number;
+  // 추천 Digest 관련 정보
+  recommendDigest: IDigest;
+  recommendDigestId: number;
 
   // 상태 변경 시점 값들
   failedAt?: Date;

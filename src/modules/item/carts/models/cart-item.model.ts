@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
+import { Digest } from '@content/digests/models';
 import { Product } from '@item/products/models';
 import { User } from '@user/users/models';
 
@@ -8,12 +9,15 @@ import { CartItemEntity } from '../entities';
 
 @ObjectType()
 export class CartItem extends CartItemEntity {
-  @Type(() => Product)
   @Field(() => Product)
+  @Type(() => Product)
   product: Product;
-  @Type(() => User)
   @Field(() => User)
+  @Type(() => User)
   user: User;
+  @Field(() => Digest, { nullable: true })
+  @Type(() => Digest)
+  recommendDigest: Digest;
 
   @Field({ description: '[MODEL ONLY]', nullable: true })
   isAdjusted: boolean;

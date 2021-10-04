@@ -5,7 +5,7 @@ import { CartItem } from '../models';
 @InputType()
 export class CreateCartItemInput extends PickType(
   CartItem,
-  ['quantity', 'productId'],
+  ['quantity', 'productId', 'recommendDigestId'],
   InputType
 ) {}
 

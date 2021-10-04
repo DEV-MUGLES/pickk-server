@@ -3,6 +3,7 @@ import { Column, Entity, Index, ManyToOne } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
+import { IDigest } from '@content/digests/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { IUser } from '@user/users/interfaces';
 
@@ -23,6 +24,9 @@ export class CartItemEntity extends BaseIdEntity implements ICartItem {
     this.user = attributes.user;
     this.userId = attributes.userId;
 
+    this.recommendDigest = attributes.recommendDigest;
+    this.recommendDigestId = attributes.recommendDigestId;
+
     this.quantity = attributes.quantity;
   }
 
@@ -36,6 +40,12 @@ export class CartItemEntity extends BaseIdEntity implements ICartItem {
   @Field(() => Int)
   @Column()
   userId: number;
+
+  @ManyToOne('DigestEntity', { onDelete: 'SET NULL', nullable: true })
+  recommendDigest: IDigest;
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  recommendDigestId: number;
 
   @Field(() => Int)
   @Column({ type: 'smallint', unsigned: true, default: 0 })

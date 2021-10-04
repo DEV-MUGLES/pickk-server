@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1632364162541 implements MigrationInterface {
-  name = 'Init1632364162541';
+export class Init1633363727134 implements MigrationInterface {
+  name = 'Init1633363727134';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -152,7 +152,7 @@ export class Init1632364162541 implements MigrationInterface {
       'CREATE TABLE `items_package` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `code` varchar(50) NOT NULL, `title` varchar(50) NOT NULL, UNIQUE INDEX `idx-code` (`code`), UNIQUE INDEX `IDX_a250f330fcfa3c053ded264bc9` (`code`), PRIMARY KEY (`id`)) ENGINE=InnoDB'
     );
     await queryRunner.query(
-      "CREATE TABLE `cart_item` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `productId` int NOT NULL, `userId` int NOT NULL, `quantity` smallint UNSIGNED NOT NULL DEFAULT '0', INDEX `idx-createdAt` (`createdAt`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
+      "CREATE TABLE `cart_item` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `productId` int NOT NULL, `userId` int NOT NULL, `recommendDigestId` int NULL, `quantity` smallint UNSIGNED NOT NULL DEFAULT '0', INDEX `idx-createdAt` (`createdAt`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       "CREATE TABLE `inquiry_answer` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `inquiryId` int NOT NULL, `userId` int NOT NULL, `from` enum ('Seller', 'Root') NOT NULL, `displayAuthor` varchar(30) NOT NULL, `content` varchar(255) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB"
@@ -176,7 +176,7 @@ export class Init1632364162541 implements MigrationInterface {
       "CREATE TABLE `exchange_request` (`merchantUid` char(22) NOT NULL, `userId` int NULL, `productId` int NULL, `sellerId` int NULL, `pickShipmentId` int NULL, `reShipmentId` int NULL, `orderItemMerchantUid` char(20) NOT NULL, `status` enum ('Requested', 'Picked', 'Reshipping', 'Reshipped', 'Rejected') NOT NULL, `faultOf` enum ('Customer', 'Seller') NOT NULL, `reason` varchar(255) NOT NULL, `rejectReason` varchar(255) NULL, `shippingFee` mediumint UNSIGNED NOT NULL, `quantity` smallint UNSIGNED NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `isSettled` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `processDelayedAt` datetime NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `reshippingAt` datetime NULL, `reshippedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, UNIQUE INDEX `REL_5785dec92cf602ee8cf74df2ac` (`pickShipmentId`), UNIQUE INDEX `REL_0534dce1cf13b2fb7896022ca6` (`reShipmentId`), UNIQUE INDEX `REL_51588d4e1b3a94cb09e0363d92` (`orderItemMerchantUid`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
-      "CREATE TABLE `order_item` (`merchantUid` char(22) NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `userId` int NULL, `sellerId` int NULL, `itemId` int NULL, `productId` int NULL, `usedCouponId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Failed', 'VbankReady', 'VbankDodged', 'Paid', 'ShipPending', 'ShipReady', 'Shipping', 'Shipped') NOT NULL, `claimStatus` enum ('CancelRequested', 'Cancelled', 'ExchangeRequested', 'Exchanged', 'RefundRequested', 'Refunded') NULL, `quantity` smallint UNSIGNED NOT NULL, `isConfirmed` tinyint NOT NULL DEFAULT 0, `isShipReserved` tinyint NOT NULL DEFAULT 0, `isSettled` tinyint NOT NULL DEFAULT 0, `isDelaying` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `isFreeShippingPackage` tinyint NOT NULL, `itemFinalPrice` int UNSIGNED NOT NULL, `shippingFee` int UNSIGNED NOT NULL, `couponDiscountAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedPointAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedCouponName` varchar(30) NULL, `brandNameKor` varchar(30) NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `recommenderId` int NULL, `recommenderNickname` varchar(11) NULL, `recommendContentType` enum ('Digest', 'Look', 'Video') NULL, `recommendContentItemId` int NULL, `failedAt` datetime NULL, `vbankReadyAt` datetime NULL, `vbankDodgedAt` datetime NULL, `paidAt` datetime NULL, `shipReadyAt` datetime NULL, `shippingAt` datetime NULL, `shippedAt` datetime NULL, `cancelRequestedAt` datetime NULL, `cancelledAt` datetime NULL, `exchangeRequestedAt` datetime NULL, `exchangedAt` datetime NULL, `refundRequestedAt` datetime NULL, `refundedAt` datetime NULL, `delayedAt` datetime NULL, `delayedShipExpectedAt` datetime NULL, `processDelayedAt` datetime NULL, `shipReservedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, `refundRequestMerchantUid` char(20) NULL, UNIQUE INDEX `REL_3f11f0bbd532d03ef4d9c44f41` (`shipmentId`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
+      "CREATE TABLE `order_item` (`merchantUid` char(22) NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `userId` int NULL, `sellerId` int NULL, `itemId` int NULL, `productId` int NULL, `usedCouponId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Failed', 'VbankReady', 'VbankDodged', 'Paid', 'ShipPending', 'ShipReady', 'Shipping', 'Shipped') NOT NULL, `claimStatus` enum ('CancelRequested', 'Cancelled', 'ExchangeRequested', 'Exchanged', 'RefundRequested', 'Refunded') NULL, `quantity` smallint UNSIGNED NOT NULL, `isConfirmed` tinyint NOT NULL DEFAULT 0, `isShipReserved` tinyint NOT NULL DEFAULT 0, `isSettled` tinyint NOT NULL DEFAULT 0, `isDelaying` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `isFreeShippingPackage` tinyint NOT NULL, `itemFinalPrice` int UNSIGNED NOT NULL, `shippingFee` int UNSIGNED NOT NULL, `couponDiscountAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedPointAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedCouponName` varchar(30) NULL, `brandNameKor` varchar(30) NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `recommenderId` int NULL, `recommenderNickname` varchar(11) NULL, `recommendDigestId` int NULL, `failedAt` datetime NULL, `vbankReadyAt` datetime NULL, `vbankDodgedAt` datetime NULL, `paidAt` datetime NULL, `shipReadyAt` datetime NULL, `shippingAt` datetime NULL, `shippedAt` datetime NULL, `cancelRequestedAt` datetime NULL, `cancelledAt` datetime NULL, `exchangeRequestedAt` datetime NULL, `exchangedAt` datetime NULL, `refundRequestedAt` datetime NULL, `refundedAt` datetime NULL, `delayedAt` datetime NULL, `delayedShipExpectedAt` datetime NULL, `processDelayedAt` datetime NULL, `shipReservedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, `refundRequestMerchantUid` char(20) NULL, UNIQUE INDEX `REL_3f11f0bbd532d03ef4d9c44f41` (`shipmentId`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       'CREATE TABLE `order_buyer` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `name` varchar(15) NOT NULL, `email` varchar(255) NOT NULL, `phoneNumber` char(12) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB'
@@ -404,6 +404,9 @@ export class Init1632364162541 implements MigrationInterface {
       'ALTER TABLE `cart_item` ADD CONSTRAINT `FK_158f0325ccf7f68a5b395fa2f6a` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
     );
     await queryRunner.query(
+      'ALTER TABLE `cart_item` ADD CONSTRAINT `FK_eb2a1ce690707db891ef7273e4e` FOREIGN KEY (`recommendDigestId`) REFERENCES `digest`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
+    );
+    await queryRunner.query(
       'ALTER TABLE `inquiry_answer` ADD CONSTRAINT `FK_8815604b164e0c4a9a158c3d9b7` FOREIGN KEY (`inquiryId`) REFERENCES `inquiry`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
     );
     await queryRunner.query(
@@ -477,6 +480,9 @@ export class Init1632364162541 implements MigrationInterface {
     );
     await queryRunner.query(
       'ALTER TABLE `order_item` ADD CONSTRAINT `FK_8a4a675ef1d951ccee274ed5b36` FOREIGN KEY (`refundRequestMerchantUid`) REFERENCES `refund_request`(`merchantUid`) ON DELETE NO ACTION ON UPDATE NO ACTION'
+    );
+    await queryRunner.query(
+      'ALTER TABLE `order_item` ADD CONSTRAINT `FK_aa2ba1e9505e547dec18394a3b0` FOREIGN KEY (`recommendDigestId`) REFERENCES `digest`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
     );
     await queryRunner.query(
       'ALTER TABLE `order` ADD CONSTRAINT `FK_caabe91507b3379c7ba73637b84` FOREIGN KEY (`userId`) REFERENCES `user`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION'
@@ -698,6 +704,9 @@ export class Init1632364162541 implements MigrationInterface {
       'ALTER TABLE `order` DROP FOREIGN KEY `FK_caabe91507b3379c7ba73637b84`'
     );
     await queryRunner.query(
+      'ALTER TABLE `order_item` DROP FOREIGN KEY `FK_aa2ba1e9505e547dec18394a3b0`'
+    );
+    await queryRunner.query(
       'ALTER TABLE `order_item` DROP FOREIGN KEY `FK_8a4a675ef1d951ccee274ed5b36`'
     );
     await queryRunner.query(
@@ -771,6 +780,9 @@ export class Init1632364162541 implements MigrationInterface {
     );
     await queryRunner.query(
       'ALTER TABLE `inquiry_answer` DROP FOREIGN KEY `FK_8815604b164e0c4a9a158c3d9b7`'
+    );
+    await queryRunner.query(
+      'ALTER TABLE `cart_item` DROP FOREIGN KEY `FK_eb2a1ce690707db891ef7273e4e`'
     );
     await queryRunner.query(
       'ALTER TABLE `cart_item` DROP FOREIGN KEY `FK_158f0325ccf7f68a5b395fa2f6a`'

@@ -11,8 +11,7 @@ import {
 } from 'typeorm';
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
-import { ContentType } from '@common/constants';
-
+import { IDigest } from '@content/digests/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
@@ -84,8 +83,7 @@ export class OrderItemEntity implements IOrderItem {
 
     this.recommenderId = attributes.recommenderId;
     this.recommenderNickname = attributes.recommenderNickname;
-    this.recommendContentType = attributes.recommendContentType;
-    this.recommendContentItemId = attributes.recommendContentItemId;
+    this.recommendDigestId = attributes.recommendDigestId;
 
     this.failedAt = attributes.failedAt;
     this.vbankReadyAt = attributes.vbankReadyAt;
@@ -262,16 +260,11 @@ export class OrderItemEntity implements IOrderItem {
   @Column({ nullable: true, length: 11 })
   recommenderNickname?: string;
 
-  @Field(() => ContentType, { nullable: true })
-  @Column({
-    type: 'enum',
-    enum: ContentType,
-    nullable: true,
-  })
-  recommendContentType?: ContentType;
+  @ManyToOne('DigestEntity', { onDelete: 'SET NULL', nullable: true })
+  recommendDigest: IDigest;
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
-  recommendContentItemId?: number;
+  recommendDigestId: number;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
