@@ -692,7 +692,7 @@ type DigestsExhibition {
 
 type ExchangeRequest {
   confirmedAt: DateTime
-  faultOf: RefundRequestFaultOf!
+  faultOf: OrderClaimFaultOf!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
   itemName: String!
@@ -1494,6 +1494,12 @@ input OrderBuyerInput {
   phoneNumber: String!
 }
 
+"""교환/반품 책임자?입니다. (구매자 or 판매자)"""
+enum OrderClaimFaultOf {
+  Customer
+  Seller
+}
+
 type OrderItem {
   brandNameKor: String!
   cancelRequestedAt: DateTime
@@ -2007,7 +2013,7 @@ type Query {
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   digestsExhibitions: [DigestsExhibition!]!
   expectedCancelAmount(merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
-  expectedClaimShippingFee(faultOf: RefundRequestFaultOf!, merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
+  expectedClaimShippingFee(faultOf: OrderClaimFaultOf!, merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
   genRandomNickname: String!
   getAppleAuthCode(getAppleAuthCodeInput: GetAppleAuthCodeInput!): String!
   inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
@@ -2108,7 +2114,7 @@ type RefundRequest {
   """반품대상 주문상품 총 결제액 (배송비 제외)"""
   amount: Int!
   confirmedAt: DateTime
-  faultOf: RefundRequestFaultOf!
+  faultOf: OrderClaimFaultOf!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
 
@@ -2140,12 +2146,6 @@ type RefundRequest {
   status: RefundRequestStatus!
   user: User
   userId: Int
-}
-
-"""교환/반품 책임자?입니다. (구매자 or 판매자)"""
-enum RefundRequestFaultOf {
-  Customer
-  Seller
 }
 
 input RefundRequestFilter {
@@ -2209,7 +2209,7 @@ input RegisterOrderItemInput {
 }
 
 input RequestOrderItemExchangeInput {
-  faultOf: RefundRequestFaultOf!
+  faultOf: OrderClaimFaultOf!
 
   """교환 대상 product"""
   productId: Int!
@@ -2220,7 +2220,7 @@ input RequestOrderItemExchangeInput {
 }
 
 input RequestOrderRefundInput {
-  faultOf: RefundRequestFaultOf!
+  faultOf: OrderClaimFaultOf!
 
   """반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다."""
   orderItemMerchantUids: [String!]!

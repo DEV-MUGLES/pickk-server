@@ -19,6 +19,6 @@ export enum OrderClaimFaultOf {
 }
 
 registerEnumType(OrderClaimFaultOf, {
-  name: 'RefundRequestFaultOf',
+  name: 'OrderClaimFaultOf',
   description: '교환/반품 책임자?입니다. (구매자 or 판매자)',
 });
