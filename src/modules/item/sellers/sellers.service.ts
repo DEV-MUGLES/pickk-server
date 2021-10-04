@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { PageInput, FindSaleStrategyInput } from '@common/dtos';
+import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
-import { SaleStrategy } from '@common/models';
-import { SaleStrategyRepository } from '@common/repositories';
 
 import { SellerRelationType } from './constants';
 import {
@@ -17,6 +15,7 @@ import {
   SellerFilter,
   CreateSellerInput,
   UpdateSellerInput,
+  UpdateSellerSaleStrategyInput,
 } from './dtos';
 import {
   SellerClaimPolicy,
@@ -26,6 +25,7 @@ import {
   Seller,
   SellerSettlePolicy,
   SellerSettleAccount,
+  SellerSaleStrategy,
 } from './models';
 
 import { SellersRepository } from './sellers.repository';
@@ -34,9 +34,7 @@ import { SellersRepository } from './sellers.repository';
 export class SellersService {
   constructor(
     @InjectRepository(SellersRepository)
-    private readonly sellersRepository: SellersRepository,
-    @InjectRepository(SaleStrategyRepository)
-    private readonly saleStrategyRepository: SaleStrategyRepository
+    private readonly sellersRepository: SellersRepository
   ) {}
 
   async list(
@@ -90,10 +88,6 @@ export class SellersService {
       ...sellerAttributes
     } = createSellerInput;
 
-    const saleStrategy = await this.saleStrategyRepository.findOrCreate(
-      saleStrategyInput
-    );
-
     const seller = new Seller({
       ...sellerAttributes,
       claimPolicy: new SellerClaimPolicy({
@@ -102,7 +96,7 @@ export class SellersService {
       crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
       shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
       returnAddress: new SellerReturnAddress(returnAddressInput),
-      saleStrategy,
+      saleStrategy: new SellerSaleStrategy(saleStrategyInput),
       settlePolicy: settlePolicyInput
         ? new SellerSettlePolicy({
             ...settlePolicyInput,
@@ -157,12 +151,17 @@ export class SellersService {
   }
 
   async updateSaleStrategy(
-    seller: Seller,
-    input: FindSaleStrategyInput
-  ): Promise<SaleStrategy> {
-    const saleStrategy = await this.saleStrategyRepository.findOrCreate(input);
-    seller.saleStrategy = saleStrategy;
-    return (await this.sellersRepository.save(seller)).saleStrategy;
+    sellerId: number,
+    input: UpdateSellerSaleStrategyInput
+  ): Promise<Seller> {
+    const seller = await this.get(sellerId, ['saleStrategy']);
+
+    seller.saleStrategy = new SellerSaleStrategy({
+      ...seller.saleStrategy,
+      ...input,
+    });
+
+    return await this.sellersRepository.save(seller);
   }
 
   async updateReturnAddress(

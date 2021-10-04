@@ -1,7 +1,5 @@
 import { Field, InputType, Int, PartialType, PickType } from '@nestjs/graphql';
 
-import { FindSaleStrategyInput } from '@common/dtos';
-
 import { Seller } from '../models';
 import {
   CreateSellerClaimPolicyInput,
@@ -10,6 +8,7 @@ import {
   CreateSellerReturnAddressInput,
   CreateSellerCrawlStrategyInput,
   CreateSellerSettlePolicyInput,
+  CreateSellerSaleStrategyInput,
 } from './seller-policies.input';
 
 @InputType()
@@ -36,15 +35,15 @@ export class CreateSellerInput extends PickType(
   @Field(() => Int)
   courierId: number;
 
-  @Field(() => FindSaleStrategyInput)
-  saleStrategyInput: FindSaleStrategyInput;
+  @Field()
+  saleStrategyInput: CreateSellerSaleStrategyInput;
+  @Field()
+  crawlStrategyInput: CreateSellerCrawlStrategyInput;
 
   @Field()
   claimPolicyInput: CreateSellerClaimPolicyInput;
   @Field()
   crawlPolicyInput: CreateSellerCrawlPolicyInput;
-  @Field()
-  crawlStrategyInput: CreateSellerCrawlStrategyInput;
   @Field()
   shippingPolicyInput: CreateSellerShippingPolicyInput;
   @Field()

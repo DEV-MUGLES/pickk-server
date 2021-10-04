@@ -3,8 +3,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToOne } from 'typeorm';
 import { IsEmail, IsOptional, IsPhoneNumber, MaxLength } from 'class-validator';
 
 import { IsBusinessCode } from '@common/decorators';
-import { BaseIdEntity, SaleStrategyEntity } from '@common/entities';
-import { SaleStrategy } from '@common/models';
+import { BaseIdEntity } from '@common/entities';
 
 import { IBrand } from '@item/brands/interfaces';
 import { ICourier } from '@item/couriers/interfaces';
@@ -16,6 +15,7 @@ import {
   ISellerCrawlPolicy,
   ISellerCrawlStrategy,
   ISellerReturnAddress,
+  ISellerSaleStrategy,
   ISellerSettlePolicy,
   ISellerShippingPolicy,
 } from '../interfaces';
@@ -123,12 +123,11 @@ export class SellerEntity extends BaseIdEntity implements ISeller {
   @Column({ nullable: true })
   courierId: number;
 
-  @ManyToOne(() => SaleStrategyEntity)
-  @JoinColumn()
-  saleStrategy: SaleStrategy;
-
+  @OneToOne('SellerSaleStrategyEntity', 'seller', { cascade: true })
+  saleStrategy: ISellerSaleStrategy;
   @OneToOne('SellerCrawlStrategyEntity', 'seller', { cascade: true })
   crawlStrategy: ISellerCrawlStrategy;
+
   @OneToOne('SellerClaimPolicyEntity', 'seller', { cascade: true })
   claimPolicy: ISellerClaimPolicy;
   @OneToOne('SellerCrawlPolicyEntity', 'seller', { cascade: true })

@@ -498,7 +498,7 @@ input CreateSellerInput {
   """최대 20자"""
   representativeName: String
   returnAddressInput: CreateSellerReturnAddressInput!
-  saleStrategyInput: FindSaleStrategyInput!
+  saleStrategyInput: CreateSellerSaleStrategyInput!
   settlePolicyInput: CreateSellerSettlePolicyInput
   shippingPolicyInput: CreateSellerShippingPolicyInput!
   userId: Int!
@@ -508,6 +508,12 @@ input CreateSellerReturnAddressInput {
   baseAddress: String!
   detailAddress: String!
   postalCode: String!
+}
+
+input CreateSellerSaleStrategyInput {
+  canUseCoupon: Boolean!
+  canUseMileage: Boolean!
+  pickkDiscountRate: Int!
 }
 
 input CreateSellerSettleAccountInput {
@@ -1415,8 +1421,8 @@ type Mutation {
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
 
-  """입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다."""
-  updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): SaleStrategy!
+  """Admin 이상의 권한이 필요합니다."""
+  updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
   updateVideo(id: Int!, updateVideoInput: UpdateVideoInput!): Video!
 }
 
@@ -2223,14 +2229,6 @@ input ReshipExchangeRequestInput {
   trackCode: String!
 }
 
-type SaleStrategy {
-  canUseCoupon: Boolean!
-  canUseMileage: Boolean!
-  createdAt: DateTime!
-  id: Int!
-  updatedAt: DateTime!
-}
-
 type Seller {
   brand: Brand!
   brandId: Int
@@ -2254,7 +2252,7 @@ type Seller {
   """최대 20자"""
   representativeName: String
   returnAddress: SellerReturnAddress!
-  saleStrategy: SaleStrategy!
+  saleStrategy: SellerSaleStrategy!
   settlePolicy: SellerSettlePolicy
   shippingPolicy: SellerShippingPolicy!
   updatedAt: DateTime!
@@ -2322,6 +2320,16 @@ type SellerReturnAddress {
   phoneNumber: String!
   postalCode: String!
   receiverName: String!
+  sellerId: Int!
+  updatedAt: DateTime!
+}
+
+type SellerSaleStrategy {
+  canUseCoupon: Boolean!
+  canUseMileage: Boolean!
+  createdAt: DateTime!
+  id: Int!
+  pickkDiscountRate: Int!
   sellerId: Int!
   updatedAt: DateTime!
 }

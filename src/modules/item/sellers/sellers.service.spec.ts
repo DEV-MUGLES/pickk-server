@@ -1,9 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
-import { SaleStrategy } from '@common/models';
-import { SaleStrategyRepository } from '@common/repositories';
-
 import { CreateSellerInput } from './dtos';
 import {
   Seller,
@@ -11,6 +8,7 @@ import {
   SellerCrawlPolicy,
   SellerShippingPolicy,
   SellerReturnAddress,
+  SellerSaleStrategy,
 } from './models';
 
 import { SellersRepository } from './sellers.repository';
@@ -19,18 +17,14 @@ import { SellersService } from './sellers.service';
 describe('SellersService', () => {
   let sellersService: SellersService;
   let sellersRepository: SellersRepository;
-  let saleStrategyRepository: SaleStrategyRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [SellersService, SellersRepository, SaleStrategyRepository],
+      providers: [SellersService, SellersRepository],
     }).compile();
 
     sellersService = module.get<SellersService>(SellersService);
     sellersRepository = module.get<SellersRepository>(SellersRepository);
-    saleStrategyRepository = module.get<SaleStrategyRepository>(
-      SaleStrategyRepository
-    );
   });
 
   describe('create', () => {
@@ -51,6 +45,7 @@ describe('SellersService', () => {
       saleStrategyInput: {
         canUseCoupon: faker.datatype.boolean(),
         canUseMileage: faker.datatype.boolean(),
+        pickkDiscountRate: 5,
       },
       claimPolicyInput: {
         fee: faker.datatype.number(),
@@ -91,19 +86,15 @@ describe('SellersService', () => {
         returnAddressInput,
         ...sellerAttributes
       } = createSellerInput;
-      const saleStrategy = new SaleStrategy(saleStrategyInput);
       const seller = new Seller({
         ...sellerAttributes,
         claimPolicy: new SellerClaimPolicy(claimPolicyInput),
         crawlPolicy: new SellerCrawlPolicy(crawlPolicyInput),
         shippingPolicy: new SellerShippingPolicy(shippingPolicyInput),
         returnAddress: new SellerReturnAddress(returnAddressInput),
-        saleStrategy,
+        saleStrategy: new SellerSaleStrategy(saleStrategyInput),
       });
 
-      const salesStrategyResposytoryFindOrCreateSpy = jest
-        .spyOn(saleStrategyRepository, 'findOrCreate')
-        .mockResolvedValueOnce(saleStrategy);
       const sellersRepositorySaveSpy = jest
         .spyOn(sellersRepository, 'save')
         .mockResolvedValueOnce(seller);
@@ -127,9 +118,6 @@ describe('SellersService', () => {
       );
       expect(result.returnAddress).toMatchObject(
         createSellerInput.returnAddressInput
-      );
-      expect(salesStrategyResposytoryFindOrCreateSpy).toHaveBeenCalledWith(
-        createSellerInput.saleStrategyInput
       );
       expect(sellersRepositorySaveSpy).toHaveBeenCalledTimes(1);
       expect(sellersServiceGetSpy).toHaveBeenCalledTimes(1);

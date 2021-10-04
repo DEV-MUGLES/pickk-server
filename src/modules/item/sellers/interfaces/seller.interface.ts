@@ -1,4 +1,4 @@
-import { IAddress, IBaseId, ISaleStrategy } from '@common/interfaces';
+import { IAddress, IBaseId } from '@common/interfaces';
 
 import { IBrand } from '@item/brands/interfaces';
 import { ICourier } from '@item/couriers/interfaces';
@@ -10,6 +10,7 @@ import {
   ISellerSettlePolicy,
 } from './policies';
 import { ISellerCrawlStrategy } from './seller-crawl-strategy.interface';
+import { ISellerSaleStrategy } from './seller-sale-strategy.interface';
 
 export interface ISeller extends IBaseId {
   /** 상호 */
@@ -37,7 +38,7 @@ export interface ISeller extends IBaseId {
   brand: IBrand;
   courier: ICourier;
 
-  saleStrategy: ISaleStrategy;
+  saleStrategy: ISellerSaleStrategy;
   crawlStrategy: ISellerCrawlStrategy;
 
   claimPolicy: ISellerClaimPolicy;

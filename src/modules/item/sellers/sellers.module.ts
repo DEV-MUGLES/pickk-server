@@ -3,7 +3,6 @@ import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
-import { SaleStrategyRepository } from '@common/repositories';
 import {
   SCRAP_SELLER_ITEMS_QUEUE,
   PROCESS_SELLER_ITEMS_SCRAP_RESULT_QUEUE,
@@ -21,7 +20,7 @@ import { SellersCrawlService } from './sellers.crawl.service';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([SellersRepository, SaleStrategyRepository]),
+    TypeOrmModule.forFeature([SellersRepository]),
     SqsModule.registerQueue(
       {
         name: SCRAP_SELLER_ITEMS_QUEUE,

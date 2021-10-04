@@ -7,7 +7,6 @@ import { JwtAuthGuard } from '@auth/guards';
 import { BaseResolver } from '@common/base.resolver';
 import { FindSaleStrategyInput, PageInput } from '@common/dtos';
 import { IntArgs } from '@common/decorators';
-import { SaleStrategy } from '@common/models';
 import { UserRole } from '@user/users/constants';
 
 import { SellerRelationType, SELLER_RELATIONS } from './constants';
@@ -60,18 +59,16 @@ export class SellersResolver extends BaseResolver<SellerRelationType> {
 
   @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
-  @Mutation(() => SaleStrategy, {
-    description:
-      '입력한 seller의 saleStrategy를 변경합니다. Admin 이상의 권한이 필요합니다.',
+  @Mutation(() => Seller, {
+    description: 'Admin 이상의 권한이 필요합니다.',
   })
   async updateSellerSaleStrategy(
     @IntArgs('sellerId') sellerId: number,
     @Args('updateSaleStrategyInput')
     updateSaleStrategyInput: FindSaleStrategyInput
-  ): Promise<SaleStrategy> {
-    const seller = await this.sellersService.get(sellerId);
+  ): Promise<Seller> {
     return await this.sellersService.updateSaleStrategy(
-      seller,
+      sellerId,
       updateSaleStrategyInput
     );
   }

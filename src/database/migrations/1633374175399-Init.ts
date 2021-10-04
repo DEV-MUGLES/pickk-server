@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1633363727134 implements MigrationInterface {
-  name = 'Init1633363727134';
+export class Init1633374175399 implements MigrationInterface {
+  name = 'Init1633374175399';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -44,7 +44,7 @@ export class Init1633363727134 implements MigrationInterface {
       "CREATE TABLE `item_property_value` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `propertyId` int NOT NULL, `name` varchar(20) NOT NULL, `order` tinyint UNSIGNED NOT NULL DEFAULT '0', PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
-      'CREATE TABLE `seller` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `businessName` varchar(255) NULL, `businessCode` char(12) NULL, `mailOrderBusinessCode` varchar(255) NULL, `representativeName` varchar(20) NULL, `phoneNumber` varchar(255) NULL, `orderNotiPhoneNumber` varchar(255) NULL, `csNotiPhoneNumber` varchar(255) NULL, `email` varchar(255) NULL, `kakaoTalkCode` varchar(255) NULL, `operationTimeMessage` varchar(255) NULL, `userId` int NULL, `brandId` int NULL, `courierId` int NULL, `saleStrategyId` int NULL, UNIQUE INDEX `REL_af49645e98a3d39bd4f3591b33` (`userId`), UNIQUE INDEX `REL_e2dea4bd18238e9ab6bd645c9e` (`brandId`), PRIMARY KEY (`id`)) ENGINE=InnoDB'
+      'CREATE TABLE `seller` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `businessName` varchar(255) NULL, `businessCode` char(12) NULL, `mailOrderBusinessCode` varchar(255) NULL, `representativeName` varchar(20) NULL, `phoneNumber` varchar(255) NULL, `orderNotiPhoneNumber` varchar(255) NULL, `csNotiPhoneNumber` varchar(255) NULL, `email` varchar(255) NULL, `kakaoTalkCode` varchar(255) NULL, `operationTimeMessage` varchar(255) NULL, `userId` int NULL, `brandId` int NULL, `courierId` int NULL, UNIQUE INDEX `REL_af49645e98a3d39bd4f3591b33` (`userId`), UNIQUE INDEX `REL_e2dea4bd18238e9ab6bd645c9e` (`brandId`), PRIMARY KEY (`id`)) ENGINE=InnoDB'
     );
     await queryRunner.query(
       'CREATE TABLE `brand` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `nameKor` varchar(30) NOT NULL, `nameEng` varchar(30) NULL, `description` varchar(512) NULL, `imageUrl` varchar(255) NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB'
@@ -93,6 +93,9 @@ export class Init1633363727134 implements MigrationInterface {
     );
     await queryRunner.query(
       'CREATE TABLE `seller_return_address` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `name` varchar(30) NOT NULL, `receiverName` varchar(50) NOT NULL, `phoneNumber` char(11) NOT NULL, `baseAddress` varchar(255) NOT NULL, `detailAddress` varchar(255) NOT NULL, `postalCode` varchar(255) NOT NULL, `sellerId` int NOT NULL, UNIQUE INDEX `REL_f92f252d4204da3e245f0f2869` (`sellerId`), PRIMARY KEY (`id`)) ENGINE=InnoDB'
+    );
+    await queryRunner.query(
+      "CREATE TABLE `seller_sale_strategy` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `canUseCoupon` tinyint NOT NULL, `canUseMileage` tinyint NOT NULL, `sellerId` int NOT NULL, `pickkDiscountRate` tinyint UNSIGNED NOT NULL DEFAULT '5', UNIQUE INDEX `REL_5285f3369bc90d1029c1025fa1` (`sellerId`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       'CREATE TABLE `courier` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `code` varchar(30) NOT NULL, `name` varchar(20) NOT NULL, `phoneNumber` char(12) NOT NULL, `returnReserveUrl` varchar(300) NOT NULL, UNIQUE INDEX `idx-name` (`name`), UNIQUE INDEX `idx-code` (`code`), UNIQUE INDEX `IDX_191d47572c6e09c1598ea39a64` (`code`), UNIQUE INDEX `IDX_0d933ba9421875f18a24b60abc` (`name`), PRIMARY KEY (`id`)) ENGINE=InnoDB'
@@ -287,9 +290,6 @@ export class Init1633363727134 implements MigrationInterface {
       'ALTER TABLE `seller` ADD CONSTRAINT `FK_0008b48ab8799d2a86e76ae53f3` FOREIGN KEY (`courierId`) REFERENCES `courier`(`id`) ON DELETE SET NULL ON UPDATE NO ACTION'
     );
     await queryRunner.query(
-      'ALTER TABLE `seller` ADD CONSTRAINT `FK_5673d465e89fe9283d00fe5b4da` FOREIGN KEY (`saleStrategyId`) REFERENCES `sale_strategy`(`id`) ON DELETE NO ACTION ON UPDATE NO ACTION'
-    );
-    await queryRunner.query(
       'ALTER TABLE `item` ADD CONSTRAINT `FK_9e2a16fa67338b5d7ba015b4e98` FOREIGN KEY (`brandId`) REFERENCES `brand`(`id`) ON DELETE RESTRICT ON UPDATE NO ACTION'
     );
     await queryRunner.query(
@@ -339,6 +339,9 @@ export class Init1633363727134 implements MigrationInterface {
     );
     await queryRunner.query(
       'ALTER TABLE `seller_return_address` ADD CONSTRAINT `FK_f92f252d4204da3e245f0f28690` FOREIGN KEY (`sellerId`) REFERENCES `seller`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
+    );
+    await queryRunner.query(
+      'ALTER TABLE `seller_sale_strategy` ADD CONSTRAINT `FK_5285f3369bc90d1029c1025fa13` FOREIGN KEY (`sellerId`) REFERENCES `seller`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
     );
     await queryRunner.query(
       'ALTER TABLE `item_category` ADD CONSTRAINT `FK_97f8cf61daf55820a4dd514f312` FOREIGN KEY (`parentId`) REFERENCES `item_category`(`id`) ON DELETE CASCADE ON UPDATE NO ACTION'
@@ -848,6 +851,9 @@ export class Init1633363727134 implements MigrationInterface {
       'ALTER TABLE `item_category` DROP FOREIGN KEY `FK_97f8cf61daf55820a4dd514f312`'
     );
     await queryRunner.query(
+      'ALTER TABLE `seller_sale_strategy` DROP FOREIGN KEY `FK_5285f3369bc90d1029c1025fa13`'
+    );
+    await queryRunner.query(
       'ALTER TABLE `seller_return_address` DROP FOREIGN KEY `FK_f92f252d4204da3e245f0f28690`'
     );
     await queryRunner.query(
@@ -897,9 +903,6 @@ export class Init1633363727134 implements MigrationInterface {
     );
     await queryRunner.query(
       'ALTER TABLE `item` DROP FOREIGN KEY `FK_9e2a16fa67338b5d7ba015b4e98`'
-    );
-    await queryRunner.query(
-      'ALTER TABLE `seller` DROP FOREIGN KEY `FK_5673d465e89fe9283d00fe5b4da`'
     );
     await queryRunner.query(
       'ALTER TABLE `seller` DROP FOREIGN KEY `FK_0008b48ab8799d2a86e76ae53f3`'
@@ -1124,6 +1127,10 @@ export class Init1633363727134 implements MigrationInterface {
     await queryRunner.query('DROP INDEX `idx-code` ON `courier`');
     await queryRunner.query('DROP INDEX `idx-name` ON `courier`');
     await queryRunner.query('DROP TABLE `courier`');
+    await queryRunner.query(
+      'DROP INDEX `REL_5285f3369bc90d1029c1025fa1` ON `seller_sale_strategy`'
+    );
+    await queryRunner.query('DROP TABLE `seller_sale_strategy`');
     await queryRunner.query(
       'DROP INDEX `REL_f92f252d4204da3e245f0f2869` ON `seller_return_address`'
     );

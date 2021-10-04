@@ -14,6 +14,7 @@ import {
   SellerShippingPolicy,
   SellerCrawlStrategy,
   SellerReturnAddress,
+  SellerSaleStrategy,
 } from '../models';
 
 @InputType()
@@ -62,6 +63,13 @@ export class CreateSellerReturnAddressInput extends PickType(
 ) {}
 
 @InputType()
+export class CreateSellerSaleStrategyInput extends PickType(
+  SellerSaleStrategy,
+  ['canUseCoupon', 'canUseMileage', 'pickkDiscountRate'],
+  InputType
+) {}
+
+@InputType()
 export class CreateSellerCrawlStrategyInput extends PickType(
   SellerCrawlStrategy,
   [
@@ -73,6 +81,11 @@ export class CreateSellerCrawlStrategyInput extends PickType(
     'startPathNamesJoin',
   ],
   InputType
+) {}
+
+@InputType()
+export class UpdateSellerSaleStrategyInput extends PartialType(
+  CreateSellerSaleStrategyInput
 ) {}
 
 @InputType()
