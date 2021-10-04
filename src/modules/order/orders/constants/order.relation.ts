@@ -4,6 +4,8 @@ export type OrderRelationType =
   | keyof Order
   | 'refundRequests.shipment'
   | 'refundRequests.shipment.courier'
+  | 'orderItems.shipment'
+  | 'orderItems.shipment.courier'
   | 'orderItems.product'
   | 'orderItems.product.item'
   | 'orderItems.product.item.prices'
@@ -21,6 +23,8 @@ export type OrderRelationType =
 export const ORDER_RELATIONS: Array<OrderRelationType> = [
   'user',
   'orderItems',
+  'orderItems.shipment',
+  'orderItems.shipment.courier',
   'orderItems.product',
   'orderItems.product.item',
   'orderItems.product.item.prices',
