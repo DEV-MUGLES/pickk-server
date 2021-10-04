@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -10,12 +10,14 @@ import { ItemsService } from '@item/items/items.service';
 
 import { ProductRelationType } from './constants';
 import {
+  CreateProductShippingReservePolicyInput,
   DestockProductInput,
   ProductFilter,
   RestockProductDto,
   UpdateProductInput,
+  UpdateProductShippingReservePolicyInput,
 } from './dtos';
-import { Product } from './models';
+import { Product, ProductShippingReservePolicy } from './models';
 
 import { ProductsRepository } from './products.repository';
 
@@ -27,7 +29,10 @@ export class ProductsService {
     private readonly itemsService: ItemsService
   ) {}
 
-  async get(id: number, relations: string[] = []): Promise<Product> {
+  async get(
+    id: number,
+    relations: ProductRelationType[] = []
+  ): Promise<Product> {
     return await this.productsRepository.get(id, relations);
   }
 
@@ -146,5 +151,31 @@ export class ProductsService {
       product.restock(quantity, isShipReserved);
     });
     await this.productsRepository.save(products);
+  }
+
+  async createShippingReservePolicy(
+    productId: number,
+    input: CreateProductShippingReservePolicyInput
+  ): Promise<Product> {
+    const product = await this.get(productId);
+    product.shippingReservePolicy = new ProductShippingReservePolicy(input);
+
+    return await this.productsRepository.save(product);
+  }
+
+  async updateShippingReservePolicy(
+    productId: number,
+    input: UpdateProductShippingReservePolicyInput
+  ): Promise<Product> {
+    const product = await this.get(productId, ['shippingReservePolicy']);
+    if (!product.shippingReservePolicy) {
+      throw new NotFoundException();
+    }
+    product.shippingReservePolicy = new ProductShippingReservePolicy({
+      ...product.shippingReservePolicy,
+      ...input,
+    });
+
+    return await this.productsRepository.save(product);
   }
 }
