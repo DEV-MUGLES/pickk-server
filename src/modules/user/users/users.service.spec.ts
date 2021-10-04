@@ -11,6 +11,7 @@ import {
 import { ShippingAddress, UserPassword, User } from './models';
 
 import {
+  RefundAccountsRepository,
   ShippingAddressesRepository,
   UsersRepository,
 } from './users.repository';
@@ -29,6 +30,7 @@ describe('UsersService', () => {
         UsersService,
         UsersRepository,
         ShippingAddressesRepository,
+        RefundAccountsRepository,
         {
           provide: FollowsService,
           useValue: new FollowsService(null, null),
@@ -208,36 +210,6 @@ describe('UsersService', () => {
         shippingAddress.id,
         updateShippingAddressInput
       );
-    });
-  });
-
-  describe('removeShippingAddress', () => {
-    it('should return removed address when success', async () => {
-      const addressId = faker.datatype.number();
-      const shippingAddress = new ShippingAddress({
-        id: addressId,
-      });
-      const user = new User({
-        shippingAddresses: [shippingAddress],
-      });
-      const remainShippingAddresses = [];
-      const updatedUser = new User({
-        ...user,
-        shippingAddresses: remainShippingAddresses,
-      });
-
-      const userModelRemoveShippingAddressSpy = jest
-        .spyOn(user, 'removeShippingAddress')
-        .mockReturnValueOnce(shippingAddress);
-      const shippingAddressRemoveSpy = jest
-        .spyOn(shippingAddress, 'remove')
-        .mockImplementation(() => null);
-      jest.spyOn(usersRepository, 'save').mockResolvedValue(updatedUser);
-
-      const result = await usersService.removeShippingAddress(user, addressId);
-      expect(result).toEqual(remainShippingAddresses);
-      expect(userModelRemoveShippingAddressSpy).toHaveBeenCalledWith(addressId);
-      expect(shippingAddressRemoveSpy).toBeCalledTimes(1);
     });
   });
 });

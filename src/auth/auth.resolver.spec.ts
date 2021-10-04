@@ -10,6 +10,7 @@ import { FollowsService } from '@user/follows/follows.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
 import {
+  RefundAccountsRepository,
   ShippingAddressesRepository,
   UsersRepository,
 } from '@user/users/users.repository';
@@ -42,6 +43,7 @@ describe('AuthResolver', () => {
         UsersService,
         UsersRepository,
         { provide: ShippingAddressesRepository, useValue: {} },
+        { provide: RefundAccountsRepository, useValue: {} },
         { provide: SellersService, useValue: {} },
         {
           provide: JwtService,

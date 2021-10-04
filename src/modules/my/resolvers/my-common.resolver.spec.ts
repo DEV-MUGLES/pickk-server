@@ -7,6 +7,7 @@ import { AwsS3ProviderModule } from '@providers/aws/s3';
 
 import { FollowsService } from '@user/follows/follows.service';
 import {
+  RefundAccountsRepository,
   ShippingAddressesRepository,
   UsersRepository,
 } from '@user/users/users.repository';
@@ -27,6 +28,7 @@ describe('MyCommonResolver', () => {
         UsersService,
         UsersRepository,
         ShippingAddressesRepository,
+        RefundAccountsRepository,
         {
           provide: JwtService,
           useValue: {

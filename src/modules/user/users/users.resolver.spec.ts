@@ -23,7 +23,7 @@ describe('UsersResolver', () => {
         UsersResolver,
         {
           provide: UsersService,
-          useValue: new UsersService(null, null, null),
+          useValue: new UsersService(null, null, null, null),
         },
         {
           provide: PointsService,
