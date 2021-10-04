@@ -12,7 +12,10 @@ import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { PointsModule } from '@order/points/points.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
-import { UpdateUserFollowCountConsumer } from './consumers';
+import {
+  SaveBuyerInfoConsumer,
+  UpdateUserFollowCountConsumer,
+} from './consumers';
 
 import { UsersService } from './users.service';
 import {
@@ -44,6 +47,7 @@ import { UsersResolver } from './users.resolver';
     Logger,
     UsersService,
     UsersResolver,
+    SaveBuyerInfoConsumer,
     UpdateUserFollowCountConsumer,
   ],
   exports: [UsersService],
