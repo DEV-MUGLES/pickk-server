@@ -18,4 +18,11 @@ export class OrderFilter implements Partial<IOrder> {
   @IsEnum(OrderStatus)
   @IsOptional()
   status?: OrderStatus;
+
+  @Field(() => [OrderStatus], {
+    nullable: true,
+  })
+  @IsEnum(OrderStatus, { each: true })
+  @IsOptional()
+  statusIn?: OrderStatus[];
 }
