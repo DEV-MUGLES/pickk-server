@@ -69,7 +69,7 @@ export class MyCommonResolver extends BaseResolver {
     );
   }
 
-  @Mutation(() => [Boolean])
+  @Mutation(() => Boolean)
   @UseGuards(JwtVerifyGuard)
   async removeMeShippingAddress(
     @CurrentUser() { sub: userId }: JwtPayload,
