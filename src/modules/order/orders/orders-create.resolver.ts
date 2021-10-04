@@ -7,10 +7,7 @@ import { JwtPayload } from '@auth/models';
 import { JwtVerifyGuard } from '@auth/guards';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
-import { REGISTER_ORDER_CART_ITEM_RELATIONS } from '@item/carts/constants';
 import { CartsService } from '@item/carts/carts.service';
-import { REGISTER_ORDER_PRODUCT_RELATIONS } from '@item/products/constants';
-import { ProductsService } from '@item/products/products.service';
 import { CouponStatus } from '@order/coupons/constants';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { PointsService } from '@order/points/points.service';
@@ -45,7 +42,6 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
   constructor(
     private readonly couponsService: CouponsService,
     private readonly cartsService: CartsService,
-    private readonly productsService: ProductsService,
     private readonly pointsService: PointsService,
     private readonly ordersService: OrdersService,
     private readonly usersService: UsersService,
@@ -73,26 +69,12 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     if (cartItemIds) {
       const cartItems = await this.cartsService.list(
         { idIn: cartItemIds },
-        null,
-        REGISTER_ORDER_CART_ITEM_RELATIONS
+        null
       );
 
       return await this.ordersService.register(userId, cartItems);
     } else {
-      const productIds = orderItemInputs.map((input) => input.productId);
-      const products = await this.productsService.list(
-        { idIn: productIds },
-        null,
-        REGISTER_ORDER_PRODUCT_RELATIONS
-      );
-      const inputs = products.map((product) => ({
-        product,
-        quantity: orderItemInputs.find(
-          (orderItemInput) => orderItemInput.productId === product.id
-        ).quantity,
-      }));
-
-      return await this.ordersService.register(userId, inputs);
+      return await this.ordersService.register(userId, orderItemInputs);
     }
   }
 

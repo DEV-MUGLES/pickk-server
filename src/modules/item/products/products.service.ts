@@ -8,6 +8,7 @@ import { parseFilter } from '@common/helpers';
 import { getOptionValueCombinations } from '@item/items/helpers';
 import { ItemsService } from '@item/items/items.service';
 
+import { ProductRelationType } from './constants';
 import {
   DestockProductInput,
   ProductFilter,
@@ -33,7 +34,7 @@ export class ProductsService {
   async list(
     productFilter?: ProductFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: ProductRelationType[] = []
   ): Promise<Product[]> {
     const _productFilter = plainToClass(ProductFilter, productFilter);
     const _pageInput = plainToClass(PageInput, pageInput);
@@ -57,6 +58,24 @@ export class ProductsService {
       updateProductInput,
       relations
     );
+  }
+
+  async bulkEnrichProduct<Enriched, Model>(
+    models: Model[],
+    propertyName = 'product',
+    relations: ProductRelationType[] = []
+  ): Promise<(Model & Enriched)[]> {
+    const productIds = models.map((model) => model[`${propertyName}Id`]);
+    const products = await this.list({ idIn: productIds }, null, relations);
+
+    for (const model of models) {
+      const product = products.find((v) => v.id === model[`${propertyName}Id`]);
+      if (product) {
+        model[propertyName] = product;
+      }
+    }
+
+    return models as (Model & Enriched)[];
   }
 
   async processDeleted(itemId: number) {
