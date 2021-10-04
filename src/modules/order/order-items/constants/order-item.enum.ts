@@ -32,7 +32,7 @@ export const getOrderItemStatusDisplayName = (status: OrderItemStatus) => {
   return (
     {
       [Pending]: '결제 대기',
-      [Failed]: '결제 취소',
+      [Failed]: '결제 실패',
       [VbankReady]: '입금 대기',
       [VbankDodged]: '입금 전 취소',
       [Paid]: '결제 완료',
