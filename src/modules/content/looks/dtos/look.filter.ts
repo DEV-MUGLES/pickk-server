@@ -14,6 +14,7 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
     'styleTagIdIn',
     'itemId',
     'heightBetween',
+    'brandId',
   ];
 
   @Field(() => [Int], { nullable: true })
@@ -30,6 +31,10 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
     nullable: true,
   })
   itemId?: number;
+  @Field(() => Int, {
+    nullable: true,
+  })
+  brandId?: number;
   @Field(() => [Int], { nullable: true })
   styleTagIdIn?: number[];
 
@@ -40,17 +45,19 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
     return (
       this.styleTagIdIn?.length > 0 ||
       this.user?.heightBetween != null ||
-      this.itemId != null
+      this.itemId != null ||
+      this.brandId != null
     );
   }
 
   get cacheKey(): string {
-    const { styleTagIdIn, user, itemId } = this;
+    const { styleTagIdIn, user, itemId, brandId } = this;
 
     return JSON.stringify({
       styleTagIdIn,
       itemId,
       heightBetween: user?.heightBetween,
+      brandId,
     });
   }
 }

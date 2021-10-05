@@ -8,6 +8,7 @@ import { BaseRepository } from '@common/base.repository';
 import { LookFilter } from './dtos';
 import { LookEntity, LookImageEntity } from './entities';
 import {
+  lookBrandIdQuery,
   lookItemIdQuery,
   lookStyleTagsQuery,
   lookUserHeightQuery,
@@ -51,7 +52,11 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     }
 
     if (filter.itemId) {
-      qb = lookItemIdQuery(this.createQueryBuilder('look'), filter.itemId);
+      qb = lookItemIdQuery(qb, filter.itemId);
+    }
+
+    if (filter.brandId) {
+      qb = lookBrandIdQuery(qb, filter.brandId);
     }
 
     const raws = await qb.execute();

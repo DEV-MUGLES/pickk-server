@@ -1275,6 +1275,7 @@ type Look {
 }
 
 input LookFilter {
+  brandId: Int
   idIn: [Int!]
 
   """사용시 다른 필터는 무시합니다. (정렬: "score")"""
@@ -1472,7 +1473,7 @@ type Order {
 
 type OrderBrand {
   id: Int!
-  imageUrl: String!
+  imageUrl: String
   items: [OrderItem!]!
   nameKor: String!
   shippingFee: Int!

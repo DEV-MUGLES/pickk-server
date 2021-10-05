@@ -3,6 +3,21 @@ import { SelectQueryBuilder } from 'typeorm';
 import { LookEntity } from '../entities';
 
 // @TODO: 테스트 작성
+export const lookBrandIdQuery = (
+  queryBuilder: SelectQueryBuilder<LookEntity>,
+  brandId: number
+) => {
+  return queryBuilder
+    .innerJoin('digest', 'digest', 'digest.lookId = look.id')
+    .innerJoin(
+      'item',
+      'item',
+      `item.id = digest.itemId AND 
+      item.brandId = ${brandId}`
+    );
+};
+
+// @TODO: 테스트 작성
 export const lookItemIdQuery = (
   queryBuilder: SelectQueryBuilder<LookEntity>,
   itemId: number
