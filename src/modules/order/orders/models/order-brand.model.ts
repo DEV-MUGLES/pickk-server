@@ -9,7 +9,7 @@ export class OrderBrand {
 
   @Field()
   nameKor: string;
-  @Field()
+  @Field({ nullable: true })
   imageUrl: string;
 
   @Field(() => Int)
