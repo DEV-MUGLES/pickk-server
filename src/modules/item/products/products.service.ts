@@ -54,14 +54,17 @@ export class ProductsService {
   }
 
   async update(
-    product: Product,
-    updateProductInput: UpdateProductInput,
-    relations: string[] = []
+    id: number,
+    input: UpdateProductInput,
+    relations: ProductRelationType[] = []
   ): Promise<Product> {
-    return await this.productsRepository.updateEntity(
-      product,
-      updateProductInput,
-      relations
+    const product = await this.get(id, relations);
+
+    return await this.productsRepository.save(
+      new Product({
+        ...product,
+        ...input,
+      })
     );
   }
 
