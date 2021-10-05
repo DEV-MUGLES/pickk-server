@@ -631,6 +631,7 @@ type Digest {
   likeCount: Int!
   look: Look
   lookId: Int
+  order: Float!
   rating: Rating
   score: Float!
   size: String!

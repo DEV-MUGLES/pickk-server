@@ -91,6 +91,9 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @Field()
   @Column({ length: 30 })
   size: string;
+  @Field()
+  @Column({ type: 'tinyint', default: 0, unsigned: true })
+  order: number;
 
   // 여기부터 꿀템만 있는 값들
   @Field(() => Rating, { nullable: true })

@@ -24,7 +24,7 @@ export interface IDigest extends IBaseId {
 
   /** 착용 사이즈 */
   size: string;
-
+  order: number;
   // 여기부터 꿀템만 있는 값들
   rating: number;
   title: string;
