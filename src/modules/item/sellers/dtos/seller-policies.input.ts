@@ -20,7 +20,14 @@ import {
 @InputType()
 export class CreateSellerClaimPolicyInput extends PickType(
   SellerClaimPolicy,
-  ['fee', 'phoneNumber', 'picName', 'isExchangable', 'isRefundable'],
+  [
+    'fee',
+    'phoneNumber',
+    'picName',
+    'isExchangable',
+    'isRefundable',
+    'description',
+  ],
   InputType
 ) {}
 
