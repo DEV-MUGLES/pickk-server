@@ -48,6 +48,7 @@ export class ExchangeRequestFactory {
       shippingFee,
       productVariantName,
       itemName,
+      orderItemMerchantUid: orderItem.merchantUid,
     });
 
     if (input.shipmentInput) {

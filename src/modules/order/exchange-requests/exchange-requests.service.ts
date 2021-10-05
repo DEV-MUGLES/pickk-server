@@ -101,7 +101,6 @@ export class ExchangeRequestsService {
     }
 
     exchangeRequest.markRequested();
-    exchangeRequest.orderItemMerchantUid = merchantUid;
 
     return await this.exchangeRequestsRepository.save(exchangeRequest);
   }
