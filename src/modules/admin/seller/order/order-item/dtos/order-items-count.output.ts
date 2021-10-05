@@ -56,7 +56,15 @@ export class OrderItemsCountOutput {
 
     orderItems.forEach(
       ({ status, claimStatus, isProcessDelaying, isConfirmed }) => {
-        countMap.set(status, (countMap.get(status) || 0) + 1);
+        const { ShipReady, Shipping, Shipped } = OrderItemStatus;
+        if ([ShipReady, Shipping, Shipped].includes(status)) {
+          if (!claimStatus) {
+            // 배송준비중,배송중,배송완료 상태면 claimStatus가 있는 경우 count하지 않는다.
+            countMap.set(status, (countMap.get(status) || 0) + 1);
+          }
+        } else {
+          countMap.set(status, (countMap.get(status) || 0) + 1);
+        }
         countMap.set(claimStatus, (countMap.get(claimStatus) || 0) + 1);
 
         if (isProcessDelaying && isProcessDelayStatus(status)) {
@@ -65,7 +73,8 @@ export class OrderItemsCountOutput {
           countMap.set(fieldName, (countMap.get(fieldName) || 0) + 1);
         }
 
-        if (isConfirmed) {
+        if (isConfirmed && !claimStatus) {
+          // 구매확정됐으며 claimStatus가 없는 경우에만 count한다.
           countMap.set('confirmed', (countMap.get('confirmed') || 0) + 1);
         }
       }
