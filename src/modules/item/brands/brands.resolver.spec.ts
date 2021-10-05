@@ -1,4 +1,4 @@
-import { UnauthorizedException } from '@nestjs/common';
+import { ForbiddenException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
@@ -107,7 +107,7 @@ describe('BrandsResolver', () => {
       expect(brandsServiceGetSpy).toHaveBeenCalledWith(brandId, []);
     });
 
-    it('Seller인 경우: 자신의 브랜드가 아니면 Unauthorized exception', async () => {
+    it('Seller인 경우: 자신의 브랜드가 아니면 ForbiddenException', async () => {
       const userId = faker.datatype.number();
       const user = new User({ id: userId, role: UserRole.Seller });
 
@@ -120,7 +120,7 @@ describe('BrandsResolver', () => {
 
       await expect(
         brandsResolver.updateBrand(user, brandId, updateBrandInput)
-      ).rejects.toThrow(UnauthorizedException);
+      ).rejects.toThrow(ForbiddenException);
       expect(sellersServiceSpy).toHaveBeenCalledWith({ userId });
     });
   });

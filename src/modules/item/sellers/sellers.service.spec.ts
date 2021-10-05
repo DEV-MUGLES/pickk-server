@@ -53,6 +53,7 @@ describe('SellersService', () => {
         picName: faker.lorem.text(),
         isExchangable: faker.datatype.boolean(),
         isRefundable: faker.datatype.boolean(),
+        description: faker.lorem.text(),
       },
       crawlPolicyInput: {
         isInspectingNew: faker.datatype.boolean(),
