@@ -71,7 +71,7 @@ export class Order extends OrderEntity {
   @Field(() => Int)
   get totalItemFinalPrice(): number {
     return this.availableOrderItems.reduce(
-      (acc, oi) => acc + oi.itemFinalPrice,
+      (acc, oi) => acc + oi.itemFinalPrice * oi.quantity,
       0
     );
   }
