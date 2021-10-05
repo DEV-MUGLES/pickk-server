@@ -7,4 +7,5 @@ export const INQUIRY_RELATIONS: InquiryRelationType[] = [
   'answers',
   'item',
   'item.brand',
+  'orderItem',
 ];
