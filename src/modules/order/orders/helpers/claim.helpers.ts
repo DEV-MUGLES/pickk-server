@@ -17,8 +17,8 @@ export const calcClaimShippingFee = (
   return faultOf === OrderClaimFaultOf.Seller
     ? 0
     : isFreeShipped
-    ? claimPolicy.fee + shippingPolicy.fee
-    : claimPolicy.fee;
+    ? claimPolicy.fee
+    : claimPolicy.fee / 2;
 };
 
 /** 대상 주문상품의 결제금액의 합산입니다. 반품 배송비가 계산되지 않은 상태입니다. */
