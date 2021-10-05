@@ -30,7 +30,7 @@ export class OrderItem extends OrderItemEntity {
   @Field(() => Int, { description: '[MODEL ONLY]' })
   get payAmount(): number {
     return (
-      this.itemFinalPrice +
+      this.itemFinalPrice * this.quantity +
       this.shippingFee -
       this.usedPointAmount -
       this.couponDiscountAmount
