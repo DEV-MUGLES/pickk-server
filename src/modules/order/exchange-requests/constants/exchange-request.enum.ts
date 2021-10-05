@@ -1,6 +1,7 @@
 import { registerEnumType } from '@nestjs/graphql';
 
 export enum ExchangeRequestStatus {
+  Pending = 'Pending',
   Requested = 'Requested',
   /** 상품 수거 완료 */
   Picked = 'Picked',
