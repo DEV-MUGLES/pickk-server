@@ -87,7 +87,12 @@ export class ExchangeRequestsService {
   }
 
   async complete(merchantUid: string) {
-    const exchangeRequest = await this.get(merchantUid, ['orderItem']);
+    const exchangeRequest = await this.get(merchantUid, [
+      'orderItem',
+      ...(EXCHANGE_ORDER_ITEM_RELATIONS.map(
+        (v) => 'orderItem.' + v
+      ) as ExchangeRequestRelationType[]),
+    ]);
 
     if (exchangeRequest.shippingFee > 0) {
       // 무료배송이 아닌 경우 결제 검증
