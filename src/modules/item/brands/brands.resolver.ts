@@ -1,4 +1,4 @@
-import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { ForbiddenException, Inject, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -53,7 +53,7 @@ export class BrandsResolver extends BaseResolver<BrandRelationType> {
     if (user.role === UserRole.Seller) {
       const seller = await this.sellersService.findOne({ userId: user.id });
       if (seller?.brandId !== id) {
-        throw new UnauthorizedException('자신의 브랜드만 수정할 수 있습니다.');
+        throw new ForbiddenException('자신의 브랜드만 수정할 수 있습니다.');
       }
     }
 

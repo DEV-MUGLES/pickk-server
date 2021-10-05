@@ -35,7 +35,8 @@ export class BrandsService {
     return await this.create(input);
   }
 
-  async update(id: number, input: UpdateBrandInput): Promise<void> {
-    await this.brandsRepository.update(id, input);
+  async update(id: number, input: UpdateBrandInput): Promise<Brand> {
+    const brand = await this.get(id);
+    return await this.brandsRepository.save(new Brand({ ...brand, ...input }));
   }
 }
