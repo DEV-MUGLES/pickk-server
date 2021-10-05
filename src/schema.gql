@@ -2075,6 +2075,7 @@ type Query {
 
   """[Admin] 결제 목록을 조회합니다."""
   payments(paymentFilter: PaymentFilter!): PaymentListOutput!
+  product(id: Int!): Product!
 
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!

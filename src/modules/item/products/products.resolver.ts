@@ -18,6 +18,14 @@ export class ProductsResolver extends BaseResolver<ProductRelationType> {
     super();
   }
 
+  @Query(() => Product)
+  async product(
+    @IntArgs('id') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Product> {
+    return await this.productsService.get(id, this.getRelationsFromInfo(info));
+  }
+
   @Mutation(() => Product)
   async updateProduct(
     @IntArgs('id') id: number,
