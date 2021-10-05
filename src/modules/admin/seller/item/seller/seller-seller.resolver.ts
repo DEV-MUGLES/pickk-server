@@ -3,7 +3,7 @@ import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
-import { JwtSellerGuard, JwtSellerVerifyGuard } from '@auth/guards';
+import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -63,7 +63,7 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   }
 
   @Mutation(() => SellerClaimPolicy)
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMySellerClaimPolicy(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerClaimPolicyInput')
@@ -78,7 +78,7 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   @Mutation(() => SellerSettlePolicy, {
     description: '추가도 이거로 해주시면 됩니다!',
   })
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMySellerSettlePolicy(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerSettlePolicyInput')
@@ -91,7 +91,7 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   }
 
   @Mutation(() => SellerCrawlPolicy)
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMySellerCrawlPolicy(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerCrawlPolicyInput')
@@ -104,7 +104,7 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   }
 
   @Mutation(() => SellerShippingPolicy)
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMySellerShippingPolicy(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerShippingPolicyInput')
@@ -117,7 +117,7 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   }
 
   @Mutation(() => SellerReturnAddress)
-  @UseGuards(JwtSellerGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   async updateMySellerReturnAddress(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerReturnAddressInput')

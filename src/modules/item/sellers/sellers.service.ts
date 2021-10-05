@@ -113,7 +113,11 @@ export class SellersService {
     input: UpdateSellerClaimPolicyInput
   ): Promise<SellerClaimPolicy> {
     const seller = await this.get(id, ['claimPolicy']);
-    seller.updateClaimPolicy(input);
+    seller.claimPolicy = new SellerClaimPolicy({
+      ...seller.claimPolicy,
+      ...input,
+    });
+
     return (await this.sellersRepository.save(seller)).claimPolicy;
   }
 

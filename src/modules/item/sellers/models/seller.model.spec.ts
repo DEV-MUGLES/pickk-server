@@ -3,15 +3,8 @@ import * as faker from 'faker';
 import { BankCode } from '@common/constants';
 import { IAccount } from '@common/interfaces';
 
-import {
-  UpdateSellerClaimPolicyInput,
-  UpdateSellerSettlePolicyInput,
-} from '../dtos';
-import {
-  SellerClaimPolicy,
-  SellerSettleAccount,
-  SellerSettlePolicy,
-} from './policies';
+import { UpdateSellerSettlePolicyInput } from '../dtos';
+import { SellerSettleAccount, SellerSettlePolicy } from './policies';
 
 import { Seller } from './seller.model';
 
@@ -19,12 +12,6 @@ const getAccountMockData = (): Partial<IAccount> => ({
   bankCode: BankCode.AbnAmro,
   ownerName: faker.name.findName(),
   number: faker.phone.phoneNumber('###########'),
-});
-
-const getClaimPolicyMockData = (): Partial<SellerClaimPolicy> => ({
-  fee: faker.datatype.number(),
-  picName: faker.name.findName(),
-  phoneNumber: faker.phone.phoneNumber('###########'),
 });
 
 const getSettlePolicyMockData = (): Partial<SellerSettlePolicy> => ({
@@ -35,19 +22,6 @@ const getSettlePolicyMockData = (): Partial<SellerSettlePolicy> => ({
 });
 
 describe('Seller', () => {
-  describe('updateClaimPolicy', () => {
-    it('성공한다', () => {
-      const claimPolicy = new SellerClaimPolicy(getClaimPolicyMockData());
-      const seller = new Seller({ claimPolicy });
-
-      const updateInput: UpdateSellerClaimPolicyInput =
-        getClaimPolicyMockData();
-
-      const result = seller.updateClaimPolicy(updateInput);
-      expect(result).toMatchObject(updateInput);
-    });
-  });
-
   describe('updateSettlePolicy', () => {
     it('성공한다', () => {
       const settlePolicy = new SellerSettlePolicy(getSettlePolicyMockData());

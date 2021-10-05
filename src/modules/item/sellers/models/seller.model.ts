@@ -5,10 +5,7 @@ import { Brand } from '@item/brands/models';
 import { Courier } from '@item/couriers/models';
 import { User } from '@user/users/models';
 
-import {
-  UpdateSellerClaimPolicyInput,
-  UpdateSellerSettlePolicyInput,
-} from '../dtos';
+import { UpdateSellerSettlePolicyInput } from '../dtos';
 import { SellerEntity } from '../entities';
 
 import {
@@ -57,14 +54,6 @@ export class Seller extends SellerEntity {
   @Field(() => SellerReturnAddress)
   @Type(() => SellerReturnAddress)
   returnAddress: SellerReturnAddress;
-
-  updateClaimPolicy(input: UpdateSellerClaimPolicyInput): SellerClaimPolicy {
-    this.claimPolicy = new SellerClaimPolicy({
-      ...this.claimPolicy,
-      ...input,
-    });
-    return this.claimPolicy;
-  }
 
   updateSettlePolicy(input: UpdateSellerSettlePolicyInput): SellerSettlePolicy {
     const { accountInput, ...settlePolicyAttributes } = input;
