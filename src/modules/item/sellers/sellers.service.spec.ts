@@ -66,6 +66,9 @@ describe('SellersService', () => {
       returnAddressInput: {
         baseAddress: faker.lorem.text(),
         detailAddress: faker.lorem.text(),
+        name: faker.lorem.text(),
+        receiverName: faker.lorem.text(),
+        phoneNumber: '01044131261',
         postalCode: '12321',
       },
       crawlStrategyInput: {
