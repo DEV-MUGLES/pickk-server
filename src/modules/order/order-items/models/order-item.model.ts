@@ -7,7 +7,6 @@ import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
 import { Coupon } from '@order/coupons/models';
-import { ExchangeRequestFactory } from '@order/exchange-requests/factories';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 import { Order } from '@order/orders/models';
 import { RefundRequest } from '@order/refund-requests/models';
@@ -17,7 +16,7 @@ import { Shipment } from '@order/shipments/models';
 import { User } from '@user/users/models';
 
 import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
-import { RequestOrderItemExchangeInput, ShipOrderItemInput } from '../dtos';
+import { ShipOrderItemInput } from '../dtos';
 import { OrderItemEntity } from '../entities';
 import { OrderItemMarkStrategyFactory } from '../factories';
 
@@ -111,14 +110,8 @@ export class OrderItem extends OrderItemEntity {
       ...shipInput,
     });
   }
-  /** mark as: exchange_requested */
-  requestExchange(
-    input: RequestOrderItemExchangeInput,
-    product: Product
-  ): OrderItem {
+  markExchangeRequested() {
     this.markAs(OrderItemClaimStatus.ExchangeRequested);
-    this.exchangeRequest = ExchangeRequestFactory.create(this, product, input);
-    return this;
   }
   markExchanged() {
     this.markAs(OrderItemClaimStatus.Exchanged);

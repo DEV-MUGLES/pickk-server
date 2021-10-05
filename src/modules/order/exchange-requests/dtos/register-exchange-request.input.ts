@@ -5,7 +5,7 @@ import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { CreateShipmentInput } from '@order/shipments/dtos';
 
 @InputType()
-export class RequestOrderItemExchangeInput {
+export class RegisterExchangeRequestInput {
   @Field({ description: '255자 이내로 적어주세요' })
   @IsString()
   reason: string;

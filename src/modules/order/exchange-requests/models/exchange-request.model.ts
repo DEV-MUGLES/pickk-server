@@ -23,6 +23,9 @@ export class ExchangeRequest extends ExchangeRequestEntity {
   private markAs(as: ExchangeRequestStatus) {
     ExchangeRequestMarkStrategyFactory.from(as, this).execute();
   }
+  markRequested() {
+    this.markAs(ExchangeRequestStatus.Requested);
+  }
   markPicked() {
     this.markAs(ExchangeRequestStatus.Picked);
   }

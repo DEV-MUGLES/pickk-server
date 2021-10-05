@@ -4,20 +4,20 @@ import {
 } from '@nestjs/common';
 
 import { Product } from '@item/products/models';
-import { RequestOrderItemExchangeInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { calcClaimShippingFee } from '@order/orders/helpers';
 import { ShipmentOwnerType } from '@order/shipments/constants';
 import { ShipmentFactory } from '@order/shipments/factories';
 
 import { ExchangeRequestStatus } from '../constants';
+import { RegisterExchangeRequestInput } from '../dtos';
 import { ExchangeRequest } from '../models';
 
 export class ExchangeRequestFactory {
   static create(
     orderItem: OrderItem,
     product: Product,
-    input: RequestOrderItemExchangeInput
+    input: RegisterExchangeRequestInput
   ): ExchangeRequest {
     if (orderItem.itemId !== product.itemId) {
       throw new BadRequestException(
@@ -40,7 +40,7 @@ export class ExchangeRequestFactory {
     const result = new ExchangeRequest({
       ...input,
       merchantUid: orderItem.merchantUid,
-      status: ExchangeRequestStatus.Requested,
+      status: ExchangeRequestStatus.Pending,
       userId,
       sellerId,
       quantity,

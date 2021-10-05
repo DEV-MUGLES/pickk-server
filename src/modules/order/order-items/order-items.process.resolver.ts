@@ -8,9 +8,7 @@ import { JwtPayload } from '@auth/models';
 import { BaseResolver } from '@common/base.resolver';
 
 import { OrderItemRelationType, ORDER_ITEM_RELATIONS } from './constants';
-import { RequestOrderItemExchangeInput } from './dtos';
 import { OrderItem } from './models';
-import { OrderItemsProducer } from './producers';
 
 import { OrderItemsService } from './order-items.service';
 
@@ -18,10 +16,7 @@ import { OrderItemsService } from './order-items.service';
 export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationType> {
   relations = ORDER_ITEM_RELATIONS;
 
-  constructor(
-    private readonly orderItemsService: OrderItemsService,
-    private readonly orderItemsProducer: OrderItemsProducer
-  ) {
+  constructor(private readonly orderItemsService: OrderItemsService) {
     super();
   }
 
@@ -33,32 +28,6 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
     @Info() info?: GraphQLResolveInfo
   ): Promise<OrderItem> {
     await this.orderItemsService.checkBelongsTo(merchantUid, userId);
-
-    return await this.orderItemsService.get(
-      merchantUid,
-      this.getRelationsFromInfo(info)
-    );
-  }
-
-  @Mutation(() => OrderItem)
-  @UseGuards(JwtVerifyGuard)
-  async requestOrderItemExchange(
-    @CurrentUser() { sub: userId }: JwtPayload,
-    @Args('merchantUid') merchantUid: string,
-    @Args('requestOrderItemExchangeInput')
-    input: RequestOrderItemExchangeInput,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<OrderItem> {
-    await this.orderItemsService.checkBelongsTo(merchantUid, userId);
-
-    const { exchangeRequest } = await this.orderItemsService.requestExchange(
-      merchantUid,
-      input
-    );
-
-    await this.orderItemsProducer.sendExchangeRequestedAlimtalk(
-      exchangeRequest.merchantUid
-    );
 
     return await this.orderItemsService.get(
       merchantUid,

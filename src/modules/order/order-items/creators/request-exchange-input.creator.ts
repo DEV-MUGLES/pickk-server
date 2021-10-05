@@ -6,7 +6,7 @@ import { Item, ItemOptionValue } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 
-import { RequestOrderItemExchangeInput } from '../dtos';
+import { RegisterExchangeRequestInput } from '../dtos';
 
 export class RequestExchangeInputCreator {
   static create(item: Item, withShipment?: boolean) {
@@ -21,7 +21,7 @@ export class RequestExchangeInputCreator {
       ],
     });
 
-    const result = new RequestOrderItemExchangeInput();
+    const result = new RegisterExchangeRequestInput();
 
     result.productId = product.id;
     result.reason = faker.lorem.text();

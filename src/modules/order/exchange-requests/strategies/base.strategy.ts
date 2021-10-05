@@ -5,7 +5,7 @@ export abstract class ExchangeRequestMarkStrategy {
   abstract status: ExchangeRequestStatus;
   abstract statusChangedField: keyof Pick<
     ExchangeRequest,
-    'pickedAt' | 'reshippingAt' | 'reshippedAt'
+    'requestedAt' | 'pickedAt' | 'reshippingAt' | 'reshippedAt'
   >;
 
   constructor(protected exchangeRequest: ExchangeRequest) {}

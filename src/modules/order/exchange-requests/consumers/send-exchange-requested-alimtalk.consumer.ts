@@ -4,7 +4,7 @@ import { SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE } from '@queue/constants';
 import { AlimtalkService } from '@providers/sens';
 import { SendExchangeRequestedAlimtalkMto } from '@queue/mtos';
 
-import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
+import { ExchangeRequestsService } from '../exchange-requests.service';
 
 @SqsProcess(SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE)
 export class SendExchangeRequestedAlimtalkConsumer {

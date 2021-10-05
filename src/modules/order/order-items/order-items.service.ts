@@ -6,12 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
-import { ProductsService } from '@item/products/products.service';
-import { InvalidExchangeShippingFeeException } from '@order/exchange-requests/exceptions';
-import { PaymentsService } from '@payment/payments/payments.service';
-
-import { EXCHANGE_ORDER_ITEM_RELATIONS } from './constants';
-import { OrderItemFilter, RequestOrderItemExchangeInput } from './dtos';
+import { OrderItemFilter } from './dtos';
 import { OrderItem } from './models';
 
 import { OrderItemsRepository } from './order-items.repository';
@@ -21,9 +16,7 @@ export class OrderItemsService {
   constructor(
     @InjectRepository(OrderItemsRepository)
     private readonly orderItemsRepository: OrderItemsRepository,
-    private readonly productsService: ProductsService,
-    private readonly cacheService: CacheService,
-    private readonly paymentsService: PaymentsService
+    private readonly cacheService: CacheService
   ) {}
 
   async get(merchantUid: string, relations: string[] = []): Promise<OrderItem> {
@@ -58,35 +51,6 @@ export class OrderItemsService {
     if (!isMine) {
       throw new ForbiddenException('자신의 주문상품이 아닙니다.');
     }
-  }
-
-  async requestExchange(
-    merchantUid: string,
-    input: RequestOrderItemExchangeInput
-  ): Promise<OrderItem> {
-    const orderItem = await this.get(
-      merchantUid,
-      EXCHANGE_ORDER_ITEM_RELATIONS
-    );
-    const product = await this.productsService.get(input.productId, [
-      'item',
-      'itemOptionValues',
-    ]);
-
-    const { exchangeRequest } = orderItem.requestExchange(input, product);
-
-    if (exchangeRequest.shippingFee > 0) {
-      // 무료배송이 아닌 경우 결제 검증
-      const payment = await this.paymentsService.get(orderItem.merchantUid);
-      if (payment.amount !== exchangeRequest.shippingFee) {
-        throw new InvalidExchangeShippingFeeException(
-          exchangeRequest,
-          payment.amount
-        );
-      }
-    }
-
-    return await this.orderItemsRepository.save(orderItem);
   }
 
   async confirm(merchantUid: string) {

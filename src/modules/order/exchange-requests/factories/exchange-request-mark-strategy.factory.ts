@@ -7,9 +7,10 @@ import {
   ExchangeRequestPickedStrategy,
   ExchangeRequestReshippingStrategy,
   ExchangeRequestReshippedStrategy,
+  ExchangeRequestRequestedStrategy,
 } from '../strategies';
 
-const { Picked, Reshipping, Reshipped } = ExchangeRequestStatus;
+const { Requested, Picked, Reshipping, Reshipped } = ExchangeRequestStatus;
 
 export class ExchangeRequestMarkStrategyFactory {
   static from(
@@ -17,6 +18,8 @@ export class ExchangeRequestMarkStrategyFactory {
     ExchangeRequest: ExchangeRequest
   ): ExchangeRequestMarkStrategy {
     switch (status) {
+      case Requested:
+        return new ExchangeRequestRequestedStrategy(ExchangeRequest);
       case Picked:
         return new ExchangeRequestPickedStrategy(ExchangeRequest);
       case Reshipping:
