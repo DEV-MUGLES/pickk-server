@@ -171,10 +171,13 @@ export class Item extends ItemEntity {
     }
 
     return (this.options = inputs.map(
-      (input) =>
+      (input, index) =>
         new ItemOption({
           name: input.name,
-          values: input.values.map((value) => new ItemOptionValue(value)),
+          values: input.values.map(
+            (value, index) => new ItemOptionValue({ ...value, order: index })
+          ),
+          order: index,
         })
     ));
   };
