@@ -1,5 +1,5 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation } from '@nestjs/graphql';
+import { Injectable, UseGuards } from '@nestjs/common';
+import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { JwtVerifyGuard } from '@auth/guards';
@@ -19,11 +19,25 @@ export class OrderItemsProcessResolver extends BaseResolver<OrderItemRelationTyp
   relations = ORDER_ITEM_RELATIONS;
 
   constructor(
-    @Inject(OrderItemsService)
     private readonly orderItemsService: OrderItemsService,
     private readonly orderItemsProducer: OrderItemsProducer
   ) {
     super();
+  }
+
+  @Query(() => OrderItem)
+  @UseGuards(JwtVerifyGuard)
+  async meOrderItem(
+    @CurrentUser() { sub: userId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<OrderItem> {
+    await this.orderItemsService.checkBelongsTo(merchantUid, userId);
+
+    return await this.orderItemsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
   }
 
   @Mutation(() => OrderItem)

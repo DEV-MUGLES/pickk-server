@@ -457,6 +457,7 @@ input CreateRefundAccountInput {
 }
 
 input CreateSellerClaimPolicyInput {
+  description: String
   fee: Int!
   isExchangable: Boolean!
   isRefundable: Boolean!
@@ -2046,6 +2047,7 @@ type Query {
   meInquiries(pageInput: PageInput): [Inquiry!]!
   meInquiry(id: Int!): Inquiry!
   meOrder(merchantUid: String!): Order!
+  meOrderItem(merchantUid: String!): OrderItem!
 
   """VbankReady, Paid만 표시"""
   meOrders(pageInput: PageInput): [Order!]!
@@ -2604,6 +2606,7 @@ input UpdateRefundAccountInput {
 }
 
 input UpdateSellerClaimPolicyInput {
+  description: String
   fee: Int
   isExchangable: Boolean
   isRefundable: Boolean
