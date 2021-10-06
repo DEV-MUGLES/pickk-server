@@ -32,7 +32,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
   constructor(
     private readonly exchangeRequestsService: ExchangeRequestsService,
     private readonly sellerExchangeRequestService: SellerExchangeRequestService,
-    private readonly exhcnageRequestsProducer: ExchangeRequestsProducer,
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer,
     private cacheService: CacheService
   ) {
     super();
@@ -112,7 +112,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
     }
 
     await this.sellerExchangeRequestService.reship(exchangeRequest, input);
-    await this.exhcnageRequestsProducer.sendExchangeItemReshipedAlimtalk(
+    await this.exchangeRequestsProducer.sendExchangeItemReshipedAlimtalk(
       merchantUid
     );
     return await this.exchangeRequestsService.get(
