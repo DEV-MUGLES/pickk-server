@@ -82,12 +82,9 @@ export class SellerSellerResolver extends BaseResolver<SellerRelationType> {
   async updateMySellerSettlePolicy(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('updateSellerSettlePolicyInput')
-    updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput
+    input: UpdateSellerSettlePolicyInput
   ): Promise<SellerSettlePolicy> {
-    return await this.sellersService.updateSettlePolicy(
-      sellerId,
-      updateSellerSettlePolicyInput
-    );
+    return await this.sellersService.updateSettlePolicy(sellerId, input);
   }
 
   @Mutation(() => SellerCrawlPolicy)

@@ -41,7 +41,7 @@ export class SellerSettlePolicyEntity
   @Column()
   sellerId: number;
 
-  @OneToOne('SellerSettleAccountEntity', { cascade: true })
+  @OneToOne('SellerSettleAccountEntity', 'settlePolicy', { cascade: true })
   account: ISellerSettleAccount;
 
   @Field({ description: '담당자 번호' })
