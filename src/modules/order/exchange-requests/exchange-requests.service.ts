@@ -94,16 +94,16 @@ export class ExchangeRequestsService {
       ) as ExchangeRequestRelationType[]),
     ]);
 
-    // if (exchangeRequest.shippingFee > 0) {
-    //   // 무료배송이 아닌 경우 결제 검증
-    //   const payment = await this.paymentsService.get(merchantUid);
-    //   if (payment.amount !== exchangeRequest.shippingFee) {
-    //     throw new InvalidExchangeShippingFeeException(
-    //       exchangeRequest,
-    //       payment.amount
-    //     );
-    //   }
-    // }
+    if (exchangeRequest.shippingFee > 0) {
+      // 무료배송이 아닌 경우 결제 검증
+      const payment = await this.paymentsService.get(merchantUid);
+      if (payment.amount !== exchangeRequest.shippingFee) {
+        throw new InvalidExchangeShippingFeeException(
+          exchangeRequest,
+          payment.amount
+        );
+      }
+    }
 
     exchangeRequest.markRequested();
 
