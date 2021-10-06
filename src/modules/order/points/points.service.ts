@@ -102,10 +102,10 @@ export class PointsService {
     );
   }
 
-  async createEvent(createEventInput: CreateEventInput): Promise<PointEvent> {
-    const { userId, orderItemMerchantUid } = createEventInput;
+  async createEvent(input: CreateEventInput): Promise<PointEvent> {
+    const { userId, orderItemMerchantUid } = input;
     const currentAmount = await this.getAvailableAmount(userId);
-    const pointEvent = PointEvent.of(createEventInput, currentAmount);
+    const pointEvent = PointEvent.of(input, currentAmount);
 
     await this.updateAvailableAmount(userId, pointEvent.resultBalance);
     const createdPointEvent = await this.pointEventsRepository.save(pointEvent);

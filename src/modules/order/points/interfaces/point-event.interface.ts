@@ -6,7 +6,6 @@ import { PointType } from '../constants';
 
 export interface IPointEvent extends IBaseId {
   title: string;
-  content: string;
   type: PointType;
   amount: number;
   /** 적립/차감 이후 잔고 */

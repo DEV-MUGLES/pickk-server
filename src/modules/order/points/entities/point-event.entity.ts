@@ -20,7 +20,6 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
     }
 
     this.title = attributes.title;
-    this.content = attributes.content;
     this.type = attributes.type;
     this.amount = attributes.amount;
     this.resultBalance = attributes.resultBalance;
@@ -33,9 +32,6 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   @Field()
   @Column({ length: 30 })
   title: string;
-  @Field()
-  @Column({ length: 30 })
-  content: string;
   @Field(() => PointType)
   @Column({ type: 'enum', enum: PointType })
   type: PointType;

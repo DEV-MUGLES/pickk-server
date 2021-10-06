@@ -15,11 +15,8 @@ export class PointEvent extends PointEventEntity {
     return `point-amount:${userId}`;
   }
 
-  public static of(
-    createEventInput: CreateEventInput,
-    currentAmount: number
-  ): PointEvent {
-    const { amount: diff, type } = createEventInput;
+  public static of(input: CreateEventInput, currentAmount: number): PointEvent {
+    const { amount: diff, type } = input;
     if (type === PointType.Add && diff < 0) {
       throw new AddPointTypeAmountInvalidException();
     }
@@ -32,6 +29,6 @@ export class PointEvent extends PointEventEntity {
       throw new NotEnoughPointAmountException();
     }
 
-    return new PointEvent({ ...createEventInput, resultBalance: resultAmount });
+    return new PointEvent({ ...input, resultBalance: resultAmount });
   }
 }
