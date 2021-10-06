@@ -23,7 +23,7 @@ import {
   UpdateItemOptionInput,
   ItemFilter,
 } from '@item/items/dtos';
-import { Item, ItemOption, ItemPrice, ItemUrl } from '@item/items/models';
+import { Item, ItemOption, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
@@ -147,13 +147,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   async updateItemPrice(
     @IntArgs('id') id: number,
     @Args('updateItemPriceInput')
-    updateItemPriceInput: UpdateItemPriceInput
-  ): Promise<ItemPrice> {
-    const itemPrice = await this.itemsService.getItemPrice(id);
-    return await this.itemsService.updateItemPrice(
-      itemPrice,
-      updateItemPriceInput
-    );
+    input: UpdateItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { itemId } = await this.itemsService.updateItemPrice(id, input);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)

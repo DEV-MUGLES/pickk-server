@@ -188,14 +188,15 @@ export class ItemsService {
   }
 
   async updateItemPrice(
-    itemPrice: ItemPrice,
-    updateItemPriceInput: UpdateItemPriceInput,
-    relations: string[] = []
+    id: number,
+    input: UpdateItemPriceInput
   ): Promise<ItemPrice> {
-    return await this.itemPricesRepository.updateEntity(
-      itemPrice,
-      updateItemPriceInput,
-      relations
+    const itemPrice = await this.getItemPrice(id);
+    return await this.itemPricesRepository.save(
+      new ItemPrice({
+        ...itemPrice,
+        ...input,
+      })
     );
   }
 
