@@ -10,6 +10,7 @@ export type ItemRelationType =
 export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'brand',
   'brand.seller',
+  'campaigns',
   'urls',
   'options',
   'options.values',

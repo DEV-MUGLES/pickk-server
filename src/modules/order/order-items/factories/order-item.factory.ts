@@ -33,6 +33,10 @@ export class OrderItemFactory {
       .map((value) => value.name)
       .join('/');
 
+    const campaigns = item.campaigns
+      .filter((v) => v.isActive)
+      .sort((a, b) => b.rate - a.rate);
+
     const orderItem = new OrderItem({
       merchantUid,
       userId,
@@ -45,6 +49,7 @@ export class OrderItemFactory {
       brandNameKor: item.brand.nameKor,
       itemName: item.name,
       productVariantName,
+      campaignId: campaigns.length > 0 ? campaigns[0].id : null,
       ...(recommendDigest && {
         recommendDigestId: recommendDigest.id,
         recommenderId: recommendDigest.user.id,

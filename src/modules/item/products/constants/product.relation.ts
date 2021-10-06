@@ -12,6 +12,7 @@ export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
   'shippingReservePolicy',
   'itemOptionValues',
   'item',
+  'item.campaigns',
   'item.detailImages',
   'item.prices',
   'item.options',

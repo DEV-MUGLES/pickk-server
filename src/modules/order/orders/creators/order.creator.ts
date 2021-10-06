@@ -84,6 +84,7 @@ export class OrderCreator {
           }),
         ],
         brand,
+        campaigns: [],
       });
 
       const itemOptionValues = [

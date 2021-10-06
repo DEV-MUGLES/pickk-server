@@ -160,6 +160,9 @@ type Campaign {
   createdAt: DateTime!
   endAt: DateTime!
   id: Int!
+
+  """[MODEL ONLY]"""
+  isActive: Boolean!
   items: [Item!]!
 
   """적용 정산률 (0~100)"""
@@ -372,7 +375,7 @@ input CreateCourierInput {
 }
 
 input CreateDigestInput {
-  """최대 길이 2047"""
+  """최대 길이 65000자"""
   content: String
   imageUrls: [String!]!
   itemId: Int
@@ -617,7 +620,7 @@ scalar DateTime
 type Digest {
   commentCount: Int!
 
-  """최대 길이 2047"""
+  """최대 길이 65000자"""
   content: String
   createdAt: DateTime!
   hitCount: Int!
@@ -1510,6 +1513,8 @@ enum OrderClaimFaultOf {
 
 type OrderItem {
   brandNameKor: String!
+  campaign: Campaign
+  campaignId: Int
   cancelRequestedAt: DateTime
   cancelledAt: DateTime
   claimStatus: OrderItemClaimStatus
@@ -1938,7 +1943,6 @@ enum Pg {
 type PointEvent {
   """적립/사용 금액. 양수/음수 구분함"""
   amount: Int!
-  content: String!
   createdAt: DateTime!
   id: Int!
   orderItemMerchantUid: String
@@ -2510,7 +2514,7 @@ input UpdateCourierInput {
 }
 
 input UpdateDigestInput {
-  """최대 길이 2047"""
+  """최대 길이 65000자"""
   content: String
   imageUrls: [String!]
   itemId: Int
