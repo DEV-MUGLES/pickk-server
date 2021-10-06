@@ -516,7 +516,10 @@ input CreateSellerInput {
 input CreateSellerReturnAddressInput {
   baseAddress: String!
   detailAddress: String!
+  name: String!
+  phoneNumber: String!
   postalCode: String!
+  receiverName: String!
 }
 
 input CreateSellerSaleStrategyInput {
@@ -2647,7 +2650,10 @@ input UpdateSellerInput {
 input UpdateSellerReturnAddressInput {
   baseAddress: String
   detailAddress: String
+  name: String
+  phoneNumber: String
   postalCode: String
+  receiverName: String
 }
 
 input UpdateSellerSettleAccountInput {

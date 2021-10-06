@@ -65,7 +65,14 @@ export class CreateSellerShippingPolicyInput extends PickType(
 @InputType()
 export class CreateSellerReturnAddressInput extends PickType(
   SellerReturnAddress,
-  ['baseAddress', 'detailAddress', 'postalCode'],
+  [
+    'baseAddress',
+    'detailAddress',
+    'postalCode',
+    'name',
+    'receiverName',
+    'phoneNumber',
+  ],
   InputType
 ) {}
 
