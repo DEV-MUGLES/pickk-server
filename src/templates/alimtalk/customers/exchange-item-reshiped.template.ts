@@ -6,7 +6,7 @@ import { getExchangeItemInfo } from '@templates/helpers';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 
 export class ExchangeItemReshipedTemplate {
-  static code = 'Cexchang01';
+  static code = 'cexchang02';
 
   static toRequest(
     exchangeRequest: ExchangeRequest
