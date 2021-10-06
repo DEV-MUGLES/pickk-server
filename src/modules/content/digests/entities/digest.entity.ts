@@ -103,8 +103,8 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   @Field({ description: '최대 길이 127', nullable: true })
   @Column({ length: 127, nullable: true })
   title: string;
-  @Field({ description: '최대 길이 2047', nullable: true })
-  @Column({ length: 2047, nullable: true })
+  @Field({ description: '최대 길이 65000자', nullable: true })
+  @Column({ type: 'text', nullable: true })
   content: string;
   @Field(() => Int, { nullable: true })
   @Column({ type: 'smallint', unsigned: true, nullable: true })
