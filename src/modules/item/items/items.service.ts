@@ -200,9 +200,10 @@ export class ItemsService {
     );
   }
 
-  async removePrice(item: Item, priceId: number): Promise<Item> {
+  async removePrice(itemId: number, priceId: number): Promise<Item> {
+    const item = await this.get(itemId, ['prices']);
     const price = item.removePrice(priceId);
-    await price.remove();
+    await this.itemPricesRepository.remove(price);
     return await this.itemsRepository.save(item);
   }
 

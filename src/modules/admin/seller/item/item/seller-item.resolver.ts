@@ -159,10 +159,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   @Mutation(() => Item)
   async removeItemPrice(
     @IntArgs('itemId') itemId: number,
-    @IntArgs('priceId') priceId: number
+    @IntArgs('priceId') priceId: number,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const item = await this.itemsService.get(itemId, ['prices']);
-    return await this.itemsService.removePrice(item, priceId);
+    await this.itemsService.removePrice(itemId, priceId);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
   @Roles(UserRole.Seller)
