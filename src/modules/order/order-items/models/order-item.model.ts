@@ -3,6 +3,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
 import { Digest } from '@content/digests/models';
+import { Campaign } from '@item/campaigns/models';
 import { Item } from '@item/items/models';
 import { Product } from '@item/products/models';
 import { Seller } from '@item/sellers/models';
@@ -53,6 +54,9 @@ export class OrderItem extends OrderItemEntity {
   @Type(() => Product)
   product?: Product;
 
+  @Field(() => Campaign, { nullable: true })
+  @Type(() => Campaign)
+  campaign: Campaign;
   @Field(() => Digest, { nullable: true })
   @Type(() => Digest)
   recommendDigest: Digest;

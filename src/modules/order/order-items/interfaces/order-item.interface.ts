@@ -1,4 +1,5 @@
 import { IDigest } from '@content/digests/interfaces';
+import { ICampaign } from '@item/campaigns/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
@@ -26,6 +27,9 @@ export interface IOrderItem {
   productId?: number;
   usedCoupon?: ICoupon;
   usedCouponId?: number;
+
+  campaign: ICampaign;
+  campaignId: number;
 
   order: IOrder;
   orderMerchantUid: string;

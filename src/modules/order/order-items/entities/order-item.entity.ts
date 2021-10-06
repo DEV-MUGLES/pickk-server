@@ -12,6 +12,7 @@ import {
 import { IsEnum, IsOptional, IsString, MaxLength, Min } from 'class-validator';
 
 import { IDigest } from '@content/digests/interfaces';
+import { ICampaign } from '@item/campaigns/interfaces';
 import { IItem } from '@item/items/interfaces';
 import { IProduct } from '@item/products/interfaces';
 import { ISeller } from '@item/sellers/interfaces';
@@ -52,6 +53,9 @@ export class OrderItemEntity implements IOrderItem {
     this.productId = attributes.productId;
     this.usedCoupon = attributes.usedCoupon;
     this.usedCouponId = attributes.usedCouponId;
+
+    this.campaign = attributes.campaign;
+    this.campaignId = attributes.campaignId;
 
     this.order = attributes.order;
     this.orderMerchantUid = attributes.orderMerchantUid;
@@ -143,6 +147,12 @@ export class OrderItemEntity implements IOrderItem {
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   productId: number;
+
+  @ManyToOne('CampaignEntity', { onDelete: 'SET NULL', nullable: true })
+  campaign: ICampaign;
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  campaignId: number;
 
   @Field(() => Coupon, { nullable: true })
   @ManyToOne('CouponEntity', { onDelete: 'SET NULL', nullable: true })

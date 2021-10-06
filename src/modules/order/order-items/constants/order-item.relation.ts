@@ -20,6 +20,7 @@ export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'order',
   'order.buyer',
   'order.receiver',
+  'campaign',
   'shipment',
   'shipment.courier',
   'refundRequest',
