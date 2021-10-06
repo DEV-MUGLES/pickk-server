@@ -1,4 +1,4 @@
-import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -106,12 +106,12 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
     @Args('reshipExchangeRequestInput') input: ReshipExchangeRequestInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<ExchangeRequest> {
-    const exchangeRequest = await this.exchangeRequestsService.get(merchantUid);
-    if (exchangeRequest.sellerId !== sellerId) {
-      throw new ForbiddenException('해당 교환 요청에 대한 권한이 없습니다.');
-    }
+    await this.sellerExchangeRequestService.checkBelongsTo(
+      merchantUid,
+      sellerId
+    );
 
-    await this.sellerExchangeRequestService.reship(exchangeRequest, input);
+    await this.sellerExchangeRequestService.reship(merchantUid, input);
     await this.exchangeRequestsProducer.sendExchangeItemReshipedAlimtalk(
       merchantUid
     );

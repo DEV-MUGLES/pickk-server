@@ -4,7 +4,6 @@ import { MoreThanOrEqual } from 'typeorm';
 import dayjs from 'dayjs';
 
 import { ReshipExchangeRequestInput } from '@order/exchange-requests/dtos';
-import { ExchangeRequest } from '@order/exchange-requests/models';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
 
@@ -17,6 +16,16 @@ export class SellerExchangeRequestService {
     private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
     private readonly exchangeRequestsService: ExchangeRequestsService
   ) {}
+
+  async checkBelongsTo(merchantUid: string, sellerId: number) {
+    const exchangeRequests = await this.exchangeRequestsRepository.findOne({
+      select: ['sellerId'],
+      where: { merchantUid },
+    });
+    if (exchangeRequests?.sellerId !== sellerId) {
+      throw new ForbiddenException('권한이 없습니다.');
+    }
+  }
 
   async getCount(
     sellerId: number,
@@ -50,10 +59,11 @@ export class SellerExchangeRequestService {
     await this.exchangeRequestsRepository.save(exchangeRequests);
   }
 
-  async reship(
-    exchangeRequest: ExchangeRequest,
-    input: ReshipExchangeRequestInput
-  ) {
+  async reship(merchantUid: string, input: ReshipExchangeRequestInput) {
+    const exchangeRequest = await this.exchangeRequestsService.get(
+      merchantUid,
+      ['orderItem']
+    );
     exchangeRequest.reship(input);
     await this.exchangeRequestsRepository.save(exchangeRequest);
   }
