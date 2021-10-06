@@ -1,7 +1,7 @@
 import { AlimtalkMessageRequest } from 'nest-sens';
 
 import { partialEncrypt } from '@common/helpers';
-import { getPurchaseItemInfo } from '@templates/helpers';
+import { getExchangeItemInfo } from '@templates/helpers';
 
 import { ExchangeRequest } from '@order/exchange-requests/models';
 
@@ -36,7 +36,7 @@ class Cexch04Template {
 
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
 
-▶ 상품명 : ${getPurchaseItemInfo(orderItem)}
+▶ 상품명 : ${getExchangeItemInfo(exchangeRequest)} 
 ▶ 주문상품번호 : ${orderItem.merchantUid}
 
 ▶ 반송 운송장 번호 : ${pickShipment.courier.name} ${pickShipment.trackCode}
@@ -60,7 +60,7 @@ class Cexch03Template {
 
     return `${partialEncrypt(buyer.name, 1)}님의 교환신청이 정상 접수되었습니다.
 
-▶ 상품명 : ${getPurchaseItemInfo(orderItem)}
+▶ 상품명 : ${getExchangeItemInfo(exchangeRequest)}
 ▶ 주문상품번호 : ${orderItem.merchantUid}
 
 아래 반송지로 착불발송 요청드립니다.
