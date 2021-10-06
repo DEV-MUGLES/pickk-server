@@ -19,6 +19,7 @@ import {
 } from '@order/exchange-requests/dtos';
 import { ExchangeRequest } from '@order/exchange-requests/models';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
+import { ExchangeRequestsProducer } from '@order/exchange-requests/producers';
 
 import { ExchangeRequestsCountOutput } from './dtos';
 
@@ -31,6 +32,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
   constructor(
     private readonly exchangeRequestsService: ExchangeRequestsService,
     private readonly sellerExchangeRequestService: SellerExchangeRequestService,
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer,
     private cacheService: CacheService
   ) {
     super();
@@ -110,7 +112,9 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
     }
 
     await this.sellerExchangeRequestService.reship(exchangeRequest, input);
-
+    await this.exchangeRequestsProducer.sendExchangeItemReshipedAlimtalk(
+      merchantUid
+    );
     return await this.exchangeRequestsService.get(
       merchantUid,
       this.getRelationsFromInfo(info)
