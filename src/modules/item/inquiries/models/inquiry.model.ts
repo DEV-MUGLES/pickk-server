@@ -1,4 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
+import { Type } from 'class-transformer';
 
 import { partialEncrypt } from '@common/helpers';
 
@@ -17,12 +18,16 @@ const SECRET_TITLE = '비공개 문의입니다';
 @ObjectType()
 export class Inquiry extends InquiryEntity {
   @Field(() => User)
+  @Type(() => User)
   user: User;
   @Field(() => Item, { nullable: true })
+  @Type(() => Item)
   item: Item;
   @Field(() => Seller, { nullable: true })
+  @Type(() => Seller)
   seller: Seller;
   @Field(() => OrderItem, { nullable: true })
+  @Type(() => OrderItem)
   orderItem: OrderItem;
 
   @Field(() => [InquiryAnswer])
