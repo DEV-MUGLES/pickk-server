@@ -10,6 +10,6 @@ dayjs.extend(timezone);
 export const format2Korean = (date: Date): string =>
   dayjs
     .tz(date, Timezone.Seoul)
-    .format('YYYY년 MM월 DD일 a HH:mm:ss')
+    .format('YYYY년 MM월 DD일 a hh:mm:ss')
     .replace('pm', '오후')
     .replace('am', '오전');
