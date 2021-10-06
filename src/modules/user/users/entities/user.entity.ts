@@ -100,7 +100,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @IsOptional()
   phoneNumber?: string;
   @Field({ description: '최대 11자' })
-  @Column({ unique: true, length: 11 })
+  @Column({ unique: true, length: 21 })
   nickname: string;
   @Field({ description: '최대 255자', nullable: true })
   @Column({ nullable: true })
