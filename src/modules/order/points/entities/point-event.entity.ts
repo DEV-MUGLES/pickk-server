@@ -5,7 +5,7 @@ import { BaseIdEntity } from '@common/entities';
 import { UserEntity } from '@user/users/entities';
 import { User } from '@user/users/models';
 
-import { PointType } from '../constants';
+import { PointSign } from '../constants';
 import { IPointEvent } from '../interfaces';
 
 @ObjectType()
@@ -20,7 +20,7 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
     }
 
     this.title = attributes.title;
-    this.type = attributes.type;
+    this.sign = attributes.sign;
     this.amount = attributes.amount;
     this.resultBalance = attributes.resultBalance;
 
@@ -32,9 +32,9 @@ export class PointEventEntity extends BaseIdEntity implements IPointEvent {
   @Field()
   @Column({ length: 30 })
   title: string;
-  @Field(() => PointType)
-  @Column({ type: 'enum', enum: PointType })
-  type: PointType;
+  @Field(() => PointSign)
+  @Column({ type: 'enum', enum: PointSign })
+  sign: PointSign;
   @Field(() => Int, { description: '적립/사용 금액. 양수/음수 구분함' })
   @Column({ type: 'int' })
   amount: number;

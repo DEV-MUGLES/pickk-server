@@ -2,11 +2,11 @@ import { IBaseId } from '@common/interfaces';
 
 import { IUser } from '@user/users/interfaces';
 
-import { PointType } from '../constants';
+import { PointSign } from '../constants';
 
 export interface IPointEvent extends IBaseId {
   title: string;
-  type: PointType;
+  sign: PointSign;
   amount: number;
   /** 적립/차감 이후 잔고 */
   resultBalance: number;

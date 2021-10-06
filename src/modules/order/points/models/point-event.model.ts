@@ -1,6 +1,6 @@
 import { ObjectType } from '@nestjs/graphql';
 
-import { PointType } from '../constants';
+import { PointSign } from '../constants';
 import { CreateEventInput } from '../dtos';
 import { PointEventEntity } from '../entities';
 import {
@@ -16,11 +16,11 @@ export class PointEvent extends PointEventEntity {
   }
 
   public static of(input: CreateEventInput, currentAmount: number): PointEvent {
-    const { amount: diff, type } = input;
-    if (type === PointType.Add && diff < 0) {
+    const { amount: diff, sign } = input;
+    if (sign === PointSign.Plus && diff < 0) {
       throw new AddPointTypeAmountInvalidException();
     }
-    if (type === PointType.Sub && diff > 0) {
+    if (sign === PointSign.Minus && diff > 0) {
       throw new SubPointTypeAmountInvalidException();
     }
 

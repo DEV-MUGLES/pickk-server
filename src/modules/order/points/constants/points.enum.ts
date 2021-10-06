@@ -1,11 +1,11 @@
 import { registerEnumType } from '@nestjs/graphql';
 
-export enum PointType {
-  Add = 'Add',
-  Sub = 'Sub',
+export enum PointSign {
+  Plus = 'Plus',
+  Minus = 'Minus',
 }
 
-registerEnumType(PointType, {
-  name: 'PointType',
-  description: '포인트 분류입니다. 적립(Add), 사용(Sub)',
+registerEnumType(PointSign, {
+  name: 'PointSign',
+  description: '포인트 분류입니다. 적립(Plus), 사용(Minus)',
 });

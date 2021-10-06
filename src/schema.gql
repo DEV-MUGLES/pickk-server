@@ -1949,8 +1949,8 @@ type PointEvent {
 
   """적립/사용 이후 잔고"""
   resultBalance: Int!
+  sign: PointSign!
   title: String!
-  type: PointType!
   updatedAt: DateTime!
   userId: Int!
 }
@@ -1958,14 +1958,14 @@ type PointEvent {
 input PointEventFilter {
   createdAtLte: DateTime
   createdAtMte: DateTime
-  type: PointType
+  sign: PointSign
   userId: Int
 }
 
-"""포인트 분류입니다. 적립(Add), 사용(Sub)"""
-enum PointType {
-  Add
-  Sub
+"""포인트 분류입니다. 적립(Plus), 사용(Minus)"""
+enum PointSign {
+  Minus
+  Plus
 }
 
 type Product {
