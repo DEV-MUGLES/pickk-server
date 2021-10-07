@@ -15,7 +15,7 @@ import { MysqlConfigModule, MysqlConfigService } from '@config/database/mysql';
       useFactory: async (mysqlConfigService: MysqlConfigService) =>
         ({
           type: 'mysql' as DatabaseType,
-          charset: 'utf8',
+          charset: 'utf8mb4',
           host: mysqlConfigService.host,
           port: mysqlConfigService.port,
           username: mysqlConfigService.username,

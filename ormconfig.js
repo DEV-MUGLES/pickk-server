@@ -5,6 +5,7 @@ module.exports = {
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_DATABASE,
+  charset: 'utf8mb4',
   entities: ['src/**/*.entity.ts', 'src/**/*.entity.js'],
   migrations: ['src/database/migrations/*.ts', 'src/database/migrations/*.js'],
   cli: {
