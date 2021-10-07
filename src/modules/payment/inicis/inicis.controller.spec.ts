@@ -2,18 +2,20 @@ import { HttpService } from '@nestjs/axios';
 import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
+import { SlackService } from '@providers/slack';
+
+import { CreatePaymentDtoCreator } from '@payment/payments/creators';
 import { Payment } from '@payment/payments/models';
 import { PaymentsRepository } from '@payment/payments/payments.repository';
 import { PaymentsService } from '@payment/payments/payments.service';
 
 import { StdVbankNotiDtoCreator } from './creators';
+import { InicisPrepareResponseDto } from './dtos';
 import { AbnormalVbankNotiException } from './exceptions';
+import { InicisProducer } from './producers';
 
 import { InicisController } from './inicis.controller';
 import { InicisService } from './inicis.service';
-import { CreatePaymentDtoCreator } from '@payment/payments/creators';
-import { InicisPrepareResponseDto } from './dtos';
-import { InicisProducer } from './producers';
 
 describe('InicisController', () => {
   let inicisController: InicisController;
@@ -26,7 +28,12 @@ describe('InicisController', () => {
       providers: [
         InicisService,
         PaymentsService,
+        SlackService,
         PaymentsRepository,
+        {
+          provide: SlackService,
+          useValue: {},
+        },
         {
           provide: HttpService,
           useValue: {

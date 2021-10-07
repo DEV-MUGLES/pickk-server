@@ -4,6 +4,8 @@ import { getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { parseFilter } from '@common/helpers';
+import { SlackService } from '@providers/slack';
+
 import { InicisService } from '@payment/inicis/inicis.service';
 
 import { PaymentStatus } from './constants';
@@ -23,7 +25,8 @@ export class PaymentsService {
   constructor(
     @InjectRepository(PaymentsRepository)
     private readonly paymentsRepository: PaymentsRepository,
-    private readonly inicisService: InicisService
+    private readonly inicisService: InicisService,
+    private readonly slackService: SlackService
   ) {}
 
   async get(merchantUid: string, relations: string[] = []): Promise<Payment> {
@@ -89,14 +92,19 @@ export class PaymentsService {
   }
 
   async cancel(merchantUid: string, input: CancelPaymentInput) {
-    const payment = await this.get(merchantUid, ['cancellations']);
-    payment.cancel(input);
+    try {
+      const payment = await this.get(merchantUid, ['cancellations']);
+      payment.cancel(input);
 
-    await this.inicisService.cancel({
-      cancelledPayment: payment,
-      ...input,
-    });
-    await this.paymentsRepository.save(payment);
+      await this.inicisService.cancel({
+        cancelledPayment: payment,
+        ...input,
+      });
+      await this.paymentsRepository.save(payment);
+    } catch (err) {
+      console.log(err);
+      await this.slackService.sendOldPayCancelRequested(merchantUid, input);
+    }
   }
 
   async dodgeVbank(merchantUid: string) {

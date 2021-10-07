@@ -1,6 +1,10 @@
 import { BankCode } from '@common/constants';
 
 export const getBankDisplayName = (code: BankCode): string => {
+  if (!code) {
+    return '';
+  }
+
   const {
     Ibk,
     Kb,

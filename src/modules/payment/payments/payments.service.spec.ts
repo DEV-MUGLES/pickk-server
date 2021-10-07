@@ -2,6 +2,8 @@ import { HttpService } from '@nestjs/axios';
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { SlackService } from '@providers/slack';
+
 import { InicisService } from '@payment/inicis/inicis.service';
 
 import { PaymentStatus } from './constants';
@@ -23,6 +25,10 @@ describe('PaymentsService', () => {
         {
           provide: HttpService,
           useValue: { get: jest.fn(), post: jest.fn() },
+        },
+        {
+          provide: SlackService,
+          useValue: {},
         },
       ],
     }).compile();

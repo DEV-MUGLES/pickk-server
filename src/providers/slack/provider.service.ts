@@ -8,14 +8,16 @@ import {
   ItemCreationSuccessTemplate,
   ItemReportTemplate,
   LookCreationTemplate,
+  OldPaymentCancelRequestedTemplate,
   VideoCreationTemplate,
 } from '@templates/slack';
 
-import { Item } from '@item/items/models';
-import { Inquiry } from '@item/inquiries/models';
 import { Digest } from '@content/digests/models';
 import { Look } from '@content/looks/models';
 import { Video } from '@content/videos/models';
+import { Item } from '@item/items/models';
+import { Inquiry } from '@item/inquiries/models';
+import { CancelPaymentInput } from '@payment/payments/dtos';
 
 @Injectable()
 export class SlackService {
@@ -65,5 +67,14 @@ export class SlackService {
 
   async sendVideoCreation(video: Video): Promise<IncomingWebhookResult> {
     return await this.webhook.send(VideoCreationTemplate.create(video));
+  }
+
+  async sendOldPayCancelRequested(
+    merchantUid: string,
+    input: CancelPaymentInput
+  ): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(
+      OldPaymentCancelRequestedTemplate.create(merchantUid, input)
+    );
   }
 }
