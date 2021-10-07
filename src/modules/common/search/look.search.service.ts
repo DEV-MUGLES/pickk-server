@@ -17,7 +17,7 @@ export type LookSearchBody = Pick<ILook, 'id' | 'title'> & {
 
 @Injectable()
 export class LookSearchService extends BaseSearchService<Look, LookSearchBody> {
-  indexName = 'looks';
+  typeName = 'looks';
 
   constructor(
     readonly searchService: SearchService // private readonly looksService: LooksService

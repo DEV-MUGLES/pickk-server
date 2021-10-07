@@ -10,7 +10,8 @@ export abstract class BaseSearchService<
     id: number;
   }
 > {
-  abstract indexName: string;
+  indexName = 'pickk';
+  abstract typeName: string;
   abstract searchService: SearchService;
 
   abstract getModel(id: number): Promise<Model>;

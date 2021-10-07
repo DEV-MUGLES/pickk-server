@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-import { getUpdateScript } from './helpers';
 import { SearchParams, SearchResult } from './types';
 
 type BaseSearchBody = {
@@ -12,14 +11,9 @@ type BaseSearchBody = {
 export class SearchService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
-  async refresh(index: string) {
-    await this.elasticsearchService.indices.refresh({
-      index,
-    });
-  }
-
   async index<SearchBody extends BaseSearchBody>(
     index: string,
+    type: string,
     body: SearchBody
   ) {
     return await this.elasticsearchService.index<
@@ -27,13 +21,64 @@ export class SearchService {
       SearchBody
     >({
       index,
+      type,
+      id: body.id.toString(),
       body,
+    });
+  }
+
+  async bulkIndex<SearchBody extends BaseSearchBody>(
+    index: string,
+    type: string,
+    bodies: SearchBody[]
+  ) {
+    return await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
+      refresh: true,
+      body: bodies.reduce(
+        (acc, body) => [
+          ...acc,
+          {
+            index: {
+              _index: index,
+              _type: type,
+              _id: body.id.toString(),
+            },
+          },
+          body,
+        ],
+        []
+      ),
+    });
+  }
+
+  async bulkUpdate<SearchBody extends BaseSearchBody>(
+    index: string,
+    type: string,
+    bodies: SearchBody[]
+  ) {
+    return await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
+      refresh: true,
+      body: bodies.reduce(
+        (acc, body) => [
+          ...acc,
+          {
+            update: {
+              _index: index,
+              _type: type,
+              _id: body.id.toString(),
+            },
+          },
+          body,
+        ],
+        []
+      ),
     });
   }
 
   /** 기본적으로 _score(관련도)순 정렬입니다. */
   async search<SearchBody extends BaseSearchBody>(
     index: string,
+    type: string,
     query: string,
     params?: SearchParams
   ): Promise<SearchBody[]> {
@@ -41,6 +86,7 @@ export class SearchService {
       SearchResult<SearchBody>
     >({
       index,
+      type,
       ...params,
       body: {
         query: {
@@ -56,31 +102,27 @@ export class SearchService {
 
   async update<SearchBody extends BaseSearchBody>(
     index: string,
+    type: string,
+    id: string | number,
     body: SearchBody
   ) {
-    return await this.elasticsearchService.updateByQuery<SearchBody>({
+    return await this.elasticsearchService.update<SearchBody>({
       index,
-      body: {
-        query: {
-          match: {
-            id: body.id,
-          },
-        },
-        script: {
-          inline: getUpdateScript(body),
-        },
-      },
+      type,
+      id: id.toString(),
+      body,
     });
   }
 
-  async remove<SearchBody extends BaseSearchBody>(index: string, id: number) {
-    return await this.elasticsearchService.deleteByQuery<SearchBody>({
+  async remove<SearchBody extends BaseSearchBody>(
+    index: string,
+    type: string,
+    id: number | string
+  ) {
+    return await this.elasticsearchService.delete<SearchBody>({
       index,
-      body: {
-        query: {
-          match: { id },
-        },
-      },
+      type,
+      id: id.toString(),
     });
   }
 }

@@ -20,7 +20,7 @@ export class VideoSearchService extends BaseSearchService<
   Video,
   VideoSearchBody
 > {
-  indexName = 'videos';
+  typeName = 'videos';
 
   constructor(
     readonly searchService: SearchService,
