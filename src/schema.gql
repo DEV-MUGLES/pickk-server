@@ -1376,7 +1376,6 @@ type Mutation {
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
-  indexItem: Boolean!
   indexKeyword: Boolean!
   indexVideo: Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
@@ -2100,10 +2099,11 @@ type Query {
   rootInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   rootInquiry(id: Int!): Inquiry!
   rootOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
+  searchAllItem(pageInput: PageInput, query: String!): [Item!]!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
-  searchItem(pageInput: PageInput, query: String!): [Item!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
   searchLook(pageInput: PageInput, query: String!): [Look!]!
+  searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!

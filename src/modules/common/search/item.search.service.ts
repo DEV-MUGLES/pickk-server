@@ -1,3 +1,5 @@
+import { Injectable } from '@nestjs/common';
+
 import { BaseSearchService } from '@common/base.search.service';
 import { SearchService } from '@providers/elasticsearch/provider.service';
 
@@ -8,8 +10,10 @@ import { ItemsService } from '@item/items/items.service';
 export type ItemSearchBody = Pick<IItem, 'id' | 'name'> & {
   brandNameKor: string;
   minorCategoryName: string;
+  isPurchasable: boolean;
 };
 
+@Injectable()
 export class ItemSearchService extends BaseSearchService<Item, ItemSearchBody> {
   typeName = 'items';
 
@@ -30,6 +34,7 @@ export class ItemSearchService extends BaseSearchService<Item, ItemSearchBody> {
       name: item.name,
       brandNameKor: item.brand.nameKor,
       minorCategoryName: item.minorCategory?.name ?? '',
+      isPurchasable: item.isPurchasable,
     };
   }
 }
