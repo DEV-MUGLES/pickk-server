@@ -37,7 +37,7 @@ export class ItemOptionEntity extends BaseIdEntity implements IItemOption {
   values: ItemOptionValue[];
 
   @Field()
-  @Column({ length: 20 })
+  @Column({ length: 25 })
   name: string;
   @Field()
   @Column({ type: 'tinyint', unsigned: true, default: 0 })

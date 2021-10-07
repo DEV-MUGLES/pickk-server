@@ -89,7 +89,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
 
   // 여기부터 정보 fields
   @Field()
-  @Column({ length: 30 })
+  @Column({ length: 80 })
   size: string;
   @Field()
   @Column({ type: 'tinyint', default: 0, unsigned: true })
