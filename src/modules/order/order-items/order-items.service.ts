@@ -8,6 +8,7 @@ import { CacheService } from '@providers/cache/redis';
 
 import { OrderItemFilter } from './dtos';
 import { OrderItem } from './models';
+import { OrderItemsProducer } from './producers';
 
 import { OrderItemsRepository } from './order-items.repository';
 
@@ -16,6 +17,7 @@ export class OrderItemsService {
   constructor(
     @InjectRepository(OrderItemsRepository)
     private readonly orderItemsRepository: OrderItemsRepository,
+    private readonly orderItemsProducer: OrderItemsProducer,
     private readonly cacheService: CacheService
   ) {}
 
@@ -57,6 +59,7 @@ export class OrderItemsService {
     const orderItem = await this.get(merchantUid);
     orderItem.confirm();
 
+    await this.orderItemsProducer.giveReward(merchantUid);
     return await this.orderItemsRepository.save(orderItem);
   }
 
