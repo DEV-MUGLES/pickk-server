@@ -19,7 +19,7 @@ export class KeywordSearchService extends BaseSearchService<
   Keyword,
   KeywordSearchBody
 > {
-  typeName = 'keywords';
+  name = 'keywords';
 
   constructor(
     readonly searchService: SearchService,

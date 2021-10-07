@@ -12,48 +12,49 @@ export class SearchService {
   constructor(private readonly elasticsearchService: ElasticsearchService) {}
 
   async index<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     body: SearchBody
   ) {
     return await this.elasticsearchService.index<
       SearchResult<SearchBody>,
       SearchBody
     >({
-      index,
-      type,
+      index: name,
+      type: name,
       id: body.id.toString(),
       body,
     });
   }
 
   async bulkIndex<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     bodies: SearchBody[]
   ) {
-    return await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
-      refresh: true,
-      body: bodies.reduce(
-        (acc, body) => [
-          ...acc,
-          {
-            index: {
-              _index: index,
-              _type: type,
-              _id: body.id.toString(),
+    const CHUNK_SIZE = 3000;
+
+    for (let i = 0; i < CHUNK_SIZE; i += CHUNK_SIZE) {
+      await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
+        refresh: true,
+        body: bodies.slice(i, i + CHUNK_SIZE).reduce(
+          (acc, body) => [
+            ...acc,
+            {
+              index: {
+                _index: name,
+                _type: name,
+                _id: body.id.toString(),
+              },
             },
-          },
-          body,
-        ],
-        []
-      ),
-    });
+            body,
+          ],
+          []
+        ),
+      });
+    }
   }
 
   async bulkUpdate<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     bodies: SearchBody[]
   ) {
     return await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
@@ -63,8 +64,8 @@ export class SearchService {
           ...acc,
           {
             update: {
-              _index: index,
-              _type: type,
+              _index: name,
+              _type: name,
               _id: body.id.toString(),
             },
           },
@@ -75,10 +76,28 @@ export class SearchService {
     });
   }
 
+  async bulkDelete(name: string, ids: (number | string)[]) {
+    return await this.elasticsearchService.bulk({
+      refresh: true,
+      body: ids.reduce(
+        (acc, id) => [
+          ...acc,
+          {
+            delete: {
+              _index: name,
+              _type: name,
+              _id: id.toString(),
+            },
+          },
+        ],
+        []
+      ),
+    });
+  }
+
   /** 기본적으로 _score(관련도)순 정렬입니다. */
   async search<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     query: string,
     params?: SearchParams,
     filter?: Partial<SearchBody>
@@ -86,8 +105,8 @@ export class SearchService {
     const { body } = await this.elasticsearchService.search<
       SearchResult<SearchBody>
     >({
-      index,
-      type,
+      index: name,
+      type: name,
       ...params,
       body: {
         query: {
@@ -112,27 +131,25 @@ export class SearchService {
   }
 
   async update<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     id: string | number,
     body: SearchBody
   ) {
     return await this.elasticsearchService.update<SearchBody>({
-      index,
-      type,
+      index: name,
+      type: name,
       id: id.toString(),
       body,
     });
   }
 
   async remove<SearchBody extends BaseSearchBody>(
-    index: string,
-    type: string,
+    name: string,
     id: number | string
   ) {
     return await this.elasticsearchService.delete<SearchBody>({
-      index,
-      type,
+      index: name,
+      type: name,
       id: id.toString(),
     });
   }

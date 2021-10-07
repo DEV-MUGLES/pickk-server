@@ -9,10 +9,10 @@ import { VideosService } from '@content/videos/videos.service';
 
 export type VideoSearchBody = Pick<IVideo, 'id' | 'title'> & {
   userNickname: string;
-  digestTitles: string;
+  digestTitles?: string;
   itemNames: string;
   brandNameKors: string;
-  minorCategoryNames: string;
+  minorCategoryNames?: string;
 };
 
 @Injectable()
@@ -20,7 +20,7 @@ export class VideoSearchService extends BaseSearchService<
   Video,
   VideoSearchBody
 > {
-  typeName = 'videos';
+  name = 'videos';
 
   constructor(
     readonly searchService: SearchService,
@@ -44,12 +44,21 @@ export class VideoSearchService extends BaseSearchService<
       id: video.id,
       title: video.title,
       userNickname: video.user.nickname,
-      digestTitles: video.digests.map((v) => v.title).join(', '),
-      itemNames: video.digests.map((v) => v.item.name).join(', '),
-      brandNameKors: video.digests.map((v) => v.item.brand.nameKor).join(', '),
-      minorCategoryNames: video.digests
-        .map((v) => v.item.minorCategory?.name)
+      digestTitles:
+        video.digests
+          .map((v) => v.title)
+          .filter((v) => v)
+          .join(', ') || '',
+      itemNames: video.digests.map((v) => v.item?.name).join(', '),
+      brandNameKors: video.digests
+        .map((v) => v.item?.brand?.nameKor)
+        .filter((v) => v)
         .join(', '),
+      minorCategoryNames:
+        video.digests
+          .map((v) => v.item?.minorCategory?.name)
+          .filter((v) => v)
+          .join(', ') || ' ',
     };
   }
 }

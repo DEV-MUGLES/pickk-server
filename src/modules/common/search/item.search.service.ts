@@ -15,7 +15,7 @@ export type ItemSearchBody = Pick<IItem, 'id' | 'name'> & {
 
 @Injectable()
 export class ItemSearchService extends BaseSearchService<Item, ItemSearchBody> {
-  typeName = 'items';
+  name = 'items_index';
 
   constructor(
     readonly searchService: SearchService,

@@ -32,6 +32,7 @@ export class BatchWorker {
       await this.runSteps(steps, context, jobExecutionRecord.id);
       jobExecutionRecord.complete();
     } catch (err) {
+      console.log(err);
       if (err instanceof Error) {
         jobExecutionRecord.fail(err);
         if (execution.errorHandler) {

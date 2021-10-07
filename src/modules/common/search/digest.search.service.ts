@@ -19,7 +19,7 @@ export class DigestsSearchService extends BaseSearchService<
   Digest,
   DigestSearchBody
 > {
-  typeName = 'digests';
+  name = 'digests';
 
   constructor(
     readonly searchService: SearchService,

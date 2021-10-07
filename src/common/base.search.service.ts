@@ -10,8 +10,7 @@ export abstract class BaseSearchService<
     id: number;
   }
 > {
-  indexName = 'pickk';
-  abstract typeName: string;
+  abstract name: string;
   abstract searchService: SearchService;
 
   abstract getModel(id: number): Promise<Model>;
@@ -20,41 +19,34 @@ export abstract class BaseSearchService<
 
   async index(id: number): Promise<void> {
     const model = await this.getModel(id);
-    await this.searchService.index(
-      this.indexName,
-      this.typeName,
-      this.toBody(model)
-    );
+    await this.searchService.index(this.name, this.toBody(model));
   }
 
   async bulkIndex(models: Model[]): Promise<void> {
     await this.searchService.bulkIndex(
-      this.indexName,
-      this.typeName,
+      this.name,
       models.map((model) => this.toBody(model))
     );
   }
 
   async update(id: number): Promise<void> {
     const model = await this.getModel(id);
-    await this.searchService.update(
-      this.indexName,
-      this.typeName,
-      id,
-      this.toBody(model)
-    );
+    await this.searchService.update(this.name, id, this.toBody(model));
   }
 
   async bulkUpdate(models: Model[]): Promise<void> {
     await this.searchService.bulkUpdate(
-      this.indexName,
-      this.typeName,
+      this.name,
       models.map((model) => this.toBody(model))
     );
   }
 
+  async bulkDelete(ids: (number | string)[]): Promise<void> {
+    await this.searchService.bulkDelete(this.name, ids);
+  }
+
   async remove(id: number): Promise<void> {
-    await this.searchService.remove(this.indexName, this.typeName, id);
+    await this.searchService.remove(this.name, id);
   }
 
   async search(
@@ -63,8 +55,7 @@ export abstract class BaseSearchService<
     filter?: Partial<SearchBody>
   ): Promise<number[]> {
     const sources = await this.searchService.search<SearchBody>(
-      this.indexName,
-      this.typeName,
+      this.name,
       query,
       {
         from: pageInput?.offset ?? 0,
