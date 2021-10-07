@@ -80,7 +80,8 @@ export class SearchService {
     index: string,
     type: string,
     query: string,
-    params?: SearchParams
+    params?: SearchParams,
+    filter?: Partial<SearchBody>
   ): Promise<SearchBody[]> {
     const { body } = await this.elasticsearchService.search<
       SearchResult<SearchBody>
@@ -90,8 +91,18 @@ export class SearchService {
       ...params,
       body: {
         query: {
-          multi_match: {
-            query,
+          bool: {
+            must: {
+              multi_match: {
+                query,
+                type: 'phrase_prefix',
+              },
+            },
+            ...(filter && {
+              filter: {
+                term: filter,
+              },
+            }),
           },
         },
       },

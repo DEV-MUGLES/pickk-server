@@ -18,32 +18,59 @@ export abstract class BaseSearchService<
 
   abstract toBody(model: Model): SearchBody;
 
-  async refresh(): Promise<void> {
-    await this.searchService.refresh(this.indexName);
-  }
-
   async index(id: number): Promise<void> {
     const model = await this.getModel(id);
-    await this.searchService.index(this.indexName, this.toBody(model));
+    await this.searchService.index(
+      this.indexName,
+      this.typeName,
+      this.toBody(model)
+    );
+  }
+
+  async bulkIndex(models: Model[]): Promise<void> {
+    await this.searchService.bulkIndex(
+      this.indexName,
+      this.typeName,
+      models.map((model) => this.toBody(model))
+    );
   }
 
   async update(id: number): Promise<void> {
     const model = await this.getModel(id);
-    await this.searchService.update(this.indexName, this.toBody(model));
+    await this.searchService.update(
+      this.indexName,
+      this.typeName,
+      id,
+      this.toBody(model)
+    );
+  }
+
+  async bulkUpdate(models: Model[]): Promise<void> {
+    await this.searchService.bulkUpdate(
+      this.indexName,
+      this.typeName,
+      models.map((model) => this.toBody(model))
+    );
   }
 
   async remove(id: number): Promise<void> {
-    await this.searchService.remove(this.indexName, id);
+    await this.searchService.remove(this.indexName, this.typeName, id);
   }
 
-  async search(query: string, pageInput: PageInput): Promise<number[]> {
+  async search(
+    query: string,
+    pageInput?: PageInput,
+    filter?: Partial<SearchBody>
+  ): Promise<number[]> {
     const sources = await this.searchService.search<SearchBody>(
       this.indexName,
+      this.typeName,
       query,
       {
         from: pageInput?.offset ?? 0,
         size: pageInput?.limit ?? 20,
-      }
+      },
+      filter
     );
 
     return sources.map((source) => source.id);
