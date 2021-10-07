@@ -81,6 +81,9 @@ export class OrderItemEntity implements IOrderItem {
     this.couponDiscountAmount = attributes.couponDiscountAmount;
     this.usedPointAmount = attributes.usedPointAmount;
 
+    this.additionalDiscountRate = attributes.additionalDiscountRate;
+    this.settleAmount = attributes.settleAmount;
+
     this.brandNameKor = attributes.brandNameKor;
     this.itemName = attributes.itemName;
     this.productVariantName = attributes.productVariantName;
@@ -246,6 +249,15 @@ export class OrderItemEntity implements IOrderItem {
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   usedPointAmount: number;
+
+  @Field(() => Int)
+  @Column({ type: 'tinyint', unsigned: true })
+  @Min(0)
+  additionalDiscountRate: number;
+  @Field(() => Int)
+  @Column({ unsigned: true })
+  @Min(0)
+  settleAmount: number;
 
   @Field({ nullable: true })
   @Column({ length: 30, nullable: true })

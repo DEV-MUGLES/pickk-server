@@ -931,6 +931,9 @@ type Item {
 
   """[MODEL ONLY]"""
   originalPrice: Float!
+
+  """[MODEL ONLY]"""
+  pickkDiscountRate: Float!
   prices: [ItemPrice!]!
   products: [Product!]
   providedCode: String
@@ -1512,6 +1515,7 @@ enum OrderClaimFaultOf {
 }
 
 type OrderItem {
+  additionalDiscountRate: Int!
   brandNameKor: String!
   campaign: Campaign
   campaignId: Int
@@ -1572,6 +1576,7 @@ type OrderItem {
   refundedAt: DateTime
   seller: Seller
   sellerId: Int
+  settleAmount: Int!
   settledAt: DateTime
   shipReadyAt: DateTime
 
