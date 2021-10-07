@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
@@ -31,6 +31,7 @@ export class UpdateItemScoreStep extends BaseStep {
         select: ['id'],
         where: {
           brandId: In(sellerBrandIds),
+          isPurchasable: true,
         },
       })
     ).map(({ id }) => id);
@@ -45,6 +46,20 @@ export class UpdateItemScoreStep extends BaseStep {
 
     for (const { itemId, itemScore } of itemScoreDatas) {
       await this.itemsRepository.update(itemId, { score: itemScore });
+    }
+
+    const resetIds = (
+      await this.itemsRepository.find({
+        select: ['id'],
+        where: {
+          isPurchasable: false,
+          score: Not(0),
+        },
+      })
+    ).map(({ id }) => id);
+
+    for (const resetId of resetIds) {
+      await this.itemsRepository.update(resetId, { score: 0 });
     }
   }
 }
