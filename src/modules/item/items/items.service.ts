@@ -61,7 +61,7 @@ export class ItemsService {
   async list(
     filter?: ItemFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: ItemRelationType[] = []
   ): Promise<Item[]> {
     const _filter = plainToClass(ItemFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);

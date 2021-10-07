@@ -17,7 +17,7 @@ export type LookSearchBody = Pick<ILook, 'id' | 'title'> & {
 
 @Injectable()
 export class LookSearchService extends BaseSearchService<Look, LookSearchBody> {
-  indexName = 'looks';
+  name = 'looks';
 
   constructor(
     readonly searchService: SearchService // private readonly looksService: LooksService
@@ -47,10 +47,12 @@ export class LookSearchService extends BaseSearchService<Look, LookSearchBody> {
       userNickname: look.user.nickname,
       itemNames: look.digests.map((v) => v.item.name).join(', '),
       brandNameKors: look.digests.map((v) => v.item.brand.nameKor).join(', '),
-      minorCategoryNames: look.digests
-        .map((v) => v.item.minorCategory.name)
-        .join(', '),
-      styleTagNames: look.styleTags.map((v) => v.name).join(', '),
+      minorCategoryNames:
+        look.digests
+          .map((v) => v.item.minorCategory?.name)
+          .filter((v) => v)
+          .join(', ') || '',
+      styleTagNames: look.styleTags.map((v) => v.name).join(', ') || '',
     };
   }
 }

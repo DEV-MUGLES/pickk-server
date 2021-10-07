@@ -43,8 +43,8 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   constructor(
     private readonly itemsService: ItemsService,
     private readonly productsService: ProductsService,
-    private readonly itemSearchService: ItemSearchService,
-    private readonly itemsProducer: ItemsProducer
+    private readonly itemsProducer: ItemsProducer,
+    private readonly itemSearchService: ItemSearchService
   ) {
     super();
   }
@@ -94,31 +94,6 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     await this.productsService.createByOptionSet(id);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @Query(() => [Item])
-  async searchItem(
-    @Args('query') query: string,
-    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<Item[]> {
-    const ids = await this.itemSearchService.search(query, pageInput);
-
-    return await this.itemsService.list(
-      { idIn: ids },
-      null,
-      this.getRelationsFromInfo(info)
-    );
-  }
-
-  @Mutation(() => Boolean)
-  async indexItem() {
-    await this.itemSearchService.index(1);
-    await this.itemSearchService.index(2);
-    await this.itemSearchService.index(3);
-    await this.itemSearchService.index(4);
-    await this.itemSearchService.index(5);
-    await this.itemSearchService.refresh();
   }
 
   @Mutation(() => Item)
@@ -184,5 +159,37 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     const { id } = await this.itemsService.manualCreate(input);
     await this.itemsProducer.sendItemCreationSuccessSlackMessage(id, nickname);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @Query(() => [Item])
+  async searchAllItem(
+    @Args('query') query: string,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    const ids = await this.itemSearchService.search(query, pageInput);
+
+    return await this.itemsService.list(
+      { idIn: ids },
+      null,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
+  @Query(() => [Item])
+  async searchPurchasableItem(
+    @Args('query') query: string,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item[]> {
+    const ids = await this.itemSearchService.search(query, pageInput, {
+      isPurchasable: true,
+    });
+
+    return await this.itemsService.list(
+      { idIn: ids },
+      null,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

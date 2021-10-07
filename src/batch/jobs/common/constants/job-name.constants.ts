@@ -1,0 +1,4 @@
+export const INDEX_DIGESTS_JOB = 'INDEX_DIGESTS';
+export const INDEX_ITEMS_JOB = 'INDEX_ITEMS';
+export const INDEX_LOOKS_JOB = 'INDEX_LOOKS';
+export const INDEX_VIDEOS_JOB = 'INDEX_VIDEOS';

@@ -10,11 +10,12 @@ import { ItemsService } from '@item/items/items.service';
 export type ItemSearchBody = Pick<IItem, 'id' | 'name'> & {
   brandNameKor: string;
   minorCategoryName: string;
+  isPurchasable: boolean;
 };
 
 @Injectable()
 export class ItemSearchService extends BaseSearchService<Item, ItemSearchBody> {
-  indexName = 'items';
+  name = 'items_index';
 
   constructor(
     readonly searchService: SearchService,
@@ -33,6 +34,7 @@ export class ItemSearchService extends BaseSearchService<Item, ItemSearchBody> {
       name: item.name,
       brandNameKor: item.brand.nameKor,
       minorCategoryName: item.minorCategory?.name ?? '',
+      isPurchasable: item.isPurchasable,
     };
   }
 }

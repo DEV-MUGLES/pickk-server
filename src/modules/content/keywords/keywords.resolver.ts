@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -82,12 +82,6 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
       null,
       this.getRelationsFromInfo(info)
     );
-  }
-
-  // @TODO: 제거
-  @Mutation(() => Boolean)
-  async indexKeyword() {
-    await this.keywordsSearchService.index(1);
   }
 
   @Query(() => [Keyword])

@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 
-import { ContentJobsModule } from './jobs/content/content-jobs.module';
-import { HitJobsModule } from './jobs/hit/hit-jobs.module';
-import { ItemJobsModule } from './jobs/item/item-jobs.module';
-import { OrderJobsModule } from './jobs/order/order-jobs.module';
-import { ShipmentJobsModule } from './jobs/shipment/shipment-jobs.module';
+import { CommonJobsModule } from './jobs/common';
+import { ContentJobsModule } from './jobs/content';
+import { HitJobsModule } from './jobs/hit';
+import { ItemJobsModule } from './jobs/item';
+import { OrderJobsModule } from './jobs/order';
+import { ShipmentJobsModule } from './jobs/shipment';
 
 @Module({
   imports: [
+    CommonJobsModule,
     ItemJobsModule,
     OrderJobsModule,
     HitJobsModule,
