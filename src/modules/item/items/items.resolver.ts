@@ -37,7 +37,7 @@ import { ItemsService } from './items.service';
 export class ItemsResolver extends BaseResolver<ItemRelationType> {
   relations = ITEM_RELATIONS;
   derivedFieldsInfo: DerivedFieldsInfoType = {
-    prices: ['originalPrice', 'sellPrice', 'finalPrice'],
+    prices: ['originalPrice', 'sellPrice', 'finalPrice', 'pickkDiscountRate'],
   };
 
   constructor(

@@ -6,7 +6,8 @@ export type ProductRelationType =
   | keyof Product
   | `item.${keyof Item}`
   | 'item.brand.seller'
-  | 'item.brand.seller.shippingPolicy';
+  | 'item.brand.seller.shippingPolicy'
+  | 'item.brand.seller.saleStrategy';
 
 export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
   'shippingReservePolicy',
@@ -19,6 +20,7 @@ export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
   'item.brand',
   'item.brand.seller',
   'item.brand.seller.shippingPolicy',
+  'item.brand.seller.saleStrategy',
 ];
 
 export const REGISTER_ORDER_PRODUCT_RELATIONS: Array<ProductRelationType> =

@@ -186,4 +186,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   get finalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).finalPrice;
   }
+  @Field({ description: '[MODEL ONLY]' })
+  get pickkDiscountRate(): number {
+    return this.prices.find(({ isActive }) => isActive === true)
+      .pickkDiscountRate;
+  }
 }

@@ -37,6 +37,13 @@ export class OrderItemFactory {
       .filter((v) => v.isActive)
       .sort((a, b) => b.rate - a.rate);
 
+    const additionalDiscountRate = Math.max(
+      0,
+      item.pickkDiscountRate - item.brand.seller.saleStrategy.pickkDiscountRate
+    );
+    const settleAmount =
+      (item.sellPrice * quantity * (100 - additionalDiscountRate)) / 100;
+
     const orderItem = new OrderItem({
       merchantUid,
       userId,
@@ -50,6 +57,8 @@ export class OrderItemFactory {
       itemName: item.name,
       productVariantName,
       campaignId: campaigns.length > 0 ? campaigns[0].id : null,
+      additionalDiscountRate,
+      settleAmount,
       ...(recommendDigest && {
         recommendDigestId: recommendDigest.id,
         recommenderId: recommendDigest.user.id,

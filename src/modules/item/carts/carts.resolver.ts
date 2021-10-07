@@ -18,7 +18,12 @@ import { CartsService } from './carts.service';
 export class CartsResolver extends BaseResolver<CartItemRelationType> {
   relations = CART_ITEM_RELATIONS;
   derivedFieldsInfo = {
-    'product.item.prices': ['originalPrice', 'sellPrice', 'finalPrice'],
+    'product.item.prices': [
+      'originalPrice',
+      'sellPrice',
+      'finalPrice',
+      'pickkDiscountRate',
+    ],
   };
 
   constructor(@Inject(CartsService) private cartsService: CartsService) {

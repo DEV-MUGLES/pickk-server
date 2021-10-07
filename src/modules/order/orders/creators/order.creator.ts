@@ -11,6 +11,7 @@ import { Brand } from '@item/brands/models';
 import {
   Seller,
   SellerClaimPolicy,
+  SellerSaleStrategy,
   SellerShippingPolicy,
 } from '@item/sellers/models';
 import { Item, ItemOptionValue, ItemPrice } from '@item/items/models';
@@ -63,6 +64,9 @@ export class OrderCreator {
           isExchangable: true,
           isRefundable: true,
         }),
+        saleStrategy: new SellerSaleStrategy({
+          pickkDiscountRate: 0,
+        }),
       });
 
       const brand = new Brand({
@@ -81,6 +85,7 @@ export class OrderCreator {
             isActive: true,
             originalPrice: getRandomIntBetween(30, 55) * 1000,
             sellPrice: getRandomIntBetween(20, 25) * 1000,
+            pickkDiscountRate: 5,
           }),
         ],
         brand,
