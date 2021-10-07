@@ -4,14 +4,17 @@ import dayjs from 'dayjs';
 import { IsNull, LessThan } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
+
 import { OrderItemStatus } from '@order/order-items/constants';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
+import { OrderItemsService } from '@order/order-items/order-items.service';
 
 @Injectable()
 export class ConfirmOrderItemsStep extends BaseStep {
   constructor(
     @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository
+    private readonly orderItemsRepository: OrderItemsRepository,
+    private readonly orderItemsService: OrderItemsService
   ) {
     super();
   }
@@ -27,9 +30,9 @@ export class ConfirmOrderItemsStep extends BaseStep {
         },
       })
     ).map(({ merchantUid }) => merchantUid);
-    //@TODO: reviewer에게 reward지급하기
-    await this.orderItemsRepository.update(notConfirmedOrderItemMerchantUids, {
-      isConfirmed: true,
-    });
+
+    for (const merchantUid of notConfirmedOrderItemMerchantUids) {
+      await this.orderItemsService.confirm(merchantUid);
+    }
   }
 }

@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { OrdersRepository } from '@order/orders/orders.repository';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
@@ -65,6 +66,7 @@ import { OrderJobsService } from './order-jobs.service';
       OrdersRepository,
     ]),
     ProductsModule,
+    OrderItemsModule,
   ],
   controllers: [OrderJobsController],
   providers: [
