@@ -81,12 +81,6 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     );
   }
 
-  @Mutation(() => Boolean)
-  async indexVideo() {
-    await this.videosSearchService.index(1);
-    await this.videosSearchService.index(2);
-  }
-
   @Query(() => [Video])
   @UseGuards(JwtVerifyGuard)
   async likingVideos(

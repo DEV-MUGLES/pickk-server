@@ -1376,8 +1376,6 @@ type Mutation {
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
-  indexKeyword: Boolean!
-  indexVideo: Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!
   modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
