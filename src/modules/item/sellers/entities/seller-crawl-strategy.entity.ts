@@ -37,8 +37,8 @@ export class SellerCrawlStrategyEntity
   sellerId: number;
 
   @Field()
-  @Column({ length: 50 })
-  @MaxLength(50)
+  @Column({ length: 100 })
+  @MaxLength(100)
   itemsSelector: string;
   @Field()
   @Column({ length: 30 })
@@ -53,9 +53,9 @@ export class SellerCrawlStrategyEntity
   @IsOptional()
   pageParam: string;
   @Field()
-  @Column({ length: 75 })
+  @Column({ length: 150 })
   @IsUrl()
-  @MaxLength(75)
+  @MaxLength(150)
   baseUrl: string;
   @Field({ description: "'<>'으로 join된 상태다." })
   @Column()
