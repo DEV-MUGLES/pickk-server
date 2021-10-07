@@ -9,6 +9,10 @@ import { Digest } from '@content/digests/models';
 
 @ObjectType()
 export class RewardEvent extends RewardEventEntity {
+  public static getAmountCacheKey(userId: number): string {
+    return `reward-amount:${userId}`;
+  }
+
   @Field(() => User)
   @Type(() => User)
   user: User;

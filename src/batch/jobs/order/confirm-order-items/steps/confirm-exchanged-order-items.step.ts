@@ -3,17 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import dayjs from 'dayjs';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { OrderItemsRepository } from '@order/order-items/order-items.repository';
+
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
+import { OrderItemsService } from '@order/order-items/order-items.service';
 
 @Injectable()
 export class ConfirmExchangedOrderItemsStep extends BaseStep {
   constructor(
-    @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository,
     @InjectRepository(ExchangeRequestsRepository)
-    private readonly exchangeRequestsRepository: ExchangeRequestsRepository
+    private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
+    private readonly orderItemsService: OrderItemsService
   ) {
     super();
   }
@@ -36,9 +36,8 @@ export class ConfirmExchangedOrderItemsStep extends BaseStep {
         .execute()
     ).map(({ orderItemMerchantUid }) => orderItemMerchantUid);
 
-    //@TODO: reviewer에게 reward지급하기
-    await this.orderItemsRepository.update(notConfirmedOrderItemMerchantUids, {
-      isConfirmed: true,
-    });
+    for (const merchantUid of notConfirmedOrderItemMerchantUids) {
+      await this.orderItemsService.confirm(merchantUid);
+    }
   }
 }
