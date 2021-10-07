@@ -52,14 +52,15 @@ export class SellerProducer {
       return [mto];
     }
 
-    const { brandId, items } = mto;
+    const { brandId, items, pickkDiscountRate } = mto;
     const itemsChunkSize = Math.round(items.length / messageChunk);
-    const splitedMtos = [];
+    const splitedMtos: ProcessSellerItemsScrapResultMto[] = [];
 
     for (let i = 0; i < messageChunk + 1; i++) {
       splitedMtos.push({
         brandId,
         items: items.slice(itemsChunkSize * i, itemsChunkSize * (i + 1)),
+        pickkDiscountRate,
       });
     }
     return splitedMtos;

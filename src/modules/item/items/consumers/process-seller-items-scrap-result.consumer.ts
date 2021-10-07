@@ -33,9 +33,11 @@ export class ProcessSellerItemsScrapResultConsumer {
 
   @SqsMessageHandler()
   async processSellerResult(message: AWS.SQS.Message) {
-    const { brandId, items }: ProcessSellerItemsScrapResultMto = JSON.parse(
-      message.Body
-    );
+    const {
+      brandId,
+      items,
+      pickkDiscountRate,
+    }: ProcessSellerItemsScrapResultMto = JSON.parse(message.Body);
 
     const addByCrawlDatasDto = new AddByCrawlDatasDto();
     const updateByCrawlDatasDto = new UpdateByCrawlDatasDto();
@@ -54,7 +56,7 @@ export class ProcessSellerItemsScrapResultConsumer {
       });
     }
 
-    await this.addItems(addByCrawlDatasDto);
+    await this.addItems(addByCrawlDatasDto, pickkDiscountRate);
     await this.updateItems(updateByCrawlDatasDto);
   }
 
@@ -64,7 +66,10 @@ export class ProcessSellerItemsScrapResultConsumer {
     return await this.itemsService.list(itemFilter, null, ['prices']);
   }
 
-  private async addItems(addByCrawlDatasDto: AddByCrawlDatasDto) {
+  private async addItems(
+    addByCrawlDatasDto: AddByCrawlDatasDto,
+    pickkDiscountRate: number
+  ) {
     const { crawlDatas } = addByCrawlDatasDto;
     if (crawlDatas.length === 0) {
       return;
@@ -72,7 +77,7 @@ export class ProcessSellerItemsScrapResultConsumer {
 
     await this.itemsService.createMany(
       crawlDatas.map((crawlData) => ({
-        ...CreateItemInput.create(crawlData),
+        ...CreateItemInput.create(crawlData, pickkDiscountRate),
         brandId: crawlData.brandId,
         providedCode: crawlData.code,
       }))
