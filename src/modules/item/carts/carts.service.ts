@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -19,7 +19,7 @@ export class CartsService {
   constructor(
     @InjectRepository(CartItemsRepository)
     private readonly cartItemsRepository: CartItemsRepository,
-    @Inject(CacheService) private cacheService: CacheService
+    private cacheService: CacheService
   ) {}
 
   async list(

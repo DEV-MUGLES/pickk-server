@@ -25,7 +25,7 @@ export class PointsService {
     private readonly pointEventsRepository: PointEventsRepository,
     @InjectRepository(ExpectedPointEventsRepository)
     private readonly expectedpointEventsRepository: ExpectedPointEventsRepository,
-    @Inject(CacheService) private cacheService: CacheService,
+    private cacheService: CacheService,
     private readonly expectedPointEventProducer: ExpectedPointEventProducer
   ) {}
 
