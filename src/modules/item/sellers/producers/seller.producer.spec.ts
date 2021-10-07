@@ -35,6 +35,7 @@ describe('SellerProducer', () => {
           isSoldout: faker.datatype.boolean(),
           code: faker.datatype.string(10),
         })),
+        pickkDiscountRate: 5,
       };
 
       const splitedMtos =

@@ -40,7 +40,7 @@ export class SellersService {
   async list(
     sellerFilter?: SellerFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: SellerRelationType[] = []
   ): Promise<Seller[]> {
     const _sellerFilter = plainToClass(SellerFilter, sellerFilter);
     const _pageInput = plainToClass(PageInput, pageInput);

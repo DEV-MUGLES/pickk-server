@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
+import { BrandRelationType } from './constants';
 import { CreateBrandInput, UpdateBrandInput } from './dtos';
 import { Brand } from './models';
 
@@ -13,12 +14,12 @@ export class BrandsService {
     private readonly brandsRepository: BrandsRepository
   ) {}
 
-  async list(relations: string[] = []): Promise<Brand[]> {
+  async list(relations: BrandRelationType[] = []): Promise<Brand[]> {
     const couriers = await this.brandsRepository.find({ relations });
     return this.brandsRepository.entityToModelMany(couriers);
   }
 
-  async get(id: number, relations: string[] = []): Promise<Brand> {
+  async get(id: number, relations: BrandRelationType[] = []): Promise<Brand> {
     return await this.brandsRepository.get(id, relations);
   }
 

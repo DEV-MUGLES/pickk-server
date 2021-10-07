@@ -120,16 +120,25 @@ export class ItemsService {
 
   async createByInfoCrawl(url: string): Promise<Item> {
     const crawlResult = await this.crawlerService.crawlInfo(url);
+
     const brand = await this.brandsService.getOrCreate({
       nameKor: crawlResult.brandKor,
     });
+    const { seller } = await this.brandsService.get(brand.id, [
+      'seller',
+      'seller.saleStrategy',
+    ]);
+
     const [uploaded] = await this.imagesService.uploadUrls(
       [crawlResult.imageUrl],
       'info_crawled'
     );
 
     return await this.create({
-      ...CreateItemInput.create(crawlResult),
+      ...CreateItemInput.create(
+        crawlResult,
+        seller?.saleStrategy.pickkDiscountRate ?? 0
+      ),
       brandId: brand.id,
       imageUrl: uploaded.url,
     });
@@ -139,9 +148,16 @@ export class ItemsService {
     const brand = await this.brandsService.getOrCreate({
       nameKor: input.brandNameKor,
     });
+    const { seller } = await this.brandsService.get(brand.id, [
+      'seller',
+      'seller.saleStrategy',
+    ]);
 
     return await this.create({
-      ...CreateItemInput.create({ ...input, salePrice: input.sellPrice }),
+      ...CreateItemInput.create(
+        { ...input, salePrice: input.sellPrice },
+        seller?.saleStrategy.pickkDiscountRate ?? 0
+      ),
       ...input,
       brandId: brand.id,
     });

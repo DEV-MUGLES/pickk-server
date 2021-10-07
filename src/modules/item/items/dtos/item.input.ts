@@ -37,24 +37,26 @@ export class CreateItemInput extends PickType(
   }
 
   static create(
-    v: Pick<
+    crawlResult: Pick<
       ItemInfoCrawlResult,
       'name' | 'imageUrl' | 'url' | 'originalPrice' | 'salePrice'
-    >
+    >,
+    pickkDiscountRate: number
   ) {
     return new CreateItemInput({
-      name: v.name,
-      imageUrl: v.imageUrl,
+      name: crawlResult.name,
+      imageUrl: crawlResult.imageUrl,
       isMdRecommended: false,
       isSellable: false,
       urlInput: {
         isPrimary: true,
-        url: v.url,
+        url: crawlResult.url,
       },
       priceInput: {
-        originalPrice: v.originalPrice,
-        sellPrice: v.salePrice,
+        originalPrice: crawlResult.originalPrice,
+        sellPrice: crawlResult.salePrice,
         isCrawlUpdating: true,
+        pickkDiscountRate,
       },
     });
   }

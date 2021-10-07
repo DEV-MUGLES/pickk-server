@@ -19,5 +19,8 @@ export class ExchangeRequestReshippedStrategy extends ExchangeRequestMarkStrateg
   execute() {
     super.execute();
     this.exchangeRequest.orderItem.markExchanged();
+    this.exchangeRequest.orderItem.productId = this.exchangeRequest.productId;
+    this.exchangeRequest.orderItem.productVariantName =
+      this.exchangeRequest.productVariantName;
   }
 }

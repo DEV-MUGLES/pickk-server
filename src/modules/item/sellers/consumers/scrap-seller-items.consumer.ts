@@ -40,6 +40,7 @@ export class ScrapSellerItemsConsumer {
     const {
       brand,
       crawlStrategy: { codeRegex },
+      saleStrategy: { pickkDiscountRate },
     } = scrapSellerItemsMto;
 
     const itemUrls = await this.sellersCrawlService.scrapItemUrls(
@@ -61,6 +62,7 @@ export class ScrapSellerItemsConsumer {
     await this.sellerProducer.processSellerItemsScrapResult({
       brandId: brand.id,
       items: uniqueItems,
+      pickkDiscountRate,
     });
   }
 

@@ -18,7 +18,12 @@ export class ProduceScrapSellerItemsMessageStep extends BaseStep {
 
   private async produceScrapSellerItemsMessage() {
     const sellers = await this.sellersService
-      .list(null, null, ['brand', 'crawlPolicy', 'crawlStrategy'])
+      .list(null, null, [
+        'brand',
+        'crawlPolicy',
+        'crawlStrategy',
+        'saleStrategy',
+      ])
       .then((sellers) =>
         sellers.filter(({ crawlPolicy }) => crawlPolicy.isUpdatingItems)
       );
