@@ -41,28 +41,27 @@ export class UpdateDigestScoreStep extends BaseUpdateScoreStep {
     await this.setCommentDiffMaps();
     await this.setOrderItemDiffMaps();
 
-    await Promise.all(
-      digests.map(
-        (digest) =>
-          new Promise((resolve) => {
-            const {
-              id,
-              item: { isSoldout, id: itemId },
-              hitCount,
-              createdAt,
-            } = digest;
+    for (const digest of digests) {
+      const {
+        id,
+        item: { isSoldout, id: itemId },
+        hitCount,
+        createdAt,
+      } = digest;
 
-            const reactionScore = this.calculateTotalReactionScore(id, itemId);
-            const hitScore = new DigestHitScore(hitCount, createdAt).value;
-            const soldOutScore = isSoldout ? -0.5 : 0;
+      const reactionScore = this.calculateTotalReactionScore(id, itemId);
+      const hitScore = new DigestHitScore(hitCount, createdAt).value;
+      const soldOutScore = isSoldout ? -0.5 : 0;
+      const newScore = Math.max(hitScore + reactionScore + soldOutScore, 0);
 
-            digest.score = Math.max(hitScore + reactionScore + soldOutScore, 0);
-            resolve(digest);
-          })
-      )
-    );
+      // 스코어가 0.2미만으로 변경되면 변경되지 않도록 함
+      const isUpdated =
+        Math.floor(digest.score * 20) !== Math.floor(newScore * 20);
 
-    await this.digestsRepository.save(digests);
+      if (isUpdated) {
+        await this.digestsRepository.update(digest.id, { score: newScore });
+      }
+    }
   }
 
   calculateTotalReactionScore(id: number, itemId: number) {

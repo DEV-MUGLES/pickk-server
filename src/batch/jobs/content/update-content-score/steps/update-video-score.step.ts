@@ -32,20 +32,19 @@ export class UpdateVideoScoreStep extends BaseUpdateScoreStep {
     await this.setLikeDiffMaps();
     await this.setCommentDiffMaps();
 
-    await Promise.all(
-      videos.map(
-        (video) =>
-          new Promise((resolve) => {
-            const { id, hitCount, createdAt } = video;
-            const reactionScore = this.calculateTotalReactionScore(id);
-            const hitScore = new VideoHitScore(hitCount, createdAt).value;
+    for (const video of videos) {
+      const { id, hitCount, createdAt } = video;
+      const newScore =
+        new VideoHitScore(hitCount, createdAt).value +
+        this.calculateTotalReactionScore(id);
 
-            video.score = hitScore + reactionScore;
-            resolve(video);
-          })
-      )
-    );
-    await this.videosRepository.save(videos);
+      // 스코어가 0.2미만으로 변경되면 변경되지 않도록 함
+      const isUpdated =
+        Math.floor(video.score * 20) !== Math.floor(newScore * 20);
+      if (isUpdated) {
+        await this.videosRepository.update(video.id, { score: newScore });
+      }
+    }
   }
 
   calculateTotalReactionScore(id: number) {

@@ -32,20 +32,19 @@ export class UpdateLookScoreStep extends BaseUpdateScoreStep {
     await this.setLikeDiffMaps();
     await this.setCommentDiffMaps();
 
-    await Promise.all(
-      looks.map(
-        (look) =>
-          new Promise((resolve) => {
-            const { id, hitCount, createdAt } = look;
-            const reactionScore = this.calculateTotalReactionScore(id);
-            const hitScore = new LookHitScore(hitCount, createdAt).value;
+    for (const look of looks) {
+      const { id, hitCount, createdAt } = look;
+      const newScore =
+        new LookHitScore(hitCount, createdAt).value +
+        this.calculateTotalReactionScore(id);
 
-            look.score = hitScore + reactionScore;
-            resolve(look);
-          })
-      )
-    );
-    await this.looksRepository.save(looks);
+      // 스코어가 0.2미만으로 변경되면 변경되지 않도록 함
+      const isUpdated =
+        Math.floor(look.score * 20) !== Math.floor(newScore * 20);
+      if (isUpdated) {
+        await this.looksRepository.update(look.id, { score: newScore });
+      }
+    }
   }
 
   calculateTotalReactionScore(id: number) {
