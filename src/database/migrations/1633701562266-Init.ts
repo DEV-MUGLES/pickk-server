@@ -1,7 +1,7 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class Init1633566593646 implements MigrationInterface {
-  name = 'Init1633566593646';
+export class Init1633701562266 implements MigrationInterface {
+  name = 'Init1633701562266';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
@@ -176,10 +176,10 @@ export class Init1633566593646 implements MigrationInterface {
       'CREATE TABLE `shipment_history` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `statusText` varchar(50) NOT NULL, `locationName` varchar(20) NOT NULL, `time` datetime NOT NULL, `shipmentId` int NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB'
     );
     await queryRunner.query(
-      "CREATE TABLE `exchange_request` (`merchantUid` char(22) NOT NULL, `userId` int NULL, `productId` int NULL, `sellerId` int NULL, `pickShipmentId` int NULL, `reShipmentId` int NULL, `orderItemMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Requested', 'Picked', 'Reshipping', 'Reshipped', 'Rejected') NOT NULL, `faultOf` enum ('Customer', 'Seller') NOT NULL, `reason` varchar(255) NOT NULL, `rejectReason` varchar(255) NULL, `shippingFee` mediumint UNSIGNED NOT NULL, `quantity` smallint UNSIGNED NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `isSettled` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `processDelayedAt` datetime NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `reshippingAt` datetime NULL, `reshippedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, UNIQUE INDEX `REL_5785dec92cf602ee8cf74df2ac` (`pickShipmentId`), UNIQUE INDEX `REL_0534dce1cf13b2fb7896022ca6` (`reShipmentId`), UNIQUE INDEX `REL_51588d4e1b3a94cb09e0363d92` (`orderItemMerchantUid`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
+      "CREATE TABLE `exchange_request` (`merchantUid` char(22) NOT NULL, `userId` int NULL, `productId` int NULL, `sellerId` int NULL, `pickShipmentId` int NULL, `reShipmentId` int NULL, `orderItemMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Requested', 'Picked', 'Reshipping', 'Reshipped', 'Rejected') NOT NULL, `faultOf` enum ('Customer', 'Seller') NOT NULL, `reason` varchar(255) NOT NULL, `rejectReason` varchar(255) NULL, `shippingFee` mediumint UNSIGNED NOT NULL, `quantity` smallint UNSIGNED NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `isSettled` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `processDelayedAt` datetime NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `reshippingAt` datetime NULL, `reshippedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, UNIQUE INDEX `REL_51588d4e1b3a94cb09e0363d92` (`orderItemMerchantUid`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
-      "CREATE TABLE `order_item` (`merchantUid` char(22) NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `userId` int NULL, `sellerId` int NULL, `itemId` int NULL, `productId` int NULL, `campaignId` int NULL, `usedCouponId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Failed', 'VbankReady', 'VbankDodged', 'Paid', 'ShipPending', 'ShipReady', 'Shipping', 'Shipped') NOT NULL, `claimStatus` enum ('CancelRequested', 'Cancelled', 'ExchangeRequested', 'Exchanged', 'RefundRequested', 'Refunded') NULL, `quantity` smallint UNSIGNED NOT NULL, `isConfirmed` tinyint NOT NULL DEFAULT 0, `isShipReserved` tinyint NOT NULL DEFAULT 0, `isSettled` tinyint NOT NULL DEFAULT 0, `isDelaying` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `isFreeShippingPackage` tinyint NOT NULL, `itemSellPrice` int UNSIGNED NOT NULL, `itemFinalPrice` int UNSIGNED NOT NULL, `shippingFee` int UNSIGNED NOT NULL, `couponDiscountAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedPointAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedCouponName` varchar(30) NULL, `brandNameKor` varchar(30) NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `recommenderId` int NULL, `recommenderNickname` varchar(11) NULL, `recommendDigestId` int NULL, `failedAt` datetime NULL, `vbankReadyAt` datetime NULL, `vbankDodgedAt` datetime NULL, `paidAt` datetime NULL, `shipReadyAt` datetime NULL, `shippingAt` datetime NULL, `shippedAt` datetime NULL, `cancelRequestedAt` datetime NULL, `cancelledAt` datetime NULL, `exchangeRequestedAt` datetime NULL, `exchangedAt` datetime NULL, `refundRequestedAt` datetime NULL, `refundedAt` datetime NULL, `delayedAt` datetime NULL, `delayedShipExpectedAt` datetime NULL, `processDelayedAt` datetime NULL, `shipReservedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, `refundRequestMerchantUid` char(20) NULL, UNIQUE INDEX `REL_3f11f0bbd532d03ef4d9c44f41` (`shipmentId`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
+      "CREATE TABLE `order_item` (`merchantUid` char(22) NOT NULL, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `userId` int NULL, `sellerId` int NULL, `itemId` int NULL, `productId` int NULL, `campaignId` int NULL, `usedCouponId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Pending', 'Failed', 'VbankReady', 'VbankDodged', 'Paid', 'ShipPending', 'ShipReady', 'Shipping', 'Shipped') NOT NULL, `claimStatus` enum ('CancelRequested', 'Cancelled', 'ExchangeRequested', 'Exchanged', 'RefundRequested', 'Refunded') NULL, `quantity` smallint UNSIGNED NOT NULL, `isConfirmed` tinyint NOT NULL DEFAULT 0, `isShipReserved` tinyint NOT NULL DEFAULT 0, `isSettled` tinyint NOT NULL DEFAULT 0, `isDelaying` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `isFreeShippingPackage` tinyint NOT NULL, `itemSellPrice` int UNSIGNED NOT NULL, `itemFinalPrice` int UNSIGNED NOT NULL, `shippingFee` int UNSIGNED NOT NULL, `couponDiscountAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedPointAmount` int UNSIGNED NOT NULL DEFAULT '0', `usedCouponName` varchar(30) NULL, `brandNameKor` varchar(30) NOT NULL, `itemName` varchar(255) NOT NULL, `productVariantName` varchar(255) NOT NULL, `recommenderId` int NULL, `recommenderNickname` varchar(11) NULL, `recommendDigestId` int NULL, `failedAt` datetime NULL, `vbankReadyAt` datetime NULL, `vbankDodgedAt` datetime NULL, `paidAt` datetime NULL, `shipReadyAt` datetime NULL, `shippingAt` datetime NULL, `shippedAt` datetime NULL, `cancelRequestedAt` datetime NULL, `cancelledAt` datetime NULL, `exchangeRequestedAt` datetime NULL, `exchangedAt` datetime NULL, `refundRequestedAt` datetime NULL, `refundedAt` datetime NULL, `delayedAt` datetime NULL, `delayedShipExpectedAt` datetime NULL, `processDelayedAt` datetime NULL, `shipReservedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, `refundRequestMerchantUid` char(20) NULL, PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       'CREATE TABLE `order_buyer` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `name` varchar(15) NOT NULL, `email` varchar(255) NOT NULL, `phoneNumber` char(12) NOT NULL, PRIMARY KEY (`id`)) ENGINE=InnoDB'
@@ -203,7 +203,7 @@ export class Init1633566593646 implements MigrationInterface {
       "CREATE TABLE `point_event` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `title` varchar(30) NOT NULL, `sign` enum ('Plus', 'Minus') NOT NULL, `amount` int NOT NULL, `resultBalance` int UNSIGNED NOT NULL, `orderItemMerchantUid` char(22) NULL, `userId` int NOT NULL, INDEX `idx-orderItemMerchantUid` (`orderItemMerchantUid`), INDEX `idx-createdAt` (`userId`, `createdAt`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
-      "CREATE TABLE `refund_request` (`merchantUid` char(20) NOT NULL, `sellerId` int NULL, `userId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Requested', 'Picked', 'Rejected', 'Confirmed') NOT NULL, `faultOf` enum ('Customer', 'Seller') NOT NULL, `reason` varchar(255) NOT NULL, `amount` int UNSIGNED NOT NULL, `shippingFee` mediumint UNSIGNED NOT NULL, `rejectReason` varchar(255) NULL, `isSettled` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `processDelayedAt` datetime NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, UNIQUE INDEX `REL_9f823dc7c469bc50c123b06ad2` (`shipmentId`), PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
+      "CREATE TABLE `refund_request` (`merchantUid` char(20) NOT NULL, `sellerId` int NULL, `userId` int NULL, `shipmentId` int NULL, `orderMerchantUid` char(20) NOT NULL, `status` enum ('Requested', 'Picked', 'Rejected', 'Confirmed') NOT NULL, `faultOf` enum ('Customer', 'Seller') NOT NULL, `reason` varchar(255) NOT NULL, `amount` int UNSIGNED NOT NULL, `shippingFee` mediumint UNSIGNED NOT NULL, `rejectReason` varchar(255) NULL, `isSettled` tinyint NOT NULL DEFAULT 0, `isProcessDelaying` tinyint NOT NULL DEFAULT 0, `processDelayedAt` datetime NULL, `requestedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `pickedAt` datetime NULL, `rejectedAt` datetime NULL, `confirmedAt` datetime NULL, `settledAt` datetime NULL, PRIMARY KEY (`merchantUid`)) ENGINE=InnoDB"
     );
     await queryRunner.query(
       "CREATE TABLE `reward_event` (`id` int NOT NULL AUTO_INCREMENT, `createdAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6), `updatedAt` datetime(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6) ON UPDATE CURRENT_TIMESTAMP(6), `userId` int NOT NULL, `recommendDigestId` int NULL, `orderItemMerchantUid` char(22) NOT NULL, `sign` enum ('Plus', 'Minus') NOT NULL, `title` varchar(30) NOT NULL, `amount` int NOT NULL, `resultBalance` int UNSIGNED NOT NULL, INDEX `idx-createdAt` (`userId`, `createdAt`), PRIMARY KEY (`id`)) ENGINE=InnoDB"
@@ -1060,9 +1060,6 @@ export class Init1633566593646 implements MigrationInterface {
     await queryRunner.query('DROP TABLE `payment_cancellation`');
     await queryRunner.query('DROP INDEX `idx-createdAt` ON `reward_event`');
     await queryRunner.query('DROP TABLE `reward_event`');
-    await queryRunner.query(
-      'DROP INDEX `REL_9f823dc7c469bc50c123b06ad2` ON `refund_request`'
-    );
     await queryRunner.query('DROP TABLE `refund_request`');
     await queryRunner.query('DROP INDEX `idx-createdAt` ON `point_event`');
     await queryRunner.query(
@@ -1093,18 +1090,9 @@ export class Init1633566593646 implements MigrationInterface {
     await queryRunner.query('DROP TABLE `order_refund_account`');
     await queryRunner.query('DROP TABLE `order_receiver`');
     await queryRunner.query('DROP TABLE `order_buyer`');
-    await queryRunner.query(
-      'DROP INDEX `REL_3f11f0bbd532d03ef4d9c44f41` ON `order_item`'
-    );
     await queryRunner.query('DROP TABLE `order_item`');
     await queryRunner.query(
       'DROP INDEX `REL_51588d4e1b3a94cb09e0363d92` ON `exchange_request`'
-    );
-    await queryRunner.query(
-      'DROP INDEX `REL_0534dce1cf13b2fb7896022ca6` ON `exchange_request`'
-    );
-    await queryRunner.query(
-      'DROP INDEX `REL_5785dec92cf602ee8cf74df2ac` ON `exchange_request`'
     );
     await queryRunner.query('DROP TABLE `exchange_request`');
     await queryRunner.query('DROP TABLE `shipment_history`');

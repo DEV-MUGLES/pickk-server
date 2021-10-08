@@ -93,7 +93,7 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   sellerId?: number;
 
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', {
+  @ManyToOne('ShipmentEntity', {
     onDelete: 'SET NULL',
     nullable: true,
     cascade: true,
@@ -105,7 +105,7 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   pickShipmentId: number;
 
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', {
+  @ManyToOne('ShipmentEntity', {
     onDelete: 'SET NULL',
     nullable: true,
     cascade: true,

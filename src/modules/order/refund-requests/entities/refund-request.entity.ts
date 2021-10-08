@@ -6,7 +6,6 @@ import {
   OneToMany,
   Entity,
   JoinColumn,
-  OneToOne,
   PrimaryColumn,
 } from 'typeorm';
 import { IsEnum, IsOptional, IsString } from 'class-validator';
@@ -79,7 +78,7 @@ export class RefundRequestEntity implements IRefundRequest {
   @Column({ nullable: true })
   userId?: number;
   @Field(() => Shipment, { nullable: true })
-  @OneToOne('ShipmentEntity', { nullable: true, cascade: true })
+  @ManyToOne('ShipmentEntity', { nullable: true, cascade: true })
   @JoinColumn()
   shipment: Shipment;
   @Field(() => Int, { nullable: true })

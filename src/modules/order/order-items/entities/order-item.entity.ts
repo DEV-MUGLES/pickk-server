@@ -161,7 +161,7 @@ export class OrderItemEntity implements IOrderItem {
   @Field(() => Int, { nullable: true })
   @Column({ nullable: true })
   usedCouponId?: number;
-  @OneToOne('ShipmentEntity', {
+  @ManyToOne('ShipmentEntity', {
     onDelete: 'SET NULL',
     nullable: true,
     cascade: true,
