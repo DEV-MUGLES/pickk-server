@@ -131,7 +131,6 @@ type BaseOrderOutput {
   userId: Int
   vbankDodgedAt: DateTime
   vbankReadyAt: DateTime
-  withdrawnAt: DateTime
 }
 
 type Brand {
@@ -1478,7 +1477,6 @@ type Order {
   vbankDodgedAt: DateTime
   vbankReadyAt: DateTime
   vbankReceipt: OrderVbankReceipt
-  withdrawnAt: DateTime
 }
 
 type OrderBrand {

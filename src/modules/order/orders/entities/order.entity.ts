@@ -63,7 +63,6 @@ export class OrderEntity implements IOrder {
     this.vbankReadyAt = attributes.vbankReadyAt;
     this.vbankDodgedAt = attributes.vbankDodgedAt;
     this.paidAt = attributes.paidAt;
-    this.withdrawnAt = attributes.withdrawnAt;
   }
   @Field(() => String, {
     description: '(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)',
@@ -127,7 +126,4 @@ export class OrderEntity implements IOrder {
   @Field({ nullable: true })
   @Column({ nullable: true })
   paidAt?: Date;
-  @Field({ nullable: true })
-  @Column({ nullable: true })
-  withdrawnAt?: Date;
 }
