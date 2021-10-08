@@ -15,6 +15,7 @@ export class IndexItemsStep {
       'brand',
       'minorCategory',
     ]);
+
     await this.itemSearchService.bulkIndex(items);
   }
 }

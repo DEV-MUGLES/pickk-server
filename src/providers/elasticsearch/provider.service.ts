@@ -32,7 +32,7 @@ export class SearchService {
   ) {
     const CHUNK_SIZE = 3000;
 
-    for (let i = 0; i < CHUNK_SIZE; i += CHUNK_SIZE) {
+    for (let i = 0; i < bodies.length; i += CHUNK_SIZE) {
       await this.elasticsearchService.bulk<SearchResult<SearchBody>>({
         refresh: true,
         body: bodies.slice(i, i + CHUNK_SIZE).reduce(
