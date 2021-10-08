@@ -21,6 +21,10 @@ export class GiveRewardConsumer {
     const { merchantUid }: GiveRewardMto = JSON.parse(message.Body);
     const orderItem = await this.orderItemsService.get(merchantUid);
 
+    if (!orderItem.recommenderId) {
+      return;
+    }
+
     const existing = await this.rewardsService.checkExist(merchantUid);
     if (existing) {
       return;
@@ -34,7 +38,7 @@ export class GiveRewardConsumer {
         ) + '...',
       sign: RewardSign.Plus,
       amount: orderItem.payAmount / 10,
-      userId: orderItem.userId,
+      userId: orderItem.recommenderId,
       recommendDigestId: orderItem.recommendDigestId,
       orderItemMerchantUid: orderItem.merchantUid,
     });
