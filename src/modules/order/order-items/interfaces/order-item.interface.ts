@@ -53,14 +53,12 @@ export interface IOrderItem {
   /** 구매시 무료배송처리되었는가 */
   isFreeShippingPackage: boolean;
 
+  itemSellPrice: number;
   itemFinalPrice: number;
   shippingFee: number;
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
-
-  additionalDiscountRate: number;
-  settleAmount: number;
 
   usedCouponName?: string;
 

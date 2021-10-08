@@ -76,13 +76,11 @@ export class OrderItemEntity implements IOrderItem {
     this.isProcessDelaying = attributes.isProcessDelaying;
     this.isFreeShippingPackage = attributes.isFreeShippingPackage;
 
+    this.itemSellPrice = attributes.itemSellPrice;
     this.itemFinalPrice = attributes.itemFinalPrice;
     this.shippingFee = attributes.shippingFee;
     this.couponDiscountAmount = attributes.couponDiscountAmount;
     this.usedPointAmount = attributes.usedPointAmount;
-
-    this.additionalDiscountRate = attributes.additionalDiscountRate;
-    this.settleAmount = attributes.settleAmount;
 
     this.brandNameKor = attributes.brandNameKor;
     this.itemName = attributes.itemName;
@@ -236,6 +234,10 @@ export class OrderItemEntity implements IOrderItem {
   @Field(() => Int)
   @Column({ unsigned: true })
   @Min(1)
+  itemSellPrice: number;
+  @Field(() => Int)
+  @Column({ unsigned: true })
+  @Min(1)
   itemFinalPrice: number;
   @Field(() => Int)
   @Column({ unsigned: true })
@@ -249,15 +251,6 @@ export class OrderItemEntity implements IOrderItem {
   @Column({ unsigned: true, default: 0 })
   @Min(0)
   usedPointAmount: number;
-
-  @Field(() => Int)
-  @Column({ type: 'tinyint', unsigned: true })
-  @Min(0)
-  additionalDiscountRate: number;
-  @Field(() => Int)
-  @Column({ unsigned: true })
-  @Min(0)
-  settleAmount: number;
 
   @Field({ nullable: true })
   @Column({ length: 30, nullable: true })

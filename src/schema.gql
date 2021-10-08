@@ -1512,7 +1512,6 @@ enum OrderClaimFaultOf {
 }
 
 type OrderItem {
-  additionalDiscountRate: Int!
   brandNameKor: String!
   campaign: Campaign
   campaignId: Int
@@ -1545,6 +1544,7 @@ type OrderItem {
   itemFinalPrice: Int!
   itemId: Int
   itemName: String!
+  itemSellPrice: Int!
 
   """order.merchantUid + 숫자 2자리"""
   merchantUid: String!
@@ -1573,7 +1573,6 @@ type OrderItem {
   refundedAt: DateTime
   seller: Seller
   sellerId: Int
-  settleAmount: Int!
   settledAt: DateTime
   shipReadyAt: DateTime
 
