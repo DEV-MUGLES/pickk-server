@@ -38,7 +38,7 @@ export class UpdateItemScoreStep extends BaseStep {
 
     const itemScoreDatas = await this.digestsRepository
       .createQueryBuilder('digest')
-      .select('SUM(digest.score)', 'itemScore')
+      .select('SUM(digest.score) + 1', 'itemScore')
       .addSelect('digest.itemId', 'itemId')
       .where('digest.itemId IN (:itemIds)', { itemIds: sellerItemIds })
       .groupBy('digest.itemId')
