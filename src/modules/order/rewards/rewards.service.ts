@@ -47,12 +47,12 @@ export class RewardsService {
     return amount;
   }
 
-  async create(input: CreateRewardEventInput) {
+  async create(input: CreateRewardEventInput): Promise<number> {
     const currentAmount = await this.reloadAmount(input.userId);
 
     const rewardEvent = RewardEventFactory.from(input, currentAmount);
     await this.rewardEventsRepository.save(rewardEvent);
 
-    await this.reloadAmount(input.userId);
+    return await this.reloadAmount(input.userId);
   }
 }

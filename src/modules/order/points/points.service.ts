@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 
@@ -102,7 +102,7 @@ export class PointsService {
     );
   }
 
-  async createEvent(input: CreateEventInput): Promise<PointEvent> {
+  async createEvent(input: CreateEventInput): Promise<number> {
     const { userId, orderItemMerchantUid } = input;
     const currentAmount = await this.getAvailableAmount(userId);
     const pointEvent = PointEvent.of(input, currentAmount);
@@ -116,7 +116,7 @@ export class PointsService {
       );
     }
 
-    return createdPointEvent;
+    return createdPointEvent.resultBalance;
   }
 
   async createExpectedEvent(

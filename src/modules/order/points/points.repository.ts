@@ -29,7 +29,7 @@ export class PointEventsRepository extends BaseRepository<
       .select('SUM(pointEvent.amount)', 'sum')
       .where('pointEvent.userId = :userId', { userId })
       .getRawOne();
-    return sum ?? 0;
+    return Number(sum ?? 0);
   }
 }
 
@@ -63,6 +63,6 @@ export class ExpectedPointEventsRepository extends BaseRepository<
       .select('SUM(expectedPointEvent.amount)', 'sum')
       .where('expectedPointEvent.userId = :userId', { userId })
       .getRawOne();
-    return sum ?? 0;
+    return Number(sum ?? 0);
   }
 }
