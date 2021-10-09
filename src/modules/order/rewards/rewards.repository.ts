@@ -29,6 +29,6 @@ export class RewardEventsRepository extends BaseRepository<
       .select('SUM(rewardEvent.amount)', 'sum')
       .where('rewardEvent.userId = :userId', { userId })
       .getRawOne();
-    return sum ?? 0;
+    return Number(sum ?? 0);
   }
 }

@@ -95,29 +95,4 @@ describe('UsersResolver', () => {
       expect(usersServiceGetSpy).toHaveBeenCalledWith(payload.sub, []);
     });
   });
-
-  describe('updateMyPassword', () => {
-    it('should return undefined when success', async () => {
-      const user = new User();
-      const oldPassword = faker.lorem.text(),
-        newPassword = faker.lorem.text();
-
-      const usersServiceUpdatePasswordSpy = jest
-        .spyOn(usersService, 'updatePassword')
-        .mockResolvedValueOnce(undefined);
-
-      const result = await usersResolver.updateMyPassword(
-        user,
-        oldPassword,
-        newPassword
-      );
-
-      expect(result).toEqual(undefined);
-      expect(usersServiceUpdatePasswordSpy).toHaveBeenCalledWith(
-        user,
-        oldPassword,
-        newPassword
-      );
-    });
-  });
 });
