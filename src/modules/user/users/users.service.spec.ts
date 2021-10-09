@@ -104,6 +104,7 @@ describe('UsersService', () => {
       const oldPassword = USER_PASSWORD_1;
       const newPassword = USER_PASSWORD_2;
       const user = new User({
+        id: faker.datatype.number(),
         password: UserPassword.of(oldPassword),
       });
       const updatedUser = new User({
@@ -114,16 +115,20 @@ describe('UsersService', () => {
       const userModelUpdatePasswordSpy = jest
         .spyOn(user, 'updatePassword')
         .mockReturnValue(updatedUser);
+      const usersServiceGetSpy = jest
+        .spyOn(usersService, 'get')
+        .mockResolvedValueOnce(user);
       const usersRepositorySaveSpy = jest
         .spyOn(usersRepository, 'save')
         .mockResolvedValue(updatedUser);
 
       const result = await usersService.updatePassword(
-        user,
+        user.id,
         oldPassword,
         newPassword
       );
       expect(result).toEqual(updatedUser);
+      expect(usersServiceGetSpy).toHaveBeenCalledWith(user.id);
       expect(userModelUpdatePasswordSpy).toHaveBeenCalledWith(
         oldPassword,
         newPassword

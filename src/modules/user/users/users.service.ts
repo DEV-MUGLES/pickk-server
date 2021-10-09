@@ -121,10 +121,11 @@ export class UsersService {
   }
 
   async updatePassword(
-    user: User,
+    id: number,
     password: string,
     input: string
   ): Promise<User> {
+    const user = await this.get(id);
     return await this.usersRepository.save(
       user.updatePassword(password, input)
     );

@@ -13,7 +13,7 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
 import { JwtPayload } from '@auth/models';
-import { JwtAuthGuard, JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
+import { JwtOrNotGuard, JwtVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -107,14 +107,14 @@ export class UsersResolver extends BaseResolver {
   @Mutation(() => User, {
     description: '(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요.',
   })
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtVerifyGuard)
   async updateMyPassword(
-    @CurrentUser() user: User,
+    @CurrentUser() { sub: userId }: JwtPayload,
     @Args('oldPassword') oldPassword: string,
     @Args('newPassword') newPassword: string
   ): Promise<User> {
     return await this.usersService.updatePassword(
-      user,
+      userId,
       oldPassword,
       newPassword
     );

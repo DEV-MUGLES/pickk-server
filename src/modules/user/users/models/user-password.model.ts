@@ -47,6 +47,10 @@ export class UserPassword extends UserPasswordEntity {
   }
 
   public compare(password: string): boolean {
+    if (!this.encrypted) {
+      return true;
+    }
+
     return bcrypt.compareSync(password, this.encrypted);
   }
 }
