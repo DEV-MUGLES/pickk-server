@@ -13,18 +13,18 @@ import { ItemJobsService } from './item-jobs.service';
 export class ItemJobsController {
   constructor(private readonly itemJobsService: ItemJobsService) {}
 
-  @Post('/update-seller-items')
-  async updateSellerItems() {
-    return await this.itemJobsService.updateSellerItems();
-  }
-
-  @Post('/update-item-is-soldout')
-  async updateItemIsSoldout() {
-    return await this.itemJobsService.updateItemIsSoldout();
-  }
-
   @Post('/update-item-score')
   async updateItemScore() {
     return await this.itemJobsService.updateItemScore();
+  }
+
+  @Post('/update-item-state')
+  async updateItemState() {
+    return await this.itemJobsService.updateItemState();
+  }
+
+  @Post('/update-seller-items')
+  async updateSellerItems() {
+    return await this.itemJobsService.updateSellerItems();
   }
 }
