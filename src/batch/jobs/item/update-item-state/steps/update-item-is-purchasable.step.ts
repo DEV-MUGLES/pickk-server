@@ -16,8 +16,8 @@ export class UpdateItemIsPurchasableStep extends BaseStep {
   async tasklet(): Promise<void> {
     const itemIds = (
       await this.itemsRepository.find({
-        isSellable: false,
-        isPurchasable: true,
+        select: ['id'],
+        where: { isSellable: false, isPurchasable: true },
       })
     ).map(({ id }) => id);
 
