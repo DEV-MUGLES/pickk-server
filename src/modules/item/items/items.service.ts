@@ -10,7 +10,7 @@ import { SlackService } from '@providers/slack';
 import { ImagesService } from '@mcommon/images/images.service';
 import { BrandsService } from '@item/brands/brands.service';
 
-import { ItemRelationType } from './constants';
+import { CRAWLED_ITEM_IMAGE_S3_PREFIX, ItemRelationType } from './constants';
 import {
   CreateItemInput,
   BulkUpdateItemInput,
@@ -36,6 +36,7 @@ import {
   ItemsRepository,
   ItemSizeChartsRepository,
 } from './items.repository';
+import { IsUrl } from 'class-validator';
 
 @Injectable()
 export class ItemsService {
@@ -131,7 +132,7 @@ export class ItemsService {
 
     const [uploaded] = await this.imagesService.uploadUrls(
       [crawlResult.imageUrl],
-      'info_crawled'
+      CRAWLED_ITEM_IMAGE_S3_PREFIX
     );
 
     return await this.create({
@@ -269,6 +270,17 @@ export class ItemsService {
       return item;
     });
     return await this.itemsRepository.save(updatedItems);
+  }
+
+  async updateImageUrl(id: number) {
+    const item = await this.get(id, ['urls']);
+    const crawlResult = await this.crawlerService.crawlInfo(item.urls[0].url);
+    const [uploaded] = await this.imagesService.uploadUrls(
+      [crawlResult.imageUrl],
+      CRAWLED_ITEM_IMAGE_S3_PREFIX
+    );
+    await this.itemsRepository.update(id, { imageUrl: uploaded.url });
+    await this.imagesService.removeByUrls([item.imageUrl]);
   }
 
   /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */
