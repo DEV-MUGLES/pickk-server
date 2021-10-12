@@ -9,9 +9,10 @@ export class OrderItemCancelledStrategy extends OrderItemMarkStrategy {
   statusChangedField = 'cancelledAt' as const;
 
   validate() {
-    if (this.orderItem.status !== OrderItemStatus.Paid) {
+    const { Paid, ShipReady } = OrderItemStatus;
+    if (![Paid, ShipReady].includes(this.orderItem.status)) {
       throw new BadRequestException(
-        `결제 완료 상태인 주문 상품만 취소할 수 있습니다.\n문제 주문상품: ${this.orderItem.name})`
+        `${this.orderItem.status} 상태인 주문 상품은 취소할 수 없습니다.\n문제 주문상품: ${this.orderItem.name})`
       );
     }
     if (this.orderItem.claimStatus != null) {
