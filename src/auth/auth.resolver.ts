@@ -1,4 +1,8 @@
-import { BadRequestException, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  UseGuards,
+} from '@nestjs/common';
 import { Resolver, Args, Query } from '@nestjs/graphql';
 
 import { checkIsPermitted } from '@user/users/helpers';
@@ -111,6 +115,11 @@ export class AuthResolver {
     @CurrentUser() { sub: userId }: JwtPayload,
     @Args('requestPinInput') { phoneNumber }: RequestPinInput
   ): Promise<boolean> {
+    const existing = await this.usersService.findOne({ phoneNumber });
+    if (existing) {
+      throw new ConflictException('이미 인증된 번호입니다.');
+    }
+
     const pinCode = await this.authService.createPinCode(userId, phoneNumber);
     await this.smsService.sendPin(phoneNumber, pinCode);
 
