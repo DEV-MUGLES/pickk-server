@@ -1372,6 +1372,7 @@ type Mutation {
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
+  giveAppInstallPoint: Boolean!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!

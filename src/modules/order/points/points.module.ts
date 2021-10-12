@@ -4,6 +4,8 @@ import { SqsModule } from '@pickk/nestjs-sqs';
 
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';
 
+import { UserLogsModule } from '@user/user-logs/user-logs.module';
+
 import { Consumers } from './consumers';
 import { Producers } from './producers';
 
@@ -23,6 +25,7 @@ import { PointsService } from './points.service';
     SqsModule.registerQueue({
       name: REMOVE_EXPECTED_POINT_EVENT_QUEUE,
     }),
+    UserLogsModule,
   ],
   providers: [PointsResolver, PointsService, ...Consumers, ...Producers],
   exports: [PointsService],

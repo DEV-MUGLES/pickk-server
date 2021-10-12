@@ -7,5 +7,6 @@ import { UserLogsService } from './user-logs.service';
 @Module({
   imports: [TypeOrmModule.forFeature([UserAppInstallLogsRepository])],
   providers: [UserLogsService],
+  exports: [UserLogsService],
 })
 export class UserLogsModule {}
