@@ -18,7 +18,11 @@ import {
   UpdateItemIsSoldoutJob,
   UpdateItemIsSoldoutStep,
 } from './update-item-is-soldout';
-import { UpdateItemScoreJob, UpdateItemScoreStep } from './update-item-score';
+import {
+  ResetItemScoreStep,
+  UpdateItemScoreJob,
+  UpdateItemScoreStep,
+} from './update-item-score';
 
 import { ItemJobsController } from './item-jobs.controller';
 import { ItemJobsService } from './item-jobs.service';
@@ -44,6 +48,7 @@ import { ItemJobsService } from './item-jobs.service';
     UpdateItemIsSoldoutStep,
     UpdateItemScoreJob,
     UpdateItemScoreStep,
+    ResetItemScoreStep,
   ],
 })
 export class ItemJobsModule {}
