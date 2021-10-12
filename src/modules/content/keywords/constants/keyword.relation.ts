@@ -26,7 +26,11 @@ export type KeywordRelationType =
   | 'keywordDigests.digest.user'
   | 'relatedKeywords.digests'
   | 'relatedKeywords.digests.item'
-  | 'relatedKeywords.digests.item.brand';
+  | 'relatedKeywords.digests.item.brand'
+  | 'relatedKeywords.keywordDigests'
+  | 'relatedKeywords.keywordDigests.digest'
+  | 'relatedKeywords.keywordDigests.digest.item'
+  | 'relatedKeywords.keywordDigests.digest.item.brand';
 
 export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'styleTags',
@@ -61,4 +65,8 @@ export const KEYWORD_RELATIONS: KeywordRelationType[] = [
   'relatedKeywords.digests',
   'relatedKeywords.digests.item',
   'relatedKeywords.digests.item.brand',
+  'relatedKeywords.keywordDigests',
+  'relatedKeywords.keywordDigests.digest',
+  'relatedKeywords.keywordDigests.digest.item',
+  'relatedKeywords.keywordDigests.digest.item.brand',
 ];

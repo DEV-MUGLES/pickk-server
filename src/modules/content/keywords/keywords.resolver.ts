@@ -25,7 +25,9 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
 
   derivedFieldsInfo = {
     keywordDigests: ['digests'],
+    'relatedKeywords.keywordDigests': ['relatedKeywords'],
     keywordLooks: ['looks'],
+    'relatedKeywords.keywordLooks': ['relatedKeywords'],
   };
   replaceRelationsInfo = {
     digests: 'keywordDigests.digest',
@@ -47,6 +49,8 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Keyword> {
+    console.log(this.getRelationsFromInfo(info));
+
     return await this.keywordsService.get(
       id,
       this.getRelationsFromInfo(info),
