@@ -49,8 +49,6 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Keyword> {
-    console.log(this.getRelationsFromInfo(info));
-
     return await this.keywordsService.get(
       id,
       this.getRelationsFromInfo(info),

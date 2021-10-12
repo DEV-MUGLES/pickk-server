@@ -25,7 +25,7 @@ export class KeywordLookEntity extends BaseIdEntity implements IKeywordLook {
     this.order = attributes.order;
   }
 
-  @ManyToOne('KeywordEntity', 'keywordDigests', {
+  @ManyToOne('KeywordEntity', 'keywordLooks', {
     onDelete: 'CASCADE',
   })
   keyword: IKeyword;

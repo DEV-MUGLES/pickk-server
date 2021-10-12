@@ -62,11 +62,9 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @ManyToMany('StyleTagEntity')
   @JoinTable()
   styleTags: IStyleTag[];
-  @OneToMany('KeywordLookEntity', 'keyword')
-  @JoinTable()
+  @OneToMany('KeywordLookEntity', 'keyword', { cascade: true })
   keywordLooks: IKeywordLook[];
-  @OneToMany('KeywordDigestEntity', 'keyword')
-  @JoinTable()
+  @OneToMany('KeywordDigestEntity', 'keyword', { cascade: true })
   keywordDigests: IKeywordDigest[];
   @ManyToMany('KeywordEntity')
   @JoinTable()
