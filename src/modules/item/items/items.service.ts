@@ -36,7 +36,6 @@ import {
   ItemsRepository,
   ItemSizeChartsRepository,
 } from './items.repository';
-import { IsUrl } from 'class-validator';
 
 @Injectable()
 export class ItemsService {
