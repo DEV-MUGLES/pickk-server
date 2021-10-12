@@ -51,10 +51,16 @@ export class UpdateItemScoreStep extends BaseStep {
     const resetIds = (
       await this.itemsRepository.find({
         select: ['id'],
-        where: {
-          isPurchasable: false,
-          score: Not(0),
-        },
+        where: [
+          {
+            isPurchasable: false,
+            score: Not(0),
+          },
+          {
+            isSellable: false,
+            score: Not(0),
+          },
+        ],
       })
     ).map(({ id }) => id);
 
