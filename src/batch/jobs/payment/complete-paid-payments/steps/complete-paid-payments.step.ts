@@ -19,9 +19,9 @@ export class CompletePaidPaymentsStep extends BaseStep {
 
   async tasklet() {
     const payments = await this.paymentsService.list({
-      statusIn: [PaymentStatus.Paid],
+      statusIn: [PaymentStatus.Paid, PaymentStatus.VbankReady],
       paidAtBetween: [
-        dayjs().subtract(3, 'minute').toDate(),
+        dayjs().subtract(30, 'minute').toDate(),
         dayjs().subtract(30, 'second').toDate(),
       ],
     });
@@ -36,12 +36,20 @@ export class CompletePaidPaymentsStep extends BaseStep {
     });
 
     for (const order of orders) {
-      // 가상계좌 주문건은 제외한다.
-      if (order.payMethod === PayMethod.Vbank) {
-        return;
-      }
+      const payment = payments.find((v) => v.merchantUid === order.merchantUid);
+      const vbankReceiptInput =
+        payment.payMethod === PayMethod.Vbank
+          ? {
+              bankCode: payment.vbankCode,
+              due: payment.vbankDate,
+              number: payment.vbankNum,
+              ownerName: payment.vbankHolder,
+            }
+          : null;
 
-      await this.ordersService.complete(order.merchantUid);
+      try {
+        await this.ordersService.complete(order.merchantUid, vbankReceiptInput);
+      } catch {}
     }
   }
 }
