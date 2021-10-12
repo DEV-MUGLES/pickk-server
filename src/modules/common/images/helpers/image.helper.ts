@@ -11,7 +11,7 @@ export const getMimeType = (url: string): string => {
     'tiff',
   ];
 
-  const mimeType = url.match(/\.(\w+)$/)[1];
+  const mimeType = url.match(/\.(\w+)$/)[1].toLowerCase();
   if (!supportImageTypes.includes(mimeType)) {
     throw new InternalServerErrorException('지원하지 않는 이미지 형식입니다.');
   }
