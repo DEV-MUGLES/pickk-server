@@ -54,7 +54,7 @@ export class PointsResolver {
   async requestAppInstallPoint(
     @CurrentUser() { sub: userId }: JwtPayload
   ): Promise<true> {
-    await this.userLogsService.checkAppInstalled(userId);
+    await this.userLogsService.createAppInstallLog(userId);
 
     await this.pointsService.create({
       userId,
@@ -64,7 +64,6 @@ export class PointsResolver {
       orderItemMerchantUid: null,
     });
 
-    await this.userLogsService.createAppInstallLog(userId);
     return true;
   }
 }
