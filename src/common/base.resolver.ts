@@ -9,6 +9,9 @@ import { GraphQLResolveInfo } from 'graphql';
 export type DerivedFieldsInfoType = {
   [relationName: string]: string[];
 };
+export type ReplaceRelationsInfo = {
+  [relationName: string]: string;
+};
 declare type mixed =
   | Record<string, any>
   | string
@@ -30,6 +33,7 @@ export type SimplifiedInfo = {
 export class BaseResolver<RelationType extends string = string> {
   protected relations: Array<RelationType> = [];
   protected derivedFieldsInfo: DerivedFieldsInfoType = {};
+  protected replaceRelationsInfo: ReplaceRelationsInfo = {};
 
   protected getSimplifiedInfo = (info: GraphQLResolveInfo): SimplifiedInfo => {
     const parsedInfo = parseResolveInfo(info) as ResolveTree;
@@ -59,7 +63,14 @@ export class BaseResolver<RelationType extends string = string> {
       }
     });
 
-    return [...new Set(relations.concat(includes))];
+    return [...new Set(relations.concat(includes))].map((v) => {
+      let result = v;
+      Object.entries(this.replaceRelationsInfo).forEach(([origin, target]) => {
+        result = result.replace(origin, target) as RelationType;
+      });
+
+      return result;
+    });
   }
 
   private checkRelationInFields(

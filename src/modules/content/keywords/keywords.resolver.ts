@@ -23,6 +23,15 @@ import { KeywordsService } from './keywords.service';
 export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
   relations = KEYWORD_RELATIONS;
 
+  derivedFieldsInfo = {
+    keywordDigests: ['digests'],
+    keywordLooks: ['looks'],
+  };
+  replaceRelationsInfo = {
+    digests: 'keywordDigests.digest',
+    looks: 'keywordLooks.look',
+  };
+
   constructor(
     private readonly keywordsService: KeywordsService,
     private readonly keywordsSearchService: KeywordSearchService,

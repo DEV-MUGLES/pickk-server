@@ -31,10 +31,11 @@ export class KeywordSearchService extends BaseSearchService<
   async getModel(id: number): Promise<Keyword> {
     return this.keywordsService.get(id, [
       'styleTags',
-      'digests',
-      'digests.item',
-      'digests.item.brand',
-      'digests.item.minorCategory',
+      'keywordDigests',
+      'keywordDigests.digest',
+      'keywordDigests.digest.item',
+      'keywordDigests.digest.item.brand',
+      'keywordDigests.digest.item.minorCategory',
     ]);
   }
 

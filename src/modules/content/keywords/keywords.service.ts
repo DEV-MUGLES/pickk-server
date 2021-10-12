@@ -29,7 +29,7 @@ export class KeywordsService {
     @InjectRepository(KeywordClassesRepository)
     private readonly keywordClassesRepository: KeywordClassesRepository,
     private readonly likesService: LikesService,
-    private cacheService: CacheService,
+    private readonly cacheService: CacheService,
     private readonly followsService: FollowsService
   ) {}
 

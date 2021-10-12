@@ -1,14 +1,24 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, Index, JoinTable, ManyToMany } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+} from 'typeorm';
 import { Max, MaxLength, Min } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IDigest } from '@content/digests/interfaces';
-import { ILook } from '@content/looks/interfaces';
 import { IStyleTag } from '@content/style-tags/interfaces';
 
-import { IKeyword, IKeywordClass } from '../interfaces';
+import {
+  IKeyword,
+  IKeywordClass,
+  IKeywordDigest,
+  IKeywordLook,
+} from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'keyword' })
@@ -23,8 +33,8 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
     this.classes = attributes.classes;
 
     this.styleTags = attributes.styleTags;
-    this.looks = attributes.looks;
-    this.digests = attributes.digests;
+    this.keywordLooks = attributes.keywordLooks;
+    this.keywordDigests = attributes.keywordDigests;
     this.relatedKeywords = attributes.relatedKeywords;
 
     this.name = attributes.name;
@@ -52,12 +62,12 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @ManyToMany('StyleTagEntity')
   @JoinTable()
   styleTags: IStyleTag[];
-  @ManyToMany('LookEntity')
+  @OneToMany('KeywordLookEntity', 'keyword')
   @JoinTable()
-  looks: ILook[];
-  @ManyToMany('DigestEntity')
+  keywordLooks: IKeywordLook[];
+  @OneToMany('KeywordDigestEntity', 'keyword')
   @JoinTable()
-  digests: IDigest[];
+  keywordDigests: IKeywordDigest[];
   @ManyToMany('KeywordEntity')
   @JoinTable()
   relatedKeywords: IKeyword[];
