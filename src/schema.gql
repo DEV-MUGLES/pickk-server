@@ -1372,7 +1372,6 @@ type Mutation {
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
   follow(targetId: Int!): Boolean!
-  giveAppInstallPoint: Boolean!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!
@@ -1394,6 +1393,7 @@ type Mutation {
 
   """정보에 오류가 있는 아이템을 신고합니다."""
   reportItem(id: Int!, reason: String!): Boolean!
+  requestAppInstallPoint: Boolean!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(merchantUid: String!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
   setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!

@@ -51,7 +51,7 @@ export class PointsResolver {
 
   @Mutation(() => Boolean)
   @UseGuards(JwtVerifyGuard)
-  async giveAppInstallPoint(
+  async requestAppInstallPoint(
     @CurrentUser() { sub: userId }: JwtPayload
   ): Promise<true> {
     await this.userLogsService.checkAppInstalled(userId);
