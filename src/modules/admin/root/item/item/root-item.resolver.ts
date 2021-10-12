@@ -20,8 +20,8 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     super();
   }
 
-  @UseGuards(JwtVerifyGuard)
   @Roles(UserRole.Admin)
+  @UseGuards(JwtVerifyGuard)
   @Mutation(() => Item)
   async updateRootItemImageUrl(
     @IntArgs('itemId') itemId: number
