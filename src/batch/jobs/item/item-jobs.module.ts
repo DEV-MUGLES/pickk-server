@@ -10,15 +10,16 @@ import { ProductsRepository } from '@item/products/products.repository';
 import { SellersRepository } from '@item/sellers/sellers.repository';
 import { ItemsRepository } from '@item/items/items.repository';
 
+import { UpdateItemScoreJob, UpdateItemScoreStep } from './update-item-score';
+import {
+  UpdateItemIsPurchasableStep,
+  UpdateItemIsSoldoutStep,
+  UpdateItemStateJob,
+} from './update-item-state';
 import {
   UpdateSellerItemsJob,
   ProduceScrapSellerItemsMessageStep,
 } from './update-seller-items';
-import {
-  UpdateItemIsSoldoutJob,
-  UpdateItemIsSoldoutStep,
-} from './update-item-is-soldout';
-import { UpdateItemScoreJob, UpdateItemScoreStep } from './update-item-score';
 
 import { ItemJobsController } from './item-jobs.controller';
 import { ItemJobsService } from './item-jobs.service';
@@ -40,10 +41,11 @@ import { ItemJobsService } from './item-jobs.service';
     ItemJobsService,
     UpdateSellerItemsJob,
     ProduceScrapSellerItemsMessageStep,
-    UpdateItemIsSoldoutJob,
-    UpdateItemIsSoldoutStep,
     UpdateItemScoreJob,
     UpdateItemScoreStep,
+    UpdateItemStateJob,
+    UpdateItemIsSoldoutStep,
+    UpdateItemIsPurchasableStep,
   ],
 })
 export class ItemJobsModule {}
