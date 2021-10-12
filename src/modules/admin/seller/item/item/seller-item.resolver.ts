@@ -80,6 +80,16 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @Roles(UserRole.Seller)
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateSellerItemImageUrl(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateImageUrl(itemId);
+    return await this.itemsService.get(itemId);
+  }
+
+  @Roles(UserRole.Seller)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
   async bulkUpdateItems(
