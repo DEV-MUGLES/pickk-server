@@ -18,3 +18,7 @@ export const getMimeType = (url: string): string => {
 
   return mimeType;
 };
+
+export const getS3Key = (url: string): string => {
+  return new URL(url).pathname;
+};
