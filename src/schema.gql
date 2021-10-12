@@ -1193,9 +1193,7 @@ type Keyword {
   """스타일팁 줄글"""
   stylingTip: String!
   updatedAt: DateTime!
-
-  """0~100 정수. 필수템만 있음"""
-  usablityRate: Int
+  usablityRate: Float
 }
 
 type KeywordClass {

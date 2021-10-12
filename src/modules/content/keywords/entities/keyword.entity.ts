@@ -7,7 +7,7 @@ import {
   ManyToMany,
   OneToMany,
 } from 'typeorm';
-import { Max, MaxLength, Min } from 'class-validator';
+import { MaxLength } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
@@ -86,13 +86,8 @@ export class KeywordEntity extends BaseIdEntity implements IKeyword {
   @Column()
   @MaxLength(255)
   stylingTip: string;
-  @Field(() => Int, {
-    description: '0~100 정수. 필수템만 있음',
-    nullable: true,
-  })
-  @Column({ type: 'tinyint', unsigned: true, nullable: true })
-  @Min(0)
-  @Max(100)
+  @Field({ nullable: true })
+  @Column({ type: 'float', nullable: true })
   usablityRate: number;
 
   @Field()
