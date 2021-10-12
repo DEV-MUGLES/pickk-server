@@ -29,44 +29,50 @@ export class PointsService {
     private readonly expectedPointEventProducer: ExpectedPointEventProducer
   ) {}
 
-  async updateAvailableAmount(userId: number, amount: number) {
+  async updateAmount(userId: number, amount: number) {
     const cacheKey = PointEvent.getAmountCacheKey(userId);
     this.cacheService.set<number>(cacheKey, amount);
   }
 
-  async getAvailableAmount(userId: number, isUpdatingCache = true) {
+  async getAmount(userId: number): Promise<number> {
     const cacheKey = PointEvent.getAmountCacheKey(userId);
-    const cachedCount = await this.cacheService.get<number>(cacheKey);
+    const cached = await this.cacheService.get<number>(cacheKey);
 
-    if (cachedCount != null) {
-      return Number(cachedCount);
+    if (cached != null) {
+      return Number(cached);
     }
 
-    const amount = await this.pointEventsRepository.getSum(userId);
-
-    if (isUpdatingCache) {
-      this.cacheService.set<number>(cacheKey, amount);
-    }
-    return Number(amount);
+    return await this.reloadAmount(userId);
   }
 
-  async getExpectedAmount(userId: number, isUpdatingCache = true) {
-    const cacheKey = ExpectedPointEvent.getAmountCacheKey(userId);
-    const cachedCount = await this.cacheService.get<number>(cacheKey);
+  async reloadAmount(userId: number): Promise<number> {
+    const cacheKey = PointEvent.getAmountCacheKey(userId);
+    const amount = await this.pointEventsRepository.getSum(userId);
 
-    if (cachedCount != null) {
-      return cachedCount;
-    }
-
-    const amount = await this.expectedpointEventsRepository.getSum(userId);
-
-    if (isUpdatingCache) {
-      this.cacheService.set<number>(cacheKey, amount);
-    }
+    this.cacheService.set<number>(cacheKey, amount);
     return amount;
   }
 
-  async listEvents(
+  async getExpectedAmount(userId: number) {
+    const cacheKey = ExpectedPointEvent.getAmountCacheKey(userId);
+    const cached = await this.cacheService.get<number>(cacheKey);
+
+    if (cached != null) {
+      return Number(cached);
+    }
+
+    return await this.reloadExpectedAmount(userId);
+  }
+
+  async reloadExpectedAmount(userId: number): Promise<number> {
+    const cacheKey = ExpectedPointEvent.getAmountCacheKey(userId);
+    const amount = await this.expectedpointEventsRepository.getSum(userId);
+
+    this.cacheService.set<number>(cacheKey, amount);
+    return amount;
+  }
+
+  async list(
     pointEventFilter?: PointEventFilter,
     pageInput?: PageInput
   ): Promise<PointEvent[]> {
@@ -84,7 +90,7 @@ export class PointsService {
     );
   }
 
-  async listExpectedEvents(
+  async listExpected(
     pointEventFilter?: PointEventFilter,
     pageInput?: PageInput
   ): Promise<ExpectedPointEvent[]> {
@@ -102,37 +108,35 @@ export class PointsService {
     );
   }
 
-  async createEvent(input: CreateEventInput): Promise<number> {
-    const { userId, orderItemMerchantUid } = input;
-    const currentAmount = await this.getAvailableAmount(userId);
+  async create(input: CreateEventInput): Promise<number> {
+    const currentAmount = await this.reloadAmount(input.userId);
+
     const pointEvent = PointEvent.of(input, currentAmount);
+    await this.pointEventsRepository.save(pointEvent);
 
-    await this.updateAvailableAmount(userId, pointEvent.resultBalance);
-    const createdPointEvent = await this.pointEventsRepository.save(pointEvent);
-
-    if (orderItemMerchantUid) {
+    if (input.orderItemMerchantUid) {
       this.expectedPointEventProducer.removeByOrderItemUid(
-        orderItemMerchantUid
+        input.orderItemMerchantUid
       );
     }
 
-    return createdPointEvent.resultBalance;
+    return await this.reloadAmount(input.userId);
   }
 
-  async createExpectedEvent(
-    createExpectedPointEventInput: CreateExpectedPointEventInput
-  ): Promise<ExpectedPointEvent> {
-    const expectedPointEvent = new ExpectedPointEvent(
-      createExpectedPointEventInput
-    );
-    return await this.expectedpointEventsRepository.save(expectedPointEvent);
+  async createExpected(input: CreateExpectedPointEventInput): Promise<number> {
+    const expected = new ExpectedPointEvent(input);
+    await this.expectedpointEventsRepository.save(expected);
+    return await this.reloadExpectedAmount(input.userId);
   }
 
-  async removeExpectedEvent(orderItemMerchantUid: string): Promise<void> {
-    const expectedPointEvent =
-      await this.expectedpointEventsRepository.findOneEntity({
-        orderItemMerchantUid,
-      });
-    await this.expectedpointEventsRepository.remove(expectedPointEvent);
+  async removeExpected(orderItemMerchantUid: string): Promise<number> {
+    const expected = await this.expectedpointEventsRepository.findOneEntity({
+      orderItemMerchantUid,
+    });
+    if (!expected) {
+      return;
+    }
+    await this.expectedpointEventsRepository.remove(expected);
+    return await this.reloadExpectedAmount(expected.userId);
   }
 }

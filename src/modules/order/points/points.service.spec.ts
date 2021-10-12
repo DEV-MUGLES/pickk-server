@@ -81,7 +81,7 @@ describe('PointsService', () => {
         orderItemMerchantUid: faker.lorem.word(),
       };
 
-      const result = await pointsService.createEvent(input);
+      const result = await pointsService.create(input);
 
       expect(result).toEqual(input.amount);
       expect(pointEventsStore[pointEventsStore.length - 1].amount).toEqual(
@@ -101,8 +101,8 @@ describe('PointsService', () => {
         orderItemMerchantUid: faker.lorem.word(),
       };
 
-      await pointsService.createEvent(input);
-      const result = await pointsService.createEvent(input);
+      await pointsService.create(input);
+      const result = await pointsService.create(input);
 
       expect(result).toEqual(input.amount * 2);
       expect(pointEventsStore[pointEventsStore.length - 1].amount).toEqual(

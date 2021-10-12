@@ -23,7 +23,7 @@ export class PointsResolver {
     pointEventFilter?: PointEventFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput
   ): Promise<PointEvent[]> {
-    return await this.pointsService.listEvents(
+    return await this.pointsService.list(
       { userId: payload.sub, ...pointEventFilter },
       pageInput
     );
@@ -37,7 +37,7 @@ export class PointsResolver {
     pointEventFilter?: PointEventFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput
   ): Promise<ExpectedPointEvent[]> {
-    return await this.pointsService.listExpectedEvents(
+    return await this.pointsService.listExpected(
       { userId: payload.sub, ...pointEventFilter },
       pageInput
     );

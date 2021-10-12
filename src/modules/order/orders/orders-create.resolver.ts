@@ -87,7 +87,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     const [order, user, availablePointAmount, coupons] = await Promise.all([
       this.ordersService.get(merchantUid, CHECKOUT_ORDER_RELATIONS),
       this.usersService.get(userId),
-      this.pointsService.getAvailableAmount(userId),
+      this.pointsService.getAmount(userId),
       this.couponsService.list({ userId, status: CouponStatus.Ready }, null, [
         'spec',
       ]),
