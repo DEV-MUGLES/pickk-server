@@ -15,6 +15,7 @@ export class ConfirmOrderItemsJob extends BaseJob {
   ) {
     super(CONFIRM_ORDER_ITEMS_JOB);
   }
+
   createExecution(): JobExecution {
     return this.getExecutionBuilder()
       .start(this.confirmOrderItemsStep)
