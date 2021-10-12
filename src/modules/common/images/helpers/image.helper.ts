@@ -20,5 +20,5 @@ export const getMimeType = (url: string): string => {
 };
 
 export const getS3Key = (url: string): string => {
-  return new URL(url).pathname;
+  return new URL(url).pathname.substring(1);
 };
