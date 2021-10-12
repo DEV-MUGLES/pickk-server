@@ -43,9 +43,9 @@ export class CancelPaymentInput extends PickType(
     const result = new CancelPaymentInput({ reason, amount, checksum });
 
     if (order.payMethod === PayMethod.Vbank) {
-      result.refundVbankCode = order.vbankReceipt.bankCode;
-      result.refundVbankHolder = order.vbankReceipt.ownerName;
-      result.refundVbankNum = order.vbankReceipt.number;
+      result.refundVbankCode = order.refundAccount.bankCode;
+      result.refundVbankHolder = order.refundAccount.ownerName;
+      result.refundVbankNum = order.refundAccount.number;
     }
 
     return result;
