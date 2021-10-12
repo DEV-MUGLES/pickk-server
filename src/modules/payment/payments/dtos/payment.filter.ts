@@ -34,6 +34,9 @@ export class PaymentFilter implements Partial<IPayment> {
   @Field(() => [Date, Date], { nullable: true })
   @IsOptional()
   createdAtBetween?: [Date, Date];
+  @Field(() => [Date, Date], { nullable: true })
+  @IsOptional()
+  paidAtBetween?: [Date, Date];
 
   @Field({ nullable: true })
   @IsOptional()
