@@ -5,15 +5,21 @@ import { JobExecution } from '@batch/models';
 
 import { UPDATE_ITEM_SCORE_JOB } from '../constants';
 
-import { UpdateItemScoreStep } from './steps';
+import { ResetItemScoreStep, UpdateItemScoreStep } from './steps';
 
 @Injectable()
 export class UpdateItemScoreJob extends BaseJob {
-  constructor(private readonly updateItemScoreStep: UpdateItemScoreStep) {
+  constructor(
+    private readonly updateItemScoreStep: UpdateItemScoreStep,
+    private readonly resetItemScoreStep: ResetItemScoreStep
+  ) {
     super(UPDATE_ITEM_SCORE_JOB);
   }
 
   createExecution(): JobExecution {
-    return this.getExecutionBuilder().start(this.updateItemScoreStep).build();
+    return this.getExecutionBuilder()
+      .start(this.updateItemScoreStep)
+      .next(this.resetItemScoreStep)
+      .build();
   }
 }

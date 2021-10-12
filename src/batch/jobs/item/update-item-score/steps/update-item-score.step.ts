@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Not } from 'typeorm';
+import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
@@ -22,44 +22,38 @@ export class UpdateItemScoreStep extends BaseStep {
   }
 
   async tasklet() {
-    const sellerBrandIds = (
-      await this.sellersRepository.find({ select: ['brandId'] })
-    ).map(({ brandId }) => brandId);
-
     const sellerItemIds = (
       await this.itemsRepository.find({
         select: ['id'],
         where: {
-          brandId: In(sellerBrandIds),
+          brandId: In(
+            (
+              await this.sellersRepository.find({ select: ['brandId'] })
+            ).map(({ brandId }) => brandId)
+          ),
           isPurchasable: true,
         },
       })
     ).map(({ id }) => id);
 
+    if (sellerItemIds.length === 0) {
+      return;
+    }
+
     const itemScoreDatas = await this.digestsRepository
       .createQueryBuilder('digest')
+      .leftJoin('digest.item', 'item')
       .select('SUM(digest.score) + 1', 'itemScore')
       .addSelect('digest.itemId', 'itemId')
+      .addSelect('item.isSoldout', 'isSoldout')
       .where('digest.itemId IN (:itemIds)', { itemIds: sellerItemIds })
       .groupBy('digest.itemId')
       .getRawMany();
 
-    for (const { itemId, itemScore } of itemScoreDatas) {
-      await this.itemsRepository.update(itemId, { score: itemScore });
-    }
-
-    const resetIds = (
-      await this.itemsRepository.find({
-        select: ['id'],
-        where: {
-          isPurchasable: false,
-          score: Not(0),
-        },
-      })
-    ).map(({ id }) => id);
-
-    for (const resetId of resetIds) {
-      await this.itemsRepository.update(resetId, { score: 0 });
+    for (const { itemId, itemScore, isSoldout } of itemScoreDatas) {
+      await this.itemsRepository.update(itemId, {
+        score: isSoldout ? itemScore : itemScore + 100,
+      });
     }
   }
 }

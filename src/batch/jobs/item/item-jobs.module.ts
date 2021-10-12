@@ -10,7 +10,6 @@ import { ProductsRepository } from '@item/products/products.repository';
 import { SellersRepository } from '@item/sellers/sellers.repository';
 import { ItemsRepository } from '@item/items/items.repository';
 
-import { UpdateItemScoreJob, UpdateItemScoreStep } from './update-item-score';
 import {
   UpdateItemIsPurchasableStep,
   UpdateItemIsSoldoutStep,
@@ -20,6 +19,11 @@ import {
   UpdateSellerItemsJob,
   ProduceScrapSellerItemsMessageStep,
 } from './update-seller-items';
+import {
+  ResetItemScoreStep,
+  UpdateItemScoreJob,
+  UpdateItemScoreStep,
+} from './update-item-score';
 
 import { ItemJobsController } from './item-jobs.controller';
 import { ItemJobsService } from './item-jobs.service';
@@ -43,6 +47,7 @@ import { ItemJobsService } from './item-jobs.service';
     ProduceScrapSellerItemsMessageStep,
     UpdateItemScoreJob,
     UpdateItemScoreStep,
+    ResetItemScoreStep,
     UpdateItemStateJob,
     UpdateItemIsSoldoutStep,
     UpdateItemIsPurchasableStep,
