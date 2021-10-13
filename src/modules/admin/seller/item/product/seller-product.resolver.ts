@@ -2,8 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { Roles } from '@auth/decorators';
-import { JwtAuthGuard } from '@auth/guards';
+import { JwtSellerVerifyGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -17,7 +16,6 @@ import {
 } from '@item/products/dtos';
 import { Product } from '@item/products/models';
 import { ProductsService } from '@item/products/products.service';
-import { UserRole } from '@user/users/constants';
 
 @Resolver(() => Product)
 export class SellerProductResolver extends BaseResolver<ProductRelationType> {
@@ -27,8 +25,7 @@ export class SellerProductResolver extends BaseResolver<ProductRelationType> {
     super();
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Product)
   async createShippingReservePolicy(
     @IntArgs('productId') productId: number,
@@ -43,8 +40,7 @@ export class SellerProductResolver extends BaseResolver<ProductRelationType> {
     );
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Product)
   async updateShippingReservePolicy(
     @IntArgs('productId') productId: number,
