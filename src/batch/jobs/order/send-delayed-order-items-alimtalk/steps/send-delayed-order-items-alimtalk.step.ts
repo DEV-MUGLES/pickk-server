@@ -41,7 +41,7 @@ export class SendDelayedOrderItemsAlimtalkStep extends BaseStep {
           new Promise(async (resolve, reject) => {
             const brandKor = r.brand_nameKor;
             const delayedCount = r['count(*)'];
-            const phoneNumber = r.seller_phoneNumber;
+            const phoneNumber = r.seller_orderNotiPhoneNumber;
             try {
               await this.alimtalkService.sendDelayedExchangeRequests(
                 { brandKor, phoneNumber },

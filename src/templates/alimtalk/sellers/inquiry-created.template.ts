@@ -11,14 +11,14 @@ export class InquiryCreatedTemplate {
     inquiry: Inquiry
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
     const {
-      seller: { phoneNumber },
+      seller: { csNotiPhoneNumber },
     } = inquiry;
 
     return {
       templateCode: this.code,
       messages: [
         {
-          to: phoneNumber,
+          to: csNotiPhoneNumber,
           content: this.toContent(inquiry),
         },
       ],

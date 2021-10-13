@@ -12,13 +12,13 @@ export class RefundRequestedSellerTemplate {
     refundRequest: RefundRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
     const {
-      seller: { phoneNumber },
+      seller: { orderNotiPhoneNumber },
     } = refundRequest;
     return {
       templateCode: this.code,
       messages: [
         {
-          to: phoneNumber,
+          to: orderNotiPhoneNumber,
           content: this.toContent(refundRequest),
         },
       ],
