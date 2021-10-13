@@ -5,7 +5,7 @@ import { firstValueFrom } from 'rxjs';
 import { AwsS3ProviderService, S3UploadResultDto } from '@providers/aws/s3';
 
 import { UploadBufferDto } from './dtos';
-import { getMimeType } from './helpers';
+import { getMimeType, getS3Key } from './helpers';
 
 @Injectable()
 export class ImagesService {
@@ -64,5 +64,9 @@ export class ImagesService {
 
   async removeByKeys(keys: string[]) {
     await this.awsS3Service.deleteObjects(keys);
+  }
+
+  async removeByUrls(urls: string[]) {
+    await this.removeByKeys(urls.map((url) => getS3Key(url)));
   }
 }
