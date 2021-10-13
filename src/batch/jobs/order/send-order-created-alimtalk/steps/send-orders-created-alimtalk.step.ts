@@ -17,7 +17,7 @@ export class SendOrdersCreatedAlimtalkStep extends BaseStep {
     const ordersCountBySeller = await runner.query(`
       SELECT sum(orderCountData.count) as ordersCount, orderCountData.brandKor, orderCountData.phoneNumber
       FROM(
-        SELECT count(oi.orderMerchantUid) as count, b.nameKor as brandKor, s.phoneNumber, oi.sellerId
+        SELECT count(oi.orderMerchantUid) as count, b.nameKor as brandKor, s.orderNotiPhoneNumber as phoneNumber, oi.sellerId
         FROM order_item as oi        
         JOIN seller as s
           ON s.id=oi.sellerId

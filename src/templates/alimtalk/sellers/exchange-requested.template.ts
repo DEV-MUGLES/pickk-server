@@ -12,13 +12,13 @@ export class ExchangeRequestedSellerTemplate {
     exchangeRequest: ExchangeRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
     const {
-      seller: { phoneNumber },
+      seller: { orderNotiPhoneNumber },
     } = exchangeRequest;
     return {
       templateCode: this.code,
       messages: [
         {
-          to: phoneNumber,
+          to: orderNotiPhoneNumber,
           content: this.toContent(exchangeRequest),
         },
       ],

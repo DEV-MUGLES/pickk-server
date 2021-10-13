@@ -37,10 +37,10 @@ export class CancelOrderApprovedTemplate {
     return `안녕하세요! ${partialEncrypt(
       name,
       1
-    )}님, 판매자에 의해 취소요청이 승인되었습니다. 영업일 기준 5일 내외에 구매금액은 환불될 예정입니다. 
+    )}님, 구매취소요청이 승인되었습니다. 영업일 기준 5일 내외에 구매금액은 환불될 예정입니다. 
     ▶ 구매 아이템 : ${getPurchaseItemInfo(orderItems)}
     ▶ 주문번호 : ${merchantUid}
-    ▶ 배송지 : ${baseAddress} ${detailAddress}
+    ▶ 배송지 : ${`${baseAddress} ${detailAddress}`} 
     ▶ 취소금액 : ${getTotalPayAmount(orderItems)}`;
   }
 }
