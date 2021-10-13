@@ -1885,6 +1885,7 @@ input PaymentFilter {
   createdAtBetween: [DateTime!]
   merchantUid: String
   merchantUidSearch: String
+  paidAtBetween: [DateTime!]
   payMethodIn: [PayMethod!]
   pgIn: [Pg!]
   pgTid: String

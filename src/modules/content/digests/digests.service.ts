@@ -19,18 +19,23 @@ import { ItemPropertiesService } from '@item/item-properties/item-properties.ser
 
 import { DigestRelationType } from './constants';
 import { CreateDigestInput, DigestFilter, UpdateDigestInput } from './dtos';
-import { Digest } from './models';
+import { DigestEntity } from './entities';
+import { Digest, DigestImage } from './models';
 import { DigestFactory, DigestImageFactory } from './factories';
 import { DigestsProducer } from './producers';
 
-import { DigestsRepository } from './digests.repository';
-import { DigestEntity } from './entities';
+import {
+  DigestImagesRepository,
+  DigestsRepository,
+} from './digests.repository';
 
 @Injectable()
 export class DigestsService {
   constructor(
     @InjectRepository(DigestsRepository)
     private readonly digestsRepository: DigestsRepository,
+    @InjectRepository(DigestImagesRepository)
+    private readonly digestImagesRepository: DigestImagesRepository,
     private readonly likesService: LikesService,
     private readonly followsService: FollowsService,
     private readonly cacheService: CacheService,
@@ -217,21 +222,21 @@ export class DigestsService {
     }
     if (input.imageUrls) {
       digest.images = input.imageUrls.map((url, order) =>
-        DigestImageFactory.from(url, order)
+        DigestImageFactory.from(url, order, id)
       );
     }
 
-    const updated = await this.digestsRepository.save(
+    const removedImages = getRemovedImages<Digest, DigestImage>(
+      original as Digest,
+      digest
+    );
+    await this.digestImagesRepository.remove(removedImages);
+    await this.digestsProducer.removeDigestImages(removedImages);
+    return await this.digestsRepository.save(
       new Digest({
         ...digest,
         ...input,
       })
     );
-
-    await this.digestsProducer.removeDigestImages(
-      getRemovedImages(original, updated)
-    );
-
-    return updated;
   }
 }
