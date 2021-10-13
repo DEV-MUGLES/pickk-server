@@ -24,10 +24,11 @@ export class CrawlerProviderService {
   }
 
   async crawlInfo(url: string): Promise<ItemInfoCrawlResult> {
+    const requestUrl = new URL(this.url + '/info');
+    requestUrl.searchParams.append('url', url);
+
     const { data } = await firstValueFrom(
-      this.httpService.get<ItemInfoCrawlResult>(
-        `${this.url}/info?url=${encodeURI(url)}`
-      )
+      this.httpService.get<ItemInfoCrawlResult>(requestUrl.href)
     );
 
     if (
