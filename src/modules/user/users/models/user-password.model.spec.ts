@@ -74,12 +74,5 @@ describe('UserPasswordModel', () => {
         expect(UserPassword.validate(invalidPassword)).toEqual(false);
       });
     });
-
-    it('should return false when not contain special charactors', () => {
-      const invalidPasswords = ['abab1212', 'a1a1b2b2'];
-      invalidPasswords.forEach((invalidPassword) => {
-        expect(UserPassword.validate(invalidPassword)).toEqual(false);
-      });
-    });
   });
 });
