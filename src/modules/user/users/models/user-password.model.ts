@@ -7,8 +7,7 @@ import { UserPasswordInvalidException } from '../exceptions';
 @ObjectType()
 export class UserPassword extends UserPasswordEntity {
   public static minLength = 8;
-  private static validRegex =
-    /^(?=.*?[A-Za-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*_=(),./:;{}[\]|\\<>-]).{8,}$/;
+  private static validRegex = /^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,}$/;
 
   public static of(password: string): UserPassword {
     if (!this.validate(password)) {
