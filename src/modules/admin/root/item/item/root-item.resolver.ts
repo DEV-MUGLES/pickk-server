@@ -2,7 +2,7 @@ import { UseGuards } from '@nestjs/common';
 import { Mutation, Resolver } from '@nestjs/graphql';
 
 import { Roles } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtAuthGuard } from '@auth/guards';
 import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -20,7 +20,7 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @Roles(UserRole.Admin)
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Mutation(() => Item)
   async updateRootItemImageUrl(
     @IntArgs('itemId') itemId: number
@@ -29,13 +29,13 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId);
   }
 
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
-  @UseGuards(JwtVerifyGuard)
   @Mutation(() => Item)
   async updateRootItemDetailImages(
     @IntArgs('itemId') itemId: number
   ): Promise<Item> {
     await this.itemsService.updateDetailImages(itemId);
-    return await this.itemsService.get(itemId);
+    return await this.itemsService.get(itemId, ['detailImages']);
   }
 }
