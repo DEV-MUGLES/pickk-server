@@ -1,6 +1,7 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
+import validator from 'validator';
 
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
@@ -10,7 +11,11 @@ import { SlackService } from '@providers/slack';
 import { ImagesService } from '@mcommon/images/images.service';
 import { BrandsService } from '@item/brands/brands.service';
 
-import { CRAWLED_ITEM_IMAGE_S3_PREFIX, ItemRelationType } from './constants';
+import {
+  CRAWLED_ITEM_IMAGE_S3_PREFIX,
+  ItemRelationType,
+  ITEM_DETAIL_IAMGE_S3_PREFIX,
+} from './constants';
 import {
   CreateItemInput,
   BulkUpdateItemInput,
@@ -273,13 +278,41 @@ export class ItemsService {
 
   async updateImageUrl(id: number) {
     const item = await this.get(id, ['urls']);
+    if (!validator.isURL(item.urls[0].url)) {
+      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+    }
+
     const crawlResult = await this.crawlerService.crawlInfo(item.urls[0].url);
     const [uploaded] = await this.imagesService.uploadUrls(
       [crawlResult.imageUrl],
       CRAWLED_ITEM_IMAGE_S3_PREFIX
     );
+
     await this.itemsRepository.update(id, { imageUrl: uploaded.url });
     await this.imagesService.removeByUrls([item.imageUrl]);
+  }
+
+  async updateDetailImages(id: number) {
+    const item = await this.get(id, ['urls', 'detailImages']);
+    if (!validator.isURL(item.urls[0].url)) {
+      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+    }
+
+    const crawlResult = await this.crawlerService.crawlInfo(item.urls[0].url);
+    if (crawlResult.images.length === 0) {
+      return;
+    }
+
+    const uploadedImages = await this.imagesService.uploadUrls(
+      crawlResult.images,
+      ITEM_DETAIL_IAMGE_S3_PREFIX
+    );
+    await this.addDetailImages(
+      id,
+      uploadedImages.map((v) => v.url)
+    );
+    await this.imagesService.removeByKeys(item.detailImages.map((v) => v.key));
+    await this.itemDetailImagesRepository.remove(item.detailImages);
   }
 
   /** 해당 아이템의 option, optionValue를 모두 삭제합니다. */

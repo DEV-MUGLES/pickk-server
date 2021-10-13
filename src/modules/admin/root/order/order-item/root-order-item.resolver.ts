@@ -3,7 +3,7 @@ import { Info, Args, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtAuthGuard } from '@auth/guards';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
@@ -25,7 +25,7 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
   }
 
   @Query(() => [OrderItem])
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootOrderItems(
     @Info() info?: GraphQLResolveInfo,

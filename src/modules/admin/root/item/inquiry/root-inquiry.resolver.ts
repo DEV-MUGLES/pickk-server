@@ -3,7 +3,7 @@ import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
-import { JwtVerifyGuard } from '@auth/guards';
+import { JwtAuthGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
@@ -43,7 +43,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Query(() => Inquiry)
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiry(
     @IntArgs('id') id: number,
@@ -53,7 +53,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Query(() => [Inquiry])
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiries(
     @Args('filter', { nullable: true }) filter: InquiryFilter,
@@ -68,7 +68,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Query(() => InquiriesCountOutput, { description: '[ROOT ADMIN]' })
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiriesCount(
     @CurrentUser() { sellerId }: JwtPayload,
@@ -94,7 +94,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Mutation(() => Inquiry)
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async answerRootInquiry(
     @CurrentUser() { sub: userId }: JwtPayload,
@@ -112,7 +112,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   }
 
   @Mutation(() => InquiryAnswer)
-  @UseGuards(JwtVerifyGuard)
+  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async updateRootInquiryAnswer(
     @IntArgs('id') id: number,

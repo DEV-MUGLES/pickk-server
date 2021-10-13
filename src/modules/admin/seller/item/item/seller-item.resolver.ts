@@ -2,8 +2,8 @@ import { UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
-import { CurrentUser, Roles } from '@auth/decorators';
-import { JwtAuthGuard, JwtSellerVerifyGuard } from '@auth/guards';
+import { CurrentUser } from '@auth/decorators';
+import { JwtSellerVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
@@ -26,7 +26,6 @@ import {
 import { Item, ItemOption, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { ProductsService } from '@item/products/products.service';
-import { UserRole } from '@user/users/constants';
 
 @Resolver(() => Item)
 export class SellerItemResolver extends BaseResolver<ItemRelationType> {
@@ -39,7 +38,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     super();
   }
 
-  @Roles(UserRole.Seller)
   @UseGuards(JwtSellerVerifyGuard)
   @Query(() => [Item])
   async meSellerItems(
@@ -55,7 +53,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     );
   }
 
-  @Roles(UserRole.Seller)
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateItem(
@@ -67,8 +64,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemOption)
   async updateItemOption(
     @IntArgs('id') id: number,
@@ -79,7 +75,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.getItemOption(id, ['values']);
   }
 
-  @Roles(UserRole.Seller)
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateSellerItemImageUrl(
@@ -89,8 +84,16 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateSellerItemDetailImages(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateDetailImages(itemId);
+    return await this.itemsService.get(itemId, ['detailImages']);
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Boolean)
   async bulkUpdateItems(
     @Args('ids', { type: () => [Int] }) ids: number[],
@@ -100,8 +103,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return true;
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async addItemDetailImages(
     @IntArgs('itemId') itemId: number,
@@ -113,8 +115,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async removeItemDetailImage(
     @IntArgs('itemId') itemId: number,
@@ -125,8 +126,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemUrl)
   async addItemUrl(
     @IntArgs('itemId') itemId: number,
@@ -138,8 +138,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async addItemPrice(
     @IntArgs('itemId') itemId: number,
@@ -151,8 +150,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateItemPrice(
     @IntArgs('id') id: number,
@@ -164,8 +162,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async removeItemPrice(
     @IntArgs('itemId') itemId: number,
@@ -176,8 +173,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async activateItemPrice(
     @IntArgs('itemId') itemId: number,
@@ -187,8 +183,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.activateItemPrice(item, priceId);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async basifyPrice(
     @IntArgs('itemId') itemId: number,
@@ -198,8 +193,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.basifyPrice(item, priceId);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async addItemSizeCharts(
     @IntArgs('itemId') itemId: number,
@@ -213,8 +207,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async removeItemSizeChartsAll(
     @IntArgs('itemId') itemId: number
@@ -223,8 +216,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.removeSizeChartsAll(item);
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async createItemOptionSet(
     @IntArgs('id') id: number,
@@ -239,8 +231,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
-  @Roles(UserRole.Seller)
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async modifyItemSizeCharts(
     @IntArgs('itemId') itemId: number,

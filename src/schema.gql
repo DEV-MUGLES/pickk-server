@@ -1438,7 +1438,9 @@ type Mutation {
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
+  updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
 
   """Admin 이상의 권한이 필요합니다."""

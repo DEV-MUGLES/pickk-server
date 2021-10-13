@@ -41,20 +41,24 @@ export class ImagesService {
     const bufferDtos: UploadBufferDto[] = await Promise.all<UploadBufferDto>(
       urls.map(
         (url) =>
-          new Promise(async (resolve) => {
-            const { data: buffer } = await firstValueFrom(
-              this.httpService.get<Buffer>(url, {
-                responseType: 'arraybuffer',
-              })
-            );
-            const mimetype = getMimeType(url);
+          new Promise(async (resolve, reject) => {
+            try {
+              const { data: buffer } = await firstValueFrom(
+                this.httpService.get<Buffer>(url, {
+                  responseType: 'arraybuffer',
+                })
+              );
+              const mimetype = getMimeType(url);
 
-            resolve({
-              buffer,
-              filename: `${new URL(url).pathname.slice(0, 10)}.${mimetype}`,
-              mimetype,
-              prefix,
-            });
+              resolve({
+                buffer,
+                filename: `${new URL(url).pathname.slice(0, 10)}.${mimetype}`,
+                mimetype,
+                prefix,
+              });
+            } catch (err) {
+              reject(err);
+            }
           })
       )
     );
