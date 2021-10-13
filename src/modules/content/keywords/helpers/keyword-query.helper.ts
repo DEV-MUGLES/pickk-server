@@ -49,19 +49,25 @@ export const keywordOwningQuery = (
 };
 
 // @TODO: 테스트 작성
-export const keywordClassQuery = (
+export const keywordClassIdInQuery = (
   queryBuilder: SelectQueryBuilder<KeywordEntity>,
-  keywordClassId?: number
+  keywordClassIdIn?: number[]
 ) => {
-  if (!keywordClassId) {
+  if (![...keywordClassIdIn].filter((v) => v).length) {
     return queryBuilder;
   }
+  // @TODO: 아래로 대체
+  // if (!keywordClassIdIn.length) {
+  //   return queryBuilder;
+  // }
 
   const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 
   return queryBuilder.innerJoin(
     KEYWORD_CLASSES_TABLE,
     'classes_table',
-    `classes_table.keywordId = keyword.id AND classes_table.keywordClassId = ${keywordClassId}`
+    `classes_table.keywordId = keyword.id AND classes_table.keywordClassId in (${[
+      ...keywordClassIdIn,
+    ].filter((v) => v)})`
   );
 };

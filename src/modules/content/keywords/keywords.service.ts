@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { FindManyOptions, In } from 'typeorm';
+import { FindManyOptions, FindOperator, In } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
@@ -128,6 +128,14 @@ export class KeywordsService {
     const _pageInput = plainToClass(PageInput, pageInput);
 
     if (_filter?.hasCustom) {
+      if (
+        _filter.keywordClassIdIn &&
+        _filter.isLiking == null &&
+        _filter.isOwning == null
+      ) {
+        return await this.getCachedIdsWhere(filter, pageInput);
+      }
+
       const ids = await this.keywordsRepository.findIds(
         _filter,
         _pageInput,
@@ -138,6 +146,25 @@ export class KeywordsService {
     }
 
     return parseFilter(_filter, _pageInput?.idFilter);
+  }
+
+  async getCachedIdsWhere(
+    filter: KeywordFilter,
+    pageInput?: PageInput
+  ): Promise<{ id: FindOperator<number> }> {
+    const cacheKey = `keyword-ids:${filter.keywordClassIdIn.join(
+      ','
+    )}:${JSON.stringify(pageInput)}`;
+    const cached = await this.cacheService.get<number[]>(cacheKey);
+
+    if (cached) {
+      return { id: In(cached) };
+    }
+
+    const ids = await this.keywordsRepository.findIds(filter, pageInput);
+    await this.cacheService.set<number[]>(cacheKey, ids, { ttl: 60 });
+
+    return { id: In(ids) };
   }
 
   async countByClass(classId: number) {

@@ -8,7 +8,7 @@ import { BaseRepository } from '@common/base.repository';
 import { KeywordFilter } from './dtos';
 import { KeywordEntity, KeywordClassEntity } from './entities';
 import {
-  keywordClassQuery,
+  keywordClassIdInQuery,
   keywordLikingQuery,
   keywordOwningQuery,
 } from './helpers';
@@ -65,9 +65,11 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
     const raws = await pageQuery(
       keywordLikingQuery(
         keywordOwningQuery(
-          keywordClassQuery(
+          keywordClassIdInQuery(
             this.createQueryBuilder('keyword'),
-            filter.keywordClassId
+            // @TODO: 삭제하고 아래 주석으로 대체
+            [...(filter.keywordClassIdIn ?? []), filter.keywordClassId]
+            // filter.keywordClassIdIn
           ),
           userId,
           filter.isOwning

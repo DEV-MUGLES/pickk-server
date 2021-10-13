@@ -1231,6 +1231,9 @@ input KeywordFilter {
   """[CUSTOM]"""
   keywordClassId: Int
 
+  """[CUSTOM]"""
+  keywordClassIdIn: [Int!]
+
   """기본값 id"""
   orderBy: String
 }
