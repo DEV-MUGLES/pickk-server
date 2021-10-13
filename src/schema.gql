@@ -1438,6 +1438,7 @@ type Mutation {
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
 

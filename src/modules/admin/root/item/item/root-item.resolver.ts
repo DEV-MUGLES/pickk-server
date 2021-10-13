@@ -28,4 +28,14 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     await this.itemsService.updateImageUrl(itemId);
     return await this.itemsService.get(itemId);
   }
+
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtVerifyGuard)
+  @Mutation(() => Item)
+  async updateRootItemDetailImages(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateDetailImages(itemId);
+    return await this.itemsService.get(itemId);
+  }
 }
