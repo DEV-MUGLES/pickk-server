@@ -2049,6 +2049,7 @@ type Query {
   likingVideos(pageInput: PageInput!): [Video!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
+  loginRootSeller(loginByCodeInput: LoginByCodeInput!, sellerId: Int!): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   look(id: Int!): Look!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
