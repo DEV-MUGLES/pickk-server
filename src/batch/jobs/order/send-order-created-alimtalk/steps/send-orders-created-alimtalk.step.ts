@@ -33,7 +33,9 @@ export class SendOrdersCreatedAlimtalkStep extends BaseStep {
           ON b.id=s.brandId
         WHERE oi.status='${OrderItemStatus.Paid}'
         AND oi.claimStatus is null
-        AND oi.createdAt BETWEEN '${start}' AND '${end}'
+        AND oi.createdAt BETWEEN '${start.format(
+          'YYYY-MM-DD hh:mm:ss'
+        )}' AND '${end.format('YYYY-MM-DD hh:mm:ss')}'
         GROUP BY oi.orderMerchantUid, oi.sellerId
       ) as orderCountData
       GROUP BY orderCountData.sellerId;
@@ -55,23 +57,14 @@ export class SendOrdersCreatedAlimtalkStep extends BaseStep {
     }
   }
 
-  private getTimeRanges(): [string, string] {
+  private getTimeRanges(): [dayjs.Dayjs, dayjs.Dayjs] {
     const current = dayjs();
     const hourDiff = this.is10oclock() ? 19 : 5;
 
     if (this.isMonday() && this.is10oclock()) {
-      return [
-        current
-          .subtract(2, 'day')
-          .subtract(hourDiff, 'hour')
-          .format('YYYY-MM-DD hh:mm:ss'),
-        current.format('YYYY-MM-DD hh:mm:ss'),
-      ];
+      return [current.subtract(2, 'day').subtract(hourDiff, 'hour'), current];
     }
-    return [
-      current.subtract(hourDiff, 'hour').format('YYYY-MM-DD hh:mm:ss'),
-      current.format('YYYY-MM-DD hh:mm:ss'),
-    ];
+    return [current.subtract(hourDiff, 'hour'), current];
   }
 
   private isMonday(): boolean {
