@@ -148,6 +148,7 @@ export class VideosService {
         DigestFactory.from({
           ...video.digests.find((v) => v.id === digest.id),
           ...digest,
+          userId: video.userId,
           ...(digest.itemPropertyValueIds != null && {
             itemPropertyValues: findModelsByIds(
               digest.itemPropertyValueIds,
