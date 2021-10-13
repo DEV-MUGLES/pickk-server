@@ -53,13 +53,9 @@ export const keywordClassIdInQuery = (
   queryBuilder: SelectQueryBuilder<KeywordEntity>,
   keywordClassIdIn?: number[]
 ) => {
-  if (![...keywordClassIdIn].filter((v) => v).length) {
+  if (!keywordClassIdIn?.length) {
     return queryBuilder;
   }
-  // @TODO: 아래로 대체
-  // if (!keywordClassIdIn.length) {
-  //   return queryBuilder;
-  // }
 
   const KEYWORD_CLASSES_TABLE = 'keyword_classes_keyword_class';
 

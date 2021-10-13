@@ -1229,9 +1229,6 @@ input KeywordFilter {
   isVisible: Boolean
 
   """[CUSTOM]"""
-  keywordClassId: Int
-
-  """[CUSTOM]"""
   keywordClassIdIn: [Int!]
 
   """기본값 id"""

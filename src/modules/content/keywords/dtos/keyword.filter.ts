@@ -5,7 +5,6 @@ import { IKeyword } from '../interfaces';
 @InputType()
 export class KeywordFilter implements Partial<IKeyword> {
   excludeFields?: Array<keyof KeywordFilter> = [
-    'keywordClassId',
     'keywordClassIdIn',
     'isOwning',
     'isLiking',
@@ -18,8 +17,6 @@ export class KeywordFilter implements Partial<IKeyword> {
   @Field(() => [Int], { nullable: true })
   idIn?: number[];
 
-  @Field(() => Int, { description: '[CUSTOM]', nullable: true })
-  keywordClassId?: number;
   @Field(() => [Int], { description: '[CUSTOM]', nullable: true })
   keywordClassIdIn?: number[];
   @Field({ description: '[CUSTOM]', nullable: true })
@@ -29,7 +26,6 @@ export class KeywordFilter implements Partial<IKeyword> {
 
   get hasCustom() {
     return (
-      this.keywordClassId != null ||
       this.keywordClassIdIn != null ||
       this.isLiking != null ||
       this.isOwning != null

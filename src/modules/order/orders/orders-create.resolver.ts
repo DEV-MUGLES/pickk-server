@@ -133,7 +133,6 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     return failed;
   }
 
-  // @TODO: Queue에서 주문완료 카톡 알림 보내기
   @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async completeOrder(

@@ -67,9 +67,7 @@ export class KeywordsRepository extends BaseRepository<KeywordEntity, Keyword> {
         keywordOwningQuery(
           keywordClassIdInQuery(
             this.createQueryBuilder('keyword'),
-            // @TODO: 삭제하고 아래 주석으로 대체
-            [...(filter.keywordClassIdIn ?? []), filter.keywordClassId]
-            // filter.keywordClassIdIn
+            filter.keywordClassIdIn
           ),
           userId,
           filter.isOwning
