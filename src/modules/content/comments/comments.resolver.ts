@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -28,9 +23,7 @@ import { CommentsService } from './comments.service';
 export class CommentsResolver extends BaseResolver<CommentRelationType> {
   relations = COMMENT_RELATIONS;
 
-  constructor(
-    @Inject(CommentsService) private readonly commentsService: CommentsService
-  ) {
+  constructor(private readonly commentsService: CommentsService) {
     super();
   }
 

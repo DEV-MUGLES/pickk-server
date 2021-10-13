@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -21,7 +21,7 @@ import { UsersService } from '@user/users/users.service';
 export class MyCommonResolver extends BaseResolver {
   relations = USER_RELATIONS;
 
-  constructor(@Inject(UsersService) private usersService: UsersService) {
+  constructor(private usersService: UsersService) {
     super();
   }
 

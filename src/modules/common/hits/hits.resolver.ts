@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Mutation } from '@nestjs/graphql';
 
 import { JwtOrIpGuard } from '@auth/guards';
@@ -10,7 +10,7 @@ import { HitsService } from './hits.service';
 
 @Injectable()
 export class HitsResolver {
-  constructor(@Inject(HitsService) private readonly hitsService: HitsService) {}
+  constructor(private readonly hitsService: HitsService) {}
 
   @Mutation(() => Boolean)
   @UseGuards(JwtOrIpGuard)

@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -19,7 +19,7 @@ import { SellersService } from './sellers.service';
 export class SellersResolver extends BaseResolver<SellerRelationType> {
   relations = SELLER_RELATIONS;
 
-  constructor(@Inject(SellersService) private sellersService: SellersService) {
+  constructor(private sellersService: SellersService) {
     super();
   }
 

@@ -1,9 +1,4 @@
-import {
-  ForbiddenException,
-  Inject,
-  Injectable,
-  UseGuards,
-} from '@nestjs/common';
+import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -28,9 +23,7 @@ export class InquiriesResolver extends BaseResolver<InquiryRelationType> {
   relations = INQUIRY_RELATIONS;
 
   constructor(
-    @Inject(InquiriesService)
     private readonly inquiriesService: InquiriesService,
-    @Inject(ItemsService)
     private readonly itemsService: ItemsService,
     private readonly inquiriesProducer: InquiriesProducer
   ) {

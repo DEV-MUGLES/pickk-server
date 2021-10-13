@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Query, Args, Info } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -16,10 +16,7 @@ import { PaymentsService } from './payments.service';
 export class PaymentsResolver extends BaseResolver {
   relations = PAYMENT_RELATIONS;
 
-  constructor(
-    @Inject(PaymentsService)
-    private readonly paymentsService: PaymentsService
-  ) {
+  constructor(private readonly paymentsService: PaymentsService) {
     super();
   }
 

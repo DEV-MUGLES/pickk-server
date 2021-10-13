@@ -1,4 +1,4 @@
-import { Inject, UseGuards } from '@nestjs/common';
+import { UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -17,9 +17,7 @@ import { CouriersService } from './couriers.service';
 export class CouriersResolver extends BaseResolver {
   relations = ['issue'];
 
-  constructor(
-    @Inject(CouriersService) private couriersService: CouriersService
-  ) {
+  constructor(private couriersService: CouriersService) {
     super();
   }
 

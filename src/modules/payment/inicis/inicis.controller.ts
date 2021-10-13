@@ -1,11 +1,4 @@
-import {
-  Body,
-  Controller,
-  HttpCode,
-  Inject,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { CreatePaymentDto } from '@payment/payments/dtos';
@@ -26,8 +19,8 @@ import { InicisService } from './inicis.service';
 @Controller('/inicis')
 export class InicisController {
   constructor(
-    @Inject(PaymentsService) private readonly paymentsService: PaymentsService,
-    @Inject(InicisService) private readonly inicisService: InicisService,
+    private readonly paymentsService: PaymentsService,
+    private readonly inicisService: InicisService,
     private readonly inicisProducer: InicisProducer
   ) {}
 

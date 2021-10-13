@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { Args, Info, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -15,10 +15,7 @@ import { ItemPropertiesService } from './item-properties.service';
 export class ItemPropertiesResolver extends BaseResolver<ItemPropertyRelationType> {
   relations = ITEM_PROPERTY_RELATIONS;
 
-  constructor(
-    @Inject(ItemPropertiesService)
-    private readonly itemPropertiesService: ItemPropertiesService
-  ) {
+  constructor(private readonly itemPropertiesService: ItemPropertiesService) {
     super();
   }
 

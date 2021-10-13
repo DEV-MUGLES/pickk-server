@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -10,9 +10,7 @@ import { FollowsService } from './follows.service';
 
 @Injectable()
 export class FollowsResolver {
-  constructor(
-    @Inject(FollowsService) private readonly followsService: FollowsService
-  ) {}
+  constructor(private readonly followsService: FollowsService) {}
 
   @Query(() => Boolean)
   @UseGuards(JwtVerifyGuard)

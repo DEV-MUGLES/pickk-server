@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -31,7 +31,6 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
   };
 
   constructor(
-    @Inject(OrdersService)
     private readonly ordersService: OrdersService,
     private readonly ordersProducer: OrdersProducer
   ) {

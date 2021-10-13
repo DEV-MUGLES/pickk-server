@@ -1,4 +1,4 @@
-import { Inject, UseGuards, ForbiddenException } from '@nestjs/common';
+import { UseGuards, ForbiddenException } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -20,8 +20,8 @@ export class CouponsResolver extends BaseResolver<CouponRelationType> {
   relations = COUPON_RELATIONS;
 
   constructor(
-    @Inject(CouponsService) private couponsService: CouponsService,
-    @Inject(SellersService) private sellersService: SellersService
+    private couponsService: CouponsService,
+    private sellersService: SellersService
   ) {
     super();
   }

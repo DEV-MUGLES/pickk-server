@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { Query, Resolver } from '@nestjs/graphql';
 
 import { BaseResolver } from '@common/base.resolver';
@@ -11,10 +10,7 @@ import { ItemCategoriesService } from './item-categories.service';
 export class ItemCategoriesResolver extends BaseResolver {
   relations = ITEM_CATEGORY_RELATIONS;
 
-  constructor(
-    @Inject(ItemCategoriesService)
-    private itemCategoriesService: ItemCategoriesService
-  ) {
+  constructor(private itemCategoriesService: ItemCategoriesService) {
     super();
   }
 

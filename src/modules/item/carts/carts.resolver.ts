@@ -1,4 +1,4 @@
-import { Inject, UnauthorizedException, UseGuards } from '@nestjs/common';
+import { UnauthorizedException, UseGuards } from '@nestjs/common';
 import { Args, Info, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -26,7 +26,7 @@ export class CartsResolver extends BaseResolver<CartItemRelationType> {
     ],
   };
 
-  constructor(@Inject(CartsService) private cartsService: CartsService) {
+  constructor(private cartsService: CartsService) {
     super();
   }
 

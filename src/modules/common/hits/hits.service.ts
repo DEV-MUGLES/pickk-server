@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CacheService } from '@providers/cache/redis';
 
 import { HitOwnerType } from './constants';
@@ -7,7 +7,7 @@ import { HitCountMap } from './types';
 
 @Injectable()
 export class HitsService {
-  constructor(@Inject(CacheService) private cacheService: CacheService) {}
+  constructor(private cacheService: CacheService) {}
 
   async isEarly(
     ownerType: HitOwnerType,

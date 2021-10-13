@@ -1,4 +1,4 @@
-import { ForbiddenException, Inject, UseGuards } from '@nestjs/common';
+import { ForbiddenException, UseGuards } from '@nestjs/common';
 import { Args, Info, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -22,8 +22,8 @@ export class BrandsResolver extends BaseResolver<BrandRelationType> {
   relations = BRAND_RELATIONS;
 
   constructor(
-    @Inject(BrandsService) private brandsService: BrandsService,
-    @Inject(SellersService) private sellersService: SellersService
+    private brandsService: BrandsService,
+    private sellersService: SellersService
   ) {
     super();
   }

@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Args, Query, Mutation } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -12,9 +12,7 @@ import { LikesService } from './likes.service';
 
 @Injectable()
 export class LikesResolver {
-  constructor(
-    @Inject(LikesService) private readonly likesService: LikesService
-  ) {}
+  constructor(private readonly likesService: LikesService) {}
 
   @Query(() => Boolean)
   @UseGuards(JwtVerifyGuard)

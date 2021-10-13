@@ -1,4 +1,4 @@
-import { Inject, Injectable, UseGuards } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { Mutation, Query } from '@nestjs/graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -12,7 +12,7 @@ import { OwnsService } from './owns.service';
 
 @Injectable()
 export class OwnsResolver {
-  constructor(@Inject(OwnsService) private readonly ownsService: OwnsService) {}
+  constructor(private readonly ownsService: OwnsService) {}
 
   @Query(() => Boolean)
   @UseGuards(JwtVerifyGuard)
