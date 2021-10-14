@@ -7,6 +7,9 @@ import { JwtAuthGuard } from '@auth/guards';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 
+import { SearchOrderItemsOutput } from '@admin/seller/order/order-item/dtos';
+import { OrderItemSearchFilter } from '@mcommon/search/dtos';
+import { OrderItemSearchService } from '@mcommon/search/order-item.search.service';
 import {
   OrderItemRelationType,
   ORDER_ITEM_RELATIONS,
@@ -20,13 +23,16 @@ import { UserRole } from '@user/users/constants';
 export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
   relations = ORDER_ITEM_RELATIONS;
 
-  constructor(private readonly orderItemsService: OrderItemsService) {
+  constructor(
+    private readonly orderItemsService: OrderItemsService,
+    private readonly orderItemSearchService: OrderItemSearchService
+  ) {
     super();
   }
 
   @Query(() => [OrderItem])
-  @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
   async rootOrderItems(
     @Info() info?: GraphQLResolveInfo,
     @Args('orderItemFilter', { nullable: true })
@@ -38,5 +44,29 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
       pageInput,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => SearchOrderItemsOutput)
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  async searchRootOrderItems(
+    @Info() info?: GraphQLResolveInfo,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: OrderItemSearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchOrderItemsOutput> {
+    const { ids: merchantUidIn, total } =
+      await this.orderItemSearchService.search(query, pageInput, filter, [
+        { merchantUid: 'desc' },
+      ]);
+
+    const orderItems = await this.orderItemsService.list(
+      { merchantUidIn },
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
+
+    return { total, result: orderItems };
   }
 }

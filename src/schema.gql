@@ -2123,6 +2123,7 @@ type Query {
   searchLook(pageInput: PageInput, query: String!): [Look!]!
   searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
+  searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
