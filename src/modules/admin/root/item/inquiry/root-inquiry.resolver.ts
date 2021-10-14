@@ -4,7 +4,6 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
-import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
 import { PageInput } from '@common/dtos';
@@ -25,6 +24,7 @@ import {
 import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
 
 import { RootInquiryService } from './root-inquiry.service';
 
@@ -69,12 +69,11 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiriesCount(
-    @CurrentUser() { sellerId }: JwtPayload,
     @Args('forceUpdate', { nullable: true }) forceUpdate?: boolean
   ): Promise<InquiriesCountOutput> {
     if (!forceUpdate) {
       const cached = await this.cacheService.get<InquiriesCountOutput>(
-        InquiriesCountOutput.getCacheKey(sellerId)
+        InquiriesCountOutput.getCacheKey(0)
       );
 
       if (cached) {
@@ -95,14 +94,14 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async answerRootInquiry(
-    @CurrentUser() { sub: userId }: JwtPayload,
+    @CurrentUser() user: User,
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
-  ): Promise<Inquiry> {
+  ): Promise<Inquiry> {    
     await this.inquiriesService.answer(id, {
       ...input,
-      userId,
+      userId: user.id,
       from: InquiryAnswerFrom.Root,
     });
 
