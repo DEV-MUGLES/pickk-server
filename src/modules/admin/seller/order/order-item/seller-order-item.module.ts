@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { SearchModule } from '@mcommon/search/search.module';
 import { SellersModule } from '@item/sellers/sellers.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
@@ -15,6 +16,7 @@ import { SellerOrderItemService } from './seller-order-item.service';
     SellersModule,
     OrderItemsModule,
     OrdersModule,
+    SearchModule,
   ],
   providers: [SellerOrderItemResolver, SellerOrderItemService],
 })

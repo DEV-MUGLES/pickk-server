@@ -9,6 +9,8 @@ import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
 
+import { OrderItemSearchFilter } from '@mcommon/search/dtos';
+import { OrderItemSearchService } from '@mcommon/search/order-item.search.service';
 import {
   OrderItemRelationType,
   ORDER_ITEM_RELATIONS,
@@ -19,7 +21,11 @@ import { OrderItemsService } from '@order/order-items/order-items.service';
 import { OrdersProducer } from '@order/orders/producers';
 import { OrdersService } from '@order/orders/orders.service';
 
-import { BulkShipOrderItemInput, OrderItemsCountOutput } from './dtos';
+import {
+  BulkShipOrderItemInput,
+  OrderItemsCountOutput,
+  SearchOrderItemsOutput,
+} from './dtos';
 
 import { SellerOrderItemService } from './seller-order-item.service';
 
@@ -31,8 +37,9 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     private readonly orderItemsService: OrderItemsService,
     private readonly ordersService: OrdersService,
     private readonly sellerOrderItemService: SellerOrderItemService,
-    private cacheService: CacheService,
-    private readonly ordersProducer: OrdersProducer
+    private readonly cacheService: CacheService,
+    private readonly ordersProducer: OrdersProducer,
+    private readonly orderItemSearchService: OrderItemSearchService
   ) {
     super();
   }
@@ -193,5 +200,32 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
       merchantUid,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => SearchOrderItemsOutput)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchMeSellerOrderItems(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Info() info?: GraphQLResolveInfo,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: OrderItemSearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchOrderItemsOutput> {
+    const { ids: merchantUidIn, total } =
+      await this.orderItemSearchService.search(
+        query,
+        pageInput,
+        { sellerId, ...filter },
+        [{ merchantUid: 'desc' }]
+      );
+
+    const orderItems = await this.orderItemsService.list(
+      { merchantUidIn },
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
+
+    return { total, result: orderItems };
   }
 }

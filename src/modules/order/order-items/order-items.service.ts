@@ -6,6 +6,7 @@ import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
+import { OrderItemRelationType } from './constants';
 import { OrderItemFilter } from './dtos';
 import { OrderItem } from './models';
 import { OrderItemsProducer } from './producers';
@@ -21,14 +22,17 @@ export class OrderItemsService {
     private readonly cacheService: CacheService
   ) {}
 
-  async get(merchantUid: string, relations: string[] = []): Promise<OrderItem> {
+  async get(
+    merchantUid: string,
+    relations: OrderItemRelationType[] = []
+  ): Promise<OrderItem> {
     return await this.orderItemsRepository.get(merchantUid, relations);
   }
 
   async list(
     orderItemFilter?: OrderItemFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: OrderItemRelationType[] = []
   ): Promise<OrderItem[]> {
     const _orderItemFilter = plainToClass(OrderItemFilter, orderItemFilter);
     const _pageInput = plainToClass(PageInput, pageInput);

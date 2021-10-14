@@ -1629,6 +1629,22 @@ input OrderItemFilter {
   statusIn: [OrderItemStatus!]
 }
 
+input OrderItemSearchFilter {
+  claimStatus: OrderItemClaimStatus
+  claimStatusIn: [OrderItemClaimStatus!]
+  confirmedAtBetween: [DateTime!]
+  isConfirmed: Boolean
+  isSettled: Boolean
+  paidAtBetween: [DateTime!]
+  sellerId: Int
+  settledAtBetween: [DateTime!]
+  shipReadyAtBetween: [DateTime!]
+  shippedAtBetween: [DateTime!]
+  shippingAtBetween: [DateTime!]
+  status: OrderItemStatus
+  statusIn: [OrderItemStatus!]
+}
+
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
 enum OrderItemStatus {
   Failed
@@ -2105,6 +2121,7 @@ type Query {
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
   searchLook(pageInput: PageInput, query: String!): [Look!]!
+  searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
@@ -2258,6 +2275,11 @@ input RequestPinInput {
 input ReshipExchangeRequestInput {
   courierId: Int!
   trackCode: String!
+}
+
+type SearchOrderItemsOutput {
+  result: [OrderItem!]!
+  total: Int!
 }
 
 type Seller {
