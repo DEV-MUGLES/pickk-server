@@ -71,13 +71,11 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiriesCount(
-    @CurrentUser() { id }: User,
     @Args('forceUpdate', { nullable: true }) forceUpdate?: boolean
   ): Promise<InquiriesCountOutput> {
     if (!forceUpdate) {
-      const {id:sellerId} = await this.sellersService.findOne({ userId: id });
       const cached = await this.cacheService.get<InquiriesCountOutput>(
-        InquiriesCountOutput.getCacheKey(sellerId)
+        InquiriesCountOutput.getCacheKey(0)
       );
 
       if (cached) {
@@ -98,14 +96,14 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async answerRootInquiry(
-    @CurrentUser() {id: userId}: User,
+    @CurrentUser() user: User,
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Inquiry> {    
     await this.inquiriesService.answer(id, {
       ...input,
-      userId,
+      userId: user.id,
       from: InquiryAnswerFrom.Root,
     });
 
