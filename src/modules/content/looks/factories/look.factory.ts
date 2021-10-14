@@ -19,7 +19,9 @@ export class LookFactory {
       images: input.imageUrls.map((url, index) =>
         LookImageFactory.from(url, index)
       ),
-      digests: input.digests.map((digest) => DigestFactory.from(digest)),
+      digests: input.digests.map((digest) =>
+        DigestFactory.from({ ...digest, userId })
+      ),
     });
   }
 }
