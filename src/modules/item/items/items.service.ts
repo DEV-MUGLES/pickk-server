@@ -254,12 +254,12 @@ export class ItemsService {
       salePrice,
       originalPrice,
     } = await this.crawlerService.crawlInfo(item.url);
-    await this.itemsRepository.update(item.id, { name });
+    await this.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
       return;
     }
-    await this.itemPricesRepository.update(
+    await this.updateItemPrice(
       item.prices.find(({ isActive }) => isActive === true).id,
       {
         sellPrice: salePrice,
