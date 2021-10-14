@@ -24,7 +24,7 @@ export class CrawlerProviderService {
   }
 
   async crawlInfo(url: string): Promise<ItemInfoCrawlResult> {
-    await this.checkIsExistUrl(url);
+    await this.checkUrlExisting(url);
 
     const { data } = await firstValueFrom(
       this.httpService.get<ItemInfoCrawlResult>(
@@ -47,7 +47,7 @@ export class CrawlerProviderService {
   }
 
   async crawlOption(url: string): Promise<ItemOptionCrawlResult> {
-    await this.checkIsExistUrl(url);
+    await this.checkUrlExisting(url);
 
     const {
       data: { values: options, optionPriceVariants },
@@ -80,7 +80,7 @@ export class CrawlerProviderService {
     return { options: optionDatas };
   }
 
-  private async checkIsExistUrl(url: string) {
+  private async checkUrlExisting(url: string) {
     try {
       await firstValueFrom(this.httpService.get(url));
     } catch (err) {
