@@ -30,4 +30,10 @@ export class CommonJobsController {
   async indexVideos() {
     return await this.commonJobsService.indexVideos();
   }
+
+  // 이 엔드포인트는 스케줄링하지 않습니다.
+  @Post('index-order-items')
+  async indexOrderItems() {
+    return await this.commonJobsService.indexOrderItems();
+  }
 }

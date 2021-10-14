@@ -6,6 +6,7 @@ import { IndexItemsJob } from './index-items';
 import { IndexDigestsJob } from './index-digests';
 import { IndexLooksJob } from './index-looks';
 import { IndexVideosJob } from './index-videos';
+import { IndexOrderItemsJob } from './index-order-items';
 
 @Injectable()
 export class CommonJobsService {
@@ -14,7 +15,8 @@ export class CommonJobsService {
     private readonly indexItemsJob: IndexItemsJob,
     private readonly indexDigestsJob: IndexDigestsJob,
     private readonly indexLooksJob: IndexLooksJob,
-    private readonly indexVideosJob: IndexVideosJob
+    private readonly indexVideosJob: IndexVideosJob,
+    private readonly indexOrderItemsJob: IndexOrderItemsJob
   ) {}
 
   async indexItems() {
@@ -31,5 +33,9 @@ export class CommonJobsService {
 
   async indexVideos() {
     return await this.batchWorker.run(this.indexVideosJob);
+  }
+
+  async indexOrderItems() {
+    return await this.batchWorker.run(this.indexOrderItemsJob);
   }
 }

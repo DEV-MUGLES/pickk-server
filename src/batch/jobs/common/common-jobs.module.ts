@@ -8,11 +8,13 @@ import { ItemsModule } from '@item/items/items.module';
 import { LooksModule } from '@content/looks/looks.module';
 import { VideosModule } from '@content/videos/videos.module';
 import { DigestsModule } from '@content/digests/digests.module';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
 
 import { IndexItemsJob, IndexItemsStep } from './index-items';
 import { IndexDigestsJob, IndexDigestsStep } from './index-digests';
 import { IndexLooksJob, IndexLooksStep } from './index-looks';
 import { IndexVideosJob, IndexVideosStep } from './index-videos';
+import { IndexOrderItemsJob, IndexOrderItemsStep } from './index-order-items';
 
 import { CommonJobsController } from './common-jobs.controller';
 import { CommonJobsService } from './common-jobs.service';
@@ -25,6 +27,7 @@ import { CommonJobsService } from './common-jobs.service';
     DigestsModule,
     LooksModule,
     VideosModule,
+    OrderItemsModule,
   ],
   controllers: [CommonJobsController],
   providers: [
@@ -38,6 +41,8 @@ import { CommonJobsService } from './common-jobs.service';
     IndexLooksStep,
     IndexVideosJob,
     IndexVideosStep,
+    IndexOrderItemsJob,
+    IndexOrderItemsStep,
   ],
 })
 export class CommonJobsModule {}
