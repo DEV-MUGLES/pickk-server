@@ -245,12 +245,15 @@ export class ItemsService {
 
   async updateByCrawl(id: number) {
     const item = await this.get(id, ['urls', 'prices']);
-    if (!validator.isURL(item.urls[0].url)) {
+    if (!validator.isURL(item.url)) {
       throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
     }
 
-    const { name, salePrice, originalPrice } =
-      await this.crawlerService.crawlInfo(item.urls[0].url);
+    const {
+      name,
+      salePrice,
+      originalPrice,
+    } = await this.crawlerService.crawlInfo(item.url);
     await this.itemsRepository.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
@@ -301,11 +304,11 @@ export class ItemsService {
 
   async updateImageUrl(id: number) {
     const item = await this.get(id, ['urls']);
-    if (!validator.isURL(item.urls[0].url)) {
+    if (!validator.isURL(item.url)) {
       throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
     }
 
-    const crawlResult = await this.crawlerService.crawlInfo(item.urls[0].url);
+    const crawlResult = await this.crawlerService.crawlInfo(item.url);
     const [uploaded] = await this.imagesService.uploadUrls(
       [crawlResult.imageUrl],
       CRAWLED_ITEM_IMAGE_S3_PREFIX
@@ -317,11 +320,11 @@ export class ItemsService {
 
   async updateDetailImages(id: number) {
     const item = await this.get(id, ['urls', 'detailImages']);
-    if (!validator.isURL(item.urls[0].url)) {
+    if (!validator.isURL(item.url)) {
       throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
     }
 
-    const crawlResult = await this.crawlerService.crawlInfo(item.urls[0].url);
+    const crawlResult = await this.crawlerService.crawlInfo(item.url);
     if (crawlResult.images.length === 0) {
       return;
     }
@@ -360,7 +363,7 @@ export class ItemsService {
 
   async crawlOptionSet(id: number): Promise<Item> {
     const item = await this.get(id, ['urls', 'options', 'options.values']);
-    const { options } = await this.crawlerService.crawlOption(item.urls[0].url);
+    const { options } = await this.crawlerService.crawlOption(item.url);
     await this.clearOptionSet(id);
     return await this.createOptionSet(id, options);
   }
