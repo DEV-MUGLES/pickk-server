@@ -11,6 +11,7 @@ import {
   ItemOptionCrawlResult,
   OptionValueData,
 } from './dtos';
+import { requestHeaderObjects } from './constants';
 
 @Injectable()
 export class CrawlerProviderService {
@@ -81,12 +82,46 @@ export class CrawlerProviderService {
   }
 
   private async checkUrlExisting(url: string) {
+    const headerObject = requestHeaderObjects[this.getHostName(url)] || {};
     try {
-      await firstValueFrom(this.httpService.get(url));
+      await firstValueFrom(
+        this.httpService.get(url, {
+          timeout: 10000,
+          headers: {
+            'User-Agent':
+              'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36',
+            ...headerObject,
+          },
+        })
+      );
     } catch (err) {
+      console.log(err);
       throw new InternalServerErrorException(
         `접근이 불가능한 URL입니다. URL: ${url}`
       );
     }
+  }
+
+  private getHostName(url: string): string {
+    const { hostname } = new URL(url);
+    if (hostname.includes('topten10mall.com')) {
+      return 'topten10mall.com';
+    }
+    if (url.includes('espionage.co.kr/m')) {
+      return 'espionage.co.kr/m';
+    }
+    if (url.includes('mamagari.com/m')) {
+      return 'mamagari.com/m';
+    }
+    if (url.includes('ocokorea.com/shopMobile')) {
+      return 'ocokorea.com/shopMobile';
+    }
+    if (url.includes('brand.naver.com/ralphlauren')) {
+      return 'brand.naver.com/ralphlauren';
+    }
+    if (url.includes('.ssg.com')) {
+      return 'ssg.com';
+    }
+    return hostname.replace('www.', '');
   }
 }
