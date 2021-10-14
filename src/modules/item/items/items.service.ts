@@ -243,6 +243,29 @@ export class ItemsService {
     return await this.itemsRepository.save(new Item({ ...item, ...input }));
   }
 
+  async updateByCrwal(id: number) {
+    const item = await this.get(id, ['urls', 'prices']);
+    if (!validator.isURL(item.urls[0].url)) {
+      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+    }
+
+    const { name, salePrice, originalPrice } =
+      await this.crawlerService.crawlInfo(item.urls[0].url);
+    await this.itemsRepository.update(item.id, { name });
+
+    if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
+      return;
+    }
+    await this.itemPricesRepository.update(
+      item.prices.find(({ isActive }) => (isActive = true)).id,
+      {
+        sellPrice: salePrice,
+        finalPrice: (salePrice * (100 - item.pickkDiscountRate)) / 100,
+        originalPrice,
+      }
+    );
+  }
+
   async updateItemOption(
     id: number,
     input: UpdateItemOptionInput
