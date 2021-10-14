@@ -5,12 +5,13 @@ import { BaseStep } from '@batch/jobs/base.step';
 import { allSettled } from '@common/helpers';
 import { DeliveryTrackerService } from '@providers/delivery-tracker';
 
-import { Shipment, ShipmentHistory } from '@order/shipments/models';
-import { ShipmentOwnerType, ShipmentStatus } from '@order/shipments/constants';
-import { ShipmentsRepository } from '@order/shipments/shipments.repository';
-import { OrderItemsRepository } from '@order/order-items/order-items.repository';
-import { OrderItemStatus } from '@order/order-items/constants';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
+import { OrderItemStatus } from '@order/order-items/constants';
+import { OrderItemsProducer } from '@order/order-items/producers';
+import { OrderItemsRepository } from '@order/order-items/order-items.repository';
+import { ShipmentOwnerType, ShipmentStatus } from '@order/shipments/constants';
+import { Shipment, ShipmentHistory } from '@order/shipments/models';
+import { ShipmentsRepository } from '@order/shipments/shipments.repository';
 
 const SHIPPED_STATUS_TEXT = '배송완료';
 
@@ -22,7 +23,8 @@ export class TrackShipmentsStep extends BaseStep {
     private readonly shipmentsRepository: ShipmentsRepository,
     @InjectRepository(OrderItemsRepository)
     private readonly orderItemsRepository: OrderItemsRepository,
-    private readonly exchangeRequestsService: ExchangeRequestsService
+    private readonly exchangeRequestsService: ExchangeRequestsService,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {
     super();
   }
@@ -80,6 +82,7 @@ export class TrackShipmentsStep extends BaseStep {
       await this.orderItemsRepository.update(ownerPk, {
         status: OrderItemStatus.Shipped,
       });
+      await this.orderItemsProducer.indexOrderItems([ownerPk]);
     }
     if (ownerType === ShipmentOwnerType.ExchangeRequestReship) {
       await this.exchangeRequestsService.markReshipped(ownerPk);

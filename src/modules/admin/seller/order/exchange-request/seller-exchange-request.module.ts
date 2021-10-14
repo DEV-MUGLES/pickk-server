@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
 
 import { SellerExchangeRequestResolver } from './seller-exchange-request.resolver';
 import { SellerExchangeRequestService } from './seller-exchange-request.service';
@@ -11,6 +12,7 @@ import { SellerExchangeRequestService } from './seller-exchange-request.service'
   imports: [
     TypeOrmModule.forFeature([ExchangeRequestsRepository]),
     ExchangeRequestsModule,
+    OrderItemsModule,
   ],
   providers: [SellerExchangeRequestResolver, SellerExchangeRequestService],
 })

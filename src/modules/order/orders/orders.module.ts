@@ -16,6 +16,7 @@ import { DigestsModule } from '@content/digests/digests.module';
 import { CartsModule } from '@item/carts/carts.module';
 import { ProductsModule } from '@item/products/products.module';
 import { CouponsModule } from '@order/coupons/coupons.module';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { PointsModule } from '@order/points/points.module';
 import { PaymentsModule } from '@payment/payments/payments.module';
 import { UsersModule } from '@user/users/users.module';
@@ -40,6 +41,7 @@ import { OrdersService } from './orders.service';
     PointsModule,
     PaymentsModule,
     UsersModule,
+    forwardRef(() => OrderItemsModule),
     forwardRef(() => RefundRequestsModule),
     SqsModule.registerQueue(
       {

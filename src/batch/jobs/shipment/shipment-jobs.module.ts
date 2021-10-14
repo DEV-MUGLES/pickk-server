@@ -6,6 +6,7 @@ import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { DeliveryTrackerProviderModule } from '@providers/delivery-tracker';
 
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
+import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import {
   ShipmentHistoriesRepository,
@@ -31,6 +32,7 @@ import { ShipmentJobsController } from './shipment-jobs.controller';
       ShipmentHistoriesRepository,
     ]),
     ExchangeRequestsModule,
+    OrderItemsModule,
   ],
   controllers: [ShipmentJobsController],
   providers: [

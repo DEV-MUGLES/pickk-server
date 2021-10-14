@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
+import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrdersService } from '@order/orders/orders.service';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
@@ -21,7 +22,8 @@ export class RefundRequestsService {
     @InjectRepository(RefundRequestsRepository)
     private readonly refundRequestsRepository: RefundRequestsRepository,
     private readonly ordersService: OrdersService,
-    private readonly paymentsService: PaymentsService
+    private readonly paymentsService: PaymentsService,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
   async get(
@@ -68,6 +70,9 @@ export class RefundRequestsService {
       CancelPaymentInput.of(order, '반품', amount)
     );
 
+    await this.orderItemsProducer.indexOrderItems(
+      refundRequest.orderItems.map((v) => v.merchantUid)
+    );
     return await this.refundRequestsRepository.save(refundRequest);
   }
 }

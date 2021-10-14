@@ -16,6 +16,7 @@ import { DigestsService } from '@content/digests/digests.service';
 import { REGISTER_ORDER_PRODUCT_RELATIONS } from '@item/products/constants';
 import { ProductsService } from '@item/products/products.service';
 import { CouponsService } from '@order/coupons/coupons.service';
+import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentStatus, PayMethod } from '@payment/payments/constants';
@@ -55,7 +56,8 @@ export class OrdersService {
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
     private readonly usersService: UsersService,
-    private readonly ordersProducer: OrdersProducer
+    private readonly ordersProducer: OrdersProducer,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
   async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
@@ -113,8 +115,14 @@ export class OrdersService {
     ]);
 
     const merchantUid = await this.genMerchantUid();
-    const order = OrderFactory.create(userId, merchantUid, inputs as any);
-    return this.ordersRepository.save(order);
+    const order = await this.ordersRepository.save(
+      OrderFactory.create(userId, merchantUid, inputs as any)
+    );
+
+    await this.orderItemsProducer.indexOrderItems(
+      order.orderItems?.map((v) => v.merchantUid)
+    );
+    return order;
   }
 
   /** YYMMDDHHmmssSSS + NN 형식의 고유한 merchantUid를 생성합니다. */
@@ -153,12 +161,19 @@ export class OrdersService {
 
     await this.productsService.bulkDestock(order.orderItems);
 
+    await this.orderItemsProducer.indexOrderItems(
+      order.orderItems?.map((v) => v.merchantUid)
+    );
     return await this.ordersRepository.save(order);
   }
 
   async fail(merchantUid: string): Promise<Order> {
     const order = await this.get(merchantUid, ['orderItems']);
     order.markFailed();
+
+    await this.orderItemsProducer.indexOrderItems(
+      order.orderItems?.map((v) => v.merchantUid)
+    );
     return await this.ordersRepository.save(order);
   }
 
@@ -185,6 +200,9 @@ export class OrdersService {
     order.complete(createOrderVbankReceiptInput);
     const completedOrder = await this.ordersRepository.save(order);
     await this.ordersProducer.sendOrderCompletedAlimtalk(order);
+    await this.orderItemsProducer.indexOrderItems(
+      order.orderItems?.map((v) => v.merchantUid)
+    );
     return completedOrder;
   }
 
@@ -192,6 +210,10 @@ export class OrdersService {
     const order = await this.get(merchantUid, ['orderItems']);
     order.markVbankDodged();
     await this.paymentsService.dodgeVbank(merchantUid);
+
+    await this.orderItemsProducer.indexOrderItems(
+      order.orderItems?.map((v) => v.merchantUid)
+    );
     return await this.ordersRepository.save(order);
   }
 
@@ -234,6 +256,7 @@ export class OrdersService {
       merchantUid,
       CancelPaymentInput.of(order, reason, amount, checksum)
     );
+    await this.orderItemsProducer.indexOrderItems(orderItemMerchantUids);
     return await this.ordersRepository.save(order);
   }
 
@@ -245,6 +268,7 @@ export class OrdersService {
 
     order.requestRefund(input);
 
+    await this.orderItemsProducer.indexOrderItems(input.orderItemMerchantUids);
     return await this.ordersRepository.save(order);
   }
 }

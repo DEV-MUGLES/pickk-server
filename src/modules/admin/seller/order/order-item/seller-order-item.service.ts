@@ -11,6 +11,7 @@ import dayjs from 'dayjs';
 import { OrderItemStatus } from '@order/order-items/constants';
 import { ShipOrderItemInput } from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
+import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 
 import { ExtendedShipOrderItemInput, OrderItemsCountOutput } from './dtos';
@@ -19,7 +20,8 @@ import { ExtendedShipOrderItemInput, OrderItemsCountOutput } from './dtos';
 export class SellerOrderItemService {
   constructor(
     @InjectRepository(OrderItemsRepository)
-    private readonly orderItemsRepository: OrderItemsRepository
+    private readonly orderItemsRepository: OrderItemsRepository,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
   async getCount(sellerId: number, month = 3): Promise<OrderItemsCountOutput> {
@@ -63,11 +65,15 @@ export class SellerOrderItemService {
 
     orderItems.forEach((oi) => oi.markShipReady());
     await this.orderItemsRepository.save(orderItems);
+    await this.orderItemsProducer.indexOrderItems(
+      orderItems.map((v) => v.merchantUid)
+    );
   }
 
   async ship(orderItem: OrderItem, input: ShipOrderItemInput) {
     orderItem.ship(input);
     await this.orderItemsRepository.save(orderItem);
+    await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
   }
 
   async updateTrackCode(orderItem: OrderItem, trackCode: string) {
@@ -79,6 +85,7 @@ export class SellerOrderItemService {
 
     orderItem.shipment.trackCode = trackCode;
     await this.orderItemsRepository.save(orderItem);
+    await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
   }
 
   async bulkShip(
@@ -91,5 +98,8 @@ export class SellerOrderItemService {
     }
 
     await this.orderItemsRepository.save(orderItems);
+    await this.orderItemsProducer.indexOrderItems(
+      orderItems.map((v) => v.merchantUid)
+    );
   }
 }

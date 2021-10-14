@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { ReshipExchangeRequestInput } from '@order/exchange-requests/dtos';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
+import { OrderItemsProducer } from '@order/order-items/producers';
 
 import { ExchangeRequestsCountOutput } from './dtos';
 
@@ -14,7 +15,8 @@ export class SellerExchangeRequestService {
   constructor(
     @InjectRepository(ExchangeRequestsRepository)
     private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
-    private readonly exchangeRequestsService: ExchangeRequestsService
+    private readonly exchangeRequestsService: ExchangeRequestsService,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
   async checkBelongsTo(merchantUid: string, sellerId: number) {
@@ -66,5 +68,8 @@ export class SellerExchangeRequestService {
     );
     exchangeRequest.reship(input);
     await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.orderItemsProducer.indexOrderItems([
+      exchangeRequest.orderItemMerchantUid,
+    ]);
   }
 }

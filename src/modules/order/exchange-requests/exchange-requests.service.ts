@@ -17,6 +17,7 @@ import { ExchangeRequestFactory } from './factories';
 import { ExchangeRequest } from './models';
 
 import { ExchangeRequestsRepository } from './exchange-requests.repository';
+import { OrderItemsProducer } from '@order/order-items/producers';
 
 @Injectable()
 export class ExchangeRequestsService {
@@ -25,7 +26,8 @@ export class ExchangeRequestsService {
     private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
     private readonly orderItemsService: OrderItemsService,
     private readonly productsService: ProductsService,
-    private readonly paymentsService: PaymentsService
+    private readonly paymentsService: PaymentsService,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
   async get(
@@ -58,11 +60,12 @@ export class ExchangeRequestsService {
     );
   }
 
-  async markReshipped(merchantUid: string): Promise<ExchangeRequest> {
+  async markReshipped(merchantUid: string): Promise<void> {
     const exchangeRequest = await this.get(merchantUid, ['orderItem']);
     exchangeRequest.markReshipped();
 
-    return await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.orderItemsProducer.indexOrderItems([merchantUid]);
   }
 
   async register(
@@ -107,6 +110,7 @@ export class ExchangeRequestsService {
 
     exchangeRequest.markRequested();
 
-    return await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.orderItemsProducer.indexOrderItems([merchantUid]);
   }
 }

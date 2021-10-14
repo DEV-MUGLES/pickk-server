@@ -64,6 +64,7 @@ export class OrderItemsService {
     orderItem.confirm();
 
     await this.orderItemsProducer.giveReward(merchantUid);
+    await this.orderItemsProducer.indexOrderItems([merchantUid]);
     return await this.orderItemsRepository.save(orderItem);
   }
 
