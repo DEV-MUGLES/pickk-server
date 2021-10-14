@@ -41,6 +41,7 @@ import {
   ItemsRepository,
   ItemSizeChartsRepository,
 } from './items.repository';
+import { InvalidItemUrlException } from './exceptions';
 
 @Injectable()
 export class ItemsService {
@@ -246,7 +247,7 @@ export class ItemsService {
   async updateByCrawl(id: number) {
     const item = await this.get(id, ['urls', 'prices']);
     if (!validator.isURL(item.url)) {
-      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+      throw new InvalidItemUrlException();
     }
 
     const {
@@ -305,7 +306,7 @@ export class ItemsService {
   async updateImageUrl(id: number) {
     const item = await this.get(id, ['urls']);
     if (!validator.isURL(item.url)) {
-      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+      throw new InvalidItemUrlException();
     }
 
     const crawlResult = await this.crawlerService.crawlInfo(item.url);
@@ -321,7 +322,7 @@ export class ItemsService {
   async updateDetailImages(id: number) {
     const item = await this.get(id, ['urls', 'detailImages']);
     if (!validator.isURL(item.url)) {
-      throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
+      throw new InvalidItemUrlException();
     }
 
     const crawlResult = await this.crawlerService.crawlInfo(item.url);
