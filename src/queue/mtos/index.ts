@@ -1,4 +1,6 @@
+export * from './delete-order-items-index.dto';
 export * from './give-reward.mto';
+export * from './index-order-items.mto';
 export * from './process-seller-items-scrap-result.mto';
 export * from './process-vbank-paid-order.mto';
 export * from './remove-digest-images.mto';

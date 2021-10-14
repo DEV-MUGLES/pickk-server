@@ -21,7 +21,7 @@ import { ProductsService } from './products.service';
       type: SqsQueueType.Consumer,
     }),
     forwardRef(() => ItemsModule),
-    OrderItemsModule,
+    forwardRef(() => OrderItemsModule),
   ],
   providers: [
     ProductsResolver,

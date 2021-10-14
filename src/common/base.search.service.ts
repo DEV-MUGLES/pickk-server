@@ -41,7 +41,7 @@ export abstract class BaseSearchService<
     );
   }
 
-  async bulkDelete(ids: (number | string)[]): Promise<void> {
+  async bulkDelete(ids: Model['id'][]): Promise<void> {
     await this.searchService.bulkDelete(this.name, ids);
   }
 

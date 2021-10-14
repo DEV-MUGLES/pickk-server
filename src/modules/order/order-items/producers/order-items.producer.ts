@@ -2,8 +2,16 @@ import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
 import { getRandomUuid } from '@common/helpers';
-import { GIVE_REWARD_QUEUE } from '@queue/constants';
-import { GiveRewardMto } from '@queue/mtos';
+import {
+  DELETE_ORDER_ITEMS_INDEX_QUEUE,
+  GIVE_REWARD_QUEUE,
+  INDEX_ORDER_ITEMS_QUEUE,
+} from '@queue/constants';
+import {
+  DeleteOrderItemsIndexMto,
+  GiveRewardMto,
+  IndexOrderItemsMto,
+} from '@queue/mtos';
 
 @Injectable()
 export class OrderItemsProducer {
@@ -14,5 +22,22 @@ export class OrderItemsProducer {
       id: getRandomUuid(),
       body: { merchantUid },
     });
+  }
+
+  async indexOrderItems(merchantUids: string[]) {
+    await this.sqsService.send<IndexOrderItemsMto>(INDEX_ORDER_ITEMS_QUEUE, {
+      id: getRandomUuid(),
+      body: { merchantUids },
+    });
+  }
+
+  async deleteOrderItemsIndex(merchantUids: string[]) {
+    await this.sqsService.send<DeleteOrderItemsIndexMto>(
+      DELETE_ORDER_ITEMS_INDEX_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: { merchantUids },
+      }
+    );
   }
 }
