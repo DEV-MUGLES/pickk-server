@@ -73,7 +73,10 @@ export class UpdateItemDetailImagesConsumer extends BaseConsumer {
 
   private async uploadDetailImages(imageUrls: string[], itemId: number) {
     return (
-      await this.imagesService.uploadUrls(imageUrls, getItemDetailImageS3Prefix(itemId))
-    ).map(({ url },index) => ItemDetailImageFactory.from(url,index));
+      await this.imagesService.uploadUrls(
+        imageUrls,
+        getItemDetailImageS3Prefix(itemId)
+      )
+    ).map(({ url }, index) => ItemDetailImageFactory.from(url, index));
   }
 }

@@ -1,1 +1,2 @@
-export const getItemDetailImageS3Prefix=(itemId:number)=>`item/${itemId}/detail`;
+export const getItemDetailImageS3Prefix = (itemId: number) =>
+  `item/${itemId}/detail`;

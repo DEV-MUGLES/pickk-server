@@ -18,7 +18,7 @@ export class ItemDetailImageEntity extends AbstractImageEntity {
 
     this.item = attributes.item;
     this.itemId = attributes.itemId;
-    
+
     this.order = attributes.order;
   }
 

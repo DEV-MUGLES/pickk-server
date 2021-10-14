@@ -98,7 +98,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
-  ): Promise<Inquiry> {    
+  ): Promise<Inquiry> {
     await this.inquiriesService.answer(id, {
       ...input,
       userId: user.id,

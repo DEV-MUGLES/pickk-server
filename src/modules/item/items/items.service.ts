@@ -11,10 +11,7 @@ import { SlackService } from '@providers/slack';
 import { ImagesService } from '@mcommon/images/images.service';
 import { BrandsService } from '@item/brands/brands.service';
 
-import {
-  CRAWLED_ITEM_IMAGE_S3_PREFIX,
-  ItemRelationType,  
-} from './constants';
+import { CRAWLED_ITEM_IMAGE_S3_PREFIX, ItemRelationType } from './constants';
 import {
   CreateItemInput,
   BulkUpdateItemInput,
