@@ -25,7 +25,6 @@ import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 import { UserRole } from '@user/users/constants';
 import { User } from '@user/users/models';
-import { SellersService } from '@item/sellers/sellers.service';
 
 import { RootInquiryService } from './root-inquiry.service';
 
@@ -36,7 +35,6 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   constructor(
     private readonly inquiriesService: InquiriesService,
     private readonly rootInquiryService: RootInquiryService,
-    private readonly sellersService:SellersService,
     private cacheService: CacheService
   ) {
     super();
