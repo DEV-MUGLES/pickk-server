@@ -31,7 +31,7 @@ export class RefundRequest extends RefundRequestEntity {
    * @param {number} shippingFee 부과된 배송비를 변경하며 승인하고 싶을 때 넘겨주세용 */
   confirm(shippingFee?: number) {
     this.markAs(RefundRequestStatus.Confirmed);
-    if (shippingFee) {
+    if (shippingFee != null) {
       this.shippingFee = shippingFee;
     }
   }
