@@ -69,7 +69,7 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Digest[]> {
-    const ids = await this.digestsSearchService.search(query, pageInput);
+    const { ids } = await this.digestsSearchService.search(query, pageInput);
 
     return await this.digestsService.list(
       { idIn: ids } as DigestFilter,

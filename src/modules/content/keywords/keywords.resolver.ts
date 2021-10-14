@@ -86,7 +86,7 @@ export class KeywordsResolver extends BaseResolver<KeywordRelationType> {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Keyword[]> {
-    const ids = await this.keywordsSearchService.search(query, pageInput);
+    const { ids } = await this.keywordsSearchService.search(query, pageInput);
 
     return await this.keywordsService.list(
       { idIn: ids, hasCustom: null },

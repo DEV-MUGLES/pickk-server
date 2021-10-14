@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
+import { getSearchFilters } from './helpers';
 import { SearchParams, SearchResult } from './types';
 
 type BaseSearchBody = {
-  id: number;
+  id: number | string;
 };
 
 @Injectable()
@@ -98,10 +99,11 @@ export class SearchService {
   /** 기본적으로 _score(관련도)순 정렬입니다. */
   async search<SearchBody extends BaseSearchBody>(
     name: string,
-    query: string,
+    query?: string,
     params?: SearchParams,
-    filter?: Partial<SearchBody>
-  ): Promise<SearchBody[]> {
+    filter?: Partial<SearchBody>,
+    sort?: (string | { [key: string]: 'asc' | 'desc' })[]
+  ): Promise<{ bodies: SearchBody[]; total: number }> {
     const { body } = await this.elasticsearchService.search<
       SearchResult<SearchBody>
     >({
@@ -109,25 +111,19 @@ export class SearchService {
       type: name,
       ...params,
       body: {
+        sort,
         query: {
           bool: {
-            must: {
-              multi_match: {
-                query,
-                type: 'phrase_prefix',
-              },
-            },
-            ...(filter && {
-              filter: {
-                term: filter,
-              },
-            }),
+            must: getSearchFilters(query, filter),
           },
         },
       },
     });
 
-    return body.hits.hits.map((hit) => hit._source);
+    return {
+      bodies: body.hits.hits.map((hit) => hit._source),
+      total: body.hits.total.value,
+    };
   }
 
   async update<SearchBody extends BaseSearchBody>(
@@ -151,6 +147,20 @@ export class SearchService {
       index: name,
       type: name,
       id: id.toString(),
+    });
+  }
+
+  async enableFielddata(name: string, fieldName: string) {
+    await this.elasticsearchService.indices.putMapping({
+      index: name,
+      body: {
+        properties: {
+          [fieldName]: {
+            type: 'text',
+            fielddata: true,
+          },
+        },
+      },
     });
   }
 }

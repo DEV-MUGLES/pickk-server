@@ -167,7 +167,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item[]> {
-    const ids = await this.itemSearchService.search(query, pageInput);
+    const { ids } = await this.itemSearchService.search(query, pageInput);
 
     return await this.itemsService.list(
       { idIn: ids },
@@ -182,7 +182,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item[]> {
-    const ids = await this.itemSearchService.search(query, pageInput, {
+    const { ids } = await this.itemSearchService.search(query, pageInput, {
       isPurchasable: true,
     });
 

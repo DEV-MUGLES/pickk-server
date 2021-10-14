@@ -71,7 +71,7 @@ export class VideosResolver extends BaseResolver<VideoRelationType> {
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Video[]> {
-    const ids = await this.videosSearchService.search(query, pageInput);
+    const { ids } = await this.videosSearchService.search(query, pageInput);
 
     return await this.videosService.list(
       { idIn: ids },

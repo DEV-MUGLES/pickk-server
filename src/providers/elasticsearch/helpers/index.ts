@@ -1,1 +1,1 @@
-export * from './parse-search-filter.helper';
+export * from './get-search-filters.helper';

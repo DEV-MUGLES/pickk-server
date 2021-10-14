@@ -1,6 +1,6 @@
-export type SearchResult<SearchBody extends { id: number }> = {
+export type SearchResult<SearchBody extends { id: number | string }> = {
   hits: {
-    total: number;
+    total: { value: number };
     hits: Array<{
       _source: SearchBody;
     }>;

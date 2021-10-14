@@ -2,23 +2,35 @@ import { isArray } from '@common/helpers';
 
 import { SearchFilter } from '../types';
 
-export const parseSearchFilter = (
-  input: Record<string, unknown>
-): SearchFilter => {
-  if (!input) {
-    return {};
+export const getSearchFilters = (
+  query?: string,
+  input?: Record<string, unknown>
+): SearchFilter[] => {
+  const result: SearchFilter[] = [];
+
+  if (query != null) {
+    result.push({
+      multi_match: {
+        query,
+        type: 'phrase_prefix',
+      },
+    });
   }
 
-  const newFilter = Object.keys(input).reduce((acc, key) => {
+  Object.keys(input ?? {}).forEach((key) => {
     const value = input[key];
     if (/In$/.test(key) && isArray(value)) {
-      return {
-        ...acc,
-        terms: {
-          ...acc.terms,
-          [key.replace(/In$/, '')]: value,
+      result.push({
+        bool: {
+          should: value.map((v) => ({
+            match_phrase: {
+              [key.replace(/In$/, '')]: v,
+            },
+          })),
+          minimum_should_match: 1,
         },
-      };
+      });
+      return;
     }
     if (/Between$/.test(key) && isArray(value)) {
       /** sort given array, get first, second element. array values can be Date or Number */
@@ -26,71 +38,64 @@ export const parseSearchFilter = (
         return a < b ? -1 : a > b ? 1 : 0;
       });
 
-      return {
-        ...acc,
+      result.push({
         range: {
-          ...acc.range,
           [key.replace(/Between$/, '')]: {
             gte: from,
             lte: to,
           },
         },
-      };
+      });
+      return;
     }
     if (/Mt$/.test(key) && !isArray(value)) {
-      return {
-        ...acc,
+      result.push({
         range: {
-          ...acc.range,
           [key.replace(/Mt$/, '')]: {
             gt: value,
           },
         },
-      };
+      });
+      return;
     }
     if (/Mte$/.test(key) && !isArray(value)) {
-      return {
-        ...acc,
+      result.push({
         range: {
-          ...acc.range,
           [key.replace(/Mte$/, '')]: {
             gte: value,
           },
         },
-      };
+      });
+      return;
     }
     if (/Lt$/.test(key) && !isArray(value)) {
-      return {
-        ...acc,
+      result.push({
         range: {
-          ...acc.range,
           [key.replace(/Lt$/, '')]: {
             lt: value,
           },
         },
-      };
+      });
+      return;
     }
     if (/Lte$/.test(key) && !isArray(value)) {
-      return {
-        ...acc,
+      result.push({
         range: {
-          ...acc.range,
           [key.replace(/Lte$/, '')]: {
             lte: value,
           },
         },
-      };
+      });
+      return;
     }
 
     // 일반 필터
-    return {
-      ...acc,
-      term: {
-        ...acc.term,
+    result.push({
+      match_phrase: {
         [key]: value,
       },
-    };
+    });
   }, {} as SearchFilter);
 
-  return newFilter;
+  return result;
 };

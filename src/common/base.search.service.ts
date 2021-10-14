@@ -4,10 +4,10 @@ import { PageInput } from './dtos';
 
 export abstract class BaseSearchService<
   Model extends {
-    id: number;
+    id: number | string;
   },
   SearchBody extends {
-    id: number;
+    id: number | string;
   }
 > {
   abstract name: string;
@@ -52,18 +52,27 @@ export abstract class BaseSearchService<
   async search(
     query: string,
     pageInput?: PageInput,
-    filter?: Partial<SearchBody>
-  ): Promise<number[]> {
-    const sources = await this.searchService.search<SearchBody>(
+    filter?: Partial<SearchBody>,
+    sort?: (string | { [key: string]: 'asc' | 'desc' })[]
+  ): Promise<{ ids: Model['id'][]; total: number }> {
+    const searched = await this.searchService.search<SearchBody>(
       this.name,
       query,
       {
         from: pageInput?.offset ?? 0,
         size: pageInput?.limit ?? 20,
       },
-      filter
+      filter,
+      sort
     );
 
-    return sources.map((source) => source.id);
+    return {
+      ids: searched.bodies.map((source) => source.id),
+      total: searched.total,
+    };
+  }
+
+  async enableFielddata(fieldName: string) {
+    await this.searchService.enableFielddata(this.name, fieldName);
   }
 }
