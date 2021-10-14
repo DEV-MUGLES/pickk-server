@@ -257,7 +257,7 @@ export class ItemsService {
       return;
     }
     await this.itemPricesRepository.update(
-      item.prices.find(({ isActive }) => (isActive = true)).id,
+      item.prices.find(({ isActive }) => isActive === true).id,
       {
         sellPrice: salePrice,
         finalPrice: (salePrice * (100 - item.pickkDiscountRate)) / 100,
