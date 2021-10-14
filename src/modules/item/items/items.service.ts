@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import validator from 'validator';
@@ -247,11 +247,8 @@ export class ItemsService {
       throw new InvalidItemUrlException();
     }
 
-    const {
-      name,
-      salePrice,
-      originalPrice,
-    } = await this.crawlerService.crawlInfo(item.url);
+    const { name, salePrice, originalPrice } =
+      await this.crawlerService.crawlInfo(item.url);
     await this.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
