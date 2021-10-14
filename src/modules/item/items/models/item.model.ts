@@ -70,6 +70,10 @@ export class Item extends ItemEntity {
   @Field(() => [ItemSizeChart], { nullable: true })
   sizeCharts: ItemSizeChart[];
 
+  get url() {
+    return this.urls.find(({ isPrimary }) => isPrimary).url;
+  }
+
   private setPrimaryUrl = (index: number): void => {
     this.urls.forEach((url, _index) => {
       url.isPrimary = _index === index;

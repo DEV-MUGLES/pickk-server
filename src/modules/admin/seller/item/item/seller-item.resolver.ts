@@ -65,6 +65,15 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateSellerItemByCrawl(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateByCrawl(itemId);
+    return await this.itemsService.get(itemId, ['prices']);
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemOption)
   async updateItemOption(
     @IntArgs('id') id: number,

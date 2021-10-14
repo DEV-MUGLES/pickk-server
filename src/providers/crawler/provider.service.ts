@@ -14,21 +14,22 @@ import {
 
 @Injectable()
 export class CrawlerProviderService {
-  url: string;
+  private baseUrl: string;
 
   constructor(
     private readonly crawlerConfigService: CrawlerConfigService,
     private readonly httpService: HttpService
   ) {
-    this.url = this.crawlerConfigService.url;
+    this.baseUrl = this.crawlerConfigService.url;
   }
 
   async crawlInfo(url: string): Promise<ItemInfoCrawlResult> {
-    const requestUrl = new URL(this.url + '/info');
-    requestUrl.searchParams.append('url', url);
+    await this.checkUrlExisting(url);
 
     const { data } = await firstValueFrom(
-      this.httpService.get<ItemInfoCrawlResult>(requestUrl.href)
+      this.httpService.get<ItemInfoCrawlResult>(
+        `${this.baseUrl}/info?url=${encodeURI(url)}`
+      )
     );
 
     if (
@@ -46,11 +47,13 @@ export class CrawlerProviderService {
   }
 
   async crawlOption(url: string): Promise<ItemOptionCrawlResult> {
+    await this.checkUrlExisting(url);
+
     const {
       data: { values: options, optionPriceVariants },
     } = await firstValueFrom(
       this.httpService.get<CrawlItemOptionResponseDto>(
-        `${this.url}/option?url=${encodeURI(url)}`
+        `${this.baseUrl}/option?url=${encodeURI(url)}`
       )
     );
 
@@ -75,5 +78,15 @@ export class CrawlerProviderService {
     );
 
     return { options: optionDatas };
+  }
+
+  private async checkUrlExisting(url: string) {
+    try {
+      await firstValueFrom(this.httpService.get(url));
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `접근이 불가능한 URL입니다. URL: ${url}`
+      );
+    }
   }
 }

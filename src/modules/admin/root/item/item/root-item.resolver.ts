@@ -38,4 +38,14 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     await this.itemsService.updateDetailImages(itemId);
     return await this.itemsService.get(itemId, ['detailImages']);
   }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async updateRootItemByCrawl(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateByCrawl(itemId);
+    return await this.itemsService.get(itemId, ['prices']);
+  }
 }
