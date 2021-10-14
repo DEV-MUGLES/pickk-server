@@ -1632,6 +1632,7 @@ input OrderItemFilter {
 input OrderItemSearchFilter {
   claimStatus: OrderItemClaimStatus
   claimStatusIn: [OrderItemClaimStatus!]
+  claimStatusIsNull: Boolean
   confirmedAtBetween: [DateTime!]
   isConfirmed: Boolean
   isSettled: Boolean

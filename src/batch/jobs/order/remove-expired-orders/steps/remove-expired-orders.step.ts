@@ -1,12 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import dayjs from 'dayjs';
 import { In, LessThan } from 'typeorm';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
-import { OrdersRepository } from '@order/orders/orders.repository';
 import { OrderStatus } from '@order/orders/constants';
+import { OrdersRepository } from '@order/orders/orders.repository';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class RemoveExpiredOrdersStep extends BaseStep {
@@ -18,9 +23,16 @@ export class RemoveExpiredOrdersStep extends BaseStep {
   }
 
   async tasklet() {
+    const yesterdayMerchantUid =
+      dayjs().tz('Asia/Seoul').subtract(1, 'day').format('YYMMDD') +
+      '00000000000';
+
     const expiredOrders = await this.ordersRepository.find({
-      status: In([OrderStatus.Failed, OrderStatus.Pending]),
-      createdAt: LessThan(dayjs().subtract(1, 'day').toDate()),
+      relations: ['orderItems'],
+      where: {
+        status: In([OrderStatus.Failed, OrderStatus.Pending]),
+        merchantUid: LessThan(yesterdayMerchantUid),
+      },
     });
     await this.ordersRepository.remove(expiredOrders);
   }

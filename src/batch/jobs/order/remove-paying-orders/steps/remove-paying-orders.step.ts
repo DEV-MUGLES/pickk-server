@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import dayjs from 'dayjs';
 import { LessThan } from 'typeorm';
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
@@ -9,6 +11,9 @@ import { OrdersRepository } from '@order/orders/orders.repository';
 import { OrderStatus } from '@order/orders/constants';
 import { ProductsService } from '@item/products/products.service';
 import { RestockProductDto } from '@item/products/dtos';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 @Injectable()
 export class RemovePayingOrdersStep extends BaseStep {
@@ -21,11 +26,15 @@ export class RemovePayingOrdersStep extends BaseStep {
   }
 
   async tasklet() {
+    const pastMerchantUid =
+      dayjs().tz('Asia/Seoul').subtract(2, 'hour').format('YYMMDDHHmmssSSS') +
+      '00';
+
     const payingOrders = await this.ordersRepository.find({
       relations: ['orderItems'],
       where: {
         status: OrderStatus.Paying,
-        createdAt: LessThan(dayjs().subtract(2, 'hour').toDate()),
+        merchantUid: LessThan(pastMerchantUid),
       },
     });
     const restockProductDtos = payingOrders.reduce(
