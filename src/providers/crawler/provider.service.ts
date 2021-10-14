@@ -24,6 +24,8 @@ export class CrawlerProviderService {
   }
 
   async crawlInfo(url: string): Promise<ItemInfoCrawlResult> {
+    await this.checkIsExistUrl(url);
+
     const requestUrl = new URL(this.url + '/info');
     requestUrl.searchParams.append('url', url);
 
@@ -46,6 +48,8 @@ export class CrawlerProviderService {
   }
 
   async crawlOption(url: string): Promise<ItemOptionCrawlResult> {
+    await this.checkIsExistUrl(url);
+
     const {
       data: { values: options, optionPriceVariants },
     } = await firstValueFrom(
@@ -75,5 +79,15 @@ export class CrawlerProviderService {
     );
 
     return { options: optionDatas };
+  }
+
+  private async checkIsExistUrl(url: string) {
+    try {
+      await firstValueFrom(this.httpService.get(url));
+    } catch (err) {
+      throw new InternalServerErrorException(
+        `접근이 불가능한 URL입니다. URL: ${url}`
+      );
+    }
   }
 }
