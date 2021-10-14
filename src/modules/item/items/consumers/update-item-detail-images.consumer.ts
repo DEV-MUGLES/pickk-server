@@ -10,6 +10,7 @@ import { UpdateItemDetailImagesMto } from '@queue/mtos';
 import { ItemsService } from '@item/items/items.service';
 
 import { ItemDetailImageFactory } from '../factories';
+import { getItemDetailImageS3Prefix } from '../helpers';
 
 import { ItemsRepository } from '../items.repository';
 
@@ -72,7 +73,7 @@ export class UpdateItemDetailImagesConsumer extends BaseConsumer {
 
   private async uploadDetailImages(imageUrls: string[], itemId: number) {
     return (
-      await this.imagesService.uploadUrls(imageUrls, `item/${itemId}/detail`)
-    ).map(({ url }) => ItemDetailImageFactory.from(url));
+      await this.imagesService.uploadUrls(imageUrls, getItemDetailImageS3Prefix(itemId))
+    ).map(({ url },index) => ItemDetailImageFactory.from(url,index));
   }
 }

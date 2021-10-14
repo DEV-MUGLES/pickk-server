@@ -13,8 +13,7 @@ import { BrandsService } from '@item/brands/brands.service';
 
 import {
   CRAWLED_ITEM_IMAGE_S3_PREFIX,
-  ItemRelationType,
-  ITEM_DETAIL_IAMGE_S3_PREFIX,
+  ItemRelationType,  
 } from './constants';
 import {
   CreateItemInput,
@@ -31,6 +30,7 @@ import {
   ManualCreateItemInput,
 } from './dtos';
 import { ItemFactory } from './factories';
+import { getItemDetailImageS3Prefix } from './helpers';
 import { ItemPrice, Item, ItemOption, ItemDetailImage } from './models';
 
 import {
@@ -305,7 +305,7 @@ export class ItemsService {
 
     const uploadedImages = await this.imagesService.uploadUrls(
       crawlResult.images,
-      ITEM_DETAIL_IAMGE_S3_PREFIX
+      getItemDetailImageS3Prefix(item.id)
     );
     await this.addDetailImages(
       id,

@@ -15,8 +15,11 @@ export class ItemDetailImageEntity extends AbstractImageEntity {
     if (!attributes) {
       return;
     }
+
     this.item = attributes.item;
     this.itemId = attributes.itemId;
+    
+    this.order = attributes.order;
   }
 
   @ManyToOne('ItemEntity', 'detailImages', { onDelete: 'CASCADE' })

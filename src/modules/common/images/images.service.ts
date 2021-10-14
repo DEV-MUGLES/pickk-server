@@ -1,5 +1,6 @@
 import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
+import https from "https"
 import { firstValueFrom } from 'rxjs';
 
 import { AwsS3ProviderService, S3UploadResultDto } from '@providers/aws/s3';
@@ -42,10 +43,11 @@ export class ImagesService {
       urls.map(
         (url) =>
           new Promise(async (resolve, reject) => {
-            try {
+            try {            
               const { data: buffer } = await firstValueFrom(
-                this.httpService.get<Buffer>(url, {
+                this.httpService.get<Buffer>(url, {                  
                   responseType: 'arraybuffer',
+                  httpsAgent: new https.Agent({ rejectUnauthorized: false })
                 })
               );
               const mimetype = getMimeType(url);
