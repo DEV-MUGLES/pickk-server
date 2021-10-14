@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { LessThan } from 'typeorm';
+import { LessThan, Not } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { JobExecutionContext } from '@batch/models';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
+import { RefundRequestStatus } from '@order/refund-requests/constants';
 
 @Injectable()
 export class UpdateDelayedRefundRequestsStep extends BaseStep {
@@ -14,16 +14,28 @@ export class UpdateDelayedRefundRequestsStep extends BaseStep {
     super();
   }
 
-  async tasklet(context: JobExecutionContext) {
+  async tasklet() {
     const delayedRefundRequests = await this.refundRequestsRepository.find({
-      requestedAt: LessThan(dayjs().add(-5, 'day').toDate()),
+      status: RefundRequestStatus.Requested,
+      requestedAt: LessThan(dayjs().subtract(5, 'day').toDate()),
     });
 
-    delayedRefundRequests.forEach((d) => {
-      d.isProcessDelaying = true;
+    delayedRefundRequests.forEach((v) => {
+      v.isProcessDelaying = true;
     });
 
-    await this.refundRequestsRepository.save(delayedRefundRequests);
-    context.put('delayedRefundRequestCount', delayedRefundRequests.length);
+    const processedRefundRequests = await this.refundRequestsRepository.find({
+      status: Not(RefundRequestStatus.Requested),
+      isProcessDelaying: true,
+    });
+
+    processedRefundRequests.forEach((v) => {
+      v.isProcessDelaying = false;
+    });
+
+    await this.refundRequestsRepository.save([
+      ...delayedRefundRequests,
+      ...processedRefundRequests,
+    ]);
   }
 }
