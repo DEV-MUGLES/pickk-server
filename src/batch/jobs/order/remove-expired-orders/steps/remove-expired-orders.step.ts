@@ -7,6 +7,7 @@ import timezone from 'dayjs/plugin/timezone';
 
 import { BaseStep } from '@batch/jobs/base.step';
 
+import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderStatus } from '@order/orders/constants';
 import { OrdersRepository } from '@order/orders/orders.repository';
 
@@ -17,7 +18,8 @@ dayjs.extend(timezone);
 export class RemoveExpiredOrdersStep extends BaseStep {
   constructor(
     @InjectRepository(OrdersRepository)
-    private readonly ordersRepository: OrdersRepository
+    private readonly ordersRepository: OrdersRepository,
+    private readonly orderItemsProducer: OrderItemsProducer
   ) {
     super();
   }
@@ -35,5 +37,14 @@ export class RemoveExpiredOrdersStep extends BaseStep {
       },
     });
     await this.ordersRepository.remove(expiredOrders);
+
+    const orderItemMerchantUids = expiredOrders.reduce(
+      (acc, { orderItems }) => [
+        ...acc,
+        ...orderItems.map((v) => v.merchantUid),
+      ],
+      []
+    );
+    await this.orderItemsProducer.deleteOrderItemsIndex(orderItemMerchantUids);
   }
 }
