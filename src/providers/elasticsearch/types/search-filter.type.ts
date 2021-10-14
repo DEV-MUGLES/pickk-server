@@ -23,8 +23,13 @@ export type SearchRangeFilter = {
   >;
 };
 
+export type SearchExistsFilter = {
+  exists: { field: string };
+};
+
 export type SearchFilter =
   | SearchMultiMatchPrefixFilter
   | SearchMatchFilter
   | SearchInFilter
-  | SearchRangeFilter;
+  | SearchRangeFilter
+  | SearchExistsFilter;

@@ -1,4 +1,5 @@
 import { isArray } from '@common/helpers';
+import { isBoolean } from 'class-validator';
 
 import { SearchFilter } from '../types';
 
@@ -86,6 +87,16 @@ export const getSearchFilters = (
           },
         },
       });
+      return;
+    }
+    if (/IsNull$/.test(key) && isBoolean(value)) {
+      const field = key.replace(/IsNull$/, '');
+      if (value === true) {
+        result.push({ match_phrase: { [field]: null } });
+      } else {
+        result.push({ exists: { field } });
+      }
+
       return;
     }
 

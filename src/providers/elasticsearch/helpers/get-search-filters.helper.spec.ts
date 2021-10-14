@@ -104,6 +104,15 @@ describe('getSearchFilters', () => {
     ]);
   });
 
+  it('should parse isNull', () => {
+    expect(getSearchFilters(null, { statusIsNull: true })).toEqual([
+      { match_phrase: { status: null } },
+    ]);
+    expect(getSearchFilters(null, { statusIsNull: false })).toEqual([
+      { exists: { field: 'status' } },
+    ]);
+  });
+
   it('should parse multiple filters', () => {
     const query = faker.lorem.text();
 

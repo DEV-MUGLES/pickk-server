@@ -23,6 +23,8 @@ export class OrderItemSearchFilter implements Partial<IOrderItem> {
   claimStatus?: OrderItemClaimStatus;
   @Field(() => [OrderItemClaimStatus], { nullable: true })
   claimStatusIn?: OrderItemClaimStatus[];
+  @Field(() => Boolean, { nullable: true })
+  claimStatusIsNull?: boolean;
 
   @Field(() => [Date, Date], { nullable: true })
   paidAtBetween?: [Date, Date];
