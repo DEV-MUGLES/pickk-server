@@ -110,6 +110,7 @@ export class SearchService {
       index: name,
       type: name,
       ...params,
+      track_total_hits: true,
       body: {
         sort,
         query: {
