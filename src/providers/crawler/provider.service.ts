@@ -95,7 +95,6 @@ export class CrawlerProviderService {
         })
       );
     } catch (err) {
-      console.log(err);
       throw new InternalServerErrorException(
         `접근이 불가능한 URL입니다. URL: ${url}`
       );
