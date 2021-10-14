@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { LessThan } from 'typeorm';
+import { LessThan, Not } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { JobExecutionContext } from '@batch/models';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
 
 @Injectable()
 export class UpdateDelayedExchangeRequestsStep extends BaseStep {
@@ -14,16 +14,30 @@ export class UpdateDelayedExchangeRequestsStep extends BaseStep {
     super();
   }
 
-  async tasklet(context: JobExecutionContext) {
+  async tasklet() {
     const delayedExchangeRequests = await this.exchangeRequestsRepository.find({
-      requestedAt: LessThan(dayjs().add(-5, 'day').toDate()),
+      status: ExchangeRequestStatus.Requested,
+      requestedAt: LessThan(dayjs().subtract(5, 'day').toDate()),
+      isProcessDelaying: false,
     });
 
-    delayedExchangeRequests.forEach((d) => {
-      d.isProcessDelaying = true;
+    delayedExchangeRequests.forEach((v) => {
+      v.isProcessDelaying = true;
     });
 
-    await this.exchangeRequestsRepository.save(delayedExchangeRequests);
-    context.put('delayedExchangeRequestCount', delayedExchangeRequests.length);
+    const processedExchangeRequests = await this.exchangeRequestsRepository.find(
+      {
+        isProcessDelaying: true,
+        status: Not(ExchangeRequestStatus.Requested),
+      }
+    );
+    processedExchangeRequests.forEach((v) => {
+      v.isProcessDelaying = false;
+    });
+
+    await this.exchangeRequestsRepository.save([
+      ...delayedExchangeRequests,
+      ...processedExchangeRequests,
+    ]);
   }
 }
