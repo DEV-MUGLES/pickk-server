@@ -19,6 +19,8 @@ export class OrderFilter implements Partial<IOrder> {
   @IsOptional()
   status?: OrderStatus;
 
+  @Field(() => String, { nullable: true })
+  merchantUidLt?: string;
   @Field(() => [String], { nullable: true })
   merchantUidIn?: string[];
   @Field(() => [OrderStatus], {

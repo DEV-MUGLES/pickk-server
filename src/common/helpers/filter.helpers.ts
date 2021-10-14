@@ -3,6 +3,7 @@ import {
   Between,
   In,
   IsNull,
+  LessThan,
   LessThanOrEqual,
   Like,
   MoreThan,
@@ -109,6 +110,12 @@ export const parseFilter = (filter: unknown, idFilter: any = {}) => {
       return {
         ...acc,
         [key.replace(/Mte$/, '')]: MoreThanOrEqual(value),
+      };
+    }
+    if (/Lt$/.test(key)) {
+      return {
+        ...acc,
+        [key.replace(/Lt$/, '')]: LessThan(value),
       };
     }
     if (/Lte$/.test(key)) {

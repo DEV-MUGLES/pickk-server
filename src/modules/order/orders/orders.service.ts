@@ -78,7 +78,7 @@ export class OrdersService {
   async list(
     filter?: OrderFilter,
     pageInput?: PageInput,
-    relations: string[] = []
+    relations: OrderRelationType[] = []
   ): Promise<Order[]> {
     const _filter = plainToClass(OrderFilter, filter);
     const _pageInput = plainToClass(PageInput, pageInput);
