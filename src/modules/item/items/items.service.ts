@@ -243,7 +243,7 @@ export class ItemsService {
     return await this.itemsRepository.save(new Item({ ...item, ...input }));
   }
 
-  async updateByCrwal(id: number) {
+  async updateByCrawl(id: number) {
     const item = await this.get(id, ['urls', 'prices']);
     if (!validator.isURL(item.urls[0].url)) {
       throw new InternalServerErrorException('item URL이 유효하지 않습니다.');
