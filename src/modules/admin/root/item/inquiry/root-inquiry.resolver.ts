@@ -4,7 +4,6 @@ import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
-import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
 import { PageInput } from '@common/dtos';
@@ -25,6 +24,8 @@ import {
 import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 import { UserRole } from '@user/users/constants';
+import { User } from '@user/users/models';
+import { SellersService } from '@item/sellers/sellers.service';
 
 import { RootInquiryService } from './root-inquiry.service';
 
@@ -35,6 +36,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   constructor(
     private readonly inquiriesService: InquiriesService,
     private readonly rootInquiryService: RootInquiryService,
+    private readonly sellersService:SellersService,
     private cacheService: CacheService
   ) {
     super();
@@ -69,10 +71,11 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async rootInquiriesCount(
-    @CurrentUser() { sellerId }: JwtPayload,
+    @CurrentUser() { id }: User,
     @Args('forceUpdate', { nullable: true }) forceUpdate?: boolean
   ): Promise<InquiriesCountOutput> {
     if (!forceUpdate) {
+      const {id:sellerId} = await this.sellersService.findOne({ userId: id });
       const cached = await this.cacheService.get<InquiriesCountOutput>(
         InquiriesCountOutput.getCacheKey(sellerId)
       );
@@ -95,11 +98,11 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   async answerRootInquiry(
-    @CurrentUser() { sub: userId }: JwtPayload,
+    @CurrentUser() {id: userId}: User,
     @IntArgs('id') id: number,
     @Args('answerInquiryInput') input: AnswerInquiryInput,
     @Info() info?: GraphQLResolveInfo
-  ): Promise<Inquiry> {
+  ): Promise<Inquiry> {    
     await this.inquiriesService.answer(id, {
       ...input,
       userId,
