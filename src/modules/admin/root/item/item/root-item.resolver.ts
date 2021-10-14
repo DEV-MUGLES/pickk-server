@@ -42,8 +42,10 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   @Mutation(() => Item)
-  async updateRootItem(@IntArgs('itemId') itemId: number): Promise<Item> {
-    await this.itemsService.updateByCrwal(itemId);
+  async updateRootItemByCrawl(
+    @IntArgs('itemId') itemId: number
+  ): Promise<Item> {
+    await this.itemsService.updateByCrawl(itemId);
     return await this.itemsService.get(itemId, ['prices']);
   }
 }
