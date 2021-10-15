@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { JobExecutionContext } from '@batch/models';
 import { allSettled, isRejected, RejectResponse } from '@common/helpers';
 import { AlimtalkService } from '@providers/sens';
+
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { RefundRequestStatus } from '@order/refund-requests/constants';
+
+import { getDelayedCountDatas } from '../../helpers';
 
 @Injectable()
 export class SendDelayedRefundRequestsAlimtalkStep extends BaseStep {
@@ -19,27 +23,20 @@ export class SendDelayedRefundRequestsAlimtalkStep extends BaseStep {
   }
 
   async tasklet(context: JobExecutionContext) {
-    const delayedRefundRequestsRawDatas = await this.refundRequestsRepository
-      .createQueryBuilder('refundRequest')
-      .select('count(*), sellerId')
-      .leftJoinAndSelect('refundRequest.seller', 'seller')
-      .leftJoinAndSelect('seller.brand', 'brand')
-      .where('refundRequest.isProcessDelaying = true')
-      .andWhere('refundRequest.status != :status', {
-        status: RefundRequestStatus.Confirmed,
-      })
-      .groupBy('refundRequest.sellerId')
-      .getRawMany();
+    const delayedRefundRequests = await this.refundRequestsRepository.find({
+      relations: ['seller', 'seller.brand'],
+      where: {
+        isProcessDelaying: true,
+        status: In([RefundRequestStatus.Requested, RefundRequestStatus.Picked]),
+      },
+    });
 
     const settledSendDatas = await allSettled(
-      delayedRefundRequestsRawDatas.map(
-        (r) =>
+      getDelayedCountDatas(delayedRefundRequests).map(
+        ({ brandKor, delayedCount, phoneNumber }) =>
           new Promise(async (resolve, reject) => {
-            const brandKor = r.brand_nameKor;
-            const delayedCount = r['count(*)'];
-            const phoneNumber = r.seller_orderNotiPhoneNumber;
             try {
-              await this.alimtalkService.sendDelayedExchangeRequests(
+              await this.alimtalkService.sendDelayedRefundRequests(
                 { brandKor, phoneNumber },
                 delayedCount
               );
