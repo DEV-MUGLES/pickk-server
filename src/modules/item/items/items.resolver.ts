@@ -38,6 +38,10 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
   relations = ITEM_RELATIONS;
   derivedFieldsInfo: DerivedFieldsInfoType = {
     prices: ['originalPrice', 'sellPrice', 'finalPrice', 'pickkDiscountRate'],
+    itemsGroupItem: ['groupItems'],
+    'itemsGroupItem.group': ['groupItems'],
+    'itemsGroupItem.group.groupItems': ['groupItems'],
+    'itemsGroupItem.group.groupItems.item': ['groupItems'],
   };
 
   constructor(
@@ -54,7 +58,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @IntArgs('id') id: number,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    return this.itemsService.get(id, this.getRelationsFromInfo(info));
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @ResolveField(() => [ItemSizeChartMetaData], { nullable: true })

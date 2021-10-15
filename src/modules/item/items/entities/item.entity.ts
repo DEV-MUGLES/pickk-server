@@ -28,6 +28,7 @@ import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemSizeChart } from '../models/item-size-chart.model';
+import { IItemsGroupItem } from '@exhibition/items-groups/interfaces';
 
 @ObjectType()
 @Entity({
@@ -119,6 +120,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   detailImages: ItemDetailImage[];
   @OneToMany('ItemSizeChartEntity', 'item', { cascade: true })
   sizeCharts: ItemSizeChart[];
+
+  @OneToOne('ItemsGroupItemEntity', 'item')
+  itemsGroupItem: IItemsGroupItem;
 
   @Field()
   @Column()

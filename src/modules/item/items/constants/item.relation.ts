@@ -5,7 +5,10 @@ export type ItemRelationType =
   | 'brand.seller'
   | 'options.values'
   | 'products.itemOptionValues'
-  | 'products.shippingReservePolicy';
+  | 'products.shippingReservePolicy'
+  | 'itemsGroupItem.group'
+  | 'itemsGroupItem.group.groupItems'
+  | 'itemsGroupItem.group.groupItems.item';
 
 export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'brand',
@@ -24,4 +27,8 @@ export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'majorCategory',
   'minorCategory',
   'campaigns',
+  'itemsGroupItem',
+  'itemsGroupItem.group',
+  'itemsGroupItem.group.groupItems',
+  'itemsGroupItem.group.groupItems.item',
 ];

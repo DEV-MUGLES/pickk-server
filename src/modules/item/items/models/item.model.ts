@@ -8,6 +8,7 @@ import { Type } from 'class-transformer';
 
 import { ItemInfoCrawlResult } from '@providers/crawler';
 
+import { ItemsGroupItem } from '@exhibition/items-groups/models';
 import { Brand } from '@item/brands/models';
 import { Campaign } from '@item/campaigns/models';
 import { ItemCategory } from '@item/item-categories/models';
@@ -66,9 +67,21 @@ export class Item extends ItemEntity {
   @Field(() => [ItemDetailImage], { nullable: true })
   @Type(() => ItemDetailImage)
   detailImages: ItemDetailImage[];
-
   @Field(() => [ItemSizeChart], { nullable: true })
   sizeCharts: ItemSizeChart[];
+
+  @Field(() => [Item], { nullable: true })
+  @Type(() => Item)
+  get groupItems() {
+    if (!this.itemsGroupItem) {
+      return null;
+    }
+
+    return this.itemsGroupItem.group.groupItems
+      .sort((a, b) => a.order - b.order)
+      .map((v) => v.item);
+  }
+  itemsGroupItem: ItemsGroupItem;
 
   get url() {
     return this.urls.find(({ isPrimary }) => isPrimary).url;

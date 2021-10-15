@@ -913,6 +913,7 @@ type Item {
 
   """[MODEL ONLY]"""
   finalPrice: Float!
+  groupItems: [Item!]
   hitCount: Int!
   id: Int!
   imageUrl: String!
@@ -1128,6 +1129,24 @@ type ItemsExhibition {
 
   """최대 50자"""
   title: String!
+  updatedAt: DateTime!
+}
+
+type ItemsGroup {
+  createdAt: DateTime!
+  groupItems: [ItemsGroupItem!]!
+  id: Int!
+  items: [Item!]!
+  name: String!
+  updatedAt: DateTime!
+}
+
+type ItemsGroupItem {
+  createdAt: DateTime!
+  group: ItemsGroup!
+  id: Int!
+  item: Item!
+  order: Int!
   updatedAt: DateTime!
 }
 

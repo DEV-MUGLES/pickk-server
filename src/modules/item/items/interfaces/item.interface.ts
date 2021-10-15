@@ -1,5 +1,6 @@
 import { IBaseId, IImage } from '@common/interfaces';
 
+import { IItemsGroupItem } from '@exhibition/items-groups/interfaces';
 import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
 import { IItemCategory } from '@item/item-categories/interfaces';
@@ -29,6 +30,8 @@ export interface IItem extends IBaseId {
   urls: IItemUrl[];
   detailImages: IImage[];
   sizeCharts?: IItemSizeChart[];
+
+  itemsGroupItem: IItemsGroupItem;
 
   name: string;
   /** (제휴아이템만) 공식홈페이지에서 사용된 식별자입니다. */
