@@ -13,6 +13,7 @@ export class InquiryCreationTemplate extends BaseSlackTemplate {
       title,
       content,
       id,
+      orderItemMerchantUid,
       user: { email, nickname },
       createdAt,
     } = inquiry;
@@ -23,7 +24,13 @@ export class InquiryCreationTemplate extends BaseSlackTemplate {
       channel: SlackChannelName.InquiryManagement,
       blocks: this.getBlocksBuilder()
         .addText('*문의 등록 알림*')
-        .addText(`*<${rootUrl}|${title}>* \n${content}`)
+        .addText(
+          `*<${rootUrl}|${title}>* \n${content}${
+            orderItemMerchantUid
+              ? `\n*주문상품번호* : ${orderItemMerchantUid}`
+              : ''
+          }`
+        )
         .addButtons([
           { text: '주문 내역', style: 'primary', url: adminUrl },
           { text: '문의 상세', url: rootUrl },
