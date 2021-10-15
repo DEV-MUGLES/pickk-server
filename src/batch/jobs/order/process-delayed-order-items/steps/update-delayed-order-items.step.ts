@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import minMax from 'dayjs/plugin/minMax';
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { JobExecutionContext } from '@batch/models';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
 
@@ -17,39 +16,49 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
     super();
   }
 
-  async tasklet(context: JobExecutionContext) {
-    const unprocessedOrderItems = await this.orderItemsRepository.find({
-      select: [
-        'paidAt',
-        'delayedShipExpectedAt',
-        'shipReservedAt',
-        'merchantUid',
-      ],
+  async tasklet() {
+    const notProcessedOrderItems = await this.orderItemsRepository.find({
       where: {
         status: In([
           OrderItemStatus.Paid,
           OrderItemStatus.ShipReady,
           OrderItemStatus.ShipPending,
         ]),
+        claimStatus: null,
       },
     });
+    const delayedOrderItems = notProcessedOrderItems.filter(
+      ({ paidAt, delayedShipExpectedAt, shipReservedAt }) =>
+        this.isDelayed(paidAt, delayedShipExpectedAt, shipReservedAt)
+    );
 
-    const delayedOrderItems = unprocessedOrderItems.filter((oi) => {
-      const { paidAt, delayedShipExpectedAt, shipReservedAt } = oi;
-      return this.getLastDay(paidAt, delayedShipExpectedAt, shipReservedAt)
-        .add(1, 'day')
-        .isBefore(dayjs());
+    delayedOrderItems.forEach((v) => {
+      v.isProcessDelaying = true;
     });
 
-    delayedOrderItems.forEach((o) => {
-      o.isProcessDelaying = true;
+    const processedOrderItems = await this.orderItemsRepository.find({
+      where: [
+        {
+          status: In([OrderItemStatus.Shipped, OrderItemStatus.Shipping]),
+          isProcessDelaying: true,
+        },
+        {
+          claimStatus: Not(null),
+          isProcessDelaying: true,
+        },
+      ],
+    });
+    processedOrderItems.forEach((v) => {
+      v.isProcessDelaying = false;
     });
 
-    await this.orderItemsRepository.save(delayedOrderItems);
-    context.put('delayedOrderItemCount', delayedOrderItems.length);
+    await this.orderItemsRepository.save([
+      ...delayedOrderItems,
+      ...processedOrderItems,
+    ]);
   }
 
-  getLastDay(
+  private getLastDay(
     paidAt: Date,
     delayedShipExpectedAt: Date,
     shipReservedAt: Date
@@ -59,5 +68,17 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
       delayedShipExpectedAt ? dayjs(delayedShipExpectedAt) : DEFAULT_OLD_DATE,
       shipReservedAt ? dayjs(shipReservedAt) : DEFAULT_OLD_DATE
     );
+  }
+
+  private isDelayed(
+    paidAt: Date,
+    delayedShipExpectedAt: Date,
+    shipReservedAt: Date
+  ) {
+    return this.getLastDay(
+      paidAt,
+      delayedShipExpectedAt,
+      shipReservedAt
+    ).isBefore(dayjs().subtract(1, 'day'));
   }
 }

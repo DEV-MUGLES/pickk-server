@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { JobExecutionContext } from '@batch/models';
 import { allSettled, RejectResponse, isRejected } from '@common/helpers';
 import { AlimtalkService } from '@providers/sens';
+
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
+
+import { getDelayedCountDatas } from '../../helpers';
 
 @Injectable()
 export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
@@ -19,29 +23,21 @@ export class SendDelayedExchangeRequestsAlimtalkStep extends BaseStep {
   }
 
   async tasklet(context: JobExecutionContext) {
-    const delayedExchangeRequestsRawDatas =
-      await this.exchangeRequestsRepository
-        .createQueryBuilder('exchangeRequest')
-        .select('count(*), sellerId')
-        .leftJoinAndSelect('exchangeRequest.seller', 'seller')
-        .leftJoinAndSelect('seller.brand', 'brand')
-        .where('exchangeRequest.isProcessDelaying = true')
-        .andWhere('exchangeRequest.status IN (:...status)', {
-          status: [
-            ExchangeRequestStatus.Picked,
-            ExchangeRequestStatus.Requested,
-          ],
-        })
-        .groupBy('exchangeRequest.sellerId')
-        .getRawMany();
+    const delayedExchangeRequests = await this.exchangeRequestsRepository.find({
+      relations: ['seller', 'seller.brand'],
+      where: {
+        status: In([
+          ExchangeRequestStatus.Picked,
+          ExchangeRequestStatus.Requested,
+        ]),
+        isProcessDelaying: true,
+      },
+    });
 
     const settledSendDatas = await allSettled(
-      delayedExchangeRequestsRawDatas.map(
-        (r) =>
+      getDelayedCountDatas(delayedExchangeRequests).map(
+        ({ brandKor, phoneNumber, delayedCount }) =>
           new Promise(async (resolve, reject) => {
-            const brandKor = r.brand_nameKor;
-            const delayedCount = r['count(*)'];
-            const phoneNumber = r.seller_orderNotiPhoneNumber;
             try {
               await this.alimtalkService.sendDelayedExchangeRequests(
                 { brandKor, phoneNumber },
