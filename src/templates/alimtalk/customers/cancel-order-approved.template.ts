@@ -2,7 +2,7 @@ import { AlimtalkMessageRequest } from 'nest-sens';
 
 import { Order } from '@order/orders/models';
 
-import { partialEncrypt } from '@common/helpers';
+import { addCommas, partialEncrypt } from '@common/helpers';
 import { getPurchaseItemInfo, getTotalPayAmount } from '@templates/helpers';
 
 export class CancelOrderApprovedTemplate {
@@ -41,6 +41,6 @@ export class CancelOrderApprovedTemplate {
     ▶ 구매 아이템 : ${getPurchaseItemInfo(orderItems)}
     ▶ 주문번호 : ${merchantUid}
     ▶ 배송지 : ${`${baseAddress} ${detailAddress}`} 
-    ▶ 취소금액 : ${getTotalPayAmount(orderItems)}`;
+    ▶ 취소금액 : ${addCommas(getTotalPayAmount(orderItems))}원`;
   }
 }
