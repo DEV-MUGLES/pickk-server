@@ -18,6 +18,8 @@ import { ProductsService } from '@item/products/products.service';
 import { CouponsService } from '@order/coupons/coupons.service';
 import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderClaimFaultOf } from '@order/refund-requests/constants';
+import { PointSign } from '@order/points/constants';
+import { PointsService } from '@order/points/points.service';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
@@ -37,11 +39,11 @@ import {
   StartOrderInput,
 } from './dtos';
 import { OrderFactory } from './factories';
+import { calcClaimShippingFee } from './helpers';
 import { Order } from './models';
 import { OrdersProducer } from './producers';
 
 import { OrdersRepository } from './orders.repository';
-import { calcClaimShippingFee } from './helpers';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -57,7 +59,8 @@ export class OrdersService {
     private readonly paymentsService: PaymentsService,
     private readonly usersService: UsersService,
     private readonly ordersProducer: OrdersProducer,
-    private readonly orderItemsProducer: OrderItemsProducer
+    private readonly orderItemsProducer: OrderItemsProducer,
+    private readonly pointsService: PointsService
   ) {}
 
   async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
@@ -198,7 +201,18 @@ export class OrdersService {
     }
 
     order.complete(createOrderVbankReceiptInput);
+    // @TODO: 리팩터링
+    if (order.totalUsedPointAmount) {
+      await this.pointsService.create({
+        userId: order.userId,
+        title: '포인트 결제',
+        amount: -order.totalUsedPointAmount,
+        sign: PointSign.Minus,
+        orderItemMerchantUid: null,
+      });
+    }
     const completedOrder = await this.ordersRepository.save(order);
+
     await this.ordersProducer.sendOrderCompletedAlimtalk(order);
     await this.orderItemsProducer.indexOrderItems(
       order.orderItems?.map((v) => v.merchantUid)
@@ -256,8 +270,28 @@ export class OrdersService {
       merchantUid,
       CancelPaymentInput.of(order, reason, amount, checksum)
     );
+    const cancelledOrder = await this.ordersRepository.save(order);
+
+    // @TODO: 리팩터링 - 비동기로 진행하도록
+    for (const uid of orderItemMerchantUids) {
+      const orderItem = order.orderItems.find((v) => v.merchantUid === uid);
+      if (!orderItem) {
+        return;
+      }
+
+      if (orderItem.usedPointAmount) {
+        await this.pointsService.create({
+          userId: order.userId,
+          title: '주문 취소 환급',
+          amount: orderItem.usedPointAmount,
+          sign: PointSign.Plus,
+          orderItemMerchantUid: orderItem.merchantUid,
+        });
+      }
+    }
+
     await this.orderItemsProducer.indexOrderItems(orderItemMerchantUids);
-    return await this.ordersRepository.save(order);
+    return cancelledOrder;
   }
 
   async requestRefund(

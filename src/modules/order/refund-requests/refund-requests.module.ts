@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrdersModule } from '@order/orders/orders.module';
+import { PointsModule } from '@order/points/points.module';
 import { PaymentsModule } from '@payment/payments/payments.module';
 
 import { RefundRequestsRepository } from './refund-requests.repository';
@@ -14,6 +15,7 @@ import { RefundRequestsService } from './refund-requests.service';
     forwardRef(() => OrdersModule),
     forwardRef(() => OrderItemsModule),
     PaymentsModule,
+    PointsModule,
   ],
   providers: [RefundRequestsService],
   exports: [RefundRequestsService],
