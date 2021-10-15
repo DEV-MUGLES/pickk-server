@@ -17,20 +17,21 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
   }
 
   async tasklet() {
-    const delayedOrderItems = (
-      await this.orderItemsRepository.find({
-        where: {
-          status: In([
-            OrderItemStatus.Paid,
-            OrderItemStatus.ShipReady,
-            OrderItemStatus.ShipPending,
-          ]),
-          claimStatus: null,
-        },
-      })
-    ).filter(({ paidAt, delayedShipExpectedAt, shipReservedAt }) =>
-      this.isDelayed(paidAt, delayedShipExpectedAt, shipReservedAt)
+    const notProcessedOrderItems = await this.orderItemsRepository.find({
+      where: {
+        status: In([
+          OrderItemStatus.Paid,
+          OrderItemStatus.ShipReady,
+          OrderItemStatus.ShipPending,
+        ]),
+        claimStatus: null,
+      },
+    });
+    const delayedOrderItems = notProcessedOrderItems.filter(
+      ({ paidAt, delayedShipExpectedAt, shipReservedAt }) =>
+        this.isDelayed(paidAt, delayedShipExpectedAt, shipReservedAt)
     );
+
     delayedOrderItems.forEach((v) => {
       v.isProcessDelaying = true;
     });
