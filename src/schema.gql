@@ -2069,6 +2069,7 @@ type Query {
   expectedClaimShippingFee(faultOf: OrderClaimFaultOf!, merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
   genRandomNickname: String!
   getAppleAuthCode(getAppleAuthCodeInput: GetAppleAuthCodeInput!): String!
+  groupItemIds(itemId: Int!): [Int!]
   inquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   inquiriesCount(itemId: Int!): Int!
   item(id: Int!): Item!
