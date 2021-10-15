@@ -32,11 +32,12 @@ export class InquiryCreatedTemplate {
       orderItem,
       item,
       seller: { brand },
+      id,
     } = inquiry;
     const itemInfo = inquiry.orderItem
       ? getPurchaseItemInfo(orderItem)
       : item.name;
-    const adminUrl = 'https://admin.pickk.one/inquiries/';
+    const adminUrl = `https://admin.pickk.one/inquiries/${id}`;
     return `안녕하세요! ${brand.nameKor} 담당자님, 아래 제품에 대한 고객님의 문의가 접수되었습니다. 핔 어드민 서비스를 통해 문의에 답변을 남겨주세요.
 ▶ 문의자 : ${user.nickname}
 ▶ 문의상품 : ${itemInfo}

@@ -1,17 +1,11 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 
-import { Timezone } from '@common/constants';
+import { format2Korean } from '@common/helpers';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export class ItemReportTemplate extends BaseSlackTemplate {
   static create(
@@ -19,7 +13,7 @@ export class ItemReportTemplate extends BaseSlackTemplate {
     reason: string,
     nickname: string
   ): IncomingWebhookSendArguments {
-    const { id, name, brand, originalPrice, sellPrice, urls } = item;
+    const { id, name, brand, originalPrice, sellPrice, url } = item;
     return {
       channel: SlackChannelName.ItemManagement,
       blocks: this.getBlocksBuilder()
@@ -30,10 +24,8 @@ export class ItemReportTemplate extends BaseSlackTemplate {
           `*sellPrice* :\n${sellPrice}`,
         ])
         .addSection([`*사유* :\n${reason} `, `*생성자* :\n${nickname} `])
-        .addButtons([
-          { text: '아이템 링크', url: urls[0].url, style: 'primary' },
-        ])
-        .addContext(dayjs().tz(Timezone.Seoul).format('YYYY. MM. DD. hh:mm:ss'))
+        .addButtons([{ text: '아이템 링크', url, style: 'primary' }])
+        .addContext(format2Korean(new Date()))
         .build(),
     };
   }

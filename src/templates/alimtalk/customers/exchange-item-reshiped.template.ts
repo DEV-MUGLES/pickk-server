@@ -1,6 +1,6 @@
 import { AlimtalkMessageRequest } from 'nest-sens';
 
-import { partialEncrypt } from '@common/helpers';
+import { addCommas, partialEncrypt } from '@common/helpers';
 import { getExchangeItemInfo } from '@templates/helpers';
 
 import { ExchangeRequest } from '@order/exchange-requests/models';
@@ -35,7 +35,7 @@ export class ExchangeItemReshipedTemplate {
     ▶ 주문상품번호 : ${orderItem.merchantUid}
     ▶ 운송장번호 : ${reShipment.courier.name} / ${reShipment.trackCode}
     ▶ 배송지 : ${receiver.baseAddress + ' ' + receiver.detailAddress ?? ''}
-    ▶ 구매가격 : ${orderItem.payAmount}
+    ▶ 구매가격 : ${addCommas(orderItem.payAmount)}원
     `;
   }
 }

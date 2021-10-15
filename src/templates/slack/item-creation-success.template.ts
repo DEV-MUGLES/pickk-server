@@ -1,21 +1,15 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 
-import { Timezone } from '@common/constants';
+import { format2Korean } from '@common/helpers';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Item } from '@item/items/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
 export class ItemCreationSuccessTemplate extends BaseSlackTemplate {
   static create(item: Item, nickname: string): IncomingWebhookSendArguments {
-    const { id, name, brand, originalPrice, sellPrice, urls } = item;
+    const { id, name, brand, originalPrice, sellPrice, url } = item;
 
     return {
       channel: SlackChannelName.ItemManagement,
@@ -30,11 +24,11 @@ export class ItemCreationSuccessTemplate extends BaseSlackTemplate {
         .addButtons([
           {
             text: 'URL',
-            url: urls[0].url,
+            url,
             style: 'primary',
           },
         ])
-        .addContext(dayjs().tz(Timezone.Seoul).format('YYYY. MM. DD. hh:mm:ss'))
+        .addContext(format2Korean(new Date()))
         .build(),
     };
   }
