@@ -1,17 +1,11 @@
 import { IncomingWebhookSendArguments } from '@slack/webhook';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 
-import { Timezone } from '@common/constants';
+import { format2Korean } from '@common/helpers';
 import { SlackChannelName } from '@providers/slack/constants';
 
 import { Video } from '@content/videos/models';
 
 import { BaseSlackTemplate } from './base-slack.template';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 export class VideoCreationTemplate extends BaseSlackTemplate {
   static create(video: Video): IncomingWebhookSendArguments {
@@ -32,11 +26,9 @@ export class VideoCreationTemplate extends BaseSlackTemplate {
         .addText(`*아이템*`)
         .addButtons([{ text: '핔에서 보기', url: pickkUrl, style: 'primary' }])
         .addContext(
-          `*<mailto:${email}|${email}(${nickname})>* at ${dayjs
-            .tz(createdAt, Timezone.Seoul)
-            .format('YYYY. M. D. a H:mm:ss')
-            .replace('pm', '오후')
-            .replace('am', '오전')}`
+          `*<mailto:${email}|${email}(${nickname})>* at ${format2Korean(
+            createdAt
+          )}`
         )
         .build(),
     };
