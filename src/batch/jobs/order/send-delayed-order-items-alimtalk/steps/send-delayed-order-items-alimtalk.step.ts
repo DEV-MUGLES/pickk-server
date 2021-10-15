@@ -1,12 +1,16 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { In } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { JobExecutionContext } from '@batch/models';
 import { allSettled, isRejected, RejectResponse } from '@common/helpers';
+import { AlimtalkService } from '@providers/sens';
+
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { OrderItemStatus } from '@order/order-items/constants';
-import { AlimtalkService } from '@providers/sens';
+
+import { getDelayedCountDatas } from '../../helpers';
 
 @Injectable()
 export class SendDelayedOrderItemsAlimtalkStep extends BaseStep {
@@ -19,31 +23,24 @@ export class SendDelayedOrderItemsAlimtalkStep extends BaseStep {
   }
 
   async tasklet(context: JobExecutionContext) {
-    const delayedOrderItemsRawDatas = await this.orderItemsRepository
-      .createQueryBuilder('orderItem')
-      .select('count(*), sellerId')
-      .leftJoinAndSelect('orderItem.seller', 'seller')
-      .leftJoinAndSelect('seller.brand', 'brand')
-      .where('orderItem.isProcessDelaying = true')
-      .andWhere('orderItem.status IN (:...status)', {
-        status: [
+    const delayedOrderItems = await this.orderItemsRepository.find({
+      relations: ['seller', 'seller.brand'],
+      where: {
+        status: In([
           OrderItemStatus.Paid,
           OrderItemStatus.ShipReady,
           OrderItemStatus.ShipPending,
-        ],
-      })
-      .groupBy('orderItem.sellerId')
-      .getRawMany();
+        ]),
+        isProcessDelaying: true,
+      },
+    });
 
     const settledSendDatas = await allSettled(
-      delayedOrderItemsRawDatas.map(
-        (r) =>
+      getDelayedCountDatas(delayedOrderItems).map(
+        ({ brandKor, phoneNumber, delayedCount }) =>
           new Promise(async (resolve, reject) => {
-            const brandKor = r.brand_nameKor;
-            const delayedCount = r['count(*)'];
-            const phoneNumber = r.seller_orderNotiPhoneNumber;
             try {
-              await this.alimtalkService.sendDelayedExchangeRequests(
+              await this.alimtalkService.sendDelayedOrderItems(
                 { brandKor, phoneNumber },
                 delayedCount
               );
