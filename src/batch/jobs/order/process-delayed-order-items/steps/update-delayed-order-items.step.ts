@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
 import minMax from 'dayjs/plugin/minMax';
-import { In } from 'typeorm';
+import { In, Not } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
@@ -29,22 +29,24 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
         },
       })
     ).filter(({ paidAt, delayedShipExpectedAt, shipReservedAt }) =>
-      this.getLastDay(paidAt, delayedShipExpectedAt, shipReservedAt).isBefore(
-        dayjs().subtract(1, 'day')
-      )
+      this.isDelayed(paidAt, delayedShipExpectedAt, shipReservedAt)
     );
-
     delayedOrderItems.forEach((v) => {
       v.isProcessDelaying = true;
     });
 
     const processedOrderItems = await this.orderItemsRepository.find({
-      where: {
-        status: In([OrderItemStatus.Shipped, OrderItemStatus.Shipping]),
-        isProcessDelaying: true,
-      },
+      where: [
+        {
+          status: In([OrderItemStatus.Shipped, OrderItemStatus.Shipping]),
+          isProcessDelaying: true,
+        },
+        {
+          claimStatus: Not(null),
+          isProcessDelaying: true,
+        },
+      ],
     });
-
     processedOrderItems.forEach((v) => {
       v.isProcessDelaying = false;
     });
@@ -65,5 +67,17 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
       delayedShipExpectedAt ? dayjs(delayedShipExpectedAt) : DEFAULT_OLD_DATE,
       shipReservedAt ? dayjs(shipReservedAt) : DEFAULT_OLD_DATE
     );
+  }
+
+  private isDelayed(
+    paidAt: Date,
+    delayedShipExpectedAt: Date,
+    shipReservedAt: Date
+  ) {
+    return this.getLastDay(
+      paidAt,
+      delayedShipExpectedAt,
+      shipReservedAt
+    ).isBefore(dayjs().subtract(1, 'day'));
   }
 }

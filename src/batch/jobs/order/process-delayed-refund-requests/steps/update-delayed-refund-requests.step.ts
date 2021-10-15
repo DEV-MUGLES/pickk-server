@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import dayjs from 'dayjs';
-import { LessThan, Not } from 'typeorm';
+import { In, LessThan } from 'typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
@@ -16,8 +16,18 @@ export class UpdateDelayedRefundRequestsStep extends BaseStep {
 
   async tasklet() {
     const delayedRefundRequests = await this.refundRequestsRepository.find({
-      status: RefundRequestStatus.Requested,
-      requestedAt: LessThan(dayjs().subtract(5, 'day').toDate()),
+      where: [
+        {
+          status: RefundRequestStatus.Requested,
+          requestedAt: LessThan(dayjs().subtract(5, 'day').toDate()),
+          isProcessDelaying: false,
+        },
+        {
+          status: RefundRequestStatus.Picked,
+          pickedAt: LessThan(dayjs().subtract(5, 'day').toDate()),
+          isProcessDelaying: false,
+        },
+      ],
     });
 
     delayedRefundRequests.forEach((v) => {
@@ -25,7 +35,7 @@ export class UpdateDelayedRefundRequestsStep extends BaseStep {
     });
 
     const processedRefundRequests = await this.refundRequestsRepository.find({
-      status: Not(RefundRequestStatus.Requested),
+      status: In([RefundRequestStatus.Confirmed, RefundRequestStatus.Rejected]),
       isProcessDelaying: true,
     });
 
