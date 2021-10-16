@@ -28,9 +28,11 @@ export class BrandsService {
   }
 
   async getOrCreate(input: CreateBrandInput): Promise<Brand> {
-    const existing = await this.brandsRepository.findOneEntity(input);
-    if (existing) {
-      return existing;
+    const existing = this.brandsRepository.entityToModelMany(
+      await this.brandsRepository.find(input)
+    );
+    if (existing?.length) {
+      return existing[0];
     }
 
     return await this.create(input);
