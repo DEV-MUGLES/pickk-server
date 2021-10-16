@@ -11,6 +11,14 @@ export class ItemsGroupsService {
   ) {}
 
   async findGroupItemIds(itemId: number): Promise<number[]> {
-    return await this.itemsGroupItemsRepository.findGroupItemIds(itemId);
+    const itemIds = await this.itemsGroupItemsRepository.findGroupItemIds(
+      itemId
+    );
+    // group이 존재하지 않으면 입력된 itemId만 반환한다.
+    if (!itemIds?.length) {
+      return [itemId];
+    }
+
+    return itemIds;
   }
 }
