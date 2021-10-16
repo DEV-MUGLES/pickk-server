@@ -1415,6 +1415,7 @@ type Mutation {
   requestAppInstallPoint: Boolean!
   requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
   reshipMeSellerExchangeRequest(merchantUid: String!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
+  scrapRootSeller(id: Int!): Boolean!
   setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!
   shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
