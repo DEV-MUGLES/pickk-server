@@ -9,6 +9,7 @@ export * from './object.helpers';
 export * from './page-query.helper';
 export * from './parse-number.helper';
 export * from './parse-string.helper';
+export * from './path.helper';
 export * from './promise.helpers';
 export * from './random.helpers';
 export * from './regex.helpers';

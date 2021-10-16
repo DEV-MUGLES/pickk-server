@@ -25,12 +25,12 @@ export class CrawlerProviderService {
   }
 
   async crawlInfo(url: string): Promise<ItemInfoCrawlResult> {
-    await this.checkUrlExisting(url);
+    // await this.checkUrlExisting(url);
 
+    const requestUrl = new URL(`${this.baseUrl}/info`);
+    requestUrl.searchParams.append('url', url);
     const { data } = await firstValueFrom(
-      this.httpService.get<ItemInfoCrawlResult>(
-        `${this.baseUrl}/info?url=${encodeURI(url)}`
-      )
+      this.httpService.get<ItemInfoCrawlResult>(requestUrl.href)
     );
 
     if (
@@ -48,7 +48,7 @@ export class CrawlerProviderService {
   }
 
   async crawlOption(url: string): Promise<ItemOptionCrawlResult> {
-    await this.checkUrlExisting(url);
+    // await this.checkUrlExisting(url);
 
     const {
       data: { values: options, optionPriceVariants },

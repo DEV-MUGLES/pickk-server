@@ -2,6 +2,7 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import * as cheerio from 'cheerio';
+import path from 'path';
 
 import {
   isEqualSet,
@@ -9,6 +10,7 @@ import {
   allSettled,
   FulfillResponse,
   isFulfilled,
+  getDirname,
 } from '@common/helpers';
 
 import { ScrapSellerItemUrlsDto } from './dtos';
@@ -25,15 +27,12 @@ export class SellersCrawlService {
     const startUrls = startPathNamesJoin
       .split('<>')
       .map((pathName) => baseUrl + pathName);
-    const origin = new URL(startUrls[0]).origin;
     const urlDatas = await allSettled(
       startUrls.map(
         (startUrl) =>
           new Promise(async (resolve, reject) => {
             try {
-              resolve(
-                await this.getUrlsFromPage(crawlStrategy, origin, startUrl)
-              );
+              resolve(await this.getUrlsFromPage(crawlStrategy, startUrl));
             } catch (err) {
               reject(err);
             }
@@ -51,7 +50,6 @@ export class SellersCrawlService {
 
   async getUrlsFromPage(
     crawlStrategy: ISellerCrawlStrategy,
-    origin: string,
     pageUrl: string,
     prevUrls: string[] = []
   ): Promise<string[]> {
@@ -67,7 +65,11 @@ export class SellersCrawlService {
 
     const urls = [];
     $(itemsSelector).each((_i, ele) => {
-      urls.push(origin + $(ele).attr('href'));
+      const url =
+        new URL(pageUrl).protocol +
+        '//' +
+        path.normalize(getDirname(pageUrl) + '/' + $(ele).attr('href'));
+      urls.push(url);
     });
 
     // 크롤링된 url들이 모두 전 페이지와 중복된다면 바로 escape합니다.
@@ -81,7 +83,7 @@ export class SellersCrawlService {
 
     const nextPageUrl = this.getNextPage(pageUrl, pagination, pageParam);
     return urls.concat(
-      await this.getUrlsFromPage(crawlStrategy, origin, nextPageUrl, urls)
+      await this.getUrlsFromPage(crawlStrategy, nextPageUrl, urls)
     );
   }
 
