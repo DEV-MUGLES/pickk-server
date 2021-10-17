@@ -106,12 +106,12 @@ export class OrderItem extends OrderItemEntity {
     this.markAs(OrderItemClaimStatus.Refunded);
   }
   /** to: shipping */
-  ship(shipInput: ShipOrderItemInput) {
+  ship(input: ShipOrderItemInput) {
     this.markAs(OrderItemStatus.Shipping);
     this.shipment = ShipmentFactory.create({
+      ...input,
       ownerType: ShipmentOwnerType.OrderItem,
       ownerPk: this.merchantUid,
-      ...shipInput,
     });
   }
   markExchangeRequested() {

@@ -34,7 +34,7 @@ export class ExchangeRequest extends ExchangeRequestEntity {
     this.markAs(ExchangeRequestStatus.Reshipping);
     this.reShipment = ShipmentFactory.create({
       ownerType: ShipmentOwnerType.ExchangeRequestReship,
-      ownerPk: this.merchantUid.toString(),
+      ownerPk: this.merchantUid,
       ...reshipInput,
     });
   }

@@ -40,7 +40,7 @@ export class RefundRequestFactory {
       result.shipment = ShipmentFactory.create({
         ...input.shipmentInput,
         ownerType: ShipmentOwnerType.RefundRequest,
-        ownerPk: null,
+        ownerPk: merchantUid,
       });
     }
 
