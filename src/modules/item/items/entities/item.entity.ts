@@ -16,6 +16,8 @@ import { IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
+import { IDigest } from '@content/digests/interfaces';
+import { IItemsGroupItem } from '@exhibition/items-groups/interfaces';
 import { BrandEntity } from '@item/brands/entities';
 import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
@@ -28,7 +30,6 @@ import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemPrice } from '../models/item-price.model';
 import { ItemSizeChart } from '../models/item-size-chart.model';
-import { IItemsGroupItem } from '@exhibition/items-groups/interfaces';
 
 @ObjectType()
 @Entity({
@@ -50,6 +51,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.options = attributes.options;
     this.products = attributes.products;
     this.campaigns = attributes.campaigns;
+
+    this.digests = attributes.digests;
 
     this.majorCategory = attributes.majorCategory;
     this.minorCategory = attributes.minorCategory;
@@ -95,6 +98,9 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @ManyToMany('CampaignEntity', 'items')
   @JoinTable()
   campaigns: ICampaign[];
+
+  @OneToMany('DigestEntity', 'item')
+  digests: IDigest[];
 
   @ManyToOne('ItemCategoryEntity', { onDelete: 'SET NULL', nullable: true })
   @JoinColumn()

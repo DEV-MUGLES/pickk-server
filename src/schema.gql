@@ -910,6 +910,7 @@ type Item {
   detailImages: [ItemDetailImage!]
   digestAverageRating: Float!
   digestCount: Int!
+  digests: [Digest!]
 
   """[MODEL ONLY]"""
   finalPrice: Float!

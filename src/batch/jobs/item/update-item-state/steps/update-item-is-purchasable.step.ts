@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
 import { BaseStep } from '@batch/jobs/base.step';
+
 import { ItemsRepository } from '@item/items/items.repository';
 
 @Injectable()
@@ -14,13 +15,25 @@ export class UpdateItemIsPurchasableStep extends BaseStep {
   }
 
   async tasklet(): Promise<void> {
-    const itemIds = (
-      await this.itemsRepository.find({
-        select: ['id'],
-        where: { isSellable: false, isPurchasable: true },
-      })
-    ).map(({ id }) => id);
+    const notPurchasables = await this.itemsRepository.find({
+      select: ['id'],
+      where: { isSellable: false, isPurchasable: true },
+    });
+    await this.itemsRepository.bulkUpdate(
+      notPurchasables.map((v) => v.id),
+      { isPurchasable: false }
+    );
 
-    await this.itemsRepository.bulkUpdate(itemIds, { isPurchasable: false });
+    const purchasables = await this.itemsRepository
+      .createQueryBuilder('item')
+      .innerJoin('item.products', 'product', 'product.isDeleted = false')
+      .innerJoin('item.digests', 'digest')
+      .where('item.isSellable = true')
+      .andWhere('item.isPurchasable = false')
+      .getMany();
+    await this.itemsRepository.bulkUpdate(
+      purchasables.map((v) => v.id),
+      { isPurchasable: true }
+    );
   }
 }

@@ -1,5 +1,6 @@
 import { IBaseId, IImage } from '@common/interfaces';
 
+import { IDigest } from '@content/digests/interfaces';
 import { IItemsGroupItem } from '@exhibition/items-groups/interfaces';
 import { IBrand } from '@item/brands/interfaces';
 import { ICampaign } from '@item/campaigns/interfaces';
@@ -19,6 +20,8 @@ export interface IItem extends IBaseId {
   options: IItemOption[];
   products: IProduct[];
   campaigns: ICampaign[];
+
+  digests: IDigest[];
 
   majorCategory?: IItemCategory;
   majorCategoryId?: number;

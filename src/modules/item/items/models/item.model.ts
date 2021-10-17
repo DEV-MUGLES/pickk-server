@@ -8,6 +8,7 @@ import { Type } from 'class-transformer';
 
 import { ItemInfoCrawlResult } from '@providers/crawler';
 
+import { Digest } from '@content/digests/models';
 import { ItemsGroupItem } from '@exhibition/items-groups/models';
 import { Brand } from '@item/brands/models';
 import { Campaign } from '@item/campaigns/models';
@@ -54,6 +55,10 @@ export class Item extends ItemEntity {
   @Field(() => [Campaign], { nullable: true })
   @Type(() => Campaign)
   campaigns: Campaign[];
+
+  @Field(() => [Digest], { nullable: true })
+  @Type(() => Digest)
+  digests: Digest[];
 
   @Field(() => ItemSalePolicy, { nullable: true })
   @Type(() => ItemSalePolicy)
