@@ -50,7 +50,6 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
   @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
   async searchRootOrderItems(
-    @Info() info?: GraphQLResolveInfo,
     @Args('query', { nullable: true }) query?: string,
     @Args('searchFilter', { nullable: true })
     filter?: OrderItemSearchFilter,
@@ -64,7 +63,7 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
     const orderItems = await this.orderItemsService.list(
       { merchantUidIn },
       pageInput,
-      this.getRelationsFromInfo(info)
+      ['order', 'order.buyer', 'order.receiver', 'shipment']
     );
 
     return { total, result: orderItems };
