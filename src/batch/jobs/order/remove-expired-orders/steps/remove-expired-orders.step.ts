@@ -25,15 +25,15 @@ export class RemoveExpiredOrdersStep extends BaseStep {
   }
 
   async tasklet() {
-    const yesterdayMerchantUid =
-      dayjs().tz('Asia/Seoul').subtract(1, 'day').format('YYMMDD') +
-      '00000000000';
+    const merchantUid =
+      dayjs().tz('Asia/Seoul').subtract(3, 'hour').format('YYMMDDHHmmss') +
+      '00000';
 
     const expiredOrders = await this.ordersRepository.find({
       relations: ['orderItems'],
       where: {
         status: In([OrderStatus.Failed, OrderStatus.Pending]),
-        merchantUid: LessThan(yesterdayMerchantUid),
+        merchantUid: LessThan(merchantUid),
       },
     });
     await this.ordersRepository.remove(expiredOrders);
