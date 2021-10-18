@@ -25,12 +25,14 @@ export class DeliveryTrackerService {
       )
     );
 
-    return progresses
-      .map(({ time, status, location }) => ({
-        time,
-        statusText: status.text,
-        locationName: location.name,
-      }))
+    const histories = progresses.map(({ time, status, location }) => ({
+      time,
+      statusText: status.text,
+      locationName: location.name,
+    }));
+
+    return histories
+      .filter((history, index) => histories.indexOf(history) === index)
       .sort((a, b) => (dayjs(a.time).isAfter(dayjs(b.time)) ? 1 : -1));
   }
 }
