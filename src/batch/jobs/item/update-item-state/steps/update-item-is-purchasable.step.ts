@@ -27,7 +27,6 @@ export class UpdateItemIsPurchasableStep extends BaseStep {
     const purchasables = await this.itemsRepository
       .createQueryBuilder('item')
       .innerJoin('item.products', 'product', 'product.isDeleted = false')
-      .innerJoin('item.digests', 'digest')
       .where('item.isSellable = true')
       .andWhere('item.isPurchasable = false')
       .getMany();
