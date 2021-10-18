@@ -43,7 +43,7 @@ export class UpdateDelayedOrderItemsStep extends BaseStep {
           isProcessDelaying: true,
         },
         {
-          claimStatus: Not(null),
+          claimStatus: Not('null'),
           isProcessDelaying: true,
         },
       ],
