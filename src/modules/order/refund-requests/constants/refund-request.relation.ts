@@ -12,6 +12,7 @@ export const REFUND_REQUEST_RELATIONS: Array<RefundRequestRelationType> = [
   'user',
   'orderItems',
   'order',
+  'order.buyer',
   'seller',
   'seller.courier',
   'seller.returnAddress',
