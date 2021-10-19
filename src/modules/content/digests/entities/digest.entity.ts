@@ -14,7 +14,7 @@ import { ILook } from '@content/looks/interfaces';
 import { IVideo } from '@content/videos/interfaces';
 import { ItemPropertyValueEntity } from '@item/item-properties/entities';
 import { ItemPropertyValue } from '@item/item-properties/models';
-import { Item } from '@item/items/models';
+import { IItem } from '@item/items/interfaces';
 import { User } from '@user/users/models';
 
 import { IDigest, IDigestImage } from '../interfaces';
@@ -60,7 +60,7 @@ export class DigestEntity extends BaseIdEntity implements IDigest {
   }
 
   @ManyToOne('ItemEntity', { onDelete: 'SET NULL', nullable: true })
-  item: Item;
+  item: IItem;
   @Field(() => Int, { nullable: true })
   @Column({ type: 'int', nullable: true })
   itemId: number;
