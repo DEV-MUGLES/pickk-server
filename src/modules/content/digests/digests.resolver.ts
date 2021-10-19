@@ -145,13 +145,14 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
   async itemsGroupDigests(
     @CurrentUser() payload: JwtPayload,
     @IntArgs('itemId') itemId: number,
+    @Args('filter', { nullable: true }) filter?: DigestFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Digest[]> {
     const itemIds = await this.itemsGroupsService.findGroupItemIds(itemId);
 
     return await this.digestsService.list(
-      { itemIdIn: itemIds } as DigestFilter,
+      { ...filter, itemIdIn: itemIds } as DigestFilter,
       pageInput,
       this.getRelationsFromInfo(info),
       payload?.sub
