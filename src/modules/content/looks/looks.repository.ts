@@ -51,8 +51,8 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
       qb = lookUserHeightQuery(qb, filter.user.heightBetween);
     }
 
-    if (filter.itemId) {
-      qb = lookItemIdQuery(qb, filter.itemId);
+    if (filter.itemId || filter.itemIdIn) {
+      qb = lookItemIdQuery(qb, filter.itemId, filter.itemIdIn);
     }
 
     if (filter.brandId) {

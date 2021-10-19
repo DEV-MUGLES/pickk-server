@@ -1310,6 +1310,9 @@ input LookFilter {
 
   """사용시 다른 필터는 무시합니다. (정렬: "score")"""
   itemId: Int
+
+  """사용시 다른 필터는 무시합니다. (정렬: "score")"""
+  itemIdIn: [Int!]
   orderBy: String = "id"
   styleTagIdIn: [Int!]
   user: LookUserFilter
@@ -2083,6 +2086,7 @@ type Query {
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
   itemsGroupDigests(itemId: Int!, pageInput: PageInput): [Digest!]!
+  itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
   keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!

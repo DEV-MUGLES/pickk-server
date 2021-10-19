@@ -20,13 +20,16 @@ export const lookBrandIdQuery = (
 // @TODO: 테스트 작성
 export const lookItemIdQuery = (
   queryBuilder: SelectQueryBuilder<LookEntity>,
-  itemId: number
+  itemId: number,
+  itemIdIn: number[]
 ) => {
+  const ids = [...(itemId ? [itemId] : []), ...(itemIdIn ? itemIdIn : [])];
+
   return queryBuilder.innerJoin(
     'digest',
     'digest',
     `digest.lookId = look.id AND 
-      digest.itemId = ${itemId}`
+      digest.itemId IN (${ids.join(', ')})`
   );
 };
 

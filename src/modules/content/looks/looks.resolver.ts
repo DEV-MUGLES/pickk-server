@@ -12,6 +12,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { LookSearchService } from '@mcommon/search/look.search.service';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { ItemsGroupsService } from '@exhibition/items-groups/items-groups.service';
 
 import { LookRelationType, LOOK_RELATIONS } from './constants';
 import { CreateLookInput, LookFilter, UpdateLookInput } from './dtos';
@@ -28,7 +29,8 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     private readonly looksService: LooksService,
     private readonly lookSearchService: LookSearchService,
     private readonly likesService: LikesService,
-    private readonly looksProducer: LooksProducer
+    private readonly looksProducer: LooksProducer,
+    private readonly itemsGroupsService: ItemsGroupsService
   ) {
     super();
   }
@@ -130,5 +132,21 @@ export class LooksResolver extends BaseResolver<LookRelationType> {
     await this.looksService.checkBelongsTo(id, userId);
     await this.looksService.remove(id);
     return true;
+  }
+
+  @Query(() => [Look])
+  @UseGuards(JwtOrNotGuard)
+  async itemsGroupLooks(
+    @IntArgs('itemId') itemId: number,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Look[]> {
+    const itemIds = await this.itemsGroupsService.findGroupItemIds(itemId);
+
+    return await this.looksService.list(
+      { itemIdIn: itemIds } as any,
+      pageInput,
+      this.getRelationsFromInfo(info)
+    );
   }
 }

@@ -31,6 +31,11 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
     nullable: true,
   })
   itemId?: number;
+  @Field(() => [Int], {
+    description: '사용시 다른 필터는 무시합니다. (정렬: "score")',
+    nullable: true,
+  })
+  itemIdIn?: number[];
   @Field(() => Int, {
     nullable: true,
   })
@@ -46,18 +51,20 @@ export class LookFilter implements Partial<Omit<ILook, 'user'>> {
       this.styleTagIdIn?.length > 0 ||
       this.user?.heightBetween != null ||
       this.itemId != null ||
-      this.brandId != null
+      this.brandId != null ||
+      this.itemIdIn?.length > 0
     );
   }
 
   get cacheKey(): string {
-    const { styleTagIdIn, user, itemId, brandId } = this;
+    const { styleTagIdIn, user, itemId, itemIdIn, brandId } = this;
 
     return JSON.stringify({
       styleTagIdIn,
       itemId,
       heightBetween: user?.heightBetween,
       brandId,
+      itemIdIn,
     });
   }
 }

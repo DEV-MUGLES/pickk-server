@@ -16,6 +16,7 @@ import { CommentsRepository } from '@content/comments/comments.repository';
 import { DigestsModule } from '@content/digests/digests.module';
 import { LikesModule } from '@content/likes/likes.module';
 import { StyleTagsModule } from '@content/style-tags/style-tags.module';
+import { ItemsGroupsModule } from '@exhibition/items-groups/items-groups.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
 import { LooksConsumers } from './consumers';
@@ -57,6 +58,7 @@ import { LooksService } from './looks.service';
     StyleTagsModule,
     DigestsModule,
     ImagesModule,
+    ItemsGroupsModule,
   ],
   providers: [
     Logger,
