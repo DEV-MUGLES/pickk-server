@@ -657,6 +657,7 @@ input DigestFilter {
   idIn: [Int!]
   item: DigestItemFilter
   itemId: Int
+  itemIdIn: [Int!]
   orderBy: String = "id"
   ratingIsNull: Boolean
   user: DigestUserFilter
@@ -2081,6 +2082,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
+  itemsGroupDigests(itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
   keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!

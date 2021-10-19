@@ -16,5 +16,6 @@ import { ItemsGroupsService } from './items-groups.service';
     ]),
   ],
   providers: [ItemsGroupsResolver, ItemsGroupsService],
+  exports: [ItemsGroupsService],
 })
 export class ItemsGroupsModule {}

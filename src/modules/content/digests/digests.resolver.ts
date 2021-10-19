@@ -12,6 +12,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { DigestsSearchService } from '@mcommon/search/digest.search.service';
 import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
+import { ItemsGroupsService } from '@exhibition/items-groups/items-groups.service';
 
 import { DigestRelationType, DIGEST_RELATIONS } from './constants';
 import { DigestFilter, CreateDigestInput, UpdateDigestInput } from './dtos';
@@ -28,7 +29,8 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     private readonly digestsService: DigestsService,
     private readonly digestsSearchService: DigestsSearchService,
     private readonly likesService: LikesService,
-    private readonly digestsProducer: DigestsProducer
+    private readonly digestsProducer: DigestsProducer,
+    private readonly itemsGroupsService: ItemsGroupsService
   ) {
     super();
   }
@@ -136,5 +138,23 @@ export class DigestsResolver extends BaseResolver<DigestRelationType> {
     await this.digestsService.checkBelongsTo(id, userId);
     await this.digestsService.remove(id);
     return true;
+  }
+
+  @Query(() => [Digest])
+  @UseGuards(JwtOrNotGuard)
+  async itemsGroupDigests(
+    @CurrentUser() payload: JwtPayload,
+    @IntArgs('itemId') itemId: number,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Digest[]> {
+    const itemIds = await this.itemsGroupsService.findGroupItemIds(itemId);
+
+    return await this.digestsService.list(
+      { itemIdIn: itemIds } as DigestFilter,
+      pageInput,
+      this.getRelationsFromInfo(info),
+      payload?.sub
+    );
   }
 }

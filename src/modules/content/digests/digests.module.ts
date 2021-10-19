@@ -27,6 +27,7 @@ import {
 } from './digests.repository';
 import { DigestsResolver } from './digests.resolver';
 import { DigestsService } from './digests.service';
+import { ItemsGroupsModule } from '@exhibition/items-groups/items-groups.module';
 
 @Module({
   imports: [
@@ -63,6 +64,7 @@ import { DigestsService } from './digests.service';
     CommentsModule,
     ItemPropertiesModule,
     ImagesModule,
+    ItemsGroupsModule,
   ],
   providers: [
     Logger,

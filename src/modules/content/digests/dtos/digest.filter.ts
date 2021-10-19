@@ -33,6 +33,8 @@ export class DigestFilter implements Partial<Omit<IDigest, 'item' | 'user'>> {
   idIn?: number[];
   @Field(() => [Int], { nullable: true })
   userIdIn?: number[];
+  @Field(() => [Int], { nullable: true })
+  itemIdIn?: number[];
   @Field(() => DigestItemFilter, { nullable: true })
   item?: DigestItemFilter;
   @Field(() => DigestUserFilter, { nullable: true })
