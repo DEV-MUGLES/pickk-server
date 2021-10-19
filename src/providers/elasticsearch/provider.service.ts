@@ -151,6 +151,18 @@ export class SearchService {
     });
   }
 
+  async clear(name: string) {
+    return await this.elasticsearchService.deleteByQuery({
+      index: name,
+      type: name,
+      body: {
+        query: {
+          match_all: {},
+        },
+      },
+    });
+  }
+
   async enableFielddata(name: string, fieldName: string) {
     await this.elasticsearchService.indices.putMapping({
       index: name,

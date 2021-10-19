@@ -18,6 +18,7 @@ export class IndexOrderItemsStep {
       'shipment',
     ]);
 
+    await this.orderItemSearchService.clear();
     await this.orderItemSearchService.bulkIndex(orderItems);
     await this.orderItemSearchService.enableFielddata('merchantUid');
   }

@@ -75,4 +75,8 @@ export abstract class BaseSearchService<
   async enableFielddata(fieldName: string) {
     await this.searchService.enableFielddata(this.name, fieldName);
   }
+
+  async clear() {
+    await this.searchService.clear(this.name);
+  }
 }

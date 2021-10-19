@@ -11,7 +11,10 @@ export type OrderItemSearchBody = Pick<
   | 'id'
   | 'merchantUid'
   | 'sellerId'
+  | 'brandNameKor'
   | 'itemName'
+  | 'recommenderId'
+  | 'recommenderNickname'
   | 'status'
   | 'claimStatus'
   | 'paidAt'
@@ -57,7 +60,10 @@ export class OrderItemSearchService extends BaseSearchService<
       id: orderItem.merchantUid,
       merchantUid: orderItem.merchantUid,
       sellerId: orderItem.sellerId,
+      brandNameKor: orderItem.brandNameKor,
       itemName: orderItem.itemName,
+      recommenderId: orderItem.recommenderId,
+      recommenderNickname: orderItem.recommenderNickname,
       status: orderItem.status,
       claimStatus: orderItem.claimStatus,
       paidAt: orderItem.paidAt,
