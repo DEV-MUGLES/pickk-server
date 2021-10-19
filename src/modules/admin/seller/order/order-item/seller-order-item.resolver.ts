@@ -206,7 +206,6 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
   @UseGuards(JwtSellerVerifyGuard)
   async searchMeSellerOrderItems(
     @CurrentUser() { sellerId }: JwtPayload,
-    @Info() info?: GraphQLResolveInfo,
     @Args('query', { nullable: true }) query?: string,
     @Args('searchFilter', { nullable: true })
     filter?: OrderItemSearchFilter,
@@ -223,7 +222,7 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     const orderItems = await this.orderItemsService.list(
       { merchantUidIn },
       pageInput,
-      this.getRelationsFromInfo(info)
+      ['order', 'order.buyer', 'order.receiver', 'shipment']
     );
 
     return { total, result: orderItems };
