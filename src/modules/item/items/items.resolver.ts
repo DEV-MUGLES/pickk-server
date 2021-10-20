@@ -1,13 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Resolver,
-  Query,
-  Info,
-  Mutation,
-  Args,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Info, Mutation, Args } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
@@ -27,8 +19,7 @@ import {
   ManualCreateItemInput,
   SetCategoryToItemInput,
 } from './dtos';
-import { getSizeChartMetaDatas } from './helpers';
-import { Item, ItemSizeChartMetaData } from './models';
+import { Item } from './models';
 import { ItemsProducer } from './producers';
 
 import { ItemsService } from './items.service';
@@ -59,19 +50,6 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @ResolveField(() => [ItemSizeChartMetaData], { nullable: true })
-  async sizeChartMetaDatas(@Parent() item: Item) {
-    if (item.majorCategory === undefined || item.minorCategory === undefined) {
-      return null;
-    }
-    const {
-      majorCategory: { code: majorCode },
-      minorCategory: { code: minorCode },
-    } = item;
-
-    return getSizeChartMetaDatas(majorCode, minorCode);
   }
 
   @Query(() => [Item])
