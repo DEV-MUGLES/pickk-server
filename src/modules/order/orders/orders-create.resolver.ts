@@ -1,4 +1,9 @@
-import { BadRequestException, Injectable, UseGuards } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  UseGuards,
+} from '@nestjs/common';
 import { Args, Info, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -16,6 +21,7 @@ import { UsersService } from '@user/users/users.service';
 import {
   CHECKOUT_ORDER_RELATIONS,
   OrderRelationType,
+  OrderStatus,
   ORDER_RELATIONS,
 } from './constants';
 import {
@@ -92,6 +98,11 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
         'spec',
       ]),
     ]);
+
+    const { VbankReady, VbankDodged, Paid } = OrderStatus;
+    if (![VbankReady, VbankDodged, Paid].includes(order.status)) {
+      throw new ConflictException('이미 결제된 주문입니다.');
+    }
 
     return OrderSheet.from(order, user, availablePointAmount, coupons);
   }
