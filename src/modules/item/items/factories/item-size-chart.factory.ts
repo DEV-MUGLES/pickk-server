@@ -5,7 +5,7 @@ import { ItemSizeChart } from '../models';
 
 export class ItemSizeChartFactory {
   static from(input: CreateItemSizeChartInput) {
-    this.checkInputValidation(input);
+    this.validate(input);
 
     return new ItemSizeChart({
       serializedLabels: JSON.stringify(input.labels),
@@ -14,13 +14,11 @@ export class ItemSizeChartFactory {
     });
   }
 
-  static checkInputValidation({
-    labels,
-    sizes,
-    recommedations,
-  }: CreateItemSizeChartInput) {
+  static validate({ labels, sizes, recommedations }: CreateItemSizeChartInput) {
     if (!sizes.every(({ values }) => values.length === labels.length)) {
-      throw new BadRequestException('size와 label의 개수가 일치하지 않습니다.');
+      throw new BadRequestException(
+        'size value의 개수와 label의 개수가 일치하지 않습니다.'
+      );
     }
 
     const sizeNames = sizes.map(({ name }) => name);
