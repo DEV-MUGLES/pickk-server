@@ -100,7 +100,7 @@ export class OrdersCreateResolver extends BaseResolver<OrderRelationType> {
     ]);
 
     const { VbankReady, VbankDodged, Paid } = OrderStatus;
-    if (![VbankReady, VbankDodged, Paid].includes(order.status)) {
+    if ([VbankReady, VbankDodged, Paid].includes(order.status)) {
       throw new ConflictException('이미 결제된 주문입니다.');
     }
 
