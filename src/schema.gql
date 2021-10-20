@@ -700,6 +700,7 @@ type DigestsExhibition {
 
 type ExchangeRequest {
   confirmedAt: DateTime
+  convertedAt: DateTime
   faultOf: OrderClaimFaultOf!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
@@ -764,6 +765,7 @@ input ExchangeRequestOrderItemFilter {
 
 """교한신청 상태입니다."""
 enum ExchangeRequestStatus {
+  Converted
   Pending
   Picked
   Rejected

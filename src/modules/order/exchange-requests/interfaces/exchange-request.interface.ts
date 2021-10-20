@@ -51,6 +51,7 @@ export interface IExchangeRequest {
   reshippingAt: Date;
   reshippedAt: Date;
   rejectedAt: Date;
+  convertedAt: Date;
 
   settledAt: Date;
 }

@@ -63,6 +63,7 @@ export class ExchangeRequestEntity implements IExchangeRequest {
     this.requestedAt = attributes.requestedAt;
     this.pickedAt = attributes.pickedAt;
     this.rejectedAt = attributes.rejectedAt;
+    this.convertedAt = attributes.convertedAt;
     this.confirmedAt = attributes.confirmedAt;
 
     this.settledAt = attributes.settledAt;
@@ -182,6 +183,9 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Field({ nullable: true })
   @Column({ nullable: true })
   rejectedAt: Date;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  convertedAt: Date;
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;

@@ -10,6 +10,8 @@ export enum ExchangeRequestStatus {
   /** 재배송 완료 */
   Reshipped = 'Reshipped',
   Rejected = 'Rejected',
+  /** 반품으로 변경됨 */
+  Converted = 'Converted',
 }
 
 registerEnumType(ExchangeRequestStatus, {

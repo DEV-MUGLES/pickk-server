@@ -42,4 +42,8 @@ export class ExchangeRequest extends ExchangeRequestEntity {
   markReshipped() {
     this.markAs(ExchangeRequestStatus.Reshipped);
   }
+  /** orderItem의 상태도 변경된다. (join 필요) */
+  markConverted() {
+    this.markAs(ExchangeRequestStatus.Converted);
+  }
 }
