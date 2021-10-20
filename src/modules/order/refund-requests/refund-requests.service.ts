@@ -5,6 +5,7 @@ import { plainToClass } from 'class-transformer';
 import { PageInput } from '@common/dtos';
 import { parseFilter } from '@common/helpers';
 
+import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
 import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrdersService } from '@order/orders/orders.service';
 import { PointSign } from '@order/points/constants';
@@ -12,7 +13,7 @@ import { PointsService } from '@order/points/points.service';
 import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentsService } from '@payment/payments/payments.service';
 
-import { RefundRequestRelationType } from './constants';
+import { OrderClaimFaultOf, RefundRequestRelationType } from './constants';
 import { RefundRequestFilter } from './dtos';
 import { RefundRequest } from './models';
 
@@ -26,7 +27,8 @@ export class RefundRequestsService {
     private readonly ordersService: OrdersService,
     private readonly paymentsService: PaymentsService,
     private readonly orderItemsProducer: OrderItemsProducer,
-    private readonly pointsService: PointsService
+    private readonly pointsService: PointsService,
+    private readonly exchangeRequestsService: ExchangeRequestsService
   ) {}
 
   async get(
@@ -93,5 +95,28 @@ export class RefundRequestsService {
       refundRequest.orderItems.map((v) => v.merchantUid)
     );
     return refundedRequest;
+  }
+
+  async convert(
+    merchantUid: string,
+    orderItemMerchantUid: string,
+    productId: number
+  ) {
+    const refundRequest = await this.get(merchantUid, ['orderItems']);
+
+    refundRequest.convert(orderItemMerchantUid);
+    await this.refundRequestsRepository.save(refundRequest);
+
+    await this.exchangeRequestsService.register(orderItemMerchantUid, {
+      reason: '반품에서 교환으로 변경',
+      faultOf: OrderClaimFaultOf.Seller,
+      productId,
+      shipmentInput: null,
+    });
+    await this.exchangeRequestsService.complete(orderItemMerchantUid);
+
+    await this.orderItemsProducer.indexOrderItems(
+      refundRequest.orderItems.map((v) => v.merchantUid)
+    );
   }
 }
