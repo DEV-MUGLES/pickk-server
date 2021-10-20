@@ -401,7 +401,7 @@ input CreateItemOptionSetInput {
 
 input CreateItemSizeChartInput {
   labels: [String!]!
-  recommedations: [ItemSizeRecommendationInput!]
+  recommendations: [ItemSizeRecommendationInput!]
   sizes: [ItemSizeInput!]!
 }
 
@@ -1079,7 +1079,7 @@ type ItemSizeChart {
   createdAt: DateTime!
   id: Int!
   labels: [String!]!
-  recommedations: [ItemSizeRecommendation!]
+  recommendations: [ItemSizeRecommendation!]
   sizes: [ItemSize!]!
   updatedAt: DateTime!
 }
@@ -2075,7 +2075,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
-  itemsGroupDigests(itemId: Int!, pageInput: PageInput): [Digest!]!
+  itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
@@ -2610,7 +2610,7 @@ input UpdateItemPriceInput {
 
 input UpdateItemSizeChartInput {
   labels: [String!]!
-  recommedations: [ItemSizeRecommendationInput!]
+  recommendations: [ItemSizeRecommendationInput!]
   sizes: [ItemSizeInput!]!
 }
 

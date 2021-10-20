@@ -19,7 +19,7 @@ export class CreateItemSizeChartInput {
   @Field(() => [ItemSizeInput])
   sizes: ItemSizeInput[];
   @Field(() => [ItemSizeRecommendationInput], { nullable: true })
-  recommedations: ItemSizeRecommendationInput[];
+  recommendations: ItemSizeRecommendationInput[];
 }
 
 @InputType()

@@ -16,7 +16,7 @@ export class ItemSizeChartEntity extends BaseIdEntity
     }
     this.serializedLabels = attributes.serializedLabels;
     this.serializedSizes = attributes.serializedSizes;
-    this.serializedRecommedations = attributes.serializedRecommedations;
+    this.serializedRecommendations = attributes.serializedRecommendations;
   }
 
   @Column()
@@ -24,5 +24,5 @@ export class ItemSizeChartEntity extends BaseIdEntity
   @Column()
   serializedSizes: string;
   @Column({ nullable: true })
-  serializedRecommedations: string;
+  serializedRecommendations: string;
 }

@@ -13,9 +13,9 @@ export class ItemSizeChart extends ItemSizeChartEntity {
     return JSON.parse(this.serializedSizes) as ItemSize[];
   }
   @Field(() => [ItemSizeRecommendation], { nullable: true })
-  get recommedations() {
+  get recommendations() {
     return JSON.parse(
-      this.serializedRecommedations
+      this.serializedRecommendations
     ) as ItemSizeRecommendation[];
   }
 }
