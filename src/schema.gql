@@ -1381,6 +1381,7 @@ type Mutation {
     shippingFee: Int!
   ): Boolean!
   convertMeSellerExchangeRequest(merchantUid: String!): ExchangeRequest!
+  convertMeSellerRefundRequest(merchantUid: String!, orderItemMerchantUid: String!, productId: Int!): RefundRequest!
   crawlItemOptionSet(itemId: Int!): Item!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!

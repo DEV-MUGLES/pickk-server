@@ -108,4 +108,25 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
 
     return true;
   }
+
+  @Mutation(() => RefundRequest)
+  @UseGuards(JwtSellerVerifyGuard)
+  async convertMeSellerRefundRequest(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('orderItemMerchantUid') orderItemMerchantUid: string,
+    @IntArgs('productId') productId: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<RefundRequest> {
+    await this.sellerRefundRequestService.checkBelongsTo(merchantUid, sellerId);
+    await this.refundRequestsService.convert(
+      merchantUid,
+      orderItemMerchantUid,
+      productId
+    );
+    return await this.refundRequestsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
+  }
 }
