@@ -69,6 +69,10 @@ export class OrderItemFilter implements Partial<IOrderItem> {
   @IsOptional()
   claimStatusIn?: OrderItemClaimStatus[];
 
+  @Field({ nullable: true })
+  @IsOptional()
+  claimStatusIsNull?: boolean;
+
   @Field(() => [Date, Date], { nullable: true })
   @IsOptional()
   paidAtBetween?: [Date, Date];

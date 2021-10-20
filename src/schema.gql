@@ -1639,6 +1639,7 @@ enum OrderItemClaimStatus {
 input OrderItemFilter {
   claimStatus: OrderItemClaimStatus
   claimStatusIn: [OrderItemClaimStatus!]
+  claimStatusIsNull: Boolean
   isConfirmed: Boolean
   isProcessDelaying: Boolean
   merchantUidIn: [String!]
@@ -2085,7 +2086,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
-  itemsGroupDigests(itemId: Int!, pageInput: PageInput): [Digest!]!
+  itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
