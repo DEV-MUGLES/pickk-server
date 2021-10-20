@@ -7,7 +7,9 @@ import { parseFilter } from '@common/helpers';
 
 import { ProductsService } from '@item/products/products.service';
 import { EXCHANGE_ORDER_ITEM_RELATIONS } from '@order/order-items/constants';
+import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderItemsService } from '@order/order-items/order-items.service';
+import { OrdersService } from '@order/orders/orders.service';
 import { PaymentsService } from '@payment/payments/payments.service';
 
 import { ExchangeRequestRelationType } from './constants';
@@ -17,13 +19,14 @@ import { ExchangeRequestFactory } from './factories';
 import { ExchangeRequest } from './models';
 
 import { ExchangeRequestsRepository } from './exchange-requests.repository';
-import { OrderItemsProducer } from '@order/order-items/producers';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 
 @Injectable()
 export class ExchangeRequestsService {
   constructor(
     @InjectRepository(ExchangeRequestsRepository)
     private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
+    private readonly ordersService: OrdersService,
     private readonly orderItemsService: OrderItemsService,
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
@@ -112,5 +115,28 @@ export class ExchangeRequestsService {
 
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([merchantUid]);
+  }
+
+  async convert(merchantUid: string) {
+    const exchangeRequest = await this.get(merchantUid, ['orderItem']);
+
+    exchangeRequest.markConverted();
+
+    if (exchangeRequest.shippingFee > 0) {
+      await this.paymentsService.cancel(merchantUid, {
+        reason: '교환신청을 반품신청으로 변경',
+        amount: exchangeRequest.shippingFee,
+      });
+    }
+
+    const { orderItem } = exchangeRequest;
+    await this.ordersService.requestRefund(orderItem.orderMerchantUid, {
+      orderItemMerchantUids: [orderItem.merchantUid],
+      faultOf: OrderClaimFaultOf.Seller,
+      reason: '교환신청에서 전환됨',
+      shipmentInput: null,
+    });
+    // @TODO: 고객에게 알림 보내야할듯? 일단 결제했던 배송비가 환불된거니까
+    await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
   }
 }

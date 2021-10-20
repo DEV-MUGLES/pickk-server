@@ -9,6 +9,7 @@ import {
 
 import { ProductsModule } from '@item/products/products.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
+import { OrdersModule } from '@order/orders/orders.module';
 import { PaymentsModule } from '@payment/payments/payments.module';
 
 import { ExchangeRequestsConsumers } from './consumers';
@@ -21,6 +22,7 @@ import { ExchangeRequestsService } from './exchange-requests.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([ExchangeRequestsRepository]),
+    OrdersModule,
     OrderItemsModule,
     SqsModule.registerQueue(
       {
