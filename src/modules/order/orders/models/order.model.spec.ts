@@ -161,7 +161,7 @@ describe('Order model', () => {
         OrderItemClaimStatus.RefundRequested
       );
       expect(order.refundRequests[0].amount).toEqual(
-        order.orderItems[0].payAmount - order.orderItems[0].shippingFee
+        order.orderItems[0].payAmount
       );
     });
 
