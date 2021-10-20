@@ -23,7 +23,4 @@ export class CreateItemSizeChartInput {
 }
 
 @InputType()
-export class UpdateItemSizeChartInput extends CreateItemSizeChartInput {
-  @Field(() => Int, { nullable: true })
-  id?: number;
-}
+export class UpdateItemSizeChartInput extends CreateItemSizeChartInput {}

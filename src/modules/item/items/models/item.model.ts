@@ -214,17 +214,17 @@ export class Item extends ItemEntity {
     return this.sizeChart;
   };
 
-  public updateSizeChart = (
-    updateSizeChartInput: UpdateItemSizeChartInput
-  ): ItemSizeChart => {
+  public updateSizeChart = (input: UpdateItemSizeChartInput): ItemSizeChart => {
     if (!this.sizeChart) {
       throw new BadRequestException('사이즈표가 존재하지 않습니다.');
     }
 
     this.sizeChart = new ItemSizeChart({
-      ...this.sizeChart,
-      ...ItemSizeChartFactory.from(updateSizeChartInput),
+      ...ItemSizeChartFactory.from(input),
+      id: this.sizeChart.id,
+      createdAt: this.sizeChart.createdAt,
     });
+
     return this.sizeChart;
   };
 
