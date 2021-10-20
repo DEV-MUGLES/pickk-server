@@ -13,26 +13,6 @@ input AddItemPriceInput {
   startAt: DateTime
 }
 
-input AddItemSizeChartInput {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  waistWidth: Float
-  watchBandDepth: Float
-}
-
 input AddItemUrlInput {
   isPrimary: Boolean!
   url: String!
@@ -417,6 +397,12 @@ input CreateItemOptionInput {
 
 input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
+}
+
+input CreateItemSizeChartInput {
+  labels: [String!]!
+  recommedations: [ItemSizeRecommendationInput!]
+  sizes: [ItemSizeInput!]!
 }
 
 input CreateLookDigestInput {
@@ -947,8 +933,7 @@ type Item {
 
   """판매가능시점(=활성전환일)"""
   sellableAt: DateTime
-  sizeChartMetaDatas: [ItemSizeChartMetaData!]
-  sizeCharts: [ItemSizeChart!]
+  sizeChart: ItemSizeChart
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -1085,33 +1070,35 @@ type ItemSalePolicy {
   updatedAt: DateTime!
 }
 
-type ItemSizeChart {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  createdAt: DateTime!
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  id: Int!
-  itemId: Int!
+type ItemSize {
   name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  updatedAt: DateTime!
-  waistWidth: Float
-  watchBandDepth: Float
+  values: [String!]!
 }
 
-type ItemSizeChartMetaData {
-  columnName: String!
-  displayName: String!
+type ItemSizeChart {
+  createdAt: DateTime!
+  id: Int!
+  labels: [String!]!
+  recommedations: [ItemSizeRecommendation!]
+  sizes: [ItemSize!]!
+  updatedAt: DateTime!
+}
+
+input ItemSizeInput {
+  name: String!
+  values: [String!]!
+}
+
+type ItemSizeRecommendation {
+  height: Float!
+  sizeName: String!
+  weight: Float!
+}
+
+input ItemSizeRecommendationInput {
+  height: Float!
+  sizeName: String!
+  weight: Float!
 }
 
 type ItemUrl {
@@ -1349,7 +1336,6 @@ type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): Item!
-  addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
@@ -1389,7 +1375,9 @@ type Mutation {
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createLook(createLookInput: CreateLookInput!): Look!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
+  createSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
   createUser(createUserInput: CreateUserInput!): User!
   createVideo(createVideoInput: CreateVideoInput!): Video!
@@ -1399,7 +1387,6 @@ type Mutation {
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!
-  modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   own(keywordId: Int!): Boolean!
   registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
@@ -1408,11 +1395,12 @@ type Mutation {
   removeInquiry(id: Int!): Boolean!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
-  removeItemSizeChartsAll(itemId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootSizeChart(itemId: Int!): Item!
+  removeSellerSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
   """정보에 오류가 있는 아이템을 신고합니다."""
@@ -1466,12 +1454,14 @@ type Mutation {
   updateRootItemByCrawl(itemId: Int!): Item!
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
+  updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
 
   """Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
+  updateSellerSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateShippingReservePolicy(productId: Int!, updateProductShippingReservePolicyInput: UpdateProductShippingReservePolicyInput!): Product!
   updateVideo(id: Int!, updateVideoInput: UpdateVideoInput!): Video!
 }
@@ -2619,24 +2609,9 @@ input UpdateItemPriceInput {
 }
 
 input UpdateItemSizeChartInput {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  id: Int
-  name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  waistWidth: Float
-  watchBandDepth: Float
+  labels: [String!]!
+  recommedations: [ItemSizeRecommendationInput!]
+  sizes: [ItemSizeInput!]!
 }
 
 input UpdateLookDigestInput {

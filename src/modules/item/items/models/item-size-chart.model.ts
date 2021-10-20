@@ -1,22 +1,39 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
-import { ItemSizeChartColumnName } from '../constants';
 import { ItemSizeChartEntity } from '../entities';
-import { IItemSizeChartMetaData } from '../interfaces';
 
 @ObjectType()
-export class ItemSizeChart extends ItemSizeChartEntity {}
-
-@ObjectType()
-export class ItemSizeChartMetaData implements IItemSizeChartMetaData {
-  constructor(attributes: IItemSizeChartMetaData) {
-    this.columnName = attributes.columnName;
-    this.displayName = attributes.displayName;
+export class ItemSizeChart extends ItemSizeChartEntity {
+  @Field(() => [String])
+  get labels() {
+    return JSON.parse(this.serializedLabels) as string[];
   }
+  @Field(() => [ItemSize])
+  get sizes() {
+    return JSON.parse(this.serializedSizes) as ItemSize[];
+  }
+  @Field(() => [ItemSizeRecommendation], { nullable: true })
+  get recommedations() {
+    return JSON.parse(
+      this.serializedRecommedations
+    ) as ItemSizeRecommendation[];
+  }
+}
 
+@ObjectType()
+export class ItemSize {
   @Field()
-  columnName: ItemSizeChartColumnName;
+  name: string;
+  @Field(() => [String])
+  values: string[];
+}
 
+@ObjectType()
+export class ItemSizeRecommendation {
   @Field()
-  displayName: string;
+  height: number;
+  @Field()
+  weight: number;
+  @Field()
+  sizeName: string;
 }
