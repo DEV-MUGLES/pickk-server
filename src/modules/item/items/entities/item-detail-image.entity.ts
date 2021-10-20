@@ -3,7 +3,7 @@ import { Field, Int, ObjectType } from '@nestjs/graphql';
 
 import { AbstractImageEntity } from '@common/entities';
 
-import { IItem } from '../interfaces';
+import { ItemEntity } from './item.entity';
 
 @ObjectType()
 @Entity({
@@ -23,7 +23,7 @@ export class ItemDetailImageEntity extends AbstractImageEntity {
   }
 
   @ManyToOne('ItemEntity', 'detailImages', { onDelete: 'CASCADE' })
-  item: IItem;
+  item: ItemEntity;
   @Field(() => Int)
   @Column()
   itemId: number;

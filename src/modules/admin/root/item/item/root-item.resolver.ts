@@ -1,6 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Resolver } from '@nestjs/graphql';
-import { GraphQLResolveInfo } from 'graphql';
+import { Mutation, Resolver } from '@nestjs/graphql';
 
 import { Roles } from '@auth/decorators';
 import { JwtAuthGuard } from '@auth/guards';
@@ -8,10 +7,6 @@ import { IntArgs } from '@common/decorators';
 import { BaseResolver } from '@common/base.resolver';
 
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
-import {
-  CreateItemSizeChartInput,
-  UpdateItemSizeChartInput,
-} from '@item/items/dtos';
 import { Item } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { UserRole } from '@user/users/constants';
@@ -52,40 +47,5 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     await this.itemsService.updateByCrawl(itemId);
     return await this.itemsService.get(itemId, ['prices']);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.Admin)
-  @Mutation(() => Item)
-  async createRootSizeChart(
-    @IntArgs('itemId') id: number,
-    @Args('input') input: CreateItemSizeChartInput,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.createSizeChart(id, input);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.Admin)
-  @Mutation(() => Item)
-  async updateRootSizeChart(
-    @IntArgs('itemId') id: number,
-    @Args('input') input: UpdateItemSizeChartInput,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.updateSizeChart(id, input);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.Admin)
-  @Mutation(() => Item)
-  async removeRootSizeChart(
-    @IntArgs('itemId') id: number,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.removeSizeChart(id);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

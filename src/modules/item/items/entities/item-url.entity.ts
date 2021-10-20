@@ -4,7 +4,8 @@ import { IsBoolean, IsUrl } from 'class-validator';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItem, IItemUrl } from '../interfaces';
+import { IItemUrl } from '../interfaces';
+import { ItemEntity } from './item.entity';
 
 @ObjectType()
 @Entity('item_url')
@@ -24,7 +25,7 @@ export class ItemUrlEntity extends BaseIdEntity implements IItemUrl {
   }
 
   @ManyToOne('ItemEntity', 'urls', { onDelete: 'CASCADE' })
-  item: IItem;
+  item: ItemEntity;
   @Field(() => Int)
   @Column()
   itemId: number;
