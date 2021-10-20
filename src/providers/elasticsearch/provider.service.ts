@@ -86,7 +86,6 @@ export class SearchService {
           {
             delete: {
               _index: name,
-              _type: name,
               _id: id.toString(),
             },
           },

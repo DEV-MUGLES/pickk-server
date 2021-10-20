@@ -1629,6 +1629,7 @@ enum OrderItemClaimStatus {
 input OrderItemFilter {
   claimStatus: OrderItemClaimStatus
   claimStatusIn: [OrderItemClaimStatus!]
+  claimStatusIsNull: Boolean
   isConfirmed: Boolean
   isProcessDelaying: Boolean
   merchantUidIn: [String!]

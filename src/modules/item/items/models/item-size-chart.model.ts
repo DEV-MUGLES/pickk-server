@@ -1,6 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 
 import { ItemSizeChartEntity } from '../entities';
+
 import { IItemSize, IItemSizeRecommendation } from '../interfaces';
 
 @ObjectType()
