@@ -3,7 +3,11 @@ import { Column, Entity } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
 
-import { IItemSizeChart } from '../interfaces';
+import {
+  IItemSize,
+  IItemSizeChart,
+  IItemSizeRecommendation,
+} from '../interfaces';
 
 @ObjectType()
 @Entity({ name: 'item_size_chart' })
@@ -14,15 +18,20 @@ export class ItemSizeChartEntity extends BaseIdEntity
     if (!attributes) {
       return;
     }
-    this.serializedLabels = attributes.serializedLabels;
-    this.serializedSizes = attributes.serializedSizes;
-    this.serializedRecommendations = attributes.serializedRecommendations;
+
+    this.labels = attributes.labels;
+    this.sizes = attributes.sizes;
+    this.recommendations = attributes.recommendations;
   }
 
-  @Column()
-  serializedLabels: string;
-  @Column()
-  serializedSizes: string;
-  @Column({ nullable: true })
-  serializedRecommendations: string;
+  @Column({
+    type: 'json',
+  })
+  labels: string[];
+  @Column({
+    type: 'json',
+  })
+  sizes: IItemSize[];
+  @Column({ type: 'json', nullable: true })
+  recommendations: IItemSizeRecommendation[];
 }

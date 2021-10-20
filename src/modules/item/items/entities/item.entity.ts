@@ -122,7 +122,11 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToOne('ItemSalePolicyEntity', { cascade: true, nullable: true })
   @JoinColumn()
   salePolicy: IItemSalePolicy;
-  @OneToOne('ItemSizeChartEntity', { cascade: true, nullable: true })
+  @OneToOne('ItemSizeChartEntity', {
+    cascade: true,
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
   @JoinColumn()
   sizeChart: IItemSizeChart;
   @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })

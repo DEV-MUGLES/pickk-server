@@ -7,11 +7,7 @@ export class ItemSizeChartFactory {
   static from(input: CreateItemSizeChartInput) {
     this.validate(input);
 
-    return new ItemSizeChart({
-      serializedLabels: JSON.stringify(input.labels),
-      serializedSizes: JSON.stringify(input.sizes),
-      serializedRecommendations: JSON.stringify(input.recommendations),
-    });
+    return new ItemSizeChart(input);
   }
 
   static validate({

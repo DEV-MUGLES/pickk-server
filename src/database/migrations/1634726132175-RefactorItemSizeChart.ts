@@ -1,11 +1,14 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class RefactorItemSizeChart1634699385609 implements MigrationInterface {
-  name = 'RefactorItemSizeChart1634699385609';
+export class RefactorItemSizeChart1634726132175 implements MigrationInterface {
+  name = 'RefactorItemSizeChart1634726132175';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      `DROP INDEX \`FK_f19e44c9f3cb1b30dce76f9b84e\` ON \`pickk_dev\`.\`item_size_chart\``
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP FOREIGN KEY \`FK_f19e44c9f3cb1b30dce76f9b84e\``
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`itemId\``
     );
     await queryRunner.query(
       `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`name\``
@@ -59,16 +62,13 @@ export class RefactorItemSizeChart1634699385609 implements MigrationInterface {
       `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`glassLegLength\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`itemId\``
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`labels\` json NOT NULL`
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`serializedLabels\` varchar(255) NOT NULL`
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`sizes\` json NOT NULL`
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`serializedSizes\` varchar(255) NOT NULL`
-    );
-    await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`serializedRecommendations\` varchar(255) NULL`
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`recommendations\` json NULL`
     );
     await queryRunner.query(
       `ALTER TABLE \`pickk_dev\`.\`item\` ADD \`sizeChartId\` int NULL`
@@ -80,11 +80,17 @@ export class RefactorItemSizeChart1634699385609 implements MigrationInterface {
       `CREATE UNIQUE INDEX \`REL_e93b9bdff4cc0fbca5fbde8ca3\` ON \`pickk_dev\`.\`item\` (\`sizeChartId\`)`
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item\` ADD CONSTRAINT \`FK_e93b9bdff4cc0fbca5fbde8ca3d\` FOREIGN KEY (\`sizeChartId\`) REFERENCES \`pickk_dev\`.\`item_size_chart\`(\`id\`) ON DELETE NO ACTION ON UPDATE NO ACTION`
+      `ALTER TABLE \`pickk_dev\`.\`item\` ADD CONSTRAINT \`FK_e93b9bdff4cc0fbca5fbde8ca3d\` FOREIGN KEY (\`sizeChartId\`) REFERENCES \`pickk_dev\`.\`item_size_chart\`(\`id\`) ON DELETE SET NULL ON UPDATE NO ACTION`
+    );
+    await queryRunner.query(
+      `DROP INDEX \`IDX_e93b9bdff4cc0fbca5fbde8ca3\` ON \`pickk_dev\`.\`item\``
     );
   }
 
   public async down(queryRunner: QueryRunner): Promise<void> {
+    await queryRunner.query(
+      `CREATE UNIQUE INDEX \`IDX_e93b9bdff4cc0fbca5fbde8ca3\` ON \`pickk_dev\`.\`item\` (\`sizeChartId\`)`
+    );
     await queryRunner.query(
       `ALTER TABLE \`pickk_dev\`.\`item\` DROP FOREIGN KEY \`FK_e93b9bdff4cc0fbca5fbde8ca3d\``
     );
@@ -98,16 +104,13 @@ export class RefactorItemSizeChart1634699385609 implements MigrationInterface {
       `ALTER TABLE \`pickk_dev\`.\`item\` DROP COLUMN \`sizeChartId\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`serializedRecommendations\``
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`recommendations\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`serializedSizes\``
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`sizes\``
     );
     await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`serializedLabels\``
-    );
-    await queryRunner.query(
-      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`itemId\` int NOT NULL`
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` DROP COLUMN \`labels\``
     );
     await queryRunner.query(
       `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`glassLegLength\` float(12) NULL`
@@ -161,7 +164,10 @@ export class RefactorItemSizeChart1634699385609 implements MigrationInterface {
       `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`name\` varchar(255) NOT NULL`
     );
     await queryRunner.query(
-      `CREATE INDEX \`FK_f19e44c9f3cb1b30dce76f9b84e\` ON \`pickk_dev\`.\`item_size_chart\` (\`itemId\`)`
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD \`itemId\` int NOT NULL`
+    );
+    await queryRunner.query(
+      `ALTER TABLE \`pickk_dev\`.\`item_size_chart\` ADD CONSTRAINT \`FK_f19e44c9f3cb1b30dce76f9b84e\` FOREIGN KEY (\`itemId\`) REFERENCES \`pickk_dev\`.\`item\`(\`id\`) ON DELETE CASCADE ON UPDATE NO ACTION`
     );
   }
 }
