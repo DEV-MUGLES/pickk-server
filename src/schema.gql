@@ -1371,6 +1371,7 @@ type Mutation {
   createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createLook(createLookInput: CreateLookInput!): Look!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
@@ -1394,6 +1395,7 @@ type Mutation {
   removeMeRefundAccount: Boolean!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootSizeChart(itemId: Int!): Item!
   removeSellerSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
@@ -1448,6 +1450,7 @@ type Mutation {
   updateRootItemByCrawl(itemId: Int!): Item!
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
+  updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
