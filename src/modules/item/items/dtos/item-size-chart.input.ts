@@ -1,34 +1,29 @@
 import { Field, InputType, Int, PickType } from '@nestjs/graphql';
 
-import { ItemSizeChart } from '../models';
+import { ItemSize, ItemSizeRecommendation } from '../models';
 
 @InputType()
-export class AddItemSizeChartInput extends PickType(
-  ItemSizeChart,
-  [
-    'accDepth',
-    'accHeight',
-    'accWidth',
-    'chestWidth',
-    'crossStrapLength',
-    'glassBridgeLength',
-    'glassLegLength',
-    'glassWidth',
-    'hemWidth',
-    'name',
-    'riseHeight',
-    'shoulderWidth',
-    'sleeveLength',
-    'thighWidth',
-    'totalLength',
-    'waistWidth',
-    'watchBandDepth',
-  ],
+class ItemSizeInput extends PickType(ItemSize, ['name', 'values'], InputType) {}
+
+@InputType()
+class ItemSizeRecommendationInput extends PickType(
+  ItemSizeRecommendation,
+  ['height', 'sizeName', 'weight'],
   InputType
 ) {}
 
 @InputType()
-export class UpdateItemSizeChartInput extends AddItemSizeChartInput {
+export class CreateItemSizeChartInput {
+  @Field(() => [String])
+  labels: string[];
+  @Field(() => [ItemSizeInput])
+  sizes: ItemSizeInput[];
+  @Field(() => [ItemSizeRecommendationInput], { nullable: true })
+  recommedations: ItemSizeRecommendationInput[];
+}
+
+@InputType()
+export class UpdateItemSizeChartInput extends CreateItemSizeChartInput {
   @Field(() => Int, { nullable: true })
   id?: number;
 }

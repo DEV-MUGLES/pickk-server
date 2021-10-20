@@ -23,7 +23,7 @@ export const ITEM_RELATIONS: Array<ItemRelationType> = [
   'products.itemOptionValues',
   'products.shippingReservePolicy',
   'prices',
-  'sizeCharts',
+  'sizeChart',
   'majorCategory',
   'minorCategory',
   'campaigns',
