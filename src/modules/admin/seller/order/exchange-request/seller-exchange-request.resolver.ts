@@ -120,4 +120,22 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
       this.getRelationsFromInfo(info)
     );
   }
+
+  @Mutation(() => ExchangeRequest)
+  @UseGuards(JwtSellerVerifyGuard)
+  async convertMeSellerExchangeRequest(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<ExchangeRequest> {
+    await this.sellerExchangeRequestService.checkBelongsTo(
+      merchantUid,
+      sellerId
+    );
+    await this.exchangeRequestsService.convert(merchantUid);
+    return await this.exchangeRequestsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
+  }
 }

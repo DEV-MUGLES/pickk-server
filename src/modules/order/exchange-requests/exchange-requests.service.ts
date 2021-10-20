@@ -121,6 +121,7 @@ export class ExchangeRequestsService {
     const exchangeRequest = await this.get(merchantUid, ['orderItem']);
 
     exchangeRequest.markConverted();
+    await this.exchangeRequestsRepository.save(exchangeRequest);
 
     if (exchangeRequest.shippingFee > 0) {
       await this.paymentsService.cancel(merchantUid, {
