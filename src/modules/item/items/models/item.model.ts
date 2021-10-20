@@ -19,11 +19,11 @@ import {
   AddItemUrlInput,
   CreateItemOptionInput,
   AddItemPriceInput,
-  AddItemSizeChartInput,
+  CreateItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from '../dtos';
 import { ItemEntity } from '../entities';
-import { ItemDetailImageFactory } from '../factories';
+import { ItemDetailImageFactory, ItemSizeChartFactory } from '../factories';
 
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
@@ -72,8 +72,9 @@ export class Item extends ItemEntity {
   @Field(() => [ItemDetailImage], { nullable: true })
   @Type(() => ItemDetailImage)
   detailImages: ItemDetailImage[];
-  @Field(() => [ItemSizeChart], { nullable: true })
-  sizeCharts: ItemSizeChart[];
+  @Field(() => ItemSizeChart, { nullable: true })
+  @Type(() => ItemSizeChart)
+  sizeChart: ItemSizeChart;
 
   @Field(() => [Item], { nullable: true })
   @Type(() => Item)
@@ -204,50 +205,27 @@ export class Item extends ItemEntity {
     ));
   };
 
-  public addSizeCharts = (
-    addItemSizeChartInputs: AddItemSizeChartInput[]
-  ): ItemSizeChart[] => {
-    this.sizeCharts = (this.sizeCharts ?? []).concat(
-      addItemSizeChartInputs.map((input) => new ItemSizeChart(input))
-    );
-    return this.sizeCharts;
+  public createSizeChart = (input: CreateItemSizeChartInput): ItemSizeChart => {
+    if (this.sizeChart) {
+      throw new BadRequestException('사이즈표가 이미 존재합니다.');
+    }
+
+    this.sizeChart = ItemSizeChartFactory.from(input);
+    return this.sizeChart;
   };
 
-  public updateSizeCharts = (
-    updateSizeChartInputs: UpdateItemSizeChartInput[]
-  ): ItemSizeChart[] => {
-    updateSizeChartInputs.forEach((input) => {
-      const index = this.sizeCharts.findIndex((v) => v.id === input.id);
-      if (index < 0) {
-        throw new NotFoundException('수정할 사이즈차트가 존재하지 않습니다.');
-      }
+  public updateSizeChart = (
+    updateSizeChartInput: UpdateItemSizeChartInput
+  ): ItemSizeChart => {
+    if (!this.sizeChart) {
+      throw new BadRequestException('사이즈표가 존재하지 않습니다.');
+    }
 
-      this.sizeCharts[index] = new ItemSizeChart({
-        ...this.sizeCharts[index],
-        ...input,
-      });
+    this.sizeChart = new ItemSizeChart({
+      ...this.sizeChart,
+      ...ItemSizeChartFactory.from(updateSizeChartInput),
     });
-    return this.sizeCharts;
-  };
-
-  public removeSizeChartsAll = (): ItemSizeChart[] => {
-    const { sizeCharts } = this;
-    if ((this.sizeCharts ?? [])?.length === 0) {
-      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
-    }
-
-    this.sizeCharts = [];
-    return sizeCharts;
-  };
-
-  public removeSizeChartsByIds = (removeIds: number[]): ItemSizeChart[] => {
-    const { sizeCharts } = this;
-    if ((this.sizeCharts ?? [])?.length === 0) {
-      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
-    }
-
-    this.sizeCharts = sizeCharts.filter((size) => !removeIds.includes(size.id));
-    return this.sizeCharts;
+    return this.sizeChart;
   };
 
   public updateByCrawlResult = (crawlData: ItemInfoCrawlResult) => {
