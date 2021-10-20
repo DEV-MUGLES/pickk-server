@@ -10,23 +10,11 @@ export class ItemSizeChartFactory {
     return new ItemSizeChart(input);
   }
 
-  static validate({
-    labels,
-    sizes,
-    recommendations,
-  }: CreateItemSizeChartInput) {
+  static validate({ labels, sizes }: CreateItemSizeChartInput) {
     if (!sizes.every(({ values }) => values.length === labels.length)) {
       throw new BadRequestException(
         'size value의 개수와 label의 개수가 일치하지 않습니다.'
       );
-    }
-
-    const sizeNames = sizes.map(({ name }) => name);
-    if (
-      recommendations &&
-      !recommendations.every(({ sizeName }) => sizeNames.includes(sizeName))
-    ) {
-      throw new BadRequestException('사이즈 추천이 잘못되었습니다.');
     }
   }
 }
