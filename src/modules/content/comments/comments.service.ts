@@ -10,7 +10,6 @@ import {
 } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
-import { LikeOwnerType } from '@content/likes/constants';
 import { LikesService } from '@content/likes/likes.service';
 
 import { CommentOwnerType, CommentRelationType } from './constants';
@@ -84,11 +83,7 @@ export class CommentsService {
       })
     );
 
-    await this.likesService.bulkEnrichLiking(
-      userId,
-      LikeOwnerType.Comment,
-      comments
-    );
+    await this.likesService.bulkEnrichCommentLiking(userId, comments);
     bulkEnrichIsMine(userId, comments);
     bulkEnrichUserIsMe(userId, comments);
 

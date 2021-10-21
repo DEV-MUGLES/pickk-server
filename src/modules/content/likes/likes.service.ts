@@ -8,6 +8,8 @@ import { plainToClass } from 'class-transformer';
 
 import { PageInput } from '@common/dtos';
 
+import { Comment } from '@content/comments/models';
+
 import { LikeOwnerType } from './constants';
 import { Like } from './models';
 import { LikeProducer } from './producers';
@@ -93,6 +95,31 @@ export class LikesService {
 
     for (const owner of owners) {
       owner.isLiking = existMap.get(owner.id);
+    }
+  }
+
+  async bulkEnrichCommentLiking(
+    userId: number,
+    comments: Comment[]
+  ): Promise<void> {
+    if (!userId) {
+      return;
+    }
+
+    const existMap = await this.bulkCheck(
+      userId,
+      LikeOwnerType.Comment,
+      comments.reduce(
+        (acc, { id, replies }) => [...acc, id, replies.map((v) => v.id)],
+        []
+      )
+    );
+
+    for (const owner of comments) {
+      owner.isLiking = existMap.get(owner.id);
+      for (const reply of owner.replies) {
+        reply.isLiking = existMap.get(reply.id);
+      }
     }
   }
 
