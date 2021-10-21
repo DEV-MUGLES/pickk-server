@@ -2151,6 +2151,7 @@ type Query {
   rootInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   rootInquiry(id: Int!): Inquiry!
   rootOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
+  rootRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
   searchAllItem(pageInput: PageInput, query: String!): [Item!]!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
@@ -2158,6 +2159,8 @@ type Query {
   searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
+  searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
+  searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
@@ -2188,6 +2191,9 @@ type RefundRequest {
   amount: Int!
   confirmedAt: DateTime
   faultOf: OrderClaimFaultOf!
+
+  """[MODEL ONLY]"""
+  id: String!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
 
@@ -2238,6 +2244,20 @@ input RefundRequestFilter {
 
 input RefundRequestOrderFilter {
   paidAtBetween: [DateTime!]
+}
+
+input RefundRequestSearchFilter {
+  confirmedAtBetween: [DateTime!]
+  isProcessDelaying: Boolean
+  isSettled: Boolean
+  orderBuyerName: String
+  pickedAtBetween: [DateTime!]
+  rejectedAtBetween: [DateTime!]
+  requestedAtBetween: [DateTime!]
+  sellerId: Int
+  settledAtBetween: [DateTime!]
+  status: RefundRequestStatus
+  statusIn: [RefundRequestStatus!]
 }
 
 """반품요청 상태입니다."""
@@ -2314,6 +2334,11 @@ input ReshipExchangeRequestInput {
 
 type SearchOrderItemsOutput {
   result: [OrderItem!]!
+  total: Int!
+}
+
+type SearchRefundRequestsOutput {
+  result: [RefundRequest!]!
   total: Int!
 }
 
