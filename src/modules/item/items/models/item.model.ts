@@ -19,8 +19,6 @@ import {
   AddItemUrlInput,
   CreateItemOptionInput,
   AddItemPriceInput,
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
 } from '../dtos';
 import { ItemEntity } from '../entities';
 import { ItemDetailImageFactory } from '../factories';
@@ -72,8 +70,9 @@ export class Item extends ItemEntity {
   @Field(() => [ItemDetailImage], { nullable: true })
   @Type(() => ItemDetailImage)
   detailImages: ItemDetailImage[];
-  @Field(() => [ItemSizeChart], { nullable: true })
-  sizeCharts: ItemSizeChart[];
+  @Field(() => ItemSizeChart, { nullable: true })
+  @Type(() => ItemSizeChart)
+  sizeChart: ItemSizeChart;
 
   @Field(() => [Item], { nullable: true })
   @Type(() => Item)
