@@ -1,5 +1,5 @@
 import { ForbiddenException, Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -226,5 +226,22 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     );
 
     return { total, result: orderItems };
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchMeSellerOrderItemsCount(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: OrderItemSearchFilter
+  ): Promise<number> {
+    const { total } = await this.orderItemSearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      { sellerId, ...filter }
+    );
+
+    return total;
   }
 }

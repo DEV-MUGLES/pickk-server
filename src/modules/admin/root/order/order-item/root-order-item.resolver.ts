@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Info, Args, Query } from '@nestjs/graphql';
+import { Info, Args, Query, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -67,5 +67,22 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
     );
 
     return { total, result: orderItems };
+  }
+
+  @Query(() => Int)
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  async searchRootOrderItemsCount(
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: OrderItemSearchFilter
+  ): Promise<number> {
+    const { total } = await this.orderItemSearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      filter
+    );
+
+    return total;
   }
 }

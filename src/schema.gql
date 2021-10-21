@@ -2156,8 +2156,10 @@ type Query {
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
   searchLook(pageInput: PageInput, query: String!): [Look!]!
   searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
+  searchMeSellerOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
+  searchRootOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
