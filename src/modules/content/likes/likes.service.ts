@@ -110,13 +110,21 @@ export class LikesService {
       userId,
       LikeOwnerType.Comment,
       comments.reduce(
-        (acc, { id, replies }) => [...acc, id, replies.map((v) => v.id)],
+        (acc, { id, replies }) => [
+          ...acc,
+          id,
+          ...(replies?.map((v) => v.id) ?? []),
+        ],
         []
       )
     );
 
     for (const owner of comments) {
       owner.isLiking = existMap.get(owner.id);
+      if (!owner.replies) {
+        continue;
+      }
+
       for (const reply of owner.replies) {
         reply.isLiking = existMap.get(reply.id);
       }
