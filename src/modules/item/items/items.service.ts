@@ -323,7 +323,7 @@ export class ItemsService {
     }
 
     const uploadedImages = await this.imagesService.uploadUrls(
-      crawlResult.images,
+      crawlResult.images.map((v) => encodeURI(v)),
       getItemDetailImageS3Prefix(item.id)
     );
     await this.addDetailImages(
