@@ -10,6 +10,8 @@ import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
 
+import { RefundRequestSearchFilter } from '@mcommon/search/dtos';
+import { RefundRequestSearchService } from '@mcommon/search/refund-request.search.service';
 import {
   RefundRequestRelationType,
   REFUND_REQUEST_RELATIONS,
@@ -18,17 +20,20 @@ import { RefundRequestFilter } from '@order/refund-requests/dtos';
 import { RefundRequest } from '@order/refund-requests/models';
 import { RefundRequestsService } from '@order/refund-requests/refund-requests.service';
 
-import { RefundRequestsCountOutput } from './dtos';
+import { RefundRequestsCountOutput, SearchRefundRequestsOutput } from './dtos';
 
 import { SellerRefundRequestService } from './seller-refund-request.service';
 
 @Injectable()
-export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelationType> {
+export class SellerRefundRequestResolver extends BaseResolver<
+  RefundRequestRelationType
+> {
   relations = REFUND_REQUEST_RELATIONS;
 
   constructor(
     private readonly refundRequestsService: RefundRequestsService,
     private readonly sellerRefundRequestService: SellerRefundRequestService,
+    private readonly refundRequestSearchService: RefundRequestSearchService,
     private cacheService: CacheService
   ) {
     super();
@@ -128,5 +133,33 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
       merchantUid,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => SearchRefundRequestsOutput)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerRefundRequests(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: RefundRequestSearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchRefundRequestsOutput> {
+    const {
+      ids: merchantUidIn,
+      total,
+    } = await this.refundRequestSearchService.search(
+      query,
+      pageInput,
+      { sellerId, ...filter },
+      [{ merchantUid: 'desc' }]
+    );
+
+    const refundRequests = await this.refundRequestsService.list(
+      { merchantUidIn },
+      null,
+      ['order', 'order.buyer', 'shipment']
+    );
+
+    return { total, result: refundRequests };
   }
 }
