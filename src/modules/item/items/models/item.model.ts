@@ -19,9 +19,11 @@ import {
   AddItemUrlInput,
   CreateItemOptionInput,
   AddItemPriceInput,
+  CreateItemSizeChartInput,
+  UpdateItemSizeChartInput,
 } from '../dtos';
 import { ItemEntity } from '../entities';
-import { ItemDetailImageFactory } from '../factories';
+import { ItemDetailImageFactory, ItemSizeChartFactory } from '../factories';
 
 import { ItemDetailImage } from './item-detail-image.model';
 import { ItemOption } from './item-option.model';
@@ -216,5 +218,27 @@ export class Item extends ItemEntity {
     });
     this.name = name;
     this.isSoldout = isSoldout;
+  };
+
+  public createSizeChart = (input: CreateItemSizeChartInput): ItemSizeChart => {
+    if (this.sizeChart) {
+      throw new BadRequestException('사이즈표가 이미 존재합니다.');
+    }
+
+    this.sizeChart = ItemSizeChartFactory.from(input);
+    return this.sizeChart;
+  };
+
+  public updateSizeChart = (input: UpdateItemSizeChartInput): ItemSizeChart => {
+    if (!this.sizeChart) {
+      throw new BadRequestException('사이즈표가 존재하지 않습니다.');
+    }
+
+    this.sizeChart = new ItemSizeChart({
+      ...ItemSizeChartFactory.from(input),
+      id: this.sizeChart.id,
+      createdAt: this.sizeChart.createdAt,
+    });
+    return this.sizeChart;
   };
 }
