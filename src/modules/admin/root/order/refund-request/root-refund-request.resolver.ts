@@ -61,7 +61,7 @@ export class RootRefundRequestResolver extends BaseResolver<
       ids: merchantUidIn,
       total,
     } = await this.refundRequestSearchService.search(query, pageInput, filter, [
-      { merchantUid: 'asc' },
+      { merchantUid: 'desc' },
     ]);
 
     const refundRequests = await this.refundRequestsService.list(
