@@ -127,6 +127,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     nullable: true,
     onDelete: 'SET NULL',
   })
+  @JoinColumn()
   sizeChart: IItemSizeChart;
   @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })
   prices: ItemPrice[];
