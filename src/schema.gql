@@ -101,6 +101,7 @@ enum BankCode {
   Shinsegae
   Sj
   SsgMoney
+  TossBank
   TossMoney
   Woori
 }
