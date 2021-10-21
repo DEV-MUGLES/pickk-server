@@ -3,6 +3,7 @@ import { SqsService } from '@pickk/nestjs-sqs';
 
 import { getRandomUuid } from '@common/helpers';
 import {
+  INDEX_REFUND_REQUEST_QUEUE,
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
   SAVE_BUYER_INFO_QUEUE,
   SEND_CANCEL_ORDER_APPROVED_ALIMTALK_QUEUE,
@@ -10,6 +11,7 @@ import {
   SEND_REFUND_REQUESTED_ALIMTALK_QUEUE,
 } from '@queue/constants';
 import {
+  IndexRefundRequestMto,
   RestoreDeductedProductStockMto,
   SaveBuyerInfoMto,
   SendCancelOrderApprovedAlimtalkMto,
@@ -77,5 +79,17 @@ export class OrdersProducer {
       id: getRandomUuid(),
       body: { userId, buyerInput },
     });
+  }
+
+  async indexRefundRequest(merchantUid: string) {
+    await this.sqsService.send<IndexRefundRequestMto>(
+      INDEX_REFUND_REQUEST_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: {
+          merchantUid,
+        },
+      }
+    );
   }
 }
