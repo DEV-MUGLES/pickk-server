@@ -14,6 +14,8 @@ export class OrderItemSearchFilter implements Partial<IOrderItem> {
   isConfirmed?: boolean;
   @Field({ nullable: true })
   isSettled?: boolean;
+  @Field({ nullable: true })
+  isProcessDelaying?: boolean;
 
   @Field(() => OrderItemStatus, { nullable: true })
   status?: OrderItemStatus;
