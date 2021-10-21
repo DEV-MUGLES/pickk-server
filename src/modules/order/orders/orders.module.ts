@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
 import {
+  INDEX_REFUND_REQUEST_QUEUE,
   PROCESS_VBANK_PAID_ORDER_QUEUE,
   RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE,
   SAVE_BUYER_INFO_QUEUE,
@@ -67,6 +68,10 @@ import { OrdersService } from './orders.service';
       },
       {
         name: SAVE_BUYER_INFO_QUEUE,
+        type: SqsQueueType.Producer,
+      },
+      {
+        name: INDEX_REFUND_REQUEST_QUEUE,
         type: SqsQueueType.Producer,
       }
     ),
