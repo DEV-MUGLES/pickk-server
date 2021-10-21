@@ -2113,7 +2113,7 @@ type Query {
   meOrder(merchantUid: String!): Order!
   meOrderItem(merchantUid: String!): OrderItem!
 
-  """VbankReady, Paid만 표시"""
+  """VbankReady, VbankDodged, Paid만 표시"""
   meOrders(pageInput: PageInput): [Order!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!
