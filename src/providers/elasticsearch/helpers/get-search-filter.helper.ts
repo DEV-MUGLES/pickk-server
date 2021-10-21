@@ -3,14 +3,15 @@ import { isBoolean } from 'class-validator';
 
 import { SearchFilter } from '../types';
 
-export const getSearchFilters = (
+export const getSearchFilter = (
   query?: string,
   input?: Record<string, unknown>
-): SearchFilter[] => {
-  const result: SearchFilter[] = [];
+): { must: SearchFilter[]; must_not: SearchFilter[] } => {
+  const must: SearchFilter[] = [];
+  const must_not: SearchFilter[] = [];
 
   if (query != null) {
-    result.push({
+    must.push({
       multi_match: {
         query,
         type: 'phrase_prefix',
@@ -21,7 +22,7 @@ export const getSearchFilters = (
   Object.keys(input ?? {}).forEach((key) => {
     const value = input[key];
     if (/In$/.test(key) && isArray(value)) {
-      result.push({
+      must.push({
         bool: {
           should: value.map((v) => ({
             match_phrase: {
@@ -39,7 +40,7 @@ export const getSearchFilters = (
         return a < b ? -1 : a > b ? 1 : 0;
       });
 
-      result.push({
+      must.push({
         range: {
           [key.replace(/Between$/, '')]: {
             gte: from,
@@ -50,7 +51,7 @@ export const getSearchFilters = (
       return;
     }
     if (/Mt$/.test(key) && !isArray(value)) {
-      result.push({
+      must.push({
         range: {
           [key.replace(/Mt$/, '')]: {
             gt: value,
@@ -60,7 +61,7 @@ export const getSearchFilters = (
       return;
     }
     if (/Mte$/.test(key) && !isArray(value)) {
-      result.push({
+      must.push({
         range: {
           [key.replace(/Mte$/, '')]: {
             gte: value,
@@ -70,7 +71,7 @@ export const getSearchFilters = (
       return;
     }
     if (/Lt$/.test(key) && !isArray(value)) {
-      result.push({
+      must.push({
         range: {
           [key.replace(/Lt$/, '')]: {
             lt: value,
@@ -80,7 +81,7 @@ export const getSearchFilters = (
       return;
     }
     if (/Lte$/.test(key) && !isArray(value)) {
-      result.push({
+      must.push({
         range: {
           [key.replace(/Lte$/, '')]: {
             lte: value,
@@ -92,21 +93,26 @@ export const getSearchFilters = (
     if (/IsNull$/.test(key) && isBoolean(value)) {
       const field = key.replace(/IsNull$/, '');
       if (value === true) {
-        result.push({ match_phrase: { [field]: null } });
+        must_not.push({ exists: { field } });
       } else {
-        result.push({ exists: { field } });
+        must.push({ exists: { field } });
       }
 
       return;
     }
 
+    // null, undefined는 처리하지 않는다.
+    if (value == null) {
+      return;
+    }
+
     // 일반 필터
-    result.push({
+    must.push({
       match_phrase: {
         [key]: value,
       },
     });
   }, {} as SearchFilter);
 
-  return result;
+  return { must, must_not };
 };

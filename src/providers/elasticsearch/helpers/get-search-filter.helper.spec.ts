@@ -1,17 +1,29 @@
 import * as faker from 'faker';
 
-import { getSearchFilters } from './get-search-filters.helper';
+import { getSearchFilter } from './get-search-filter.helper';
 
 describe('getSearchFilters', () => {
   it('should return {} when falsy params given', () => {
-    expect(getSearchFilters(null, null)).toEqual([]);
-    expect(getSearchFilters(null, undefined)).toEqual([]);
+    expect(getSearchFilter(null, null)).toEqual({ must: [], must_not: [] });
+    expect(getSearchFilter(null, undefined)).toEqual({
+      must: [],
+      must_not: [],
+    });
+  });
+
+  it('null, undefined는 처리하지 않는다.', () => {
+    const status = null;
+
+    expect(getSearchFilter(null, { status })).toEqual({
+      must: [],
+      must_not: [],
+    });
   });
 
   it('query를 성공적으로 변환한다.', () => {
     const query = faker.lorem.text();
 
-    expect(getSearchFilters(query)).toEqual([
+    expect(getSearchFilter(query).must).toEqual([
       {
         multi_match: {
           query,
@@ -29,7 +41,7 @@ describe('getSearchFilters', () => {
       faker.datatype.number(),
     ];
 
-    expect(getSearchFilters(null, { nameIn: strs })).toEqual([
+    expect(getSearchFilter(null, { nameIn: strs }).must).toEqual([
       {
         bool: {
           should: [
@@ -41,7 +53,7 @@ describe('getSearchFilters', () => {
         },
       },
     ]);
-    expect(getSearchFilters(null, { ageIn: nums })).toEqual([
+    expect(getSearchFilter(null, { ageIn: nums }).must).toEqual([
       {
         bool: {
           should: [
@@ -66,7 +78,7 @@ describe('getSearchFilters', () => {
     ];
 
     for (const input of inputs) {
-      expect(getSearchFilters(null, { nameBetween: input })).toEqual([
+      expect(getSearchFilter(null, { nameBetween: input }).must).toEqual([
         { range: { name: { gte: input[0], lte: input[1] } } },
       ]);
     }
@@ -75,7 +87,7 @@ describe('getSearchFilters', () => {
   it('should parse Mt', () => {
     const num = faker.datatype.number();
 
-    expect(getSearchFilters(null, { ageMt: num })).toEqual([
+    expect(getSearchFilter(null, { ageMt: num }).must).toEqual([
       { range: { age: { gt: num } } },
     ]);
   });
@@ -83,7 +95,7 @@ describe('getSearchFilters', () => {
   it('should parse Mte', () => {
     const num = faker.datatype.number();
 
-    expect(getSearchFilters(null, { ageMte: num })).toEqual([
+    expect(getSearchFilter(null, { ageMte: num }).must).toEqual([
       { range: { age: { gte: num } } },
     ]);
   });
@@ -91,7 +103,7 @@ describe('getSearchFilters', () => {
   it('should parse Lt', () => {
     const num = faker.datatype.number();
 
-    expect(getSearchFilters(null, { ageLt: num })).toEqual([
+    expect(getSearchFilter(null, { ageLt: num }).must).toEqual([
       { range: { age: { lt: num } } },
     ]);
   });
@@ -99,16 +111,16 @@ describe('getSearchFilters', () => {
   it('should parse Lte', () => {
     const num = faker.datatype.number();
 
-    expect(getSearchFilters(null, { ageLte: num })).toEqual([
+    expect(getSearchFilter(null, { ageLte: num }).must).toEqual([
       { range: { age: { lte: num } } },
     ]);
   });
 
   it('should parse isNull', () => {
-    expect(getSearchFilters(null, { statusIsNull: true })).toEqual([
-      { match_phrase: { status: null } },
+    expect(getSearchFilter(null, { statusIsNull: true }).must_not).toEqual([
+      { exists: { field: 'status' } },
     ]);
-    expect(getSearchFilters(null, { statusIsNull: false })).toEqual([
+    expect(getSearchFilter(null, { statusIsNull: false }).must).toEqual([
       { exists: { field: 'status' } },
     ]);
   });
@@ -124,7 +136,7 @@ describe('getSearchFilters', () => {
     ];
     const ageLte = faker.datatype.number();
 
-    expect(getSearchFilters(query, { name, idIn, ageLte })).toEqual([
+    expect(getSearchFilter(query, { name, idIn, ageLte }).must).toEqual([
       {
         multi_match: {
           query,
