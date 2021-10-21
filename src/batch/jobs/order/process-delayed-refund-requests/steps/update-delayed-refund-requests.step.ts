@@ -5,10 +5,12 @@ import { In, LessThan } from 'typeorm';
 import { BaseStep } from '@batch/jobs/base.step';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { RefundRequestStatus } from '@order/refund-requests/constants';
+import { RefundRequestsProducer } from '@order/refund-requests/producers';
 
 @Injectable()
 export class UpdateDelayedRefundRequestsStep extends BaseStep {
   constructor(
+    private readonly refundRequestsProducer: RefundRequestsProducer,
     private readonly refundRequestsRepository: RefundRequestsRepository
   ) {
     super();
@@ -43,9 +45,13 @@ export class UpdateDelayedRefundRequestsStep extends BaseStep {
       v.isProcessDelaying = false;
     });
 
-    await this.refundRequestsRepository.save([
+    const updatedRefundRequests = [
       ...delayedRefundRequests,
       ...processedRefundRequests,
-    ]);
+    ];
+    await this.refundRequestsRepository.save(updatedRefundRequests);
+    await this.refundRequestsProducer.indexRefundRequests(
+      updatedRefundRequests.map((v) => v.merchantUid)
+    );
   }
 }

@@ -8,6 +8,7 @@ import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { RefundRequestsModule } from '@order/refund-requests/refund-requests.module';
 import { ProductsModule } from '@item/products/products.module';
 
 import {
@@ -67,6 +68,7 @@ import { OrderJobsService } from './order-jobs.service';
     ]),
     ProductsModule,
     OrderItemsModule,
+    RefundRequestsModule,
   ],
   controllers: [OrderJobsController],
   providers: [
