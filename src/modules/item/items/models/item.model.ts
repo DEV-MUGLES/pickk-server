@@ -204,52 +204,6 @@ export class Item extends ItemEntity {
     ));
   };
 
-  public addSizeCharts = (
-    addItemSizeChartInputs: AddItemSizeChartInput[]
-  ): ItemSizeChart[] => {
-    this.sizeCharts = (this.sizeCharts ?? []).concat(
-      addItemSizeChartInputs.map((input) => new ItemSizeChart(input))
-    );
-    return this.sizeCharts;
-  };
-
-  public updateSizeCharts = (
-    updateSizeChartInputs: UpdateItemSizeChartInput[]
-  ): ItemSizeChart[] => {
-    updateSizeChartInputs.forEach((input) => {
-      const index = this.sizeCharts.findIndex((v) => v.id === input.id);
-      if (index < 0) {
-        throw new NotFoundException('수정할 사이즈차트가 존재하지 않습니다.');
-      }
-
-      this.sizeCharts[index] = new ItemSizeChart({
-        ...this.sizeCharts[index],
-        ...input,
-      });
-    });
-    return this.sizeCharts;
-  };
-
-  public removeSizeChartsAll = (): ItemSizeChart[] => {
-    const { sizeCharts } = this;
-    if ((this.sizeCharts ?? [])?.length === 0) {
-      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
-    }
-
-    this.sizeCharts = [];
-    return sizeCharts;
-  };
-
-  public removeSizeChartsByIds = (removeIds: number[]): ItemSizeChart[] => {
-    const { sizeCharts } = this;
-    if ((this.sizeCharts ?? [])?.length === 0) {
-      throw new NotFoundException('삭제할 사이즈 차트가 없습니다.');
-    }
-
-    this.sizeCharts = sizeCharts.filter((size) => !removeIds.includes(size.id));
-    return this.sizeCharts;
-  };
-
   public updateByCrawlResult = (crawlData: ItemInfoCrawlResult) => {
     const { originalPrice, salePrice, name, isSoldout } = crawlData;
 

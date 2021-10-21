@@ -19,8 +19,6 @@ import {
   ItemFilter,
   CreateItemOptionInput,
   UpdateItemOptionInput,
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
   AddItemPriceInput,
   UpdateItemPriceInput,
   UpdateByCrawlDatasDto,
@@ -245,8 +243,11 @@ export class ItemsService {
       throw new InvalidItemUrlException();
     }
 
-    const { name, salePrice, originalPrice } =
-      await this.crawlerService.crawlInfo(item.url);
+    const {
+      name,
+      salePrice,
+      originalPrice,
+    } = await this.crawlerService.crawlInfo(item.url);
     await this.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
@@ -359,51 +360,6 @@ export class ItemsService {
     const { options } = await this.crawlerService.crawlOption(item.url);
     await this.clearOptionSet(id);
     return await this.createOptionSet(id, options);
-  }
-
-  async addSizeCharts(
-    item: Item,
-    addItemSizeChartInputs: AddItemSizeChartInput[]
-  ): Promise<Item> {
-    if (!addItemSizeChartInputs) {
-      return item;
-    }
-    item.addSizeCharts(addItemSizeChartInputs);
-    return await this.itemsRepository.save(item);
-  }
-
-  async removeSizeChartsAll(item: Item): Promise<Item> {
-    await this.itemSizeChartsRepository.bulkDelete(
-      item.sizeCharts.map(({ id }) => id)
-    );
-    item.removeSizeChartsAll();
-    return await this.itemsRepository.save(item);
-  }
-
-  async removeSizeChartsByIds(
-    item: Item,
-    removeItemSizeChartInputs: number[]
-  ): Promise<Item> {
-    if (!removeItemSizeChartInputs) {
-      return item;
-    }
-
-    item.removeSizeChartsByIds(removeItemSizeChartInputs);
-    await this.itemSizeChartsRepository.bulkDelete(removeItemSizeChartInputs);
-
-    return await this.itemsRepository.save(item);
-  }
-
-  async updateSizeCharts(
-    item: Item,
-    updateItemSizeChartInputs: UpdateItemSizeChartInput[]
-  ): Promise<Item> {
-    if (!updateItemSizeChartInputs) {
-      return item;
-    }
-
-    item.updateSizeCharts(updateItemSizeChartInputs);
-    return await this.itemsRepository.save(item);
   }
 
   async report(id: number, reason: string, nickname: string): Promise<void> {
