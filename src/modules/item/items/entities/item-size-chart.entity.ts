@@ -11,8 +11,10 @@ import {
 
 @ObjectType()
 @Entity({ name: 'item_size_chart' })
-export class ItemSizeChartEntity extends BaseIdEntity
-  implements IItemSizeChart {
+export class ItemSizeChartEntity
+  extends BaseIdEntity
+  implements IItemSizeChart
+{
   constructor(attributes?: Partial<ItemSizeChartEntity>) {
     super(attributes);
     if (!attributes) {
