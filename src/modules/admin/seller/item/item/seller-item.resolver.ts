@@ -20,6 +20,8 @@ import {
   UpdateItemInput,
   UpdateItemOptionInput,
   ItemFilter,
+  CreateItemSizeChartInput,
+  UpdateItemSizeChartInput,
 } from '@item/items/dtos';
 import { Item, ItemOption, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
@@ -212,6 +214,38 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
     await this.itemsService.createOptionSet(id, options);
     await this.productsService.createByOptionSet(id);
 
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async createSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: CreateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.createSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: UpdateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.updateSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async removeSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.removeSizeChart(id);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }
