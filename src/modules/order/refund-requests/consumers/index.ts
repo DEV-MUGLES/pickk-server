@@ -1,3 +1,3 @@
-import { IndexRefundRequestConsumer } from './index-refund-request.consumer';
+import { IndexRefundRequestsConsumer } from './index-refund-requests.consumer';
 
-export const RefundRequestConsumers = [IndexRefundRequestConsumer];
+export const RefundRequestConsumers = [IndexRefundRequestsConsumer];

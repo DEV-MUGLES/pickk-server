@@ -305,9 +305,9 @@ export class OrdersService {
     order.requestRefund(input);
 
     await this.orderItemsProducer.indexOrderItems(input.orderItemMerchantUids);
-    await this.refundRequestsProducer.indexRefundRequest(
-      order.refundRequests[order.refundRequests.length - 1].merchantUid
-    );
+    await this.refundRequestsProducer.indexRefundRequests([
+      order.refundRequests[order.refundRequests.length - 1].merchantUid,
+    ]);
     return await this.ordersRepository.save(order);
   }
 }
