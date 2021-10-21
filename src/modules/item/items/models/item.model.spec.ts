@@ -8,14 +8,11 @@ import * as faker from 'faker';
 import {
   CreateItemOptionSetInput,
   AddItemPriceInput,
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
   AddItemUrlInput,
 } from '../dtos';
 
 import { ItemOption } from './item-option.model';
 import { ItemPrice } from './item-price.model';
-import { ItemSizeChart } from './item-size-chart.model';
 import { Item } from './item.model';
 
 describe('Item', () => {

@@ -243,11 +243,8 @@ export class ItemsService {
       throw new InvalidItemUrlException();
     }
 
-    const {
-      name,
-      salePrice,
-      originalPrice,
-    } = await this.crawlerService.crawlInfo(item.url);
+    const { name, salePrice, originalPrice } =
+      await this.crawlerService.crawlInfo(item.url);
     await this.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {

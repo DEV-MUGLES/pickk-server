@@ -34,6 +34,7 @@ export class ItemSizeChartEntity extends BaseIdEntity
   sizes: IItemSize[];
   @Column({
     type: 'json',
+    nullable: true,
   })
   recommendations: IItemSizeRecommendation[];
 }

@@ -9,7 +9,7 @@ export class ItemSizeChart extends ItemSizeChartEntity {
   labels: string[];
   @Field(() => [ItemSize])
   sizes: ItemSize[];
-  @Field(() => [ItemSizeRecommendation])
+  @Field(() => [ItemSizeRecommendation], { nullable: true })
   recommendations: ItemSizeRecommendation[];
 }
 
