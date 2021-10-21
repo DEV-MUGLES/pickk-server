@@ -1,6 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { getManager } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
 import { parseFilter } from '@common/helpers';
@@ -111,10 +110,8 @@ export class PaymentsService {
     const payment = await this.get(merchantUid);
     payment.dodgeVbank();
 
-    await getManager().transaction(async (manager) => {
-      await manager.save(payment);
-      await this.inicisService.dodgeVbank(payment);
-    });
+    await this.inicisService.dodgeVbank(payment);
+    await this.paymentsRepository.save(payment);
   }
 
   async confirmVbankPaid(payment: Payment): Promise<Payment> {
