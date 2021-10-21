@@ -1,6 +1,6 @@
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@pickk/nestjs-sqs';
 
 import { SearchModule } from '@mcommon/search/search.module';
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
@@ -11,6 +11,7 @@ import { PaymentsModule } from '@payment/payments/payments.module';
 import { INDEX_REFUND_REQUEST_QUEUE } from '@queue/constants';
 
 import { RefundRequestConsumers } from './consumers';
+import { RefundRequestsProducer } from './producers';
 
 import { RefundRequestsRepository } from './refund-requests.repository';
 import { RefundRequestsService } from './refund-requests.service';
@@ -26,10 +27,14 @@ import { RefundRequestsService } from './refund-requests.service';
     ExchangeRequestsModule,
     SqsModule.registerQueue({
       name: INDEX_REFUND_REQUEST_QUEUE,
-      type: SqsQueueType.Consumer,
     }),
   ],
-  providers: [Logger, RefundRequestsService, ...RefundRequestConsumers],
-  exports: [RefundRequestsService],
+  providers: [
+    Logger,
+    RefundRequestsService,
+    RefundRequestsProducer,
+    ...RefundRequestConsumers,
+  ],
+  exports: [RefundRequestsService, RefundRequestsProducer],
 })
 export class RefundRequestsModule {}

@@ -24,6 +24,7 @@ import { CancelPaymentInput } from '@payment/payments/dtos';
 import { PaymentStatus, PayMethod } from '@payment/payments/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
 import { UsersService } from '@user/users/users.service';
+import { RefundRequestsProducer } from '@order/refund-requests/producers';
 
 import {
   CANCEL_ORDER_RELATIONS,
@@ -60,7 +61,8 @@ export class OrdersService {
     private readonly usersService: UsersService,
     private readonly ordersProducer: OrdersProducer,
     private readonly orderItemsProducer: OrderItemsProducer,
-    private readonly pointsService: PointsService
+    private readonly pointsService: PointsService,
+    private readonly refundRequestsProducer: RefundRequestsProducer
   ) {}
 
   async checkBelongsTo(merchantUid: string, userId: number): Promise<void> {
@@ -303,7 +305,7 @@ export class OrdersService {
     order.requestRefund(input);
 
     await this.orderItemsProducer.indexOrderItems(input.orderItemMerchantUids);
-    await this.ordersProducer.indexRefundRequest(
+    await this.refundRequestsProducer.indexRefundRequest(
       order.refundRequests[order.refundRequests.length - 1].merchantUid
     );
     return await this.ordersRepository.save(order);
