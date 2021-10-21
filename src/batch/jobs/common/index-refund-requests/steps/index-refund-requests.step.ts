@@ -17,7 +17,6 @@ export class IndexRefundRequestsStep {
       'shipment',
     ]);
 
-    await this.refundRequestSearchService.clear();
     await this.refundRequestSearchService.bulkIndex(refundRequests);
     await this.refundRequestSearchService.enableFielddata('merchantUid');
   }
