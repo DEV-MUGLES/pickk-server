@@ -797,6 +797,13 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+type FollowOutput {
+  id: Int!
+
+  """[MODEL ONLY]"""
+  isFollowing: Boolean
+}
+
 input GetAppleAuthCodeInput {
   clientType: AppleClientType!
   code: String!
@@ -1388,7 +1395,7 @@ type Mutation {
   createVideo(createVideoInput: CreateVideoInput!): Video!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
-  follow(targetId: Int!): Boolean!
+  follow(targetId: Int!): FollowOutput!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!
@@ -1419,7 +1426,7 @@ type Mutation {
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
 
   """여러번 구독된 상태였다면 모두 삭제됩니다."""
-  unfollow(targetId: Int!): Boolean!
+  unfollow(targetId: Int!): FollowOutput!
 
   """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
