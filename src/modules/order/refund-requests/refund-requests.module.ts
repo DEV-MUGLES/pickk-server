@@ -1,6 +1,7 @@
 import { forwardRef, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { SearchModule } from '@mcommon/search/search.module';
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrdersModule } from '@order/orders/orders.module';
@@ -13,11 +14,12 @@ import { RefundRequestsService } from './refund-requests.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([RefundRequestsRepository]),
+    forwardRef(() => SearchModule),
     forwardRef(() => OrdersModule),
     forwardRef(() => OrderItemsModule),
     PaymentsModule,
     PointsModule,
-    forwardRef(() => ExchangeRequestsModule),
+    ExchangeRequestsModule,
   ],
   providers: [RefundRequestsService],
   exports: [RefundRequestsService],
