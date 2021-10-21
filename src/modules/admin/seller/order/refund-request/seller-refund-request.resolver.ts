@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Query, Info, Args, Mutation } from '@nestjs/graphql';
+import { Query, Info, Args, Mutation, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -161,5 +161,22 @@ export class SellerRefundRequestResolver extends BaseResolver<
     );
 
     return { total, result: refundRequests };
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerRefundRequestsCount(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: RefundRequestSearchFilter
+  ): Promise<number> {
+    const { total } = await this.refundRequestSearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      { sellerId, ...filter }
+    );
+
+    return total;
   }
 }

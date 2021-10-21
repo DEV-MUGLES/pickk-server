@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Info, Args, Query } from '@nestjs/graphql';
+import { Info, Args, Query, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -71,5 +71,22 @@ export class RootRefundRequestResolver extends BaseResolver<
     );
 
     return { total, result: refundRequests };
+  }
+
+  @Query(() => Int)
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  async searchRootRefundRequestsCount(
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: RefundRequestSearchFilter
+  ): Promise<number> {
+    const { total } = await this.refundRequestSearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      filter
+    );
+
+    return total;
   }
 }

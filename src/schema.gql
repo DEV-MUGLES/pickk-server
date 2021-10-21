@@ -2160,7 +2160,9 @@ type Query {
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
+  searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
+  searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
