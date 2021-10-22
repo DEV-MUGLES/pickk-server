@@ -222,7 +222,7 @@ export class SellerOrderItemResolver extends BaseResolver<OrderItemRelationType>
     const orderItems = await this.orderItemsService.list(
       { merchantUidIn },
       null,
-      ['order', 'order.buyer', 'order.receiver', 'shipment']
+      ['order', 'order.buyer', 'order.receiver', 'shipment', 'shipment.courier']
     );
 
     return { total, result: orderItems };
