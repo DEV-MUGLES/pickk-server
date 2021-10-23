@@ -20,9 +20,7 @@ import { RefundRequest } from '@order/refund-requests/models';
 import { RefundRequestsService } from '@order/refund-requests/refund-requests.service';
 
 @Injectable()
-export class RootRefundRequestResolver extends BaseResolver<
-  RefundRequestRelationType
-> {
+export class RootRefundRequestResolver extends BaseResolver<RefundRequestRelationType> {
   relations = REFUND_REQUEST_RELATIONS;
 
   constructor(
@@ -57,12 +55,10 @@ export class RootRefundRequestResolver extends BaseResolver<
     filter?: RefundRequestSearchFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput
   ): Promise<SearchRefundRequestsOutput> {
-    const {
-      ids: merchantUidIn,
-      total,
-    } = await this.refundRequestSearchService.search(query, pageInput, filter, [
-      { merchantUid: 'desc' },
-    ]);
+    const { ids: merchantUidIn, total } =
+      await this.refundRequestSearchService.search(query, pageInput, filter, [
+        { merchantUid: 'desc' },
+      ]);
 
     const refundRequests = await this.refundRequestsService.list(
       { merchantUidIn },
