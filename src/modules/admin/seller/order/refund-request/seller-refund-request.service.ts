@@ -5,6 +5,7 @@ import dayjs from 'dayjs';
 
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
 import { RefundRequestsService } from '@order/refund-requests/refund-requests.service';
+import { RefundRequestsProducer } from '@order/refund-requests/producers';
 
 import { RefundRequestsCountOutput } from './dtos';
 
@@ -13,7 +14,8 @@ export class SellerRefundRequestService {
   constructor(
     @InjectRepository(RefundRequestsRepository)
     private readonly refundRequestsRepository: RefundRequestsRepository,
-    private readonly refundRequestsService: RefundRequestsService
+    private readonly refundRequestsService: RefundRequestsService,
+    private readonly refundRequestsProducer: RefundRequestsProducer
   ) {}
 
   async checkBelongsTo(merchantUid: string, sellerId: number): Promise<void> {
@@ -58,5 +60,8 @@ export class SellerRefundRequestService {
     refundRequests.forEach((v) => v.markPicked());
 
     await this.refundRequestsRepository.save(refundRequests);
+    await this.refundRequestsProducer.indexRefundRequests(
+      refundRequests.map((v) => v.merchantUid)
+    );
   }
 }

@@ -12,6 +12,11 @@ import { RefundRequestMarkStrategyFactory } from '../factories';
 
 @ObjectType()
 export class RefundRequest extends RefundRequestEntity {
+  @Field({ description: '[MODEL ONLY]' })
+  get id(): string {
+    return this.merchantUid;
+  }
+
   @Field(() => Order)
   @Type(() => Order)
   order: Order;

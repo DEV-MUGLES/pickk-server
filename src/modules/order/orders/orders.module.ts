@@ -40,7 +40,7 @@ import { OrdersService } from './orders.service';
     CouponsModule,
     PointsModule,
     PaymentsModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
     forwardRef(() => OrderItemsModule),
     forwardRef(() => RefundRequestsModule),
     SqsModule.registerQueue(

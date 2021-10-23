@@ -16,6 +16,7 @@ import { PaymentsService } from '@payment/payments/payments.service';
 import { OrderClaimFaultOf, RefundRequestRelationType } from './constants';
 import { RefundRequestFilter } from './dtos';
 import { RefundRequest } from './models';
+import { RefundRequestsProducer } from './producers';
 
 import { RefundRequestsRepository } from './refund-requests.repository';
 
@@ -28,7 +29,8 @@ export class RefundRequestsService {
     private readonly paymentsService: PaymentsService,
     private readonly orderItemsProducer: OrderItemsProducer,
     private readonly pointsService: PointsService,
-    private readonly exchangeRequestsService: ExchangeRequestsService
+    private readonly exchangeRequestsService: ExchangeRequestsService,
+    private readonly refundRequestsProducer: RefundRequestsProducer
   ) {}
 
   async get(
@@ -94,6 +96,9 @@ export class RefundRequestsService {
     await this.orderItemsProducer.indexOrderItems(
       refundRequest.orderItems.map((v) => v.merchantUid)
     );
+    await this.refundRequestsProducer.indexRefundRequests([
+      refundedRequest.merchantUid,
+    ]);
     return refundedRequest;
   }
 
@@ -118,5 +123,8 @@ export class RefundRequestsService {
     await this.orderItemsProducer.indexOrderItems(
       refundRequest.orderItems.map((v) => v.merchantUid)
     );
+    await this.refundRequestsProducer.indexRefundRequests([
+      refundRequest.merchantUid,
+    ]);
   }
 }

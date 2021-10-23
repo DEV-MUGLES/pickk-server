@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
@@ -23,7 +23,7 @@ import { ExchangeRequestsService } from './exchange-requests.service';
   imports: [
     TypeOrmModule.forFeature([ExchangeRequestsRepository]),
     OrdersModule,
-    OrderItemsModule,
+    forwardRef(() => OrderItemsModule),
     SqsModule.registerQueue(
       {
         name: SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,

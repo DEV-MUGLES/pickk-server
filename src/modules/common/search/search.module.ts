@@ -8,6 +8,7 @@ import { LooksModule } from '@content/looks/looks.module';
 import { VideosModule } from '@content/videos/videos.module';
 import { ItemsModule } from '@item/items/items.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
+import { RefundRequestsModule } from '@order/refund-requests/refund-requests.module';
 
 import { DigestsSearchService } from './digest.search.service';
 import { KeywordSearchService } from './keyword.search.service';
@@ -15,6 +16,7 @@ import { LookSearchService } from './look.search.service';
 import { VideoSearchService } from './video.search.service';
 import { ItemSearchService } from './item.search.service';
 import { OrderItemSearchService } from './order-item.search.service';
+import { RefundRequestSearchService } from './refund-request.search.service';
 
 @Module({
   imports: [
@@ -25,6 +27,7 @@ import { OrderItemSearchService } from './order-item.search.service';
     forwardRef(() => VideosModule),
     forwardRef(() => ItemsModule),
     forwardRef(() => OrderItemsModule),
+    forwardRef(() => RefundRequestsModule),
   ],
   providers: [
     DigestsSearchService,
@@ -33,6 +36,7 @@ import { OrderItemSearchService } from './order-item.search.service';
     VideoSearchService,
     ItemSearchService,
     OrderItemSearchService,
+    RefundRequestSearchService,
   ],
   exports: [
     DigestsSearchService,
@@ -41,6 +45,7 @@ import { OrderItemSearchService } from './order-item.search.service';
     VideoSearchService,
     ItemSearchService,
     OrderItemSearchService,
+    RefundRequestSearchService,
   ],
 })
 export class SearchModule {}
