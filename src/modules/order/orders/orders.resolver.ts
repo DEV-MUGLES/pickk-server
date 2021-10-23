@@ -43,7 +43,7 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     );
   }
 
-  @Query(() => [Order], { description: 'VbankReady, Paid만 표시' })
+  @Query(() => [Order], { description: 'VbankReady, VbankDodged, Paid만 표시' })
   @UseGuards(JwtVerifyGuard)
   async meOrders(
     @CurrentUser() payload: JwtPayload,
@@ -53,7 +53,11 @@ export class OrdersResolver extends BaseResolver<OrderRelationType> {
     return await this.ordersService.list(
       {
         userId: payload.sub,
-        statusIn: [OrderStatus.VbankReady, OrderStatus.Paid],
+        statusIn: [
+          OrderStatus.VbankReady,
+          OrderStatus.VbankDodged,
+          OrderStatus.Paid,
+        ],
       },
       pageInput,
       this.getRelationsFromInfo(info)

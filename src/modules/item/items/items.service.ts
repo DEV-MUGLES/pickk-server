@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { plainToClass } from 'class-transformer';
 import validator from 'validator';
@@ -19,13 +19,14 @@ import {
   ItemFilter,
   CreateItemOptionInput,
   UpdateItemOptionInput,
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
   AddItemPriceInput,
   UpdateItemPriceInput,
   UpdateByCrawlDatasDto,
   ManualCreateItemInput,
+  CreateItemSizeChartInput,
+  UpdateItemSizeChartInput,
 } from './dtos';
+import { InvalidItemUrlException } from './exceptions';
 import { ItemFactory } from './factories';
 import { getItemDetailImageS3Prefix } from './helpers';
 import { ItemPrice, Item, ItemOption, ItemDetailImage } from './models';
@@ -38,7 +39,6 @@ import {
   ItemsRepository,
   ItemSizeChartsRepository,
 } from './items.repository';
-import { InvalidItemUrlException } from './exceptions';
 
 @Injectable()
 export class ItemsService {
@@ -323,7 +323,7 @@ export class ItemsService {
     }
 
     const uploadedImages = await this.imagesService.uploadUrls(
-      crawlResult.images,
+      crawlResult.images.map((v) => encodeURI(v)),
       getItemDetailImageS3Prefix(item.id)
     );
     await this.addDetailImages(
@@ -361,53 +361,43 @@ export class ItemsService {
     return await this.createOptionSet(id, options);
   }
 
-  async addSizeCharts(
-    item: Item,
-    addItemSizeChartInputs: AddItemSizeChartInput[]
-  ): Promise<Item> {
-    if (!addItemSizeChartInputs) {
-      return item;
-    }
-    item.addSizeCharts(addItemSizeChartInputs);
-    return await this.itemsRepository.save(item);
-  }
-
-  async removeSizeChartsAll(item: Item): Promise<Item> {
-    await this.itemSizeChartsRepository.bulkDelete(
-      item.sizeCharts.map(({ id }) => id)
-    );
-    item.removeSizeChartsAll();
-    return await this.itemsRepository.save(item);
-  }
-
-  async removeSizeChartsByIds(
-    item: Item,
-    removeItemSizeChartInputs: number[]
-  ): Promise<Item> {
-    if (!removeItemSizeChartInputs) {
-      return item;
-    }
-
-    item.removeSizeChartsByIds(removeItemSizeChartInputs);
-    await this.itemSizeChartsRepository.bulkDelete(removeItemSizeChartInputs);
-
-    return await this.itemsRepository.save(item);
-  }
-
-  async updateSizeCharts(
-    item: Item,
-    updateItemSizeChartInputs: UpdateItemSizeChartInput[]
-  ): Promise<Item> {
-    if (!updateItemSizeChartInputs) {
-      return item;
-    }
-
-    item.updateSizeCharts(updateItemSizeChartInputs);
-    return await this.itemsRepository.save(item);
-  }
-
   async report(id: number, reason: string, nickname: string): Promise<void> {
     const item = await this.get(id, ['brand', 'urls']);
     await this.slackService.sendItemReport(item, reason, nickname);
+  }
+
+  async createSizeChart(
+    id: number,
+    input: CreateItemSizeChartInput
+  ): Promise<Item> {
+    const item = await this.get(id, ['sizeChart']);
+    if (!input) {
+      return item;
+    }
+    item.createSizeChart(input);
+    return await this.itemsRepository.save(item);
+  }
+
+  async updateSizeChart(
+    id: number,
+    input: UpdateItemSizeChartInput
+  ): Promise<Item> {
+    const item = await this.get(id, ['sizeChart']);
+    item.updateSizeChart(input);
+    return await this.itemsRepository.save(item);
+  }
+
+  async removeSizeChart(id: number) {
+    const item = await this.get(id, ['sizeChart']);
+    if (!item.sizeChart) {
+      throw new BadRequestException(
+        '해당 아이템에 사이즈표가 존재하지 않습니다.'
+      );
+    }
+
+    const { sizeChart } = item;
+    item.sizeChart = null;
+    await this.itemsRepository.save(item);
+    await this.itemSizeChartsRepository.remove(sizeChart);
   }
 }

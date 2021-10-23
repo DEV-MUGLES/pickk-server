@@ -227,10 +227,12 @@ export class OrdersService {
     order.markVbankDodged();
     await this.paymentsService.dodgeVbank(merchantUid);
 
+    const dodged = await this.ordersRepository.save(order);
     await this.orderItemsProducer.indexOrderItems(
       order.orderItems?.map((v) => v.merchantUid)
     );
-    return await this.ordersRepository.save(order);
+
+    return dodged;
   }
 
   async getExpectedCancelAmount(

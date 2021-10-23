@@ -39,6 +39,7 @@ export const getBankDisplayName = (code: BankCode): string => {
     Peace,
     Shinsegae,
     KBank,
+    TossBank,
   } = BankCode;
 
   return {
@@ -75,5 +76,6 @@ export const getBankDisplayName = (code: BankCode): string => {
     [Peace]: '평화은행',
     [Shinsegae]: '신세계',
     [KBank]: '케이뱅크',
+    [TossBank]: '토스뱅크',
   }[code];
 };

@@ -174,13 +174,4 @@ export class ItemSizeChartsRepository extends BaseRepository<
       this.entityToModel(entity, transformOptions)
     );
   }
-
-  async bulkDelete(ids: number[]): Promise<void> {
-    await getConnection()
-      .createQueryBuilder()
-      .delete()
-      .from(ItemSizeChartEntity)
-      .where({ id: In(ids) })
-      .execute();
-  }
 }

@@ -8,12 +8,16 @@ import { IOrderItem } from '@order/order-items/interfaces';
 
 @InputType()
 export class OrderItemSearchFilter implements Partial<IOrderItem> {
+  @Field({ nullable: true })
+  merchantUidMt?: string;
   @Field(() => Int, { nullable: true })
   sellerId?: number;
   @Field({ nullable: true })
   isConfirmed?: boolean;
   @Field({ nullable: true })
   isSettled?: boolean;
+  @Field({ nullable: true })
+  isProcessDelaying?: boolean;
 
   @Field(() => OrderItemStatus, { nullable: true })
   status?: OrderItemStatus;

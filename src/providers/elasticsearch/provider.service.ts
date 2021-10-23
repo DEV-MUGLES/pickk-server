@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
-import { getSearchFilters } from './helpers';
+import { getSearchFilter } from './helpers';
 import { SearchParams, SearchResult } from './types';
 
 type BaseSearchBody = {
@@ -113,9 +113,7 @@ export class SearchService {
       body: {
         sort,
         query: {
-          bool: {
-            must: getSearchFilters(query, filter),
-          },
+          bool: getSearchFilter(query, filter),
         },
       },
     });

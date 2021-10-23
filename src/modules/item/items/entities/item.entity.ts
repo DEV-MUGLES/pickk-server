@@ -24,12 +24,16 @@ import { ICampaign } from '@item/campaigns/interfaces';
 import { IItemCategory } from '@item/item-categories/interfaces';
 import { IProduct } from '@item/products/interfaces';
 
-import { IItem, IItemOption, IItemSalePolicy } from '../interfaces';
+import {
+  IItem,
+  IItemOption,
+  IItemSalePolicy,
+  IItemSizeChart,
+} from '../interfaces';
 
 import { ItemUrl } from '../models/item-url.model';
 import { ItemDetailImage } from '../models/item-detail-image.model';
 import { ItemPrice } from '../models/item-price.model';
-import { ItemSizeChart } from '../models/item-size-chart.model';
 
 @ObjectType()
 @Entity({
@@ -63,7 +67,7 @@ export class ItemEntity extends BaseIdEntity implements IItem {
     this.prices = attributes.prices;
     this.urls = attributes.urls;
     this.detailImages = attributes.detailImages;
-    this.sizeCharts = attributes.sizeCharts;
+    this.sizeChart = attributes.sizeChart;
 
     this.name = attributes.name;
     this.description = attributes.description;
@@ -118,14 +122,19 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToOne('ItemSalePolicyEntity', { cascade: true, nullable: true })
   @JoinColumn()
   salePolicy: IItemSalePolicy;
+  @OneToOne('ItemSizeChartEntity', {
+    cascade: true,
+    nullable: true,
+    onDelete: 'SET NULL',
+  })
+  @JoinColumn()
+  sizeChart: IItemSizeChart;
   @OneToMany('ItemPriceEntity', 'item', { cascade: true, eager: true })
   prices: ItemPrice[];
   @OneToMany('ItemUrlEntity', 'item', { cascade: true })
   urls: ItemUrl[];
   @OneToMany('ItemDetailImageEntity', 'item', { cascade: true })
   detailImages: ItemDetailImage[];
-  @OneToMany('ItemSizeChartEntity', 'item', { cascade: true })
-  sizeCharts: ItemSizeChart[];
 
   @OneToOne('ItemsGroupItemEntity', 'item')
   itemsGroupItem: IItemsGroupItem;

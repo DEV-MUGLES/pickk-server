@@ -2,7 +2,6 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { firstValueFrom } from 'rxjs';
 import * as cheerio from 'cheerio';
-import path from 'path';
 
 import {
   isEqualSet,
@@ -10,7 +9,7 @@ import {
   allSettled,
   FulfillResponse,
   isFulfilled,
-  getDirname,
+  merge,
 } from '@common/helpers';
 
 import { ScrapSellerItemUrlsDto } from './dtos';
@@ -65,11 +64,7 @@ export class SellersCrawlService {
 
     const urls = [];
     $(itemsSelector).each((_i, ele) => {
-      const url =
-        new URL(pageUrl).protocol +
-        '//' +
-        path.normalize(getDirname(pageUrl) + '/' + $(ele).attr('href'));
-      urls.push(url);
+      urls.push(merge(pageUrl, $(ele).attr('href')));
     });
 
     // 크롤링된 url들이 모두 전 페이지와 중복된다면 바로 escape합니다.

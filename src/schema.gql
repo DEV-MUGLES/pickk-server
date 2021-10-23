@@ -13,46 +13,34 @@ input AddItemPriceInput {
   startAt: DateTime
 }
 
-input AddItemSizeChartInput {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  waistWidth: Float
-  watchBandDepth: Float
-}
-
 input AddItemUrlInput {
   isPrimary: Boolean!
   url: String!
 }
 
 input AnswerInquiryInput {
-  """최대 길이 255"""
+  """
+  최대 길이 255
+  """
   content: String!
 
-  """표시될 답변작성자 이름. 최대 길이 30"""
+  """
+  표시될 답변작성자 이름. 최대 길이 30
+  """
   displayAuthor: String!
 }
 
-"""애플 로그인시 사용됩니다. [App, Web]"""
+"""
+애플 로그인시 사용됩니다. [App, Web]
+"""
 enum AppleClientType {
   App
   Web
 }
 
-"""은행 식별 코드입니다. InicisBankCode와 값이 같습니다."""
+"""
+은행 식별 코드입니다. InicisBankCode와 값이 같습니다.
+"""
 enum BankCode {
   AbnAmro
   BcCard
@@ -101,20 +89,27 @@ enum BankCode {
   Shinsegae
   Sj
   SsgMoney
+  TossBank
   TossMoney
   Woori
 }
 
 type BaseOrderOutput {
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   brands: [OrderBrand!]!
   createdAt: DateTime!
   failedAt: DateTime
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   id: String!
 
-  """(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)"""
+  """
+  (PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)
+  """
   merchantUid: String!
   paidAt: DateTime
   payMethod: PayMethod
@@ -160,11 +155,15 @@ type Campaign {
   endAt: DateTime!
   id: Int!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isActive: Boolean!
   items: [Item!]!
 
-  """적용 정산률 (0~100)"""
+  """
+  적용 정산률 (0~100)
+  """
   rate: Int!
   startAt: DateTime!
   updatedAt: DateTime!
@@ -173,7 +172,9 @@ type Campaign {
 input CancelOrderInput {
   orderItemMerchantUids: [String!]!
 
-  """취소 사유"""
+  """
+  취소 사유
+  """
   reason: String!
 }
 
@@ -202,11 +203,15 @@ enum CardCode {
 }
 
 type Cart {
-  """CartItem을 브랜드 단위로 묶은 것"""
+  """
+  CartItem을 브랜드 단위로 묶은 것
+  """
   cartBrands: [CartBrand!]!
   cartItems: [CartItem!]!
 
-  """userId와 동일한 더미값입니다."""
+  """
+  userId와 동일한 더미값입니다.
+  """
   id: Int!
 }
 
@@ -220,7 +225,9 @@ type CartItem {
   createdAt: DateTime!
   id: Int!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isAdjusted: Boolean
   product: Product!
   productId: Int!
@@ -245,10 +252,14 @@ type Comment {
   isContentUpdated: Boolean!
   isDeleted: Boolean!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isLiking: Boolean
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isMine: Boolean
   likeCount: Int!
   mentionedUser: User
@@ -269,7 +280,9 @@ input CommentFilter {
   parentIdIsNull: Boolean
 }
 
-"""댓글 연관 객체 분류입니다."""
+"""
+댓글 연관 객체 분류입니다.
+"""
 enum CommentOwnerType {
   Digest
   Look
@@ -288,33 +301,43 @@ type Coupon {
 }
 
 type CouponSpecification {
-  """이 값으로 클라이언트에서 필터링 해주세요."""
+  """
+  이 값으로 클라이언트에서 필터링 해주세요.
+  """
   availableAt: DateTime
   brand: Brand
   brandId: Float
   createdAt: DateTime!
   discountAmount: Int
 
-  """1~99 정수"""
+  """
+  1~99 정수
+  """
   discountRate: Int
   expireAt: DateTime!
   id: Int!
   maximumDiscountPrice: Int
   minimumForUse: Int
 
-  """최대 30자"""
+  """
+  최대 30자
+  """
   name: String!
   type: CouponType!
   updatedAt: DateTime!
 }
 
-"""쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)"""
+"""
+쿠폰 상태입니다. 사용가능(Ready), 사용됨(Applied)
+"""
 enum CouponStatus {
   Applied
   Ready
 }
 
-"""쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)"""
+"""
+쿠폰 분류입니다. 정률적용(Rate), 정액적용(Amount)
+"""
 enum CouponType {
   Amount
   Rate
@@ -350,18 +373,24 @@ input CreateCouponInput {
 }
 
 input CreateCouponSpecificationInput {
-  """이 값으로 클라이언트에서 필터링 해주세요."""
+  """
+  이 값으로 클라이언트에서 필터링 해주세요.
+  """
   availableAt: DateTime
   brandId: Float
   discountAmount: Int
 
-  """1~99 정수"""
+  """
+  1~99 정수
+  """
   discountRate: Int
   expireAt: DateTime!
   maximumDiscountPrice: Int
   minimumForUse: Int
 
-  """최대 30자"""
+  """
+  최대 30자
+  """
   name: String!
   type: CouponType!
 }
@@ -374,7 +403,9 @@ input CreateCourierInput {
 }
 
 input CreateDigestInput {
-  """최대 길이 65000자"""
+  """
+  최대 길이 65000자
+  """
   content: String
   imageUrls: [String!]!
   itemId: Int
@@ -382,21 +413,29 @@ input CreateDigestInput {
   rating: Rating
   size: String!
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 }
 
 input CreateInquiryInput {
-  """알림톡 받을 전화번호 (11글자)"""
+  """
+  알림톡 받을 전화번호 (11글자)
+  """
   contactPhoneNumber: String!
 
-  """최대 길이 255"""
+  """
+  최대 길이 255
+  """
   content: String!
   isSecret: Boolean!
   itemId: Int
   orderItemMerchantUid: String
 
-  """최대 길이 100"""
+  """
+  최대 길이 100
+  """
   title: String!
   type: InquiryType!
 }
@@ -419,6 +458,12 @@ input CreateItemOptionSetInput {
   options: [CreateItemOptionInput!]!
 }
 
+input CreateItemSizeChartInput {
+  labels: [String!]!
+  recommendations: [ItemSizeRecommendationInput!]
+  sizes: [ItemSizeInput!]!
+}
+
 input CreateLookDigestInput {
   itemId: Int!
   size: String!
@@ -429,7 +474,9 @@ input CreateLookInput {
   imageUrls: [String!]!
   styleTagIds: [Int!]!
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String!
 }
 
@@ -437,23 +484,31 @@ input CreateOrderVbankReceiptInput {
   bankCode: BankCode
   due: DateTime
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String
   ownerName: String
 }
 
 input CreateProductShippingReservePolicyInput {
-  """예약발송 예정일"""
+  """
+  예약발송 예정일
+  """
   estimatedShippingBegginDate: DateTime!
 
-  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
+  """
+  예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다.
+  """
   stock: Int!
 }
 
 input CreateRefundAccountInput {
   bankCode: BankCode!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
 }
@@ -464,18 +519,26 @@ input CreateSellerClaimPolicyInput {
   isExchangable: Boolean!
   isRefundable: Boolean!
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String!
 
-  """담당자 이름"""
+  """
+  담당자 이름
+  """
   picName: String!
 }
 
 input CreateSellerCrawlPolicyInput {
-  """크롤링된 새로운 아이템들을 추가 등록하는가"""
+  """
+  크롤링된 새로운 아이템들을 추가 등록하는가
+  """
   isInspectingNew: Boolean!
 
-  """기존 아이템들의 이름/가격을 업데이트하는가"""
+  """
+  기존 아이템들의 이름/가격을 업데이트하는가
+  """
   isUpdatingItems: Boolean!
 }
 
@@ -486,7 +549,9 @@ input CreateSellerCrawlStrategyInput {
   pageParam: String
   pagination: Boolean!
 
-  """'<>'으로 join된 상태다."""
+  """
+  '<>'으로 join된 상태다.
+  """
   startPathNamesJoin: String!
 }
 
@@ -506,7 +571,9 @@ input CreateSellerInput {
   orderNotiPhoneNumber: String
   phoneNumber: String
 
-  """최대 20자"""
+  """
+  최대 20자
+  """
   representativeName: String
   returnAddressInput: CreateSellerReturnAddressInput!
   saleStrategyInput: CreateSellerSaleStrategyInput!
@@ -533,23 +600,33 @@ input CreateSellerSaleStrategyInput {
 input CreateSellerSettleAccountInput {
   bankCode: BankCode!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
 }
 
 input CreateSellerSettlePolicyInput {
-  """정산 받을 계좌"""
+  """
+  정산 받을 계좌
+  """
   accountInput: CreateSellerSettleAccountInput
 
-  """세금계산서 수령이메일"""
+  """
+  세금계산서 수령이메일
+  """
   email: String!
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String!
   picName: String!
 
-  """기본 정산율"""
+  """
+  기본 정산율
+  """
   rate: Int!
 }
 
@@ -581,7 +658,9 @@ input CreateUserInput {
   height: Int
   name: String
 
-  """최대 11자"""
+  """
+  최대 11자
+  """
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
@@ -597,17 +676,23 @@ input CreateVideoDigestInput {
   timestampEndSecond: Int
   timestampStartSecond: Int
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 }
 
 input CreateVideoInput {
   digests: [CreateVideoDigestInput!]!
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String!
 
-  """최대 길이 40"""
+  """
+  최대 길이 40
+  """
   youtubeCode: String!
 }
 
@@ -619,17 +704,23 @@ scalar DateTime
 type Digest {
   commentCount: Int!
 
-  """최대 길이 65000자"""
+  """
+  최대 길이 65000자
+  """
   content: String
   createdAt: DateTime!
   hitCount: Int!
   id: Int!
   images: [DigestImage!]!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isLiking: Boolean
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isMine: Boolean
   item: Item
   itemId: Int
@@ -644,7 +735,9 @@ type Digest {
   timestampEndSecond: Int
   timestampStartSecond: Int
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
   updatedAt: DateTime!
   user: User
@@ -676,18 +769,26 @@ type DigestImage {
 }
 
 input DigestItemFilter {
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   brandId: Int
 
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   majorCategoryId: Int
 
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   minorCategoryId: Int
 }
 
 input DigestUserFilter {
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   heightBetween: [Int!]
 }
 
@@ -706,14 +807,18 @@ type ExchangeRequest {
   isSettled: Boolean!
   itemName: String!
 
-  """orderItemMerchantUid와 동일"""
+  """
+  orderItemMerchantUid와 동일
+  """
   merchantUid: String!
   orderItem: OrderItem!
   orderItemMerchantUid: String!
   pickShipment: Shipment
   pickShipmentId: Int
 
-  """수거 완료 시점"""
+  """
+  수거 완료 시점
+  """
   pickedAt: DateTime
   processDelayedAt: DateTime!
   product: Product
@@ -723,10 +828,14 @@ type ExchangeRequest {
   reShipment: Shipment
   reShipmentId: Int
 
-  """255자 이내로 적어주세요"""
+  """
+  255자 이내로 적어주세요
+  """
   reason: String!
 
-  """255자 이내로 적어주세요"""
+  """
+  255자 이내로 적어주세요
+  """
   rejectReason: String
   rejectedAt: DateTime
   requestedAt: DateTime!
@@ -736,7 +845,9 @@ type ExchangeRequest {
   sellerId: Int
   settledAt: DateTime
 
-  """결제된 교환 배송비"""
+  """
+  결제된 교환 배송비
+  """
   shippingFee: Int!
   status: ExchangeRequestStatus!
   user: User
@@ -749,10 +860,14 @@ input ExchangeRequestFilter {
   orderItem: ExchangeRequestOrderItemFilter
   requestedAtBetween: [DateTime!]
 
-  """재배송 완료일 (기간). 교환 완료와 동일한 의미로 사용됩니다."""
+  """
+  재배송 완료일 (기간). 교환 완료와 동일한 의미로 사용됩니다.
+  """
   reshippedAtBetween: [DateTime!]
 
-  """주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색"""
+  """
+  주문상품번호, 회수 운송장번호, 재배송 운송장번호로 검색
+  """
   search: String
   sellerId: Int
   status: ExchangeRequestStatus
@@ -763,7 +878,9 @@ input ExchangeRequestOrderItemFilter {
   paidAtBetween: [DateTime!]
 }
 
-"""교한신청 상태입니다."""
+"""
+교한신청 상태입니다.
+"""
 enum ExchangeRequestStatus {
   Converted
   Pending
@@ -774,28 +891,44 @@ enum ExchangeRequestStatus {
   Reshipping
 }
 
-"""생성일 기준 3달 이내의 건들만 count합니다."""
+"""
+생성일 기준 3달 이내의 건들만 count합니다.
+"""
 type ExchangeRequestsCountOutput {
-  """수거 완료"""
+  """
+  수거 완료
+  """
   Picked: Int!
 
-  """교환 거부"""
+  """
+  교환 거부
+  """
   Rejected: Int!
 
-  """교환 요청 (= 수거중)"""
+  """
+  교환 요청 (= 수거중)
+  """
   Requested: Int!
 
-  """교환 배송 완료"""
+  """
+  교환 배송 완료
+  """
   Reshipped: Int!
 
-  """교환 배송 중"""
+  """
+  교환 배송 중
+  """
   Reshipping: Int!
 
-  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  """
+  sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다.
+  """
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """교환 처리 지연 (지연중인 requested + picked)"""
+  """
+  교환 처리 지연 (지연중인 requested + picked)
+  """
   process_delayed: Int!
 }
 
@@ -810,12 +943,23 @@ input FindSaleStrategyInput {
   canUseMileage: Boolean!
 }
 
+type FollowOutput {
+  id: Int!
+
+  """
+  [MODEL ONLY]
+  """
+  isFollowing: Boolean
+}
+
 input GetAppleAuthCodeInput {
   clientType: AppleClientType!
   code: String!
 }
 
-"""조회수 누적 대상 객체 분류입니다."""
+"""
+조회수 누적 대상 객체 분류입니다.
+"""
 enum HitOwnerType {
   Digest
   Item
@@ -824,26 +968,38 @@ enum HitOwnerType {
   Video
 }
 
-"""생성일 기준 3달 이내의 건들만 count합니다."""
+"""
+생성일 기준 3달 이내의 건들만 count합니다.
+"""
 type InquiriesCountOutput {
-  """답변 지연 (생성일 5일 경과)"""
+  """
+  답변 지연 (생성일 5일 경과)
+  """
   delayed: Int!
 
-  """sellerId와 동일한 값(or 0). Apollo Client 캐싱을 위해 존재합니다."""
+  """
+  sellerId와 동일한 값(or 0). Apollo Client 캐싱을 위해 존재합니다.
+  """
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """미답변"""
+  """
+  미답변
+  """
   not_answered: Int!
 }
 
 type Inquiry {
   answers: [InquiryAnswer!]!
 
-  """알림톡 받을 전화번호 (11글자)"""
+  """
+  알림톡 받을 전화번호 (11글자)
+  """
   contactPhoneNumber: String!
 
-  """최대 길이 255"""
+  """
+  최대 길이 255
+  """
   content: String!
   createdAt: DateTime!
   id: Int!
@@ -856,7 +1012,9 @@ type Inquiry {
   seller: Seller
   sellerId: Int
 
-  """최대 길이 100"""
+  """
+  최대 길이 100
+  """
   title: String!
   type: InquiryType!
   updatedAt: DateTime!
@@ -865,11 +1023,15 @@ type Inquiry {
 }
 
 type InquiryAnswer {
-  """최대 길이 255"""
+  """
+  최대 길이 255
+  """
   content: String!
   createdAt: DateTime!
 
-  """표시될 답변작성자 이름. 최대 길이 30"""
+  """
+  표시될 답변작성자 이름. 최대 길이 30
+  """
   displayAuthor: String!
   from: InquiryAnswerFrom!
   id: Int!
@@ -880,7 +1042,9 @@ type InquiryAnswer {
   userId: Int
 }
 
-"""답변 작성 출처입니다. (Seller or Root)"""
+"""
+답변 작성 출처입니다. (Seller or Root)
+"""
 enum InquiryAnswerFrom {
   Root
   Seller
@@ -890,13 +1054,17 @@ input InquiryFilter {
   isAnswered: Boolean
   itemId: Int
 
-  """주문상품번호로 검색 가능"""
+  """
+  주문상품번호로 검색 가능
+  """
   search: String
   sellerId: Int
   userId: Int
 }
 
-"""배송/사이즈/재입고/기타"""
+"""
+배송/사이즈/재입고/기타
+"""
 enum InquiryType {
   Etc
   Restock
@@ -915,7 +1083,9 @@ type Item {
   digestCount: Int!
   digests: [Digest!]
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   finalPrice: Float!
   groupItems: [Item!]
   hitCount: Int!
@@ -933,10 +1103,14 @@ type Item {
   name: String!
   options: [ItemOption!]
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   originalPrice: Float!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   pickkDiscountRate: Float!
   prices: [ItemPrice!]!
   products: [Product!]
@@ -944,13 +1118,16 @@ type Item {
   salePolicy: ItemSalePolicy
   score: Float!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   sellPrice: Float!
 
-  """판매가능시점(=활성전환일)"""
+  """
+  판매가능시점(=활성전환일)
+  """
   sellableAt: DateTime
-  sizeChartMetaDatas: [ItemSizeChartMetaData!]
-  sizeCharts: [ItemSizeChart!]
+  sizeChart: ItemSizeChart
   updatedAt: DateTime!
   urls: [ItemUrl!]!
 }
@@ -958,12 +1135,16 @@ type Item {
 type ItemCategory {
   children: [ItemCategory!]!
 
-  """최대 20자"""
+  """
+  최대 20자
+  """
   code: String!
   createdAt: DateTime!
   id: Int!
 
-  """최대 20자"""
+  """
+  최대 20자
+  """
   name: String!
   parent: ItemCategory!
   updatedAt: DateTime!
@@ -992,7 +1173,9 @@ input ItemFilter {
   orderBy: String
   scoreMt: Float
 
-  """아이템 이름(name)으로 검색합니다."""
+  """
+  아이템 이름(name)으로 검색합니다.
+  """
   search: String
   sellableAtBetween: [DateTime!]
   sellableAtLte: DateTime
@@ -1071,7 +1254,9 @@ type ItemPropertyValue {
   id: Int!
   name: String!
 
-  """표시될 순서. 최소 0, 최대 255입니다."""
+  """
+  표시될 순서. 최소 0, 최대 255입니다.
+  """
   order: Float!
   property: ItemProperty!
   propertyId: Int!
@@ -1087,33 +1272,35 @@ type ItemSalePolicy {
   updatedAt: DateTime!
 }
 
-type ItemSizeChart {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  createdAt: DateTime!
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  id: Int!
-  itemId: Int!
+type ItemSize {
   name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  updatedAt: DateTime!
-  waistWidth: Float
-  watchBandDepth: Float
+  values: [String!]!
 }
 
-type ItemSizeChartMetaData {
-  columnName: String!
-  displayName: String!
+type ItemSizeChart {
+  createdAt: DateTime!
+  id: Int!
+  labels: [String!]!
+  recommendations: [ItemSizeRecommendation!]
+  sizes: [ItemSize!]!
+  updatedAt: DateTime!
+}
+
+input ItemSizeInput {
+  name: String!
+  values: [String!]!
+}
+
+type ItemSizeRecommendation {
+  height: Float!
+  sizeName: String!
+  weight: Float!
+}
+
+input ItemSizeRecommendationInput {
+  height: Float!
+  sizeName: String!
+  weight: Float!
 }
 
 type ItemUrl {
@@ -1131,7 +1318,9 @@ type ItemsExhibition {
   id: Int!
   items: [Item!]!
 
-  """최대 50자"""
+  """
+  최대 50자
+  """
   title: String!
   updatedAt: DateTime!
 }
@@ -1155,32 +1344,46 @@ type ItemsGroupItem {
 }
 
 type ItemsPackage {
-  """최대 50자"""
+  """
+  최대 50자
+  """
   code: String!
   createdAt: DateTime!
   id: Int!
   items: [Item!]!
 
-  """최대 50자"""
+  """
+  최대 50자
+  """
   title: String!
   updatedAt: DateTime!
 }
 
 type JwtPayload {
-  """Seller 로그인인 경우에만 발급된다."""
+  """
+  Seller 로그인인 경우에만 발급된다.
+  """
   brandId: Float
 
-  """Seller 로그인인 경우에만 발급된다."""
+  """
+  Seller 로그인인 경우에만 발급된다.
+  """
   brandNameKor: String
 
-  """만료 시점 timestamp"""
+  """
+  만료 시점 timestamp
+  """
   exp: Timestamp!
 
-  """발급 시점 timestamp"""
+  """
+  발급 시점 timestamp
+  """
   iat: Timestamp!
   nickname: String!
 
-  """Seller 로그인인 경우에만 발급된다."""
+  """
+  Seller 로그인인 경우에만 발급된다.
+  """
   sellerId: Float
   sub: Int!
 }
@@ -1199,10 +1402,14 @@ type Keyword {
   id: Int!
   imageUrl: String!
 
-  """좋아요 중 여부"""
+  """
+  좋아요 중 여부
+  """
   isLiking: Boolean
 
-  """보유중 여부"""
+  """
+  보유중 여부
+  """
   isOwning: Boolean
   isVisible: Boolean!
   likeCount: Int!
@@ -1213,7 +1420,9 @@ type Keyword {
   score: Float!
   styleTags: [StyleTag!]!
 
-  """스타일팁 줄글"""
+  """
+  스타일팁 줄글
+  """
   stylingTip: String!
   updatedAt: DateTime!
   usablityRate: Float
@@ -1225,7 +1434,9 @@ type KeywordClass {
   isVisible: Boolean!
   name: String!
 
-  """0~255 정수"""
+  """
+  0~255 정수
+  """
   order: Int
   type: KeywordClassType!
   updatedAt: DateTime!
@@ -1244,21 +1455,31 @@ enum KeywordClassType {
 input KeywordFilter {
   idIn: [Int!]
 
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   isLiking: Boolean
 
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   isOwning: Boolean
   isVisible: Boolean
 
-  """[CUSTOM]"""
+  """
+  [CUSTOM]
+  """
   keywordClassIdIn: [Int!]
 
-  """기본값 id"""
+  """
+  기본값 id
+  """
   orderBy: String
 }
 
-"""좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)"""
+"""
+좋아요 대상 객체 분류입니다. (Digest, Look, Video, Comment, Keyword)
+"""
 enum LikeOwnerType {
   Comment
   Digest
@@ -1270,13 +1491,17 @@ enum LikeOwnerType {
 input LoginByCodeInput {
   code: String
 
-  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
+  """
+  로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)
+  """
   minRole: UserRole = User
   password: String!
 }
 
 input LoginByOauthInput {
-  """로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)"""
+  """
+  로그인에 필요한 최소 권한입니다. (ex: Seller로 설정 시 Seller, Admin일때만 성공)
+  """
   minRole: UserRole = User
   oauthCode: String
   oauthProvider: UserProviderType
@@ -1290,16 +1515,22 @@ type Look {
   id: Int!
   images: [LookImage!]!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isLiking: Boolean
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isMine: Boolean
   likeCount: Int!
   score: Float!
   styleTags: [StyleTag!]!
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String!
   updatedAt: DateTime!
   user: User
@@ -1310,10 +1541,14 @@ input LookFilter {
   brandId: Int
   idIn: [Int!]
 
-  """사용시 다른 필터는 무시합니다. (정렬: "score")"""
+  """
+  사용시 다른 필터는 무시합니다. (정렬: "score")
+  """
   itemId: Int
 
-  """사용시 다른 필터는 무시합니다. (정렬: "score")"""
+  """
+  사용시 다른 필터는 무시합니다. (정렬: "score")
+  """
   itemIdIn: [Int!]
   orderBy: String = "id"
   styleTagIdIn: [Int!]
@@ -1349,27 +1584,45 @@ input ManualCreateItemInput {
 
 type Mutation {
   activateItemPrice(itemId: Int!, priceId: Int!): Item!
-  addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
+  addItemDetailImages(
+    createItemDetailImageInput: CreateItemDetailImageInput!
+    itemId: Int!
+  ): Item!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): Item!
-  addItemSizeCharts(addItemSizeChartInputs: [AddItemSizeChartInput!]!, itemId: Int!): Item!
   addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
-  addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
-  addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
-  answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
+  addMeRefundAccount(
+    createRefundAccountInput: CreateRefundAccountInput!
+  ): RefundAccount!
+  addMeShippingAddress(
+    createShippingAddressInput: CreateShippingAddressInput!
+  ): ShippingAddress!
+  answerMeSellerInquiry(
+    answerInquiryInput: AnswerInquiryInput!
+    id: Int!
+  ): Inquiry!
   answerRootInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   basifyPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
-  bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
+  bulkShipMeSellerOrderItems(
+    bulkShipOrderItemInput: BulkShipOrderItemInput!
+  ): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
-  bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  bulkUpdateItems(
+    bulkUpdateItemInput: BulkUpdateItemInput!
+    ids: [Int!]!
+  ): Boolean!
 
-  """취소 사유는 "담당자 취소 처리"로 고정"""
+  """
+  취소 사유는 "담당자 취소 처리"로 고정
+  """
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
   cancelOrder(cancelOrderInput: CancelOrderInput!, merchantUid: String!): Order!
   completeExchangeRequest(merchantUid: String!): ExchangeRequest!
   completeOrder(
-    """가상계좌 주문건인 경우에만 필요합니다."""
+    """
+    가상계좌 주문건인 경우에만 필요합니다.
+    """
     createOrderVbankReceiptInput: CreateOrderVbankReceiptInput
     merchantUid: String!
   ): BaseOrderOutput!
@@ -1377,120 +1630,212 @@ type Mutation {
   confirmMeSellerRefundRequest(
     merchantUid: String!
 
-    """부과된 배송비"""
+    """
+    부과된 배송비
+    """
     shippingFee: Int!
   ): Boolean!
   convertMeSellerExchangeRequest(merchantUid: String!): ExchangeRequest!
-  convertMeSellerRefundRequest(merchantUid: String!, orderItemMerchantUid: String!, productId: Int!): RefundRequest!
+  convertMeSellerRefundRequest(
+    merchantUid: String!
+    orderItemMerchantUid: String!
+    productId: Int!
+  ): RefundRequest!
   crawlItemOptionSet(itemId: Int!): Item!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
-  createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
+  createCouponSpecification(
+    createCouponSpecificationInput: CreateCouponSpecificationInput!
+  ): CouponSpecification!
   createCourier(createCourierInput: CreateCourierInput!): Courier!
   createDigest(createDigestInput: CreateDigestInput!): Digest!
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemByUrl(url: String!): Item!
-  createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
+  createItemOptionSet(
+    createItemOptionSetInput: CreateItemOptionSetInput!
+    id: Int!
+  ): Item!
   createLook(createLookInput: CreateLookInput!): Look!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
-  createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
+  createSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
+  createShippingReservePolicy(
+    createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!
+    productId: Int!
+  ): Product!
   createUser(createUserInput: CreateUserInput!): User!
   createVideo(createVideoInput: CreateVideoInput!): Video!
   dodgeVbankOrder(merchantUid: String!): BaseOrderOutput!
   failOrder(merchantUid: String!): BaseOrderOutput!
-  follow(targetId: Int!): Boolean!
+  follow(targetId: Int!): FollowOutput!
   hit(ownerId: Float!, ownerType: HitOwnerType!): Boolean!
   like(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   manualCreateItem(input: ManualCreateItemInput!): Item!
-  modifyItemSizeCharts(itemId: Int!, removedChartIds: [Int!], updateItemSizeChartInput: [UpdateItemSizeChartInput!]): Item!
   own(keywordId: Int!): Boolean!
-  registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
+  registerExchangeRequest(
+    merchantUid: String!
+    registerExchangeRequestInput: RegisterExchangeRequestInput!
+  ): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
   removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
-  removeItemSizeChartsAll(itemId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootSizeChart(itemId: Int!): Item!
+  removeSellerSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
-  """정보에 오류가 있는 아이템을 신고합니다."""
+  """
+  정보에 오류가 있는 아이템을 신고합니다.
+  """
   reportItem(id: Int!, reason: String!): Boolean!
   requestAppInstallPoint: Boolean!
-  requestOrderRefund(merchantUid: String!, requestOrderRefundInput: RequestOrderRefundInput!): Order!
-  reshipMeSellerExchangeRequest(merchantUid: String!, reshipExchangeRequestInput: ReshipExchangeRequestInput!): ExchangeRequest!
+  requestOrderRefund(
+    merchantUid: String!
+    requestOrderRefundInput: RequestOrderRefundInput!
+  ): Order!
+  reshipMeSellerExchangeRequest(
+    merchantUid: String!
+    reshipExchangeRequestInput: ReshipExchangeRequestInput!
+  ): ExchangeRequest!
   scrapRootSeller(id: Int!): Boolean!
-  setCategoryToItem(id: Int!, setCategoryToItemInput: SetCategoryToItemInput!): Item!
-  shipMeSellerOrderItem(merchantUid: String!, shipOrderItemInput: ShipOrderItemInput!): OrderItem!
+  setCategoryToItem(
+    id: Int!
+    setCategoryToItemInput: SetCategoryToItemInput!
+  ): Item!
+  shipMeSellerOrderItem(
+    merchantUid: String!
+    shipOrderItemInput: ShipOrderItemInput!
+  ): OrderItem!
   startOrder(merchantUid: String!, startOrderInput: StartOrderInput!): Order!
 
-  """여러번 구독된 상태였다면 모두 삭제됩니다."""
-  unfollow(targetId: Int!): Boolean!
+  """
+  여러번 구독된 상태였다면 모두 삭제됩니다.
+  """
+  unfollow(targetId: Int!): FollowOutput!
 
-  """여러번 좋아요한 상태였다면 모두 삭제됩니다."""
+  """
+  여러번 좋아요한 상태였다면 모두 삭제됩니다.
+  """
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   unown(keywordId: Int!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
-  updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
+  updateDigestsExhibitionDigests(
+    digestIds: [Int!]!
+    id: Int!
+  ): DigestsExhibition!
   updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
-  updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
+  updateItemOption(
+    id: Int!
+    updateItemOptionInput: UpdateItemOptionInput!
+  ): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): Item!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
   updateMe(updateUserInput: UpdateUserInput!): User!
-  updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
+  updateMeRefundAccount(
+    updateRefundAccountInput: UpdateRefundAccountInput!
+  ): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
-  updateMeSellerInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateMeSellerInquiryAnswer(
+    id: Int!
+    updateInquiryAnswerInput: UpdateInquiryAnswerInput!
+  ): InquiryAnswer!
 
-  """주문상품 단건 운송장 수정"""
-  updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
-  updateMeShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
-  updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
+  """
+  주문상품 단건 운송장 수정
+  """
+  updateMeSellerOrderItemTrackCode(
+    merchantUid: String!
+    trackCode: String!
+  ): OrderItem!
+  updateMeShippingAddress(
+    addressId: Int!
+    updateShippingAddressInput: UpdateShippingAddressInput!
+  ): ShippingAddress!
+  updateMyCartItem(
+    id: Int!
+    updateCartItemInput: UpdateCartItemInput!
+  ): CartItem!
 
-  """(!) 예전 비밀번호와 현재 비밀번호를 입력해주세요."""
+  """
+  (!) 예전 비밀번호와 현재 비밀번호를 입력해주세요.
+  """
   updateMyPassword(newPassword: String!, oldPassword: String!): User!
-  updateMySellerClaimPolicy(updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!): SellerClaimPolicy!
-  updateMySellerCrawlPolicy(updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!): SellerCrawlPolicy!
-  updateMySellerReturnAddress(updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!): SellerReturnAddress!
+  updateMySellerClaimPolicy(
+    updateSellerClaimPolicyInput: UpdateSellerClaimPolicyInput!
+  ): SellerClaimPolicy!
+  updateMySellerCrawlPolicy(
+    updateSellerCrawlPolicyInput: UpdateSellerCrawlPolicyInput!
+  ): SellerCrawlPolicy!
+  updateMySellerReturnAddress(
+    updateSellerReturnAddressInput: UpdateSellerReturnAddressInput!
+  ): SellerReturnAddress!
 
-  """추가도 이거로 해주시면 됩니다!"""
-  updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
-  updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
+  """
+  추가도 이거로 해주시면 됩니다!
+  """
+  updateMySellerSettlePolicy(
+    updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!
+  ): SellerSettlePolicy!
+  updateMySellerShippingPolicy(
+    updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!
+  ): SellerShippingPolicy!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
-  updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateRootInquiryAnswer(
+    id: Int!
+    updateInquiryAnswerInput: UpdateInquiryAnswerInput!
+  ): InquiryAnswer!
   updateRootItemByCrawl(itemId: Int!): Item!
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
+  updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
 
-  """Admin 이상의 권한이 필요합니다."""
-  updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
-  updateShippingReservePolicy(productId: Int!, updateProductShippingReservePolicyInput: UpdateProductShippingReservePolicyInput!): Product!
+  """
+  Admin 이상의 권한이 필요합니다.
+  """
+  updateSellerSaleStrategy(
+    sellerId: Int!
+    updateSaleStrategyInput: FindSaleStrategyInput!
+  ): Seller!
+  updateSellerSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
+  updateShippingReservePolicy(
+    productId: Int!
+    updateProductShippingReservePolicyInput: UpdateProductShippingReservePolicyInput!
+  ): Product!
   updateVideo(id: Int!, updateVideoInput: UpdateVideoInput!): Video!
 }
 
 type Order {
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   brands: [OrderBrand!]!
   buyer: OrderBuyer
   createdAt: DateTime!
   failedAt: DateTime
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   id: String!
 
-  """(PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)"""
+  """
+  (PK) 주문고유번호. YYMMDDHHmmssSSS + NN(00~99)
+  """
   merchantUid: String!
   orderItems: [OrderItem!]!
   paidAt: DateTime
@@ -1537,7 +1882,9 @@ input OrderBuyerInput {
   phoneNumber: String!
 }
 
-"""교환/반품 책임자?입니다. (구매자 or 판매자)"""
+"""
+교환/반품 책임자?입니다. (구매자 or 판매자)
+"""
 enum OrderClaimFaultOf {
   Customer
   Seller
@@ -1554,17 +1901,23 @@ type OrderItem {
   couponDiscountAmount: Int!
   createdAt: DateTime!
 
-  """지연발송 전환 시점"""
+  """
+  지연발송 전환 시점
+  """
   delayedAt: DateTime
 
-  """지연발송 예정일"""
+  """
+  지연발송 예정일
+  """
   delayedShipExpectedAt: DateTime
   exchangeRequest: ExchangeRequest!
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   id: String!
   isConfirmed: Boolean!
   isDelaying: Boolean!
@@ -1578,19 +1931,27 @@ type OrderItem {
   itemName: String!
   itemSellPrice: Int!
 
-  """order.merchantUid + 숫자 2자리"""
+  """
+  order.merchantUid + 숫자 2자리
+  """
   merchantUid: String!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   name: String!
   order: Order!
   orderMerchantUid: String!
   paidAt: DateTime
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   payAmount: Int!
 
-  """처리지연 전환 시점"""
+  """
+  처리지연 전환 시점
+  """
   processDelayedAt: DateTime
   product: Product
   productId: Int
@@ -1608,7 +1969,9 @@ type OrderItem {
   settledAt: DateTime
   shipReadyAt: DateTime
 
-  """예약발송 예정일"""
+  """
+  예약발송 예정일
+  """
   shipReservedAt: DateTime
   shipment: Shipment
   shipmentId: Int
@@ -1617,7 +1980,9 @@ type OrderItem {
   shippingFee: Int!
   status: OrderItemStatus!
 
-  """프론트엔드를 위한 status/claimStatus 표시값입니다."""
+  """
+  프론트엔드를 위한 status/claimStatus 표시값입니다.
+  """
   statusDisplayName: String!
   updatedAt: DateTime!
   usedCoupon: Coupon
@@ -1630,7 +1995,9 @@ type OrderItem {
   vbankReadyAt: DateTime
 }
 
-"""주문상품 클레임상태입니다."""
+"""
+주문상품 클레임상태입니다.
+"""
 enum OrderItemClaimStatus {
   CancelRequested
   Cancelled
@@ -1649,7 +2016,9 @@ input OrderItemFilter {
   merchantUidIn: [String!]
   paidAtBetween: [DateTime!]
 
-  """주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!"""
+  """
+  주문번호, 주문상품번호, 아이템 명으로 검색합니다. 구매자 번호를 검색할 땐 dash를 제거하고 보내주세요!
+  """
   search: String
   sellerId: Int
   shipReadyAtBetween: [DateTime!]
@@ -1665,6 +2034,7 @@ input OrderItemSearchFilter {
   claimStatusIsNull: Boolean
   confirmedAtBetween: [DateTime!]
   isConfirmed: Boolean
+  isProcessDelaying: Boolean
   isSettled: Boolean
   paidAtBetween: [DateTime!]
   sellerId: Int
@@ -1676,7 +2046,9 @@ input OrderItemSearchFilter {
   statusIn: [OrderItemStatus!]
 }
 
-"""주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""
+"""
+주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다.
+"""
 enum OrderItemStatus {
   Failed
   Paid
@@ -1689,67 +2061,109 @@ enum OrderItemStatus {
   VbankReady
 }
 
-"""생성일 기준 3달 이내의 건들만 count합니다."""
+"""
+생성일 기준 3달 이내의 건들만 count합니다.
+"""
 type OrderItemsCountOutput {
-  """취소 요청됨 (deprecated)"""
+  """
+  취소 요청됨 (deprecated)
+  """
   CancelRequested: Int! @deprecated(reason: "현재 취소는 신청 즉시 완료됩니다.")
 
-  """취소 완료"""
+  """
+  취소 완료
+  """
   Cancelled: Int!
 
-  """교환 요청됨"""
+  """
+  교환 요청됨
+  """
   ExchangeRequested: Int!
 
-  """교환 완료"""
+  """
+  교환 완료
+  """
   Exchanged: Int!
 
-  """결제 실패"""
+  """
+  결제 실패
+  """
   Failed: Int!
 
-  """결제 완료"""
+  """
+  결제 완료
+  """
   Paid: Int!
 
-  """결제대기 (입금대기와 다릅니다.)"""
+  """
+  결제대기 (입금대기와 다릅니다.)
+  """
   Pending: Int!
 
-  """반품 요청됨"""
+  """
+  반품 요청됨
+  """
   RefundRequested: Int!
 
-  """반품 완료"""
+  """
+  반품 완료
+  """
   Refunded: Int!
 
-  """배송 보류중(예약중)"""
+  """
+  배송 보류중(예약중)
+  """
   ShipPending: Int!
 
-  """배송 준비중"""
+  """
+  배송 준비중
+  """
   ShipReady: Int!
 
-  """배송 완료"""
+  """
+  배송 완료
+  """
   Shipped: Int!
 
-  """배송 중"""
+  """
+  배송 중
+  """
   Shipping: Int!
 
-  """입금 전 취소"""
+  """
+  입금 전 취소
+  """
   VbankDodged: Int!
 
-  """입금 대기"""
+  """
+  입금 대기
+  """
   VbankReady: Int!
 
-  """구매 확정"""
+  """
+  구매 확정
+  """
   confirmed: Int!
 
-  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  """
+  sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다.
+  """
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """결제 완료"""
+  """
+  결제 완료
+  """
   process_delayed_Paid: Int!
 
-  """배송 보류중(예약중)"""
+  """
+  배송 보류중(예약중)
+  """
   process_delayed_ShipPending: Int!
 
-  """배송 준비중"""
+  """
+  배송 준비중
+  """
   process_delayed_ShipReady: Int!
 }
 
@@ -1759,7 +2173,9 @@ type OrderReceiver {
   detailAddress: String!
   id: Int!
 
-  """베송 요청사항 (최대 50자)"""
+  """
+  베송 요청사항 (최대 50자)
+  """
   message: String
   name: String!
   phoneNumber: String!
@@ -1769,18 +2185,24 @@ type OrderReceiver {
 }
 
 input OrderReceiverInput {
-  """베송 요청사항 (최대 50자)"""
+  """
+  베송 요청사항 (최대 50자)
+  """
   message: String
   shippingAddressId: Int!
 }
 
-"""가상계좌 결제시 환불 받을 계좌 정보"""
+"""
+가상계좌 결제시 환불 받을 계좌 정보
+"""
 type OrderRefundAccount {
   bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
   updatedAt: DateTime!
@@ -1789,7 +2211,9 @@ type OrderRefundAccount {
 input OrderRefundAccountInput {
   bankCode: BankCode!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
 }
@@ -1799,7 +2223,9 @@ type OrderSheet {
   brands: [OrderBrand!]!
   coupons: [Coupon!]!
 
-  """[MODEL ONLY] order의 merchantUid와 같습니다."""
+  """
+  [MODEL ONLY] order의 merchantUid와 같습니다.
+  """
   id: String!
   me: User!
   order: Order!
@@ -1807,7 +2233,9 @@ type OrderSheet {
   shippingAddresses: [ShippingAddress!]!
 }
 
-"""주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다."""
+"""
+주문 상태입니다. 클라이언트에선 거의 사용되지 않을 값입니다.
+"""
 enum OrderStatus {
   Failed
   Paid
@@ -1823,21 +2251,31 @@ type OrderVbankReceipt {
   due: DateTime!
   id: Int!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
   updatedAt: DateTime!
 }
 
-"""키워드 보유중 여부와 관련된 개수들입니다."""
+"""
+키워드 보유중 여부와 관련된 개수들입니다.
+"""
 type OwnsCountOutput {
-  """keywordClassId와 동일"""
+  """
+  keywordClassId와 동일
+  """
   id: Int!
 
-  """해당 클래스의 키워드 중 내가 보유한 수"""
+  """
+  해당 클래스의 키워드 중 내가 보유한 수
+  """
   owning: Int!
 
-  """해당 클래스의 키워드 수"""
+  """
+  해당 클래스의 키워드 수
+  """
   total: Int!
 }
 
@@ -1852,7 +2290,9 @@ enum PayEnviroment {
   Pc
 }
 
-"""결제수단입니다."""
+"""
+결제수단입니다.
+"""
 enum PayMethod {
   Booknlife
   Card
@@ -1891,7 +2331,9 @@ type Payment {
   failedAt: DateTime
   failedReason: String
 
-  """(PK) 결제유번호. YYMMDDHHmmssSSS + NN(00~99) 형식"""
+  """
+  (PK) 결제유번호. YYMMDDHHmmssSSS + NN(00~99) 형식
+  """
   merchantUid: String!
   name: String!
   origin: String!
@@ -1987,19 +2429,25 @@ type PaymentsListStatusCount {
   VbankReady: Float!
 }
 
-"""PG사입니다."""
+"""
+PG사입니다.
+"""
 enum Pg {
   Inicis
 }
 
 type PointEvent {
-  """적립/사용 금액. 양수/음수 구분함"""
+  """
+  적립/사용 금액. 양수/음수 구분함
+  """
   amount: Int!
   createdAt: DateTime!
   id: Int!
   orderItemMerchantUid: String
 
-  """적립/사용 이후 잔고"""
+  """
+  적립/사용 이후 잔고
+  """
   resultBalance: Int!
   sign: PointSign!
   title: String!
@@ -2014,7 +2462,9 @@ input PointEventFilter {
   userId: Int
 }
 
-"""포인트 분류입니다. 적립(Plus), 사용(Minus)"""
+"""
+포인트 분류입니다. 적립(Plus), 사용(Minus)
+"""
 enum PointSign {
   Minus
   Plus
@@ -2025,19 +2475,25 @@ type Product {
   id: Int!
   isDeleted: Boolean!
 
-  """[MODEL ONLY] 예약배송 적용 여부"""
+  """
+  [MODEL ONLY] 예약배송 적용 여부
+  """
   isShipReserving: Boolean!
   item: Item!
   itemId: Int!
   itemOptionValues: [ItemOptionValue!]!
   priceVariant: Int!
 
-  """[MODEL ONLY] item.finalPrice + priceVariant"""
+  """
+  [MODEL ONLY] item.finalPrice + priceVariant
+  """
   purchasePrice: Float!
   shippingReservePolicy: ProductShippingReservePolicy
   stock: Int!
 
-  """[MODEL ONLY] stock || shippingReservePolicy?.stock || 0"""
+  """
+  [MODEL ONLY] stock || shippingReservePolicy?.stock || 0
+  """
   stockThreshold: Float!
   updatedAt: DateTime!
 }
@@ -2045,11 +2501,15 @@ type Product {
 type ProductShippingReservePolicy {
   createdAt: DateTime!
 
-  """예약발송 예정일"""
+  """
+  예약발송 예정일
+  """
   estimatedShippingBegginDate: DateTime!
   id: Int!
 
-  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
+  """
+  예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다.
+  """
   stock: Int!
   updatedAt: DateTime!
 }
@@ -2060,13 +2520,17 @@ type Query {
   checkFollowing(targetId: Int!): Boolean!
   checkLiking(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
 
-  """중복이면 true, 아니면 false를 반환한다."""
+  """
+  중복이면 true, 아니면 false를 반환한다.
+  """
   checkNicknameDuplicate(nickname: String!): Boolean!
   checkOwning(keywordId: Int!): Boolean!
   checkPin(checkPinInput: CheckPinInput!): Boolean!
   checkoutOrder(merchantUid: String!): OrderSheet!
   comments(
-    """기본적으로 parentIdIsNull:true가 적용되어있습니다."""
+    """
+    기본적으로 parentIdIsNull:true가 적용되어있습니다.
+    """
     filter: CommentFilter
     pageInput: PageInput
   ): [Comment!]!
@@ -2076,8 +2540,15 @@ type Query {
   digest(id: Int!): Digest!
   digests(filter: DigestFilter, pageInput: PageInput): [Digest!]!
   digestsExhibitions: [DigestsExhibition!]!
-  expectedCancelAmount(merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
-  expectedClaimShippingFee(faultOf: OrderClaimFaultOf!, merchantUid: String!, orderItemMerchantUids: [String!]!): Int!
+  expectedCancelAmount(
+    merchantUid: String!
+    orderItemMerchantUids: [String!]!
+  ): Int!
+  expectedClaimShippingFee(
+    faultOf: OrderClaimFaultOf!
+    merchantUid: String!
+    orderItemMerchantUids: [String!]!
+  ): Int!
   genRandomNickname: String!
   getAppleAuthCode(getAppleAuthCodeInput: GetAppleAuthCodeInput!): String!
   groupItemIds(itemId: Int!): [Int!]
@@ -2087,14 +2558,24 @@ type Query {
   itemCategoryTree: [ItemCategory!]!
   itemMajorCategories: [ItemCategory!]!
   itemMinorCategories: [ItemCategory!]!
-  itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
+  itemProperties(
+    itemPropertyFilter: ItemPropertyFilter
+    pageInput: PageInput
+  ): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsExhibitions: [ItemsExhibition!]!
-  itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
+  itemsGroupDigests(
+    filter: DigestFilter
+    itemId: Int!
+    pageInput: PageInput
+  ): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
   itemsPackage(code: String!): ItemsPackage!
   keyword(id: Int!): Keyword!
-  keywordClasses(filter: KeywordClassFilter!, pageInput: PageInput): [KeywordClass!]!
+  keywordClasses(
+    filter: KeywordClassFilter!
+    pageInput: PageInput
+  ): [KeywordClass!]!
   keywords(filter: KeywordFilter, pageInput: PageInput): [Keyword!]!
   keywordsCountByClass(keywordClassId: Int!): Int!
   likingDigests(pageInput: PageInput!): [Digest!]!
@@ -2103,7 +2584,10 @@ type Query {
   likingVideos(pageInput: PageInput!): [Video!]!
   loginByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   loginByOauth(loginByOauthInput: LoginByOauthInput!): JwtToken!
-  loginRootSeller(loginByCodeInput: LoginByCodeInput!, sellerId: Int!): JwtToken!
+  loginRootSeller(
+    loginByCodeInput: LoginByCodeInput!
+    sellerId: Int!
+  ): JwtToken!
   loginSellerByCode(loginByCodeInput: LoginByCodeInput!): JwtToken!
   look(id: Int!): Look!
   looks(filter: LookFilter, pageInput: PageInput): [Look!]!
@@ -2114,55 +2598,100 @@ type Query {
   meOrder(merchantUid: String!): Order!
   meOrderItem(merchantUid: String!): OrderItem!
 
-  """VbankReady, Paid만 표시"""
+  """
+  VbankReady, VbankDodged, Paid만 표시
+  """
   meOrders(pageInput: PageInput): [Order!]!
   meOwnsCount(keywordClassId: Int!): OwnsCountOutput!
   meSeller: Seller!
-  meSellerExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
-  meSellerExchangeRequestsCount(forceUpdate: Boolean): ExchangeRequestsCountOutput!
+  meSellerExchangeRequests(
+    exchangeRequestFilter: ExchangeRequestFilter
+    pageInput: PageInput
+  ): [ExchangeRequest!]!
+  meSellerExchangeRequestsCount(
+    forceUpdate: Boolean
+  ): ExchangeRequestsCountOutput!
   meSellerInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
   meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   meSellerInquiry(id: Int!): Inquiry!
   meSellerItems(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
-  meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
+  meSellerOrderItems(
+    orderItemFilter: OrderItemFilter
+    pageInput: PageInput
+  ): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
-  meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
+  meSellerRefundRequests(
+    pageInput: PageInput
+    refundRequestFilter: RefundRequestFilter
+  ): [RefundRequest!]!
   meSellerRefundRequestsCount(forceUpdate: Boolean): RefundRequestsCountOutput!
   meShippingAddresses: [ShippingAddress!]!
   myCart: Cart!
   myCartItemsCount: Int!
   myCoupons: [Coupon!]!
-  myExpectedPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
+  myExpectedPointEvents(
+    pageInput: PageInput
+    pointEventFilter: PointEventFilter
+  ): [PointEvent!]!
 
-  """Bearer token을 받아 JwtPayload를 반환합니다."""
+  """
+  Bearer token을 받아 JwtPayload를 반환합니다.
+  """
   myJwtPayload: JwtPayload!
-  myPointEvents(pageInput: PageInput, pointEventFilter: PointEventFilter): [PointEvent!]!
+  myPointEvents(
+    pageInput: PageInput
+    pointEventFilter: PointEventFilter
+  ): [PointEvent!]!
 
-  """[Admin] 결제 목록을 조회합니다."""
+  """
+  [Admin] 결제 목록을 조회합니다.
+  """
   payments(paymentFilter: PaymentFilter!): PaymentListOutput!
   product(id: Int!): Product!
 
-  """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
+  """
+  refresh token을 받아서 새로운 JwtToken을 생성합니다.
+  """
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
   rootInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
 
-  """[ROOT ADMIN]"""
+  """
+  [ROOT ADMIN]
+  """
   rootInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   rootInquiry(id: Int!): Inquiry!
-  rootOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
-  rootRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
+  rootOrderItems(
+    orderItemFilter: OrderItemFilter
+    pageInput: PageInput
+  ): [OrderItem!]!
+  rootRefundRequests(
+    pageInput: PageInput
+    refundRequestFilter: RefundRequestFilter
+  ): [RefundRequest!]!
   searchAllItem(pageInput: PageInput, query: String!): [Item!]!
   searchDigest(pageInput: PageInput, query: String!): [Digest!]!
   searchKeyword(pageInput: PageInput, query: String!): [Keyword!]!
   searchLook(pageInput: PageInput, query: String!): [Look!]!
-  searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
+  searchMeSellerOrderItems(
+    pageInput: PageInput
+    query: String
+    searchFilter: OrderItemSearchFilter
+  ): SearchOrderItemsOutput!
+  searchMeSellerOrderItemsCount(
+    query: String
+    searchFilter: OrderItemSearchFilter
+  ): Int!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
-  searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
-  searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
-  searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
-  searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
-  searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
+  searchRootOrderItems(
+    pageInput: PageInput
+    query: String
+    searchFilter: OrderItemSearchFilter
+  ): SearchOrderItemsOutput!
+  searchRootOrderItemsCount(
+    query: String
+    searchFilter: OrderItemSearchFilter
+  ): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
   seller(id: Int!): Seller!
   sellers(pageInput: PageInput, sellerFilter: SellerFilter): [Seller!]!
@@ -2172,16 +2701,22 @@ type Query {
   videos(filter: VideoFilter, pageInput: PageInput): [Video!]!
 }
 
-"""별점을 나타냅니다. 클라이언트로부터 입력 받은 0~5 실수를 0~10 정수로 변환합니다."""
+"""
+별점을 나타냅니다. 클라이언트로부터 입력 받은 0~5 실수를 0~10 정수로 변환합니다.
+"""
 scalar Rating
 
-"""가상계좌 결제시 환불 받을 계좌 정보"""
+"""
+가상계좌 결제시 환불 받을 계좌 정보
+"""
 type RefundAccount {
   bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
   updatedAt: DateTime!
@@ -2189,30 +2724,42 @@ type RefundAccount {
 }
 
 type RefundRequest {
-  """반품대상 주문상품 총 결제액 (배송비 제외)"""
+  """
+  반품대상 주문상품 총 결제액 (배송비 제외)
+  """
   amount: Int!
   confirmedAt: DateTime
   faultOf: OrderClaimFaultOf!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   id: String!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
 
-  """(PK) YYMMDDHHmmssSSS + NN(00~99) + M"""
+  """
+  (PK) YYMMDDHHmmssSSS + NN(00~99) + M
+  """
   merchantUid: String!
   order: Order!
   orderItems: [OrderItem!]!
   orderMerchantUid: String!
 
-  """수거 완료 시점"""
+  """
+  수거 완료 시점
+  """
   pickedAt: DateTime
   processDelayedAt: DateTime!
 
-  """최대 255자"""
+  """
+  최대 255자
+  """
   reason: String!
 
-  """최대 255자"""
+  """
+  최대 255자
+  """
   rejectReason: String
   rejectedAt: DateTime
   requestedAt: DateTime!
@@ -2222,7 +2769,9 @@ type RefundRequest {
   shipment: Shipment
   shipmentId: Int
 
-  """부과된 반품 배송비"""
+  """
+  부과된 반품 배송비
+  """
   shippingFee: Int!
   status: RefundRequestStatus!
   user: User
@@ -2237,7 +2786,9 @@ input RefundRequestFilter {
   pickedAtBetween: [DateTime!]
   requestedAtBetween: [DateTime!]
 
-  """주문번호, 운송장번호로 검색"""
+  """
+  주문번호, 운송장번호로 검색
+  """
   search: String
   sellerId: Int
   status: RefundRequestStatus
@@ -2262,7 +2813,9 @@ input RefundRequestSearchFilter {
   statusIn: [RefundRequestStatus!]
 }
 
-"""반품요청 상태입니다."""
+"""
+반품요청 상태입니다.
+"""
 enum RefundRequestStatus {
   Confirmed
   Picked
@@ -2270,35 +2823,53 @@ enum RefundRequestStatus {
   Requested
 }
 
-"""생성일 기준 3달 이내의 건들만 count합니다."""
+"""
+생성일 기준 3달 이내의 건들만 count합니다.
+"""
 type RefundRequestsCountOutput {
-  """반품 승인"""
+  """
+  반품 승인
+  """
   Confirmed: Int!
 
-  """수거 완료"""
+  """
+  수거 완료
+  """
   Picked: Int!
 
-  """반품 거부"""
+  """
+  반품 거부
+  """
   Rejected: Int!
 
-  """반품 요청 (= 수거중)"""
+  """
+  반품 요청 (= 수거중)
+  """
   Requested: Int!
 
-  """sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다."""
+  """
+  sellerId와 동일한 값. Apollo Client 캐싱을 위해 존재합니다.
+  """
   id: Int!
   lastUpdatedAt: DateTime!
 
-  """반품 처리 지연 (지연중인 requested + picked)"""
+  """
+  반품 처리 지연 (지연중인 requested + picked)
+  """
   process_delayed: Int!
 }
 
 input RegisterExchangeRequestInput {
   faultOf: OrderClaimFaultOf!
 
-  """교환 대상 product"""
+  """
+  교환 대상 product
+  """
   productId: Int!
 
-  """255자 이내로 적어주세요"""
+  """
+  255자 이내로 적어주세요
+  """
   reason: String!
   shipmentInput: CreateShipmentInput
 }
@@ -2317,10 +2888,14 @@ input RegisterOrderItemInput {
 input RequestOrderRefundInput {
   faultOf: OrderClaimFaultOf!
 
-  """반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다."""
+  """
+  반품처리할 OrderItem들. 같은 브랜드의 OrderItem들로만 신청할 수 있습니다.
+  """
   orderItemMerchantUids: [String!]!
 
-  """최대 255자"""
+  """
+  최대 255자
+  """
   reason: String!
   shipmentInput: CreateShipmentInput
 }
@@ -2364,7 +2939,9 @@ type Seller {
   orderNotiPhoneNumber: String
   phoneNumber: String
 
-  """최대 20자"""
+  """
+  최대 20자
+  """
   representativeName: String
   returnAddress: SellerReturnAddress!
   saleStrategy: SellerSaleStrategy!
@@ -2383,10 +2960,14 @@ type SellerClaimPolicy {
   isExchangable: Boolean!
   isRefundable: Boolean!
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String!
 
-  """담당자 이름"""
+  """
+  담당자 이름
+  """
   picName: String!
   sellerId: Int!
   updatedAt: DateTime!
@@ -2396,10 +2977,14 @@ type SellerCrawlPolicy {
   createdAt: DateTime!
   id: Int!
 
-  """크롤링된 새로운 아이템들을 추가 등록하는가"""
+  """
+  크롤링된 새로운 아이템들을 추가 등록하는가
+  """
   isInspectingNew: Boolean!
 
-  """기존 아이템들의 이름/가격을 업데이트하는가"""
+  """
+  기존 아이템들의 이름/가격을 업데이트하는가
+  """
   isUpdatingItems: Boolean!
   sellerId: Int!
   updatedAt: DateTime!
@@ -2415,7 +3000,9 @@ type SellerCrawlStrategy {
   pagination: Boolean!
   sellerId: Int!
 
-  """'<>'으로 join된 상태다."""
+  """
+  '<>'으로 join된 상태다.
+  """
   startPathNamesJoin: String!
   updatedAt: DateTime!
 }
@@ -2449,13 +3036,17 @@ type SellerSaleStrategy {
   updatedAt: DateTime!
 }
 
-"""정산 계좌"""
+"""
+정산 계좌
+"""
 type SellerSettleAccount {
   bankCode: BankCode!
   createdAt: DateTime!
   id: Int!
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String!
   ownerName: String!
   settlePolicyId: Int!
@@ -2463,19 +3054,27 @@ type SellerSettleAccount {
 }
 
 type SellerSettlePolicy {
-  """정산 받을 계좌"""
+  """
+  정산 받을 계좌
+  """
   account: SellerSettleAccount!
   createdAt: DateTime!
 
-  """세금계산서 수령이메일"""
+  """
+  세금계산서 수령이메일
+  """
   email: String!
   id: Int!
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String!
   picName: String!
 
-  """기본 정산율"""
+  """
+  기본 정산율
+  """
   rate: Int!
   sellerId: Int!
   updatedAt: DateTime!
@@ -2523,7 +3122,9 @@ type ShipmentHistory {
   time: DateTime!
 }
 
-"""배송 연관 객체 분류입니다."""
+"""
+배송 연관 객체 분류입니다.
+"""
 enum ShipmentOwnerType {
   ExchangeRequestPick
   ExchangeRequestReship
@@ -2562,7 +3163,9 @@ input StartOrderInput {
 }
 
 input StartOrderItemInput {
-  """order.merchantUid + 숫자 2자리"""
+  """
+  order.merchantUid + 숫자 2자리
+  """
   merchantUid: String!
   usedCouponId: Int
 }
@@ -2571,7 +3174,9 @@ type StyleTag {
   createdAt: DateTime!
   id: Int!
 
-  """최대 길이 30"""
+  """
+  최대 길이 30
+  """
   name: String!
   order: Int!
   updatedAt: DateTime!
@@ -2605,7 +3210,9 @@ input UpdateCourierInput {
 }
 
 input UpdateDigestInput {
-  """최대 길이 65000자"""
+  """
+  최대 길이 65000자
+  """
   content: String
   imageUrls: [String!]
   itemId: Int
@@ -2613,15 +3220,21 @@ input UpdateDigestInput {
   rating: Rating
   size: String
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 }
 
 input UpdateInquiryAnswerInput {
-  """최대 길이 255"""
+  """
+  최대 길이 255
+  """
   content: String
 
-  """표시될 답변작성자 이름. 최대 길이 30"""
+  """
+  표시될 답변작성자 이름. 최대 길이 30
+  """
   displayAuthor: String
 }
 
@@ -2651,24 +3264,9 @@ input UpdateItemPriceInput {
 }
 
 input UpdateItemSizeChartInput {
-  accDepth: Float
-  accHeight: Float
-  accWidth: Float
-  chestWidth: Float
-  crossStrapLength: Float
-  glassBridgeLength: Float
-  glassLegLength: Float
-  glassWidth: Float
-  hemWidth: Float
-  id: Int
-  name: String!
-  riseHeight: Float
-  shoulderWidth: Float
-  sleeveLength: Float
-  thighWidth: Float
-  totalLength: Float
-  waistWidth: Float
-  watchBandDepth: Float
+  labels: [String!]!
+  recommendations: [ItemSizeRecommendationInput!]
+  sizes: [ItemSizeInput!]!
 }
 
 input UpdateLookDigestInput {
@@ -2682,7 +3280,9 @@ input UpdateLookInput {
   imageUrls: [String!]
   styleTagIds: [Int!]
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 }
 
@@ -2691,17 +3291,23 @@ input UpdateProductInput {
 }
 
 input UpdateProductShippingReservePolicyInput {
-  """예약발송 예정일"""
+  """
+  예약발송 예정일
+  """
   estimatedShippingBegginDate: DateTime
 
-  """예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다."""
+  """
+  예약설정된 재고. 예약발송일이 되면, 예약발송 상태는 자동으로 종료되며, 잔여 예약발송 재고는 일반 재고에 합산됩니다.
+  """
   stock: Int
 }
 
 input UpdateRefundAccountInput {
   bankCode: BankCode
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String
   ownerName: String
 }
@@ -2712,18 +3318,26 @@ input UpdateSellerClaimPolicyInput {
   isExchangable: Boolean
   isRefundable: Boolean
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String
 
-  """담당자 이름"""
+  """
+  담당자 이름
+  """
   picName: String
 }
 
 input UpdateSellerCrawlPolicyInput {
-  """크롤링된 새로운 아이템들을 추가 등록하는가"""
+  """
+  크롤링된 새로운 아이템들을 추가 등록하는가
+  """
   isInspectingNew: Boolean
 
-  """기존 아이템들의 이름/가격을 업데이트하는가"""
+  """
+  기존 아이템들의 이름/가격을 업데이트하는가
+  """
   isUpdatingItems: Boolean
 }
 
@@ -2738,7 +3352,9 @@ input UpdateSellerInput {
   orderNotiPhoneNumber: String
   phoneNumber: String
 
-  """최대 20자"""
+  """
+  최대 20자
+  """
   representativeName: String
 }
 
@@ -2754,7 +3370,9 @@ input UpdateSellerReturnAddressInput {
 input UpdateSellerSettleAccountInput {
   bankCode: BankCode
 
-  """계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다."""
+  """
+  계좌번호입니다.("-" 제외) 최대 14자까지 입력 가능합니다.
+  """
   number: String
   ownerName: String
 }
@@ -2762,14 +3380,20 @@ input UpdateSellerSettleAccountInput {
 input UpdateSellerSettlePolicyInput {
   accountInput: UpdateSellerSettleAccountInput
 
-  """세금계산서 수령이메일"""
+  """
+  세금계산서 수령이메일
+  """
   email: String
 
-  """담당자 번호"""
+  """
+  담당자 번호
+  """
   phoneNumber: String
   picName: String
 
-  """기본 정산율"""
+  """
+  기본 정산율
+  """
   rate: Int
 }
 
@@ -2794,14 +3418,18 @@ input UpdateUserInput {
   avatarUrl: String
   code: String
 
-  """최대 255자"""
+  """
+  최대 255자
+  """
   description: String
   email: String
   height: Int
   instagramCode: String
   name: String
 
-  """최대 11자"""
+  """
+  최대 11자
+  """
   nickname: String
   styleTagIds: [Int!]
   weight: Int
@@ -2817,49 +3445,69 @@ input UpdateVideoDigestInput {
   timestampEndSecond: Int
   timestampStartSecond: Int
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 }
 
 input UpdateVideoInput {
   digests: [UpdateVideoDigestInput!]
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String
 
-  """최대 길이 40"""
+  """
+  최대 길이 40
+  """
   youtubeCode: String
 }
 
 type User {
-  """[ResolveField] 활성화된 주문건들 개수"""
+  """
+  [ResolveField] 활성화된 주문건들 개수
+  """
   activeOrderItemsCount: Int!
 
-  """[ResolveField] 사용가능 포인트 잔고"""
+  """
+  [ResolveField] 사용가능 포인트 잔고
+  """
   availablePoint: Int!
   avatarUrl: String
   code: String
   createdAt: DateTime!
 
-  """최대 255자"""
+  """
+  최대 255자
+  """
   description: String
   email: String
 
-  """[ResolveField] 적립예정 포인트 잔고"""
+  """
+  [ResolveField] 적립예정 포인트 잔고
+  """
   expectedPoint: Int!
   followCount: Int!
   height: Int
   id: Int!
   instagramCode: String
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isFollowing: Boolean
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isMe: Boolean
   name: String
 
-  """최대 11자"""
+  """
+  최대 11자
+  """
   nickname: String!
   oauthCode: String
   oauthProvider: UserProviderType
@@ -2873,14 +3521,18 @@ type User {
   youtubeUrl: String
 }
 
-"""Oauth 제공 서비스입니다."""
+"""
+Oauth 제공 서비스입니다.
+"""
 enum UserProviderType {
   Apple
   Facebook
   Kakao
 }
 
-"""유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다."""
+"""
+유저의 역할/권한을 나타냅니다. User->Editor->Seller->Admin 순으로 계층 구조입니다.
+"""
 enum UserRole {
   Admin
   Editor
@@ -2895,21 +3547,29 @@ type Video {
   hitCount: Int!
   id: Int!
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isLiking: Boolean
 
-  """[MODEL ONLY]"""
+  """
+  [MODEL ONLY]
+  """
   isMine: Boolean
   likeCount: Int!
   score: Float!
 
-  """최대 길이 127"""
+  """
+  최대 길이 127
+  """
   title: String!
   updatedAt: DateTime!
   user: User
   userId: Int
 
-  """최대 길이 40"""
+  """
+  최대 길이 40
+  """
   youtubeCode: String!
 }
 

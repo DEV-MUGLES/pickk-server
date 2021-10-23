@@ -37,7 +37,6 @@ export class OrdersProcessResolver extends BaseResolver<OrderRelationType> {
     super();
   }
 
-  // @TODO: SQS에서 1. Payment 채번취소 처리, 3. 완료 알림톡 전송
   @Mutation(() => BaseOrderOutput)
   @UseGuards(JwtVerifyGuard)
   async dodgeVbankOrder(

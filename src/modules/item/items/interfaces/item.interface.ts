@@ -29,10 +29,10 @@ export interface IItem extends IBaseId {
   minorCategoryId?: number;
 
   salePolicy: IItemSalePolicy;
+  sizeChart: IItemSizeChart;
   prices: IItemPrice[];
   urls: IItemUrl[];
   detailImages: IImage[];
-  sizeCharts?: IItemSizeChart[];
 
   itemsGroupItem: IItemsGroupItem;
 

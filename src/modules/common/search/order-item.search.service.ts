@@ -25,6 +25,7 @@ export type OrderItemSearchBody = Pick<
   | 'confirmedAt'
   | 'isSettled'
   | 'settledAt'
+  | 'isProcessDelaying'
 > & {
   orderBuyerName: string;
   orderBuyerPhoneNumber: string;
@@ -74,6 +75,7 @@ export class OrderItemSearchService extends BaseSearchService<
       confirmedAt: orderItem.confirmedAt,
       isSettled: orderItem.isSettled,
       settledAt: orderItem.settledAt,
+      isProcessDelaying: orderItem.isProcessDelaying,
       orderBuyerName: orderItem.order?.buyer?.name,
       orderBuyerPhoneNumber: orderItem.order?.buyer?.phoneNumber,
       orderReceiverReceiverName: orderItem.order?.receiver?.receiverName,

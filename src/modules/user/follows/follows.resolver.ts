@@ -6,6 +6,8 @@ import { JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 
+import { FollowOutput } from './dtos';
+
 import { FollowsService } from './follows.service';
 
 @Injectable()
@@ -21,25 +23,33 @@ export class FollowsResolver {
     return await this.followsService.check(userId, targetId);
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => FollowOutput)
   @UseGuards(JwtVerifyGuard)
   async follow(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('targetId') targetId: number
-  ) {
+  ): Promise<FollowOutput> {
     await this.followsService.add(userId, targetId);
-    return true;
+
+    return {
+      id: targetId,
+      isFollowing: true,
+    };
   }
 
-  @Mutation(() => Boolean, {
+  @Mutation(() => FollowOutput, {
     description: '여러번 구독된 상태였다면 모두 삭제됩니다.',
   })
   @UseGuards(JwtVerifyGuard)
   async unfollow(
     @CurrentUser() { sub: userId }: JwtPayload,
     @IntArgs('targetId') targetId: number
-  ) {
+  ): Promise<FollowOutput> {
     await this.followsService.remove(userId, targetId);
-    return true;
+
+    return {
+      id: targetId,
+      isFollowing: false,
+    };
   }
 }

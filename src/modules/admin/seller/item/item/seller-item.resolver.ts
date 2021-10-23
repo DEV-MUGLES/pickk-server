@@ -16,12 +16,12 @@ import {
   AddItemUrlInput,
   AddItemPriceInput,
   UpdateItemPriceInput,
-  AddItemSizeChartInput,
-  UpdateItemSizeChartInput,
   CreateItemOptionSetInput,
   UpdateItemInput,
   UpdateItemOptionInput,
   ItemFilter,
+  CreateItemSizeChartInput,
+  UpdateItemSizeChartInput,
 } from '@item/items/dtos';
 import { Item, ItemOption, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
@@ -204,29 +204,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async addItemSizeCharts(
-    @IntArgs('itemId') itemId: number,
-    @Args({
-      name: 'addItemSizeChartInputs',
-      type: () => [AddItemSizeChartInput],
-    })
-    addItemSizeChartInputs: AddItemSizeChartInput[]
-  ): Promise<Item> {
-    const item = await this.itemsService.get(itemId, ['sizeCharts']);
-    return await this.itemsService.addSizeCharts(item, addItemSizeChartInputs);
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
-  async removeItemSizeChartsAll(
-    @IntArgs('itemId') itemId: number
-  ): Promise<Item> {
-    const item = await this.itemsService.get(itemId, ['sizeCharts']);
-    return await this.itemsService.removeSizeChartsAll(item);
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
   async createItemOptionSet(
     @IntArgs('id') id: number,
     @Args('createItemOptionSetInput')
@@ -242,35 +219,33 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async modifyItemSizeCharts(
-    @IntArgs('itemId') itemId: number,
-    @Args('updateItemSizeChartInput', {
-      type: () => [UpdateItemSizeChartInput],
-      nullable: true,
-    })
-    updateItemSizeChartInputs: UpdateItemSizeChartInput[],
-    @Args('removedChartIds', {
-      type: () => [Int],
-      nullable: true,
-    })
-    removedChartIds: number[]
-  ): Promise<Item> {
-    const item = await this.itemsService.get(itemId, ['sizeCharts']);
+  async createSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: CreateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.createSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
 
-    const addInputs: AddItemSizeChartInput[] = updateItemSizeChartInputs.filter(
-      (input) => input.id === null
-    );
-    const updateInputs = updateItemSizeChartInputs.filter(
-      (input) => input.id !== null
-    );
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: UpdateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.updateSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
 
-    if (removedChartIds?.length > 0) {
-      await this.itemsService.removeSizeChartsByIds(item, removedChartIds);
-    }
-    if (addInputs?.length > 0) {
-      await this.itemsService.addSizeCharts(item, addInputs);
-    }
-
-    return await this.itemsService.updateSizeCharts(item, updateInputs);
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async removeSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.removeSizeChart(id);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }
