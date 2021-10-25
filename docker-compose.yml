@@ -32,7 +32,7 @@ services:
       - '${REDIS_PORT}:${REDIS_PORT}'
   localsqs:
     container_name: localsqs
-    image: greatsumini/localsqs:0.1.1
+    image: greatsumini/localsqs:0.2.0
     networks:
       - webnet
     ports:
