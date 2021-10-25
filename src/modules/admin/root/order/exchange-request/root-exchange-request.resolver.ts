@@ -12,7 +12,8 @@ import {
   ExchangeRequestSearchFilter,
   SearchExchangeRequestsOutput,
 } from '@mcommon/search/dtos';
-import { ExchangeRequestSearchService } from '@mcommon/search/Exchange-request.search.service';
+import { ExchangeRequestSearchService } from '@mcommon/search/exchange-request.search.service';
+
 import {
   ExchangeRequestRelationType,
   EXCHANGE_REQUEST_RELATIONS,
