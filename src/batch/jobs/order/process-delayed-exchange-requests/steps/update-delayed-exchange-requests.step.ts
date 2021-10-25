@@ -5,11 +5,13 @@ import { In, LessThan } from 'typeorm';
 import { BaseStep } from '@batch/jobs/base.step';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestStatus } from '@order/exchange-requests/constants';
+import { ExchangeRequestsProducer } from '@order/exchange-requests/producers';
 
 @Injectable()
 export class UpdateDelayedExchangeRequestsStep extends BaseStep {
   constructor(
-    private readonly exchangeRequestsRepository: ExchangeRequestsRepository
+    private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer
   ) {
     super();
   }
@@ -33,22 +35,28 @@ export class UpdateDelayedExchangeRequestsStep extends BaseStep {
       v.isProcessDelaying = true;
     });
 
-    const processedExchangeRequests =
-      await this.exchangeRequestsRepository.find({
+    const processedExchangeRequests = await this.exchangeRequestsRepository.find(
+      {
         isProcessDelaying: true,
         status: In([
           ExchangeRequestStatus.Rejected,
           ExchangeRequestStatus.Reshipped,
           ExchangeRequestStatus.Reshipping,
         ]),
-      });
+      }
+    );
     processedExchangeRequests.forEach((v) => {
       v.isProcessDelaying = false;
     });
 
-    await this.exchangeRequestsRepository.save([
+    const updatedExchangeRequests = [
       ...delayedExchangeRequests,
       ...processedExchangeRequests,
-    ]);
+    ];
+
+    await this.exchangeRequestsRepository.save(updatedExchangeRequests);
+    await this.exchangeRequestsProducer.indexExchangeRequests(
+      updatedExchangeRequests.map((v) => v.merchantUid)
+    );
   }
 }
