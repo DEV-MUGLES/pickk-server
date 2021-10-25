@@ -7,7 +7,8 @@ export type OrderItemRelationType =
   | 'seller.shippingPolicy'
   | 'order.buyer'
   | 'order.receiver'
-  | 'shipment.courier';
+  | 'shipment.courier'
+  | 'shipment.histories';
 
 // @TODO: 현재 TypeORM 기능 문제로 2중 nested 필터링이 지원되지 않습니다. 해결해야함
 export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
@@ -23,6 +24,7 @@ export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'campaign',
   'shipment',
   'shipment.courier',
+  'shipment.histories',
   'refundRequest',
   'exchangeRequest',
 ];
