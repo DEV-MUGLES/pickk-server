@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import {
+  BaseEntity,
   Column,
   CreateDateColumn,
   Entity,
@@ -19,8 +20,9 @@ import { ShipmentHistory } from '../models';
 @ObjectType()
 @Entity('shipment')
 @Index('idx-status', ['status'])
-export class ShipmentEntity implements IShipment {
+export class ShipmentEntity extends BaseEntity implements IShipment {
   constructor(attributes?: Partial<ShipmentEntity>) {
+    super();
     if (!attributes) {
       return;
     }
