@@ -2537,11 +2537,11 @@ type Shipment {
   courier: Courier!
   courierId: Int!
   createdAt: DateTime!
+  histories: [ShipmentHistory!]!
   id: Int!
   lastTrackedAt: DateTime
   ownerPk: String
   ownerType: ShipmentOwnerType
-  shipmentHistories: [ShipmentHistory!]!
   status: ShipmentStatus!
   trackCode: String!
 }
