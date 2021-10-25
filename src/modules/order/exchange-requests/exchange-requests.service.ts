@@ -131,6 +131,7 @@ export class ExchangeRequestsService {
 
     exchangeRequest.markConverted();
     await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestProducer.indexExchangeRequests([merchantUid]);
 
     if (exchangeRequest.shippingFee > 0) {
       await this.paymentsService.cancel(merchantUid, {
@@ -148,6 +149,5 @@ export class ExchangeRequestsService {
     });
     // @TODO: 고객에게 알림 보내야할듯? 일단 결제했던 배송비가 환불된거니까
     await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
-    await this.exchangeRequestProducer.indexExchangeRequests([merchantUid]);
   }
 }
