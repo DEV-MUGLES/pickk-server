@@ -42,4 +42,10 @@ export class CommonJobsController {
   async indexRefundRequests() {
     return await this.commonJobsService.indexRefundRequests();
   }
+
+  // 이 엔드포인트는 스케줄링하지 않습니다.
+  @Post('index-exchange-requests')
+  async indexExchangeRequests() {
+    return await this.commonJobsService.indexExchangeRequests();
+  }
 }
