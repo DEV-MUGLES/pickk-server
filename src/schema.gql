@@ -689,6 +689,9 @@ type ExchangeRequest {
   confirmedAt: DateTime
   convertedAt: DateTime
   faultOf: OrderClaimFaultOf!
+
+  """[MODEL ONLY]"""
+  id: String!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
   itemName: String!

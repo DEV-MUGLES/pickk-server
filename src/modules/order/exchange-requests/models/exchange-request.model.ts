@@ -12,6 +12,10 @@ import { ExchangeRequestMarkStrategyFactory } from '../factories';
 
 @ObjectType()
 export class ExchangeRequest extends ExchangeRequestEntity {
+  @Field({ description: '[MODEL ONLY]' })
+  get id(): string {
+    return this.merchantUid;
+  }
   @Type(() => OrderItem)
   @Field(() => OrderItem)
   orderItem: OrderItem;

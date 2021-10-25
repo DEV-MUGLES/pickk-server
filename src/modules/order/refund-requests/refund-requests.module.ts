@@ -24,7 +24,7 @@ import { RefundRequestsService } from './refund-requests.service';
     forwardRef(() => OrderItemsModule),
     PaymentsModule,
     PointsModule,
-    ExchangeRequestsModule,
+    forwardRef(() => ExchangeRequestsModule),
     SqsModule.registerQueue({
       name: INDEX_REFUND_REQUESTS_QUEUE,
     }),
