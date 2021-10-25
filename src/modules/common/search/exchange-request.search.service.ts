@@ -49,6 +49,7 @@ export class ExchangeRequestSearchService extends BaseSearchService<
 
   async getModel(merchantUid: string | number): Promise<ExchangeRequest> {
     return await this.exchangeRequestsService.get(merchantUid.toString(), [
+      'orderItem',
       'orderItem.order',
       'orderItem.order.buyer',
       'reShipment',

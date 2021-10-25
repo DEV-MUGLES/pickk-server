@@ -26,7 +26,13 @@ export class IndexExchangeRequestsConsumer extends BaseConsumer {
     const exchangeRequests = await this.exchangeRequestsService.list(
       { merchantUidIn: merchantUids },
       null,
-      ['orderItem.order', 'orderItem.order.buyer', 'reShipment', 'pickShipment']
+      [
+        'orderItem',
+        'orderItem.order',
+        'orderItem.order.buyer',
+        'reShipment',
+        'pickShipment',
+      ]
     );
 
     await this.exchangeRequestSearchService.bulkIndex(exchangeRequests);
