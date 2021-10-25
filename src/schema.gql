@@ -2186,6 +2186,8 @@ type Query {
   searchRootOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
+  searchSellerExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
+  searchSellerExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
   searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!

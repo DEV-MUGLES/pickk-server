@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -8,7 +8,12 @@ import { JwtPayload } from '@auth/models';
 import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
+import {
+  ExchangeRequestSearchFilter,
+  SearchExchangeRequestsOutput,
+} from '@mcommon/search/dtos';
 
+import { ExchangeRequestSearchService } from '@mcommon/search/exchange-request.search.service';
 import {
   ExchangeRequestRelationType,
   EXCHANGE_REQUEST_RELATIONS,
@@ -26,13 +31,16 @@ import { ExchangeRequestsCountOutput } from './dtos';
 import { SellerExchangeRequestService } from './seller-exchange-request.service';
 
 @Injectable()
-export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestRelationType> {
+export class SellerExchangeRequestResolver extends BaseResolver<
+  ExchangeRequestRelationType
+> {
   relations = EXCHANGE_REQUEST_RELATIONS;
 
   constructor(
     private readonly exchangeRequestsService: ExchangeRequestsService,
     private readonly sellerExchangeRequestService: SellerExchangeRequestService,
     private readonly exchangeRequestsProducer: ExchangeRequestsProducer,
+    private readonly exchangeRequestSearchService: ExchangeRequestSearchService,
     private cacheService: CacheService
   ) {
     super();
@@ -137,5 +145,56 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
       merchantUid,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => SearchExchangeRequestsOutput)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerExchangeRequests(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: ExchangeRequestSearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchExchangeRequestsOutput> {
+    const {
+      ids: merchantUidIn,
+      total,
+    } = await this.exchangeRequestSearchService.search(
+      query,
+      pageInput,
+      { ...filter, sellerId },
+      [{ merchantUid: 'desc' }]
+    );
+
+    const exchangeRequests = await this.exchangeRequestsService.list(
+      { merchantUidIn },
+      null,
+      [
+        'orderItem',
+        'orderItem.order',
+        'orderItem.order.buyer',
+        'reShipment',
+        'pickShipment',
+      ]
+    );
+
+    return { total, result: exchangeRequests };
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerExchangeRequestsCount(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: ExchangeRequestSearchFilter
+  ): Promise<number> {
+    const { total } = await this.exchangeRequestSearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      { ...filter, sellerId }
+    );
+
+    return total;
   }
 }

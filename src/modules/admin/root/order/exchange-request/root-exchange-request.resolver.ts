@@ -70,7 +70,7 @@ export class RootExchangeRequestResolver extends BaseResolver<
       [{ merchantUid: 'desc' }]
     );
 
-    const ExchangeRequests = await this.exchangeRequestsService.list(
+    const exchangeRequests = await this.exchangeRequestsService.list(
       { merchantUidIn },
       null,
       [
@@ -82,7 +82,7 @@ export class RootExchangeRequestResolver extends BaseResolver<
       ]
     );
 
-    return { total, result: ExchangeRequests };
+    return { total, result: exchangeRequests };
   }
 
   @Query(() => Int)
