@@ -32,7 +32,7 @@ export class ExchangeRequestsService {
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
     private readonly orderItemsProducer: OrderItemsProducer,
-    private readonly exchangeRequestProducer: ExchangeRequestsProducer
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer
   ) {}
 
   async get(
@@ -71,7 +71,7 @@ export class ExchangeRequestsService {
 
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([merchantUid]);
-    await this.exchangeRequestProducer.indexExchangeRequests([
+    await this.exchangeRequestsProducer.indexExchangeRequests([
       exchangeRequest.merchantUid,
     ]);
   }
@@ -92,7 +92,7 @@ export class ExchangeRequestsService {
     const exchangeRequest = await this.exchangeRequestsRepository.save(
       ExchangeRequestFactory.create(orderItem, product, input)
     );
-    await this.exchangeRequestProducer.indexExchangeRequests([
+    await this.exchangeRequestsProducer.indexExchangeRequests([
       exchangeRequest.merchantUid,
     ]);
     return exchangeRequest;
@@ -121,7 +121,7 @@ export class ExchangeRequestsService {
 
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([merchantUid]);
-    await this.exchangeRequestProducer.indexExchangeRequests([
+    await this.exchangeRequestsProducer.indexExchangeRequests([
       exchangeRequest.merchantUid,
     ]);
   }
@@ -131,7 +131,7 @@ export class ExchangeRequestsService {
 
     exchangeRequest.markConverted();
     await this.exchangeRequestsRepository.save(exchangeRequest);
-    await this.exchangeRequestProducer.indexExchangeRequests([merchantUid]);
+    await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
 
     if (exchangeRequest.shippingFee > 0) {
       await this.paymentsService.cancel(merchantUid, {
