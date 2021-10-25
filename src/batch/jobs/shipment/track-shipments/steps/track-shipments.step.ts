@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Not } from 'typeorm';
 import { plainToClass } from 'class-transformer';
+import dayjs from 'dayjs';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { JobExecutionContext } from '@batch/models';
@@ -12,11 +13,13 @@ import { OrderItemStatus } from '@order/order-items/constants';
 import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { ShipmentOwnerType, ShipmentStatus } from '@order/shipments/constants';
+import { ShipmentHistoryEntity } from '@order/shipments/entities';
 import { Shipment, ShipmentHistory } from '@order/shipments/models';
 import {
   ShipmentHistoriesRepository,
   ShipmentsRepository,
 } from '@order/shipments/shipments.repository';
+import { IShipmentHistory } from '@order/shipments/interfaces';
 
 const SHIPPED_STATUS_TEXT = '배송완료';
 
@@ -47,6 +50,9 @@ export class TrackShipmentsStep extends BaseStep {
     for (const shipment of shipments) {
       try {
         const recentHistories = await this.getRecentHistories(shipment);
+        const duplicatedHistories = this.findDuplicatedHistories(
+          shipment.histories
+        );
         const deletedHistories = this.findDeletedHistories(
           shipment.histories,
           recentHistories
@@ -54,7 +60,10 @@ export class TrackShipmentsStep extends BaseStep {
 
         delete shipment.histories;
         await this.shipmentsHistoriesRepository.save(recentHistories);
-        await this.shipmentsHistoriesRepository.remove(deletedHistories);
+        await this.shipmentsHistoriesRepository.remove([
+          ...deletedHistories,
+          ...duplicatedHistories,
+        ]);
 
         if (this.isShippedShipment(recentHistories)) {
           shipment.status = ShipmentStatus.Shipped;
@@ -83,7 +92,7 @@ export class TrackShipmentsStep extends BaseStep {
     return trackHistoryResult.map((input) => {
       const existingHistory = histories.filter(
         (history) =>
-          input.time === history.time &&
+          dayjs(input.time).isSame(history.time) &&
           input.statusText === history.statusText &&
           input.locationName === history.locationName
       )[0];
@@ -104,6 +113,14 @@ export class TrackShipmentsStep extends BaseStep {
     return histories.filter(
       (history) =>
         !recentHistories.find((recentHistory) => recentHistory.isEqual(history))
+    );
+  }
+
+  private findDuplicatedHistories(historyEntities: ShipmentHistoryEntity[]) {
+    const histories = plainToClass(ShipmentHistory, historyEntities);
+    return histories.filter(
+      (history, index) =>
+        histories.findIndex((history2) => history2.isEqual(history)) !== index
     );
   }
 
