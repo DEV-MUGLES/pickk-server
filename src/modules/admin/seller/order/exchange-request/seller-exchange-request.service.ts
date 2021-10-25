@@ -9,6 +9,7 @@ import { ExchangeRequestsService } from '@order/exchange-requests/exchange-reque
 import { OrderItemsProducer } from '@order/order-items/producers';
 
 import { ExchangeRequestsCountOutput } from './dtos';
+import { ExchangeRequestsProducer } from '@order/exchange-requests/producers';
 
 @Injectable()
 export class SellerExchangeRequestService {
@@ -16,6 +17,7 @@ export class SellerExchangeRequestService {
     @InjectRepository(ExchangeRequestsRepository)
     private readonly exchangeRequestsRepository: ExchangeRequestsRepository,
     private readonly exchangeRequestsService: ExchangeRequestsService,
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer,
     private readonly orderItemsProducer: OrderItemsProducer
   ) {}
 
@@ -59,6 +61,9 @@ export class SellerExchangeRequestService {
     exchangeRequests.forEach((v) => v.markPicked());
 
     await this.exchangeRequestsRepository.save(exchangeRequests);
+    await this.exchangeRequestsProducer.indexExchangeRequests(
+      exchangeRequests.map((v) => v.merchantUid)
+    );
   }
 
   async reship(merchantUid: string, input: ReshipExchangeRequestInput) {
@@ -70,6 +75,9 @@ export class SellerExchangeRequestService {
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([
       exchangeRequest.orderItemMerchantUid,
+    ]);
+    await this.exchangeRequestsProducer.indexExchangeRequests([
+      exchangeRequest.merchantUid,
     ]);
   }
 }

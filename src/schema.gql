@@ -689,6 +689,9 @@ type ExchangeRequest {
   confirmedAt: DateTime
   convertedAt: DateTime
   faultOf: OrderClaimFaultOf!
+
+  """[MODEL ONLY]"""
+  id: String!
   isProcessDelaying: Boolean!
   isSettled: Boolean!
   itemName: String!
@@ -748,6 +751,23 @@ input ExchangeRequestFilter {
 
 input ExchangeRequestOrderItemFilter {
   paidAtBetween: [DateTime!]
+}
+
+input ExchangeRequestSearchFilter {
+  convertedAtBetween: [DateTime!]
+  isProcessDelaying: Boolean
+  isSettled: Boolean
+  orderBuyerName: String
+  pickedAtBetween: [DateTime!]
+  productId: Int
+  rejectedAtBetween: [DateTime!]
+  requestedAtBetween: [DateTime!]
+  reshippedAtBetween: [DateTime!]
+  reshippingAtBetween: [DateTime!]
+  sellerId: Int
+  settledAtBetween: [DateTime!]
+  status: ExchangeRequestStatus
+  statusIn: [ExchangeRequestStatus!]
 }
 
 """교한신청 상태입니다."""
@@ -2145,6 +2165,7 @@ type Query {
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
+  rootExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   rootInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
 
   """[ROOT ADMIN]"""
@@ -2159,10 +2180,14 @@ type Query {
   searchMeSellerOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchMeSellerOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
+  searchRootExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
+  searchRootExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
   searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchRootOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
+  searchSellerExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
+  searchSellerExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
   searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
@@ -2334,6 +2359,11 @@ input RequestPinInput {
 input ReshipExchangeRequestInput {
   courierId: Int!
   trackCode: String!
+}
+
+type SearchExchangeRequestsOutput {
+  result: [ExchangeRequest!]!
+  total: Int!
 }
 
 type SearchOrderItemsOutput {

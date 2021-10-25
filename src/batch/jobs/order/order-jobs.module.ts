@@ -3,11 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
+import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
+import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
 import { OrdersRepository } from '@order/orders/orders.repository';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
-import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { RefundRequestsModule } from '@order/refund-requests/refund-requests.module';
 import { ProductsModule } from '@item/products/products.module';
 
@@ -69,6 +70,7 @@ import { OrderJobsService } from './order-jobs.service';
     ProductsModule,
     OrderItemsModule,
     RefundRequestsModule,
+    ExchangeRequestsModule,
   ],
   controllers: [OrderJobsController],
   providers: [

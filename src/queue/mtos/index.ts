@@ -1,5 +1,6 @@
 export * from './delete-order-items-index.dto';
 export * from './give-reward.mto';
+export * from './index-exchange-requests.mto';
 export * from './index-order-items.mto';
 export * from './index-refund-requests.mto';
 export * from './process-seller-items-scrap-result.mto';

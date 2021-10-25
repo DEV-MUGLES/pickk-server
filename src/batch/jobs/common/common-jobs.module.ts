@@ -10,6 +10,7 @@ import { VideosModule } from '@content/videos/videos.module';
 import { DigestsModule } from '@content/digests/digests.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { RefundRequestsModule } from '@order/refund-requests/refund-requests.module';
+import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
 
 import { IndexItemsJob, IndexItemsStep } from './index-items';
 import { IndexDigestsJob, IndexDigestsStep } from './index-digests';
@@ -20,6 +21,10 @@ import {
   IndexRefundRequestsJob,
   IndexRefundRequestsStep,
 } from './index-refund-requests';
+import {
+  IndexExchangeRequestsJob,
+  IndexExchangeRequestsStep,
+} from './index-exchange-requests';
 
 import { CommonJobsController } from './common-jobs.controller';
 import { CommonJobsService } from './common-jobs.service';
@@ -34,6 +39,7 @@ import { CommonJobsService } from './common-jobs.service';
     VideosModule,
     OrderItemsModule,
     RefundRequestsModule,
+    ExchangeRequestsModule,
   ],
   controllers: [CommonJobsController],
   providers: [
@@ -51,6 +57,8 @@ import { CommonJobsService } from './common-jobs.service';
     IndexOrderItemsStep,
     IndexRefundRequestsJob,
     IndexRefundRequestsStep,
+    IndexExchangeRequestsJob,
+    IndexExchangeRequestsStep,
   ],
 })
 export class CommonJobsModule {}

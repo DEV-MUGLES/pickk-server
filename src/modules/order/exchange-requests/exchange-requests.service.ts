@@ -16,6 +16,7 @@ import { ExchangeRequestRelationType } from './constants';
 import { ExchangeRequestFilter, RegisterExchangeRequestInput } from './dtos';
 import { InvalidExchangeShippingFeeException } from './exceptions';
 import { ExchangeRequestFactory } from './factories';
+import { ExchangeRequestsProducer } from './producers';
 import { ExchangeRequest } from './models';
 
 import { ExchangeRequestsRepository } from './exchange-requests.repository';
@@ -30,7 +31,8 @@ export class ExchangeRequestsService {
     private readonly orderItemsService: OrderItemsService,
     private readonly productsService: ProductsService,
     private readonly paymentsService: PaymentsService,
-    private readonly orderItemsProducer: OrderItemsProducer
+    private readonly orderItemsProducer: OrderItemsProducer,
+    private readonly exchangeRequestsProducer: ExchangeRequestsProducer
   ) {}
 
   async get(
@@ -69,6 +71,9 @@ export class ExchangeRequestsService {
 
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([merchantUid]);
+    await this.exchangeRequestsProducer.indexExchangeRequests([
+      exchangeRequest.merchantUid,
+    ]);
   }
 
   async register(
@@ -84,12 +89,13 @@ export class ExchangeRequestsService {
       'itemOptionValues',
     ]);
 
-    const exchangeRequest = ExchangeRequestFactory.create(
-      orderItem,
-      product,
-      input
+    const exchangeRequest = await this.exchangeRequestsRepository.save(
+      ExchangeRequestFactory.create(orderItem, product, input)
     );
-    return await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsProducer.indexExchangeRequests([
+      exchangeRequest.merchantUid,
+    ]);
+    return exchangeRequest;
   }
 
   async complete(merchantUid: string) {
@@ -115,6 +121,9 @@ export class ExchangeRequestsService {
 
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.orderItemsProducer.indexOrderItems([merchantUid]);
+    await this.exchangeRequestsProducer.indexExchangeRequests([
+      exchangeRequest.merchantUid,
+    ]);
   }
 
   async convert(merchantUid: string) {
@@ -122,6 +131,7 @@ export class ExchangeRequestsService {
 
     exchangeRequest.markConverted();
     await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
 
     if (exchangeRequest.shippingFee > 0) {
       await this.paymentsService.cancel(merchantUid, {
