@@ -21,9 +21,13 @@ export class IndexRefundRequestsConsumer extends BaseConsumer {
   @SqsMessageHandler()
   async indexRefundRequest(message: AWS.SQS.Message) {
     const { merchantUids } = JSON.parse(message.Body) as IndexRefundRequestsMto;
-    const refundRequests = await this.refundRequestsService.list({
-      merchantUidIn: merchantUids,
-    });
+    const refundRequests = await this.refundRequestsService.list(
+      {
+        merchantUidIn: merchantUids,
+      },
+      null,
+      ['order', 'order.buyer', 'shipment']
+    );
 
     await this.refundRequestSearchService.bulkIndex(refundRequests);
   }
