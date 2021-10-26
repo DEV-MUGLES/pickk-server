@@ -124,6 +124,7 @@ export class OrderItem extends OrderItemEntity {
   confirm() {
     // @TODO: status, claimStatus validate
     this.isConfirmed = true;
+    this.confirmedAt = new Date();
   }
 
   ///////////////
