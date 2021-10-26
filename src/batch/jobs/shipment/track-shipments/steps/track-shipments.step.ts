@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 
 import { BaseStep } from '@batch/jobs/base.step';
 import { JobExecutionContext } from '@batch/models';
+import { allSettled } from '@common/helpers';
 import { DeliveryTrackerService } from '@providers/delivery-tracker';
 
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
@@ -19,7 +20,6 @@ import {
   ShipmentHistoriesRepository,
   ShipmentsRepository,
 } from '@order/shipments/shipments.repository';
-import { IShipmentHistory } from '@order/shipments/interfaces';
 
 const SHIPPED_STATUS_TEXT = '배송완료';
 
@@ -47,9 +47,29 @@ export class TrackShipmentsStep extends BaseStep {
       })
     );
 
+    const historiesMap = new Map<number, ShipmentHistory[]>();
+    await allSettled(
+      shipments.map(
+        (v) =>
+          new Promise<void>(async (resolve, reject) => {
+            try {
+              const histories = await this.getRecentHistories(v);
+              historiesMap.set(v.id, histories);
+              resolve();
+            } catch {
+              reject();
+            }
+          })
+      )
+    );
+
     for (const shipment of shipments) {
       try {
-        const recentHistories = await this.getRecentHistories(shipment);
+        const recentHistories = historiesMap.get(shipment.id);
+        if (!recentHistories) {
+          continue;
+        }
+
         const duplicatedHistories = this.findDuplicatedHistories(
           shipment.histories
         );
