@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
@@ -10,6 +10,11 @@ import { PageInput } from '@common/dtos';
 import { BaseResolver } from '@common/base.resolver';
 import { CacheService } from '@providers/cache/redis';
 
+import {
+  InquirySearchFilter,
+  SearchInquiriesOutput,
+} from '@mcommon/search/dtos';
+import { InquirySearchService } from '@mcommon/search/inquiry.search.service';
 import {
   InquiryAnswerFrom,
   InquiryRelationType,
@@ -35,6 +40,7 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
   constructor(
     private readonly inquiriesService: InquiriesService,
     private readonly rootInquiryService: RootInquiryService,
+    private readonly inquirySearchService: InquirySearchService,
     private cacheService: CacheService
   ) {
     super();
@@ -118,5 +124,43 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
     await this.inquiriesService.updateAnswer(id, input);
 
     return await this.inquiriesService.getAnswer(id);
+  }
+
+  @Query(() => SearchInquiriesOutput)
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  async searchRootInquiries(
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: InquirySearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchInquiriesOutput> {
+    const { ids, total } = await this.inquirySearchService.search(
+      query,
+      pageInput,
+      filter
+    );
+    const inquiries = await this.inquiriesService.list({ idIn: ids }, null, [
+      'orderItem',
+    ]);
+
+    return { total, result: inquiries };
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  async searchRootInquiryCount(
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: InquirySearchFilter
+  ): Promise<number> {
+    const { total } = await this.inquirySearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      filter
+    );
+
+    return total;
   }
 }
