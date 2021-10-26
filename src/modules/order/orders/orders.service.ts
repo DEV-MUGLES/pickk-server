@@ -162,6 +162,15 @@ export class OrdersService {
     );
 
     const order = await this.get(merchantUid, START_ORDER_RELATIONS);
+    if (
+      order.totalItemFinalPrice === 0 &&
+      (startOrderInput.usedPointAmount > 0 || usedCoupons.length > 0)
+    ) {
+      throw new BadRequestException(
+        '총결제금액이 0원인 주문에는 포인트와 쿠폰을 사용할 수 없습니다.'
+      );
+    }
+
     order.start(startOrderInput, shippingAddress, usedCoupons);
 
     await this.productsService.bulkDestock(order.orderItems);
