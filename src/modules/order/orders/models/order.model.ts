@@ -142,9 +142,10 @@ export class Order extends OrderEntity {
         ...input.refundAccountInput,
       });
     }
-
-    this.applyUsedPoints(input.usedPointAmount);
-    this.applyCoupons(input.orderItemInputs, coupons);
+    if (this.totalItemFinalPrice > 0) {
+      this.applyCoupons(input.orderItemInputs, coupons);
+      this.applyUsedPoints(input.usedPointAmount);
+    }
   }
 
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
