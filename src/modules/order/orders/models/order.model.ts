@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
-import { findModelById } from '@common/helpers';
+import { findModelById, findModelByUid } from '@common/helpers';
 
 import { Coupon } from '@order/coupons/models';
 import { OrderItemClaimStatus } from '@order/order-items/constants';
@@ -130,6 +130,7 @@ export class Order extends OrderEntity {
     shippingAddress: ShippingAddress,
     coupons: Coupon[]
   ): void {
+    this.checkTotalPayAmount(input, coupons);
     this.markPaying();
     this.payMethod = input.payMethod;
     this.buyer = new OrderBuyer({ ...input.buyerInput });
@@ -142,10 +143,8 @@ export class Order extends OrderEntity {
         ...input.refundAccountInput,
       });
     }
-    if (this.totalItemFinalPrice > 0) {
-      this.applyCoupons(input.orderItemInputs, coupons);
-      this.applyUsedPoints(input.usedPointAmount);
-    }
+    this.applyCoupons(input.orderItemInputs, coupons);
+    this.applyUsedPoints(input.usedPointAmount);
   }
 
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
@@ -205,6 +204,9 @@ export class Order extends OrderEntity {
 
   /** evenly spread usedPointAmount to each orderItem */
   private applyUsedPoints(usedPointAmount: number) {
+    if (usedPointAmount === 0) {
+      return;
+    }
     for (const oi of this.orderItems) {
       oi.usedPointAmount = Math.ceil(
         (oi.itemFinalPrice / this.totalItemFinalPrice) * usedPointAmount
@@ -216,6 +218,9 @@ export class Order extends OrderEntity {
   }
 
   private applyCoupons(inputs: StartOrderItemInput[] = [], coupons: Coupon[]) {
+    if (coupons.length === 0) {
+      return;
+    }
     for (const oi of this.orderItems) {
       const input = inputs.find((v) => v.merchantUid === oi.merchantUid);
       if (!input) {
@@ -254,5 +259,27 @@ export class Order extends OrderEntity {
         oi.shippingFee = 0;
       }
     }
+  }
+
+  checkTotalPayAmount(input: StartOrderInput, coupons: Coupon[]) {
+    const usedCouponAmount = coupons.reduce((totalAmount, coupon) => {
+      const { merchantUid } = input.orderItemInputs.find(
+        (v) => v.usedCouponId === coupon.id
+      );
+      return (
+        totalAmount +
+        coupon.getDiscountAmountFor(
+          findModelByUid(merchantUid, this.orderItems).item
+        )
+      );
+    }, 0);
+
+    const totalPayAmount =
+      this.totalItemFinalPrice - input.usedPointAmount - usedCouponAmount;
+
+    if (totalPayAmount < 0) {
+      throw new BadRequestException('총상품금액보다 할인금액이 많습니다.');
+    }
+    return true;
   }
 }
