@@ -1,2 +1,8 @@
+import { UpdateDelayedRefundRequestsStep } from './steps';
+import { ProcessDelayedRefundRequestsJob } from './job';
+
 export * from './job';
-export * from './steps';
+export const ProcessDelayedRefundRequestsJobProviders = [
+  UpdateDelayedRefundRequestsStep,
+  ProcessDelayedRefundRequestsJob,
+];

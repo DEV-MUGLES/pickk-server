@@ -1,2 +1,8 @@
+import { SendDelayedExchangeRequestsAlimtalkStep } from './steps';
+import { SendDelayedExchangeRequestsAlimtalkJob } from './job';
+
 export * from './job';
-export * from './steps';
+export const SendDelayedExchangeRequestsAlimtalkJobProviders = [
+  SendDelayedExchangeRequestsAlimtalkStep,
+  SendDelayedExchangeRequestsAlimtalkJob,
+];

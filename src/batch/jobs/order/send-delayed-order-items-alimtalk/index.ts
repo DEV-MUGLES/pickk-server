@@ -1,2 +1,8 @@
+import { SendDelayedOrderItemsAlimtalkStep } from './steps';
+import { SendDelayedOrderItemsAlimtalkJob } from './job';
+
 export * from './job';
-export * from './steps';
+export const SendDelayedOrderItemsAlimtalkJobProviders = [
+  SendDelayedOrderItemsAlimtalkStep,
+  SendDelayedOrderItemsAlimtalkJob,
+];

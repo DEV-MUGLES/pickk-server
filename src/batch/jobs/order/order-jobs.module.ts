@@ -18,47 +18,16 @@ import { RefundRequestsRepository } from '@order/refund-requests/refund-requests
 import { RefundRequestsModule } from '@order/refund-requests/refund-requests.module';
 import { ProductsModule } from '@item/products/products.module';
 
-import {
-  ProcessDelayedExchangeRequestsJob,
-  UpdateDelayedExchangeRequestsStep,
-} from './process-delayed-exchange-requests';
-import {
-  UpdateDelayedOrderItemsStep,
-  ProcessDelayedOrderItemsJob,
-} from './process-delayed-order-items';
-import {
-  ProcessDelayedRefundRequestsJob,
-  UpdateDelayedRefundRequestsStep,
-} from './process-delayed-refund-requests';
-import {
-  SendDelayedOrderItemsAlimtalkJob,
-  SendDelayedOrderItemsAlimtalkStep,
-} from './send-delayed-order-items-alimtalk';
-import {
-  SendDelayedExchangeRequestsAlimtalkJob,
-  SendDelayedExchangeRequestsAlimtalkStep,
-} from './send-delayed-exchange-requests-alimtalk';
-import {
-  SendDelayedRefundRequestsAlimtalkJob,
-  SendDelayedRefundRequestsAlimtalkStep,
-} from './send-delayed-refund-requests-alimtalk';
-import {
-  ConfirmExchangedOrderItemsStep,
-  ConfirmOrderItemsJob,
-  ConfirmOrderItemsStep,
-} from './confirm-order-items';
-import {
-  RemoveExpiredOrdersJob,
-  RemoveExpiredOrdersStep,
-} from './remove-expired-orders';
-import {
-  RemovePayingOrdersJob,
-  RemovePayingOrdersStep,
-} from './remove-paying-orders';
-import {
-  SendOrdersCreatedAlimtalkJob,
-  SendOrdersCreatedAlimtalkStep,
-} from './send-order-created-alimtalk';
+import { ProcessDelayedExchangeRequestsJobProviders } from './process-delayed-exchange-requests';
+import { ProcessDelayedOrderItemsJobProviders } from './process-delayed-order-items';
+import { ProcessDelayedRefundRequestsJobProviders } from './process-delayed-refund-requests';
+import { SendDelayedOrderItemsAlimtalkJobProviders } from './send-delayed-order-items-alimtalk';
+import { SendDelayedExchangeRequestsAlimtalkJobProviders } from './send-delayed-exchange-requests-alimtalk';
+import { SendDelayedRefundRequestsAlimtalkJobProviders } from './send-delayed-refund-requests-alimtalk';
+import { ConfirmOrderItemsJobProviders } from './confirm-order-items';
+import { RemoveExpiredOrdersJobProviders } from './remove-expired-orders';
+import { RemovePayingOrdersJobProviders } from './remove-paying-orders';
+import { SendOrdersCreatedAlimtalkJobProviders } from './send-order-created-alimtalk';
 import { RemoveNotReferedOrderRelatedEntitiesJobProviders } from './remove-not-refered-order-related-entities';
 
 import { OrderJobsController } from './order-jobs.controller';
@@ -87,28 +56,17 @@ import { OrderJobsService } from './order-jobs.service';
   providers: [
     OrderJobsService,
     BatchWorker,
-    ProcessDelayedOrderItemsJob,
-    ProcessDelayedExchangeRequestsJob,
-    ProcessDelayedRefundRequestsJob,
-    SendDelayedOrderItemsAlimtalkJob,
-    SendDelayedExchangeRequestsAlimtalkJob,
-    SendDelayedRefundRequestsAlimtalkJob,
-    UpdateDelayedOrderItemsStep,
-    UpdateDelayedRefundRequestsStep,
-    UpdateDelayedExchangeRequestsStep,
-    SendDelayedOrderItemsAlimtalkStep,
-    SendDelayedExchangeRequestsAlimtalkStep,
-    SendDelayedRefundRequestsAlimtalkStep,
-    ConfirmOrderItemsJob,
-    ConfirmOrderItemsStep,
-    ConfirmExchangedOrderItemsStep,
-    RemoveExpiredOrdersJob,
-    RemoveExpiredOrdersStep,
-    RemovePayingOrdersJob,
-    RemovePayingOrdersStep,
-    SendOrdersCreatedAlimtalkJob,
-    SendOrdersCreatedAlimtalkStep,
+    ...ConfirmOrderItemsJobProviders,
+    ...ProcessDelayedOrderItemsJobProviders,
+    ...ProcessDelayedExchangeRequestsJobProviders,
+    ...ProcessDelayedRefundRequestsJobProviders,
+    ...RemoveExpiredOrdersJobProviders,
+    ...RemovePayingOrdersJobProviders,
     ...RemoveNotReferedOrderRelatedEntitiesJobProviders,
+    ...SendDelayedOrderItemsAlimtalkJobProviders,
+    ...SendDelayedExchangeRequestsAlimtalkJobProviders,
+    ...SendDelayedRefundRequestsAlimtalkJobProviders,
+    ...SendOrdersCreatedAlimtalkJobProviders,
   ],
 })
 export class OrderJobsModule {}
