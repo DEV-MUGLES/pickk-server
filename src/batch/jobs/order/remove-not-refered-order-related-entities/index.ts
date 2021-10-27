@@ -3,6 +3,7 @@ import {
   RemoveOrderBuyersStep,
   RemoveOrderReceiversStep,
   RemoveOrderRefundAccountsStep,
+  RemoveOrderVbankReceiptsStep,
 } from './steps';
 
 export * from './job';
@@ -11,4 +12,5 @@ export const RemoveNotReferedOrderRelatedEntitiesJobProviders = [
   RemoveOrderBuyersStep,
   RemoveOrderReceiversStep,
   RemoveOrderRefundAccountsStep,
+  RemoveOrderVbankReceiptsStep,
 ];
