@@ -11,7 +11,7 @@ export class IndexInquiresStep {
   ) {}
 
   async tasklet() {
-    const exchangeRequests = await this.inquiriesService.list(null, null, [
+    const inquiries = await this.inquiriesService.list(null, null, [
       'orderItem',
       'orderItem.order',
       'orderItem.order.buyer',
@@ -19,7 +19,7 @@ export class IndexInquiresStep {
       'user',
     ]);
 
-    await this.inquirySearchService.bulkIndex(exchangeRequests);
-    await this.inquirySearchService.enableFielddata('merchantUid');
+    await this.inquirySearchService.bulkIndex(inquiries);
+    await this.inquirySearchService.enableFielddata('id');
   }
 }
