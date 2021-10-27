@@ -10,6 +10,7 @@ import {
   OrderReceiversRepository,
   OrderRefundAccountsRepository,
   OrdersRepository,
+  OrderVbankReceiptsRepository,
 } from '@order/orders/orders.repository';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
@@ -75,6 +76,7 @@ import { OrderJobsService } from './order-jobs.service';
       OrderBuyersRepository,
       OrderReceiversRepository,
       OrderRefundAccountsRepository,
+      OrderVbankReceiptsRepository,
     ]),
     ProductsModule,
     OrderItemsModule,

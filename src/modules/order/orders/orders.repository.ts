@@ -7,6 +7,7 @@ import {
   OrderEntity,
   OrderReceiverEntity,
   OrderRefundAccountEntity,
+  OrderVbankReceiptEntity,
 } from './entities';
 import { Order } from './models';
 
@@ -67,4 +68,9 @@ export class OrderReceiversRepository extends Repository<OrderReceiverEntity> {}
 @EntityRepository(OrderRefundAccountEntity)
 export class OrderRefundAccountsRepository extends Repository<
   OrderRefundAccountEntity
+> {}
+
+@EntityRepository(OrderVbankReceiptEntity)
+export class OrderVbankReceiptsRepository extends Repository<
+  OrderVbankReceiptEntity
 > {}
