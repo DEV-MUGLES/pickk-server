@@ -6,6 +6,8 @@ import { SearchService } from '@providers/elasticsearch/provider.service';
 import { Inquiry } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
 
+import { INQUIRY_SEARCH_INDEX_RELATIONS } from './constants';
+
 export type InquirySearchBody = Pick<
   Inquiry,
   | 'type'
@@ -38,13 +40,7 @@ export class InquirySearchService extends BaseSearchService<
   }
 
   async getModel(id: number): Promise<Inquiry> {
-    return await this.inquiriesService.get(id, [
-      'orderItem',
-      'orderItem.order',
-      'orderItem.order.buyer',
-      'item',
-      'user',
-    ]);
+    return await this.inquiriesService.get(id, INQUIRY_SEARCH_INDEX_RELATIONS);
   }
 
   toBody(inquiry: Inquiry): InquirySearchBody {
