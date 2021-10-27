@@ -2201,6 +2201,8 @@ type Query {
   searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchSellerExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
   searchSellerExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
+  searchSellerInquiries(pageInput: PageInput, query: String, searchFilter: InquirySearchFilter): SearchInquiriesOutput!
+  searchSellerInquiryCount(query: String, searchFilter: InquirySearchFilter): Int!
   searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!

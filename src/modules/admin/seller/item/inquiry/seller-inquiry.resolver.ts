@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Query } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Query } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser } from '@auth/decorators';
@@ -22,6 +22,11 @@ import {
 } from '@item/inquiries/dtos';
 import { Inquiry, InquiryAnswer } from '@item/inquiries/models';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
+import {
+  SearchInquiriesOutput,
+  InquirySearchFilter,
+} from '@mcommon/search/dtos';
+import { InquirySearchService } from '@mcommon/search/inquiry.search.service';
 
 import { InquiriesCountOutput } from './dtos';
 import { SellerInquiryProducer } from './producers';
@@ -34,6 +39,7 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
 
   constructor(
     private readonly inquiriesService: InquiriesService,
+    private readonly inquirySearchService: InquirySearchService,
     private readonly sellerInquiryService: SellerInquiryService,
     private cacheService: CacheService,
     private readonly sellerInquiryProducer: SellerInquiryProducer
@@ -128,5 +134,49 @@ export class SellerInquiryResolver extends BaseResolver<InquiryRelationType> {
     await this.inquiriesService.updateAnswer(id, input);
 
     return await this.inquiriesService.getAnswer(id);
+  }
+
+  @Query(() => SearchInquiriesOutput)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerInquiries(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: InquirySearchFilter,
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+  ): Promise<SearchInquiriesOutput> {
+    const { ids, total } = await this.inquirySearchService.search(
+      query,
+      pageInput,
+      { ...filter, sellerId },
+      [{ id: 'desc' }]
+    );
+    const inquiries = await this.inquiriesService.list({ idIn: ids }, null, [
+      'answers',
+      'item',
+      'user',
+      'orderItem',
+      'orderItem.order',
+      'orderItem.order.buyer',
+    ]);
+
+    return { total, result: inquiries };
+  }
+
+  @Query(() => Int)
+  @UseGuards(JwtSellerVerifyGuard)
+  async searchSellerInquiryCount(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('query', { nullable: true }) query?: string,
+    @Args('searchFilter', { nullable: true })
+    filter?: InquirySearchFilter
+  ): Promise<number> {
+    const { total } = await this.inquirySearchService.search(
+      query,
+      { offset: 0, limit: 0 } as PageInput,
+      { ...filter, sellerId }
+    );
+
+    return total;
   }
 }

@@ -138,10 +138,16 @@ export class RootInquiryResolver extends BaseResolver<InquiryRelationType> {
     const { ids, total } = await this.inquirySearchService.search(
       query,
       pageInput,
-      filter
+      filter,
+      [{ id: 'desc' }]
     );
     const inquiries = await this.inquiriesService.list({ idIn: ids }, null, [
+      'answers',
+      'item',
+      'user',
       'orderItem',
+      'orderItem.order',
+      'orderItem.order.buyer',
     ]);
 
     return { total, result: inquiries };
