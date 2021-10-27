@@ -3,10 +3,12 @@ import { SqsService } from '@pickk/nestjs-sqs';
 
 import { getRandomUuid } from '@common/helpers';
 import {
+  INDEX_INQUIRY_QUEUE,
   SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
   SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
 } from '@queue/constants';
 import {
+  IndexInquiryMto,
   SendInquiryCreationSlackMessageMto,
   SendInquriryCreatedAlimtalkMto,
 } from '@queue/mtos';
@@ -40,5 +42,14 @@ export class InquiriesProducer {
         },
       }
     );
+  }
+
+  async indexInquiry(id: number) {
+    await this.sqsService.send<IndexInquiryMto>(INDEX_INQUIRY_QUEUE, {
+      id: getRandomUuid(),
+      body: {
+        id,
+      },
+    });
   }
 }
