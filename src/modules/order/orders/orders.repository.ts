@@ -2,7 +2,12 @@ import { NotFoundException } from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { plainToClass } from 'class-transformer';
 
-import { OrderEntity } from './entities';
+import {
+  OrderBuyerEntity,
+  OrderEntity,
+  OrderReceiverEntity,
+  OrderRefundAccountEntity,
+} from './entities';
 import { Order } from './models';
 
 @EntityRepository(OrderEntity)
@@ -52,3 +57,14 @@ export class OrdersRepository extends Repository<OrderEntity> {
     return result?.length > 0;
   }
 }
+
+@EntityRepository(OrderBuyerEntity)
+export class OrderBuyersRepository extends Repository<OrderBuyerEntity> {}
+
+@EntityRepository(OrderReceiverEntity)
+export class OrderReceiversRepository extends Repository<OrderReceiverEntity> {}
+
+@EntityRepository(OrderRefundAccountEntity)
+export class OrderRefundAccountsRepository extends Repository<
+  OrderRefundAccountEntity
+> {}
