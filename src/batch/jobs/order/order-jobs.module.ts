@@ -5,7 +5,12 @@ import { BatchWorker } from '@batch/batch.worker';
 import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { ExchangeRequestsRepository } from '@order/exchange-requests/exchange-requests.repository';
 import { ExchangeRequestsModule } from '@order/exchange-requests/exchange-requests.module';
-import { OrdersRepository } from '@order/orders/orders.repository';
+import {
+  OrderBuyersRepository,
+  OrderReceiversRepository,
+  OrderRefundAccountsRepository,
+  OrdersRepository,
+} from '@order/orders/orders.repository';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrderItemsRepository } from '@order/order-items/order-items.repository';
 import { RefundRequestsRepository } from '@order/refund-requests/refund-requests.repository';
@@ -53,6 +58,10 @@ import {
   SendOrdersCreatedAlimtalkJob,
   SendOrdersCreatedAlimtalkStep,
 } from './send-order-created-alimtalk';
+import {
+  RemoveNotReferedOrderRelatedEntitiesJob,
+  RemoveOrderBuyersStep,
+} from './remove-not-refered-order-related-entities';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
@@ -66,6 +75,9 @@ import { OrderJobsService } from './order-jobs.service';
       RefundRequestsRepository,
       ExchangeRequestsRepository,
       OrdersRepository,
+      OrderBuyersRepository,
+      OrderReceiversRepository,
+      OrderRefundAccountsRepository,
     ]),
     ProductsModule,
     OrderItemsModule,
@@ -97,6 +109,8 @@ import { OrderJobsService } from './order-jobs.service';
     RemovePayingOrdersStep,
     SendOrdersCreatedAlimtalkJob,
     SendOrdersCreatedAlimtalkStep,
+    RemoveNotReferedOrderRelatedEntitiesJob,
+    RemoveOrderBuyersStep,
   ],
 })
 export class OrderJobsModule {}

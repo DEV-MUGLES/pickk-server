@@ -12,6 +12,7 @@ import { SendDelayedRefundRequestsAlimtalkJob } from './send-delayed-refund-requ
 import { RemoveExpiredOrdersJob } from './remove-expired-orders';
 import { RemovePayingOrdersJob } from './remove-paying-orders';
 import { SendOrdersCreatedAlimtalkJob } from './send-order-created-alimtalk';
+import { RemoveNotReferedOrderRelatedEntitiesJob } from './remove-not-refered-order-related-entities';
 
 @Injectable()
 export class OrderJobsService {
@@ -24,9 +25,10 @@ export class OrderJobsService {
     private readonly sendDelayedOrderItemsAlimtalkJob: SendDelayedOrderItemsAlimtalkJob,
     private readonly sendDelayedExchangeRequestsAlimtalkJob: SendDelayedExchangeRequestsAlimtalkJob,
     private readonly sendDelayedRefundRequestsAlimtalkJob: SendDelayedRefundRequestsAlimtalkJob,
+    private readonly sendOrdersCreatedAlimtalkJob: SendOrdersCreatedAlimtalkJob,
     private readonly removeExpiredOrdersJob: RemoveExpiredOrdersJob,
     private readonly removePayingOrdersJob: RemovePayingOrdersJob,
-    private readonly sendOrdersCreatedAlimtalkJob: SendOrdersCreatedAlimtalkJob
+    private readonly removeNotReferedOrderRelatedEntitiesJob: RemoveNotReferedOrderRelatedEntitiesJob
   ) {}
 
   async processDelayedExchangeRequests() {
@@ -71,5 +73,11 @@ export class OrderJobsService {
 
   async sendOrdersCreatedAlimtalk() {
     return await this.bacthWorker.run(this.sendOrdersCreatedAlimtalkJob);
+  }
+
+  async removeNotReferedOrderRelatedEntities() {
+    return await this.bacthWorker.run(
+      this.removeNotReferedOrderRelatedEntitiesJob
+    );
   }
 }
