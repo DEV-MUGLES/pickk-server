@@ -8,7 +8,6 @@ import { InquiriesService } from '@item/inquiries/inquiries.service';
 
 export type InquirySearchBody = Pick<
   Inquiry,
-  | 'id'
   | 'type'
   | 'title'
   | 'content'
@@ -16,7 +15,9 @@ export type InquirySearchBody = Pick<
   | 'isAnswered'
   | 'orderItemMerchantUid'
   | 'createdAt'
+  | 'sellerId'
 > & {
+  id: string;
   userNickname: string;
   itemName: string;
   orderBuyerName: string;
@@ -48,7 +49,7 @@ export class InquirySearchService extends BaseSearchService<
 
   toBody(inquiry: Inquiry): InquirySearchBody {
     return {
-      id: inquiry.id,
+      id: inquiry.id.toString(),
       type: inquiry.type,
       title: inquiry.title,
       content: inquiry.content,
@@ -56,6 +57,7 @@ export class InquirySearchService extends BaseSearchService<
       isAnswered: inquiry.isAnswered,
       orderItemMerchantUid: inquiry.orderItemMerchantUid,
       createdAt: inquiry.createdAt,
+      sellerId: inquiry.sellerId,
       userNickname: inquiry?.user?.nickname,
       itemName: inquiry?.item?.name,
       orderBuyerName: inquiry?.orderItem?.order?.buyer?.name,
