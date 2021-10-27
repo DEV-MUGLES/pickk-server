@@ -76,6 +76,7 @@ export class InquiriesService {
 
   async remove(inquiry: Inquiry): Promise<void> {
     await this.inquiriesRepository.remove(inquiry);
+    await this.inquiriesProducer.removeInquiryIndex(inquiry.id);
   }
 
   async answer(id: number, input: AnswerInquiryInput): Promise<Inquiry> {
