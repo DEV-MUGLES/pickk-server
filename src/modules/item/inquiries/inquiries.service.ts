@@ -13,6 +13,7 @@ import {
   UpdateInquiryAnswerInput,
 } from './dtos';
 import { Inquiry, InquiryAnswer } from './models';
+import { InquiriesProducer } from './producers';
 
 import {
   InquiriesRepository,
@@ -25,7 +26,8 @@ export class InquiriesService {
     @InjectRepository(InquiriesRepository)
     private readonly inquiriesRepository: InquiriesRepository,
     @InjectRepository(InquiryAnswersRepository)
-    private readonly inquiryAnswersRepository: InquiryAnswersRepository
+    private readonly inquiryAnswersRepository: InquiryAnswersRepository,
+    private readonly inquiriesProducer: InquiriesProducer
   ) {}
 
   async count(itemId: number): Promise<number> {
@@ -67,7 +69,9 @@ export class InquiriesService {
   }
 
   async create(input: CreateInquiryInput): Promise<Inquiry> {
-    return await this.inquiriesRepository.save(new Inquiry(input));
+    const inquiry = await this.inquiriesRepository.save(new Inquiry(input));
+    await this.inquiriesProducer.indexInquiry(inquiry.id);
+    return inquiry;
   }
 
   async remove(inquiry: Inquiry): Promise<void> {
@@ -78,7 +82,9 @@ export class InquiriesService {
     const inquiry = await this.get(id, ['answers']);
     inquiry.answer(input);
 
-    return await this.inquiriesRepository.save(inquiry);
+    const answeredInquiry = await this.inquiriesRepository.save(inquiry);
+    await this.inquiriesProducer.indexInquiry(id);
+    return answeredInquiry;
   }
 
   async updateAnswer(
