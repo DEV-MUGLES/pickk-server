@@ -9,6 +9,7 @@ export * from './process-vbank-paid-order.mto';
 export * from './remove-digest-images.mto';
 export * from './remove-digests.mto';
 export * from './remove-expected-event-point.mto';
+export * from './remove-inquiry-index.mto';
 export * from './remove-look-images.mto';
 export * from './restore-deducted-product-stock.mto';
 export * from './save-buyer-info.mto';
