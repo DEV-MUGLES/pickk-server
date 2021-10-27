@@ -1,2 +1,14 @@
+import { RemoveNotReferedOrderRelatedEntitiesJob } from './job';
+import {
+  RemoveOrderBuyersStep,
+  RemoveOrderReceiversStep,
+  RemoveOrderRefundAccountsStep,
+} from './steps';
+
 export * from './job';
-export * from './steps';
+export const RemoveNotReferedOrderRelatedEntitiesJobProviders = [
+  RemoveNotReferedOrderRelatedEntitiesJob,
+  RemoveOrderBuyersStep,
+  RemoveOrderReceiversStep,
+  RemoveOrderRefundAccountsStep,
+];

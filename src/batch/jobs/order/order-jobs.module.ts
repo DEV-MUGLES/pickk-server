@@ -58,10 +58,7 @@ import {
   SendOrdersCreatedAlimtalkJob,
   SendOrdersCreatedAlimtalkStep,
 } from './send-order-created-alimtalk';
-import {
-  RemoveNotReferedOrderRelatedEntitiesJob,
-  RemoveOrderBuyersStep,
-} from './remove-not-refered-order-related-entities';
+import { RemoveNotReferedOrderRelatedEntitiesJobProviders } from './remove-not-refered-order-related-entities';
 
 import { OrderJobsController } from './order-jobs.controller';
 import { OrderJobsService } from './order-jobs.service';
@@ -109,8 +106,7 @@ import { OrderJobsService } from './order-jobs.service';
     RemovePayingOrdersStep,
     SendOrdersCreatedAlimtalkJob,
     SendOrdersCreatedAlimtalkStep,
-    RemoveNotReferedOrderRelatedEntitiesJob,
-    RemoveOrderBuyersStep,
+    ...RemoveNotReferedOrderRelatedEntitiesJobProviders,
   ],
 })
 export class OrderJobsModule {}
