@@ -20,4 +20,9 @@ export class InquiryFilter implements Partial<IInquiry> {
 
   @Field({ nullable: true })
   isAnswered?: boolean;
+
+  @Field(() => [Int], {
+    nullable: true,
+  })
+  idIn?: number[];
 }

@@ -6,6 +6,7 @@ import { SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE } from '@queue/constants';
 
 import { InquiriesModule } from '@item/inquiries/inquiries.module';
 import { InquiriesRepository } from '@item/inquiries/inquiries.repository';
+import { SearchModule } from '@mcommon/search/search.module';
 
 import { SendInquiryAnsweredAlimtalkConsumer } from './consumers';
 import { SellerInquiryProducer } from './producers';
@@ -17,6 +18,7 @@ import { SellerInquiryService } from './seller-inquiry.service';
   imports: [
     TypeOrmModule.forFeature([InquiriesRepository]),
     InquiriesModule,
+    SearchModule,
     SqsModule.registerQueue({
       name: SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE,
     }),

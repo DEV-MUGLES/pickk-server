@@ -1,6 +1,7 @@
 export * from './delete-order-items-index.dto';
 export * from './give-reward.mto';
 export * from './index-exchange-requests.mto';
+export * from './index-inquiry.mto';
 export * from './index-order-items.mto';
 export * from './index-refund-requests.mto';
 export * from './process-seller-items-scrap-result.mto';
@@ -8,6 +9,7 @@ export * from './process-vbank-paid-order.mto';
 export * from './remove-digest-images.mto';
 export * from './remove-digests.mto';
 export * from './remove-expected-event-point.mto';
+export * from './remove-inquiry-index.mto';
 export * from './remove-look-images.mto';
 export * from './restore-deducted-product-stock.mto';
 export * from './save-buyer-info.mto';

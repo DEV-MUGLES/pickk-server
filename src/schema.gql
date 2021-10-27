@@ -901,6 +901,7 @@ enum InquiryAnswerFrom {
 }
 
 input InquiryFilter {
+  idIn: [Int!]
   isAnswered: Boolean
   itemId: Int
 
@@ -908,6 +909,16 @@ input InquiryFilter {
   search: String
   sellerId: Int
   userId: Int
+}
+
+input InquirySearchFilter {
+  createdAtBetween: [DateTime!]
+  isAnswered: Boolean
+  itemName: String
+  orderBuyerName: String
+  orderItemMerchantUid: String
+  type: String
+  userNickname: String
 }
 
 """배송/사이즈/재입고/기타"""
@@ -2182,12 +2193,16 @@ type Query {
   searchPurchasableItem(pageInput: PageInput, query: String!): [Item!]!
   searchRootExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
   searchRootExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
+  searchRootInquiries(pageInput: PageInput, query: String, searchFilter: InquirySearchFilter): SearchInquiriesOutput!
+  searchRootInquiryCount(query: String, searchFilter: InquirySearchFilter): Int!
   searchRootOrderItems(pageInput: PageInput, query: String, searchFilter: OrderItemSearchFilter): SearchOrderItemsOutput!
   searchRootOrderItemsCount(query: String, searchFilter: OrderItemSearchFilter): Int!
   searchRootRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchRootRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchSellerExchangeRequests(pageInput: PageInput, query: String, searchFilter: ExchangeRequestSearchFilter): SearchExchangeRequestsOutput!
   searchSellerExchangeRequestsCount(query: String, searchFilter: ExchangeRequestSearchFilter): Int!
+  searchSellerInquiries(pageInput: PageInput, query: String, searchFilter: InquirySearchFilter): SearchInquiriesOutput!
+  searchSellerInquiryCount(query: String, searchFilter: InquirySearchFilter): Int!
   searchSellerRefundRequests(pageInput: PageInput, query: String, searchFilter: RefundRequestSearchFilter): SearchRefundRequestsOutput!
   searchSellerRefundRequestsCount(query: String, searchFilter: RefundRequestSearchFilter): Int!
   searchVideo(pageInput: PageInput, query: String!): [Video!]!
@@ -2363,6 +2378,11 @@ input ReshipExchangeRequestInput {
 
 type SearchExchangeRequestsOutput {
   result: [ExchangeRequest!]!
+  total: Int!
+}
+
+type SearchInquiriesOutput {
+  result: [Inquiry!]!
   total: Int!
 }
 

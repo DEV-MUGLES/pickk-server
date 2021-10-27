@@ -4,6 +4,7 @@ import { BatchWorker } from '@batch/batch.worker';
 
 import { JobsModule } from '@mcommon/jobs/jobs.module';
 import { SearchModule } from '@mcommon/search/search.module';
+import { InquiriesModule } from '@item/inquiries/inquiries.module';
 import { ItemsModule } from '@item/items/items.module';
 import { LooksModule } from '@content/looks/looks.module';
 import { VideosModule } from '@content/videos/videos.module';
@@ -25,6 +26,7 @@ import {
   IndexExchangeRequestsJob,
   IndexExchangeRequestsStep,
 } from './index-exchange-requests';
+import { IndexInquiresStep, IndexInquiriesJob } from './index-inquires';
 
 import { CommonJobsController } from './common-jobs.controller';
 import { CommonJobsService } from './common-jobs.service';
@@ -40,6 +42,7 @@ import { CommonJobsService } from './common-jobs.service';
     OrderItemsModule,
     RefundRequestsModule,
     ExchangeRequestsModule,
+    InquiriesModule,
   ],
   controllers: [CommonJobsController],
   providers: [
@@ -59,6 +62,8 @@ import { CommonJobsService } from './common-jobs.service';
     IndexRefundRequestsStep,
     IndexExchangeRequestsJob,
     IndexExchangeRequestsStep,
+    IndexInquiriesJob,
+    IndexInquiresStep,
   ],
 })
 export class CommonJobsModule {}

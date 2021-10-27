@@ -1,12 +1,15 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule } from '@pickk/nestjs-sqs';
 
 import {
   SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
   SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
+  INDEX_INQUIRY_QUEUE,
+  REMOVE_INQUIRY_INDEX_QUEUE,
 } from '@queue/constants';
 
+import { SearchModule } from '@mcommon/search/search.module';
 import { ItemsModule } from '@item/items/items.module';
 import { UsersModule } from '@user/users/users.module';
 
@@ -24,17 +27,25 @@ import { InquiriesService } from './inquiries.service';
   imports: [
     TypeOrmModule.forFeature([InquiriesRepository, InquiryAnswersRepository]),
     ItemsModule,
-    UsersModule,
+    forwardRef(() => UsersModule),
+    forwardRef(() => SearchModule),
     SqsModule.registerQueue(
       {
         name: SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
       },
       {
         name: SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
+      },
+      {
+        name: INDEX_INQUIRY_QUEUE,
+      },
+      {
+        name: REMOVE_INQUIRY_INDEX_QUEUE,
       }
     ),
   ],
   providers: [
+    Logger,
     InquiriesResolver,
     InquiriesService,
     InquiriesProducer,
