@@ -6,6 +6,7 @@ import {
   SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
   SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
   INDEX_INQUIRY_QUEUE,
+  REMOVE_INQUIRY_INDEX_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
@@ -37,6 +38,9 @@ import { InquiriesService } from './inquiries.service';
       },
       {
         name: INDEX_INQUIRY_QUEUE,
+      },
+      {
+        name: REMOVE_INQUIRY_INDEX_QUEUE,
       }
     ),
   ],

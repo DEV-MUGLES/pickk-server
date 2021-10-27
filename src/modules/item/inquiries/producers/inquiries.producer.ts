@@ -4,11 +4,13 @@ import { SqsService } from '@pickk/nestjs-sqs';
 import { getRandomUuid } from '@common/helpers';
 import {
   INDEX_INQUIRY_QUEUE,
+  REMOVE_INQUIRY_INDEX_QUEUE,
   SEND_INQUIRY_CREATED_ALIMTALK_QUEUE,
   SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,
 } from '@queue/constants';
 import {
   IndexInquiryMto,
+  RemoveInquiryIndexMto,
   SendInquiryCreationSlackMessageMto,
   SendInquriryCreatedAlimtalkMto,
 } from '@queue/mtos';
@@ -51,5 +53,17 @@ export class InquiriesProducer {
         id,
       },
     });
+  }
+
+  async removeInquiryIndex(id: number) {
+    await this.sqsService.send<RemoveInquiryIndexMto>(
+      REMOVE_INQUIRY_INDEX_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: {
+          id,
+        },
+      }
+    );
   }
 }
