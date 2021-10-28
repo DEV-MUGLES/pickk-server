@@ -1491,7 +1491,6 @@ type Mutation {
   """추가도 이거로 해주시면 됩니다!"""
   updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
-  updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
   updateRootItem(id: Int!, input: UpdateItemInput!): Item!
   updateRootItemByCrawl(itemId: Int!): Item!
@@ -1499,6 +1498,7 @@ type Mutation {
   updateRootItemImageUrl(itemId: Int!): Item!
   updateRootItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
   updateRootItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
+  updateRootProduct(id: Int!, input: UpdateProductInput!): Product!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateSellerItem(id: Int!, input: UpdateItemInput!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
