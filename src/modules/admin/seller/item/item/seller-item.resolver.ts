@@ -204,9 +204,9 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async createItemOptionSet(
+  async createSellerItemOptionSet(
     @IntArgs('id') id: number,
-    @Args('createItemOptionSetInput')
+    @Args('input')
     { options }: CreateItemOptionSetInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
