@@ -104,11 +104,11 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Boolean)
-  async bulkUpdateItems(
+  async bulkUpdateSellerItems(
     @Args('ids', { type: () => [Int] }) ids: number[],
-    @Args('bulkUpdateItemInput') bulkUpdateItemInput: BulkUpdateItemInput
+    @Args('input') input: BulkUpdateItemInput
   ): Promise<boolean> {
-    await this.itemsService.bulkUpdate(ids, bulkUpdateItemInput);
+    await this.itemsService.bulkUpdate(ids, input);
     return true;
   }
 

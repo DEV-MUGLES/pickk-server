@@ -1387,7 +1387,7 @@ type Mutation {
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
-  bulkUpdateItems(bulkUpdateItemInput: BulkUpdateItemInput!, ids: [Int!]!): Boolean!
+  bulkUpdateSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!

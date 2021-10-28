@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -9,6 +9,7 @@ import { BaseResolver } from '@common/base.resolver';
 
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
 import {
+  BulkUpdateItemInput,
   CreateItemSizeChartInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
@@ -87,5 +88,16 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ) {
     await this.itemsService.removeSizeChart(id);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Boolean)
+  async bulkUpdateSellerItems(
+    @Args('ids', { type: () => [Int] }) ids: number[],
+    @Args('input') input: BulkUpdateItemInput
+  ): Promise<boolean> {
+    await this.itemsService.bulkUpdate(ids, input);
+    return true;
   }
 }
