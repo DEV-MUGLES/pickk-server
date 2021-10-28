@@ -1468,7 +1468,6 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
-  updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): Item!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
@@ -1504,6 +1503,7 @@ type Mutation {
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
   updateSellerItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
+  updateSellerItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
 
   """Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
