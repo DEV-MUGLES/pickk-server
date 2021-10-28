@@ -1467,7 +1467,6 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
-  updateItem(itemId: Int!, updateItemInput: UpdateItemInput!): Item!
   updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): Item!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
@@ -1498,6 +1497,7 @@ type Mutation {
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
+  updateSellerItem(id: Int!, input: UpdateItemInput!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!

@@ -11,6 +11,7 @@ import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
 import {
   BulkUpdateItemInput,
   CreateItemSizeChartInput,
+  UpdateItemInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
 import { Item } from '@item/items/models';
@@ -99,5 +100,17 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<boolean> {
     await this.itemsService.bulkUpdate(ids, input);
     return true;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async updateSellerItem(
+    @IntArgs('id') id: number,
+    @Args('input') input: UpdateItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.update(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

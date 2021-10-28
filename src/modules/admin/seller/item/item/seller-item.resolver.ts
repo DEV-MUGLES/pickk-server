@@ -55,13 +55,13 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateItem(
-    @IntArgs('itemId') itemId: number,
-    @Args('updateItemInput') updateItemInput: UpdateItemInput,
+  async updateSellerItem(
+    @IntArgs('id') id: number,
+    @Args('input') input: UpdateItemInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    await this.itemsService.update(itemId, updateItemInput);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    await this.itemsService.update(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
