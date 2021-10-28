@@ -57,8 +57,14 @@ export class OrderJobsController {
   async removePayingOrders() {
     return await this.orderJobsService.removePayingOrders();
   }
+
   @Post('/send-orders-created-alimtalk')
   async sendOrdersCreatedAlimtalkJob() {
     return await this.orderJobsService.sendOrdersCreatedAlimtalk();
+  }
+
+  @Delete('/remove-not-refered-order-related-entities')
+  async removeNotReferedOrderRelatedEntities() {
+    return await this.orderJobsService.removeNotReferedOrderRelatedEntities();
   }
 }

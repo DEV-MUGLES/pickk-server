@@ -1,2 +1,8 @@
+import { RemoveExpiredOrdersStep } from './steps';
+import { RemoveExpiredOrdersJob } from './job';
+
 export * from './job';
-export * from './steps';
+export const RemoveExpiredOrdersJobProviders = [
+  RemoveExpiredOrdersStep,
+  RemoveExpiredOrdersJob,
+];

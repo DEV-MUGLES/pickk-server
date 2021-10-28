@@ -1,2 +1,8 @@
+import { UpdateDelayedExchangeRequestsStep } from './steps';
+import { ProcessDelayedExchangeRequestsJob } from './job';
+
 export * from './job';
-export * from './steps';
+export const ProcessDelayedExchangeRequestsJobProviders = [
+  ProcessDelayedExchangeRequestsJob,
+  UpdateDelayedExchangeRequestsStep,
+];
