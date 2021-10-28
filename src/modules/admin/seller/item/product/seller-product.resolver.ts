@@ -12,6 +12,7 @@ import {
 } from '@item/products/constants';
 import {
   CreateProductShippingReservePolicyInput,
+  UpdateProductInput,
   UpdateProductShippingReservePolicyInput,
 } from '@item/products/dtos';
 import { Product } from '@item/products/models';
@@ -53,5 +54,16 @@ export class SellerProductResolver extends BaseResolver<ProductRelationType> {
       productId,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Product)
+  async updateSellerProduct(
+    @IntArgs('id') id: number,
+    @Args('input') input: UpdateProductInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Product> {
+    await this.productsService.update(id, input);
+    return await this.productsService.get(id, this.getRelationsFromInfo(info));
   }
 }
