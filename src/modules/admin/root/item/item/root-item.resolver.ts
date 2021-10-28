@@ -10,6 +10,7 @@ import { BaseResolver } from '@common/base.resolver';
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
 import {
   BulkUpdateItemInput,
+  CreateItemOptionSetInput,
   CreateItemSizeChartInput,
   UpdateItemInput,
   UpdateItemOptionInput,
@@ -18,13 +19,17 @@ import {
 } from '@item/items/dtos';
 import { Item, ItemOption } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
+import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
 @Resolver(() => Item)
 export class RootItemResolver extends BaseResolver<ItemRelationType> {
   relations = ITEM_RELATIONS;
 
-  constructor(private readonly itemsService: ItemsService) {
+  constructor(
+    private readonly itemsService: ItemsService,
+    private readonly productsService: ProductsService
+  ) {
     super();
   }
 
@@ -139,5 +144,21 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     const { itemId } = await this.itemsService.updateItemPrice(id, input);
     return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async createRootItemOptionSet(
+    @IntArgs('id') id: number,
+    @Args('input')
+    { options }: CreateItemOptionSetInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.clearOptionSet(id);
+    await this.itemsService.createOptionSet(id, options);
+    await this.productsService.createByOptionSet(id);
+
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

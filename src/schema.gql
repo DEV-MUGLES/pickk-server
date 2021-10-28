@@ -1416,11 +1416,12 @@ type Mutation {
   createDigest(createDigestInput: CreateDigestInput!): Digest!
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemByUrl(url: String!): Item!
-  createItemOptionSet(createItemOptionSetInput: CreateItemOptionSetInput!, id: Int!): Item!
   createLook(createLookInput: CreateLookInput!): Look!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
+  createSellerItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
   createUser(createUserInput: CreateUserInput!): User!
