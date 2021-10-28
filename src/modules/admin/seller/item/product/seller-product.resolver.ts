@@ -58,7 +58,7 @@ export class SellerProductResolver extends BaseResolver<ProductRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Product)
-  async updateSellerProduct(
+  async updateMeSellerProduct(
     @IntArgs('id') id: number,
     @Args('input') input: UpdateProductInput,
     @Info() info?: GraphQLResolveInfo

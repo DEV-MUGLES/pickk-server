@@ -55,7 +55,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateSellerItem(
+  async updateMeSellerItem(
     @IntArgs('id') id: number,
     @Args('input') input: UpdateItemInput,
     @Info() info?: GraphQLResolveInfo
@@ -66,7 +66,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateSellerItemByCrawl(
+  async updateMeSellerItemByCrawl(
     @IntArgs('itemId') itemId: number
   ): Promise<Item> {
     await this.itemsService.updateByCrawl(itemId);
@@ -75,7 +75,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemOption)
-  async updateSellerItemOption(
+  async updateMeSellerItemOption(
     @IntArgs('id') id: number,
     @Args('input')
     input: UpdateItemOptionInput
@@ -86,7 +86,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateSellerItemImageUrl(
+  async updateMeSellerItemImageUrl(
     @IntArgs('itemId') itemId: number
   ): Promise<Item> {
     await this.itemsService.updateImageUrl(itemId);
@@ -95,7 +95,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateSellerItemDetailImages(
+  async updateMeSellerItemDetailImages(
     @IntArgs('itemId') itemId: number
   ): Promise<Item> {
     await this.itemsService.updateDetailImages(itemId);
@@ -104,12 +104,71 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Boolean)
-  async bulkUpdateSellerItems(
+  async bulkUpdateMeSellerItems(
     @Args('ids', { type: () => [Int] }) ids: number[],
     @Args('input') input: BulkUpdateItemInput
   ): Promise<boolean> {
     await this.itemsService.bulkUpdate(ids, input);
     return true;
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateMeSellerItemPrice(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: UpdateItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { itemId } = await this.itemsService.updateItemPrice(id, input);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async createMeSellerItemOptionSet(
+    @IntArgs('id') id: number,
+    @Args('input')
+    { options }: CreateItemOptionSetInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.clearOptionSet(id);
+    await this.itemsService.createOptionSet(id, options);
+    await this.productsService.createByOptionSet(id);
+
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async createMeSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: CreateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.createSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async updateMeSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Args('input') input: UpdateItemSizeChartInput,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.updateSizeChart(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
+  @Mutation(() => Item)
+  async removeMeSellerSizeChart(
+    @IntArgs('itemId') id: number,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.itemsService.removeSizeChart(id);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
@@ -161,18 +220,6 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async updateSellerItemPrice(
-    @IntArgs('id') id: number,
-    @Args('input')
-    input: UpdateItemPriceInput,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<Item> {
-    const { itemId } = await this.itemsService.updateItemPrice(id, input);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
   async removeItemPrice(
     @IntArgs('itemId') itemId: number,
     @IntArgs('priceId') priceId: number,
@@ -200,52 +247,5 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     const item = await this.itemsService.get(itemId, ['prices']);
     return await this.itemsService.basifyPrice(item, priceId);
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
-  async createSellerItemOptionSet(
-    @IntArgs('id') id: number,
-    @Args('input')
-    { options }: CreateItemOptionSetInput,
-    @Info() info?: GraphQLResolveInfo
-  ): Promise<Item> {
-    await this.itemsService.clearOptionSet(id);
-    await this.itemsService.createOptionSet(id, options);
-    await this.productsService.createByOptionSet(id);
-
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
-  async createSellerSizeChart(
-    @IntArgs('itemId') id: number,
-    @Args('input') input: CreateItemSizeChartInput,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.createSizeChart(id, input);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
-  async updateSellerSizeChart(
-    @IntArgs('itemId') id: number,
-    @Args('input') input: UpdateItemSizeChartInput,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.updateSizeChart(id, input);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
-  }
-
-  @UseGuards(JwtSellerVerifyGuard)
-  @Mutation(() => Item)
-  async removeSellerSizeChart(
-    @IntArgs('itemId') id: number,
-    @Info() info?: GraphQLResolveInfo
-  ) {
-    await this.itemsService.removeSizeChart(id);
-    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }

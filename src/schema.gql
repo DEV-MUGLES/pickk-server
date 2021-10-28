@@ -1387,8 +1387,8 @@ type Mutation {
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
+  bulkUpdateMeSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
-  bulkUpdateSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
@@ -1417,12 +1417,12 @@ type Mutation {
   createInquiry(createInquiryInput: CreateInquiryInput!): Inquiry!
   createItemByUrl(url: String!): Item!
   createLook(createLookInput: CreateLookInput!): Look!
+  createMeSellerItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
+  createMeSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createRootItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
-  createSellerItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
-  createSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
   createUser(createUserInput: CreateUserInput!): User!
   createVideo(createVideoInput: CreateVideoInput!): Video!
@@ -1442,10 +1442,10 @@ type Mutation {
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
+  removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeRootSizeChart(itemId: Int!): Item!
-  removeSellerSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
   """정보에 오류가 있는 아이템을 신고합니다."""
@@ -1476,9 +1476,17 @@ type Mutation {
   updateMeRefundAccount(updateRefundAccountInput: UpdateRefundAccountInput!): RefundAccount!
   updateMeSeller(updateSellerInput: UpdateSellerInput!): Seller!
   updateMeSellerInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateMeSellerItem(id: Int!, input: UpdateItemInput!): Item!
+  updateMeSellerItemByCrawl(itemId: Int!): Item!
+  updateMeSellerItemDetailImages(itemId: Int!): Item!
+  updateMeSellerItemImageUrl(itemId: Int!): Item!
+  updateMeSellerItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
+  updateMeSellerItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
 
   """주문상품 단건 운송장 수정"""
   updateMeSellerOrderItemTrackCode(merchantUid: String!, trackCode: String!): OrderItem!
+  updateMeSellerProduct(id: Int!, input: UpdateProductInput!): Product!
+  updateMeSellerSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateMeShippingAddress(addressId: Int!, updateShippingAddressInput: UpdateShippingAddressInput!): ShippingAddress!
   updateMyCartItem(id: Int!, updateCartItemInput: UpdateCartItemInput!): CartItem!
 
@@ -1500,17 +1508,9 @@ type Mutation {
   updateRootItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
   updateRootProduct(id: Int!, input: UpdateProductInput!): Product!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
-  updateSellerItem(id: Int!, input: UpdateItemInput!): Item!
-  updateSellerItemByCrawl(itemId: Int!): Item!
-  updateSellerItemDetailImages(itemId: Int!): Item!
-  updateSellerItemImageUrl(itemId: Int!): Item!
-  updateSellerItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
-  updateSellerItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
-  updateSellerProduct(id: Int!, input: UpdateProductInput!): Product!
 
   """Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
-  updateSellerSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateShippingReservePolicy(productId: Int!, updateProductShippingReservePolicyInput: UpdateProductShippingReservePolicyInput!): Product!
   updateVideo(id: Int!, updateVideoInput: UpdateVideoInput!): Video!
 }
