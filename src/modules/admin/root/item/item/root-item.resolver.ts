@@ -13,6 +13,7 @@ import {
   CreateItemSizeChartInput,
   UpdateItemInput,
   UpdateItemOptionInput,
+  UpdateItemPriceInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
 import { Item, ItemOption } from '@item/items/models';
@@ -125,5 +126,18 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<ItemOption> {
     await this.itemsService.updateItemOption(id, input);
     return await this.itemsService.getItemOption(id, ['values']);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async updateRootItemPrice(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: UpdateItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { itemId } = await this.itemsService.updateItemPrice(id, input);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
   }
 }

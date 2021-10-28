@@ -1497,6 +1497,7 @@ type Mutation {
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
   updateRootItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
+  updateRootItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
   updateSellerItem(id: Int!, input: UpdateItemInput!): Item!
   updateSellerItemByCrawl(itemId: Int!): Item!
