@@ -75,12 +75,12 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemOption)
-  async updateItemOption(
+  async updateSellerItemOption(
     @IntArgs('id') id: number,
-    @Args('updateItemOptionInput')
-    updateItemOptionInput: UpdateItemOptionInput
+    @Args('input')
+    input: UpdateItemOptionInput
   ): Promise<ItemOption> {
-    await this.itemsService.updateItemOption(id, updateItemOptionInput);
+    await this.itemsService.updateItemOption(id, input);
     return await this.itemsService.getItemOption(id, ['values']);
   }
 

@@ -1387,6 +1387,7 @@ type Mutation {
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
+  bulkUpdateRootItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
@@ -1467,7 +1468,6 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
-  updateItemOption(id: Int!, updateItemOptionInput: UpdateItemOptionInput!): ItemOption!
   updateItemPrice(id: Int!, updateItemPriceInput: UpdateItemPriceInput!): Item!
   updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
@@ -1493,6 +1493,7 @@ type Mutation {
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
   updateProduct(id: Int!, updateProductInput: UpdateProductInput!): Product!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
+  updateRootItem(id: Int!, input: UpdateItemInput!): Item!
   updateRootItemByCrawl(itemId: Int!): Item!
   updateRootItemDetailImages(itemId: Int!): Item!
   updateRootItemImageUrl(itemId: Int!): Item!
@@ -1501,6 +1502,7 @@ type Mutation {
   updateSellerItemByCrawl(itemId: Int!): Item!
   updateSellerItemDetailImages(itemId: Int!): Item!
   updateSellerItemImageUrl(itemId: Int!): Item!
+  updateSellerItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
 
   """Admin 이상의 권한이 필요합니다."""
   updateSellerSaleStrategy(sellerId: Int!, updateSaleStrategyInput: FindSaleStrategyInput!): Seller!
