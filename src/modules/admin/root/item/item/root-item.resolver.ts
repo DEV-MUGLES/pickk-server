@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Info, Mutation, Resolver } from '@nestjs/graphql';
+import { Args, Info, Int, Mutation, Resolver } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -9,18 +9,27 @@ import { BaseResolver } from '@common/base.resolver';
 
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
 import {
+  BulkUpdateItemInput,
+  CreateItemOptionSetInput,
   CreateItemSizeChartInput,
+  UpdateItemInput,
+  UpdateItemOptionInput,
+  UpdateItemPriceInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
-import { Item } from '@item/items/models';
+import { Item, ItemOption } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
+import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
 
 @Resolver(() => Item)
 export class RootItemResolver extends BaseResolver<ItemRelationType> {
   relations = ITEM_RELATIONS;
 
-  constructor(private readonly itemsService: ItemsService) {
+  constructor(
+    private readonly itemsService: ItemsService,
+    private readonly productsService: ProductsService
+  ) {
     super();
   }
 
@@ -86,6 +95,70 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     @Info() info?: GraphQLResolveInfo
   ) {
     await this.itemsService.removeSizeChart(id);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Boolean)
+  async bulkUpdateRootItems(
+    @Args('ids', { type: () => [Int] }) ids: number[],
+    @Args('input') input: BulkUpdateItemInput
+  ): Promise<boolean> {
+    await this.itemsService.bulkUpdate(ids, input);
+    return true;
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async updateRootItem(
+    @IntArgs('id') id: number,
+    @Args('input') input: UpdateItemInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.update(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => ItemOption)
+  async updateRootItemOption(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: UpdateItemOptionInput
+  ): Promise<ItemOption> {
+    await this.itemsService.updateItemOption(id, input);
+    return await this.itemsService.getItemOption(id, ['values']);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async updateRootItemPrice(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: UpdateItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    const { itemId } = await this.itemsService.updateItemPrice(id, input);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async createRootItemOptionSet(
+    @IntArgs('id') id: number,
+    @Args('input')
+    { options }: CreateItemOptionSetInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.clearOptionSet(id);
+    await this.itemsService.createOptionSet(id, options);
+    await this.productsService.createByOptionSet(id);
+
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 }
