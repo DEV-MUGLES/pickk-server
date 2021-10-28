@@ -28,6 +28,7 @@ import {
   OrderItemClaimStatus,
   getOrderItemClaimStatusDisplayName,
   getOrderItemStatusDisplayName,
+  OrderItemSettleStatus,
 } from '../constants';
 import { IOrderItem } from '../interfaces';
 
@@ -67,6 +68,7 @@ export class OrderItemEntity implements IOrderItem {
 
     this.status = attributes.status;
     this.claimStatus = attributes.claimStatus;
+    this.settleStatus = attributes.settleStatus;
     this.quantity = attributes.quantity;
 
     this.isShipReserved = attributes.isShipReserved;
@@ -208,6 +210,14 @@ export class OrderItemEntity implements IOrderItem {
   @IsEnum(OrderItemClaimStatus)
   @IsOptional()
   claimStatus?: OrderItemClaimStatus;
+  @Field(() => OrderItemSettleStatus)
+  @Column({
+    type: 'enum',
+    enum: OrderItemSettleStatus,
+    default: OrderItemSettleStatus.Pending,
+  })
+  @IsEnum(OrderItemSettleStatus)
+  settleStatus: OrderItemSettleStatus;
   @Field(() => Int)
   @Column({ type: 'smallint', unsigned: true })
   @Min(1)

@@ -89,3 +89,14 @@ registerEnumType(OrderItemClaimStatus, {
   name: 'OrderItemClaimStatus',
   description: '주문상품 클레임상태입니다.',
 });
+
+export enum OrderItemSettleStatus {
+  Pending = 'Pending',
+  Ready = 'Ready',
+  Completed = 'Completed',
+}
+
+registerEnumType(OrderItemSettleStatus, {
+  name: 'OrderItemSettleStatus',
+  description: '주문상품 정산상태입니다.',
+});

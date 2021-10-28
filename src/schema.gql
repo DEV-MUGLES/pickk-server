@@ -1641,6 +1641,7 @@ type OrderItem {
   seller: Seller
   sellerId: Int
   settleAmount: Int!
+  settleStatus: OrderItemSettleStatus!
   settledAt: DateTime
   shipReadyAt: DateTime
 
@@ -1712,6 +1713,13 @@ input OrderItemSearchFilter {
   shippingAtBetween: [DateTime!]
   status: OrderItemStatus
   statusIn: [OrderItemStatus!]
+}
+
+"""주문상품 정산상태입니다."""
+enum OrderItemSettleStatus {
+  Completed
+  Pending
+  Ready
 }
 
 """주문상품 상태입니다. 클레임상태와 무관하게 handling됩니다."""

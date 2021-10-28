@@ -10,7 +10,11 @@ import { IRefundRequest } from '@order/refund-requests/interfaces';
 import { IShipment } from '@order/shipments/interfaces';
 import { IUser } from '@user/users/interfaces';
 
-import { OrderItemStatus, OrderItemClaimStatus } from '../constants';
+import {
+  OrderItemStatus,
+  OrderItemClaimStatus,
+  OrderItemSettleStatus,
+} from '../constants';
 
 export interface IOrderItem {
   merchantUid: string;
@@ -41,6 +45,7 @@ export interface IOrderItem {
 
   status: OrderItemStatus;
   claimStatus?: OrderItemClaimStatus;
+  settleStatus: OrderItemSettleStatus;
   quantity: number;
 
   isShipReserved: boolean;
