@@ -36,6 +36,12 @@ export class OrderItemFactory {
     const campaigns = item.campaigns
       .filter((v) => v.isActive)
       .sort((a, b) => b.rate - a.rate);
+    const activeCampaign = campaigns.length > 0 ? campaigns[0] : null;
+    const settleAmount =
+      (item.sellPrice *
+        quantity *
+        (activeCampaign?.rate ?? item.brand.seller.settlePolicy?.rate ?? 70)) /
+      100;
 
     const orderItem = new OrderItem({
       merchantUid,
@@ -50,7 +56,8 @@ export class OrderItemFactory {
       brandNameKor: item.brand.nameKor,
       itemName: item.name,
       productVariantName,
-      campaignId: campaigns.length > 0 ? campaigns[0].id : null,
+      campaignId: activeCampaign?.id,
+      settleAmount,
       ...(recommendDigest && {
         recommendDigestId: recommendDigest.id,
         recommenderId: recommendDigest.user.id,

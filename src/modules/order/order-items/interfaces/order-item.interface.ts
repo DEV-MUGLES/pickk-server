@@ -59,6 +59,7 @@ export interface IOrderItem {
   couponDiscountAmount: number;
   /** 사용자가 입력한 usedPointAmount를 액수에 따라 가중 평균낸 값 */
   usedPointAmount: number;
+  settleAmount: number;
 
   usedCouponName?: string;
 

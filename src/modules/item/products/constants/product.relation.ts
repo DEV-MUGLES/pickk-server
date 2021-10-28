@@ -7,6 +7,7 @@ export type ProductRelationType =
   | `item.${keyof Item}`
   | 'item.brand.seller'
   | 'item.brand.seller.shippingPolicy'
+  | 'item.brand.seller.settlePolicy'
   | 'item.brand.seller.saleStrategy';
 
 export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
@@ -20,6 +21,7 @@ export const PRODUCT_RELATIONS: Array<ProductRelationType> = [
   'item.brand',
   'item.brand.seller',
   'item.brand.seller.shippingPolicy',
+  'item.brand.seller.settlePolicy',
   'item.brand.seller.saleStrategy',
 ];
 

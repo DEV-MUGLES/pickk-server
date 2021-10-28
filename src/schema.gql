@@ -1640,6 +1640,7 @@ type OrderItem {
   refundedAt: DateTime
   seller: Seller
   sellerId: Int
+  settleAmount: Int!
   settledAt: DateTime
   shipReadyAt: DateTime
 
