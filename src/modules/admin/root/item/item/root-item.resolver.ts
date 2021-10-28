@@ -12,9 +12,10 @@ import {
   BulkUpdateItemInput,
   CreateItemSizeChartInput,
   UpdateItemInput,
+  UpdateItemOptionInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
-import { Item } from '@item/items/models';
+import { Item, ItemOption } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { UserRole } from '@user/users/constants';
 
@@ -112,5 +113,17 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   ): Promise<Item> {
     await this.itemsService.update(id, input);
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => ItemOption)
+  async updateRootItemOption(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: UpdateItemOptionInput
+  ): Promise<ItemOption> {
+    await this.itemsService.updateItemOption(id, input);
+    return await this.itemsService.getItemOption(id, ['values']);
   }
 }
