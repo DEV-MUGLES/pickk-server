@@ -94,7 +94,7 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   @Mutation(() => Boolean)
-  async bulkUpdateSellerItems(
+  async bulkUpdateRootItems(
     @Args('ids', { type: () => [Int] }) ids: number[],
     @Args('input') input: BulkUpdateItemInput
   ): Promise<boolean> {
@@ -105,7 +105,7 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.Admin)
   @Mutation(() => Item)
-  async updateSellerItem(
+  async updateRootItem(
     @IntArgs('id') id: number,
     @Args('input') input: UpdateItemInput,
     @Info() info?: GraphQLResolveInfo
