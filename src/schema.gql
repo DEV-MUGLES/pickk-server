@@ -148,6 +148,7 @@ type Campaign {
   """적용 정산률 (0~100)"""
   rate: Int!
   startAt: DateTime!
+  title: String!
   updatedAt: DateTime!
 }
 

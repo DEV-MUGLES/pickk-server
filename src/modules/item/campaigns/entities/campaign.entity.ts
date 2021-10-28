@@ -17,6 +17,7 @@ export class CampaignEntity extends BaseIdEntity implements ICampaign {
 
     this.items = attributes.items;
 
+    this.title = attributes.title;
     this.rate = attributes.rate;
 
     this.startAt = attributes.startAt;
@@ -27,6 +28,9 @@ export class CampaignEntity extends BaseIdEntity implements ICampaign {
   @JoinTable()
   items: IItem[];
 
+  @Field()
+  @Column({ nullable: true })
+  title: string;
   @Field(() => Int, { description: '적용 정산률 (0~100)' })
   @Column({ type: 'tinyint', unsigned: true })
   rate: number;
