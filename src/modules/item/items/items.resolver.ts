@@ -1,13 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import {
-  Resolver,
-  Query,
-  Info,
-  Mutation,
-  Args,
-  ResolveField,
-  Parent,
-} from '@nestjs/graphql';
+import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { CurrentUser, Roles } from '@auth/decorators';
@@ -181,5 +173,12 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
       null,
       this.getRelationsFromInfo(info)
     );
+  }
+
+  @Query(() => Int)
+  async itemsCount(
+    @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter
+  ): Promise<number> {
+    return await this.itemsService.count(itemFilter);
   }
 }

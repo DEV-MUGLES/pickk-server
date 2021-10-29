@@ -61,6 +61,11 @@ export class ItemsService {
     private readonly imagesService: ImagesService
   ) {}
 
+  async count(filter?: ItemFilter): Promise<number> {
+    const _filter = plainToClass(ItemFilter, filter);
+    return await this.itemsRepository.count({ where: parseFilter(_filter) });
+  }
+
   async list(
     filter?: ItemFilter,
     pageInput?: PageInput,
