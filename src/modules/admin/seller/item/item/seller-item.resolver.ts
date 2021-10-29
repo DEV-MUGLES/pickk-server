@@ -209,8 +209,8 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async addItemPrice(
-    @IntArgs('id') id: number,
-    @Args('input')
+    @IntArgs('itemId') id: number,
+    @Args('addItemPriceInput')
     input: AddItemPriceInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
