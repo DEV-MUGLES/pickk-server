@@ -1419,7 +1419,6 @@ type Mutation {
   convertMeSellerExchangeRequest(merchantUid: String!): ExchangeRequest!
   convertMeSellerRefundRequest(merchantUid: String!, orderItemMerchantUid: String!, productId: Int!): RefundRequest!
   crawlItemOptionSet(itemId: Int!): Item!
-  createCampaign(input: CreateCampaignInput!): Campaign!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
@@ -1431,6 +1430,7 @@ type Mutation {
   createMeSellerItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createMeSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootCampaign(input: CreateCampaignInput!): Campaign!
   createRootItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
@@ -1446,8 +1446,6 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
-  removeCampaign(id: Int!): Boolean!
-  removeCampaignItems: Campaign!
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
@@ -1458,6 +1456,7 @@ type Mutation {
   removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootCampaign(id: Int!): Boolean!
   removeRootSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
@@ -1478,8 +1477,6 @@ type Mutation {
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   unown(keywordId: Int!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
-  updateCampaign(id: Int!, input: UpdateCampaignInput!): Campaign!
-  updateCampaignItems: Campaign!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
@@ -1514,6 +1511,8 @@ type Mutation {
   """추가도 이거로 해주시면 됩니다!"""
   updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
+  updateRootCampaign(id: Int!, input: UpdateCampaignInput!): Campaign!
+  updateRootCampaignItems(id: Int!, itemIds: [Int!]!): Campaign!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
   updateRootItem(id: Int!, input: UpdateItemInput!): Item!
   updateRootItemByCrawl(itemId: Int!): Item!
