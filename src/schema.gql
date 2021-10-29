@@ -1375,15 +1375,20 @@ input ManualCreateItemInput {
 }
 
 type Mutation {
-  activateItemPrice(itemId: Int!, priceId: Int!): Item!
-  addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
-  addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): Item!
-  addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
+  activateMeSellerItemPrice(itemId: Int!, priceId: Int!): Item!
+  activateRootItemPrice(itemId: Int!, priceId: Int!): Item!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
+  addMeSellerItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
+  addMeSellerItemPrice(id: Int!, input: AddItemPriceInput!): Item!
+  addMeSellerItemUrl(id: Int!, input: AddItemUrlInput!): ItemUrl!
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
+  addRootItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
+  addRootItemPrice(id: Int!, input: AddItemPriceInput!): Item!
+  addRootItemUrl(id: Int!, input: AddItemUrlInput!): ItemUrl!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   answerRootInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
-  basifyPrice(itemId: Int!, priceId: Int!): Item!
+  basifyMeSellerPrice(itemId: Int!, priceId: Int!): Item!
+  basifyRootPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
@@ -1439,13 +1444,15 @@ type Mutation {
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
-  removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
-  removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
+  removeMeSellerItemDetailImage(detailImageKey: String!, id: Int!): Item!
+  removeMeSellerItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootItemDetailImage(detailImageKey: String!, id: Int!): Item!
+  removeRootItemPrice(itemId: Int!, priceId: Int!): Item!
   removeRootSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 

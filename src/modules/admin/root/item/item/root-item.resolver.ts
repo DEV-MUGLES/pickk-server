@@ -9,7 +9,10 @@ import { BaseResolver } from '@common/base.resolver';
 
 import { ItemRelationType, ITEM_RELATIONS } from '@item/items/constants';
 import {
+  AddItemPriceInput,
+  AddItemUrlInput,
   BulkUpdateItemInput,
+  CreateItemDetailImageInput,
   CreateItemOptionSetInput,
   CreateItemSizeChartInput,
   UpdateItemInput,
@@ -17,7 +20,7 @@ import {
   UpdateItemPriceInput,
   UpdateItemSizeChartInput,
 } from '@item/items/dtos';
-import { Item, ItemOption } from '@item/items/models';
+import { Item, ItemOption, ItemUrl } from '@item/items/models';
 import { ItemsService } from '@item/items/items.service';
 import { ProductsService } from '@item/products/products.service';
 import { UserRole } from '@user/users/constants';
@@ -160,5 +163,90 @@ export class RootItemResolver extends BaseResolver<ItemRelationType> {
     await this.productsService.createByOptionSet(id);
 
     return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async addRootItemDetailImages(
+    @IntArgs('id') id: number,
+    @Args('input')
+    { urls }: CreateItemDetailImageInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.addDetailImages(id, urls);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async removeRootItemDetailImage(
+    @IntArgs('id') id: number,
+    @Args('detailImageKey') detailImageKey: string,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.removeDetailImage(detailImageKey);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => ItemUrl)
+  async addRootItemUrl(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: AddItemUrlInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.addUrl(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async addRootItemPrice(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: AddItemPriceInput,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.addPrice(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async removeRootItemPrice(
+    @IntArgs('itemId') itemId: number,
+    @IntArgs('priceId') priceId: number,
+    @Info() info?: GraphQLResolveInfo
+  ): Promise<Item> {
+    await this.itemsService.removePrice(itemId, priceId);
+    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async activateRootItemPrice(
+    @IntArgs('itemId') itemId: number,
+    @IntArgs('priceId') priceId: number
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['prices']);
+    return await this.itemsService.activateItemPrice(item, priceId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.Admin)
+  @Mutation(() => Item)
+  async basifyRootPrice(
+    @IntArgs('itemId') itemId: number,
+    @IntArgs('priceId') priceId: number
+  ): Promise<Item> {
+    const item = await this.itemsService.get(itemId, ['prices']);
+    return await this.itemsService.basifyPrice(item, priceId);
   }
 }
