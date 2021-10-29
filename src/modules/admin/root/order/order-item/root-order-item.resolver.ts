@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Info, Args, Query, Int } from '@nestjs/graphql';
+import { Info, Args, Query, Int, Mutation } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -12,9 +12,13 @@ import { OrderItemSearchFilter } from '@mcommon/search/dtos';
 import { OrderItemSearchService } from '@mcommon/search/order-item.search.service';
 import {
   OrderItemRelationType,
+  OrderItemSettleStatus,
   ORDER_ITEM_RELATIONS,
 } from '@order/order-items/constants';
-import { OrderItemFilter } from '@order/order-items/dtos';
+import {
+  BulkUpdateOrderItemInput,
+  OrderItemFilter,
+} from '@order/order-items/dtos';
 import { OrderItem } from '@order/order-items/models';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 import { UserRole } from '@user/users/constants';
@@ -84,5 +88,21 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
     );
 
     return total;
+  }
+
+  @Mutation(() => Boolean)
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  async bulkUpdateRootOrderItems(
+    @Args('merchantUids', { type: () => [String] }) merchantUids: string[],
+    @Args('input') input: BulkUpdateOrderItemInput
+  ): Promise<boolean> {
+    await this.orderItemsService.bulkUpdate(merchantUids, {
+      ...input,
+      ...(input?.settleStatus === OrderItemSettleStatus.Completed && {
+        settledAt: new Date(),
+      }),
+    });
+    return true;
   }
 }
