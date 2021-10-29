@@ -100,7 +100,6 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @OneToMany('ProductEntity', 'item', { cascade: true })
   products: IProduct[];
   @ManyToMany('CampaignEntity', 'items')
-  @JoinTable()
   campaigns: ICampaign[];
 
   @OneToMany('DigestEntity', 'item')
