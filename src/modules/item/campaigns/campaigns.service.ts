@@ -60,8 +60,6 @@ export class CampaignsService {
       throw new BadRequestException('존재하지 않는 캠페인입니다.');
     }
     campaign.items = await this.itemsService.list({ idIn: itemIds });
-    return this.campaignsRepository.entityToModel(
-      await this.campaignsRepository.save(campaign)
-    );
+    return await this.campaignsRepository.save(campaign);
   }
 }
