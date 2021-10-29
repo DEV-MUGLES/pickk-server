@@ -312,6 +312,15 @@ type Courier {
   updatedAt: DateTime!
 }
 
+input CreateCampaignInput {
+  endAt: DateTime!
+
+  """적용 정산률 (0~100)"""
+  rate: Int!
+  startAt: DateTime!
+  title: String!
+}
+
 input CreateCartItemInput {
   productId: Int!
   quantity: Int!
@@ -1410,6 +1419,7 @@ type Mutation {
   convertMeSellerExchangeRequest(merchantUid: String!): ExchangeRequest!
   convertMeSellerRefundRequest(merchantUid: String!, orderItemMerchantUid: String!, productId: Int!): RefundRequest!
   crawlItemOptionSet(itemId: Int!): Item!
+  createCampaign(input: CreateCampaignInput!): Campaign!
   createComment(input: CreateCommentInput!): Comment!
   createCoupon(createCouponInput: CreateCouponInput!): Coupon!
   createCouponSpecification(createCouponSpecificationInput: CreateCouponSpecificationInput!): CouponSpecification!
@@ -1436,6 +1446,8 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
+  removeCampaign(id: Int!): Boolean!
+  removeCampaignItems: Campaign!
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
@@ -1466,6 +1478,8 @@ type Mutation {
   unlike(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
   unown(keywordId: Int!): Boolean!
   updateBrand(id: Int!, updateBrandInput: UpdateBrandInput!): Brand!
+  updateCampaign(id: Int!, input: UpdateCampaignInput!): Campaign!
+  updateCampaignItems: Campaign!
   updateComment(id: Int!, input: UpdateCommentInput!): Comment!
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
@@ -2104,6 +2118,8 @@ type ProductShippingReservePolicy {
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
+  campaign(id: Int!): Campaign!
+  campaigns: [Campaign!]!
   checkFollowing(targetId: Int!): Boolean!
   checkLiking(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
 
@@ -2655,6 +2671,15 @@ input UpdateBrandInput {
   imageUrl: String
   nameEng: String
   nameKor: String
+}
+
+input UpdateCampaignInput {
+  endAt: DateTime
+
+  """적용 정산률 (0~100)"""
+  rate: Int
+  startAt: DateTime
+  title: String
 }
 
 input UpdateCartItemInput {
