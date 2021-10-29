@@ -38,10 +38,6 @@ export class CampaignsService {
 
   async update(id: number, input: UpdateCampaignInput): Promise<Campaign> {
     const campaign = await this.get(id);
-    if (!campaign) {
-      throw new BadRequestException('존재하지 않는 캠페인입니다.');
-    }
-
     return this.campaignsRepository.entityToModel(
       await this.campaignsRepository.save(
         new Campaign({ ...campaign, ...input })
@@ -56,9 +52,6 @@ export class CampaignsService {
 
   async updateItems(id: number, itemIds: number[]): Promise<Campaign> {
     const campaign = await this.get(id);
-    if (!campaign) {
-      throw new BadRequestException('존재하지 않는 캠페인입니다.');
-    }
     campaign.items = await this.itemsService.list({ idIn: itemIds });
     return await this.campaignsRepository.save(campaign);
   }
