@@ -54,6 +54,15 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @UseGuards(JwtSellerVerifyGuard)
+  @Query(() => Int)
+  async meSellerItemsCount(
+    @CurrentUser() { brandId }: JwtPayload,
+    @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter
+  ): Promise<number> {
+    return await this.itemsService.count({ brandId, ...itemFilter });
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateMeSellerItem(
     @IntArgs('id') id: number,

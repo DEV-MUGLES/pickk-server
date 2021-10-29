@@ -2202,6 +2202,7 @@ type Query {
   meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   meSellerInquiry(id: Int!): Inquiry!
   meSellerItems(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
+  meSellerItemsCount(itemFilter: ItemFilter): Int!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!
