@@ -312,6 +312,15 @@ type Courier {
   updatedAt: DateTime!
 }
 
+input CreateCampaignInput {
+  endAt: DateTime!
+
+  """적용 정산률 (0~100)"""
+  rate: Int!
+  startAt: DateTime!
+  title: String!
+}
+
 input CreateCartItemInput {
   productId: Int!
   quantity: Int!
@@ -1421,6 +1430,7 @@ type Mutation {
   createMeSellerItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createMeSellerSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
+  createRootCampaign(input: CreateCampaignInput!): Campaign!
   createRootItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
   createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
@@ -1446,6 +1456,7 @@ type Mutation {
   removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
+  removeRootCampaign(id: Int!): Boolean!
   removeRootSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
@@ -1500,6 +1511,8 @@ type Mutation {
   """추가도 이거로 해주시면 됩니다!"""
   updateMySellerSettlePolicy(updateSellerSettlePolicyInput: UpdateSellerSettlePolicyInput!): SellerSettlePolicy!
   updateMySellerShippingPolicy(updateSellerShippingPolicyInput: UpdateSellerShippingPolicyInput!): SellerShippingPolicy!
+  updateRootCampaign(id: Int!, input: UpdateCampaignInput!): Campaign!
+  updateRootCampaignItems(id: Int!, itemIds: [Int!]!): Campaign!
   updateRootInquiryAnswer(id: Int!, updateInquiryAnswerInput: UpdateInquiryAnswerInput!): InquiryAnswer!
   updateRootItem(id: Int!, input: UpdateItemInput!): Item!
   updateRootItemByCrawl(itemId: Int!): Item!
@@ -2104,6 +2117,8 @@ type ProductShippingReservePolicy {
 type Query {
   brand(id: Int!): Brand!
   brands: [Brand!]!
+  campaign(id: Int!): Campaign!
+  campaigns: [Campaign!]!
   checkFollowing(targetId: Int!): Boolean!
   checkLiking(ownerId: Int!, ownerType: LikeOwnerType!): Boolean!
 
@@ -2655,6 +2670,15 @@ input UpdateBrandInput {
   imageUrl: String
   nameEng: String
   nameKor: String
+}
+
+input UpdateCampaignInput {
+  endAt: DateTime
+
+  """적용 정산률 (0~100)"""
+  rate: Int
+  startAt: DateTime
+  title: String
 }
 
 input UpdateCartItemInput {
