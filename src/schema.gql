@@ -1377,9 +1377,9 @@ input ManualCreateItemInput {
 type Mutation {
   activateMeSellerItemPrice(itemId: Int!, priceId: Int!): Item!
   activateRootItemPrice(itemId: Int!, priceId: Int!): Item!
+  addItemPrice(id: Int!, input: AddItemPriceInput!): Item!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
   addMeSellerItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
-  addMeSellerItemPrice(id: Int!, input: AddItemPriceInput!): Item!
   addMeSellerItemUrl(id: Int!, input: AddItemUrlInput!): ItemUrl!
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
   addRootItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
@@ -1444,10 +1444,10 @@ type Mutation {
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
+  removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
   removeMeSellerItemDetailImage(detailImageKey: String!, id: Int!): Item!
-  removeMeSellerItemPrice(itemId: Int!, priceId: Int!): Item!
   removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!

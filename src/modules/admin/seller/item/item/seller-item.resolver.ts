@@ -208,7 +208,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async addMeSellerItemPrice(
+  async addItemPrice(
     @IntArgs('id') id: number,
     @Args('input')
     input: AddItemPriceInput,
@@ -220,7 +220,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async removeMeSellerItemPrice(
+  async removeItemPrice(
     @IntArgs('itemId') itemId: number,
     @IntArgs('priceId') priceId: number,
     @Info() info?: GraphQLResolveInfo
