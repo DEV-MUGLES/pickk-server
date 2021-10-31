@@ -57,7 +57,8 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
     @Args('query', { nullable: true }) query?: string,
     @Args('searchFilter', { nullable: true })
     filter?: OrderItemSearchFilter,
-    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<SearchOrderItemsOutput> {
     const { ids: merchantUidIn, total } =
       await this.orderItemSearchService.search(query, pageInput, filter, [
@@ -67,7 +68,7 @@ export class RootOrderItemResolver extends BaseResolver<OrderItemRelationType> {
     const orderItems = await this.orderItemsService.list(
       { merchantUidIn },
       null,
-      ['order', 'order.buyer', 'order.receiver', 'shipment', 'shipment.courier']
+      this.getRelationsFromInfo(info, [], 'result.')
     );
 
     return { total, result: orderItems };
