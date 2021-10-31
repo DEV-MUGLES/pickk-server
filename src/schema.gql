@@ -1620,7 +1620,7 @@ type OrderItem {
 
   """지연발송 예정일"""
   delayedShipExpectedAt: DateTime
-  exchangeRequest: ExchangeRequest!
+  exchangeRequest: ExchangeRequest
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime
@@ -1661,7 +1661,7 @@ type OrderItem {
   recommendDigestId: Int
   recommenderId: Int
   recommenderNickname: String
-  refundRequest: RefundRequest!
+  refundRequest: RefundRequest
   refundRequestedAt: DateTime
   refundedAt: DateTime
   seller: Seller
