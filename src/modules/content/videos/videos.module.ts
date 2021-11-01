@@ -40,12 +40,12 @@ import { VideosService } from './videos.service';
         name: SEND_VIDEO_CREATION_SLACK_MESSAGE_QUEUE,
       }
     ),
-    LikesModule,
-    FollowsModule,
+    forwardRef(() => LikesModule),
+    forwardRef(() => FollowsModule),
     forwardRef(() => SearchModule),
-    CommentsModule,
-    ItemPropertiesModule,
-    DigestsModule,
+    forwardRef(() => CommentsModule),
+    forwardRef(() => DigestsModule),
+    forwardRef(() => ItemPropertiesModule),
   ],
   providers: [
     Logger,

@@ -1,4 +1,4 @@
-import { Logger, Module } from '@nestjs/common';
+import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
 
@@ -8,6 +8,9 @@ import {
   UPDATE_USER_FOLLOW_COUNT_QUEUE,
 } from '@queue/constants';
 
+import { DigestsModule } from '@content/digests/digests.module';
+import { VideosModule } from '@content/videos/videos.module';
+import { LooksModule } from '@content/looks/looks.module';
 import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { PointsModule } from '@order/points/points.module';
 import { FollowsModule } from '@user/follows/follows.module';
@@ -44,9 +47,12 @@ import { UsersResolver } from './users.resolver';
       }
     ),
     AwsS3ProviderModule,
-    PointsModule,
-    FollowsModule,
-    OrderItemsModule,
+    forwardRef(() => PointsModule),
+    forwardRef(() => FollowsModule),
+    forwardRef(() => OrderItemsModule),
+    forwardRef(() => DigestsModule),
+    forwardRef(() => VideosModule),
+    forwardRef(() => LooksModule),
   ],
   providers: [
     Logger,

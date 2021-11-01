@@ -34,7 +34,7 @@ import { OrdersService } from './orders.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([OrdersRepository]),
-    DigestsModule,
+    forwardRef(() => DigestsModule),
     CartsModule,
     ProductsModule,
     CouponsModule,

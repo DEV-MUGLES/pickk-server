@@ -50,6 +50,10 @@ export class DigestsService {
     }
   }
 
+  async checkRatedExist(userId: number): Promise<boolean> {
+    return await this.digestsRepository.checkRatedExist(userId);
+  }
+
   async get(
     id: number,
     relations: DigestRelationType[] = [],

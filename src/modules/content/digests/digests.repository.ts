@@ -33,6 +33,17 @@ export class DigestsRepository extends BaseRepository<DigestEntity, Digest> {
     return result?.length > 0;
   }
 
+  async checkRatedExist(userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('digest')
+      .select('1')
+      .where('digest.userId = :userId', { userId })
+      .andWhere('rating is not null')
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
+
   async findIds(
     filter: DigestFilter,
     pageInput?: PageInput

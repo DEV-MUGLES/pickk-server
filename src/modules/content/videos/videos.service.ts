@@ -44,6 +44,10 @@ export class VideosService {
     }
   }
 
+  async checkExist(userId: number): Promise<boolean> {
+    return await this.videosRepository.checkExist(userId);
+  }
+
   async get(id: number, relations: VideoRelationType[] = [], userId?: number) {
     const video = await this.videosRepository.get(id, relations);
 

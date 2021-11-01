@@ -38,6 +38,16 @@ export class LooksRepository extends BaseRepository<LookEntity, Look> {
     return result?.length > 0;
   }
 
+  async checkExist(userId: number): Promise<boolean> {
+    const result = await this.createQueryBuilder('look')
+      .select('1')
+      .where('look.userId = :userId', { userId })
+      .take(1)
+      .limit(1)
+      .execute();
+    return result?.length > 0;
+  }
+
   async findIds(filter: LookFilter, pageInput?: PageInput): Promise<number[]> {
     let qb = pageQuery(
       lookStyleTagsQuery(this.createQueryBuilder('look'), filter.styleTagIdIn),

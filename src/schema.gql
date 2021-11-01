@@ -2926,10 +2926,10 @@ input UpdateVideoInput {
 }
 
 type User {
-  """[ResolveField] 활성화된 주문건들 개수"""
+  """[ResolveField]"""
   activeOrderItemsCount: Int!
 
-  """[ResolveField] 사용가능 포인트 잔고"""
+  """[ResolveField]"""
   availablePoint: Int!
   avatarUrl: String
   code: String
@@ -2939,9 +2939,18 @@ type User {
   description: String
   email: String
 
-  """[ResolveField] 적립예정 포인트 잔고"""
+  """[ResolveField]"""
   expectedPoint: Int!
   followCount: Int!
+
+  """[ResolveField]"""
+  hasLook: Boolean!
+
+  """[ResolveField]"""
+  hasRatedDigest: Boolean!
+
+  """[ResolveField]"""
+  hasVideo: Boolean!
   height: Int
   id: Int!
   instagramCode: String

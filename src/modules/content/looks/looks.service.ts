@@ -49,6 +49,10 @@ export class LooksService {
     }
   }
 
+  async checkExist(userId: number): Promise<boolean> {
+    return await this.looksRepository.checkExist(userId);
+  }
+
   async get(
     id: number,
     relations: LookRelationType[] = [],

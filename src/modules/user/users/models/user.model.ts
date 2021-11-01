@@ -30,6 +30,16 @@ export class User extends UserEntity {
   @Field(() => RefundAccount, { nullable: true })
   refundAccount: RefundAccount;
 
+  get hasRatedDigestCacheKey(): string {
+    return `user:${this.id}:has-rated-digest`;
+  }
+  get hasVideoCacheKey(): string {
+    return `user:${this.id}:has-video`;
+  }
+  get hasLookCacheKey(): string {
+    return `user:${this.id}:has-look`;
+  }
+
   public updatePassword = (password: string, input: string): User => {
     if (!this.comparePassword(password)) {
       throw new PasswordIncorrectException();
