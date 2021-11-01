@@ -1,26 +1,25 @@
-const urlRegex = /^https?:\/\/([^\s$.?#].[^\s]*)$/;
-const urlWithoutProtocolRegex = /^([^\s$.?#].[^\s]*)$/;
+import { isURL } from 'class-validator';
 
-const isUrlString = (str: string): boolean => {
-  if (!str) {
-    return false;
+const httpRegex = /^https?:\/\/([^\s$.?#].[^\s]*)$/;
+
+export const addHttpTo = (url: string) => {
+  if (!isURL(url)) {
+    return null;
   }
-
-  return urlRegex.test(str);
-};
-
-export const addHttpTo = (url: string): string | null => {
-  if (isUrlString(url)) {
+  if (isURL(url, { require_protocol: true })) {
     return url;
   }
 
-  return urlWithoutProtocolRegex.test(url) ? `http://${url}` : null;
+  return `http://${url}`;
 };
 
-export const removeProtocolFrom = (url: string): string | null => {
-  if (!isUrlString(url)) {
+export const removeProtocolFrom = (url: string) => {
+  if (!isURL(url)) {
     return null;
   }
+  if (!isURL(url, { require_protocol: true })) {
+    return url;
+  }
 
-  return urlRegex.exec(url)[1];
+  return httpRegex.exec(url)[1];
 };
