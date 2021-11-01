@@ -1,7 +1,7 @@
 const urlRegex = /^https?:\/\/([^\s$.?#].[^\s]*)$/;
 const urlWithoutProtocolRegex = /^([^\s$.?#].[^\s]*)$/;
 
-const isUrlString = (str: string) => {
+const isUrlString = (str: string): boolean => {
   if (!str) {
     return false;
   }
@@ -9,15 +9,15 @@ const isUrlString = (str: string) => {
   return urlRegex.test(str);
 };
 
-export const parse2UrlString = (str: string) => {
-  if (isUrlString(str)) {
-    return str;
+export const addHttpTo = (url: string): string | null => {
+  if (isUrlString(url)) {
+    return url;
   }
 
-  return urlWithoutProtocolRegex.test(str) ? `http://${str}` : null;
+  return urlWithoutProtocolRegex.test(url) ? `http://${url}` : null;
 };
 
-export const removeProtocolFrom = (url: string) => {
+export const removeProtocolFrom = (url: string): string | null => {
   if (!isUrlString(url)) {
     return null;
   }

@@ -8,7 +8,7 @@ import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
-import { parse2UrlString } from '@common/helpers';
+import { addHttpTo } from '@common/helpers';
 
 import { ItemSearchService } from '@mcommon/search/item.search.service';
 import { ProductsService } from '@item/products/products.service';
@@ -86,14 +86,14 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Args('url') url: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    const urlString = parse2UrlString(url);
-    if (!urlString) {
+    const httpUrl = addHttpTo(url);
+    if (!httpUrl) {
       await this.itemsProducer.sendItemCreationFailSlackMessage(url, nickname);
       throw new BadRequestException(`유효하지 않은 url입니다.\nurl:${url}`);
     }
 
     const existing = await this.itemsService.findByUrl(
-      urlString,
+      httpUrl,
       this.getRelationsFromInfo(info)
     );
     if (existing) {
@@ -101,7 +101,7 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     }
 
     try {
-      const { id } = await this.itemsService.createByInfoCrawl(urlString);
+      const { id } = await this.itemsService.createByInfoCrawl(httpUrl);
       await this.itemsProducer.sendItemCreationSuccessSlackMessage(
         id,
         nickname
