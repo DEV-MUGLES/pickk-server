@@ -17,6 +17,7 @@ export type OrderItemSearchBody = Pick<
   | 'recommenderNickname'
   | 'status'
   | 'claimStatus'
+  | 'settleStatus'
   | 'paidAt'
   | 'shipReadyAt'
   | 'shippingAt'
@@ -67,6 +68,7 @@ export class OrderItemSearchService extends BaseSearchService<
       recommenderNickname: orderItem.recommenderNickname,
       status: orderItem.status,
       claimStatus: orderItem.claimStatus,
+      settleStatus: orderItem.settleStatus,
       paidAt: orderItem.paidAt,
       shipReadyAt: orderItem.shipReadyAt,
       shippingAt: orderItem.shippingAt,

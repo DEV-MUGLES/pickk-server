@@ -2,6 +2,7 @@ import { Field, InputType, Int } from '@nestjs/graphql';
 
 import {
   OrderItemClaimStatus,
+  OrderItemSettleStatus,
   OrderItemStatus,
 } from '@order/order-items/constants';
 import { IOrderItem } from '@order/order-items/interfaces';
@@ -29,6 +30,10 @@ export class OrderItemSearchFilter implements Partial<IOrderItem> {
   claimStatusIn?: OrderItemClaimStatus[];
   @Field(() => Boolean, { nullable: true })
   claimStatusIsNull?: boolean;
+  @Field(() => OrderItemSettleStatus, { nullable: true })
+  settleStatus?: OrderItemSettleStatus;
+  @Field(() => [OrderItemSettleStatus], { nullable: true })
+  settleStatusIn?: OrderItemSettleStatus[];
 
   @Field(() => [Date, Date], { nullable: true })
   paidAtBetween?: [Date, Date];
@@ -40,6 +45,8 @@ export class OrderItemSearchFilter implements Partial<IOrderItem> {
   shippedAtBetween?: [Date, Date];
   @Field(() => [Date, Date], { nullable: true })
   confirmedAtBetween?: [Date, Date];
+  @Field(() => Date, { nullable: true })
+  confirmedAtLte?: Date;
   @Field(() => [Date, Date], { nullable: true })
   settledAtBetween?: [Date, Date];
 }

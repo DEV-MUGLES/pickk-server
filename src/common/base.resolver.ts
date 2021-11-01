@@ -45,7 +45,8 @@ export class BaseResolver<RelationType extends string = string> {
 
   protected getRelationsFromInfo(
     info: GraphQLResolveInfo,
-    includes: RelationType[] = []
+    includes: RelationType[] = [],
+    prefix = ''
   ) {
     if (!info) {
       return [];
@@ -54,7 +55,11 @@ export class BaseResolver<RelationType extends string = string> {
     const simplifiedInfo = this.getSimplifiedInfo(info);
 
     const relations = this.relations.filter((relation) =>
-      this.checkRelationInFields(relation, simplifiedInfo.fieldsByTypeName, '')
+      this.checkRelationInFields(
+        prefix + relation,
+        simplifiedInfo.fieldsByTypeName,
+        ''
+      )
     );
 
     Object.entries(this.derivedFieldsInfo).forEach(([relationName, fields]) => {

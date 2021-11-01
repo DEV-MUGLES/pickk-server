@@ -54,6 +54,15 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
   }
 
   @UseGuards(JwtSellerVerifyGuard)
+  @Query(() => Int)
+  async meSellerItemsCount(
+    @CurrentUser() { brandId }: JwtPayload,
+    @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter
+  ): Promise<number> {
+    return await this.itemsService.count({ brandId, ...itemFilter });
+  }
+
+  @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async updateMeSellerItem(
     @IntArgs('id') id: number,
@@ -173,49 +182,49 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async addItemDetailImages(
-    @IntArgs('itemId') itemId: number,
-    @Args('createItemDetailImageInput')
+  async addMeSellerItemDetailImages(
+    @IntArgs('id') id: number,
+    @Args('input')
     { urls }: CreateItemDetailImageInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    await this.itemsService.addDetailImages(itemId, urls);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    await this.itemsService.addDetailImages(id, urls);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async removeItemDetailImage(
-    @IntArgs('itemId') itemId: number,
+  async removeMeSellerItemDetailImage(
+    @IntArgs('id') id: number,
     @Args('detailImageKey') detailImageKey: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
     await this.itemsService.removeDetailImage(detailImageKey);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => ItemUrl)
-  async addItemUrl(
-    @IntArgs('itemId') itemId: number,
-    @Args('addItemUrlInput')
-    addItemUrlInput: AddItemUrlInput,
+  async addMeSellerItemUrl(
+    @IntArgs('id') id: number,
+    @Args('input')
+    input: AddItemUrlInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    await this.itemsService.addUrl(itemId, addItemUrlInput);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    await this.itemsService.addUrl(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
   async addItemPrice(
-    @IntArgs('itemId') itemId: number,
+    @IntArgs('itemId') id: number,
     @Args('addItemPriceInput')
-    addItemPriceInput: AddItemPriceInput,
+    input: AddItemPriceInput,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    await this.itemsService.addPrice(itemId, addItemPriceInput);
-    return await this.itemsService.get(itemId, this.getRelationsFromInfo(info));
+    await this.itemsService.addPrice(id, input);
+    return await this.itemsService.get(id, this.getRelationsFromInfo(info));
   }
 
   @UseGuards(JwtSellerVerifyGuard)
@@ -231,7 +240,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async activateItemPrice(
+  async activateMeSellerItemPrice(
     @IntArgs('itemId') itemId: number,
     @IntArgs('priceId') priceId: number
   ): Promise<Item> {
@@ -241,7 +250,7 @@ export class SellerItemResolver extends BaseResolver<ItemRelationType> {
 
   @UseGuards(JwtSellerVerifyGuard)
   @Mutation(() => Item)
-  async basifyPrice(
+  async basifyMeSellerPrice(
     @IntArgs('itemId') itemId: number,
     @IntArgs('priceId') priceId: number
   ): Promise<Item> {

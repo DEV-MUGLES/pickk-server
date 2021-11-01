@@ -136,6 +136,10 @@ input BulkUpdateItemInput {
   minorCategoryId: Int
 }
 
+input BulkUpdateOrderItemInput {
+  settleStatus: OrderItemSettleStatus
+}
+
 type Campaign {
   createdAt: DateTime!
   endAt: DateTime!
@@ -1384,21 +1388,27 @@ input ManualCreateItemInput {
 }
 
 type Mutation {
-  activateItemPrice(itemId: Int!, priceId: Int!): Item!
-  addItemDetailImages(createItemDetailImageInput: CreateItemDetailImageInput!, itemId: Int!): Item!
+  activateMeSellerItemPrice(itemId: Int!, priceId: Int!): Item!
+  activateRootItemPrice(itemId: Int!, priceId: Int!): Item!
   addItemPrice(addItemPriceInput: AddItemPriceInput!, itemId: Int!): Item!
-  addItemUrl(addItemUrlInput: AddItemUrlInput!, itemId: Int!): ItemUrl!
   addMeRefundAccount(createRefundAccountInput: CreateRefundAccountInput!): RefundAccount!
+  addMeSellerItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
+  addMeSellerItemUrl(id: Int!, input: AddItemUrlInput!): ItemUrl!
   addMeShippingAddress(createShippingAddressInput: CreateShippingAddressInput!): ShippingAddress!
+  addRootItemDetailImages(id: Int!, input: CreateItemDetailImageInput!): Item!
+  addRootItemPrice(id: Int!, input: AddItemPriceInput!): Item!
+  addRootItemUrl(id: Int!, input: AddItemUrlInput!): ItemUrl!
   answerMeSellerInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
   answerRootInquiry(answerInquiryInput: AnswerInquiryInput!, id: Int!): Inquiry!
-  basifyPrice(itemId: Int!, priceId: Int!): Item!
+  basifyMeSellerPrice(itemId: Int!, priceId: Int!): Item!
+  basifyRootPrice(itemId: Int!, priceId: Int!): Item!
   bulkPickMeSellerExchangeRequests(merchantUids: [String!]!): Boolean!
   bulkPickMeSellerRefundRequests(merchantUids: [String!]!): Boolean!
   bulkShipMeSellerOrderItems(bulkShipOrderItemInput: BulkShipOrderItemInput!): Boolean!
   bulkShipReadyMeSellerOrderItems(merchantUids: [String!]!): Boolean!
   bulkUpdateMeSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
+  bulkUpdateRootOrderItems(input: BulkUpdateOrderItemInput!, merchantUids: [String!]!): Boolean!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
@@ -1449,14 +1459,16 @@ type Mutation {
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
-  removeItemDetailImage(detailImageKey: String!, itemId: Int!): Item!
   removeItemPrice(itemId: Int!, priceId: Int!): Item!
   removeLook(id: Int!): Boolean!
   removeMeRefundAccount: Boolean!
+  removeMeSellerItemDetailImage(detailImageKey: String!, id: Int!): Item!
   removeMeSellerSizeChart(itemId: Int!): Item!
   removeMeShippingAddress(addressId: Int!): Boolean!
   removeMyCartItems(ids: [Int!]!): Boolean!
   removeRootCampaign(id: Int!): Boolean!
+  removeRootItemDetailImage(detailImageKey: String!, id: Int!): Item!
+  removeRootItemPrice(itemId: Int!, priceId: Int!): Item!
   removeRootSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
 
@@ -1608,7 +1620,7 @@ type OrderItem {
 
   """지연발송 예정일"""
   delayedShipExpectedAt: DateTime
-  exchangeRequest: ExchangeRequest!
+  exchangeRequest: ExchangeRequest
   exchangeRequestedAt: DateTime
   exchangedAt: DateTime
   failedAt: DateTime
@@ -1649,7 +1661,7 @@ type OrderItem {
   recommendDigestId: Int
   recommenderId: Int
   recommenderNickname: String
-  refundRequest: RefundRequest!
+  refundRequest: RefundRequest
   refundRequestedAt: DateTime
   refundedAt: DateTime
   seller: Seller
@@ -1715,12 +1727,15 @@ input OrderItemSearchFilter {
   claimStatusIn: [OrderItemClaimStatus!]
   claimStatusIsNull: Boolean
   confirmedAtBetween: [DateTime!]
+  confirmedAtLte: DateTime
   isConfirmed: Boolean
   isProcessDelaying: Boolean
   isSettled: Boolean
   merchantUidMt: String
   paidAtBetween: [DateTime!]
   sellerId: Int
+  settleStatus: OrderItemSettleStatus
+  settleStatusIn: [OrderItemSettleStatus!]
   settledAtBetween: [DateTime!]
   shipReadyAtBetween: [DateTime!]
   shippedAtBetween: [DateTime!]
@@ -2151,6 +2166,7 @@ type Query {
   itemMinorCategories: [ItemCategory!]!
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
+  itemsCount(itemFilter: ItemFilter): Int!
   itemsExhibitions: [ItemsExhibition!]!
   itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
@@ -2186,6 +2202,7 @@ type Query {
   meSellerInquiriesCount(forceUpdate: Boolean): InquiriesCountOutput!
   meSellerInquiry(id: Int!): Inquiry!
   meSellerItems(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
+  meSellerItemsCount(itemFilter: ItemFilter): Int!
   meSellerOrderItems(orderItemFilter: OrderItemFilter, pageInput: PageInput): [OrderItem!]!
   meSellerOrderItemsCount(forceUpdate: Boolean): OrderItemsCountOutput!
   meSellerRefundRequests(pageInput: PageInput, refundRequestFilter: RefundRequestFilter): [RefundRequest!]!

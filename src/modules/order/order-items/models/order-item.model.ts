@@ -67,10 +67,10 @@ export class OrderItem extends OrderItemEntity {
   @Field(() => Order)
   @Type(() => Order)
   order: Order;
-  @Field(() => RefundRequest)
+  @Field(() => RefundRequest, { nullable: true })
   @Type(() => RefundRequest)
   refundRequest: RefundRequest;
-  @Field(() => ExchangeRequest)
+  @Field(() => ExchangeRequest, { nullable: true })
   @Type(() => ExchangeRequest)
   exchangeRequest: ExchangeRequest;
 

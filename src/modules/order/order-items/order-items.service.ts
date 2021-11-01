@@ -7,7 +7,7 @@ import { parseFilter } from '@common/helpers';
 import { CacheService } from '@providers/cache/redis';
 
 import { OrderItemRelationType } from './constants';
-import { OrderItemFilter } from './dtos';
+import { BulkUpdateOrderItemInput, OrderItemFilter } from './dtos';
 import { OrderItem } from './models';
 import { OrderItemsProducer } from './producers';
 
@@ -93,5 +93,16 @@ export class OrderItemsService {
     this.cacheService.set(cacheKey, count, { ttl: 600 });
 
     return count;
+  }
+
+  async bulkUpdate(
+    merchantUids: string[],
+    input: BulkUpdateOrderItemInput
+  ): Promise<OrderItem[]> {
+    const orderItems = await this.list({ merchantUidIn: merchantUids });
+
+    return await this.orderItemsRepository.save(
+      orderItems.map((v) => new OrderItem({ ...v, ...input }))
+    );
   }
 }

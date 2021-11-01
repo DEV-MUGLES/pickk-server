@@ -4,6 +4,7 @@ export type OrderItemRelationType =
   | keyof OrderItem
   | 'item.brand'
   | 'seller.claimPolicy'
+  | 'seller.settlePolicy'
   | 'seller.shippingPolicy'
   | 'order.buyer'
   | 'order.receiver'
@@ -17,6 +18,7 @@ export const ORDER_ITEM_RELATIONS: Array<OrderItemRelationType> = [
   'item',
   'item.brand',
   'seller',
+  'seller.settlePolicy',
   'seller.shippingPolicy',
   'order',
   'order.buyer',
