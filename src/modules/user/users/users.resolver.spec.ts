@@ -2,7 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as faker from 'faker';
 
 import { JwtPayload } from '@auth/models';
+import { CacheService } from '@providers/cache/redis';
 
+import { DigestsService } from '@content/digests/digests.service';
+import { LooksService } from '@content/looks/looks.service';
+import { VideosService } from '@content/videos/videos.service';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 import { PointsService } from '@order/points/points.service';
 import { FollowsService } from '@user/follows/follows.service';
@@ -36,6 +40,30 @@ describe('UsersResolver', () => {
         {
           provide: OrderItemsService,
           useValue: new OrderItemsService(null, null, null),
+        },
+        {
+          provide: DigestsService,
+          useValue: new DigestsService(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+          ),
+        },
+        {
+          provide: VideosService,
+          useValue: new VideosService(null, null, null, null, null),
+        },
+        {
+          provide: LooksService,
+          useValue: new LooksService(null, null, null, null, null, null, null),
+        },
+        {
+          provide: CacheService,
+          useValue: new CacheService(null),
         },
       ],
     }).compile();
