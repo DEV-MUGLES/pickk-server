@@ -9,7 +9,7 @@ import { IndexVideosJob } from './index-videos';
 import { IndexOrderItemsJob } from './index-order-items';
 import { IndexRefundRequestsJob } from './index-refund-requests';
 import { IndexExchangeRequestsJob } from './index-exchange-requests';
-import { IndexInquiriesJob } from './index-inquires';
+import { IndexInquiriesJob } from './index-inquiries';
 
 @Injectable()
 export class CommonJobsService {

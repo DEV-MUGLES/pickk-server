@@ -26,7 +26,7 @@ import {
   IndexExchangeRequestsJob,
   IndexExchangeRequestsStep,
 } from './index-exchange-requests';
-import { IndexInquiresStep, IndexInquiriesJob } from './index-inquires';
+import { IndexInquiriesStep, IndexInquiriesJob } from './index-inquiries';
 
 import { CommonJobsController } from './common-jobs.controller';
 import { CommonJobsService } from './common-jobs.service';
@@ -63,7 +63,7 @@ import { CommonJobsService } from './common-jobs.service';
     IndexExchangeRequestsJob,
     IndexExchangeRequestsStep,
     IndexInquiriesJob,
-    IndexInquiresStep,
+    IndexInquiriesStep,
   ],
 })
 export class CommonJobsModule {}

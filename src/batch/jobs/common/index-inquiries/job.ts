@@ -4,11 +4,11 @@ import { BaseJob } from '@batch/jobs/base.job';
 import { JobExecution } from '@batch/models';
 
 import { INDEX_INQUIRES_JOB } from '../constants';
-import { IndexInquiresStep } from './steps';
+import { IndexInquiriesStep } from './steps';
 
 @Injectable()
 export class IndexInquiriesJob extends BaseJob {
-  constructor(private readonly indexInquiresStep: IndexInquiresStep) {
+  constructor(private readonly indexInquiresStep: IndexInquiriesStep) {
     super(INDEX_INQUIRES_JOB);
   }
 
