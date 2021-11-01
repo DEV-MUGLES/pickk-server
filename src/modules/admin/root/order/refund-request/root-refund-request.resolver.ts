@@ -53,7 +53,8 @@ export class RootRefundRequestResolver extends BaseResolver<RefundRequestRelatio
     @Args('query', { nullable: true }) query?: string,
     @Args('searchFilter', { nullable: true })
     filter?: RefundRequestSearchFilter,
-    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<SearchRefundRequestsOutput> {
     const { ids: merchantUidIn, total } =
       await this.refundRequestSearchService.search(query, pageInput, filter, [
@@ -63,7 +64,7 @@ export class RootRefundRequestResolver extends BaseResolver<RefundRequestRelatio
     const refundRequests = await this.refundRequestsService.list(
       { merchantUidIn },
       null,
-      ['order', 'order.buyer', 'shipment']
+      this.getRelationsFromInfo(info, [], 'result.')
     );
 
     return { total, result: refundRequests };

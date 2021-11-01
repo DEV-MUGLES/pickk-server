@@ -23,9 +23,7 @@ import { ExchangeRequest } from '@order/exchange-requests/models';
 import { ExchangeRequestsService } from '@order/exchange-requests/exchange-requests.service';
 
 @Injectable()
-export class RootExchangeRequestResolver extends BaseResolver<
-  ExchangeRequestRelationType
-> {
+export class RootExchangeRequestResolver extends BaseResolver<ExchangeRequestRelationType> {
   relations = EXCHANGE_REQUEST_RELATIONS;
 
   constructor(
@@ -58,28 +56,18 @@ export class RootExchangeRequestResolver extends BaseResolver<
     @Args('query', { nullable: true }) query?: string,
     @Args('searchFilter', { nullable: true })
     filter?: ExchangeRequestSearchFilter,
-    @Args('pageInput', { nullable: true }) pageInput?: PageInput
+    @Args('pageInput', { nullable: true }) pageInput?: PageInput,
+    @Info() info?: GraphQLResolveInfo
   ): Promise<SearchExchangeRequestsOutput> {
-    const {
-      ids: merchantUidIn,
-      total,
-    } = await this.exchangeRequestSearchService.search(
-      query,
-      pageInput,
-      filter,
-      [{ merchantUid: 'desc' }]
-    );
+    const { ids: merchantUidIn, total } =
+      await this.exchangeRequestSearchService.search(query, pageInput, filter, [
+        { merchantUid: 'desc' },
+      ]);
 
     const exchangeRequests = await this.exchangeRequestsService.list(
       { merchantUidIn },
       null,
-      [
-        'orderItem',
-        'orderItem.order',
-        'orderItem.order.buyer',
-        'reShipment',
-        'pickShipment',
-      ]
+      this.getRelationsFromInfo(info, [], 'result.')
     );
 
     return { total, result: exchangeRequests };
