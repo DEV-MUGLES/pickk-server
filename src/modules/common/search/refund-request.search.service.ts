@@ -27,6 +27,7 @@ export type RefundRequestSearchBody = Pick<
   orderBuyerName: string;
   orderBuyerPhoneNumber: string;
   shipmentTrackCode: string;
+  orderItemsBrandNameKor: string;
 };
 
 @Injectable()
@@ -48,6 +49,7 @@ export class RefundRequestSearchService extends BaseSearchService<
       'order',
       'order.buyer',
       'shipment',
+      'orderItems',
     ]);
   }
 
@@ -71,6 +73,7 @@ export class RefundRequestSearchService extends BaseSearchService<
       orderBuyerName: refundRequest.order?.buyer?.name,
       orderBuyerPhoneNumber: refundRequest.order?.buyer?.phoneNumber,
       shipmentTrackCode: refundRequest.shipment?.trackCode,
+      orderItemsBrandNameKor: refundRequest.orderItems[0].brandNameKor,
     };
   }
 }

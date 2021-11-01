@@ -26,7 +26,7 @@ export class IndexRefundRequestsConsumer extends BaseConsumer {
         merchantUidIn: merchantUids,
       },
       null,
-      ['order', 'order.buyer', 'shipment']
+      ['order', 'order.buyer', 'shipment', 'orderItems']
     );
 
     await this.refundRequestSearchService.bulkIndex(refundRequests);

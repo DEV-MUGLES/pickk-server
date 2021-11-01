@@ -15,8 +15,10 @@ export class IndexRefundRequestsStep {
       'order',
       'order.buyer',
       'shipment',
+      'orderItems',
     ]);
 
+    await this.refundRequestSearchService.clear();
     await this.refundRequestSearchService.bulkIndex(refundRequests);
     await this.refundRequestSearchService.enableFielddata('merchantUid');
   }
