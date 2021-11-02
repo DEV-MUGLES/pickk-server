@@ -3,6 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { INQUIRY_SEARCH_INDEX_RELATIONS } from '@mcommon/search/constants';
 import { InquirySearchService } from '@mcommon/search/inquiry.search.service';
 import { InquiriesService } from '@item/inquiries/inquiries.service';
+import { SearchFieldDataType } from '@providers/elasticsearch/types';
 
 @Injectable()
 export class IndexInquiriesStep {
@@ -20,6 +21,6 @@ export class IndexInquiriesStep {
 
     await this.inquirySearchService.clear();
     await this.inquirySearchService.bulkIndex(inquiries);
-    await this.inquirySearchService.enableFielddata('id');
+    await this.inquirySearchService.putMapping('id', SearchFieldDataType.Long);
   }
 }
