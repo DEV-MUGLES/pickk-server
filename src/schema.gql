@@ -1167,9 +1167,19 @@ type ItemUrl {
 }
 
 type ItemsExhibition {
+  """최대 12자"""
+  backgroundColor: String
   createdAt: DateTime!
+
+  """최대 50자"""
+  description: String
   id: Int!
+  imageRight: Float!
+  imageTop: Float!
+  imageUrl: String
+  isVisible: Boolean!
   items: [Item!]!
+  order: Float!
 
   """최대 50자"""
   title: String!

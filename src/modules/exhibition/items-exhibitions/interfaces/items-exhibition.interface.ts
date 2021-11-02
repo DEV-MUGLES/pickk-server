@@ -6,4 +6,13 @@ export interface IItemsExhibition extends IBaseId {
   exhibitionItems: IItemsExhibitionItem[];
 
   title: string;
+  description: string;
+
+  imageUrl: string;
+  imageTop: number;
+  imageRight: number;
+  backgroundColor: string;
+
+  isVisible: boolean;
+  order: number;
 }
