@@ -80,6 +80,13 @@ export class ExchangeRequestsService {
     merchantUid: string,
     input: RegisterExchangeRequestInput
   ): Promise<ExchangeRequest> {
+    const existingRequest = await this.exchangeRequestsRepository.findOne({
+      merchantUid,
+    });
+    if (existingRequest) {
+      await this.exchangeRequestsRepository.remove(existingRequest);
+    }
+
     const orderItem = await this.orderItemsService.get(
       merchantUid,
       EXCHANGE_ORDER_ITEM_RELATIONS
