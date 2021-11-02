@@ -24,8 +24,10 @@ export interface IUser extends IBaseId {
   description: string;
   _avatarUrl: string;
 
+  naverCode: string;
   instagramCode: string;
   youtubeUrl: string;
+  mainChannel: string;
 
   /** 개인정보 */
   name?: string | null;

@@ -2970,7 +2970,9 @@ type User {
 
   """[MODEL ONLY]"""
   isMe: Boolean
+  mainChannel: UserMainChannel
   name: String
+  naverCode: String
 
   """최대 11자"""
   nickname: String!
@@ -2984,6 +2986,12 @@ type User {
   updatedAt: DateTime!
   weight: Int
   youtubeUrl: String
+}
+
+enum UserMainChannel {
+  Instagram
+  NaverBlog
+  Youtube
 }
 
 """Oauth 제공 서비스입니다."""
