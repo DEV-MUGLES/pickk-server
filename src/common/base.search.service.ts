@@ -1,4 +1,5 @@
 import { SearchService } from '@providers/elasticsearch/provider.service';
+import { SearchFieldDataType } from '@providers/elasticsearch/types';
 
 import { PageInput } from './dtos';
 
@@ -76,6 +77,10 @@ export abstract class BaseSearchService<
 
   async enableFielddata(fieldName: string) {
     await this.searchService.enableFielddata(this.name, fieldName);
+  }
+
+  async putMapping(fieldName: string, type: SearchFieldDataType) {
+    await this.searchService.putMapping(this.name, fieldName, type);
   }
 
   async clear() {
