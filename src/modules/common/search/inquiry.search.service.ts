@@ -10,6 +10,7 @@ import { INQUIRY_SEARCH_INDEX_RELATIONS } from './constants';
 
 export type InquirySearchBody = Pick<
   Inquiry,
+  | 'id'
   | 'type'
   | 'title'
   | 'content'
@@ -19,7 +20,6 @@ export type InquirySearchBody = Pick<
   | 'createdAt'
   | 'sellerId'
 > & {
-  id: string;
   userNickname: string;
   itemName: string;
   orderBuyerName: string;
@@ -45,7 +45,7 @@ export class InquirySearchService extends BaseSearchService<
 
   toBody(inquiry: Inquiry): InquirySearchBody {
     return {
-      id: inquiry.id.toString(),
+      id: inquiry.id,
       type: inquiry.type,
       title: inquiry.title,
       content: inquiry.content,
