@@ -150,4 +150,18 @@ export class ExchangeRequestsService {
     // @TODO: 고객에게 알림 보내야할듯? 일단 결제했던 배송비가 환불된거니까
     await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
   }
+
+  async reject(merchantUid: string, reason: string) {
+    const exchangeRequest = await this.get(merchantUid);
+    exchangeRequest.reject(reason);
+    if (exchangeRequest.shippingFee > 0) {
+      await this.paymentsService.cancel(merchantUid, {
+        reason,
+        amount: exchangeRequest.shippingFee,
+      });
+    }
+    await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
+    // TODO: 알림톡 전송
+  }
 }
