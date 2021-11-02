@@ -1456,6 +1456,7 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
+  rejectMeSellerExchangeRequest(merchantUid: String!, reason: String!): ExchangeRequest!
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!

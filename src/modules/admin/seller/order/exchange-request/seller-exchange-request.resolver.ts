@@ -147,6 +147,25 @@ export class SellerExchangeRequestResolver extends BaseResolver<
     );
   }
 
+  @Mutation(() => ExchangeRequest)
+  @UseGuards(JwtSellerVerifyGuard)
+  async rejectMeSellerExchangeRequest(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string,
+    @Args('reason') reason: string,
+    @Info() info?: GraphQLResolveInfo
+  ) {
+    await this.sellerExchangeRequestService.checkBelongsTo(
+      merchantUid,
+      sellerId
+    );
+    await this.exchangeRequestsService.reject(merchantUid, reason);
+    return await this.exchangeRequestsService.get(
+      merchantUid,
+      this.getRelationsFromInfo(info)
+    );
+  }
+
   @Query(() => SearchExchangeRequestsOutput)
   @UseGuards(JwtSellerVerifyGuard)
   async searchSellerExchangeRequests(
