@@ -1,19 +1,8 @@
-import { InputType, PickType } from '@nestjs/graphql';
+import { InputType, PartialType } from '@nestjs/graphql';
 
-import { ItemsExhibition } from '../models';
+import { CreateItemsExhibitionInput } from './create-items-exhibition.input';
 
 @InputType()
-export class UpdateItemsExhibitionInput extends PickType(
-  ItemsExhibition,
-  [
-    'title',
-    'description',
-    'imageUrl',
-    'imageTop',
-    'imageRight',
-    'backgroundColor',
-    'isVisible',
-    'order',
-  ],
-  InputType
+export class UpdateItemsExhibitionInput extends PartialType(
+  CreateItemsExhibitionInput
 ) {}

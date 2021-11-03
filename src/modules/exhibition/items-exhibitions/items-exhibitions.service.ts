@@ -8,7 +8,7 @@ import {
   ItemsExhibitionItemsRepository,
   ItemsExhibitionsRepository,
 } from './items-exhibitions.repository';
-import { UpdateItemsExhibitionInput } from './dtos';
+import { CreateItemsExhibitionInput, UpdateItemsExhibitionInput } from './dtos';
 
 @Injectable()
 export class ItemsExhibitionsService {
@@ -18,6 +18,17 @@ export class ItemsExhibitionsService {
     @InjectRepository(ItemsExhibitionItemsRepository)
     private readonly itemsExhibitionItemsRepository: ItemsExhibitionItemsRepository
   ) {}
+
+  async create(input: CreateItemsExhibitionInput): Promise<ItemsExhibition> {
+    return await this.itemsExhibitionsRepository.save(
+      new ItemsExhibition({
+        ...input,
+        exhibitionItems: input.itemIds.map(
+          (itemId) => new ItemsExhibitionItem({ itemId })
+        ),
+      })
+    );
+  }
 
   async get(
     id: number,
