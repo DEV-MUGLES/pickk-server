@@ -2177,6 +2177,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsCount(itemFilter: ItemFilter): Int!
+  itemsExhibition(id: Int!): ItemsExhibition!
   itemsExhibitions: [ItemsExhibition!]!
   itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!

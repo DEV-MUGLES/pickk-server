@@ -27,6 +27,11 @@ export class ItemsExhibitionsResolver extends BaseResolver<ItemsExhibitionRelati
     super();
   }
 
+  @Query(() => ItemsExhibition)
+  async itemsExhibition(@IntArgs('id') id: number): Promise<ItemsExhibition> {
+    return await this.itemsExhibitionsService.get(id, this.relations);
+  }
+
   @Query(() => [ItemsExhibition])
   async itemsExhibitions(): Promise<ItemsExhibition[]> {
     return await this.itemsExhibitionsService.list(this.relations);
