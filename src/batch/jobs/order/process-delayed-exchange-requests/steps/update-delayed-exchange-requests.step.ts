@@ -35,16 +35,15 @@ export class UpdateDelayedExchangeRequestsStep extends BaseStep {
       v.isProcessDelaying = true;
     });
 
-    const processedExchangeRequests = await this.exchangeRequestsRepository.find(
-      {
+    const processedExchangeRequests =
+      await this.exchangeRequestsRepository.find({
         isProcessDelaying: true,
         status: In([
           ExchangeRequestStatus.Rejected,
           ExchangeRequestStatus.Reshipped,
           ExchangeRequestStatus.Reshipping,
         ]),
-      }
-    );
+      });
     processedExchangeRequests.forEach((v) => {
       v.isProcessDelaying = false;
     });

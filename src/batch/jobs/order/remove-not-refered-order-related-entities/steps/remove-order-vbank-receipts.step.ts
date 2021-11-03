@@ -16,16 +16,15 @@ export class RemoveOrderVbankReceiptsStep extends BaseStep {
   }
 
   async tasklet() {
-    const notReferedVbankReceipts = await this.orderVbankReceiptsRepository.find(
-      {
+    const notReferedVbankReceipts =
+      await this.orderVbankReceiptsRepository.find({
         relations: ['order'],
         where: {
           order: {
             merchantUid: IsNull(),
           },
         },
-      }
-    );
+      });
     await this.orderVbankReceiptsRepository.remove(notReferedVbankReceipts);
   }
 }
