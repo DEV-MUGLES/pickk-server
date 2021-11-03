@@ -8,6 +8,7 @@ import {
   ItemsExhibitionItemsRepository,
   ItemsExhibitionsRepository,
 } from './items-exhibitions.repository';
+import { UpdateItemsExhibitionInput } from './dtos';
 
 @Injectable()
 export class ItemsExhibitionsService {
@@ -31,6 +32,20 @@ export class ItemsExhibitionsService {
     return this.itemsExhibitionsRepository.entityToModelMany(
       await this.itemsExhibitionsRepository.find({
         relations,
+      })
+    );
+  }
+
+  async update(
+    id: number,
+    input: UpdateItemsExhibitionInput
+  ): Promise<ItemsExhibition> {
+    const exhibition = await this.get(id);
+
+    return await this.itemsExhibitionsRepository.save(
+      new ItemsExhibition({
+        ...exhibition,
+        ...input,
       })
     );
   }

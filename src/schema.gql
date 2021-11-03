@@ -1503,7 +1503,6 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
-  updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
   updateMe(updateUserInput: UpdateUserInput!): User!
@@ -1542,6 +1541,7 @@ type Mutation {
   updateRootItemImageUrl(itemId: Int!): Item!
   updateRootItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
   updateRootItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
+  updateRootItemsExhibition(id: Int!, input: UpdateItemsExhibitionInput, itemIds: [Int!]): ItemsExhibition!
   updateRootProduct(id: Int!, input: UpdateProductInput!): Product!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
 
@@ -2774,6 +2774,22 @@ input UpdateItemSizeChartInput {
   labels: [String!]!
   recommendations: [ItemSizeRecommendationInput!]
   sizes: [ItemSizeInput!]!
+}
+
+input UpdateItemsExhibitionInput {
+  """최대 12자"""
+  backgroundColor: String
+
+  """최대 50자"""
+  description: String
+  imageRight: Float!
+  imageTop: Float!
+  imageUrl: String
+  isVisible: Boolean = true
+  order: Float!
+
+  """최대 50자"""
+  title: String!
 }
 
 input UpdateLookDigestInput {
