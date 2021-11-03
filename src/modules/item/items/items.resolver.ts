@@ -1,4 +1,4 @@
-import { UseGuards } from '@nestjs/common';
+import { BadRequestException, UseGuards } from '@nestjs/common';
 import { Resolver, Query, Info, Mutation, Args, Int } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
@@ -7,6 +7,7 @@ import { JwtAuthGuard, JwtVerifyGuard } from '@auth/guards';
 import { JwtPayload } from '@auth/models';
 import { IntArgs } from '@common/decorators';
 import { PageInput } from '@common/dtos';
+import { addHttpTo } from '@common/helpers';
 import { BaseResolver, DerivedFieldsInfoType } from '@common/base.resolver';
 
 import { ItemSearchService } from '@mcommon/search/item.search.service';
@@ -85,16 +86,22 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Args('url') url: string,
     @Info() info?: GraphQLResolveInfo
   ): Promise<Item> {
-    try {
-      const existing = await this.itemsService.findByUrl(
-        url,
-        this.getRelationsFromInfo(info)
-      );
-      if (existing) {
-        return existing;
-      }
+    const httpUrl = addHttpTo(url);
+    if (!httpUrl) {
+      await this.itemsProducer.sendItemCreationFailSlackMessage(url, nickname);
+      throw new BadRequestException(`유효하지 않은 url입니다.\nurl:${url}`);
+    }
 
-      const { id } = await this.itemsService.createByInfoCrawl(url);
+    const existing = await this.itemsService.findByUrl(
+      httpUrl,
+      this.getRelationsFromInfo(info)
+    );
+    if (existing) {
+      return existing;
+    }
+
+    try {
+      const { id } = await this.itemsService.createByInfoCrawl(httpUrl);
       await this.itemsProducer.sendItemCreationSuccessSlackMessage(
         id,
         nickname

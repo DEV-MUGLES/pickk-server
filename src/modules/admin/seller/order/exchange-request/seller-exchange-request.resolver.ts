@@ -31,9 +31,7 @@ import { ExchangeRequestsCountOutput } from './dtos';
 import { SellerExchangeRequestService } from './seller-exchange-request.service';
 
 @Injectable()
-export class SellerExchangeRequestResolver extends BaseResolver<
-  ExchangeRequestRelationType
-> {
+export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestRelationType> {
   relations = EXCHANGE_REQUEST_RELATIONS;
 
   constructor(
@@ -156,15 +154,13 @@ export class SellerExchangeRequestResolver extends BaseResolver<
     filter?: ExchangeRequestSearchFilter,
     @Args('pageInput', { nullable: true }) pageInput?: PageInput
   ): Promise<SearchExchangeRequestsOutput> {
-    const {
-      ids: merchantUidIn,
-      total,
-    } = await this.exchangeRequestSearchService.search(
-      query,
-      pageInput,
-      { ...filter, sellerId },
-      [{ merchantUid: 'desc' }]
-    );
+    const { ids: merchantUidIn, total } =
+      await this.exchangeRequestSearchService.search(
+        query,
+        pageInput,
+        { ...filter, sellerId },
+        [{ merchantUid: 'desc' }]
+      );
 
     const exchangeRequests = await this.exchangeRequestsService.list(
       { merchantUidIn },
