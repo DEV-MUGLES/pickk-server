@@ -16,5 +16,6 @@ import { ItemsExhibitionsService } from './items-exhibitions.service';
     ]),
   ],
   providers: [ItemsExhibitionsResolver, ItemsExhibitionsService],
+  exports: [ItemsExhibitionsService],
 })
 export class ItemsExhibitionsModule {}

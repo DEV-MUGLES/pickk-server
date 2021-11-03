@@ -23,3 +23,13 @@ registerEnumType(UserOauthProvider, {
   name: 'UserProviderType',
   description: 'Oauth 제공 서비스입니다.',
 });
+
+export enum UserMainChannel {
+  Youtube = 'Youtube',
+  Instagram = 'Instagram',
+  NaverBlog = 'NaverBlog',
+}
+
+registerEnumType(UserMainChannel, {
+  name: 'UserMainChannel',
+});

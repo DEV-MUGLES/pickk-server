@@ -45,7 +45,7 @@ export class RootCampaignResolver extends BaseResolver<CampaignRelationType> {
   @Roles(UserRole.Admin)
   @UseGuards(JwtAuthGuard)
   @Mutation(() => Boolean)
-  async removeRootCampaign(@IntArgs('id') id: number): Promise<Boolean> {
+  async removeRootCampaign(@IntArgs('id') id: number): Promise<boolean> {
     await this.campaignsService.remove(id);
     return true;
   }

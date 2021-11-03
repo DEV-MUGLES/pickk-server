@@ -20,6 +20,15 @@ export class ItemsExhibitionEntity
     this.exhibitionItems = attributes.exhibitionItems;
 
     this.title = attributes.title;
+    this.description = attributes.description;
+
+    this.imageUrl = attributes.imageUrl;
+    this.imageTop = attributes.imageTop;
+    this.imageRight = attributes.imageRight;
+    this.backgroundColor = attributes.backgroundColor;
+
+    this.isVisible = attributes.isVisible;
+    this.order = attributes.order;
   }
 
   @OneToMany('ItemsExhibitionItemEntity', 'exhibition', { cascade: true })
@@ -28,4 +37,27 @@ export class ItemsExhibitionEntity
   @Field({ description: '최대 50자' })
   @Column({ length: 50 })
   title: string;
+  @Field({ description: '최대 50자', nullable: true })
+  @Column({ length: 50, nullable: true })
+  description: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  imageUrl: string;
+  @Field()
+  @Column({ type: 'smallint', default: 0 })
+  imageTop: number;
+  @Field()
+  @Column({ type: 'smallint', default: 0 })
+  imageRight: number;
+  @Field({ description: '최대 12자', nullable: true })
+  @Column({ length: 12, nullable: true })
+  backgroundColor: string;
+
+  @Field({ defaultValue: true })
+  @Column({ default: true })
+  isVisible: boolean;
+  @Field()
+  @Column({ type: 'smallint', default: 0 })
+  order: number;
 }

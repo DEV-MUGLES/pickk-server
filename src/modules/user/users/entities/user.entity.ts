@@ -15,7 +15,12 @@ import { BaseIdEntity } from '@common/entities';
 import { StyleTagEntity } from '@content/style-tags/entities';
 import { StyleTag } from '@content/style-tags/models';
 
-import { DEFAULT_AVATAR_URL, UserOauthProvider, UserRole } from '../constants';
+import {
+  DEFAULT_AVATAR_URL,
+  UserMainChannel,
+  UserOauthProvider,
+  UserRole,
+} from '../constants';
 import { IRefundAccount, IShippingAddress, IUser } from '../interfaces';
 
 import { UserPassword } from '../models/user-password.model';
@@ -44,8 +49,10 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this._avatarUrl = attributes._avatarUrl;
     this.avatarUrl = attributes.avatarUrl;
 
+    this.naverCode = attributes.naverCode;
     this.instagramCode = attributes.instagramCode;
     this.youtubeUrl = attributes.youtubeUrl;
+    this.mainChannel = attributes.mainChannel;
 
     this.name = attributes.name;
     this.weight = attributes.weight;
@@ -127,10 +134,16 @@ export class UserEntity extends BaseIdEntity implements IUser {
 
   @Field({ nullable: true })
   @Column({ length: 50, nullable: true })
+  naverCode: string;
+  @Field({ nullable: true })
+  @Column({ length: 50, nullable: true })
   instagramCode: string;
   @Field({ nullable: true })
   @Column({ nullable: true })
   youtubeUrl: string;
+  @Field(() => UserMainChannel, { nullable: true })
+  @Column({ type: 'enum', enum: UserMainChannel, nullable: true })
+  mainChannel: UserMainChannel;
 
   @Column(() => UserPassword)
   password: UserPassword;

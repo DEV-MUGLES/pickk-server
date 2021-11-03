@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 
 import { getSearchFilter } from './helpers';
-import { SearchParams, SearchResult } from './types';
+import { SearchFieldDataType, SearchParams, SearchResult } from './types';
 
 type BaseSearchBody = {
   id: number | string;
@@ -168,6 +168,19 @@ export class SearchService {
           [fieldName]: {
             type: 'text',
             fielddata: true,
+          },
+        },
+      },
+    });
+  }
+
+  async putMapping(name: string, fieldName: string, type: SearchFieldDataType) {
+    await this.elasticsearchService.indices.putMapping({
+      index: name,
+      body: {
+        properties: {
+          [fieldName]: {
+            type,
           },
         },
       },

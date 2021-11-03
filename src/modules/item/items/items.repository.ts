@@ -3,6 +3,7 @@ import { plainToClass } from 'class-transformer';
 
 import { BaseRepository } from '@common/base.repository';
 import { ImageRepository } from '@common/image.repository';
+import { removeProtocolFrom } from '@common/helpers';
 
 import {
   ItemEntity,
@@ -51,7 +52,9 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
       .innerJoin(
         'item.urls',
         'item_url',
-        `item.id = item_url.itemId and item_url.url = '${url}'`
+        `item.id = item_url.itemId and item_url.url LIKE '%${removeProtocolFrom(
+          url
+        )}'`
       )
       .take(1)
       .getOne();

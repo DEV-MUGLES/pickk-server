@@ -420,6 +420,23 @@ input CreateItemSizeChartInput {
   sizes: [ItemSizeInput!]!
 }
 
+input CreateItemsExhibitionInput {
+  """최대 12자"""
+  backgroundColor: String
+
+  """최대 50자"""
+  description: String
+  imageRight: Float!
+  imageTop: Float!
+  imageUrl: String
+  isVisible: Boolean = true
+  itemIds: [Int!]!
+  order: Float!
+
+  """최대 50자"""
+  title: String!
+}
+
 input CreateLookDigestInput {
   itemId: Int!
   size: String!
@@ -1167,9 +1184,19 @@ type ItemUrl {
 }
 
 type ItemsExhibition {
+  """최대 12자"""
+  backgroundColor: String
   createdAt: DateTime!
+
+  """최대 50자"""
+  description: String
   id: Int!
+  imageRight: Float!
+  imageTop: Float!
+  imageUrl: String
+  isVisible: Boolean!
   items: [Item!]!
+  order: Float!
 
   """최대 50자"""
   title: String!
@@ -1442,6 +1469,7 @@ type Mutation {
   createMyCartItem(createCartItemInput: CreateCartItemInput!): CartItem!
   createRootCampaign(input: CreateCampaignInput!): Campaign!
   createRootItemOptionSet(id: Int!, input: CreateItemOptionSetInput!): Item!
+  createRootItemsExhibition(input: CreateItemsExhibitionInput!): ItemsExhibition!
   createRootSizeChart(input: CreateItemSizeChartInput!, itemId: Int!): Item!
   createSeller(createSellerInput: CreateSellerInput!): Seller!
   createShippingReservePolicy(createProductShippingReservePolicyInput: CreateProductShippingReservePolicyInput!, productId: Int!): Product!
@@ -1494,7 +1522,6 @@ type Mutation {
   updateCourier(id: Int!, updateCourierInput: UpdateCourierInput!): Courier!
   updateDigest(id: Int!, updateDigestInput: UpdateDigestInput!): Digest!
   updateDigestsExhibitionDigests(digestIds: [Int!]!, id: Int!): DigestsExhibition!
-  updateItemsExhibitionItems(id: Int!, itemIds: [Int!]!): ItemsExhibition!
   updateItemsPackageItems(code: String!, itemIds: [Int!]!): ItemsPackage!
   updateLook(id: Int!, updateLookInput: UpdateLookInput!): Look!
   updateMe(updateUserInput: UpdateUserInput!): User!
@@ -1533,6 +1560,7 @@ type Mutation {
   updateRootItemImageUrl(itemId: Int!): Item!
   updateRootItemOption(id: Int!, input: UpdateItemOptionInput!): ItemOption!
   updateRootItemPrice(id: Int!, input: UpdateItemPriceInput!): Item!
+  updateRootItemsExhibition(id: Int!, input: UpdateItemsExhibitionInput!): ItemsExhibition!
   updateRootProduct(id: Int!, input: UpdateProductInput!): Product!
   updateRootSizeChart(input: UpdateItemSizeChartInput!, itemId: Int!): Item!
 
@@ -2168,6 +2196,7 @@ type Query {
   itemProperties(itemPropertyFilter: ItemPropertyFilter, pageInput: PageInput): [ItemProperty!]!
   items(itemFilter: ItemFilter, pageInput: PageInput): [Item!]!
   itemsCount(itemFilter: ItemFilter): Int!
+  itemsExhibition(id: Int!): ItemsExhibition!
   itemsExhibitions: [ItemsExhibition!]!
   itemsGroupDigests(filter: DigestFilter, itemId: Int!, pageInput: PageInput): [Digest!]!
   itemsGroupLooks(itemId: Int!, pageInput: PageInput): [Look!]!
@@ -2766,6 +2795,23 @@ input UpdateItemSizeChartInput {
   sizes: [ItemSizeInput!]!
 }
 
+input UpdateItemsExhibitionInput {
+  """최대 12자"""
+  backgroundColor: String
+
+  """최대 50자"""
+  description: String
+  imageRight: Float
+  imageTop: Float
+  imageUrl: String
+  isVisible: Boolean = true
+  itemIds: [Int!]
+  order: Float
+
+  """최대 50자"""
+  title: String
+}
+
 input UpdateLookDigestInput {
   id: Int
   itemId: Int
@@ -2961,7 +3007,9 @@ type User {
 
   """[MODEL ONLY]"""
   isMe: Boolean
+  mainChannel: UserMainChannel
   name: String
+  naverCode: String
 
   """최대 11자"""
   nickname: String!
@@ -2975,6 +3023,12 @@ type User {
   updatedAt: DateTime!
   weight: Int
   youtubeUrl: String
+}
+
+enum UserMainChannel {
+  Instagram
+  NaverBlog
+  Youtube
 }
 
 """Oauth 제공 서비스입니다."""

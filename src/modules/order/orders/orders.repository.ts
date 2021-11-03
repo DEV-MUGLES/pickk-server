@@ -66,11 +66,7 @@ export class OrderBuyersRepository extends Repository<OrderBuyerEntity> {}
 export class OrderReceiversRepository extends Repository<OrderReceiverEntity> {}
 
 @EntityRepository(OrderRefundAccountEntity)
-export class OrderRefundAccountsRepository extends Repository<
-  OrderRefundAccountEntity
-> {}
+export class OrderRefundAccountsRepository extends Repository<OrderRefundAccountEntity> {}
 
 @EntityRepository(OrderVbankReceiptEntity)
-export class OrderVbankReceiptsRepository extends Repository<
-  OrderVbankReceiptEntity
-> {}
+export class OrderVbankReceiptsRepository extends Repository<OrderVbankReceiptEntity> {}

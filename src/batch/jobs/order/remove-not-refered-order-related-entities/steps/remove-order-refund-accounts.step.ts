@@ -16,16 +16,15 @@ export class RemoveOrderRefundAccountsStep extends BaseStep {
   }
 
   async tasklet() {
-    const notReferedRefundAccounts = await this.orderRefundAccountsRepository.find(
-      {
+    const notReferedRefundAccounts =
+      await this.orderRefundAccountsRepository.find({
         relations: ['order'],
         where: {
           order: {
             merchantUid: IsNull(),
           },
         },
-      }
-    );
+      });
     await this.orderRefundAccountsRepository.remove(notReferedRefundAccounts);
   }
 }
