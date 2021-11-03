@@ -169,6 +169,8 @@ export class ExchangeRequestsService {
     }
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
-    // TODO: 알림톡 전송
+    await this.exchangeRequestsProducer.sendExchangeRejectedAlimtalk(
+      merchantUid
+    );
   }
 }
