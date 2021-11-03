@@ -42,7 +42,7 @@ export class ExchangeRequestMarkStrategyFactory {
 
       default:
         throw new InternalServerErrorException(
-          'Invalide ExchangeRequestStatus to mark'
+          'Invalid ExchangeRequestStatus to mark'
         );
     }
   }
