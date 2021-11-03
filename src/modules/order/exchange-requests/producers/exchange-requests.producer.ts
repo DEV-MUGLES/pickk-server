@@ -5,17 +5,31 @@ import { getRandomUuid } from '@common/helpers';
 import {
   INDEX_EXCHANGE_REQUESTS_QUEUE,
   SEND_EXCHANGE_ITEM_RESHIPED_ALIMTALK_QUEUE,
+  SEND_EXCHANGE_REJECTED_ALIMTALK_QUEUE,
   SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,
 } from '@queue/constants';
 import {
   IndexExchangeRequestsMto,
   SendExchangeItemReshipedAlimtalkMto,
+  SendExchangeRejectedAlimtalkMto,
   SendExchangeRequestedAlimtalkMto,
 } from '@queue/mtos';
 
 @Injectable()
 export class ExchangeRequestsProducer {
   constructor(private readonly sqsService: SqsService) {}
+
+  async sendExchangeRejectedAlimtalk(merchantUid: string) {
+    await this.sqsService.send<SendExchangeRejectedAlimtalkMto>(
+      SEND_EXCHANGE_REJECTED_ALIMTALK_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: {
+          merchantUid,
+        },
+      }
+    );
+  }
 
   async sendExchangeRequestedAlimtalk(merchantUid: string) {
     await this.sqsService.send<SendExchangeRequestedAlimtalkMto>(
