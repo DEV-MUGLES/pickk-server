@@ -1,7 +1,7 @@
 import { addHttpTo, removeProtocolFrom } from './url.helpers';
 
 describe('UrlHelpers', () => {
-  const inValidUrls = [
+  const invalidUrls = [
     'http:// shouldfail.com',
     'file:///blah/index.html',
     'http://..',
@@ -25,21 +25,21 @@ describe('UrlHelpers', () => {
       expect(addHttpTo(null)).toBeNull();
     });
     it('유효하지 않은 url문자열을 입력받으면, null을 반환한다', () => {
-      for (const url of inValidUrls) {
+      invalidUrls.forEach((url) => {
         expect(addHttpTo(url)).toBeNull();
-      }
+      });
     });
 
     it('protocol이 없는 url문자열을 입력받으면, http프로토콜을 추가하여 반환한다.', () => {
-      for (const url of urlsWithoutProtocol) {
+      urlsWithoutProtocol.forEach((url) => {
         expect(addHttpTo(url)).toBe(`http://${url}`);
-      }
+      });
     });
 
     it('유효한 url문자열을 입력받으면, 입력받은 문자열을 반환한다.', () => {
-      for (const url of urls) {
+      urls.forEach((url) => {
         expect(addHttpTo(url)).toBe(url);
-      }
+      });
     });
   });
 
@@ -50,21 +50,21 @@ describe('UrlHelpers', () => {
     });
 
     it('유효하지 않은 url문자열을 입력받으면, null을 반환한다', () => {
-      for (const url of inValidUrls) {
+      invalidUrls.forEach((url) => {
         expect(removeProtocolFrom(url)).toBeNull();
-      }
+      });
     });
 
     it('protocol이 없는 url문자열을 입력받으면, 입력받은 문자열을 그래도 반환한다', () => {
-      for (const url of urlsWithoutProtocol) {
+      urlsWithoutProtocol.forEach((url) => {
         expect(removeProtocolFrom(url)).toBe(url);
-      }
+      });
     });
 
     it('유효한 url문자열을 입력받으면, protocol을 제거한 url문자열을 반환한다', () => {
-      for (const url of urls) {
+      urls.forEach((url) => {
         expect(removeProtocolFrom(url)).toBe(url.replace(/https?:\/\//, ''));
-      }
+      });
     });
   });
 });
