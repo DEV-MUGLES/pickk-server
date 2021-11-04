@@ -1683,6 +1683,7 @@ type OrderItem {
   processDelayedAt: DateTime
   product: Product
   productId: Int
+  productPriceVariant: Int!
   productVariantName: String!
   quantity: Int!
   recommendDigest: Digest

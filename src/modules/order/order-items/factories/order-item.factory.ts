@@ -53,6 +53,7 @@ export class OrderItemFactory {
       quantity,
       itemSellPrice: item.sellPrice,
       itemFinalPrice: item.finalPrice + priceVariant,
+      productPriceVariant: product.priceVariant,
       brandNameKor: item.brand.nameKor,
       itemName: item.name,
       productVariantName,

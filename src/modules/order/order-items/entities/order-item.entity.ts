@@ -251,6 +251,9 @@ export class OrderItemEntity implements IOrderItem {
   @Min(1)
   itemFinalPrice: number;
   @Field(() => Int)
+  @Column({ unsigned: true, default: 0 })
+  productPriceVariant: number;
+  @Field(() => Int)
   @Column({ unsigned: true })
   @Min(1)
   shippingFee: number;
