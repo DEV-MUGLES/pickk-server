@@ -3001,6 +3001,7 @@ type User {
   height: Int
   id: Int!
   instagramCode: String
+  isCeleb: Boolean!
 
   """[MODEL ONLY]"""
   isFollowing: Boolean

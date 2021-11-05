@@ -53,6 +53,7 @@ export class UserEntity extends BaseIdEntity implements IUser {
     this.instagramCode = attributes.instagramCode;
     this.youtubeUrl = attributes.youtubeUrl;
     this.mainChannel = attributes.mainChannel;
+    this.isCeleb = attributes.isCeleb;
 
     this.name = attributes.name;
     this.weight = attributes.weight;
@@ -144,6 +145,9 @@ export class UserEntity extends BaseIdEntity implements IUser {
   @Field(() => UserMainChannel, { nullable: true })
   @Column({ type: 'enum', enum: UserMainChannel, nullable: true })
   mainChannel: UserMainChannel;
+  @Field()
+  @Column({ default: false })
+  isCeleb: boolean;
 
   @Column(() => UserPassword)
   password: UserPassword;

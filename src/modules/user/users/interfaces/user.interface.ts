@@ -29,6 +29,8 @@ export interface IUser extends IBaseId {
   youtubeUrl: string;
   mainChannel: string;
 
+  isCeleb: boolean;
+
   /** 개인정보 */
   name?: string | null;
   weight?: number;
