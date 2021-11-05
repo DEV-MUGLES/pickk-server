@@ -14,6 +14,7 @@ export class CreateItemsExhibitionInput extends PickType(
     'backgroundColor',
     'isVisible',
     'order',
+    'videoId',
   ],
   InputType
 ) {

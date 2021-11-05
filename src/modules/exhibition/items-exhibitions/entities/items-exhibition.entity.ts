@@ -1,7 +1,9 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
 import { BaseIdEntity } from '@common/entities';
+
+import { IVideo } from '@content/videos/interfaces';
 
 import { IItemsExhibition, IItemsExhibitionItem } from '../interfaces';
 
@@ -19,6 +21,9 @@ export class ItemsExhibitionEntity
 
     this.exhibitionItems = attributes.exhibitionItems;
 
+    this.video = attributes.video;
+    this.videoId = attributes.videoId;
+
     this.title = attributes.title;
     this.description = attributes.description;
 
@@ -33,6 +38,11 @@ export class ItemsExhibitionEntity
 
   @OneToMany('ItemsExhibitionItemEntity', 'exhibition', { cascade: true })
   exhibitionItems: IItemsExhibitionItem[];
+  @ManyToOne('VideoEntity', { onDelete: 'CASCADE', nullable: true })
+  video: IVideo;
+  @Field(() => Int, { nullable: true })
+  @Column({ nullable: true })
+  videoId: number;
 
   @Field({ description: '최대 50자' })
   @Column({ length: 50 })

@@ -435,6 +435,7 @@ input CreateItemsExhibitionInput {
 
   """최대 50자"""
   title: String!
+  videoId: Int
 }
 
 input CreateLookDigestInput {
@@ -1201,6 +1202,8 @@ type ItemsExhibition {
   """최대 50자"""
   title: String!
   updatedAt: DateTime!
+  video: Video
+  videoId: Int
 }
 
 type ItemsGroup {
@@ -2810,6 +2813,7 @@ input UpdateItemsExhibitionInput {
 
   """최대 50자"""
   title: String
+  videoId: Int
 }
 
 input UpdateLookDigestInput {
