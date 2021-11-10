@@ -718,6 +718,9 @@ type DigestsExhibition {
 }
 
 type ExchangeRequest {
+  """255자 이내로 적어주세요"""
+  cancelReason: String
+  canceledAt: DateTime
   confirmedAt: DateTime
   convertedAt: DateTime
   faultOf: OrderClaimFaultOf!
@@ -804,6 +807,7 @@ input ExchangeRequestSearchFilter {
 
 """교한신청 상태입니다."""
 enum ExchangeRequestStatus {
+  Canceled
   Converted
   Pending
   Picked

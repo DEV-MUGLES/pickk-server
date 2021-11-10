@@ -33,10 +33,10 @@ export class ExchangeRequest extends ExchangeRequestEntity {
   markPicked() {
     this.markAs(ExchangeRequestStatus.Picked);
   }
-  /** mark as: rejected */
+  /** mark as: canceled */
   cancel(reason: string) {
-    this.markAs(ExchangeRequestStatus.Rejected);
-    this.rejectReason = reason;
+    this.markAs(ExchangeRequestStatus.Canceled);
+    this.cancelReason = reason;
   }
   /** mark as: reshipping */
   reship(reshipInput: ReshipExchangeRequestInput) {

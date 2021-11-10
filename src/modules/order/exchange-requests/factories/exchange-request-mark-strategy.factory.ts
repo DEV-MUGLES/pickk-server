@@ -9,11 +9,17 @@ import {
   ExchangeRequestReshippedStrategy,
   ExchangeRequestRequestedStrategy,
   ExchangeRequestConvertedStrategy,
-  ExchangeRequestRejectedStrategy,
+  ExchangeRequestCanceledStrategy,
 } from '../strategies';
 
-const { Requested, Picked, Rejected, Reshipping, Reshipped, Converted } =
-  ExchangeRequestStatus;
+const {
+  Requested,
+  Picked,
+  Canceled,
+  Reshipping,
+  Reshipped,
+  Converted,
+} = ExchangeRequestStatus;
 
 export class ExchangeRequestMarkStrategyFactory {
   static from(
@@ -25,8 +31,8 @@ export class ExchangeRequestMarkStrategyFactory {
         return new ExchangeRequestRequestedStrategy(exchangeRequest);
       case Picked:
         return new ExchangeRequestPickedStrategy(exchangeRequest);
-      case Rejected:
-        return new ExchangeRequestRejectedStrategy(exchangeRequest);
+      case Canceled:
+        return new ExchangeRequestCanceledStrategy(exchangeRequest);
       case Reshipping:
         return new ExchangeRequestReshippingStrategy(exchangeRequest);
       case Reshipped:

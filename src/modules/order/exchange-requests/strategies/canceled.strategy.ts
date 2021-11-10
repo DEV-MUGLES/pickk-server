@@ -4,9 +4,9 @@ import { ExchangeRequestStatus } from '../constants';
 
 import { ExchangeRequestMarkStrategy } from './base.strategy';
 
-export class ExchangeRequestRejectedStrategy extends ExchangeRequestMarkStrategy {
-  status = ExchangeRequestStatus.Rejected;
-  statusChangedField = 'rejectedAt' as const;
+export class ExchangeRequestCanceledStrategy extends ExchangeRequestMarkStrategy {
+  status = ExchangeRequestStatus.Canceled;
+  statusChangedField = 'canceledAt' as const;
 
   validate() {
     if (
