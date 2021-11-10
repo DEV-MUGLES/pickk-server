@@ -10,7 +10,7 @@ import { ExchangeRequestsService } from '../exchange-requests.service';
 export class SendExchangeCanceledAlimtalkConsumer {
   constructor(
     private readonly exchangeRequestsService: ExchangeRequestsService,
-    private readonly alimtalkServcie: AlimtalkService
+    private readonly alimtalkService: AlimtalkService
   ) {}
 
   @SqsMessageHandler()
@@ -24,6 +24,6 @@ export class SendExchangeCanceledAlimtalkConsumer {
       ['orderItem', 'orderItem.order', 'orderItem.order.buyer']
     );
 
-    await this.alimtalkServcie.sendExchangeCanceled(exchangeRequest);
+    await this.alimtalkService.sendExchangeCanceled(exchangeRequest);
   }
 }
