@@ -34,7 +34,7 @@ export class ExchangeRequest extends ExchangeRequestEntity {
     this.markAs(ExchangeRequestStatus.Picked);
   }
   /** mark as: rejected */
-  reject(reason: string) {
+  cancel(reason: string) {
     this.markAs(ExchangeRequestStatus.Rejected);
     this.rejectReason = reason;
   }

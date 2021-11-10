@@ -158,9 +158,9 @@ export class ExchangeRequestsService {
     await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
   }
 
-  async reject(merchantUid: string, reason: string) {
+  async cancel(merchantUid: string, reason: string) {
     const exchangeRequest = await this.get(merchantUid);
-    exchangeRequest.reject(reason);
+    exchangeRequest.cancel(reason);
     if (exchangeRequest.shippingFee > 0) {
       await this.paymentsService.cancel(merchantUid, {
         reason,
@@ -169,7 +169,7 @@ export class ExchangeRequestsService {
     }
     await this.exchangeRequestsRepository.save(exchangeRequest);
     await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
-    await this.exchangeRequestsProducer.sendExchangeRejectedAlimtalk(
+    await this.exchangeRequestsProducer.sendExchangeCanceledAlimtalk(
       merchantUid
     );
   }

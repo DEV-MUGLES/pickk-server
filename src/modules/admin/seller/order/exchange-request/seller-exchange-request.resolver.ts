@@ -147,7 +147,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
 
   @Mutation(() => ExchangeRequest)
   @UseGuards(JwtSellerVerifyGuard)
-  async rejectMeSellerExchangeRequest(
+  async cancelMeSellerExchangeRequest(
     @CurrentUser() { sellerId }: JwtPayload,
     @Args('merchantUid') merchantUid: string,
     @Args('reason') reason: string,
@@ -157,7 +157,7 @@ export class SellerExchangeRequestResolver extends BaseResolver<ExchangeRequestR
       merchantUid,
       sellerId
     );
-    await this.exchangeRequestsService.reject(merchantUid, reason);
+    await this.exchangeRequestsService.cancel(merchantUid, reason);
     return await this.exchangeRequestsService.get(
       merchantUid,
       this.getRelationsFromInfo(info)

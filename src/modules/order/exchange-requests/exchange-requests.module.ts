@@ -5,7 +5,7 @@ import { SqsModule } from '@pickk/nestjs-sqs';
 import {
   INDEX_EXCHANGE_REQUESTS_QUEUE,
   SEND_EXCHANGE_ITEM_RESHIPED_ALIMTALK_QUEUE,
-  SEND_EXCHANGE_REJECTED_ALIMTALK_QUEUE,
+  SEND_EXCHANGE_CANCELED_ALIMTALK_QUEUE,
   SEND_EXCHANGE_REQUESTED_ALIMTALK_QUEUE,
 } from '@queue/constants';
 
@@ -36,7 +36,7 @@ import { ExchangeRequestsService } from './exchange-requests.service';
         name: SEND_EXCHANGE_ITEM_RESHIPED_ALIMTALK_QUEUE,
       },
       {
-        name: SEND_EXCHANGE_REJECTED_ALIMTALK_QUEUE,
+        name: SEND_EXCHANGE_CANCELED_ALIMTALK_QUEUE,
       },
       {
         name: INDEX_EXCHANGE_REQUESTS_QUEUE,

@@ -21,10 +21,10 @@ import {
   RefundRequestedSellerTemplate,
   ExchangeRequestedSellerTemplate,
   ExchangeItemReshipedTemplate,
+  ExchangeCanceledCustomerTemplate,
 } from '@templates/alimtalk';
 
 import { ISellerInfo } from '@templates/alimtalk/sellers/intefaces';
-import { ExchangeRejectedCustomerTemplate } from '@templates/alimtalk/customers/exchange-rejected.template';
 
 @Injectable()
 export class AlimtalkService {
@@ -111,9 +111,9 @@ export class AlimtalkService {
     await this.alimtalkClient.send(VbankNotiTemplate.toRequest(order));
   }
 
-  async sendExchangeRejected(exchangeRequest: ExchangeRequest) {
+  async sendExchangeCanceled(exchangeRequest: ExchangeRequest) {
     await this.alimtalkClient.send(
-      ExchangeRejectedCustomerTemplate.toRequest(exchangeRequest)
+      ExchangeCanceledCustomerTemplate.toRequest(exchangeRequest)
     );
   }
 }

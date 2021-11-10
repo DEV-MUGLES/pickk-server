@@ -1436,6 +1436,7 @@ type Mutation {
   bulkUpdateMeSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootOrderItems(input: BulkUpdateOrderItemInput!, merchantUids: [String!]!): Boolean!
+  cancelMeSellerExchangeRequest(merchantUid: String!, reason: String!): ExchangeRequest!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
@@ -1484,7 +1485,6 @@ type Mutation {
   own(keywordId: Int!): Boolean!
   registerExchangeRequest(merchantUid: String!, registerExchangeRequestInput: RegisterExchangeRequestInput!): ExchangeRequest!
   registerOrder(registerOrderInput: RegisterOrderInput!): BaseOrderOutput!
-  rejectMeSellerExchangeRequest(merchantUid: String!, reason: String!): ExchangeRequest!
   removeComment(id: Int!): Comment!
   removeDigest(id: Int!): Boolean!
   removeInquiry(id: Int!): Boolean!
