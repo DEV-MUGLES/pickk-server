@@ -38,7 +38,7 @@ export class OrderItemFactory {
       .sort((a, b) => b.rate - a.rate);
     const activeCampaign = campaigns.length > 0 ? campaigns[0] : null;
     const settleAmount =
-      (item.sellPrice *
+      ((item.sellPrice + product.priceVariant) *
         quantity *
         (activeCampaign?.rate ?? item.brand.seller.settlePolicy?.rate ?? 70)) /
       100;
@@ -53,6 +53,7 @@ export class OrderItemFactory {
       quantity,
       itemSellPrice: item.sellPrice,
       itemFinalPrice: item.finalPrice + priceVariant,
+      productPriceVariant: product.priceVariant,
       brandNameKor: item.brand.nameKor,
       itemName: item.name,
       productVariantName,

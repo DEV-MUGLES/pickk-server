@@ -435,6 +435,7 @@ input CreateItemsExhibitionInput {
 
   """최대 50자"""
   title: String!
+  videoId: Int
 }
 
 input CreateLookDigestInput {
@@ -1201,6 +1202,8 @@ type ItemsExhibition {
   """최대 50자"""
   title: String!
   updatedAt: DateTime!
+  video: Video
+  videoId: Int
 }
 
 type ItemsGroup {
@@ -1684,6 +1687,7 @@ type OrderItem {
   processDelayedAt: DateTime
   product: Product
   productId: Int
+  productPriceVariant: Int!
   productVariantName: String!
   quantity: Int!
   recommendDigest: Digest
@@ -2810,6 +2814,7 @@ input UpdateItemsExhibitionInput {
 
   """최대 50자"""
   title: String
+  videoId: Int
 }
 
 input UpdateLookDigestInput {
@@ -3001,6 +3006,7 @@ type User {
   height: Int
   id: Int!
   instagramCode: String
+  isCeleb: Boolean!
 
   """[MODEL ONLY]"""
   isFollowing: Boolean

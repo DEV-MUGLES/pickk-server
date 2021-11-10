@@ -24,7 +24,7 @@ export class ItemsExhibitionsService {
       new ItemsExhibition({
         ...input,
         exhibitionItems: input.itemIds.map(
-          (itemId) => new ItemsExhibitionItem({ itemId })
+          (itemId, idx) => new ItemsExhibitionItem({ itemId, order: idx })
         ),
       })
     );
