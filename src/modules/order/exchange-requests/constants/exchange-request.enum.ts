@@ -12,6 +12,7 @@ export enum ExchangeRequestStatus {
   Rejected = 'Rejected',
   /** 반품으로 변경됨 */
   Converted = 'Converted',
+  Canceled = 'Canceled',
 }
 
 registerEnumType(ExchangeRequestStatus, {

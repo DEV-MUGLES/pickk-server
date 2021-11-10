@@ -10,6 +10,7 @@ import { EXCHANGE_ORDER_ITEM_RELATIONS } from '@order/order-items/constants';
 import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 import { OrdersService } from '@order/orders/orders.service';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
 
 import { ExchangeRequestRelationType } from './constants';
@@ -20,7 +21,6 @@ import { ExchangeRequestsProducer } from './producers';
 import { ExchangeRequest } from './models';
 
 import { ExchangeRequestsRepository } from './exchange-requests.repository';
-import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 
 @Injectable()
 export class ExchangeRequestsService {
@@ -80,6 +80,13 @@ export class ExchangeRequestsService {
     merchantUid: string,
     input: RegisterExchangeRequestInput
   ): Promise<ExchangeRequest> {
+    const existingRequest = await this.exchangeRequestsRepository.findOne({
+      merchantUid,
+    });
+    if (existingRequest) {
+      await this.exchangeRequestsRepository.remove(existingRequest);
+    }
+
     const orderItem = await this.orderItemsService.get(
       merchantUid,
       EXCHANGE_ORDER_ITEM_RELATIONS
@@ -149,5 +156,21 @@ export class ExchangeRequestsService {
     });
     // @TODO: 고객에게 알림 보내야할듯? 일단 결제했던 배송비가 환불된거니까
     await this.orderItemsProducer.indexOrderItems([orderItem.merchantUid]);
+  }
+
+  async cancel(merchantUid: string, reason: string) {
+    const exchangeRequest = await this.get(merchantUid);
+    exchangeRequest.cancel(reason);
+    if (exchangeRequest.shippingFee > 0) {
+      await this.paymentsService.cancel(merchantUid, {
+        reason,
+        amount: exchangeRequest.shippingFee,
+      });
+    }
+    await this.exchangeRequestsRepository.save(exchangeRequest);
+    await this.exchangeRequestsProducer.indexExchangeRequests([merchantUid]);
+    await this.exchangeRequestsProducer.sendExchangeCanceledAlimtalk(
+      merchantUid
+    );
   }
 }

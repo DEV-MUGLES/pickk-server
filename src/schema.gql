@@ -718,6 +718,9 @@ type DigestsExhibition {
 }
 
 type ExchangeRequest {
+  """255자 이내로 적어주세요"""
+  cancelReason: String
+  canceledAt: DateTime
   confirmedAt: DateTime
   convertedAt: DateTime
   faultOf: OrderClaimFaultOf!
@@ -804,6 +807,7 @@ input ExchangeRequestSearchFilter {
 
 """교한신청 상태입니다."""
 enum ExchangeRequestStatus {
+  Canceled
   Converted
   Pending
   Picked
@@ -1439,6 +1443,7 @@ type Mutation {
   bulkUpdateMeSellerItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootItems(ids: [Int!]!, input: BulkUpdateItemInput!): Boolean!
   bulkUpdateRootOrderItems(input: BulkUpdateOrderItemInput!, merchantUids: [String!]!): Boolean!
+  cancelMeSellerExchangeRequest(merchantUid: String!, reason: String!): ExchangeRequest!
 
   """취소 사유는 "담당자 취소 처리"로 고정"""
   cancelMeSellerOrderItem(merchantUid: String!, restock: Boolean!): OrderItem!
