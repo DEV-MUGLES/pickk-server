@@ -10,6 +10,7 @@ import { EXCHANGE_ORDER_ITEM_RELATIONS } from '@order/order-items/constants';
 import { OrderItemsProducer } from '@order/order-items/producers';
 import { OrderItemsService } from '@order/order-items/order-items.service';
 import { OrdersService } from '@order/orders/orders.service';
+import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 import { PaymentsService } from '@payment/payments/payments.service';
 
 import { ExchangeRequestRelationType } from './constants';
@@ -20,7 +21,6 @@ import { ExchangeRequestsProducer } from './producers';
 import { ExchangeRequest } from './models';
 
 import { ExchangeRequestsRepository } from './exchange-requests.repository';
-import { OrderClaimFaultOf } from '@order/refund-requests/constants';
 
 @Injectable()
 export class ExchangeRequestsService {
