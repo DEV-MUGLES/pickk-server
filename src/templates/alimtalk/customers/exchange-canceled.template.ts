@@ -10,7 +10,7 @@ export class ExchangeCanceledCustomerTemplate {
     exchangeRequest: ExchangeRequest
   ): Omit<AlimtalkMessageRequest, 'plusFriendId'> {
     const TemplateClass =
-      exchangeRequest.shippingFee > 0 ? Cexchrej02Template : Cexchrej01Template;
+      exchangeRequest.shippingFee > 0 ? Cexchcn02Template : Cexchcn01Template;
 
     return {
       templateCode: TemplateClass.code,
@@ -24,41 +24,41 @@ export class ExchangeCanceledCustomerTemplate {
   }
 }
 
-class Cexchrej01Template {
-  static code = 'cexchrej01';
+class Cexchcn01Template {
+  static code = 'cexchcn01';
 
   static toContent(exchangeRequest: ExchangeRequest) {
-    const { orderItem, rejectReason } = exchangeRequest;
+    const { orderItem, cancelReason } = exchangeRequest;
     const {
       order: { buyer },
     } = orderItem;
 
     return `안녕하세요 ${partialEncrypt(buyer.name, 1)}님
-아래의 교환요청이 판매자의 사유로 거절되었습니다. 이용에 불편을 드려 죄송합니다.
+아래의 교환요청이 판매자의 사유로 취소되었습니다. 이용에 불편을 드려 죄송합니다.
 
 ▶ 상품명 : ${getExchangeItemInfo(exchangeRequest)}
 ▶ 주문번호 : ${orderItem.merchantUid}
-▶ 거절사유 : ${rejectReason}
+▶ 취소사유 : ${cancelReason}
     `;
   }
 }
 
-class Cexchrej02Template {
-  static code = 'cexchrej02';
+class Cexchcn02Template {
+  static code = 'cexchcn02';
 
   static toContent(exchangeRequest: ExchangeRequest) {
-    const { orderItem, rejectReason, shippingFee } = exchangeRequest;
+    const { orderItem, cancelReason, shippingFee } = exchangeRequest;
 
     const {
       order: { buyer },
     } = orderItem;
 
     return `안녕하세요 ${partialEncrypt(buyer.name, 1)}님
-아래의 교환요청이 판매자의 사유로 거절되었습니다. 이용에 불편을 드려 죄송합니다.
+아래의 교환요청이 판매자의 사유로 취소되었습니다. 이용에 불편을 드려 죄송합니다.
 
 ▶ 상품명 : ${getExchangeItemInfo(exchangeRequest)}
 ▶ 주문번호 : ${orderItem.merchantUid}
-▶ 거절사유 : ${rejectReason}
+▶ 취소사유 : ${cancelReason}
 
 교환요청시 결제하셨던 금액은 환불될 예정입니다.
 ▶ 환불금액 : ${shippingFee}
