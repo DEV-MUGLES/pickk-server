@@ -140,6 +140,9 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Field({ description: '255자 이내로 적어주세요', nullable: true })
   @Column({ nullable: true })
   rejectReason: string;
+  @Field({ description: '255자 이내로 적어주세요', nullable: true })
+  @Column({ nullable: true })
+  cancelReason: string;
   @Field(() => Int, { description: '결제된 교환 배송비' })
   @Column({ type: 'mediumint', unsigned: true })
   @Min(1)
@@ -189,6 +192,9 @@ export class ExchangeRequestEntity implements IExchangeRequest {
   @Field({ nullable: true })
   @Column({ nullable: true })
   confirmedAt: Date;
+  @Field({ nullable: true })
+  @Column({ nullable: true })
+  canceledAt: Date;
 
   @Field({ nullable: true })
   @Column({ nullable: true })
