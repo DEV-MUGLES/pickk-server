@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { IncomingWebhook, IncomingWebhookResult } from '@slack/webhook';
 
 import {
+  ContentReportedTemplate,
   DigestCreationTemplate,
   InquiryCreationTemplate,
   ItemCreationFailTemplate,
@@ -76,5 +77,9 @@ export class SlackService {
     return await this.webhook.send(
       OldPaymentCancelRequestedTemplate.create(merchantUid, input)
     );
+  }
+
+  async sendContentReported(url: string): Promise<IncomingWebhookResult> {
+    return await this.webhook.send(ContentReportedTemplate.create(url));
   }
 }

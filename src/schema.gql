@@ -1507,6 +1507,7 @@ type Mutation {
   removeRootItemPrice(itemId: Int!, priceId: Int!): Item!
   removeRootSizeChart(itemId: Int!): Item!
   removeVideo(id: Int!): Boolean!
+  reportContent(url: String!): Boolean!
 
   """정보에 오류가 있는 아이템을 신고합니다."""
   reportItem(id: Int!, reason: String!): Boolean!
