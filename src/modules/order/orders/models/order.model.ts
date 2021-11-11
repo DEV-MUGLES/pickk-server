@@ -2,7 +2,7 @@ import { BadRequestException } from '@nestjs/common';
 import { Field, Int, ObjectType } from '@nestjs/graphql';
 import { Type } from 'class-transformer';
 
-import { findModelById, findModelByUid } from '@common/helpers';
+import { findModelById } from '@common/helpers';
 
 import { Coupon } from '@order/coupons/models';
 import { OrderItemClaimStatus } from '@order/order-items/constants';

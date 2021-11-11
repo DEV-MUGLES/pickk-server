@@ -23,10 +23,12 @@ export class BatchWorker {
     if (!(await this.jobsService.getJob(jobName))) {
       throw new Error(`${jobName} job doesn\'t exist in database`);
     }
+    if (steps.length === 0) {
+      throw new Error('step이 한 개이상 필요합니다.');
+    }
 
-    const jobExecutionRecord: JobExecutionRecord = await this.jobsService.createJobExecutionRecord(
-      { jobName }
-    );
+    const jobExecutionRecord: JobExecutionRecord =
+      await this.jobsService.createJobExecutionRecord({ jobName });
 
     try {
       jobExecutionRecord.start();
@@ -63,12 +65,11 @@ export class BatchWorker {
     context: JobExecutionContext,
     jobExecutionRecordId: number
   ) {
-    const stepExecutionRecord = await this.jobsService.createStepExecutionRecord(
-      {
+    const stepExecutionRecord =
+      await this.jobsService.createStepExecutionRecord({
         stepName: step.constructor.name,
         jobExecutionRecordId,
-      }
-    );
+      });
     try {
       stepExecutionRecord.start();
       await step.tasklet(context);

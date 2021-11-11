@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddCanceledStatus2ExchangeRequest1636511230368
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddCanceledStatus2ExchangeRequest1636511230368';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
