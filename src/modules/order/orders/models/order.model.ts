@@ -268,9 +268,7 @@ export class Order extends OrderEntity {
       input.orderItemInputs
     );
     const totalPayAmount =
-      this.totalItemFinalPrice -
-      input.usedPointAmount -
-      totalCouponDiscountAmount;
+      this.totalPayAmount - input.usedPointAmount - totalCouponDiscountAmount;
 
     if (totalPayAmount < 0) {
       throw new BadRequestException('총상품금액보다 할인금액이 많습니다.');
