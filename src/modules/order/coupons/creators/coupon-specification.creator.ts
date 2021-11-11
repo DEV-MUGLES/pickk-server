@@ -8,9 +8,11 @@ import { CouponSpecification } from '../models';
 export class CouponSpecificationCreator {
   static create(type: CouponType, maximumDiscountAmountOrRate?: number) {
     const result = new CouponSpecification({
+      type,
       id: faker.datatype.number(100),
       name: 'couponSpec' + faker.datatype.string(10),
-      type,
+      maximumDiscountPrice: getRandomIntBetween(30000, 50000),
+      minimumForUse: getRandomIntBetween(1000, 3000),
     });
     if (type === CouponType.Amount) {
       result.discountAmount = getRandomIntBetween(
