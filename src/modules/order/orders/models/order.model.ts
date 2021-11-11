@@ -21,7 +21,7 @@ import {
 } from '../dtos';
 import { OrderEntity } from '../entities';
 import { OrderProcessStrategyFactory } from '../factories';
-import { getOrderBrands } from '../helpers';
+import { getOrderBrands, calTotalCouponDiscountAmount } from '../helpers';
 
 import { OrderBrand } from './order-brand.model';
 import { OrderBuyer } from './order-buyer.model';
@@ -262,20 +262,15 @@ export class Order extends OrderEntity {
   }
 
   checkTotalPayAmount(input: StartOrderInput, coupons: Coupon[]) {
-    const usedCouponAmount = coupons.reduce((totalAmount, coupon) => {
-      const { merchantUid } = input.orderItemInputs.find(
-        (v) => v.usedCouponId === coupon.id
-      );
-      return (
-        totalAmount +
-        coupon.getDiscountAmountFor(
-          findModelByUid(merchantUid, this.orderItems).item
-        )
-      );
-    }, 0);
-
+    const totalCouponDiscountAmount = calTotalCouponDiscountAmount(
+      coupons,
+      this.orderItems,
+      input.orderItemInputs
+    );
     const totalPayAmount =
-      this.totalItemFinalPrice - input.usedPointAmount - usedCouponAmount;
+      this.totalItemFinalPrice -
+      input.usedPointAmount -
+      totalCouponDiscountAmount;
 
     if (totalPayAmount < 0) {
       throw new BadRequestException('총상품금액보다 할인금액이 많습니다.');
