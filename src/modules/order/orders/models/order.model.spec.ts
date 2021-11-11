@@ -1,3 +1,5 @@
+import { BadRequestException } from '@nestjs/common';
+import { CouponCreator } from '@order/coupons/creators';
 import {
   OrderItemClaimStatus,
   OrderItemStatus,
@@ -11,11 +13,19 @@ import {
   RequestOrderRefundInputCreator,
   StartOrderInputCreator,
 } from '../creators';
+import * as CouponDiscountAmountHelper from '../helpers/coupon-discount-amount.helper';
 
 describe('Order model', () => {
   const setUp = () => {
     const order = OrderCreator.create();
-    const cardStartInput = StartOrderInputCreator.create(order, PayMethod.Card);
+    const coupons = Array.from(Array(order.orderItems.length), (_, i) =>
+      CouponCreator.create(i)
+    );
+    const cardStartInput = StartOrderInputCreator.create(
+      order,
+      PayMethod.Card,
+      coupons
+    );
     const vbankStartInput = StartOrderInputCreator.create(
       order,
       PayMethod.Vbank
@@ -25,6 +35,7 @@ describe('Order model', () => {
       order,
       cardStartInput,
       vbankStartInput,
+      coupons,
     };
   };
 
@@ -181,6 +192,38 @@ describe('Order model', () => {
       }
 
       expect(() => order.requestRefund(requestRefundInput)).toThrowError();
+    });
+  });
+
+  describe('checkTotalPayAmount', () => {
+    beforeAll(() => {
+      jest
+        .spyOn(CouponDiscountAmountHelper, 'calTotalCouponDiscountAmount')
+        .mockReturnValue(0);
+    });
+
+    it('쿠폰 할인액과 사용포인트의 합이 총상품금액보다 적으면 성공적으로 수행한다', () => {
+      const { order, cardStartInput, coupons } = setUp();
+      expect(() =>
+        order.checkTotalPayAmount(cardStartInput, coupons)
+      ).toBeTruthy();
+    });
+    it('사용 포인트가 총상품금액보다 많으면 에러를 발생한다.', () => {
+      const { order, cardStartInput, coupons } = setUp();
+      cardStartInput.usedPointAmount = order.totalPayAmount + 1;
+      expect(() => order.checkTotalPayAmount(cardStartInput, coupons)).toThrow(
+        BadRequestException
+      );
+    });
+    it('쿠폰 할인액이 총상품금액보다 많으면 에러를 발생한다.', () => {
+      const { order, cardStartInput, coupons } = setUp();
+      cardStartInput.usedPointAmount = 0;
+      jest
+        .spyOn(CouponDiscountAmountHelper, 'calTotalCouponDiscountAmount')
+        .mockReturnValue(order.totalPayAmount + 1);
+      expect(() => order.checkTotalPayAmount(cardStartInput, coupons)).toThrow(
+        BadRequestException
+      );
     });
   });
 });
