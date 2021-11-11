@@ -45,7 +45,7 @@ export class Coupon extends CouponEntity {
     if (type === CouponType.Rate) {
       return min(
         maximumDiscountPrice,
-        ceil(item.finalPrice * (1 - this.spec.discountRate / 100))
+        ceil((item.finalPrice * this.spec.discountRate) / 100)
       );
     } else {
       return min(maximumDiscountPrice, discountAmount);
