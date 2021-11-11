@@ -24,15 +24,15 @@ export class BatchWorker {
       throw new Error(`${jobName} job doesn\'t exist in database`);
     }
 
-    const jobExecutionRecord: JobExecutionRecord =
-      await this.jobsService.createJobExecutionRecord({ jobName });
+    const jobExecutionRecord: JobExecutionRecord = await this.jobsService.createJobExecutionRecord(
+      { jobName }
+    );
 
     try {
       jobExecutionRecord.start();
       await this.runSteps(steps, context, jobExecutionRecord.id);
       jobExecutionRecord.complete();
     } catch (err) {
-      console.log(err);
       if (err instanceof Error) {
         jobExecutionRecord.fail(err);
         if (execution.errorHandler) {
@@ -63,11 +63,12 @@ export class BatchWorker {
     context: JobExecutionContext,
     jobExecutionRecordId: number
   ) {
-    const stepExecutionRecord =
-      await this.jobsService.createStepExecutionRecord({
+    const stepExecutionRecord = await this.jobsService.createStepExecutionRecord(
+      {
         stepName: step.constructor.name,
         jobExecutionRecordId,
-      });
+      }
+    );
     try {
       stepExecutionRecord.start();
       await step.tasklet(context);
