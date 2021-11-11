@@ -21,7 +21,7 @@ import {
 } from '../dtos';
 import { OrderEntity } from '../entities';
 import { OrderProcessStrategyFactory } from '../factories';
-import { getOrderBrands, calTotalCouponDiscountAmount } from '../helpers';
+import { getOrderBrands } from '../helpers';
 
 import { OrderBrand } from './order-brand.model';
 import { OrderBuyer } from './order-buyer.model';
@@ -130,8 +130,6 @@ export class Order extends OrderEntity {
     shippingAddress: ShippingAddress,
     coupons: Coupon[]
   ): void {
-    this.checkTotalPayAmount(input, coupons);
-    this.markPaying();
     this.payMethod = input.payMethod;
     this.buyer = new OrderBuyer({ ...input.buyerInput });
     this.receiver = OrderReceiver.from(
@@ -145,6 +143,7 @@ export class Order extends OrderEntity {
     }
     this.applyCoupons(input.orderItemInputs, coupons);
     this.applyUsedPoints(input.usedPointAmount);
+    this.markPaying();
   }
 
   complete(createOrderVbankReceiptInput?: CreateOrderVbankReceiptInput) {
@@ -259,20 +258,5 @@ export class Order extends OrderEntity {
         oi.shippingFee = 0;
       }
     }
-  }
-
-  checkTotalPayAmount(input: StartOrderInput, coupons: Coupon[]) {
-    const totalCouponDiscountAmount = calTotalCouponDiscountAmount(
-      coupons,
-      this.orderItems,
-      input.orderItemInputs
-    );
-    const totalPayAmount =
-      this.totalPayAmount - input.usedPointAmount - totalCouponDiscountAmount;
-
-    if (totalPayAmount < 0) {
-      throw new BadRequestException('총상품금액보다 할인금액이 많습니다.');
-    }
-    return true;
   }
 }

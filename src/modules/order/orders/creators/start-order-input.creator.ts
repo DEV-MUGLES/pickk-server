@@ -1,7 +1,5 @@
 import * as faker from 'faker';
 
-import { Coupon } from '@order/coupons/models';
-import { OrderItem } from '@order/order-items/models';
 import { PayMethod } from '@payment/payments/constants';
 
 import { BankCode } from '@common/constants';
@@ -12,16 +10,11 @@ import {
   OrderReceiverInput,
   OrderRefundAccountInput,
   StartOrderInput,
-  StartOrderItemInput,
 } from '../dtos';
 import { Order } from '../models';
 
 export class StartOrderInputCreator {
-  static create(
-    order: Order,
-    payMethod?: PayMethod,
-    coupons?: Coupon[]
-  ): StartOrderInput {
+  static create(order: Order, payMethod?: PayMethod): StartOrderInput {
     const result = new StartOrderInput();
 
     result.payMethod =
@@ -33,13 +26,6 @@ export class StartOrderInputCreator {
 
     if (result.payMethod === PayMethod.Vbank) {
       result.refundAccountInput = this.createRefundAccountInput();
-    }
-
-    if (coupons?.length > 0) {
-      result.orderItemInputs = this.createOrderItemInputs(
-        order.orderItems,
-        coupons
-      );
     }
 
     return result;
@@ -72,15 +58,5 @@ export class StartOrderInputCreator {
     result.ownerName = faker.name.firstName();
 
     return result;
-  }
-
-  static createOrderItemInputs(
-    orderItems: OrderItem[],
-    coupons: Coupon[]
-  ): StartOrderItemInput[] {
-    return coupons.map((coupon, i) => ({
-      usedCouponId: coupon.id,
-      merchantUid: orderItems[i].merchantUid,
-    }));
   }
 }

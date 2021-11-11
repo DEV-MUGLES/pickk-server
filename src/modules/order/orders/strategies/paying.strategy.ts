@@ -12,5 +12,8 @@ export class OrderPayingStrategy extends OrderProcessStrategy {
     if (![Pending, Paying, Failed].includes(this.order.status)) {
       throw new BadRequestException('이미 완료된 주문입니다.');
     }
+    if (this.order.totalPayAmount < 0) {
+      throw new BadRequestException('총 결제금액이 음수일 수 없습니다.');
+    }
   }
 }
