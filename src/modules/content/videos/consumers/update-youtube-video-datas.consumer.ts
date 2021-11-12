@@ -13,7 +13,7 @@ import { UpdateYoutubeVideoDatasMto } from '@queue/mtos';
 import { VideosRepository } from '../videos.repository';
 
 @SqsProcess(UPDATE_YOUTUBE_VIDEO_DATAS_QUEUE)
-export class UpdatYoutubeVideoDatasConsumer extends BaseConsumer {
+export class UpdateYoutubeVideoDatasConsumer extends BaseConsumer {
   constructor(
     @InjectRepository(VideosRepository)
     private readonly videosRepository: VideosRepository,

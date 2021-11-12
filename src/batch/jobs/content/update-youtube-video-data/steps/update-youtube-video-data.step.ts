@@ -19,7 +19,7 @@ export class UpdateYoutubeVideoDataStep extends BaseStep {
     const CHUNK_SIZE = 100;
 
     for (let i = 0; i < videos.length; i += CHUNK_SIZE) {
-      await this.videosProducer.updateYoutubeVideoData(
+      await this.videosProducer.updateYoutubeVideoDatas(
         videos.slice(i, i + CHUNK_SIZE).map(({ youtubeCode }) => youtubeCode)
       );
     }
