@@ -36,3 +36,4 @@ export * from './update-keyword-class-owning-count-cache.mto';
 export * from './update-comment-count.mto';
 export * from './update-item-images.mto';
 export * from './update-item-digest-statistics.mto';
+export * from './update-youtube-video-datas.mto';
