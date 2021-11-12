@@ -27,7 +27,7 @@ export class VideosProducer {
     );
   }
 
-  async updateYoutubeVideoData(youtubeCodes: string[]) {
+  async updateYoutubeVideoDatas(youtubeCodes: string[]) {
     return await this.sqsService.send<UpdateYoutubeVideoDatasMto>(
       UPDATE_YOUTUBE_VIDEO_DATAS_QUEUE,
       {
