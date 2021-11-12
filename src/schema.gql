@@ -3080,6 +3080,8 @@ type Video {
 
   """최대 길이 40"""
   youtubeCode: String!
+  youtubeDuration: Int!
+  youtubeViewCount: Int!
 }
 
 input VideoFilter {
