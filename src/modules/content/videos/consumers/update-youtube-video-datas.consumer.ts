@@ -52,7 +52,7 @@ export class UpdateYoutubeVideoDatasConsumer extends BaseConsumer {
     for (const {
       code: youtubeCode,
       viewCount: youtubeViewCount,
-      durationMs: youtubeDuration,
+      duration: youtubeDuration,
     } of fulfilledVideoDatas) {
       await this.videosRepository.update(
         { youtubeCode },

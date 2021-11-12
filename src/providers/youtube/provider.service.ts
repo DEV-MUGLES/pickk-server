@@ -15,10 +15,8 @@ export class YoutubeProviderService {
         `${this.baseUrl}/video-data?code=${youtubeCode}`
       )
     );
-    if (!data.viewCount || !data.durationMs) {
-      throw new InternalServerErrorException(
-        '크롤링 된 유튜브 정보가 잘못됐습니다.'
-      );
+    if (!data.viewCount || !data.duration) {
+      throw new InternalServerErrorException('유튜브 정보가 잘못됐습니다.');
     }
 
     return data;
