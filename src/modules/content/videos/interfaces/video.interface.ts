@@ -10,6 +10,8 @@ export interface IVideo extends IBaseId {
   digests: IDigest[];
 
   youtubeCode: string;
+  youtubeDuration: number;
+  youtubeViewCount: number;
   title: string;
 
   likeCount: number;
