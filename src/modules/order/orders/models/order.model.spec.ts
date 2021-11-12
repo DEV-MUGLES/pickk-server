@@ -1,4 +1,4 @@
-import { CouponCreator } from '@order/coupons/creators';
+import { BadRequestException } from '@nestjs/common';
 import {
   OrderItemClaimStatus,
   OrderItemStatus,
@@ -28,11 +28,9 @@ describe('Order model', () => {
       vbankStartInput,
     };
   };
-
   describe('start', () => {
     it('성공적으로 수행한다.', () => {
       const { order, cardStartInput } = setUp();
-
       order.start(cardStartInput, new ShippingAddress(), []);
 
       expect(order.payMethod).toEqual(cardStartInput.payMethod);
@@ -40,6 +38,13 @@ describe('Order model', () => {
       expect(order.totalUsedPointAmount).toEqual(
         cardStartInput.usedPointAmount
       );
+    });
+    it('할인금액이 구매금액보다 크면 에러를 발생한다', () => {
+      const { order, cardStartInput } = setUp();
+      cardStartInput.usedPointAmount = order.totalPayAmount + 1;
+      expect(() =>
+        order.start(cardStartInput, new ShippingAddress(), [])
+      ).toThrow(BadRequestException);
     });
   });
 
@@ -83,13 +88,12 @@ describe('Order model', () => {
     });
 
     it('실패한 이후에도 성공적으로 수행한다.', () => {
-      const { order, cardStartInput: cardStartInput } = setUp();
+      const { order, cardStartInput } = setUp();
 
       order.start(cardStartInput, new ShippingAddress(), []);
       order.markFailed();
       order.start(cardStartInput, new ShippingAddress(), []);
       order.complete();
-
       expect(order.status).toEqual(OrderStatus.Paid);
       order.orderItems.forEach((oi) => {
         expect(oi.status).toEqual(OrderItemStatus.Paid);
@@ -183,42 +187,6 @@ describe('Order model', () => {
       }
 
       expect(() => order.requestRefund(requestRefundInput)).toThrowError();
-    });
-  });
-
-  describe('checkTotalPayAmount', () => {
-    const { order, cardStartInput } = setUp();
-    const coupons = Array.from(new Array(5)).map(() => CouponCreator.create());
-    coupons.forEach((coupon) => {
-      coupon.getDiscountAmountFor = jest.fn(() => 0);
-    });
-    cardStartInput.orderItemInputs = [
-      {
-        merchantUid: null,
-        usedCouponId: null,
-      },
-    ];
-
-    it('쿠폰 할인액과 사용포인트의 합이 총상품금액보다 적으면 성공적으로 수행한다', () => {
-      cardStartInput.usedPointAmount = order.totalItemFinalPrice - 10;
-
-      expect(() =>
-        order.checkTotalPayAmount(cardStartInput, coupons)
-      ).toBeTruthy();
-    });
-    it('사용 포인트가 총상품금액보다 많으면 에러를 발생한다.', () => {
-      cardStartInput.usedPointAmount = order.totalItemFinalPrice + 1;
-      expect(() =>
-        order.checkTotalPayAmount(cardStartInput, [])
-      ).toThrowError();
-    });
-    it('쿠폰 할인액이 총상품금액보다 많으면 에러를 발생한다.', () => {
-      coupons.forEach((coupon) => {
-        coupon.getDiscountAmountFor = jest.fn(() => order.totalItemFinalPrice);
-      });
-      expect(() =>
-        order.checkTotalPayAmount(cardStartInput, coupons)
-      ).toThrowError();
     });
   });
 });

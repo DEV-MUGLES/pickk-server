@@ -1,9 +1,9 @@
 import * as faker from 'faker';
 
+import { PayMethod } from '@payment/payments/constants';
+
 import { BankCode } from '@common/constants';
 import { getRandomEnumValue, getRandomIntBetween } from '@common/helpers';
-
-import { PayMethod } from '@payment/payments/constants';
 
 import {
   OrderBuyerInput,

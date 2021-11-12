@@ -12,14 +12,8 @@ import {
   ExchangeRequestCanceledStrategy,
 } from '../strategies';
 
-const {
-  Requested,
-  Picked,
-  Canceled,
-  Reshipping,
-  Reshipped,
-  Converted,
-} = ExchangeRequestStatus;
+const { Requested, Picked, Canceled, Reshipping, Reshipped, Converted } =
+  ExchangeRequestStatus;
 
 export class ExchangeRequestMarkStrategyFactory {
   static from(
