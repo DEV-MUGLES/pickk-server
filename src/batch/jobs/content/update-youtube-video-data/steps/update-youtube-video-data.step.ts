@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
 import { VideosProducer } from '@content/videos/producers';
+import { VideosService } from '@content/videos/videos.service';
 
 import { BaseStep } from '@batch/jobs/base.step';
-import { VideosService } from '@content/videos/videos.service';
 
 @Injectable()
 export class UpdateYoutubeVideoDataStep extends BaseStep {
