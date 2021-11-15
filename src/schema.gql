@@ -989,6 +989,9 @@ type Item {
   isSoldout: Boolean!
   majorCategory: ItemCategory
   majorCategoryId: Float
+
+  """[MODEL ONLY]"""
+  maxDigestRating: Int
   minorCategory: ItemCategory
   minorCategoryId: Float
   name: String!
@@ -2263,6 +2266,7 @@ type Query {
   """refresh token을 받아서 새로운 JwtToken을 생성합니다."""
   refreshJwtToken: JwtToken!
   requestPin(requestPinInput: RequestPinInput!): Boolean!
+  reviewItems(reviewItemFilter: ReviewItemFilter): [Item!]!
   rootExchangeRequests(exchangeRequestFilter: ExchangeRequestFilter, pageInput: PageInput): [ExchangeRequest!]!
   rootInquiries(filter: InquiryFilter, pageInput: PageInput): [Inquiry!]!
 
@@ -2461,6 +2465,11 @@ input RequestPinInput {
 input ReshipExchangeRequestInput {
   courierId: Int!
   trackCode: String!
+}
+
+input ReviewItemFilter {
+  orderByDigestRating: Boolean
+  reviewerId: Int!
 }
 
 type SearchExchangeRequestsOutput {

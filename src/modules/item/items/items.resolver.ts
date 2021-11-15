@@ -18,6 +18,7 @@ import { ItemRelationType, ITEM_RELATIONS } from './constants';
 import {
   ItemFilter,
   ManualCreateItemInput,
+  ReviewItemFilter,
   SetCategoryToItemInput,
 } from './dtos';
 import { Item } from './models';
@@ -187,5 +188,13 @@ export class ItemsResolver extends BaseResolver<ItemRelationType> {
     @Args('itemFilter', { nullable: true }) itemFilter?: ItemFilter
   ): Promise<number> {
     return await this.itemsService.count(itemFilter);
+  }
+
+  @Query(() => [Item])
+  async reviewItems(
+    @Args('reviewItemFilter', { nullable: true })
+    reviewItemFilter: ReviewItemFilter
+  ): Promise<Item[]> {
+    return await this.itemsService.findReviewItems(reviewItemFilter);
   }
 }
