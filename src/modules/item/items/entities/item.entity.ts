@@ -191,6 +191,8 @@ export class ItemEntity extends BaseIdEntity implements IItem {
   @Column({ type: 'float', default: 0 })
   score: number;
 
+  @Field(() => Int, { nullable: true, description: '[MODEL ONLY]' })
+  maxDigestRating: number;
   @Field({ description: '[MODEL ONLY]' })
   get originalPrice(): number {
     return this.prices.find(({ isActive }) => isActive === true).originalPrice;
