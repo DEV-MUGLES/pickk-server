@@ -53,3 +53,12 @@ export class ItemFilter implements Partial<IItem> {
   @Field(() => String, { nullable: true })
   orderBy?: keyof IItem;
 }
+
+@InputType()
+export class ReviewItemFilter {
+  @Field(() => Int)
+  reviewerId: number;
+
+  @Field(() => Boolean, { nullable: true })
+  orderByDigestRating?: boolean;
+}
