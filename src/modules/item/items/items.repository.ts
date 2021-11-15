@@ -5,6 +5,7 @@ import { BaseRepository } from '@common/base.repository';
 import { ImageRepository } from '@common/image.repository';
 import { removeProtocolFrom } from '@common/helpers';
 
+import { ReviewItemFilter } from './dtos';
 import {
   ItemEntity,
   ItemSizeChartEntity,
@@ -13,6 +14,7 @@ import {
   ItemDetailImageEntity,
   ItemPriceEntity,
 } from './entities';
+import { reviewedItemsQuery } from './helpers';
 import {
   Item,
   ItemSizeChart,
@@ -60,6 +62,22 @@ export class ItemsRepository extends BaseRepository<ItemEntity, Item> {
       .getOne();
 
     return item?.id;
+  }
+
+  async findReviewItems(filter: ReviewItemFilter) {
+    const qb = reviewedItemsQuery(this.createQueryBuilder('item'), filter);
+
+    const itemEntities = await qb.getMany();
+    if (filter.orderByDigestRating) {
+      const raws = await qb.getRawMany();
+      itemEntities.forEach((item) => {
+        item.maxDigestRating = raws.find(
+          (raw) => raw.item_id === item.id
+        ).maxDigestRating;
+      });
+    }
+
+    return itemEntities;
   }
 }
 
