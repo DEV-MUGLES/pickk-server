@@ -1,15 +1,15 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
-export class AddYoutubeColumns2Video1636684224794
+export class AddYoutubeColumns2Video1636951645529
   implements MigrationInterface {
-  name = 'AddYoutubeColumns2Video1636684224794';
+  name = 'AddYoutubeColumns2Video1636951645529';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
     await queryRunner.query(
-      "ALTER TABLE video ADD `youtubeDuration` mediumint UNSIGNED NOT NULL DEFAULT '0'"
+      'ALTER TABLE video ADD `youtubeDuration` mediumint UNSIGNED NULL'
     );
     await queryRunner.query(
-      "ALTER TABLE video ADD `youtubeViewCount` mediumint UNSIGNED NOT NULL DEFAULT '0'"
+      'ALTER TABLE video ADD `youtubeViewCount` int UNSIGNED NULL'
     );
   }
 

@@ -47,11 +47,11 @@ export class VideoEntity extends BaseIdEntity implements IVideo {
   @Field({ description: '최대 길이 40' })
   @Column({ length: 40 })
   youtubeCode: string;
-  @Field(() => Int, { defaultValue: 0 })
-  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'mediumint', unsigned: true, nullable: true })
   youtubeDuration: number;
-  @Field(() => Int, { defaultValue: 0 })
-  @Column({ type: 'mediumint', unsigned: true, default: 0 })
+  @Field(() => Int, { nullable: true })
+  @Column({ type: 'int', unsigned: true, nullable: true })
   youtubeViewCount: number;
   @Field({ description: '최대 길이 127' })
   @Column({ length: 127 })
