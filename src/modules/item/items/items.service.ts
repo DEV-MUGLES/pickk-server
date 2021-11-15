@@ -25,6 +25,7 @@ import {
   ManualCreateItemInput,
   CreateItemSizeChartInput,
   UpdateItemSizeChartInput,
+  ReviewItemFilter,
 } from './dtos';
 import { InvalidItemUrlException } from './exceptions';
 import { ItemFactory } from './factories';
@@ -250,8 +251,11 @@ export class ItemsService {
       throw new InvalidItemUrlException();
     }
 
-    const { name, salePrice, originalPrice } =
-      await this.crawlerService.crawlInfo(item.url);
+    const {
+      name,
+      salePrice,
+      originalPrice,
+    } = await this.crawlerService.crawlInfo(item.url);
     await this.update(item.id, { name });
 
     if (item.sellPrice === salePrice && item.originalPrice === originalPrice) {
@@ -404,5 +408,11 @@ export class ItemsService {
     item.sizeChart = null;
     await this.itemsRepository.save(item);
     await this.itemSizeChartsRepository.remove(sizeChart);
+  }
+
+  async findReviewItems(filter: ReviewItemFilter) {
+    return this.itemsRepository.entityToModelMany(
+      await this.itemsRepository.findReviewItems(filter)
+    );
   }
 }
