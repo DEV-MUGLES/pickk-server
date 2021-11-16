@@ -11,6 +11,7 @@ export * from './remove-digests.mto';
 export * from './remove-expected-event-point.mto';
 export * from './remove-inquiry-index.mto';
 export * from './remove-look-images.mto';
+export * from './remove-refund-request-index.mto';
 export * from './restore-deducted-product-stock.mto';
 export * from './save-buyer-info.mto';
 export * from './scrap-seller-items.mto';
