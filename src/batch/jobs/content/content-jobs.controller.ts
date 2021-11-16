@@ -15,4 +15,9 @@ export class ContentJobsController {
   async updateDigestScore() {
     return await this.contentJobsService.updateContentScore();
   }
+
+  @Post('update-youtube-video-data')
+  async updateYoutubeVideoData() {
+    return await this.contentJobsService.updateYoutubeVideoData();
+  }
 }

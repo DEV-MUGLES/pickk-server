@@ -6,6 +6,7 @@ import {
   UPDATE_VIDEO_LIKE_COUNT_QUEUE,
   UPDATE_VIDEO_COMMENT_COUNT_QUEUE,
   SEND_VIDEO_CREATION_SLACK_MESSAGE_QUEUE,
+  UPDATE_YOUTUBE_VIDEO_DATAS_QUEUE,
 } from '@queue/constants';
 
 import { SearchModule } from '@mcommon/search/search.module';
@@ -13,6 +14,7 @@ import { LikesModule } from '@content/likes/likes.module';
 import { CommentsModule } from '@content/comments/comments.module';
 import { DigestsModule } from '@content/digests/digests.module';
 import { ItemPropertiesModule } from '@item/item-properties/item-properties.module';
+import { YoutubeProviderModule } from '@providers/youtube/provider.module';
 import { FollowsModule } from '@user/follows/follows.module';
 
 import { VideosConsumers } from './consumers';
@@ -38,6 +40,9 @@ import { VideosService } from './videos.service';
       },
       {
         name: SEND_VIDEO_CREATION_SLACK_MESSAGE_QUEUE,
+      },
+      {
+        name: UPDATE_YOUTUBE_VIDEO_DATAS_QUEUE,
       }
     ),
     forwardRef(() => LikesModule),
@@ -46,6 +51,7 @@ import { VideosService } from './videos.service';
     forwardRef(() => CommentsModule),
     forwardRef(() => DigestsModule),
     forwardRef(() => ItemPropertiesModule),
+    YoutubeProviderModule,
   ],
   providers: [
     Logger,
@@ -54,6 +60,6 @@ import { VideosService } from './videos.service';
     VideosProducer,
     ...VideosConsumers,
   ],
-  exports: [VideosService],
+  exports: [VideosService, VideosProducer],
 })
 export class VideosModule {}
