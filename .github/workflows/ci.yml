@@ -42,11 +42,5 @@ jobs:
           steps.cache-node-modules.outputs.cache-hit != 'true'
         run: npm install
 
-      - name: Lint check
-        run: npm run lint
-
-      - name: Type check
-        run: npm run tsc
-
-      - name: Unit test
-        run: npm run jest
+      - name: Run all checks (lint, type, jest)
+        run: npm run check

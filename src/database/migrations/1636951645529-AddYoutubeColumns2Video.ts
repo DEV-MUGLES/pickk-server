@@ -1,7 +1,8 @@
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AddYoutubeColumns2Video1636951645529
-  implements MigrationInterface {
+  implements MigrationInterface
+{
   name = 'AddYoutubeColumns2Video1636951645529';
 
   public async up(queryRunner: QueryRunner): Promise<void> {
