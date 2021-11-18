@@ -127,4 +127,18 @@ export class RefundRequestsService {
       refundRequest.merchantUid,
     ]);
   }
+
+  async cancel(merchantUid: string) {
+    const refundRequest = await this.get(merchantUid, ['orderItems']);
+    for (const oi of refundRequest.orderItems) {
+      oi.refundRequest = null;
+      oi.claimStatus = null;
+    }
+    await this.refundRequestsRepository.save(refundRequest);
+    await this.refundRequestsRepository.remove(refundRequest);
+    await this.orderItemsProducer.indexOrderItems(
+      refundRequest.orderItems.map((v) => v.merchantUid)
+    );
+    await this.refundRequestsProducer.removeRefundRequestIndex(merchantUid);
+  }
 }
