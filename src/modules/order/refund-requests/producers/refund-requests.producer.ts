@@ -2,8 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { SqsService } from '@pickk/nestjs-sqs';
 
 import { getRandomUuid } from '@common/helpers';
-import { INDEX_REFUND_REQUESTS_QUEUE } from '@queue/constants';
-import { IndexRefundRequestsMto } from '@queue/mtos';
+import {
+  INDEX_REFUND_REQUESTS_QUEUE,
+  REMOVE_REFUND_REQUEST_INDEX_QUEUE,
+} from '@queue/constants';
+import {
+  IndexRefundRequestsMto,
+  RemoveRefundRequestIndexMto,
+} from '@queue/mtos';
 
 @Injectable()
 export class RefundRequestsProducer {
@@ -16,6 +22,18 @@ export class RefundRequestsProducer {
         id: getRandomUuid(),
         body: {
           merchantUids,
+        },
+      }
+    );
+  }
+
+  async removeRefundRequestIndex(merchantUid: string) {
+    await this.sqsService.send<RemoveRefundRequestIndexMto>(
+      REMOVE_REFUND_REQUEST_INDEX_QUEUE,
+      {
+        id: getRandomUuid(),
+        body: {
+          merchantUid,
         },
       }
     );

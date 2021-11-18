@@ -8,7 +8,10 @@ import { OrderItemsModule } from '@order/order-items/order-items.module';
 import { OrdersModule } from '@order/orders/orders.module';
 import { PointsModule } from '@order/points/points.module';
 import { PaymentsModule } from '@payment/payments/payments.module';
-import { INDEX_REFUND_REQUESTS_QUEUE } from '@queue/constants';
+import {
+  INDEX_REFUND_REQUESTS_QUEUE,
+  REMOVE_REFUND_REQUEST_INDEX_QUEUE,
+} from '@queue/constants';
 
 import { RefundRequestConsumers } from './consumers';
 import { RefundRequestsProducer } from './producers';
@@ -25,9 +28,14 @@ import { RefundRequestsService } from './refund-requests.service';
     PaymentsModule,
     PointsModule,
     forwardRef(() => ExchangeRequestsModule),
-    SqsModule.registerQueue({
-      name: INDEX_REFUND_REQUESTS_QUEUE,
-    }),
+    SqsModule.registerQueue(
+      {
+        name: INDEX_REFUND_REQUESTS_QUEUE,
+      },
+      {
+        name: REMOVE_REFUND_REQUEST_INDEX_QUEUE,
+      }
+    ),
   ],
   providers: [
     Logger,
