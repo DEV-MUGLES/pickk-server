@@ -1,5 +1,5 @@
 import { Injectable, UseGuards } from '@nestjs/common';
-import { Info, Args, Query, Int } from '@nestjs/graphql';
+import { Info, Args, Query, Int, Mutation } from '@nestjs/graphql';
 import { GraphQLResolveInfo } from 'graphql';
 
 import { Roles } from '@auth/decorators';
@@ -85,5 +85,15 @@ export class RootRefundRequestResolver extends BaseResolver<RefundRequestRelatio
     );
 
     return total;
+  }
+
+  @Mutation(() => Boolean)
+  @Roles(UserRole.Admin)
+  @UseGuards(JwtAuthGuard)
+  async cancelRootRefundRequest(
+    @Args('merchantUid') merchantUid: string
+  ): Promise<boolean> {
+    await this.refundRequestsService.cancel(merchantUid);
+    return true;
   }
 }

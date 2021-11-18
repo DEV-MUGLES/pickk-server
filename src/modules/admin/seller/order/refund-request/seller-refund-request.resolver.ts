@@ -175,4 +175,15 @@ export class SellerRefundRequestResolver extends BaseResolver<RefundRequestRelat
 
     return total;
   }
+
+  @Mutation(() => Boolean)
+  @UseGuards(JwtSellerVerifyGuard)
+  async cancelSellerRefundRequest(
+    @CurrentUser() { sellerId }: JwtPayload,
+    @Args('merchantUid') merchantUid: string
+  ): Promise<boolean> {
+    await this.sellerRefundRequestService.checkBelongsTo(merchantUid, sellerId);
+    await this.refundRequestsService.cancel(merchantUid);
+    return true;
+  }
 }
