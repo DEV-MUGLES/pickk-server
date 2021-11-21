@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { DELETE_ORDER_ITEMS_INDEX_QUEUE } from '@queue/constants';
 import { DeleteOrderItemsIndexMto } from '@queue/mtos';

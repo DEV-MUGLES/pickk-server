@@ -1,4 +1,4 @@
-import { AlimtalkMessageRequest } from 'nest-sens';
+import { AlimtalkMessageRequest } from '@nestjs-packages/ncp-sens';
 
 import { addCommas, partialEncrypt } from '@common/helpers';
 import { getExchangeItemInfo } from '@templates/helpers';

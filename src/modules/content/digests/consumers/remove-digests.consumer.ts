@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { BaseConsumer } from '@common/base.consumer';
 import { REMOVE_DIGESTS_QUEUE } from '@queue/constants';

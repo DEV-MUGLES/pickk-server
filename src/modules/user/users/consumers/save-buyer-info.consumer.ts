@@ -1,5 +1,5 @@
 import { Logger } from '@nestjs/common';
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { BaseConsumer } from '@common/base.consumer';
 import { SAVE_BUYER_INFO_QUEUE } from '@queue/constants';

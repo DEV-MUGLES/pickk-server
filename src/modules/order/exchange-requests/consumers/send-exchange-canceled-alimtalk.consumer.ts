@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { SEND_EXCHANGE_CANCELED_ALIMTALK_QUEUE } from '@queue/constants';
 import { AlimtalkService } from '@providers/sens';

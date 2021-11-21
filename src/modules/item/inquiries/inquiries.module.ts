@@ -1,6 +1,6 @@
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@nestjs-packages/sqs';
 
 import {
   SEND_INQUIRY_CREATION_SLACK_MESSAGE_QUEUE,

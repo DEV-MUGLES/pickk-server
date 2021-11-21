@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { AlimtalkService } from '@providers/sens';
 import { SEND_VBANK_PAID_ALIMTALK_QUEUE } from '@queue/constants';

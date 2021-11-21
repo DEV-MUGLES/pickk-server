@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@nestjs-packages/sqs';
 
 import { KeywordsModule } from '@content/keywords/keywords.module';
 import { UPDATE_KEYWORD_CLASS_OWNING_COUNT_CACHE_QUEUE } from '@queue/constants';

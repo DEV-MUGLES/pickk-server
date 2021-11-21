@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SqsService } from '@pickk/nestjs-sqs';
+import { SqsService } from '@nestjs-packages/sqs';
 
 import { getRandomUuid } from '@common/helpers';
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';

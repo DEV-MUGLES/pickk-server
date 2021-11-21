@@ -1,4 +1,4 @@
-import { AlimtalkMessageRequest } from 'nest-sens';
+import { AlimtalkMessageRequest } from '@nestjs-packages/ncp-sens';
 
 import { partialEncrypt } from '@common/helpers';
 import { RefundRequest } from '@order/refund-requests/models';

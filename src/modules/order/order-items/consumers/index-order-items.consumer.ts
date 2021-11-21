@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { INDEX_ORDER_ITEMS_QUEUE } from '@queue/constants';
 import { IndexOrderItemsMto } from '@queue/mtos';

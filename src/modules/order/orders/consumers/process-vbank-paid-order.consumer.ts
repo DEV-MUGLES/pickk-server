@@ -1,5 +1,5 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { PROCESS_VBANK_PAID_ORDER_QUEUE } from '@queue/constants';
 import { ProcessVbankPaidOrderMto } from '@queue/mtos';

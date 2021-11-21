@@ -3,7 +3,7 @@ import {
   SensModule,
   SensModuleAsyncOptions,
   SensModuleOptions,
-} from 'nest-sens';
+} from '@nestjs-packages/ncp-sens';
 
 import { SensConfigModule, SensConfigService } from '@config/providers/sens';
 

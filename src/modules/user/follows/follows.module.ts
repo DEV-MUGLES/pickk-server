@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import { UPDATE_USER_FOLLOW_COUNT_QUEUE } from '@queue/constants';
 

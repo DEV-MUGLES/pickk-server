@@ -1,6 +1,6 @@
 import { Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import { LikesModule } from '@content/likes/likes.module';
 import {

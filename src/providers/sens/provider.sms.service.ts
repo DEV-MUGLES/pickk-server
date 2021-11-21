@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SmsClient } from 'nest-sens';
+import { SmsClient } from '@nestjs-packages/ncp-sens';
 
 import { createPinTemplate } from '@templates/sms';
 

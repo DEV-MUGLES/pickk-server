@@ -3,7 +3,7 @@ import {
   SqsConsumerEventHandler,
   SqsMessageHandler,
   SqsProcess,
-} from '@pickk/nestjs-sqs';
+} from '@nestjs-packages/sqs';
 
 import { REMOVE_EXPECTED_POINT_EVENT_QUEUE } from '@queue/constants';
 import { RemoveExpectedPointEventMto } from '@queue/mtos';

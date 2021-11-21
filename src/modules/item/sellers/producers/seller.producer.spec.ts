@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@nestjs-packages/sqs';
 import * as faker from 'faker';
 
 import { AwsSqsProviderModule } from '@providers/aws/sqs';

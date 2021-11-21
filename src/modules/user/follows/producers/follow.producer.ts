@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { SqsService } from '@pickk/nestjs-sqs';
+import { SqsService } from '@nestjs-packages/sqs';
 
 import { getRandomUuid } from '@common/helpers';
 import { UPDATE_USER_FOLLOW_COUNT_QUEUE } from '@queue/constants';

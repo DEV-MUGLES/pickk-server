@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { UPDATE_LOOK_LIKE_COUNT_QUEUE } from '@queue/constants';
 import { UpdateLikeCountMto } from '@queue/mtos';

@@ -1,6 +1,6 @@
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@nestjs-packages/sqs';
 
 import {
   INDEX_EXCHANGE_REQUESTS_QUEUE,

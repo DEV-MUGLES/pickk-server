@@ -11,7 +11,8 @@
     "job",
     "auth",
     "templates",
-    "queue"
+    "queue",
+    "deps"
   ],
   "jestrunner.jestCommand": "npm run jest --",
   "editor.formatOnSave": true

@@ -4,7 +4,7 @@ import {
   SqsConsumerEventHandler,
   SqsMessageHandler,
   SqsProcess,
-} from '@pickk/nestjs-sqs';
+} from '@nestjs-packages/sqs';
 
 import {
   allSettled,

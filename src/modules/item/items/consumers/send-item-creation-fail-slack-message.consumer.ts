@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 import { plainToClass } from 'class-transformer';
 
 import { SlackService } from '@providers/slack';

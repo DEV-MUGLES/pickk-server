@@ -1,6 +1,6 @@
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import {
   PROCESS_VBANK_PAID_ORDER_QUEUE,

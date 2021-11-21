@@ -1,7 +1,7 @@
 import { HttpModule } from '@nestjs/axios';
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import {
   SCRAP_SELLER_ITEMS_QUEUE,

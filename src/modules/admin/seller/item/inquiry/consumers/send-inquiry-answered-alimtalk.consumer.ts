@@ -3,7 +3,7 @@ import {
   SqsConsumerEventHandler,
   SqsMessageHandler,
   SqsProcess,
-} from '@pickk/nestjs-sqs';
+} from '@nestjs-packages/sqs';
 
 import { SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE } from '@queue/constants';
 import { SendInquriryAnsweredAlimtalkMto } from '@queue/mtos';

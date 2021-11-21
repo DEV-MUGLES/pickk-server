@@ -1,6 +1,6 @@
 import { Module, forwardRef } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import { PaymentsModule } from '@payment/payments/payments.module';
 import {

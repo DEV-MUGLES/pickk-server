@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { AlimtalkClient } from 'nest-sens';
+import { AlimtalkClient } from '@nestjs-packages/ncp-sens';
 
 import { RefundRequest } from '@order/refund-requests/models';
 import { Order } from '@order/orders/models';

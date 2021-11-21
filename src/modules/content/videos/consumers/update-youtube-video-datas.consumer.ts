@@ -1,6 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { IYoutubeVideoData } from '@providers/youtube/interfaces';
 import { YoutubeProviderService } from '@providers/youtube/provider.service';

@@ -1,5 +1,8 @@
 import { Logger } from '@nestjs/common';
-import { SqsConsumerEvent, SqsConsumerEventHandler } from '@pickk/nestjs-sqs';
+import {
+  SqsConsumerEvent,
+  SqsConsumerEventHandler,
+} from '@nestjs-packages/sqs';
 
 export abstract class BaseConsumer {
   abstract logger: Logger;

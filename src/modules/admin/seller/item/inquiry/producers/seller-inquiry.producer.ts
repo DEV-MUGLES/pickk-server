@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SqsService } from '@pickk/nestjs-sqs';
+import { SqsService } from '@nestjs-packages/sqs';
 
 import { getRandomUuid } from '@common/helpers';
 import { SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE } from '@queue/constants';

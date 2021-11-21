@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { RESTORE_DEDUCTED_PRODUCT_STOCK_QUEUE } from '@queue/constants';
 import { RestoreDeductedProductStockMto } from '@queue/mtos';

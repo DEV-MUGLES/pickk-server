@@ -4,7 +4,7 @@ import {
   SqsConsumerEventHandler,
   SqsMessageHandler,
   SqsProcess,
-} from '@pickk/nestjs-sqs';
+} from '@nestjs-packages/sqs';
 
 import { UPDATE_ITEM_IMAGE_URL_QUEUE } from '@queue/constants';
 import { UpdateItemImageUrlMto } from '@queue/mtos';

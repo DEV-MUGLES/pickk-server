@@ -1,4 +1,4 @@
-import { SqsMessageHandler, SqsProcess } from '@pickk/nestjs-sqs';
+import { SqsMessageHandler, SqsProcess } from '@nestjs-packages/sqs';
 
 import { GIVE_REWARD_QUEUE } from '@queue/constants';
 import { GiveRewardMto } from '@queue/mtos';

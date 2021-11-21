@@ -1,4 +1,4 @@
-import { AlimtalkMessageRequest } from 'nest-sens';
+import { AlimtalkMessageRequest } from '@nestjs-packages/ncp-sens';
 
 import { addCommas, format2Korean, partialEncrypt } from '@common/helpers';
 import { getPurchaseItemInfo, getTotalPayAmount } from '@templates/helpers';

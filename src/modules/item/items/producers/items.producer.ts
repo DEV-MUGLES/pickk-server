@@ -1,6 +1,6 @@
 import { getRandomUuid } from '@common/helpers';
 import { Inject, Injectable } from '@nestjs/common';
-import { SqsService } from '@pickk/nestjs-sqs';
+import { SqsService } from '@nestjs-packages/sqs';
 
 import {
   SEND_ITEM_CREATION_FAIL_SLACK_MESSAGE_QUEUE,

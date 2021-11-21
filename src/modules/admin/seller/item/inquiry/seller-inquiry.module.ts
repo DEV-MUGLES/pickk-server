@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule } from '@pickk/nestjs-sqs';
+import { SqsModule } from '@nestjs-packages/sqs';
 
 import { SEND_INQUIRY_ANSWERED_ALIMTALK_QUEUE } from '@queue/constants';
 

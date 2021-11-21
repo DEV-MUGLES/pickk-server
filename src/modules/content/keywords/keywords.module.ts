@@ -1,6 +1,6 @@
 import { forwardRef, Logger, Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { SqsModule, SqsQueueType } from '@pickk/nestjs-sqs';
+import { SqsModule, SqsQueueType } from '@nestjs-packages/sqs';
 
 import { UPDATE_KEYWORD_LIKE_COUNT_QUEUE } from '@queue/constants';
 
