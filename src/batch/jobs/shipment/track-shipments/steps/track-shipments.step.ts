@@ -48,56 +48,56 @@ export class TrackShipmentsStep extends BaseStep {
     );
 
     const historiesMap = new Map<number, ShipmentHistory[]>();
-    await allSettled(
-      shipments.map(
-        (v) =>
-          new Promise<void>(async (resolve, reject) => {
-            try {
-              const histories = await this.getRecentHistories(v);
-              historiesMap.set(v.id, histories);
-              resolve();
-            } catch {
-              reject();
-            }
-          })
-      )
-    );
+    const CHUNK_SIZE = 50;
+    for (let i = 0; i < shipments.length; i += CHUNK_SIZE) {
+      await allSettled(
+        shipments.slice(i, i + CHUNK_SIZE).map(
+          (v) =>
+            new Promise<void>(async (resolve, reject) => {
+              try {
+                const histories = await this.getRecentHistories(v);
+                historiesMap.set(v.id, histories);
+                resolve();
+              } catch (error) {
+                context.put(
+                  v.id.toString(),
+                  error?.config?.url ?? error.message
+                );
+                reject();
+              }
+            })
+        )
+      );
+    }
 
     for (const shipment of shipments) {
-      try {
-        const recentHistories = historiesMap.get(shipment.id);
-        if (!recentHistories) {
-          continue;
-        }
-
-        const duplicatedHistories = this.findDuplicatedHistories(
-          shipment.histories
-        );
-        const deletedHistories = this.findDeletedHistories(
-          shipment.histories,
-          recentHistories
-        );
-
-        delete shipment.histories;
-        await this.shipmentsHistoriesRepository.save(recentHistories);
-        await this.shipmentsHistoriesRepository.remove([
-          ...deletedHistories,
-          ...duplicatedHistories,
-        ]);
-
-        if (this.isShippedShipment(recentHistories)) {
-          shipment.status = ShipmentStatus.Shipped;
-          await this.processShippedShipment(shipment);
-        }
-
-        shipment.lastTrackedAt = new Date();
-        await this.shipmentsRepository.save(shipment);
-      } catch (error) {
-        context.put(
-          shipment.id.toString(),
-          error?.config?.url ?? error.message
-        );
+      const recentHistories = historiesMap.get(shipment.id);
+      if (!recentHistories) {
+        continue;
       }
+
+      const duplicatedHistories = this.findDuplicatedHistories(
+        shipment.histories
+      );
+      const deletedHistories = this.findDeletedHistories(
+        shipment.histories,
+        recentHistories
+      );
+
+      delete shipment.histories;
+      await this.shipmentsHistoriesRepository.save(recentHistories);
+      await this.shipmentsHistoriesRepository.remove([
+        ...deletedHistories,
+        ...duplicatedHistories,
+      ]);
+
+      if (this.isShippedShipment(recentHistories)) {
+        shipment.status = ShipmentStatus.Shipped;
+        await this.processShippedShipment(shipment);
+      }
+
+      shipment.lastTrackedAt = new Date();
+      await this.shipmentsRepository.save(shipment);
     }
   }
 
@@ -149,7 +149,7 @@ export class TrackShipmentsStep extends BaseStep {
     if (ownerType === ShipmentOwnerType.OrderItem) {
       await this.orderItemsRepository.update(ownerPk, {
         status: OrderItemStatus.Shipped,
-        shippedAt: new Date()
+        shippedAt: new Date(),
       });
       await this.orderItemsProducer.indexOrderItems([ownerPk]);
     }

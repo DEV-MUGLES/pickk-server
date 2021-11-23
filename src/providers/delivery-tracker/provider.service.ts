@@ -21,7 +21,10 @@ export class DeliveryTrackerService {
       data: { progresses },
     } = await firstValueFrom(
       this.httpService.get<TrackDeliveryDto>(
-        `${this.url}/${courierCode}/tracks/${trackCode}`
+        `${this.url}/${courierCode}/tracks/${trackCode}`,
+        {
+          timeout: 5000,
+        }
       )
     );
 
