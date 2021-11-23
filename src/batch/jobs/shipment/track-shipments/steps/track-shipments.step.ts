@@ -149,6 +149,7 @@ export class TrackShipmentsStep extends BaseStep {
     if (ownerType === ShipmentOwnerType.OrderItem) {
       await this.orderItemsRepository.update(ownerPk, {
         status: OrderItemStatus.Shipped,
+        shippedAt: new Date()
       });
       await this.orderItemsProducer.indexOrderItems([ownerPk]);
     }
