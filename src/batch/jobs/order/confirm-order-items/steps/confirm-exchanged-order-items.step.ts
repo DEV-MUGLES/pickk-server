@@ -31,7 +31,7 @@ export class ConfirmExchangedOrderItemsStep extends BaseStep {
           status: ExchangeRequestStatus.Reshipped,
         })
         .andWhere('exchangeRequest.reShippedAt < :reShippedAt', {
-          reShippedAt: dayjs().add(-14, 'day').toDate(),
+          reShippedAt: dayjs().subtract(7, 'day').toDate(),
         })
         .execute()
     ).map(({ orderItemMerchantUid }) => orderItemMerchantUid);

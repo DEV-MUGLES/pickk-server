@@ -26,7 +26,7 @@ export class ConfirmOrderItemsStep extends BaseStep {
           status: OrderItemStatus.Shipped,
           isConfirmed: false,
           claimStatus: IsNull(),
-          shippedAt: LessThan(dayjs().add(-14, 'day').toDate()),
+          shippedAt: LessThan(dayjs().subtract(7, 'day').toDate()),
         },
       })
     ).map(({ merchantUid }) => merchantUid);
